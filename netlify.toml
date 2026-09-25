@@ -1,0 +1,27 @@
+# Netlify: static app in dist/ + one serverless function serving /api/*.
+# Connect this GitHub repo in Netlify (Add new site -> Import from Git) and
+# every push to the main branch deploys automatically.
+[build]
+  command   = "node scripts/build.mjs"
+  publish   = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["firebase-admin", "@anthropic-ai/sdk"]
+
+# the service worker must never be served stale, or deploys never arrive
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(self), bluetooth=(self)"

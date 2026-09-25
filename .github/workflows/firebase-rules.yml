@@ -1,0 +1,27 @@
+# Deploys database.rules.json + storage.rules to Firebase whenever they change
+# on main. Needs the repo secret FIREBASE_SERVICE_ACCOUNT (the same JSON key
+# Netlify uses). Without the secret the job skips instead of failing.
+name: Firebase rules
+on:
+  push:
+    branches: [main]
+    paths: [database.rules.json, storage.rules, firebase.json]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.SA != ''
+      - uses: actions/setup-node@v4
+        if: env.SA != ''
+        with:
+          node-version: 20
+      - name: Deploy rules
+        if: env.SA != ''
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@13 deploy --only database,storage --project kova-ee9d5 --non-interactive
