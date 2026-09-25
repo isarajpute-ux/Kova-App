@@ -3109,7 +3109,6 @@ body.light-mode .card.card-lg .chip,body.light-mode .card.kova .chip{
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
 <!-- Google Analytics. gtag is the site-level tag; Firebase Analytics is
      the app-level one. They are separate products that happen to share a
@@ -3164,6 +3163,28 @@ window.KOVA_FB_CONFIG = {
 
   window.KOVA_FB = { ok: ok, auth: auth, db: db, storage: st };
 
+  /* The backend (/api on Netlify) identifies people by their Firebase ID
+     token. Firebase refreshes it on its own while the app is open;
+     onIdTokenChanged keeps a synchronous copy for callers that build
+     request headers synchronously (KovaModel's provider table). */
+  window.__kovaIdToken = '';
+  if (auth) {
+    auth.onIdTokenChanged(function(u){
+      if (!u) { window.__kovaIdToken = ''; return; }
+      u.getIdToken().then(function(t){
+        window.__kovaIdToken = t;
+        /* linked-account status is per person, so refresh it on sign-in */
+        try { if (window.KovaLink && KovaLink.server()) KovaLink.status(); } catch(e){}
+      }).catch(function(){});
+    });
+  }
+  window.KovaIdToken = function(){
+    var u = auth && auth.currentUser;
+    if (!u) return Promise.resolve('');
+    return u.getIdToken().then(function(t){ window.__kovaIdToken = t; return t; })
+                         .catch(function(){ return window.__kovaIdToken || ''; });
+  };
+
 /* =================================================================
    KovaAnalytics - one funnel, two sinks.
    ================================================================= */
@@ -3172,7 +3193,10 @@ window.KovaAnalytics = (function(){
   function track(name, params){
     params = params || {};
     try { if (analytics) analytics.logEvent(name, params); } catch(e){}
-    try { if (window.gtag) gtag('event', name, params); } catch(e){}
+    /* send_to matters: Firebase Analytics registers its own measurement id
+       with the same gtag, so a bare gtag('event') would land in the
+       Firebase property a second time and double every count there. */
+    try { if (window.gtag) gtag('event', name, Object.assign({ send_to: 'G-PRTZHJVKRT' }, params)); } catch(e){}
   }
   return {
     track: track,
@@ -8130,6 +8154,9 @@ window.KovaLink = (function(){
   var UKEY = 'kova.link.uid';
   var CKEY = 'kova.link.cache';
 
+  /* Where the backend lives. Served from Netlify, it is this same site's
+     /api, so nothing needs configuring. A URL saved in Settings still wins,
+     which keeps self-hosting or a staging backend possible. */
   function server(url){
     if(url !== undefined){
       try{
@@ -8137,11 +8164,16 @@ window.KovaLink = (function(){
         url ? localStorage.setItem(SKEY, url) : localStorage.removeItem(SKEY);
       }catch(e){}
     }
-    try{ return localStorage.getItem(SKEY) || ''; }catch(e){ return ''; }
+    var v = '';
+    try{ v = localStorage.getItem(SKEY) || ''; }catch(e){}
+    /* same rule KovaMode uses for "this is the deployed site" */
+    if(!v && location.protocol === 'https:'
+       && !/(^|\.)claude(usercontent)?\.(ai|com)$/.test(location.hostname)) v = location.origin + '/api';
+    return v;
   }
 
-  /* one id per install, so the Worker can file tokens somewhere.
-     Not an account — nothing about the person is in it. */
+  /* one id per install, kept for older callers. The server identifies
+     people by their Firebase sign-in, never by this. */
   function uid(){
     var v = '';
     try{ v = localStorage.getItem(UKEY) || ''; }catch(e){}
@@ -8150,6 +8182,19 @@ window.KovaLink = (function(){
       try{ localStorage.setItem(UKEY, v); }catch(e){}
     }
     return v;
+  }
+
+  /* fetch against the backend with the signed-in identity attached */
+  function api(path, opts){
+    var s = server();
+    if(!s) return Promise.reject(Object.assign(new Error('no-server'), {state:'no-server'}));
+    opts = opts || {};
+    return (window.KovaIdToken ? KovaIdToken() : Promise.resolve('')).then(function(tok){
+      var h = Object.assign({}, opts.headers || {});
+      if(tok) h.Authorization = 'Bearer ' + tok;
+      if(opts.body && typeof opts.body !== 'string'){ h['Content-Type'] = 'application/json'; opts.body = JSON.stringify(opts.body); }
+      return fetch(s + path, Object.assign({cache:'no-store'}, opts, {headers:h}));
+    });
   }
 
   /* last known status, so the UI can paint before the network answers */
@@ -8162,9 +8207,8 @@ window.KovaLink = (function(){
   }
 
   function status(){
-    var s = server();
-    if(!s) return Promise.resolve(null);
-    return fetch(s + '/status?u=' + encodeURIComponent(uid()), {cache:'no-store'})
+    if(!server()) return Promise.resolve(null);
+    return api('/status')
       .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function(j){ cache(j); return j; })
       .catch(function(){ return null; });
@@ -8178,39 +8222,53 @@ window.KovaLink = (function(){
     var c = cache();
     return (c[provider] && c[provider].label) || '';
   }
+  /* false only when the server has said this provider has no keys yet */
+  function configured(provider){
+    var c = cache();
+    return !(c[provider] && c[provider].configured === false);
+  }
 
   /* opens the provider's login, then watches for the link to appear.
-     Resolves 'linked' | 'timeout' | 'no-server'. */
+     Resolves 'linked' | 'timeout' | 'no-server' | 'no-auth' | 'not-configured' | 'error'.
+     The tab is opened synchronously, inside the tap, and pointed at the
+     login once the server answers - iOS blocks a window.open that happens
+     after an await. */
   function connect(provider){
-    var s = server();
-    if(!s) return Promise.resolve('no-server');
+    if(!server()) return Promise.resolve('no-server');
+    var win = null;
+    try{ win = window.open('', '_blank'); }catch(e){}
+    function fail(state){ try{ if(win && !win.closed) win.close(); }catch(e){} return state; }
 
-    var win = window.open(s + '/connect/' + provider + '?u=' + encodeURIComponent(uid()), '_blank');
-
-    return new Promise(function(res){
-      var tries = 0;
-      var iv = setInterval(function(){
-        tries++;
-        status().then(function(j){
-          if(j && j[provider] && j[provider].linked){
-            clearInterval(iv);
-            try{ if(win && !win.closed) win.close(); }catch(e){}
-            try{ window.dispatchEvent(new CustomEvent('kova:link')); }catch(e){}
-            res('linked');
-          }else if(tries > 45){          /* 45 x 2s = 90s */
-            clearInterval(iv);
-            res('timeout');
-          }
+    return api('/connect/' + provider, {method:'POST'}).then(function(r){
+      if(r.status === 401) return fail('no-auth');
+      if(r.status === 501) return fail('not-configured');
+      if(!r.ok) return fail('error');
+      return r.json().then(function(j){
+        if(win && !win.closed) win.location.href = j.url; else location.href = j.url;
+        return new Promise(function(res){
+          var tries = 0;
+          var iv = setInterval(function(){
+            tries++;
+            status().then(function(s){
+              if(s && s[provider] && s[provider].linked){
+                clearInterval(iv);
+                try{ if(win && !win.closed) win.close(); }catch(e){}
+                try{ window.dispatchEvent(new CustomEvent('kova:link')); }catch(e){}
+                res('linked');
+              }else if(tries > 60){          /* 60 x 2s = 2 min */
+                clearInterval(iv);
+                res('timeout');
+              }
+            });
+          }, 2000);
         });
-      }, 2000);
-    });
+      });
+    }).catch(function(){ return fail('error'); });
   }
 
   function disconnect(provider){
-    var s = server();
-    if(!s) return Promise.resolve(false);
-    return fetch(s + '/disconnect/' + provider + '?u=' + encodeURIComponent(uid()),
-                 {method:'POST'})
+    if(!server()) return Promise.resolve(false);
+    return api('/disconnect/' + provider, {method:'POST'})
       .then(function(){ return status(); })
       .then(function(){
         try{ window.dispatchEvent(new CustomEvent('kova:link')); }catch(e){}
@@ -8221,13 +8279,8 @@ window.KovaLink = (function(){
 
   /* proxied API call. spec = {path, method, body} */
   function call(provider, spec){
-    var s = server();
-    if(!s) return Promise.resolve(null);
-    return fetch(s + '/call/' + provider + '?u=' + encodeURIComponent(uid()), {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(spec || {})
-    })
+    if(!server()) return Promise.resolve(null);
+    return api('/call/' + provider, {method:'POST', body: spec || {}})
       .then(function(r){ return r.json(); })
       .then(function(j){
         if(!j || j.error) return null;
@@ -8260,6 +8313,16 @@ window.KovaLink = (function(){
     });
   }
 
+  /* one sentence per connect() outcome, shared by every Connect button */
+  function resultText(r, name){
+    return r === 'linked'         ? name + ' connected'
+         : r === 'no-server'      ? 'Open Kova from its web address to connect accounts'
+         : r === 'no-auth'        ? 'Sign in to Kova first, then connect ' + name
+         : r === 'not-configured' ? name + ' is not set up on the server yet (see SETUP.md)'
+         : r === 'timeout'        ? name + ' sign-in did not finish'
+         : 'Could not reach the Kova server';
+  }
+
   /* refresh on launch so the UI is not showing a stale link */
   if(server()) status();
 
@@ -8267,7 +8330,8 @@ window.KovaLink = (function(){
     server: server, uid: uid, status: status, cache: cache,
     linked: linked, label: label,
     connect: connect, disconnect: disconnect,
-    call: call, upcoming: upcoming
+    call: call, upcoming: upcoming, api: api, configured: configured,
+    resultText: resultText
   };
 })();
 
@@ -15142,7 +15206,9 @@ function openLibrary(title,rec,onPick){
     function macroLine(x){ return x.kcal+' kcal \u00b7 '+x.p+'p '+x.c+'c '+x.f+'f'; }
     function drawResults(list){
       document.getElementById('foodResults').innerHTML=list.map(function(x,i){
-        return '<div class="list-item foodpick" data-i="'+i+'" style="margin-bottom:6px"><div style="flex:1"><div class="li-name">'+x.n+'</div><div class="li-sub">'+macroLine(x)+'</div></div><svg class="ic" style="font-size:15px;color:var(--acc)"><use href="#i-plus"/></svg></div>';
+        /* names can come from crowdsourced databases: always escaped */
+        var nm=String(x.n).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});
+        return '<div class="list-item foodpick" data-i="'+i+'" style="margin-bottom:6px"><div style="flex:1"><div class="li-name">'+nm+(x.src?' <span style="opacity:.5;font-size:9px">'+x.src+'</span>':'')+'</div><div class="li-sub">'+macroLine(x)+'</div></div><svg class="ic" style="font-size:15px;color:var(--acc)"><use href="#i-plus"/></svg></div>';
       }).join('');
       /* this used to close the sheet and toast without writing anything,
          so the ring never moved. It writes to the day store now. */
@@ -15150,7 +15216,8 @@ function openLibrary(title,rec,onPick){
         e.onclick=function(){
           var x=list[+e.dataset.i]; if(!x) return;
           if(window.KovaFuel){
-            KovaFuel.add({src:'search', kcal:x.kcal, p:x.p, c:x.c, f:x.f, items:[{n:x.n}]});
+            KovaFuel.add({src:'search', kcal:x.kcal, p:x.p, c:x.c, f:x.f,
+                          fiber:x.fiber, sodium:x.sodium, items:[{n:x.n}]});
           }
           closeSheet();
           toast(x.n+' logged \u00b7 '+x.kcal+' kcal, '+x.p+'g protein');
@@ -15354,9 +15421,34 @@ function openLibrary(title,rec,onPick){
         toast('Logged '+t.k+' kcal \u00b7 '+t.p+'g protein');
       };
     }
+    /* Local list answers instantly; the server then adds USDA FoodData
+       Central + Open Food Facts matches (hundreds of thousands of foods).
+       Offline or signed out, the local list is what you get. */
+    var fsTimer=null, fsSeq=0;
     document.getElementById('foodSearch').addEventListener('input',function(){
-      var q=this.value.toLowerCase();
-      drawResults(q?DB.filter(function(x){return x.n.toLowerCase().indexOf(q)>-1}):DB.slice(0,5));
+      var q=this.value.trim().toLowerCase();
+      var local=q?DB.filter(function(x){return x.n.toLowerCase().indexOf(q)>-1}):DB.slice(0,5);
+      drawResults(local);
+      clearTimeout(fsTimer);
+      if(q.length<2||!window.KovaLink||!KovaLink.server()) return;
+      var seq=++fsSeq;
+      fsTimer=setTimeout(function(){
+        var box=document.getElementById('foodResults');
+        if(box) box.insertAdjacentHTML('beforeend','<div class="sub" id="fsMore" style="padding:6px 2px">Searching the food database\u2026</div>');
+        KovaLink.api('/food/search?q='+encodeURIComponent(q)).then(function(r){ return r.ok?r.json():{items:[]}; })
+          .catch(function(){ return {items:[]}; })
+          .then(function(j){
+            if(seq!==fsSeq) return;               /* a newer keystroke won */
+            var more=(j.items||[]).map(function(x){
+              return {n:x.n, kcal:x.kcal, p:x.p||0, c:x.c||0, f:x.f||0, fiber:x.fiber, sodium:x.sodium, src:x.src};
+            });
+            drawResults(local.concat(more));
+            if(!more.length){
+              var b=document.getElementById('foodResults');
+              if(b) b.insertAdjacentHTML('beforeend','<div class="sub" style="padding:6px 2px">No database matches. Try a simpler name, or scan the barcode.</div>');
+            }
+          });
+      },350);
     });
   }
   var sb=document.getElementById('scanBtn'); if(sb) sb.onclick=function(){foodSheet('scan')};
@@ -23919,9 +24011,11 @@ window.KovaModel=(function(){
            range is 0-1 and there is no seed parameter, so 0 is the strongest
            consistency lever available. It is near-determinism, not a
            guarantee: identical input can still differ across calls. */
+        /* opts.temperature is deliberately not forwarded: current Claude
+           models reject non-default sampling params with a 400, which is
+           what made photo logging fail with a personal key. */
         opts=opts||{};
         var body={model:model,max_tokens:opts.max_tokens||900,system:sys,messages:msgs};
-        if(typeof opts.temperature==='number') body.temperature=opts.temperature;
         return {
           headers:{'content-type':'application/json','x-api-key':key,
                    'anthropic-version':'2023-06-01',
@@ -24004,8 +24098,30 @@ window.KovaModel=(function(){
       +'about this person that is not in that line.';
   }
 
+  /* Kova's own backend: same Messages body as 'anthropic', sent to /api/ai
+     with the Firebase sign-in instead of a key. The server pins the model and
+     limits. Non-enumerable so the Settings provider picker does not list it -
+     it is the default, not a choice. */
+  Object.defineProperty(PROVIDERS,'kova',{enumerable:false,value:{
+    n:'Kova', model:'server',
+    get url(){ return (window.KovaLink&&KovaLink.server()||'')+'/ai'; },
+    build:function(key,model,sys,msgs,opts){
+      var r=PROVIDERS.anthropic.build('',model,sys,msgs,opts);
+      return {headers:{'content-type':'application/json',
+                       'authorization':'Bearer '+(window.__kovaIdToken||'')}, body:r.body};
+    },
+    read:function(d){ return PROVIDERS.anthropic.read(d); }
+  }});
+  function serverReady(){
+    try{
+      return !!(window.KovaLink&&KovaLink.server()&&window.__kovaIdToken);
+    }catch(e){ return false; }
+  }
+
   function cfg(){
     var c=(window.KP&&KP.get('model'))||{};
+    /* a personal key wins; otherwise the included assistant, once signed in */
+    if(!c.key && serverReady()) return {p:'kova', key:'server', model:'server'};
     return {p:c.p||'anthropic', key:c.key||'', model:c.model||PROVIDERS[c.p||'anthropic'].model};
   }
   function set(p,key,model){
@@ -24572,7 +24688,11 @@ window.KovaTalk=(function(){
   }
 
   function modelSheet(){
-    var c=KovaModel.cfg(), prov=c.p;
+    var c=KovaModel.cfg();
+    var included=c.p==='kova';
+    /* this sheet edits the personal key only; the included assistant is not a key */
+    if(included) c={p:'anthropic',key:'',model:''};
+    var prov=c.p;
     function draw(){
       var P=KovaModel.providers[prov];
       var h='<div class="grab"></div>'
@@ -24580,9 +24700,12 @@ window.KovaTalk=(function(){
         +'<div class="title-s" style="font-size:18px">Answer anything</div>'
         +'<div class="iconbtn" onclick="closeSheet()" style="border-radius:50%;width:28px;height:28px"><svg class="ic"><use href="#i-x"/></svg></div></div>'
         +'<div class="sub" style="margin-bottom:13px;font-size:10.5px;line-height:1.5">'
-        +'Kova answers from your own data on its own. Connect a model and it can answer everything else too, '
-        +'in the same voice, in the same conversation. Your key is stored on this device and used only for '
-        +'questions Kova cannot answer itself.</div>'
+        +(included
+          ? 'The Kova assistant is included with your account and already on. Add your own key only if you '
+            +'want answers billed to your own Anthropic or OpenAI account instead.'
+          : 'Kova answers from your own data on its own. Connect a model and it can answer everything else too, '
+            +'in the same voice, in the same conversation. Your key is stored on this device and used only for '
+            +'questions Kova cannot answer itself.')+'</div>'
         +'<div class="lbl" style="margin-bottom:7px">PROVIDER</div>'
         +'<div style="display:flex;gap:6px;margin-bottom:13px">'
         +Object.keys(KovaModel.providers).map(function(k){
@@ -24595,7 +24718,7 @@ window.KovaTalk=(function(){
         +'<div class="lbl">MODEL</div>'
         +'<input id="mdModel" class="field" placeholder="'+P.model+'" value="'+(c.model||'')+'" style="margin-bottom:14px"/>'
         +'<button class="btn" id="mdSave">Connect</button>'
-        +(KovaModel.connected()?'<button class="btn ghost" id="mdClear" style="margin-top:8px">Disconnect</button>':'')
+        +(c.key?'<button class="btn ghost" id="mdClear" style="margin-top:8px">Disconnect</button>':'')
         +'<div class="sub" style="font-size:9px;margin-top:12px;opacity:.65;line-height:1.5">'
         +'A browser key can be read by anyone with this device. Use a key you can revoke, and do not put '
         +'one on a shared phone. Kova works fully without this.</div>';
@@ -24720,12 +24843,12 @@ window.KovaTalk=(function(){
 
   // ================= HEALTH DATA CONNECT =================
   var SOURCES=[
-    {id:'health', n:'Apple Health',      d:'Sleep, heart rate, HRV, steps, workouts, weight', req:true,
-     why:'The main one. Most watches and rings feed into Apple Health, so this covers nearly everything.'},
-    {id:'watch',  n:'Apple Watch',       d:'Live heart rate, sleep stages, wrist temperature', req:false,
-     why:'Gets your sleep stages and heart rate without you logging anything.'},
-    {id:'third',  n:'Oura, Whoop, Garmin, Fitbit', d:'Recovery, HRV, readiness', req:false,
-     why:'These feed into Apple Health through their own apps. Connect Health first.'},
+    {id:'health', n:'Any smartwatch or ring', d:'Sleep, heart rate, HRV, steps, workouts, weight', req:true,
+     why:'Apple Watch, Garmin, Samsung, Amazfit, Huawei and unbranded watches, through Apple Health or Health Connect on your phone.'},
+    {id:'third',  n:'Oura, WHOOP, Fitbit, Withings', d:'Recovery, HRV, readiness, sleep stages', req:false,
+     why:'Sign in once and Kova pulls straight from their servers.'},
+    {id:'watch',  n:'Bluetooth heart rate', d:'Live heart rate and a morning HRV reading', req:false,
+     why:'Chest straps and watches that broadcast heart rate. Chrome on Android or a computer.'},
     {id:'cal',    n:'Calendar',          d:'Training windows and focus blocks', req:false,
      why:'Lets Kova plan your hardest work around your stress peak.'},
     {id:'notif',  n:'Notifications',     d:'Bedtime, water, meals, medication', req:true,
@@ -24866,12 +24989,18 @@ window.KovaTalk=(function(){
   }
 
   /* health + watch cannot be toggled on; they are on when data arrives */
-  var LIVE_SOURCES = {health:1, watch:1, cal:1};
+  var LIVE_SOURCES = {health:1, cal:1};
   /* connect list id -> provider name on the integrations server */
   var OAUTH_SOURCES = {cal:'google'};
   function isLiveSource(id){ return !!LIVE_SOURCES[id]; }
 
   function sourceState(id){
+    if(id==='third') return (window.KovaDevices && KovaDevices.linkedWearables().length) ? 'on' : 'off';
+    if(id==='notif') return (window.Notification && Notification.permission==='granted') ? 'on' : 'off';
+    if(id==='watch'){
+      var KHs = window.KovaHealth && KovaHealth.all();
+      return (KHs && KHs.src==='bluetooth' && Date.now()-KHs.ts < 24*3600e3) ? 'on' : 'off';
+    }
     if(OAUTH_SOURCES[id]){
       return (window.KovaLink && KovaLink.linked(OAUTH_SOURCES[id])) ? 'on' : 'off';
     }
@@ -24975,9 +25104,7 @@ window.KovaTalk=(function(){
           if(act === 'connect'){
             syncToast('Opening Google sign-in\u2026');
             KL.connect('google').then(function(r){
-              syncToast(r === 'linked'    ? 'Calendar connected'
-                      : r === 'no-server' ? 'The relay is not deployed yet \u2014 tap for what it needs'
-                      : 'Sign-in did not complete');
+              syncToast(KL.resultText(r, 'Calendar'));
               paintConnect();
               if(r === 'linked') calendarSheet();
             });
@@ -25160,7 +25287,8 @@ window.KovaTalk=(function(){
       });
     }, 60);
   }
-  window.__watchSetup = watchSetupSheet;
+  window.__watchSetup = function(){ if(window.KovaDevices) KovaDevices.hub(); else watchSetupSheet(); };
+  window.paintConnect = function(){ paintConnect(); };
 
   /* true when a sync has landed recently enough to be worth trusting */
   function syncLive(){
@@ -25180,7 +25308,7 @@ window.KovaTalk=(function(){
     var head = fr === 'none' ? 'No watch data yet'
              : n + ' field' + (n === 1 ? '' : 's') + ' \u00b7 ' + KH.ageText();
     var sub  = fr === 'none'
-        ? 'Run the Kova Sync shortcut on your iPhone to send Apple Health data over.'
+        ? 'Connect a watch below and your real numbers replace the sample ones.'
         : fr === 'fresh' ? 'Readings are current. Kova is showing your real numbers.'
         : fr === 'aging' ? 'Getting old. Run the shortcut again for a current picture.'
         : 'Stale. These numbers are old enough to be misleading.';
@@ -25252,7 +25380,7 @@ window.KovaTalk=(function(){
         if(b){ ev.stopPropagation(); syncAct(b.getAttribute('data-act')); }
       },true);
     }
-    var c=conn(), done=SOURCES.filter(function(x){return c[x.id]}).length;
+    var done=SOURCES.filter(function(x){return sourceState(x.id)==='on'}).length;
     el.innerHTML= syncCardHTML() +
       '<div class="card" style="padding:12px 13px;margin-bottom:8px;'+(done<2?'border-color:var(--warn)':'')+'">'
       +'<div style="display:flex;align-items:center;gap:10px">'
@@ -25279,14 +25407,20 @@ window.KovaTalk=(function(){
     el.querySelectorAll('.connopt').forEach(function(e){
       e.onclick=function(){
         var k=e.dataset.i;
-        /* these two cannot be switched on by tapping; they need real setup */
+        /* nothing here is a toggle: each row opens its real setup */
         if(OAUTH_SOURCES[k]){ calendarSheet(); return; }
-        if(isLiveSource(k)){ watchSetupSheet(); return; }
-        var c2=conn();
-        c2[k]=!c2[k]; KP.set('connected',c2); paintConnect();
-        toast(c2[k]
-          ? SOURCES.filter(function(x){return x.id===k})[0].n+' connected.'
-          : 'Disconnected.');
+        if(k==='third'){ if(window.KovaDevices) KovaDevices.cloudSheet(); return; }
+        if(k==='watch'){ if(window.KovaDevices) KovaDevices.bleSheet(); return; }
+        if(k==='health'){ if(window.KovaDevices) KovaDevices.hub(); return; }
+        if(k==='notif'){
+          if(!window.Notification){ toast('This browser does not support notifications. On iPhone, add Kova to your Home Screen first.'); return; }
+          if(Notification.permission==='denied'){ toast('Notifications are blocked. Turn them on in your browser or phone settings.'); return; }
+          Notification.requestPermission().then(function(r){
+            toast(r==='granted'?'Notifications on.':'Notifications not allowed.');
+            paintConnect();
+          });
+          return;
+        }
       };
     });
   }
@@ -25493,10 +25627,10 @@ window.KovaTalk=(function(){
    Replaces the voice assistant. There is no audio path any more: no
    speech synthesis, no recognition, no wake word.
 
-   Answers come from a real model through the kovaChat Cloud Function
-   (functions/index.js), which holds the API key server-side and grounds
-   every reply in functions/knowledge.js plus a snapshot of THIS person's
-   data built below. When the function is unreachable - signed out,
+   Answers come from Claude through POST /api/chat (server/ai.mjs on
+   Netlify), which holds the API key server-side and grounds every reply
+   in a snapshot of THIS person's data built below. When the backend is
+   unreachable - signed out,
    offline, or not deployed yet - it falls back to the on-device
    KovaBrain corpus and says so in the footer, rather than quietly
    pretending the small engine is the real one.
@@ -25723,7 +25857,7 @@ window.KovaChat=(function(){
 
   function backend(){
     try{
-      return !!(window.firebase&&firebase.functions&&window.KOVA_FB&&KOVA_FB.ok
+      return !!(window.KovaLink&&KovaLink.server()&&window.KOVA_FB&&KOVA_FB.ok
         &&KOVA_FB.auth&&KOVA_FB.auth.currentUser);
     }catch(e){ return false; }
   }
@@ -25769,28 +25903,31 @@ window.KovaChat=(function(){
       return;
     }
     foot.textContent='';
-    var call=firebase.functions().httpsCallable('kovaChat');
     var msgs=hist().filter(function(m){ return !m.err; })
       .map(function(m){ return {role:m.role,content:m.content}; });
-    call({messages:msgs,pillar:pillarNow(),snapshot:snapshot()})
+    KovaLink.api('/chat',{method:'POST',body:{messages:msgs,pillar:pillarNow(),snapshot:snapshot()}})
       .then(function(r){
-        var loc=window.KovaReason?KovaReason.answer(text):null;
-        done((r&&r.data&&r.data.text)||'No reply came back.',
-             loc?{links:loc.links,viz:loc.ok?loc.viz:null,q:text}:{});
+        return r.json().catch(function(){ return {}; }).then(function(j){ return {status:r.status,j:j}; });
       })
-      .catch(function(e){
-        var code=(e&&e.code)||'';
-        /* not deployed / unreachable: fall back rather than dead-end */
-        if(/not-found|unavailable|internal|deadline/.test(code)){
-          foot.textContent='Assistant unreachable \u00b7 answered offline';
-          doneR(localAnswer(text));
-        } else if(/resource-exhausted/.test(code)){
-          done('You have hit today\u2019s chat limit. It resets tomorrow.',{err:true});
-        } else if(/unauthenticated/.test(code)){
+      .then(function(x){
+        if(x.status===200){
+          var loc=window.KovaReason?KovaReason.answer(text):null;
+          done((x.j&&x.j.text)||'No reply came back.',
+               loc?{links:loc.links,viz:loc.ok?loc.viz:null,q:text}:{});
+        } else if(x.status===429){
+          done('You have hit today\u2019s assistant limit. It resets tomorrow.',{err:true});
+        } else if(x.status===401){
           done('Sign in to use the full assistant.',{err:true});
         } else {
-          done('Something went wrong ('+(code||'error')+'). Try again.',{err:true});
+          /* 503 = not configured, 404 = old deploy, 5xx = down: answer offline
+             rather than dead-end */
+          foot.textContent='Assistant unreachable \u00b7 answered offline';
+          doneR(localAnswer(text));
         }
+      })
+      .catch(function(){
+        foot.textContent='Assistant unreachable \u00b7 answered offline';
+        doneR(localAnswer(text));
       });
   }
 
@@ -28591,7 +28728,7 @@ window.WorkOS=(function(){
   /* ids here ride a real account via KovaLink; everything else has no
      provider in the server yet, so it can only ever be honestly disconnected */
   window.WORKOS_OAUTH = {calendar:'google', meet:'google', youtube:'youtube',
-                          linkedin:'linkedin', tiktok:'tiktok'};
+                          linkedin:'linkedin', tiktok:'tiktok', instagram:'instagram', x:'x'};
 
   function integration(id){
     var prov = window.WORKOS_OAUTH[id];
@@ -29043,10 +29180,10 @@ window.KovaStudio=(function(){
                kind:'video', note:'Needs a Professional account linked to a Page.'},
     youtube:  {n:'YouTube',   prov:'youtube',  cap:5000, mode:'direct',
                kind:'video', note:'Direct upload once the account is linked.'},
-    linkedin: {n:'LinkedIn',  prov:'linkedin', cap:3000, mode:'draft',
-               kind:'text',  note:'Direct posting needs LinkedIn Partner access.'},
-    x:        {n:'X',         prov:'x',        cap:280,  mode:'draft',
-               kind:'text',  note:'Posts with links are billed per request.'}
+    linkedin: {n:'LinkedIn',  prov:'linkedin', cap:3000, mode:'direct',
+               kind:'text',  note:'Posts to your own profile. Company pages need LinkedIn approval.'},
+    x:        {n:'X',         prov:'x',        cap:280,  mode:'direct',
+               kind:'text',  note:'Posts straight to your account. X bills API posts per request.'}
   };
   var ORDER=['tiktok','instagram','youtube','linkedin','x'];
 
@@ -29461,7 +29598,9 @@ window.KovaStudio=(function(){
         body:{platform:v.platform,mode:v.mode,title:v.title||'',
               caption:v.caption||'',tags:v.tags||[]}
       }).then(function(r){
-        results.push({platform:v.platform,ok:!!r,mode:v.mode});
+        /* the server answers {ok:false, note} when a platform refuses, e.g. a
+           video platform with no video attached - that is not a success */
+        results.push({platform:v.platform,ok:!!(r&&r.ok),mode:v.mode,note:(r&&r.note)||''});
       }).catch(function(){
         results.push({platform:v.platform,ok:false,mode:v.mode});
       }).then(function(){
@@ -29515,8 +29654,8 @@ window.KovaStudio=(function(){
     var offs=st.plats.filter(function(k){ return modeOf(k)==='off'; });
     var note=document.getElementById('wcPlatNote');
     if(!haveServer()){
-      note.innerHTML='No integrations server set. Kova will compose and queue, '
-        +'but cannot publish until the Worker is deployed and its address is set in Settings.';
+      note.innerHTML='Publishing needs the Kova server, which runs on the deployed site. '
+        +'Open Kova from its web address (not a local file) and sign in.';
     } else if(offs.length){
       note.innerHTML=esc(offs.map(function(k){return P[k].n}).join(', '))
         +' not linked yet \u2014 those will be composed and held in the queue.';
@@ -29877,7 +30016,7 @@ window.KovaStudio=(function(){
     var uid = (window.KovaLink && KovaLink.uid && KovaLink.uid()) || '';
     var ctl = (typeof AbortController!=='undefined') ? new AbortController() : null;
     var timer = ctl && setTimeout(function(){ ctl.abort(); }, 9000);
-    return fetch(srv+'/inbound?u='+encodeURIComponent(uid), ctl?{signal:ctl.signal,cache:'no-store'}:{cache:'no-store'})
+    return KovaLink.api('/inbound', ctl?{signal:ctl.signal}:{})
       .then(function(r){
         if(timer) clearTimeout(timer);
         /* 404 is the expected answer from a Worker built before the
@@ -30016,9 +30155,9 @@ window.KovaStudio=(function(){
         head='Nothing new'; body='Accounts are linked and the server answered with an empty feed. '
           +'Nothing has come in since the last read.';
       }else if(res.state==='no-endpoint'){
-        head='Worker is up, inbound is not';
-        body='The integrations Worker answered but has no /inbound route. Deploy the current '
-          +'integrations-worker.js and this fills in on the next open.';
+        head='Server is out of date';
+        body='The Kova server answered but has no /inbound route. Redeploy from GitHub '
+          +'and this fills in on the next open.';
       }else if(res.state==='no-server'){
         head='No server set';
         body='Accounts show as linked from a cached status, but no Worker URL is configured. '
@@ -30780,7 +30919,7 @@ window.WorkAI=(function(){
     if(!srv) return Promise.resolve({state:'no-server'});
     var uid=(window.KovaLink&&KovaLink.uid&&KovaLink.uid())||'';
     var ctl=(typeof AbortController!=='undefined')?new AbortController():null;
-    var timer=ctl&&setTimeout(function(){ ctl.abort(); },9000);
+    var timer=ctl&&setTimeout(function(){ ctl.abort(); },26000);   /* generation, not a lookup */
 
     /* Send the open tasks. toProposals drops any id the local store does not
        know, so an engine that cannot see the real ids can only ever produce
@@ -30796,8 +30935,8 @@ window.WorkAI=(function(){
                 });
     }catch(e){}
 
-    return fetch(srv+'/script?u='+encodeURIComponent(uid),{
-      method:'POST', headers:{'Content-Type':'application/json'},
+    return KovaLink.api('/script',{
+      method:'POST',
       signal:ctl?ctl.signal:undefined,
       body:JSON.stringify({
         universal_workflow_ingestion:{
@@ -31610,7 +31749,9 @@ window.WorkAI=(function(){
   var PUBLISH_GATE = {
     youtube:  'Reading works now. Uploads from this app stay private until the project passes Google\u2019s API audit \u2014 that\u2019s Google\u2019s rule, not a bug here.',
     tiktok:   'Reading works now. Posting needs TikTok\u2019s own app review first; until then posts are restricted to private.',
-    linkedin: 'Reading works now. Posting needs LinkedIn\u2019s Community Management API approval first.'
+    linkedin: 'Posts go to your own profile. Company pages need LinkedIn\u2019s Community Management API approval.',
+    instagram:'Needs a Business or Creator account. Every post needs a photo or video.',
+    x:        'Text posts go straight to your account. X bills API posts per request on the developer plan.'
   };
 
   function intSheet(id){
@@ -31630,7 +31771,7 @@ window.WorkAI=(function(){
         +'<div class="srcfact-v">Not connected</div></div>'
         +'<div class="srcfact"><div class="srcfact-k">Blocked by</div>'
         +'<div class="srcfact-v">Not built yet for '+esc(pl.n)+'</div></div>'
-        +'<div class="sub" style="margin-top:12px;line-height:1.55">Calendar, Meet, YouTube, LinkedIn and TikTok '
+        +'<div class="sub" style="margin-top:12px;line-height:1.55">Calendar, Meet, YouTube, LinkedIn, TikTok, Instagram and X '
         +'have a real connection now. '+esc(pl.n)+' does not have a provider registered on the server yet \u2014 '
         +'that is separate work, not a missing server.</div>'
         +'<button class="btn" style="margin-top:16px" onclick="closeSheet()">Understood</button>');
@@ -31649,9 +31790,8 @@ window.WorkAI=(function(){
     if(!srv){
       body += '<div class="sub" style="margin-top:13px;line-height:1.5">'+esc(pl.feeds)+'</div>'
         + '<div class="sub" style="margin-top:8px;line-height:1.5">'
-        + 'This one is not reachable yet. Kova is a static page, so it has nowhere safe '
-        + 'to keep the login \u2014 a small relay you deploy once holds it instead. It is '
-        + 'already written and waiting in your Kova folder.</div>'
+        + 'Connecting accounts runs through the Kova server, which lives on the deployed '
+        + 'site. Open Kova from its web address and sign in, and this turns on.</div>'
         + '<div class="card linkbtn" data-act="server" data-prov="'+prov+'" style="padding:11px 12px;margin-top:12px;cursor:pointer;border-color:var(--acc-brd)">'
         + '<div style="font-size:12px;font-weight:700;color:var(--txt,#FFFFFF)">What this needs</div>'
         + '<div class="sub" style="margin-top:3px">One deploy turns on every account at once</div></div>';
@@ -31694,9 +31834,7 @@ window.WorkAI=(function(){
           if(act === 'connect'){
             toast('Opening '+pl.n+' sign-in\u2026');
             KL.connect(p).then(function(r){
-              toast(r === 'linked'    ? pl.n+' connected'
-                      : r === 'no-server' ? 'The relay is not deployed yet \u2014 tap for what it needs'
-                      : 'Sign-in did not complete');
+              toast(KL.resultText(r, pl.n));
               drawIntegrations();
               if(r === 'linked') intSheet(id);
             });
@@ -33976,8 +34114,10 @@ window.KovaAuth = (function(){
     var why = state==='no-server'
         ? 'No sign-in server is configured yet, so Kova has nowhere to send the code from.'
       : state==='no-endpoint'
-        ? 'The relay Worker is up but has no /auth/code route yet. Deploy the current relay-worker.js and this works.'
-      : 'The sign-in server did not answer. It may not be deployed yet, or you may be offline.';
+        ? 'The Kova server is out of date. Redeploy it from GitHub and this works.'
+      : state==='error'
+        ? 'Email codes are not switched on yet (RESEND_API_KEY on the server). Use Google, Apple or skip for now.'
+      : 'The sign-in server did not answer. You may be offline.';
 
     inner.innerHTML =
       '<div class="af-mark">kova</div>'
@@ -34051,7 +34191,13 @@ window.KovaAuth = (function(){
         if(r.state==='ok' && r.body && r.body.ok){
           var acct={provider:'email',name:(r.body.name||email.split('@')[0]),email:email,ts:Date.now()};
           wr(AK,acct);
-          promptBiometric(function(){ firstRunDone(); });
+          /* the server vouches for the email with a Firebase custom token, so
+             the code sign-in lands in the same account as Google/password */
+          var FB=window.KOVA_FB;
+          var into=(r.body.token&&FB&&FB.auth)
+            ? FB.auth.signInWithCustomToken(r.body.token).catch(function(){})
+            : Promise.resolve();
+          into.then(function(){ promptBiometric(function(){ firstRunDone(); }); });
           return;
         }
         boxes.forEach(function(b){ b.classList.add('bad'); });
@@ -34067,28 +34213,62 @@ window.KovaAuth = (function(){
     setTimeout(function(){ boxes[0].focus(); },60);
   }
 
-  /* --- OAuth flow (simulated — needs deployed Worker for real handshake) --- */
+  /* --- Google / Apple sign-in, through Firebase Auth ---------------
+     The same account cloud sync, the assistant and linked accounts use.
+     Popup first; redirect when the popup is blocked (iOS home-screen
+     installs block popups outright). Apple needs the Apple provider
+     enabled in the Firebase console - see SETUP.md. */
   function oauthFlow(provider){
-    /* In production with a deployed relay/integrations Worker, this would
-       open a popup to the provider's consent screen and poll for a token.
-       As a static file we simulate the success path so the UI is testable. */
+    var FB = window.KOVA_FB;
     var provName = provider === 'google' ? 'Google' : 'Apple';
-    var acct = {
-      provider: provider,
-      name: 'Isa',
-      email: provider === 'google' ? 'isa@gmail.com' : 'isa@icloud.com',
-      ts: Date.now()
-    };
+    if(!FB || !FB.auth){
+      showAuthErr(provName + ' sign-in needs a connection. Try again when you are online.');
+      return;
+    }
+    var p = provider === 'google'
+      ? new firebase.auth.GoogleAuthProvider()
+      : new firebase.auth.OAuthProvider('apple.com');
+    if(provider === 'apple'){ p.addScope('email'); p.addScope('name'); }
 
-    /* Show a brief "connecting" state, then land on PIN setup */
     inner.innerHTML =
       '<div class="auth-mark">k<span>ova</span></div>'
       + '<div class="auth-sub">Connecting to ' + provName + '\u2026</div>';
 
-    setTimeout(function(){
+    function landed(user){
+      var acct = {
+        provider: provider,
+        name: (user && user.displayName) || ((user && user.email) || '').split('@')[0] || provName,
+        email: (user && user.email) || '',
+        uid: user && user.uid,
+        ts: Date.now()
+      };
       wr(AK, acct);
+      try { if(window.KovaAnalytics) KovaAnalytics.track('login', {method: provider}); } catch(e){}
       promptBiometric(function(){ firstRunDone(); });
-    }, 900);
+    }
+
+    FB.auth.signInWithPopup(p)
+      .then(function(r){ landed(r.user); })
+      .catch(function(e){
+        var c = (e && e.code) || '';
+        if(c === 'auth/popup-blocked' || c === 'auth/operation-not-supported-in-this-environment'){
+          FB.auth.signInWithRedirect(p);
+          return;
+        }
+        renderWelcome();
+        if(c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+        showAuthErr(c === 'auth/operation-not-allowed'
+          ? provName + ' sign-in is not switched on for this app yet.'
+          : c === 'auth/unauthorized-domain'
+          ? 'This web address is not on the Firebase authorised domains list yet.'
+          : c === 'auth/network-request-failed'
+          ? 'No connection. Try again when you are online.'
+          : 'Sign-in did not complete (' + (c || 'error') + ').');
+      });
+  }
+  function showAuthErr(msg){
+    var el = document.getElementById('afErr');
+    if(el) el.textContent = msg;
   }
 
   /* --- biometric enrollment prompt --- */
@@ -34816,139 +34996,77 @@ window.KovaWorkspace=(function(){
 
 
 <script>
-/* ================= RELAY SETUP EXPLAINER =======================
-   "Set the server address" is accurate and tells the user nothing.
-   What it means: linking any outside account (Google, Drive, YouTube,
-   TikTok, LinkedIn) needs somewhere to hold the access token. A page
-   served as a static file has no such place — anything it stored
-   would be readable by anyone who opened devtools. The Worker IS
-   that place, and it is written but not deployed.
-
-   So the honest UI names the one command that fixes it, shows what
-   is still blocked until then, and lets the address be pasted when
-   it exists. Nothing here pretends to connect anything.
+/* ================= SERVER STATUS ===============================
+   What the Kova server (/api on Netlify) can do right now, read live
+   from GET /api/ping. Each row is a real capability that is either
+   switched on (its keys are set in Netlify) or not - no guessing.
    ============================================================== */
 window.KovaRelay=(function(){
   'use strict';
   function esc(x){var d=document.createElement('div');d.textContent=x==null?'':String(x);return d.innerHTML}
   function toast(m){ if(window.syncToast)syncToast(m); else if(window.KovaToast)KovaToast(m); }
 
-  /* everything that is dark until the Worker answers */
-  var BLOCKED=[
-    ['Google Calendar','plans training around what is already booked'],
-    ['Google Drive',   'reads documents you point Kova at'],
-    ['Gmail',          'summarises what came in, never replies for you'],
-    ['YouTube',        'direct upload once the account is linked'],
-    ['TikTok / Instagram','hands over a draft for you to post'],
-    ['LinkedIn / X',   'drafts, and direct posting with partner access']
-  ];
-
   function state(){
     var KL=window.KovaLink;
     return { srv: KL?KL.server():'', has: !!(KL&&KL.server()) };
   }
 
+  function row(on, name, sub){
+    return '<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 2px;'
+      +'border-top:.5px solid rgba(255,255,255,.07)">'
+      +'<span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;'
+      +'background:'+(on?'var(--good)':'rgba(255,255,255,.22)')+'"></span>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+esc(name)+'</div>'
+      +'<div class="sub" style="margin-top:2px">'+esc(sub)+'</div></div></div>';
+  }
+
   function sheet(){
     var st=state();
     var h='<div class="grab"></div><div style="padding:2px 4px 20px">'
-      + '<div class="title-s" style="font-size:19px;margin-bottom:3px">Connecting accounts</div>'
-      + '<div class="sub" style="line-height:1.55;margin-bottom:14px">'
-      + 'Kova runs as a static page, which means it has nowhere safe to keep an '
-      + 'access token \u2014 anything it saved locally could be read by anyone who '
-      + 'opened the browser tools. The small relay handles that instead. It is '
-      + 'written and sitting in your Kova folder; it has not been deployed yet.'
+      + '<div class="title-s" style="font-size:19px;margin-bottom:3px">Kova server</div>'
+      + '<div class="sub" style="line-height:1.55;margin-bottom:12px">'
+      + 'Linked accounts, the assistant, food search and automatic watch sync run on the '
+      + 'Kova server, which deploys with the site. Logins are kept there, encrypted, never '
+      + 'on this device.</div>'
+      + '<div class="card linkbtn2" data-act="addr" style="padding:11px 13px;margin-bottom:12px;cursor:pointer">'
+      + '<div style="font-size:12px;font-weight:700;color:var(--txt,#FFFFFF)">Server address</div>'
+      + '<div class="sub" style="margin-top:3px;word-break:break-all">'
+      + (st.has?esc(st.srv):'None — open Kova from its web address')+'</div></div>'
+      + '<div id="kovaSrvRows"><div class="sub">'+(st.has?'Checking…':'')+'</div></div>'
       + '</div>';
-
-    if(!st.has){
-      h+='<div class="card" style="padding:13px 14px;margin-bottom:12px;'
-        +'border-color:var(--acc-brd)">'
-        +'<div style="font-size:11px;font-weight:700;letter-spacing:.1em;'
-        +'text-transform:uppercase;color:var(--acc);margin-bottom:7px">One command</div>'
-        +'<div style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;'
-        +'font-size:12.5px;color:var(--txt,#FFFFFF);background:rgba(255,255,255,.06);'
-        +'border-radius:9px;padding:10px 11px;word-break:break-all;user-select:all">'
-        +'npx wrangler deploy</div>'
-        +'<div class="sub" style="margin-top:8px;line-height:1.5">'
-        +'Run it from <b style="color:var(--txt,#FFFFFF)">workers/integrations/</b> on your '
-        +'own machine. Cloudflare prints an address ending in '
-        +'<b style="color:var(--txt,#FFFFFF)">.workers.dev</b> \u2014 paste that below. '
-        +'This one deploy turns on every row underneath at once.</div></div>';
-    }
-
-    h+='<div class="card linkbtn2" data-act="addr" style="padding:12px 13px;'
-      +'margin-bottom:14px;cursor:pointer">'
-      +'<div style="font-size:12px;font-weight:700;color:var(--txt,#FFFFFF)">'
-      +(st.has?'Relay address':'Paste the address once you have it')+'</div>'
-      +'<div class="sub" style="margin-top:3px;word-break:break-all">'
-      +(st.has?esc(st.srv):'Not set yet')+'</div></div>';
-
-    h+='<div class="sub" style="margin-bottom:8px">'
-      +(st.has?'Should be reachable now:':'Dark until then:')+'</div>';
-
-    h+=BLOCKED.map(function(b){
-      return '<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 2px;'
-        +'border-top:.5px solid rgba(255,255,255,.07)">'
-        +'<span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;'
-        +'background:'+(st.has?'var(--good)':'rgba(255,255,255,.22)')+'"></span>'
-        +'<div style="flex:1;min-width:0">'
-        +'<div style="font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+esc(b[0])+'</div>'
-        +'<div class="sub" style="margin-top:2px">'+esc(b[1])+'</div></div></div>';
-    }).join('');
+    if(window.openSheet) openSheet(h); else return;
 
     if(st.has){
-      h+='<div class="card linkbtn2" data-act="test" style="padding:11px 6px;margin-top:13px;'
-        +'text-align:center;cursor:pointer;font-size:12px;font-weight:600">Test the connection</div>'
-        +'<div class="card linkbtn2" data-act="clear" style="padding:10px 6px;margin-top:7px;'
-        +'text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--bad)">'
-        +'Forget this address</div>';
+      fetch(st.srv+'/ping',{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
+        var el=document.getElementById('kovaSrvRows'); if(!el) return;
+        var P=j.providers||{}, out='';
+        out+=row(j.storage,'Account storage', j.storage?'On':'Needs FIREBASE_SERVICE_ACCOUNT and TOKEN_ENCRYPTION_KEY');
+        out+=row(j.ai,'Assistant, photo logging, content engine', j.ai?'On':'Needs ANTHROPIC_API_KEY');
+        out+=row(j.mail,'Email sign-in codes', j.mail?'On':'Needs RESEND_API_KEY and MAIL_FROM');
+        Object.keys(P).forEach(function(k){
+          out+=row(P[k].configured, P[k].name, P[k].configured?'Ready to connect':'Needs its app keys on the server');
+        });
+        el.innerHTML=out;
+      }).catch(function(){
+        var el=document.getElementById('kovaSrvRows');
+        if(el) el.innerHTML='<div class="sub">The server did not answer. It may still be deploying, or you are offline.</div>';
+      });
     }
-
-    h+='</div>';
-    if(window.openSheet) openSheet(h); else return;
 
     setTimeout(function(){
       document.querySelectorAll('.sheet .linkbtn2').forEach(function(b){
         if(b.__w) return; b.__w=1;
         b.addEventListener('click',function(ev){
           ev.stopPropagation();
-          var act=b.getAttribute('data-act'), KL=window.KovaLink;
-          if(!KL) return;
-
-          if(act==='addr'){
-            var v=prompt('Paste the address Cloudflare printed.\n'
-                        +'It looks like: https://kova-integrations.<you>.workers.dev',
-                         KL.server()||'https://');
-            if(v===null) return;
-            v=String(v).trim();
-            if(v && !/^https:\/\//i.test(v)){
-              toast('That needs to start with https://'); return;
-            }
-            KL.server(v);
-            toast(KL.server()?'Address saved. Testing\u2026':'Address cleared');
-            if(KL.server()) KL.status().then(function(r){
-              toast(r?'Relay answered \u2014 accounts can link now.'
-                     :'Saved, but nothing answered there yet.');
-              if(window.paintConnect) paintConnect();
-              sheet();
-            });
-            else { if(window.paintConnect) paintConnect(); sheet(); }
-            return;
-          }
-
-          if(act==='test'){
-            toast('Checking\u2026');
-            KL.status().then(function(r){
-              toast(r?'Relay answered.':'No answer. Check it is deployed and the address is exact.');
-            });
-            return;
-          }
-
-          if(act==='clear'){
-            KL.server('');
-            toast('Address cleared');
-            if(window.paintConnect) paintConnect();
-            sheet();
-          }
+          var KL=window.KovaLink; if(!KL) return;
+          var v=prompt('Server address (leave empty to use this site’s own /api):', KL.server()||'');
+          if(v===null) return;
+          v=String(v).trim();
+          if(v && !/^https:\/\//i.test(v)){ toast('That needs to start with https://'); return; }
+          KL.server(v);
+          if(window.paintConnect) paintConnect();
+          sheet();
         });
       });
     },30);
@@ -36481,12 +36599,14 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
 (function(){
   if(!document.getElementById('kdcField')) return;
 
-  var MODES=['Auto','Post','Article','Thread','Document'];
-  var st={target:null, mode:0, files:[]};
+  /* Post now = publish publicly where the platform allows it; Draft = the
+     platform's own review step (YouTube private, TikTok inbox). */
+  var MODES=['Post now','Draft'];
+  var st={target:null, mode:0, files:[]};   /* files: [{name,url,type,up}] */
 
-  /* only platforms that can actually receive a post */
-  var POSTABLE={linkedin:1,x:1,youtube:1,instagram:1,tiktok:1,threads:1,
-                substack:1,medium:1,facebook:1,reddit:1};
+  /* platforms the server has a publisher for (server/publish.mjs) */
+  var POSTABLE={linkedin:1,x:1,youtube:1,instagram:1,tiktok:1};
+  var NEEDS_MEDIA={youtube:'a video',instagram:'a photo or video',tiktok:'a video'};
 
   function targets(){
     if(!window.WorkOS||!WorkOS.platforms) return [];
@@ -36530,26 +36650,56 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
   function paintFiles(){
     var host=document.getElementById('kdcFiles'); if(!host) return;
     host.innerHTML=st.files.map(function(f,i){
-      return '<div class="kdc-f"><span>'+esc0(f)+'</span><i data-x="'+i+'">\u00d7</i></div>';
+      return '<div class="kdc-f"><span>'+esc0(f.name)+(f.up?' \u00b7 uploading\u2026':(f.url?'':' \u00b7 failed'))
+        +'</span><i data-x="'+i+'">\u00d7</i></div>';
     }).join('');
     host.querySelectorAll('[data-x]').forEach(function(el){
       el.onclick=function(){ st.files.splice(+el.dataset.x,1); paintFiles(); paintNote(); };
     });
   }
 
+  function ready(){
+    var body=(document.getElementById('kdcBody')||{}).value||'';
+    var up=st.files.some(function(f){ return f.up; });
+    var media=st.files.some(function(f){ return f.url; });
+    return !!(st.target && body.trim() && !up && (!NEEDS_MEDIA[st.target] || media));
+  }
+
   function paintNote(){
     var n=document.getElementById('kdcNote'), send=document.getElementById('kdcSend');
     var body=(document.getElementById('kdcBody')||{}).value||'';
-    var ready=!!(st.target&&body.trim());
-    if(send) send.className='kdc-send'+(ready?'':' off');
+    if(send) send.className='kdc-send'+(ready()?'':' off');
     if(!n) return;
     if(!st.target){ n.textContent='Pick where it goes. Only connected accounts can be chosen.'; return; }
     if(!body.trim()){ n.textContent='Say what you want posted. Title, caption, or the whole thing.'; return; }
-    /* the honest line. Nothing here publishes yet. */
-    n.textContent='Queues locally \u2014 nothing is published until the integrations '
-      +'Worker is deployed (npx wrangler deploy). '
-      +st.files.length+' attachment'+(st.files.length===1?'':'s')+' will go with it.';
+    if(st.files.some(function(f){ return f.up; })){ n.textContent='Uploading your file\u2026'; return; }
+    if(NEEDS_MEDIA[st.target] && !st.files.some(function(f){ return f.url; })){
+      n.textContent='This one needs '+NEEDS_MEDIA[st.target]+'. Tap the image button to attach it.'; return;
+    }
+    n.textContent=(st.mode===0?'Posts to ':'Sends a draft to ')
+      +(targets().filter(function(p){return p.id===st.target})[0]||{n:st.target}).n+' when you tap send.';
   }
+
+  /* real attachments: uploaded to Firebase Storage under users/<uid>/post,
+     and the download URL is what the platform fetches */
+  var picker=document.createElement('input');
+  picker.type='file'; picker.accept='image/*,video/*'; picker.style.display='none';
+  document.body.appendChild(picker);
+  picker.addEventListener('change',function(){
+    var f=picker.files&&picker.files[0]; picker.value='';
+    if(!f) return;
+    if(!window.KovaMedia){ toast0('Uploads need the app to be online and signed in.'); return; }
+    var rec={name:f.name.slice(0,60), url:'', type:f.type, up:true};
+    st.files=[rec]; paintFiles(); paintNote();
+    KovaMedia.upload('post', f, f.name).then(function(r){
+      rec.url=(r&&(r.url||r.downloadURL))||''; rec.up=false;
+      if(!rec.url) toast0('Upload finished but returned no link.');
+      paintFiles(); paintNote();
+    }).catch(function(e){
+      rec.up=false; paintFiles(); paintNote();
+      toast0('Upload failed: '+((e&&e.message)||'error'));
+    });
+  });
 
   /* ---- wiring ---- */
   var body=document.getElementById('kdcBody');
@@ -36561,38 +36711,53 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
     });
   }
   var add=document.getElementById('kdcAdd');
-  if(add) add.onclick=function(){
-    var nm=prompt('File or document name'); if(!nm) return;
-    st.files.push(String(nm).slice(0,60)); paintFiles(); paintNote();
-  };
+  if(add) add.onclick=function(){ picker.click(); };
   var med=document.getElementById('kdcMedia');
-  if(med) med.onclick=function(){
-    var nm=prompt('Image or video name'); if(!nm) return;
-    st.files.push(String(nm).slice(0,60)); paintFiles(); paintNote();
-  };
+  if(med) med.onclick=function(){ picker.click(); };
   var mode=document.getElementById('kdcMode');
-  if(mode) mode.onclick=function(){
-    st.mode=(st.mode+1)%MODES.length;
+  if(mode){
     document.getElementById('kdcModeL').textContent=MODES[st.mode];
-  };
+    mode.onclick=function(){
+      st.mode=(st.mode+1)%MODES.length;
+      document.getElementById('kdcModeL').textContent=MODES[st.mode];
+      paintNote();
+    };
+  }
+  var sending=false;
   var send=document.getElementById('kdcSend');
   if(send) send.onclick=function(){
-    var txt=(document.getElementById('kdcBody')||{}).value||'';
-    if(!st.target||!txt.trim()) return;
-    var name=(targets().filter(function(p){return p.id===st.target})[0]||{}).n||st.target;
-    /* recorded as a real WorkOS item so the queue survives a reload and is
-       visible somewhere other than a toast */
-    try{
-      WorkOS.create('items',{
-        name:'Queued for '+name+': '+txt.trim().slice(0,60),
-        status:'Queued', priority:'Medium',
-        note:txt.trim()+(st.files.length?('\n\nAttachments: '+st.files.join(', ')):''),
-        due:WorkOS.startOfDay()
-      },'user');
-    }catch(e){}
-    toast0('Queued for '+name+'. It sends once the Worker is deployed.');
-    document.getElementById('kdcBody').value='';
-    st.files=[]; paintFiles(); paintNote();
+    var txt=((document.getElementById('kdcBody')||{}).value||'').trim();
+    if(!ready()||sending) return;
+    var target=st.target;
+    var name=(targets().filter(function(p){return p.id===target})[0]||{}).n||target;
+    var prov=(window.WORKOS_OAUTH||{})[target]||target;
+    var media=st.files.filter(function(f){ return f.url; })[0];
+    sending=true; send.className='kdc-send off';
+    toast0('Sending to '+name+'\u2026');
+    KovaLink.call(prov,{path:'/kova/publish', method:'POST', body:{
+      platform:target, mode:st.mode===0?'direct':'draft',
+      title:txt.split('\n')[0].slice(0,100), caption:txt,
+      media_url:media?media.url:undefined, media_type:media?media.type:undefined
+    }}).then(function(r){
+      sending=false;
+      var ok=!!(r&&r.ok);
+      try{
+        WorkOS.create('items',{
+          name:(ok?'Posted to ':'Failed to post to ')+name+': '+txt.slice(0,60),
+          status:ok?'Completed':'Waiting', priority:'Medium',
+          note:txt+(r&&r.url?'\n\n'+r.url:'')+(r&&r.note?'\n\n'+r.note:''),
+          due:WorkOS.startOfDay()
+        },'user');
+      }catch(e){}
+      if(ok){
+        toast0(r.note||('Posted to '+name+'.'));
+        document.getElementById('kdcBody').value='';
+        st.files=[];
+      }else{
+        toast0((r&&r.note)||('Could not post to '+name+'. Check the account in Settings.'));
+      }
+      paintFiles(); paintNote();
+    });
   };
 
   paintTargets(); paintFiles(); paintNote();
@@ -39480,5 +39645,322 @@ window.KovaLive=(function(){
 })();
 
 </script>
+<script>
+/* ================= KOVA DEVICES ================================
+   Every way a watch, ring, band or strap gets into Kova, in one place.
+
+   1. Sync link   Any watch whose app writes to Apple Health or Health
+                  Connect - Apple Watch, Garmin, Amazfit, Huawei, Samsung
+                  (via Health Connect), and the unbranded Amazon watches
+                  (FitCloudPro, Da Fit, GloryFit, VeryFit...). A phone
+                  bridge app POSTs to a private link; Kova pulls it.
+   2. Cloud       Oura, WHOOP, Fitbit, Withings: sign in once, Kova pulls
+                  sleep/HRV/recovery/steps straight from their APIs.
+   3. Bluetooth   Live heart rate + HRV from anything that broadcasts the
+                  standard Bluetooth heart-rate service (chest straps,
+                  Garmin/Polar/Coros/Amazfit "broadcast HR" mode).
+   All three land in KovaHealth, so every screen reads them the same way.
+   ============================================================== */
+window.KovaDevices=(function(){
+  'use strict';
+  var WEAR=[
+    {id:'oura',    n:'Oura',     d:'Sleep stages, HRV, readiness, temperature'},
+    {id:'whoop',   n:'WHOOP',    d:'Recovery, HRV, sleep, strain'},
+    {id:'fitbit',  n:'Fitbit',   d:'Sleep stages, HRV, steps, SpO2 (incl. Pixel Watch)'},
+    {id:'withings',n:'Withings', d:'ScanWatch sleep, steps, smart-scale weight'}
+  ];
+  var LAST='kova.devices.lastsync';
+  function esc(x){var d=document.createElement('div');d.textContent=x==null?'':String(x);return d.innerHTML}
+  function say(m){ if(window.toast) toast(m); }
+  function KL(){ return window.KovaLink; }
+  function linkedWearables(){
+    return WEAR.filter(function(w){ return KL() && KL().linked(w.id); });
+  }
+  function lastSync(v){
+    if(v!==undefined){ try{ localStorage.setItem(LAST,String(v)); }catch(e){} }
+    try{ return +localStorage.getItem(LAST)||0; }catch(e){ return 0; }
+  }
+  function localDate(){
+    var d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+    return d.toISOString().slice(0,10);
+  }
+
+  /* ---- cloud wearables ------------------------------------------ */
+  function syncWearables(){
+    if(!KL()||!KL().server()||!linkedWearables().length) return Promise.resolve(0);
+    return KL().api('/wearables/sync?date='+localDate()).then(function(r){
+      if(!r.ok) return 0;
+      return r.json().then(function(j){
+        var n=window.KovaHealth?KovaHealth.ingest(j.fields||{},'cloud'):0;
+        if(n) KovaHealth.apply();
+        return n;
+      });
+    }).catch(function(){ return 0; });
+  }
+
+  /* ---- the private sync link (server webhook) -------------------- */
+  function makeLink(){
+    if(!KL()||!KL().server()) return Promise.resolve({error:'Open Kova from its web address to make a sync link.'});
+    return KL().api('/health/key',{method:'POST'}).then(function(r){
+      if(r.status===401) return {error:'Sign in to Kova first.'};
+      if(!r.ok) return {error:'The server could not make a link ('+r.status+').'};
+      return r.json().then(function(j){
+        if(window.KovaHealth) KovaHealth.relay(j.relayUrl);
+        return j;
+      });
+    }).catch(function(){ return {error:'Could not reach the Kova server.'}; });
+  }
+
+  /* ---- everything, quietly, when the app opens or comes back ----- */
+  function syncAll(force){
+    if(!force && Date.now()-lastSync()<20*60e3) return Promise.resolve(0);
+    lastSync(Date.now());
+    var jobs=[syncWearables()];
+    if(window.KovaHealth&&KovaHealth.relay()) jobs.push(KovaHealth.pull().then(function(n){ if(n>0) KovaHealth.apply(); return n>0?n:0; }));
+    return Promise.all(jobs).then(function(a){ return a.reduce(function(x,y){ return x+(y||0); },0); });
+  }
+  window.addEventListener('load',function(){ setTimeout(function(){ syncAll(false); },4000); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) syncAll(false); });
+  window.addEventListener('kova:link',function(){ syncWearables(); });
+
+  /* ---- Bluetooth heart rate ----------------------------------------
+     Standard GATT Heart Rate Service (0x180D). Works in Chrome/Edge on
+     Android, Windows, Mac and ChromeOS. iPhone browsers do not ship Web
+     Bluetooth - that is Apple's rule, not a Kova limitation.          */
+  var ble={dev:null, hr:[], rr:[], t0:0, battery:null, live:0};
+  function bleSupported(){ return !!(navigator.bluetooth&&navigator.bluetooth.requestDevice); }
+
+  function parseHR(dv){
+    var flags=dv.getUint8(0), i=1, hr;
+    if(flags&1){ hr=dv.getUint16(i,true); i+=2; } else { hr=dv.getUint8(i); i+=1; }
+    if(flags&0x08) i+=2;                      /* energy expended, skip */
+    var rr=[];
+    if(flags&0x10){ for(;i+1<dv.byteLength;i+=2) rr.push(dv.getUint16(i,true)/1024*1000); }
+    return {hr:hr, rr:rr};
+  }
+  /* RMSSD over clean beats: drop physiologically impossible intervals and
+     ectopic jumps (>20% from the previous beat) before differencing */
+  function rmssd(rr){
+    var ok=rr.filter(function(x){ return x>=300&&x<=2000; }), d=[];
+    for(var i=1;i<ok.length;i++){
+      if(Math.abs(ok[i]-ok[i-1])/ok[i-1]>0.2) continue;
+      d.push(Math.pow(ok[i]-ok[i-1],2));
+    }
+    if(d.length<20) return null;
+    return Math.round(Math.sqrt(d.reduce(function(a,b){return a+b;},0)/d.length));
+  }
+  function median(a){
+    if(!a.length) return null;
+    var s=a.slice().sort(function(x,y){return x-y;}); return s[Math.floor(s.length/2)];
+  }
+
+  function bleConnect(){
+    if(!bleSupported()) return Promise.reject(new Error('This browser has no Bluetooth. Use Chrome on Android or a computer.'));
+    return navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}], optionalServices:['battery_service']})
+      .then(function(dev){
+        ble.dev=dev; ble.hr=[]; ble.rr=[]; ble.t0=Date.now(); ble.live=0;
+        dev.addEventListener('gattserverdisconnected',function(){ ble.live=0; paintBle(); });
+        return dev.gatt.connect();
+      })
+      .then(function(g){
+        g.getPrimaryService('battery_service')
+          .then(function(s){ return s.getCharacteristic('battery_level'); })
+          .then(function(c){ return c.readValue(); })
+          .then(function(v){ ble.battery=v.getUint8(0); paintBle(); })
+          .catch(function(){});
+        return g.getPrimaryService('heart_rate');
+      })
+      .then(function(s){ return s.getCharacteristic('heart_rate_measurement'); })
+      .then(function(c){
+        c.addEventListener('characteristicvaluechanged',function(e){
+          var m=parseHR(e.target.value);
+          if(m.hr>0){ ble.hr.push(m.hr); ble.live=m.hr; }
+          Array.prototype.push.apply(ble.rr,m.rr);
+          if(ble.hr.length>900) ble.hr.shift();
+          if(ble.rr.length>900) ble.rr.shift();
+          paintBle();
+        });
+        return c.startNotifications();
+      });
+  }
+  function bleStop(){ try{ if(ble.dev&&ble.dev.gatt.connected) ble.dev.gatt.disconnect(); }catch(e){} ble.live=0; }
+
+  function paintBle(){
+    var el=document.getElementById('kovaBleLive'); if(!el) return;
+    var secs=ble.t0?Math.round((Date.now()-ble.t0)/1000):0;
+    var h=rmssd(ble.rr);
+    var canSave=ble.hr.length>=30&&secs>=60;
+    el.innerHTML=ble.dev
+      ? '<div style="display:flex;gap:16px;align-items:baseline;margin:10px 0 4px">'
+        +'<div><div class="big" style="font-size:40px;line-height:1">'+(ble.live||'--')+'</div><div class="sub">bpm</div></div>'
+        +'<div><div class="big" style="font-size:26px;line-height:1">'+(h||'--')+'</div><div class="sub">HRV (RMSSD, ms)</div></div>'
+        +'</div>'
+        +'<div class="sub">'+esc(ble.dev.name||'Device')+(ble.battery!=null?' · battery '+ble.battery+'%':'')
+        +' · '+secs+'s'+(ble.rr.length?'':' · this device sends heart rate only, no beat intervals, so no HRV')+'</div>'
+        +'<button class="btn" id="kovaBleSave" style="margin-top:12px'+(canSave?'':';opacity:.45')+'">'
+        +(canSave?'Save as this morning’s reading':'Sit still for a minute…')+'</button>'
+        +'<button class="btn ghost" id="kovaBleStop" style="margin-top:8px">Disconnect</button>'
+      : '';
+    var sv=document.getElementById('kovaBleSave');
+    if(sv) sv.onclick=function(){
+      if(!canSave) return;
+      var o={hr:median(ble.hr), device:(ble.dev&&ble.dev.name)||'Bluetooth'};
+      if(h) o.hrv=h;
+      var n=window.KovaHealth?KovaHealth.ingest(o,'bluetooth'):0;
+      if(n){ KovaHealth.apply(); say('Saved: resting '+o.hr+' bpm'+(h?', HRV '+h+' ms':'')); }
+    };
+    var sp=document.getElementById('kovaBleStop');
+    if(sp) sp.onclick=function(){ bleStop(); ble.dev=null; paintBle(); };
+  }
+
+  /* ---- sheets ----------------------------------------------------- */
+  function card(inner,act,extra){
+    return '<div class="card kdev" data-act="'+act+'" style="padding:12px 13px;margin-top:8px;cursor:pointer;'+(extra||'')+'">'+inner+'</div>';
+  }
+  function head(t,s){
+    return '<div style="font-size:13px;font-weight:700;color:var(--txt,#FFFFFF)">'+t+'</div>'
+      +'<div class="sub" style="margin-top:3px;line-height:1.45">'+s+'</div>';
+  }
+
+  function hub(){
+    var KH=window.KovaHealth, n=KH?KH.count():0;
+    var linked=linkedWearables().map(function(w){return w.n;});
+    var h='<div class="grab"></div><div style="padding:2px 4px 18px">'
+      +'<div class="title-s" style="font-size:19px">Connect any watch</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.5">'
+      +(n?'Kova has '+n+' live metric'+(n===1?'':'s')+' · '+esc(KH.ageText())+(KH.get&&KH.get('device')?' · '+esc(KH.get('device')):'')
+         :'Pick how your watch gets its data out. Most watches, including unbranded ones, work through the first option.')
+      +'</div>'
+      +card(head('Any watch, via your phone',
+          'If your watch’s app can sync to Apple Health (iPhone) or Health Connect (Android), Kova gets it. '
+          +'That covers Apple Watch, Garmin, Samsung, Amazfit, Huawei and most Amazon watches (FitCloudPro, Da Fit, GloryFit, VeryFit…).'),'link','border-color:var(--acc-brd)')
+      +card(head('Oura, WHOOP, Fitbit, Withings',
+          linked.length?'Connected: '+esc(linked.join(', '))+'. Tap to sync or manage.':'Sign in once and Kova pulls straight from their servers. No phone app needed.'),'cloud')
+      +card(head('Bluetooth heart rate, live',
+          bleSupported()?'Chest straps and watches in “broadcast heart rate” mode. Gives a morning HRV reading.'
+                        :'Needs Chrome on Android or a computer. iPhone browsers have no Bluetooth access.'),'ble',bleSupported()?'':'opacity:.55')
+      +card(head('Import a file','A Health Auto Export JSON file, or anything with the same fields.'),'file')
+      +'<input type="file" id="kovaDevFile" accept=".json,application/json" style="display:none"/>'
+      +'</div>';
+    openSheet(h);
+    wire({
+      link:linkSheet, cloud:cloudSheet,
+      ble:function(){ if(bleSupported()) bleSheet(); else say('Web Bluetooth is not available in this browser.'); },
+      file:function(){ var f=document.getElementById('kovaDevFile'); if(f) f.click(); }
+    });
+    var f=document.getElementById('kovaDevFile');
+    if(f) f.onchange=function(){
+      var file=f.files&&f.files[0]; if(!file||!KH) return;
+      KH.importFile(file).then(function(m){
+        say(m>0?'Loaded '+m+' metric'+(m===1?'':'s'):m===0?'That file held no health data Kova understands':'Could not read that file');
+        if(m>0) hub();
+      });
+    };
+  }
+
+  function linkSheet(){
+    var h='<div class="grab"></div><div style="padding:2px 4px 18px">'
+      +'<div class="title-s" style="font-size:19px">Sync link</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.5">A private web address only your phone knows. '
+      +'Your phone sends health data to it in the background; Kova picks it up whenever it opens.</div>'
+      +'<div id="kovaLinkBox" class="card" style="padding:12px 13px;margin-top:12px"><div class="sub">Making your link…</div></div>'
+      +'<div class="lbl" style="margin-top:16px;margin-bottom:6px">IPHONE</div>'
+      +'<div class="sub" style="line-height:1.55">1. In your watch’s app, switch on Apple Health sync.<br/>'
+      +'2. Install <b>Health Auto Export</b> from the App Store.<br/>'
+      +'3. Automations → New → REST API. Paste the link as the URL, format JSON, sync every hour.</div>'
+      +'<div class="lbl" style="margin-top:14px;margin-bottom:6px">ANDROID</div>'
+      +'<div class="sub" style="line-height:1.55">1. In your watch’s app, switch on Health Connect sync.<br/>'
+      +'2. Use any app that can send Health Connect data, or an automation (Tasker, MacroDroid), to POST JSON to the link. '
+      +'Kova reads keys like <code>hr, hrv, sleep, deep, rem, steps, spo2, resp, weight</code>.</div>'
+      +'<div class="sub" style="margin-top:14px;line-height:1.5;opacity:.75">Making a new link switches the old one off.</div>'
+      +'</div>';
+    openSheet(h);
+    makeLink().then(function(j){
+      var box=document.getElementById('kovaLinkBox'); if(!box) return;
+      if(j.error){ box.innerHTML='<div class="sub">'+esc(j.error)+'</div>'; return; }
+      box.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--acc)">YOUR LINK</div>'
+        +'<div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;word-break:break-all;margin-top:6px;user-select:all">'+esc(j.ingestUrl)+'</div>'
+        +'<button class="btn" id="kovaLinkCopy" style="margin-top:10px">Copy link</button>';
+      document.getElementById('kovaLinkCopy').onclick=function(){
+        (navigator.clipboard?navigator.clipboard.writeText(j.ingestUrl):Promise.reject())
+          .then(function(){ say('Copied. Paste it into your phone’s sync app.'); })
+          .catch(function(){ say('Press and hold the link to copy it.'); });
+      };
+    });
+  }
+
+  function cloudSheet(){
+    var h='<div class="grab"></div><div style="padding:2px 4px 18px">'
+      +'<div class="title-s" style="font-size:19px">Oura, WHOOP, Fitbit, Withings</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.5">Sign in with the device’s own account. '
+      +'Kova only reads; it never changes anything there.</div>'
+      +WEAR.map(function(w){
+        var on=KL()&&KL().linked(w.id), cfg=!KL()||KL().configured(w.id);
+        return card('<div style="display:flex;align-items:center;gap:10px"><div style="flex:1;min-width:0">'
+          +head(esc(w.n), on?'Connected · '+esc(KL().label(w.id)||w.n):(cfg?esc(w.d):'Not set up on the server yet'))
+          +'</div><div class="chip" style="font-size:9.5px">'+(on?'Disconnect':'Connect')+'</div></div>',
+          (on?'off:':'on:')+w.id, on?'border-color:var(--acc-brd)':'');
+      }).join('')
+      +(linkedWearables().length?'<button class="btn" id="kovaWearSync" style="margin-top:14px">Sync now</button>':'')
+      +'<div class="sub" style="margin-top:14px;line-height:1.5;opacity:.75">Garmin, Polar, Samsung and Amazfit do not offer this kind of '
+      +'sign-in to new apps. Use the sync link instead — their phone apps feed Apple Health / Health Connect.</div>'
+      +'</div>';
+    openSheet(h);
+    document.querySelectorAll('.sheet .kdev').forEach(function(b){
+      b.onclick=function(){
+        var a=b.getAttribute('data-act').split(':'), id=a[1], w=WEAR.filter(function(x){return x.id===id;})[0];
+        if(a[0]==='on'){
+          say('Opening '+w.n+' sign-in…');
+          KL().connect(id).then(function(r){
+            say(KL().resultText(r,w.n));
+            if(r==='linked') syncWearables().then(function(n){ if(n) say('Pulled '+n+' metrics from '+w.n); cloudSheet(); });
+            else cloudSheet();
+          });
+        }else{
+          KL().disconnect(id).then(function(){ say(w.n+' disconnected'); cloudSheet(); });
+        }
+      };
+    });
+    var s=document.getElementById('kovaWearSync');
+    if(s) s.onclick=function(){
+      s.textContent='Syncing…';
+      syncWearables().then(function(n){ say(n?'Updated '+n+' metric'+(n===1?'':'s'):'Nothing new yet'); s.textContent='Sync now'; });
+    };
+  }
+
+  function bleSheet(){
+    var h='<div class="grab"></div><div style="padding:2px 4px 18px">'
+      +'<div class="title-s" style="font-size:19px">Bluetooth heart rate</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.5">Put your watch in heart-rate broadcast mode (Garmin: Broadcast Heart Rate; '
+      +'Amazfit/Zepp: Heart rate sharing; Polar/Coros: HR broadcast), or wear a chest strap. For a morning reading, sit still for a minute.</div>'
+      +'<button class="btn" id="kovaBleGo" style="margin-top:14px">Find my device</button>'
+      +'<div id="kovaBleLive"></div>'
+      +'<div class="sub" style="margin-top:14px;line-height:1.5;opacity:.75">Many budget watches keep heart rate inside their own app and '
+      +'never broadcast it. If yours does not show up here, use the sync link instead.</div>'
+      +'</div>';
+    openSheet(h);
+    document.getElementById('kovaBleGo').onclick=function(){
+      var b=this; b.textContent='Connecting…';
+      bleConnect().then(function(){ b.style.display='none'; paintBle(); })
+        .catch(function(e){ b.textContent='Find my device';
+          if(e&&e.name!=='NotFoundError') say((e&&e.message)||'Could not connect'); });
+    };
+    paintBle();
+  }
+
+  function wire(map){
+    setTimeout(function(){
+      document.querySelectorAll('.sheet .kdev').forEach(function(b){
+        var f=map[b.getAttribute('data-act')]; if(f) b.onclick=f;
+      });
+    },30);
+  }
+
+  return {hub:hub, linkSheet:linkSheet, cloudSheet:cloudSheet, bleSheet:bleSheet,
+          syncAll:syncAll, syncWearables:syncWearables, linkedWearables:linkedWearables,
+          makeLink:makeLink, _rmssd:rmssd, _parseHR:parseHR};
+})();
+</script>
+
 </body>
 </html>
