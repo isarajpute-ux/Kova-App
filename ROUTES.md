@@ -12,61 +12,61 @@ None: every call the app makes has a route.
 
 | Method | Path | Implemented in | Auth | What it does / returns | Called by |
 |---|---|---|---|---|---|
-| GET | `/ping` | `api.js` | no | health check; `has` says which keys are set (yes/no only) | app, index.html line 11022, 52918 |
-| POST | `/auth/code` | `api.js` (authCode) | no | {email} email a 6-digit sign-in code | app, index.html line 37222 |
-| POST | `/auth/verify` | `api.js` (authVerify) | no | {email,code} -> {ok, token, name} (Firebase custom token) | app, index.html line 37308 |
-| POST | `/health/token` | `api.js` (healthToken) | yes | -> {url} personal Apple Health sync URL | app, index.html line 11151 |
+| GET | `/ping` | `api.js` | no | health check; `has` says which keys are set (yes/no only) | app, index.html line 11092, 53163 |
+| POST | `/auth/code` | `api.js` (authCode) | no | {email} email a 6-digit sign-in code | app, index.html line 37294 |
+| POST | `/auth/verify` | `api.js` (authVerify) | no | {email,code} -> {ok, token, name} (Firebase custom token) | app, index.html line 37380 |
+| POST | `/health/token` | `api.js` (healthToken) | yes | -> {url} personal Apple Health sync URL | app, index.html line 11221 |
 | POST | `/health/:token` | `api.js`, `health.js`, `wellness.js` (healthPost) | no | Shortcut / Health Auto Export posts here | the Apple Health shortcut / Health Auto Export (POST); the app reads it (GET) |
 | GET | `/health/:token` | `api.js` (healthGet) | no | the app pulls the merged latest values | the Apple Health shortcut / Health Auto Export (POST); the app reads it (GET) |
-| GET | `/status` | `api.js`, `providers.js` (status) | yes | which providers are linked | app, index.html line 11015 |
-| POST | `/connect/:provider` | `api.js`, `providers.js` (connect) | yes | {return,instance} -> {url} provider consent screen | app, index.html line 11073 |
-| POST | `/link/:provider` | `api.js`, `providers.js` (linkRoute) | yes | {fields} Bluesky / Discord / Telegram | app, index.html line 11087 |
-| GET | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | Pages, ad accounts, boards, locations, blogs | app, index.html line 11097, 11100 |
-| POST | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | {id} choose which one to post to | app, index.html line 11097, 11100 |
-| GET | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | Meta Ads: ad account, Page, pixel, currency | app, index.html line 43386 |
-| POST | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | {account,page,pixel} choose them | app, index.html line 43386 |
+| GET | `/status` | `api.js`, `providers.js` (status) | yes | which providers are linked | app, index.html line 11085 |
+| POST | `/connect/:provider` | `api.js`, `providers.js` (connect) | yes | {return,instance} -> {url} provider consent screen | app, index.html line 11143 |
+| POST | `/link/:provider` | `api.js`, `providers.js` (linkRoute) | yes | {fields} Bluesky / Discord / Telegram | app, index.html line 11157 |
+| GET | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | Pages, ad accounts, boards, locations, blogs | app, index.html line 11167, 11170 |
+| POST | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | {id} choose which one to post to | app, index.html line 11167, 11170 |
+| GET | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | Meta Ads: ad account, Page, pixel, currency | app, index.html line 43456 |
+| POST | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | {account,page,pixel} choose them | app, index.html line 43456 |
 | GET | `/oauth/callback` | `api.js`, `providers.js` (callback) | no | provider redirects here | the provider, after you approve |
-| POST | `/disconnect/:provider` | `api.js`, `providers.js` (disconnect) | yes |  | app, index.html line 11127 |
-| POST | `/call/:provider` | `api.js`, `providers.js` (proxy) | yes | {path,method,body} proxied provider API call | app, index.html line 11138 |
-| GET | `/inbound` | `api.js`, `providers.js` (inbound) | yes | recent YouTube comments on your videos | app, index.html line 33143 |
-| POST | `/script` | `api.js` (script) | yes | Work OS "Creator Script" engine | app, index.html line 34054 |
-| POST | `/publish` | `api.js`, `providers.js`, `publish.js (worker)` (publishRoute) | yes | {post} publish now, schedule, or send as a draft | app, index.html line 43370 |
-| GET | `/posts` | `api.js` (postsRoute) | yes | recent posts and each platform's result | app, index.html line 43397 |
-| GET | `/posts/:id` | `api.js` (postsRoute) | yes | one post | app, index.html line 43394 |
-| POST | `/posts/:id/cancel` | `api.js` (cancelRoute) | yes | unschedule a post that has not run yet | app, index.html line 43395 |
-| POST | `/write` | `api.js` (writeRoute) | yes | {field,...} write one field of a post with the model | app, index.html line 43403 |
-| POST | `/foods/search` | `api.js` (foodsSearch) | yes | {q} USDA FoodData Central: calories, macros and 10 micronutrients per 100 g | app, index.html line 47312 |
-| POST | `/crew/step` | `api.js` (crewStep) | yes | {system,messages,tools,web} one step of an AI employee's job (Claude with tools) | app, index.html line 48062 |
-| POST | `/hashtags` | `api.js` (hashtagsRoute) | yes | {post words} hashtag ideas, grouped, with a rough size band | app, index.html line 43391 |
-| POST | `/assist` | `api.js` (assistRoute) | yes | {text} the agent drafts a job: an email, a task, or an answer | app, index.html line 46018 |
-| POST | `/assist/email` | `api.js`, `providers.js` (assistEmail) | yes | {to,subject,body,send} send the APPROVED email, or save it as a Gmail draft | app, index.html line 46024, 47943 |
-| POST | `/traction/refresh` | `api.js`, `traction.js`, `providers.js` (tractionRefresh) | yes | {postId?} read posts' numbers and comments back now | app, index.html line 46430 |
-| POST | `/traction/:id/advice` | `api.js`, `traction.js`, `providers.js` (tractionAdvice) | yes | {mode} "What should I fix?" - business or creator | app, index.html line 46485 |
-| POST | `/card/push` | `api.js`, `card.js`, `providers.js` (cardPush) | yes | {card} business inquiries onto Facebook Page, YouTube | app, index.html line 46527 |
-| GET | `/agent` | `api.js` (agentGet) | yes | wellness agent: settings, last audit, alerts | app, index.html line 46135 |
-| POST | `/agent/settings` | `api.js`, `wellness.js` (agentSettings) | yes | {on,tz,times} switch the three daily audits on or off | app, index.html line 46134, 46269 |
-| POST | `/agent/run` | `api.js`, `wellness.js` (agentRun) | yes | {window?} queue an audit now ("Check now") | app, index.html line 46258 |
-| POST | `/agent/alerts/:id` | `api.js` (agentAlert) | yes | {state} seen / done | app, index.html line 46203 |
-| POST | `/chat` | `api.js`, `chat.js` (chatRoute) | yes | {messages,pillar,snapshot} -> {text} the chat (was the kovaChat callable) | app, index.html line 29008 |
-| GET | `/account/export` | `api.js`, `account.js` (accountExport) | yes | everything the server holds about you, no secrets | app, index.html line 49808 |
-| POST | `/account/delete` | `api.js`, `account.js` (accountDelete) | yes | {confirm:"DELETE"} delete the account and every record of it | app, index.html line 49884 |
+| POST | `/disconnect/:provider` | `api.js`, `providers.js` (disconnect) | yes |  | app, index.html line 11197 |
+| POST | `/call/:provider` | `api.js`, `providers.js` (proxy) | yes | {path,method,body} proxied provider API call | app, index.html line 11208 |
+| GET | `/inbound` | `api.js`, `providers.js` (inbound) | yes | recent YouTube comments on your videos | app, index.html line 33213 |
+| POST | `/script` | `api.js` (script) | yes | Work OS "Creator Script" engine | app, index.html line 34124 |
+| POST | `/publish` | `api.js`, `providers.js`, `publish.js (worker)` (publishRoute) | yes | {post} publish now, schedule, or send as a draft | app, index.html line 43440 |
+| GET | `/posts` | `api.js` (postsRoute) | yes | recent posts and each platform's result | app, index.html line 43467 |
+| GET | `/posts/:id` | `api.js` (postsRoute) | yes | one post | app, index.html line 43464 |
+| POST | `/posts/:id/cancel` | `api.js` (cancelRoute) | yes | unschedule a post that has not run yet | app, index.html line 43465 |
+| POST | `/write` | `api.js` (writeRoute) | yes | {field,...} write one field of a post with the model | app, index.html line 43473 |
+| POST | `/foods/search` | `api.js` (foodsSearch) | yes | {q} USDA FoodData Central: calories, macros and 10 micronutrients per 100 g | app, index.html line 47382 |
+| POST | `/crew/step` | `api.js` (crewStep) | yes | {system,messages,tools,web} one step of an AI employee's job (Claude with tools) | app, index.html line 48132 |
+| POST | `/hashtags` | `api.js` (hashtagsRoute) | yes | {post words} hashtag ideas, grouped, with a rough size band | app, index.html line 43461 |
+| POST | `/assist` | `api.js` (assistRoute) | yes | {text} the agent drafts a job: an email, a task, or an answer | app, index.html line 46088 |
+| POST | `/assist/email` | `api.js`, `providers.js` (assistEmail) | yes | {to,subject,body,send} send the APPROVED email, or save it as a Gmail draft | app, index.html line 46094, 48013 |
+| POST | `/traction/refresh` | `api.js`, `traction.js`, `providers.js` (tractionRefresh) | yes | {postId?} read posts' numbers and comments back now | app, index.html line 46500 |
+| POST | `/traction/:id/advice` | `api.js`, `traction.js`, `providers.js` (tractionAdvice) | yes | {mode} "What should I fix?" - business or creator | app, index.html line 46555 |
+| POST | `/card/push` | `api.js`, `card.js`, `providers.js` (cardPush) | yes | {card} business inquiries onto Facebook Page, YouTube | app, index.html line 46597 |
+| GET | `/agent` | `api.js` (agentGet) | yes | wellness agent: settings, last audit, alerts | app, index.html line 46205 |
+| POST | `/agent/settings` | `api.js`, `wellness.js` (agentSettings) | yes | {on,tz,times} switch the three daily audits on or off | app, index.html line 46204, 46339 |
+| POST | `/agent/run` | `api.js`, `wellness.js` (agentRun) | yes | {window?} queue an audit now ("Check now") | app, index.html line 46328 |
+| POST | `/agent/alerts/:id` | `api.js` (agentAlert) | yes | {state} seen / done | app, index.html line 46273 |
+| POST | `/chat` | `api.js`, `chat.js` (chatRoute) | yes | {messages,pillar,snapshot} -> {text} the chat (was the kovaChat callable) | app, index.html line 29078 |
+| GET | `/account/export` | `api.js`, `account.js` (accountExport) | yes | everything the server holds about you, no secrets | app, index.html line 50053 |
+| POST | `/account/delete` | `api.js`, `account.js` (accountDelete) | yes | {confirm:"DELETE"} delete the account and every record of it | app, index.html line 50129 |
 | POST | `/media/upload` | `api.js`, `media.js` (mediaUpload) | yes | one 3 MB part of a file (Netlify only) | app, index.html line 3517 |
 | POST | `/media/remove` | `api.js`, `media.js` (mediaRemove) | yes | {path} delete one of your files (Netlify only) | app, index.html line 3600 |
-| POST | `/meal/read` | `api.js`, `meal.js` (mealRead) | yes | {image,mime,note} -> {items} read a plate from a photo (Pro) | app, index.html line 50504 |
-| POST | `/labs/extract` | `api.js`, `labs.js` (labsExtract) | yes | {text \| image,mime} -> {rows} lab results, extraction only (Pro) | app, index.html line 52326 |
-| POST | `/calendar/sync` | `api.js`, `calendar.js`, `providers.js` (calendarSync) | yes | {blocks,from,to} Work OS blocks <-> Google Calendar, both ways | app, index.html line 52566 |
-| POST | `/devices` | `api.js`, `push.js` (devicesRoute) | yes | {token,platform} this device's push token | app, index.html line 50042 |
-| POST | `/devices/remove` | `api.js`, `push.js` (devicesRoute) | yes | {token} stop pushing to this device | app, index.html line 50052 |
-| POST | `/reminders` | `api.js`, `push.js` (remindersRoute) | yes | {tz,quiet,items} the reminder list the push schedule uses | app, index.html line 50012 |
-| GET | `/billing/status` | `api.js`, `billing.js` (billingStatus) | yes | {configured, pro, until} Kova Pro, from RevenueCat | app, index.html line 50301 |
+| POST | `/meal/read` | `api.js`, `meal.js` (mealRead) | yes | {image,mime,note} -> {items} read a plate from a photo (Pro) | app, index.html line 50749 |
+| POST | `/labs/extract` | `api.js`, `labs.js` (labsExtract) | yes | {text \| image,mime} -> {rows} lab results, extraction only (Pro) | app, index.html line 52571 |
+| POST | `/calendar/sync` | `api.js`, `calendar.js`, `providers.js` (calendarSync) | yes | {blocks,from,to} Work OS blocks <-> Google Calendar, both ways | app, index.html line 52811 |
+| POST | `/devices` | `api.js`, `push.js` (devicesRoute) | yes | {token,platform} this device's push token | app, index.html line 50287 |
+| POST | `/devices/remove` | `api.js`, `push.js` (devicesRoute) | yes | {token} stop pushing to this device | app, index.html line 50297 |
+| POST | `/reminders` | `api.js`, `push.js` (remindersRoute) | yes | {tz,quiet,items} the reminder list the push schedule uses | app, index.html line 50257 |
+| GET | `/billing/status` | `api.js`, `billing.js` (billingStatus) | yes | {configured, pro, until} Kova Pro, from RevenueCat | app, index.html line 50546 |
 | GET | `/social/me` | `api.js`, `social.js` (socialRoute) | yes | your friends-feed profile, followers, following | not called yet (reserved for a profile screen) |
-| GET | `/social/feed` | `api.js`, `social.js` (socialRoute) | yes | the opt-in friends feed: workouts and PRs of people you follow | app, index.html line 52174 |
-| POST | `/social/profile` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} switch the feed on or off, pick a handle | app, index.html line 52208 |
-| POST | `/social/follow` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} follow or unfollow someone | app, index.html line 52189 |
+| GET | `/social/feed` | `api.js`, `social.js` (socialRoute) | yes | the opt-in friends feed: workouts and PRs of people you follow | app, index.html line 52419 |
+| POST | `/social/profile` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} switch the feed on or off, pick a handle | app, index.html line 52453 |
+| POST | `/social/follow` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} follow or unfollow someone | app, index.html line 52434 |
 | POST | `/social/followers/remove` | `api.js`, `social.js` (socialRoute) | yes | {handle} remove a follower | not called yet (reserved for "remove follower") |
-| POST | `/social/post` | `api.js`, `social.js` (socialRoute) | yes | {stats} share a finished workout or PR (no health data) | app, index.html line 52113 |
-| POST | `/social/unpost` | `api.js`, `social.js` (socialRoute) | yes | {id} take a share back | app, index.html line 52123, 52184 |
-| POST | `/social/like` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,on} like or unlike a friend's post | app, index.html line 52183 |
-| POST | `/social/comment` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,text} comment on a friend's post | app, index.html line 52190 |
+| POST | `/social/post` | `api.js`, `social.js` (socialRoute) | yes | {stats} share a finished workout or PR (no health data) | app, index.html line 52358 |
+| POST | `/social/unpost` | `api.js`, `social.js` (socialRoute) | yes | {id} take a share back | app, index.html line 52368, 52429 |
+| POST | `/social/like` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,on} like or unlike a friend's post | app, index.html line 52428 |
+| POST | `/social/comment` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,text} comment on a friend's post | app, index.html line 52435 |
 | POST | `/billing/webhook` | `api.js`, `billing.js` (billingWebhook) | no | RevenueCat events (its own Authorization value) | RevenueCat |
 | GET | `/media/file` | `netlify.js`, `media.js` | no | a signed link to a file (Netlify only, streamed) | signed links in the app (img/video src) |

@@ -157,7 +157,7 @@ node tests/alarm.js        # smart alarm: light-sleep window, fallback, groggine
 node tests/a11y.js         # every control named, every field labelled, keyboard, focus, motion
 node tests/site.js         # the built page: minified, Work OS split out, under 450 KB
 node tests/launch.js       # the hidden Launch check and what /api/ping reports
-node tests/focus.js        # only the areas you picked: tab bar (5 at most), Home, More, one-a-day
+node tests/teamtiles.js    # Work OS team tiles: what each number means, and the pop-up behind each
 ```
 
 In a real browser (Playwright; `npx playwright install chromium` once), against the built site:

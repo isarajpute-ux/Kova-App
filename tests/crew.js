@@ -174,7 +174,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('four labelled stats with the real numbers', body.querySelectorAll('.crd-stat').length === 4 && /Finished3/.test(body.querySelector('.crd-stats').textContent.replace(/\s+/g, '')));
   ck('a stage timeline and a focus card with the wireframe globe', !!body.querySelector('.crd-flow .crd-step') && !!body.querySelector('.crd-focus .crd-globe'));
   ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 5 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
-  ck('five tiles, the big one with a date range, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && !!body.querySelector('.crd-t.t-big .crd-date') && body.querySelectorAll('.crd-tiles svg.crd-ch').length === 5);
+  ck('five tiles, the big one with a date range, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && !!body.querySelector('.crd-t.t-big .crd-date') && [...body.querySelectorAll('.crd-tiles .crd-t')].every((t) => t.querySelector('svg.crd-ch, .crd-srows')));
   body.querySelector('.crd-t.t-big .crd-date').click(); await wait(10);
   ck('the date range changes', /–/.test(body.querySelector('.crd-t.t-big .crd-date').textContent) && C._S.range === 90);
   for (const n of ['jobs', 'approvals', 'routines', 'reports']) { body.querySelector('.crd-nav [data-n="' + n + '"]').click(); await wait(10); }

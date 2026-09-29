@@ -415,3 +415,99 @@ body.light-mode .crd-menu{box-shadow:0 20px 50px rgba(20,30,50,.18)}
 .crw-hero .crd-menu{left:0;right:auto}
 .crd-save{margin:6px 0 20px}
 @media (prefers-reduced-motion:reduce){.crd-ch .hot,.crd-globe .a{filter:none}}
+
+/* ---- the team tiles' one-line meaning, and the pop-ups behind them ----
+   The pop-ups live in #sheet, so they use its tokens (p08_sheet.css) and
+   read in dark, soft light and light glass alike. */
+.crd-tcap{font-size:11.5px;line-height:1.35;opacity:.74;margin-top:7px;letter-spacing:0}
+.cwd{--c0:#8FB3FF;--c1:#E0A33B;--c2:#B48CF0;--c3:#5FD08A;padding:2px 4px 24px;color:var(--txt);font-family:'Outfit',sans-serif}
+body.light-mode #sheet .cwd{--c0:#3E6FD8;--c1:#A86B12;--c2:#7B55C9;--c3:#1E7A4B}
+.cwd-t{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.cwd-s{font-size:12.5px;color:var(--txt-2);margin-top:3px}
+.cwd-seg{display:inline-flex;gap:3px;margin-top:12px;padding:3px;border-radius:12px;background:var(--glass);border:.5px solid var(--glass-brd)}
+.cwd-seg button{min-height:34px;padding:0 13px;border:0;border-radius:9px;background:none;color:var(--txt-2);font:600 12px 'Outfit',sans-serif;cursor:pointer}
+.cwd-seg button.on{background:var(--acc-bg);color:var(--txt);box-shadow:inset 0 0 0 .5px var(--acc-brd)}
+.cwd-big{display:flex;align-items:baseline;gap:8px;margin-top:14px}
+.cwd-big b{font:250 46px/1 'Outfit',sans-serif;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.cwd-big span{font-size:13.5px;color:var(--txt-2)}
+.cwd-big.soft b{font-size:26px;font-weight:400;letter-spacing:-.01em}
+.cwd-cap{font-size:13px;line-height:1.5;color:var(--txt-2);margin:6px 0 0}
+.cwd-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.cwd-stats.c3,.cwd-stats.c6{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (min-width:430px){.cwd-stats.c4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.cwd-st{padding:10px 11px;border-radius:14px;background:var(--glass);border:.5px solid var(--glass-brd);min-width:0}
+.cwd-st b{display:block;font:500 20px/1.1 'Outfit',sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cwd-st span{display:block;font-size:11.5px;line-height:1.3;color:var(--txt-2);margin-top:3px}
+.cwd-st.good b{color:var(--good)}.cwd-st.bad b{color:var(--bad)}.cwd-st.warn b{color:var(--warn)}
+.cwd-sec{margin-top:20px}
+.cwd-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:0 0 4px}
+.cwd-h small{font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;text-align:right}
+.cwd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:46px;padding:10px 2px;border:0;border-top:.5px solid var(--glass-brd);background:none;color:var(--txt);text-align:left;font:inherit;cursor:pointer}
+.cwd-row.static{cursor:default}
+.cwd-rn{flex:1;min-width:0;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cwd-rm{flex-shrink:0;max-width:55%;font-size:12px;line-height:1.35;color:var(--txt-2);text-align:right}
+.cwd-rm.bad{color:var(--bad)}.cwd-rm.warn{color:var(--warn)}
+.cwd-none{font-size:12.5px;line-height:1.45;color:var(--txt-2);margin:6px 0 0}
+.cwd-note{font-size:11.5px;line-height:1.5;color:var(--txt-3);margin:18px 0 0}
+.cwd-bar{display:flex;gap:2px;height:12px;border-radius:6px;overflow:hidden;background:var(--glass);margin-top:14px}
+.cwd-bar i{display:block;height:100%}.cwd-bar .b-none{flex:1;background:var(--glass-2)}
+.cwd .b0{background:var(--c0)}.cwd .b1{background:var(--c1)}.cwd .b2{background:var(--c2)}.cwd .b3{background:var(--c3)}
+.cwd-key{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:11.5px;color:var(--txt-2)}
+.cwd-key i,.cwd-det summary span i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.cwd-key i.ok{background:var(--good)}.cwd-key i.late{background:var(--bad)}
+.cwd-chart{display:block;width:100%;height:auto;margin-top:4px}
+.cwd-chart .ok{fill:var(--good)}.cwd-chart .late{fill:var(--bad)}.cwd-chart .nil{fill:var(--glass-brd)}
+.cwd-chart text{fill:var(--txt-3);font:10px 'Outfit',sans-serif;text-anchor:middle}
+.cwd-det{border-top:.5px solid var(--glass-brd);margin-top:6px}
+.cwd-det:first-of-type{margin-top:20px}
+.cwd-det summary{display:flex;justify-content:space-between;align-items:center;min-height:46px;cursor:pointer;list-style:none;font-size:14px}
+.cwd-det summary::-webkit-details-marker{display:none}
+.cwd-det summary b{font-weight:500;color:var(--txt-2);display:flex;align-items:center;gap:8px}
+.cwd-det summary b::after{content:"";width:7px;height:7px;border-right:1.5px solid var(--txt-3);border-bottom:1.5px solid var(--txt-3);transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.cwd-det[open] summary b::after{transform:rotate(225deg) translateY(-1px)}
+.cwd-det .cwd-row:first-of-type{border-top:0}
+.cwd-ap{padding:12px 13px;border-radius:16px;background:var(--glass);border:.5px solid var(--glass-brd);margin-top:8px}
+.cwd-aph{font-size:13.5px;line-height:1.4}.cwd-aph span{float:right;margin-left:8px;font-size:11.5px;color:var(--txt-3)}
+.cwd-apw{font-size:12.5px;line-height:1.45;color:var(--txt-2);margin:6px 0 0;overflow-wrap:anywhere}
+.cwd-apb{display:flex;gap:8px;margin-top:10px}.cwd-apb .cwd-btn{flex:1;min-height:40px;white-space:nowrap}.cwd-apb .cwd-btn:first-child{flex:2}
+.cwd-btns{display:flex;flex-direction:column;gap:8px;margin-top:22px}
+.cwd-btn{min-height:46px;padding:0 16px;border-radius:14px;border:.5px solid var(--acc-brd);background:var(--txt);color:var(--sheet-ink,#141414);font:600 13.5px 'Outfit',sans-serif;cursor:pointer}
+body.light-mode #sheet .cwd-btn{--sheet-ink:#FFFFFF}
+.cwd-btn.ghost{background:var(--glass);color:var(--txt);border-color:var(--glass-brd)}
+
+/* ---- phones: one calm column ----
+   Under 560 px the four small tiles stop sharing a row: each is a
+   full-width card, words on the left (title, number, what it means),
+   its chart on the right. The big "jobs done" tile gets shorter, and in
+   the how-it-works steps only the one you are on keeps its pill. */
+@container (max-width:559px){
+  .crd-mid{gap:16px;margin-bottom:20px}
+  .crd-stats{gap:16px 12px}
+  .crd-flow{gap:10px}
+  .crd-step{font-size:13px}
+  .crd-step:not(.s-active):not(.s-up) .st{display:none}
+  .crd-step.s-active,.crd-step.s-up{font-size:14.5px}
+  .crd-tiles{grid-template-columns:minmax(0,1fr);gap:12px}
+  .crd-t.t-big{min-height:0;padding-bottom:12px}
+  .crd-t.t-big .crd-ch{max-height:150px}
+  .crd-t:not(.t-big){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,42%);grid-template-rows:auto auto 1fr;column-gap:14px;min-height:0;padding:15px 16px 14px;border-radius:22px}
+  .crd-t:not(.t-big) .crd-th{grid-column:1/-1}
+  .crd-t:not(.t-big) .crd-tt{font-size:15px;max-width:none}
+  .crd-t:not(.t-big) .crd-tv{grid-column:1;margin-top:8px;font-size:30px}
+  .crd-t:not(.t-big) .crd-tcap,.crd-t:not(.t-big) .crd-tnote{grid-column:1;font-size:12px;opacity:.78}
+  .crd-t:not(.t-big) .crd-tc{grid-column:2;grid-row:2/4;margin-top:0;padding-top:0;align-self:center}
+  .crd-t:not(.t-big) .crd-ch{max-height:84px}
+  /* at this size a chart's own small labels are unreadable; the words beside it say the numbers */
+  .crd-t:not(.t-big) .crd-ch text{display:none}
+}
+/* a tile with no number yet says so in words */
+.crd-tv.soft{font-size:21px;letter-spacing:-.01em;margin-top:12px}
+/* Work by status: four labelled bars */
+.crd-srows{display:grid;gap:6px;font-size:11px;line-height:1}
+.crd-srows .r{display:grid;grid-template-columns:44px minmax(0,1fr) 18px;align-items:center;gap:6px}
+.crd-srows span{opacity:.75;white-space:nowrap}
+.crd-srows i{display:block;height:6px;position:relative}
+.crd-srows i::before{content:"";position:absolute;inset:0;border-radius:3px;background:currentColor;opacity:.16}
+.crd-srows i b{position:absolute;left:0;top:0;bottom:0;min-width:0;border-radius:3px;background:currentColor}
+.crd-srows em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;opacity:.85}
+@container (max-width:559px){.crd-t:not(.t-big) .crd-tv.soft{font-size:19px}}

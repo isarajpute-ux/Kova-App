@@ -1,7 +1,7 @@
 /* The core journeys on the built site, by tapping, in a real browser at
    phone size (390 x 844) with Firebase stubbed: a new person skips sign-in,
-   answers the three questions (Food only), logs a meal from search,
-   finishes a one-set workout, turns on GLP-1 mode from More and opens the
+   answers the three questions, logs a meal from search, finishes a
+   one-set workout, opens GLP-1 mode from its card on Fuel and opens the
    plan screen. Any page error fails it.
      npm run build && node tests/e2e/flows.mjs */
 import { chromium } from 'playwright';
@@ -32,8 +32,8 @@ try {
   await page.waitForFunction(() => document.getElementById('s-home').classList.contains('on'), null, { timeout: 10000 });
   await page.waitForTimeout(600);
   const tabs = await page.evaluate(() => [...document.querySelectorAll('.rail .rnav[data-go]')].filter((n) => n.offsetParent && n.getAttribute('data-go') !== 'settings').map((n) => n.getAttribute('data-go')));
-  ck('three questions and a first win land on Today, with Home and Fuel as the only tabs', JSON.stringify(tabs) === '["home","fuel"]');
-  ck('no Work OS on Today for a food-only person', await page.evaluate(() => !document.getElementById('osHero').offsetParent));
+  ck('three questions and a first win land on Today, with every area in the tab bar', JSON.stringify(tabs) === '["home","fuel","sleep","move","vitals","work"]');
+  ck('nothing is hidden: Work OS is on Today and there is no More button', await page.evaluate(() => !!document.getElementById('osHero').offsetParent && !document.getElementById('kfMore')));
 
   // ---------- a meal from search ----------
   await tap('.rail .rnav[data-go="fuel"]');
@@ -63,12 +63,12 @@ try {
   const n1 = await page.evaluate(() => JSON.parse(localStorage.getItem('kova_log_v1') || '[]').length);
   ck('one set logged with one tap ("Same"), then Finish saves the session (' + sets.trim() + ')', /^1\//.test(sets.trim()) && n1 === n0 + 1);
 
-  // ---------- GLP-1 mode from More ----------
-  await tap('#kfMore');
-  await page.waitForSelector('#sheetIn [data-kf-x="glp1"]');
-  await tap('#sheetIn [data-kf-x="glp1"]');
+  // ---------- GLP-1 mode from its card on Fuel ----------
+  await page.evaluate(() => go('fuel'));
+  await page.waitForSelector('#kg1Off');
+  await tap('#kg1Off');
   await page.waitForFunction(() => /GLP-1/.test((document.getElementById('sheetIn') || {}).textContent || '') && document.getElementById('sheet').classList.contains('on'), null, { timeout: 5000 });
-  ck('GLP-1 mode opens from More in two taps', true);
+  ck('GLP-1 mode opens from its card on Fuel', true);
   await page.evaluate(() => closeSheet());
 
   // ---------- the plan ----------

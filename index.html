@@ -5302,6 +5302,102 @@ body.light-mode .crd-menu{box-shadow:0 20px 50px rgba(20,30,50,.18)}
 .crd-save{margin:6px 0 20px}
 @media (prefers-reduced-motion:reduce){.crd-ch .hot,.crd-globe .a{filter:none}}
 
+/* ---- the team tiles' one-line meaning, and the pop-ups behind them ----
+   The pop-ups live in #sheet, so they use its tokens (p08_sheet.css) and
+   read in dark, soft light and light glass alike. */
+.crd-tcap{font-size:11.5px;line-height:1.35;opacity:.74;margin-top:7px;letter-spacing:0}
+.cwd{--c0:#8FB3FF;--c1:#E0A33B;--c2:#B48CF0;--c3:#5FD08A;padding:2px 4px 24px;color:var(--txt);font-family:'Outfit',sans-serif}
+body.light-mode #sheet .cwd{--c0:#3E6FD8;--c1:#A86B12;--c2:#7B55C9;--c3:#1E7A4B}
+.cwd-t{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.cwd-s{font-size:12.5px;color:var(--txt-2);margin-top:3px}
+.cwd-seg{display:inline-flex;gap:3px;margin-top:12px;padding:3px;border-radius:12px;background:var(--glass);border:.5px solid var(--glass-brd)}
+.cwd-seg button{min-height:34px;padding:0 13px;border:0;border-radius:9px;background:none;color:var(--txt-2);font:600 12px 'Outfit',sans-serif;cursor:pointer}
+.cwd-seg button.on{background:var(--acc-bg);color:var(--txt);box-shadow:inset 0 0 0 .5px var(--acc-brd)}
+.cwd-big{display:flex;align-items:baseline;gap:8px;margin-top:14px}
+.cwd-big b{font:250 46px/1 'Outfit',sans-serif;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.cwd-big span{font-size:13.5px;color:var(--txt-2)}
+.cwd-big.soft b{font-size:26px;font-weight:400;letter-spacing:-.01em}
+.cwd-cap{font-size:13px;line-height:1.5;color:var(--txt-2);margin:6px 0 0}
+.cwd-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.cwd-stats.c3,.cwd-stats.c6{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (min-width:430px){.cwd-stats.c4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.cwd-st{padding:10px 11px;border-radius:14px;background:var(--glass);border:.5px solid var(--glass-brd);min-width:0}
+.cwd-st b{display:block;font:500 20px/1.1 'Outfit',sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cwd-st span{display:block;font-size:11.5px;line-height:1.3;color:var(--txt-2);margin-top:3px}
+.cwd-st.good b{color:var(--good)}.cwd-st.bad b{color:var(--bad)}.cwd-st.warn b{color:var(--warn)}
+.cwd-sec{margin-top:20px}
+.cwd-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:0 0 4px}
+.cwd-h small{font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;text-align:right}
+.cwd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:46px;padding:10px 2px;border:0;border-top:.5px solid var(--glass-brd);background:none;color:var(--txt);text-align:left;font:inherit;cursor:pointer}
+.cwd-row.static{cursor:default}
+.cwd-rn{flex:1;min-width:0;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cwd-rm{flex-shrink:0;max-width:55%;font-size:12px;line-height:1.35;color:var(--txt-2);text-align:right}
+.cwd-rm.bad{color:var(--bad)}.cwd-rm.warn{color:var(--warn)}
+.cwd-none{font-size:12.5px;line-height:1.45;color:var(--txt-2);margin:6px 0 0}
+.cwd-note{font-size:11.5px;line-height:1.5;color:var(--txt-3);margin:18px 0 0}
+.cwd-bar{display:flex;gap:2px;height:12px;border-radius:6px;overflow:hidden;background:var(--glass);margin-top:14px}
+.cwd-bar i{display:block;height:100%}.cwd-bar .b-none{flex:1;background:var(--glass-2)}
+.cwd .b0{background:var(--c0)}.cwd .b1{background:var(--c1)}.cwd .b2{background:var(--c2)}.cwd .b3{background:var(--c3)}
+.cwd-key{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:11.5px;color:var(--txt-2)}
+.cwd-key i,.cwd-det summary span i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.cwd-key i.ok{background:var(--good)}.cwd-key i.late{background:var(--bad)}
+.cwd-chart{display:block;width:100%;height:auto;margin-top:4px}
+.cwd-chart .ok{fill:var(--good)}.cwd-chart .late{fill:var(--bad)}.cwd-chart .nil{fill:var(--glass-brd)}
+.cwd-chart text{fill:var(--txt-3);font:10px 'Outfit',sans-serif;text-anchor:middle}
+.cwd-det{border-top:.5px solid var(--glass-brd);margin-top:6px}
+.cwd-det:first-of-type{margin-top:20px}
+.cwd-det summary{display:flex;justify-content:space-between;align-items:center;min-height:46px;cursor:pointer;list-style:none;font-size:14px}
+.cwd-det summary::-webkit-details-marker{display:none}
+.cwd-det summary b{font-weight:500;color:var(--txt-2);display:flex;align-items:center;gap:8px}
+.cwd-det summary b::after{content:"";width:7px;height:7px;border-right:1.5px solid var(--txt-3);border-bottom:1.5px solid var(--txt-3);transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.cwd-det[open] summary b::after{transform:rotate(225deg) translateY(-1px)}
+.cwd-det .cwd-row:first-of-type{border-top:0}
+.cwd-ap{padding:12px 13px;border-radius:16px;background:var(--glass);border:.5px solid var(--glass-brd);margin-top:8px}
+.cwd-aph{font-size:13.5px;line-height:1.4}.cwd-aph span{float:right;margin-left:8px;font-size:11.5px;color:var(--txt-3)}
+.cwd-apw{font-size:12.5px;line-height:1.45;color:var(--txt-2);margin:6px 0 0;overflow-wrap:anywhere}
+.cwd-apb{display:flex;gap:8px;margin-top:10px}.cwd-apb .cwd-btn{flex:1;min-height:40px;white-space:nowrap}.cwd-apb .cwd-btn:first-child{flex:2}
+.cwd-btns{display:flex;flex-direction:column;gap:8px;margin-top:22px}
+.cwd-btn{min-height:46px;padding:0 16px;border-radius:14px;border:.5px solid var(--acc-brd);background:var(--txt);color:var(--sheet-ink,#141414);font:600 13.5px 'Outfit',sans-serif;cursor:pointer}
+body.light-mode #sheet .cwd-btn{--sheet-ink:#FFFFFF}
+.cwd-btn.ghost{background:var(--glass);color:var(--txt);border-color:var(--glass-brd)}
+
+/* ---- phones: one calm column ----
+   Under 560 px the four small tiles stop sharing a row: each is a
+   full-width card, words on the left (title, number, what it means),
+   its chart on the right. The big "jobs done" tile gets shorter, and in
+   the how-it-works steps only the one you are on keeps its pill. */
+@container (max-width:559px){
+  .crd-mid{gap:16px;margin-bottom:20px}
+  .crd-stats{gap:16px 12px}
+  .crd-flow{gap:10px}
+  .crd-step{font-size:13px}
+  .crd-step:not(.s-active):not(.s-up) .st{display:none}
+  .crd-step.s-active,.crd-step.s-up{font-size:14.5px}
+  .crd-tiles{grid-template-columns:minmax(0,1fr);gap:12px}
+  .crd-t.t-big{min-height:0;padding-bottom:12px}
+  .crd-t.t-big .crd-ch{max-height:150px}
+  .crd-t:not(.t-big){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,42%);grid-template-rows:auto auto 1fr;column-gap:14px;min-height:0;padding:15px 16px 14px;border-radius:22px}
+  .crd-t:not(.t-big) .crd-th{grid-column:1/-1}
+  .crd-t:not(.t-big) .crd-tt{font-size:15px;max-width:none}
+  .crd-t:not(.t-big) .crd-tv{grid-column:1;margin-top:8px;font-size:30px}
+  .crd-t:not(.t-big) .crd-tcap,.crd-t:not(.t-big) .crd-tnote{grid-column:1;font-size:12px;opacity:.78}
+  .crd-t:not(.t-big) .crd-tc{grid-column:2;grid-row:2/4;margin-top:0;padding-top:0;align-self:center}
+  .crd-t:not(.t-big) .crd-ch{max-height:84px}
+  /* at this size a chart's own small labels are unreadable; the words beside it say the numbers */
+  .crd-t:not(.t-big) .crd-ch text{display:none}
+}
+/* a tile with no number yet says so in words */
+.crd-tv.soft{font-size:21px;letter-spacing:-.01em;margin-top:12px}
+/* Work by status: four labelled bars */
+.crd-srows{display:grid;gap:6px;font-size:11px;line-height:1}
+.crd-srows .r{display:grid;grid-template-columns:44px minmax(0,1fr) 18px;align-items:center;gap:6px}
+.crd-srows span{opacity:.75;white-space:nowrap}
+.crd-srows i{display:block;height:6px;position:relative}
+.crd-srows i::before{content:"";position:absolute;inset:0;border-radius:3px;background:currentColor;opacity:.16}
+.crd-srows i b{position:absolute;left:0;top:0;bottom:0;min-width:0;border-radius:3px;background:currentColor}
+.crd-srows em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;opacity:.85}
+@container (max-width:559px){.crd-t:not(.t-big) .crd-tv.soft{font-size:19px}}
+
 </style>
 <style id="p08-help">
 /* ---- Help: two choices, and "Find anything" ---- */
@@ -5786,32 +5882,6 @@ html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}
 .kla-s{font-size:11px;font-weight:600;color:var(--txt-2);white-space:nowrap;padding-top:2px}
 .kla-r.bad .kla-s{color:var(--txt)}
 .kla-foot{font-size:11.5px;color:var(--txt-3);margin-top:12px;line-height:1.45}
-
-</style>
-<style id="p08-focus">
-/* KovaFocus: only the areas you picked, More for the rest. Tokens only,
-   so it reads in dark, soft light and light glass. */
-.rail .rnav.kf-off,#s-home .kf-off{display:none!important}
-.rail .kf-more{margin-top:auto}
-.rail .kf-more+.rnav.kf-after-more,.rail .rnav.kf-after-more{margin-top:0!important}
-/* Home tiles: an odd one out fills its row */
-#s-home .grid2>.card.kf-wide{grid-column:1/-1}
-#s-home .kf-none{display:none!important}
-/* the extras wait until turned on */
-body.kf-focus:not(.kf-glp1) #kg1Off,
-body.kf-focus:not(.kf-labs) #klbCard,
-body.kf-focus:not(.kf-work) [data-o="team"]{display:none!important}
-/* the More sheet */
-.kf{padding:2px 4px 22px;color:var(--txt);font-family:'Outfit',sans-serif}
-.kf-h{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:16px 0 4px}
-.kf-r{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
-.kf-t{flex:1;min-width:0}
-.kf-t b{display:block;font-size:14px;font-weight:600;line-height:1.35}
-.kf-t span{display:block;font-size:12px;line-height:1.45;color:var(--txt-2);margin-top:2px}
-.kf-b{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
-.kf-btn{min-height:36px;min-width:88px;padding:0 12px;border-radius:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.2));background:var(--glass,rgba(255,255,255,.08));color:var(--txt);font:600 12.5px 'Outfit',sans-serif;cursor:pointer}
-.kf-btn.ghost{background:none;color:var(--txt-2)}
-.kf-all{display:block;width:100%;min-height:44px;margin-top:14px;border:0;background:none;color:var(--txt-2);font:500 12.5px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
 </style>
 </head>
@@ -34326,6 +34396,8 @@ window.WorkAI=(function(){
   function openItem(id){
     curItem=id; go('workitem'); drawItem();
   }
+  /* the AI team's detail pop-ups open a task straight from their lists */
+  window.__openWorkItem=openItem;
   function drawItem(){
     var i=W.find('items',curItem); if(!i) return;
     document.getElementById('wiTitle').textContent=i.name.length>32?i.name.slice(0,32)+'\u2026':i.name;
@@ -37571,11 +37643,10 @@ window.KovaAuth = (function(){
   function obDone(){ return !!rd(OBK); }
 
   var OB_Q = [
-    /* p12: several allowed. The tab bar and Today show just these
-       (KovaFocus); the rest waits under More and comes back one a day
-       after the first win. The first one picked is where Kova opens. */
+    /* several allowed. Everything stays in the tab bar either way; the
+       first one picked is where Kova opens and what the first week leans on. */
     { k:'areas', multi:true, q:'What do you want Kova for?',
-      why:'Pick any. Your tabs and Today show just these; everything else waits under More.',
+      why:'Pick any. Kova opens on the first one. Everything else is always one tap away.',
       opts:[
         {v:'fuel',  t:'Food',              s:'Two-tap logging, targets that move'},
         {v:'move',  t:'Training',          s:'A split that adapts to your sleep'},
@@ -37699,7 +37770,6 @@ window.KovaAuth = (function(){
                            skipped:!!skipped, win:win||null});
       }
     }catch(e){}
-    try{ if(window.KovaFocus) KovaFocus.paint(); }catch(e){}
     unlock();
     /* the one visible payoff: land where they said. Deferred a tick so the
        wall has started fading and the transition is not fighting it. */
@@ -48815,6 +48885,12 @@ window.KovaCrew=(function(){
     [0,.25,.5,.75,1].forEach(function(f){ var i=Math.round(f*(n-1)); h+='<text class="l" x="'+(10+i*(280/Math.max(1,n-1))).toFixed(1)+'" y="146">'+new Date(times[i]).getDate()+'</text>'; });
     return '<svg class="crd-ch ch-big" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+h+'</svg>';
   }
+  /* status as four labelled bars: readable at any tile size */
+  function statusRows(d){
+    var mx=Math.max.apply(null,d.map(function(x){ return +x.value||0; }).concat([1]));
+    return '<div class="crd-srows" role="img" aria-label="'+esc(d.map(function(x){ return x.label+' '+x.value; }).join(', '))+'">'+d.map(function(x){
+      return '<div class="r"><span>'+esc(x.label)+'</span><i><b style="width:'+((+x.value||0)/mx*100).toFixed(0)+'%"></b></i><em>'+esc(fmtN(+x.value||0))+'</em></div>'; }).join('')+'</div>';
+  }
   function orbitChart(frac){
     var r=10+frac*26;
     return '<svg class="crd-ch" viewBox="0 0 260 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><circle class="ring" cx="180" cy="112" r="74"/><path class="track" d="M60 112 A120 120 0 0 1 250 40"/>'
@@ -48897,10 +48973,174 @@ window.KovaCrew=(function(){
       +'<div class="crd-avs">'+(o.avatars||[]).slice(0,6).map(function(e){ return av(e); }).join('')+'</div><div class="crd-tc">'+o.chart+'</div></div>';
   }
   function tileSm(o){
-    var nav=o.go?' data-c="nav" data-n="'+o.go+'" role="button" tabindex="0"':'';
-    return '<div class="crd-t t-'+o.tone+'"'+nav+'><div class="crd-th"><span class="crd-tt">'+esc(o.title)+'</span><span class="crd-arw">'+svg(IC.arrow)+'</span></div>'
-      +(o.value!=null?'<div class="crd-tv">'+(o.pre?'<sup>'+esc(o.pre)+'</sup>':'')+esc(fmtN(o.value))+(o.suf?'<small>'+esc(o.suf)+'</small>':'')+'</div>':'')
+    var nav=o.k?' data-c="detail" data-k="'+o.k+'" role="button" tabindex="0" aria-label="'+esc(o.title+': '+fmtN(o.value)+(o.suf?' '+String(o.suf).replace(/^\//,''):'')+(o.cap?'. '+o.cap:'')+'. Open the details')+'"'
+      :o.go?' data-c="nav" data-n="'+o.go+'" role="button" tabindex="0"':'';
+    return '<div class="crd-t t-'+o.tone+(o.cap?' has-cap':'')+'"'+nav+'><div class="crd-th"><span class="crd-tt">'+esc(o.title)+'</span><span class="crd-arw">'+svg(IC.arrow)+'</span></div>'
+      +(o.value!=null?'<div class="crd-tv'+(o.soft?' soft':'')+'">'+(o.pre?'<sup>'+esc(o.pre)+'</sup>':'')+esc(fmtN(o.value))+(o.suf?'<small>'+esc(o.suf)+'</small>':'')+'</div>':'')
+      +(o.cap?'<div class="crd-tcap">'+esc(o.cap)+'</div>':'')
       +'<div class="crd-tc">'+o.chart+'</div></div>';
+  }
+
+  /* ---- the four team tiles, in depth ----
+     Each tile says what its number means in a line, and opens a pop-up
+     with the rest: the breakdown, the trend, the tasks or posts behind it
+     (each one tap to open), how it is counted, and what to do next. */
+  var dRange=30;
+  function dayLabel(t){ if(!t) return 'no date'; var d=Math.round((new Date(t).setHours(0,0,0,0)-sod())/DAY);
+    return d===0?'today':d===1?'tomorrow':d===-1?'yesterday':d<0?(-d)+' days ago':d<7?wd(t,true):dm(t); }
+  function lateBy(i){ return Math.max(1,Math.ceil((doneAt(i)-i.due-DAY)/DAY)); }
+  function overBy(i){ return Math.max(1,Math.round((sod()-new Date(i.due).setHours(0,0,0,0))/DAY)); }
+  function onTimeData(days){
+    var from=Date.now()-days*DAY, items=W.list('items');
+    var fin=items.filter(function(i){ var t=doneAt(i); return t&&t>=from; });
+    var dated=fin.filter(function(i){ return i.due; });
+    var late=dated.filter(function(i){ return doneAt(i)>i.due+DAY; }).sort(function(a,b){ return doneAt(b)-doneAt(a); });
+    var weeks=[];
+    for(var w=5;w>=0;w--){ var b=sod()+DAY-w*7*DAY, a=b-7*DAY;
+      var d=items.filter(function(i){ var t=doneAt(i); return i.due&&t&&t>=a&&t<b; }), l=d.filter(function(i){ return doneAt(i)>i.due+DAY; }).length;
+      weeks.push({a:a,ok:d.length-l,late:l}); }
+    var lb=late.map(lateBy);
+    var over=(W.overdue?W.overdue():[]).slice().sort(function(a,b){ return a.due-b.due; });
+    var soon=items.filter(function(i){ return i.status!=='Completed'&&i.due&&i.due>=sod()&&i.due<sod()+3*DAY; }).sort(function(a,b){ return a.due-b.due; });
+    return {days:days,fin:fin.length,dated:dated.length,ok:dated.length-late.length,late:late,undated:fin.length-dated.length,
+      rate:dated.length?Math.round((dated.length-late.length)/dated.length*100):null,
+      avgLate:lb.length?Math.round(lb.reduce(function(x,y){ return x+y; },0)/lb.length*10)/10:null,weeks:weeks,over:over,soon:soon};
+  }
+  function postsData(){
+    var P=(window.KovaPost&&KovaPost.all)?KovaPost.all():[];
+    var st=function(p,s){ return Object.keys(p.results||{}).some(function(k){ return p.results[k]&&p.results[k].state===s; }); };
+    var pub=P.filter(function(p){ return st(p,'ok'); });
+    return {all:P,pub:pub,rate:P.length?Math.round(pub.length/P.length*100):null,
+      sch:P.filter(function(p){ return p.status==='scheduled'; }).sort(function(a,b){ return (a.when||0)-(b.when||0); }),
+      drafts:P.filter(function(p){ return p.status==='draft'||p.status==='drafted'; }),
+      hand:P.filter(function(p){ return st(p,'manual'); }), failed:P.filter(function(p){ return st(p,'error'); }),
+      ideas:W.list('content',function(c){ return c.kind!=='post'; }).length};
+  }
+  /* pieces of a pop-up */
+  function dOpen(title,sub){ return '<div class="grab"></div><div class="cwd"><div class="cwd-t">'+esc(title)+'</div>'+(sub?'<div class="cwd-s">'+esc(sub)+'</div>':''); }
+  function dBig(v,unit,cap,soft){ return '<div class="cwd-big'+(soft?' soft':'')+'"><b>'+esc(v)+'</b>'+(unit?'<span>'+esc(unit)+'</span>':'')+'</div>'+(cap?'<p class="cwd-cap">'+esc(cap)+'</p>':''); }
+  function dStats(L){ return '<div class="cwd-stats c'+L.length+'">'+L.map(function(x){ return '<div class="cwd-st'+(x.tone?' '+x.tone:'')+'"><b>'+esc(x.v)+'</b><span>'+esc(x.l)+'</span></div>'; }).join('')+'</div>'; }
+  function dSec(h,body,note){ return '<section class="cwd-sec"><h3 class="cwd-h">'+esc(h)+(note?'<small>'+esc(note)+'</small>':'')+'</h3>'+body+'</section>'; }
+  function dTask(i,meta,tone){ return '<button class="cwd-row" data-cd="item" data-id="'+esc(i.id)+'"><span class="cwd-rn">'+esc(i.name)+'</span><span class="cwd-rm'+(tone?' '+tone:'')+'">'+esc(meta)+'</span></button>'; }
+  function dList(L,fn,none,max){ max=max||6; if(!L.length) return '<p class="cwd-none">'+esc(none)+'</p>';
+    return L.slice(0,max).map(fn).join('')+(L.length>max?'<p class="cwd-none">and '+(L.length-max)+' more</p>':''); }
+  function dBtns(L){ return '<div class="cwd-btns">'+L.map(function(b,i){ return '<button class="cwd-btn'+(i?' ghost':'')+'" '+b.a+'>'+esc(b.l)+'</button>'; }).join('')+'</div>'; }
+  function dBar(parts){
+    var tot=parts.reduce(function(a,p){ return a+p.v; },0);
+    return '<div class="cwd-bar" role="img" aria-label="'+esc(parts.map(function(p){ return p.l+' '+p.v; }).join(', '))+'">'
+      +(tot?parts.map(function(p,i){ return p.v?'<i class="b'+i+'" style="width:'+(p.v/tot*100).toFixed(1)+'%"></i>':''; }).join(''):'<i class="b-none"></i>')+'</div>'
+      +'<div class="cwd-key">'+parts.map(function(p,i){ return '<span><i class="b'+i+'"></i>'+esc(p.l)+' '+p.v+'</span>'; }).join('')+'</div>';
+  }
+  function weekBars(L){
+    var mx=Math.max.apply(null,L.map(function(w){ return w.ok+w.late; }).concat([1])), w=300/L.length, h='';
+    L.forEach(function(x,i){ var cx=w*i+w/2, ho=x.ok/mx*84, hl=x.late/mx*84, y=100;
+      if(!x.ok&&!x.late) h+='<rect class="nil" x="'+(cx-14).toFixed(1)+'" y="97" width="28" height="3" rx="1.5"/>';
+      if(x.ok) h+='<rect class="ok" x="'+(cx-14).toFixed(1)+'" y="'+(y-ho).toFixed(1)+'" width="28" height="'+ho.toFixed(1)+'" rx="5"/>';
+      if(x.late) h+='<rect class="late" x="'+(cx-14).toFixed(1)+'" y="'+(y-ho-hl-(x.ok?2:0)).toFixed(1)+'" width="28" height="'+hl.toFixed(1)+'" rx="5"/>';
+      h+='<text x="'+cx.toFixed(1)+'" y="116">'+esc(dm(x.a))+'</text>'; });
+    var sum=L.map(function(x){ return dm(x.a)+': '+x.ok+' on time, '+x.late+' late'; }).join('; ');
+    return '<svg class="cwd-chart" viewBox="0 0 300 120" role="img" aria-label="'+esc(sum)+'">'+h+'</svg>'
+      +'<div class="cwd-key"><span><i class="ok"></i>On time</span><span><i class="late"></i>Late</span></div>';
+  }
+  var PRI_ORDER=['Critical','High','Medium','Low'];
+
+  function dOnTime(){
+    var d=onTimeData(dRange);
+    var h=dOpen('On time','Tasks with a date, finished by that date')
+      +'<div class="cwd-seg" role="group" aria-label="Period">'+[7,30,90].map(function(n){ return '<button data-cd="range" data-r="'+n+'" aria-pressed="'+(n===d.days)+'"'+(n===d.days?' class="on"':'')+'>'+n+' days</button>'; }).join('')+'</div>';
+    h+=d.rate==null
+      ?dBig('No score yet','','No task with a date was finished in the last '+d.days+' days, so there is nothing to score. '+(d.soon.length?d.soon.length+' due in the next 3 days: finish one by its date and the score starts.':'Give tasks a due date and it starts with the first one you finish.'),true)
+      :dBig(d.rate+'%','on time',d.ok+' of '+d.dated+' finished by their date'+(d.late.length?'; '+d.late.length+' late'+(d.avgLate?', by '+d.avgLate+' days on average':''):'')+'.');
+    h+=dStats([{v:d.ok,l:'On time',tone:d.ok?'good':''},{v:d.late.length,l:'Late',tone:d.late.length?'bad':''},{v:d.undated,l:'Done, no date'},{v:d.over.length,l:'Overdue now',tone:d.over.length?'bad':''}]);
+    h+=dSec('The last six weeks',d.weeks.some(function(w){ return w.ok||w.late; })?weekBars(d.weeks):'<p class="cwd-none">Nothing with a date was finished in these six weeks.</p>');
+    h+=dSec('At risk now',dList(d.over.concat(d.soon),function(i){ var od=d.over.indexOf(i)>=0; return dTask(i,od?overBy(i)+' d overdue':'due '+dayLabel(i.due),od?'bad':'warn'); },'Nothing overdue or due in the next 3 days.'),'overdue, or due in 3 days');
+    h+=dSec('Finished late',dList(d.late,function(i){ var n=lateBy(i); return dTask(i,n+' day'+(n===1?'':'s')+' late','bad'); },'None in this period.'));
+    h+='<p class="cwd-note">A task counts as on time when it is marked done by the end of its due day. Tasks without a date are not scored.</p>';
+    return h+dBtns([{l:'Open Tasks',a:'data-cd="go" data-s="worktasks"'}].concat(d.over.length?[{l:'Have the team triage what is late',a:'data-cd="ask" data-q="Triage my overdue tasks"'}]:[]))+'</div>';
+  }
+  function dStatus(){
+    var items=W.list('items'), K=[['Not Started','To do'],['In Progress','Doing'],['Waiting','Waiting'],['Completed','Done']], by={};
+    K.forEach(function(k){ by[k[0]]=items.filter(function(i){ return (i.status||'Not Started')===k[0]; }); });
+    var open=items.filter(function(i){ return i.status!=='Completed'; }), a=analyze(7), od=W.overdue?W.overdue():[], td=W.dueToday?W.dueToday():[];
+    var stuck=by['Waiting'].filter(function(i){ return Date.now()-(i.updated||i.created||Date.now())>3*DAY; });
+    var slow=by['In Progress'].filter(function(i){ return Date.now()-(i.updated||i.created||Date.now())>5*DAY; });
+    var net=a.completed-a.created;
+    var h=dOpen('Work by status',items.length+' task'+(items.length===1?'':'s')+' in Work OS')
+      +dBig(open.length,'open',(od.length?od.length+' overdue':'Nothing overdue')+(td.length?', '+td.length+' due today':'')+'.')
+      +dBar(K.map(function(k){ return {v:by[k[0]].length,l:k[1]}; }));
+    h+=dSec('This week',dStats([{v:a.created,l:'Added'},{v:a.completed,l:'Finished',tone:a.completed?'good':''},{v:(net>0?'+':'')+net,l:net>=0?'Net, cleared':'Net, piling up',tone:net<0?'warn':''},{v:a.avgCycleDays==null?'—':a.avgCycleDays+' d',l:'Avg to finish'}]),'last 7 days');
+    var pri=PRI_ORDER.map(function(p){ return {v:open.filter(function(i){ return (i.priority||'Medium')===p; }).length,l:p,tone:p==='Critical'&&open.some(function(i){ return i.priority==='Critical'; })?'bad':''}; });
+    h+=dSec('Open, by priority',dStats(pri));
+    var push=[];
+    od.slice().sort(function(a,b){ return a.due-b.due; }).forEach(function(i){ push.push({i:i,m:overBy(i)+' d overdue',t:'bad'}); });
+    stuck.forEach(function(i){ push.push({i:i,m:'waiting '+Math.floor((Date.now()-(i.updated||i.created))/DAY)+' d',t:'warn'}); });
+    slow.forEach(function(i){ push.push({i:i,m:'doing for '+Math.floor((Date.now()-(i.updated||i.created))/DAY)+' d',t:'warn'}); });
+    h+=dSec('Needs a push',dList(push,function(x){ return dTask(x.i,x.m,x.t); },'Nothing overdue, stuck or dragging.'),'overdue, waiting 3+ days, doing 5+ days');
+    h+=K.map(function(k,ix){ var L=by[k[0]].slice().sort(function(a,b){ return (a.due||9e15)-(b.due||9e15); });
+      return '<details class="cwd-det"'+(ix===0&&L.length?' open':'')+'><summary><span><i class="b'+ix+'"></i>'+esc(k[1])+'</span><b>'+L.length+'</b></summary>'
+        +dList(L,function(i){ return dTask(i,[i.due?(k[0]==='Completed'?'done '+dayLabel(doneAt(i)):'due '+dayLabel(i.due)):'no date',i.priority||''].filter(Boolean).join(' · '),i.status!=='Completed'&&od.indexOf(i)>=0?'bad':''); },'None.',8)+'</details>'; }).join('');
+    return h+dBtns([{l:'Open Tasks',a:'data-cd="go" data-s="worktasks"'}].concat(od.length||stuck.length?[{l:'Have the team triage these',a:'data-cd="ask" data-q="Triage my overdue tasks"'}]:[]))+'</div>';
+  }
+  function dContent(){
+    var d=postsData(), PL=(window.KovaPost&&KovaPost.PLAT)||{}, T=(window.KovaTraction&&KovaTraction._state&&KovaTraction._state.posts)||{};
+    var name=function(k){ return (PL[k]&&PL[k].n)||k; };
+    var h=dOpen('Content','From idea to published')
+      +(d.all.length?dBig(d.rate+'%','published',d.pub.length+' of '+d.all.length+' post'+(d.all.length===1?' is':'s are')+' live on at least one platform.')
+        :dBig('No posts yet','','Write one in the Studio and it shows here, from draft to published.',true));
+    h+=dSec('Pipeline',dStats([{v:d.ideas,l:'Ideas'},{v:d.drafts.length,l:'Drafts'},{v:d.sch.length,l:'Scheduled'},{v:d.pub.length,l:'Published',tone:d.pub.length?'good':''},{v:d.hand.length,l:'Your turn',tone:d.hand.length?'warn':''},{v:d.failed.length,l:'Failed',tone:d.failed.length?'bad':''}]));
+    h+=dSec('Next up',dList(d.sch,function(p){ return '<button class="cwd-row" data-cd="go" data-s="workstudio"><span class="cwd-rn">'+esc(p.title||'Untitled post')+'</span><span class="cwd-rm">'+esc((p.when?wd(p.when,true)+' '+hm(p.when):'')+' · '+(p.targets||[]).map(name).join(', '))+'</span></button>'; },'Nothing scheduled.',4));
+    var recent=d.pub.slice().sort(function(a,b){ var t=function(p){ return Math.max.apply(null,Object.keys(p.results||{}).map(function(k){ return (p.results[k]&&p.results[k].at)||0; }).concat([p.updated||0])); }; return t(b)-t(a); });
+    h+=dSec('Recently published',dList(recent,function(p){
+      var tr=T[p.id], views=0, likes=0;
+      if(tr&&tr.platforms) Object.keys(tr.platforms).forEach(function(k){ var m=tr.platforms[k].metrics||{}; views+=+m.views||0; likes+=+m.likes||0; });
+      var ok=(p.targets||[]).filter(function(k){ return p.results[k]&&p.results[k].state==='ok'; }).length;
+      return '<button class="cwd-row" data-cd="traction" data-id="'+esc(p.id)+'"><span class="cwd-rn">'+esc(p.title||'Untitled post')+'</span><span class="cwd-rm">'+ok+' of '+(p.targets||[]).length+' live'+(views?' · '+fmtN(views)+' views, '+fmtN(likes)+' likes':'')+'</span></button>'; },'Nothing published yet.',5));
+    var per={}; d.all.forEach(function(p){ (p.targets||[]).forEach(function(k){ var r=(p.results||{})[k], x=per[k]=per[k]||{ok:0,bad:0,hand:0,sch:0};
+      if(r&&r.state==='ok') x.ok++; else if(r&&r.state==='error') x.bad++; else if(r&&r.state==='manual') x.hand++; else if(p.status==='scheduled') x.sch++; }); });
+    var ks=Object.keys(per).sort(function(a,b){ return (per[b].ok+per[b].bad+per[b].sch)-(per[a].ok+per[a].bad+per[a].sch); });
+    if(ks.length) h+=dSec('By platform',ks.slice(0,8).map(function(k){ var x=per[k], bits=[];
+      if(x.ok||!(x.sch||x.hand||x.bad)) bits.push(x.ok+' live'); if(x.sch) bits.push(x.sch+' scheduled'); if(x.hand) bits.push(x.hand+' your turn'); if(x.bad) bits.push(x.bad+' failed');
+      return '<div class="cwd-row static"><span class="cwd-rn">'+esc(name(k))+'</span><span class="cwd-rm'+(x.bad?' bad':'')+'">'+bits.join(' · ')+'</span></div>'; }).join(''));
+    if(d.failed.length) h+=dSec('Failed',dList(d.failed,function(p){ var why=(p.targets||[]).filter(function(k){ return p.results[k]&&p.results[k].state==='error'; }).map(function(k){ return name(k)+': '+String(p.results[k].msg||'failed').slice(0,60); }).join('; ');
+      return '<button class="cwd-row" data-cd="go" data-s="workstudio"><span class="cwd-rn">'+esc(p.title||'Untitled post')+'</span><span class="cwd-rm bad">'+esc(why)+'</span></button>'; },'',3));
+    return h+dBtns([{l:'Open the Studio',a:'data-cd="go" data-s="workstudio"'},{l:'Draft 3 posts for this week',a:'data-cd="ask" data-q="Draft 3 posts for this week"'}])+'</div>';
+  }
+  function dNeeds(){
+    var wt=waiting().slice().sort(function(a,b){ return a.at-b.at; }), items=W.list('items'), od=(W.overdue?W.overdue():[]).slice().sort(function(a,b){ return a.due-b.due; });
+    var wo=items.filter(function(i){ return i.status==='Waiting'; }).sort(function(a,b){ return (a.updated||a.created||0)-(b.updated||b.created||0); });
+    var h=dOpen('Needs you',wt.length?wt.length+' waiting for your OK':'Nothing waiting for your OK')
+      +dBig(wt.length,wt.length===1?'approval':'approvals',wt.length?'Your team stopped here. Nothing leaves Kova, and nothing of yours changes, until you say so.':'All clear. When an employee wants to send an email or change your work, it waits here first.');
+    h+=dSec('Waiting for your OK',wt.length?wt.map(function(j){
+      var e=emp(j.emp)||{n:'?'}, a=j.ask||{}, T=TOOLS[a.name], i=a.input||{}, d=T&&T.describe?T.describe(i):{t:a.name||'a step',n:'',s:''};
+      var what=a.name==='draft_email'?'To '+(i.to||'no address yet')+' · '+(i.subject||'no subject')+(i.body?' · '+String(i.body).split('\n')[0].slice(0,80):''):[d.n,d.s].filter(Boolean).join(' · ');
+      return '<div class="cwd-ap"><div class="cwd-aph"><b>'+esc(e.n)+'</b> wants to '+esc(String(d.t||'').toLowerCase())+'<span>'+esc(ago(j.at))+'</span></div>'
+        +(what?'<p class="cwd-apw">'+esc(what)+'</p>':'')
+        +'<div class="cwd-apb"><button class="cwd-btn" data-cd="nav" data-n="approvals">Review and approve</button><button class="cwd-btn ghost" data-cd="skip" data-j="'+esc(j.id)+'">Skip</button></div></div>'; }).join('')
+      :'<p class="cwd-none">Nothing right now.</p>');
+    h+=dSec('Waiting on someone else',dList(wo,function(i){ var n=Math.floor((Date.now()-(i.updated||i.created||Date.now()))/DAY); return dTask(i,n?'waiting '+n+' d':'since today',n>3?'warn':''); },'No task is waiting on someone else.'),'a nudge may be due');
+    h+=dSec('Overdue',dList(od,function(i){ return dTask(i,overBy(i)+' d overdue','bad'); },'Nothing overdue.'));
+    return h+dBtns([{l:'Open Approvals',a:'data-cd="nav" data-n="approvals"'}].concat(od.length?[{l:'Have the team triage what is late',a:'data-cd="ask" data-q="Triage my overdue tasks"'}]:[]))+'</div>';
+  }
+  var DETAIL={ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
+  function detail(k){
+    if(!DETAIL[k]||!window.openSheet) return;
+    dCur=k; openSheet(DETAIL[k]());
+    var el=document.querySelector('#sheetIn .cwd'); if(el) el.addEventListener('click',onDetail);
+    try{ if(window.KovaAnalytics) KovaAnalytics.track('team_tile',{feature:k}); }catch(e){}
+  }
+  function onDetail(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-cd]'); if(!b) return;
+    var c=b.getAttribute('data-cd');
+    if(c==='range'){ dRange=+b.getAttribute('data-r')||30; detail(dCur); return; }
+    if(c==='skip'){ skip(b.getAttribute('data-j'),'You skipped this from Needs you.'); detail(dCur); return; }
+    if(window.closeSheet) closeSheet();
+    if(c==='item'){ var id=b.getAttribute('data-id'); setTimeout(function(){ if(window.__openWorkItem) __openWorkItem(id); },220); return; }
+    if(c==='go'){ var s=b.getAttribute('data-s'); setTimeout(function(){ try{ go(s); }catch(e){} },220); return; }
+    if(c==='traction'){ var pid=b.getAttribute('data-id'); setTimeout(function(){ if(window.KovaTraction&&KovaTraction.open) KovaTraction.open(pid); else try{ go('workstudio'); }catch(e){} },220); return; }
+    if(c==='nav'){ S.view='team'; S.nav=b.getAttribute('data-n')||'team'; S.draft=null; paint(); top0(); return; }
+    if(c==='ask'){ var q=b.getAttribute('data-q'), r=route(q); if(!r){ say('Hire someone first.'); return; }
+      var j=start(r.emp,q,'team'); if(j) log(j,'From the '+({ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'}[dCur]||'team')+' tile. Routed to '+r.emp.n+'.','handoff');
+      S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return; }
   }
 
   /* ---- the team page ---- */
@@ -48908,7 +49148,7 @@ window.KovaCrew=(function(){
     var a=analyze(7), L=emps(), all=jobsOf(), cur=all.filter(function(j){ return j.state==='running'||j.state==='waiting'; }).slice(-1)[0], last=all.slice(-1)[0];
     var rng=S.range||30, days=[];
     for(var d=rng-1;d>=0;d--){ var s0=sod()-d*DAY; days.push({s:s0,v:all.filter(function(j){ return j.state==='done'&&(j.end||j.at)>=s0&&(j.end||j.at)<s0+DAY; }).length}); }
-    var posts=(window.KovaPost&&KovaPost.all)?KovaPost.all():[], pub=posts.filter(function(p){ return Object.keys(p.results||{}).some(function(k){ return p.results[k]&&p.results[k].state==='ok'; }); }).length, wt=waiting().length;
+    var ot=onTimeData(30), pd=postsData(), wl=waiting(), wt=wl.length, od=W.overdue?W.overdue():[], td=W.dueToday?W.dueToday():[];
     return head(last?(last.end||last.at):0,(String(prof().business||'').trim()||'Your')+' team')
       +'<div class="crd-mid"><div class="crd-stats">'
         +stat('Finished',a.completed,'✓','Tasks done this week')+stat('Open',a.open,'','Still to do')+stat('Overdue',a.overdue,'!','Past their date')+stat('Team',L.length,'person','AI employees')
@@ -48916,10 +49156,14 @@ window.KovaCrew=(function(){
       +tabsRow('all')
       +'<div class="crd-tiles">'
         +tileBig({tone:'lit',value:days.reduce(function(x,y){ return x+y.v; },0),label:'jobs done',range:rng,avatars:L,chart:ringsChart(days.map(function(x){ return x.v; }),days.map(function(x){ return x.s; }))})
-        +tileSm({tone:'g1',title:'On time',value:a.onTimeRate==null?'—':a.onTimeRate,pre:a.onTimeRate==null?'':'%',suf:'/of tasks',chart:gaugeChart(a.onTimeRate||0,'%',false),go:'reports'})
-        +tileSm({tone:'g2',title:'Work by status',value:a.open+a.completed,suf:'/tasks',chart:hillsChart(statusData(a)),go:'jobs'})
-        +tileSm({tone:'g3',title:'Content',value:posts.length?Math.round(pub/posts.length*100):0,pre:'%',suf:'/published',chart:orbitChart(posts.length?pub/posts.length:0)})
-        +tileSm({tone:'g4',title:'Needs you',value:wt,suf:wt===1?'/approval':'/approvals',chart:halftone(wt),go:'approvals'})
+        +tileSm({tone:'g1',title:'On time',k:'ontime',value:ot.rate==null?'No score yet':ot.rate+'%',soft:ot.rate==null,suf:ot.rate==null?'':'/on time',chart:gaugeChart(ot.rate||0,'%',false),
+          cap:ot.rate==null?(ot.soon.length?ot.soon.length+' due soon. Finish one by its date and the score starts.':'Starts with the first dated task you finish.'):ot.ok+' of '+ot.dated+' by their date, last 30 days'})
+        +tileSm({tone:'g2',title:'Work by status',k:'status',value:a.open,suf:'/open',chart:statusRows(statusData(a)),
+          cap:(od.length?od.length+' overdue':'Nothing overdue')+(td.length?' · '+td.length+' due today':'')})
+        +tileSm({tone:'g3',title:'Content',k:'content',value:pd.rate==null?'No posts yet':pd.rate+'%',soft:pd.rate==null,suf:pd.rate==null?'':'/published',chart:orbitChart(pd.all.length?pd.pub.length/pd.all.length:0),
+          cap:pd.all.length?pd.pub.length+' of '+pd.all.length+' posts live'+(pd.sch.length?' · '+pd.sch.length+' scheduled':''):'Draft one in the Studio and follow it to published.'})
+        +tileSm({tone:'g4',title:'Needs you',k:'needs',value:wt,suf:wt===1?'/approval':'/approvals',chart:halftone(wt),
+          cap:wt?'Oldest waiting '+ago(wl.slice().sort(function(x,y){ return x.at-y.at; })[0].at).replace(' ago',''):'All clear'})
       +'</div>'
       +'<div class="crd-below">'+composer(null)+needsYou()+recent()+'</div>';
   }
@@ -49188,6 +49432,7 @@ window.KovaCrew=(function(){
     if(c==='open'){ S.view='team'; S.nav='team'; S.tab=id||'all'; S.draft=null; S.scroll=true; paint(); return; }
     if(c==='job'){ var jj=S.jobs[jid]; if(jj){ S.view='team'; S.nav='team'; S.tab=jj.emp; paint(); var n=document.getElementById('job-'+jid); if(n&&n.scrollIntoView) n.scrollIntoView({block:'center'}); } return; }
     if(c==='search'){ S.view='team'; S.nav='team'; S.tab='all'; paint(); var ta0=document.getElementById('crwAsk'); if(ta0){ if(ta0.scrollIntoView) ta0.scrollIntoView({block:'center'}); try{ ta0.focus({preventScroll:true}); }catch(x){} } return; }
+    if(c==='detail'){ detail(b.getAttribute('data-k')); return; }
     if(c==='settings'){ S.showSet=!S.showSet; paint(); return; }
     if(c==='range'){ S.range={7:30,30:90,90:7}[S.range||30]; paint(); return; }
     if(c==='hire'){ S.view='hire'; S.draft=null; paint(); top0(); return; }
@@ -49297,7 +49542,7 @@ window.KovaCrew=(function(){
 
   return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount};
+    slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData};
 })();
 
 </script>
@@ -53000,184 +53245,6 @@ window.KovaLaunch=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',hook); else setTimeout(hook,0);
 
   return {open:open,rows:rows,ping:ping,_tap:onTap};
-})();
-
-</script>
-<script id="p08-focus">
-/* =====================================================================
-   KovaFocus - show new people less (p12).
-
-   The first question asks what you want Kova for: Food, Training, Sleep &
-   recovery, Work (any of them). From then on:
-     - the tab bar shows Home and those areas only, never more than five
-       (Sleep & recovery brings Sleep and Vitals; when all four areas are
-       picked, Vitals is the one that waits under More);
-     - Home shows those areas' tiles, and the Work OS card only if Work
-       was picked;
-     - the extras stay off the main path until turned on from More: the AI
-       team, Studio publishing, calling your team by voice, lab results and
-       GLP-1 mode;
-     - after the first win, the areas not picked come back as the first
-       week's one-a-day suggestion (KovaFirstWeek), one at a time.
-   More sits at the bottom of the rail, above Settings, one tap from all of
-   it. Nobody who skipped the question, or set up Kova before it, loses
-   anything: they keep every area, with Vitals under More to stay at five.
-   ===================================================================== */
-window.KovaFocus=(function(){
-  'use strict';
-  var KEY='kova.focus.v1', MAX=5;
-  var AREAS=[
-    {k:'fuel',n:'Food',p:['fuel'],why:'Two-tap meal logging, and targets that move with your sleep and training.'},
-    {k:'move',n:'Training',p:['move'],why:'Your split, last time on every set, and plates worked out for you.'},
-    {k:'sleep',n:'Sleep & recovery',p:['sleep','vitals'],why:'What moves your nights, readiness each morning, and your vitals.'},
-    {k:'work',n:'Work',p:['work'],why:'Tasks placed in your sharpest hours, your calendar, and an AI team.'}
-  ];
-  var ORDER=['home','fuel','sleep','move','vitals','work'];
-  var DROP=['vitals','work','sleep','move','fuel'];          // what waits under More first when there are too many
-  var NAME={fuel:'Fuel',sleep:'Sleep',move:'Workout',vitals:'Vitals',work:'Work OS'};
-  var CAPPED={vitals:'Resting heart rate, HRV, blood oxygen and your trends. Also the Vitals tile on Home.'};
-  var S=lsJ(KEY,{extra:[],adv:{},all:false});
-  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
-  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
-  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
-  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
-
-  /* what was picked on the first run; null = everything */
-  function picked(){ try{ var o=(window.KP&&KP.get('onboard'))||{}; return Array.isArray(o.areas)&&o.areas.length?o.areas:null; }catch(e){ return null; } }
-  function focused(){ return !S.all&&!!picked(); }
-  function areas(){
-    if(!focused()) return AREAS.map(function(a){ return a.k; });
-    var a=picked().slice(); (S.extra||[]).forEach(function(k){ if(a.indexOf(k)<0) a.push(k); }); return a;
-  }
-  function pillars(){ var on=areas(), p=[]; AREAS.forEach(function(a){ if(on.indexOf(a.k)>=0) p=p.concat(a.p); }); return p; }
-  function tabs(){
-    var p=pillars(), t=ORDER.filter(function(id){ return id==='home'||p.indexOf(id)>=0; });
-    for(var i=0;t.length>MAX&&i<DROP.length;i++){ var at=t.indexOf(DROP[i]); if(at>0) t.splice(at,1); }
-    return t;
-  }
-  function hidden(){ var t=tabs(); return ORDER.filter(function(id){ return id!=='home'&&t.indexOf(id)<0; }); }
-
-  /* ---------------- the rail ---------------- */
-  function paintRail(){
-    var rail=document.querySelector('.rail'); if(!rail) return;
-    var t=tabs();
-    [].forEach.call(rail.querySelectorAll('.rnav[data-go]'),function(n){
-      var id=n.getAttribute('data-go'); if(ORDER.indexOf(id)<0) return;
-      n.classList.toggle('kf-off',t.indexOf(id)<0);
-    });
-    var more=document.getElementById('kfMore'), set=rail.querySelector('.rnav[data-go="settings"]');
-    if(!more){
-      more=document.createElement('div'); more.id='kfMore'; more.className='rnav kf-more'; more.setAttribute('role','button'); more.setAttribute('tabindex','0');
-      more.setAttribute('title','More'); more.setAttribute('aria-label','More: everything else in Kova');
-      more.innerHTML='<svg class="ic" aria-hidden="true"><use href="#i-dots"/></svg>';
-      more.addEventListener('click',open);
-      more.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); open(); } });
-      if(set) set.parentNode.insertBefore(more,set); else rail.appendChild(more);
-    }
-    if(set) set.classList.add('kf-after-more');
-  }
-  /* ---------------- Home ---------------- */
-  function paintHome(){
-    var home=document.getElementById('s-home'); if(!home) return;
-    var p=pillars(), f=focused(), grid=null, vis=[];
-    [].forEach.call(home.querySelectorAll('.card.tap[data-go]'),function(c){
-      var id=c.getAttribute('data-go'); if(['sleep','move','fuel','vitals'].indexOf(id)<0) return;
-      var on=!f||p.indexOf(id)>=0; c.classList.toggle('kf-off',!on); c.classList.remove('kf-wide'); if(on) vis.push(c); grid=c.parentElement;
-    });
-    /* an odd one out fills its row, so the grid has no hole */
-    if(vis.length%2) vis[vis.length-1].classList.add('kf-wide');
-    if(grid) grid.classList.toggle('kf-none',!vis.length);
-    var os=document.getElementById('osHero'); if(os) os.classList.toggle('kf-off',f&&p.indexOf('work')<0);
-    var b=document.body;
-    b.classList.toggle('kf-focus',f);
-    b.classList.toggle('kf-work',!f||p.indexOf('work')>=0);
-    b.classList.toggle('kf-glp1',!f||!!S.adv.glp1||!!(window.KovaGLP1&&KovaGLP1.on()));
-    var labs=0; try{ labs=window.KovaLabs?KovaLabs.markers().length:0; }catch(e){}
-    b.classList.toggle('kf-labs',!f||!!S.adv.labs||labs>0);
-  }
-  function paint(){ paintRail(); paintHome(); }
-
-  /* ---------------- More ---------------- */
-  var EXTRA=[
-    {k:'crew',n:'Your AI team',d:'AI employees that draft, research and follow up, with your approval.',need:'work',act:function(){ go('workteam'); }},
-    {k:'studio',n:'Studio publishing',d:'Write once, post to 16 platforms, and see what worked.',need:'work',act:function(){ go('work'); }},
-    {k:'voice',n:'Call your team by voice',d:'Say an employee’s name and ask. Uses the microphone only while on.',need:'work',
-      on:function(){ return !!(window.KovaListen&&KovaListen.on()); },
-      act:function(){ if(!window.KovaListen||!KovaListen.supported()){ say('This browser cannot listen. The app can.'); return; } KovaListen.set(!KovaListen.on()); say(KovaListen.on()?'Listening for your team’s names.':'Voice off.'); }},
-    {k:'labs',n:'Lab results',d:'Read a blood test PDF or photo; you confirm every row. Never a diagnosis.',
-      on:function(){ return !!S.adv.labs; },
-      act:function(){ S.adv.labs=true; save(); paint(); track('feature_on',{feature:'labs'}); if(window.KovaLabs&&KovaLabs.open) KovaLabs.open(); }},
-    {k:'glp1',n:'GLP-1 mode',d:'For Ozempic, Wegovy, Mounjaro and Zepbound: a protein floor, doses and side effects.',
-      on:function(){ return !!(window.KovaGLP1&&KovaGLP1.on()); },
-      act:function(){ S.adv.glp1=true; save(); paint(); track('feature_on',{feature:'glp1'}); if(window.KovaGLP1&&KovaGLP1.setup) KovaGLP1.setup(); }}
-  ];
-  function open(){
-    if(!window.openSheet) return;
-    var hid=hidden(), on=areas();
-    var h='<div class="grab"></div><div class="kf"><div class="title-s" style="font-size:19px">More</div>';
-    /* one row per area not picked; a screen of a picked area that waits
-       only because of the five-tab limit (Vitals) gets its own row */
-    var list=[];
-    AREAS.forEach(function(a){ if(on.indexOf(a.k)<0) list.push({go:a.p[0],n:a.n,why:a.why,add:a.k}); });
-    hid.forEach(function(id){ if(!list.some(function(r){ return AREAS.filter(function(a){ return a.n===r.n; })[0].p.indexOf(id)>=0; })) list.push({go:id,n:NAME[id],why:CAPPED[id]||''}); });
-    if(list.length){
-      h+='<div class="kf-h">Also in Kova</div>'+list.map(function(r){
-        return '<div class="kf-r"><div class="kf-t"><b>'+esc(r.n)+'</b><span>'+esc(r.why)+'</span></div>'
-          +'<div class="kf-b"><button class="kf-btn" data-kf-go="'+r.go+'">Open</button>'+(r.add?'<button class="kf-btn ghost" data-kf-add="'+r.add+'">Add to tabs</button>':'')+'</div></div>';
-      }).join('');
-    }
-    h+='<div class="kf-h">Turn on when you need it</div>'+EXTRA.map(function(x){
-      var st=x.on?x.on():null;
-      return '<div class="kf-r"><div class="kf-t"><b>'+esc(x.n)+'</b><span>'+esc(x.d)+'</span></div><div class="kf-b"><button class="kf-btn'+(st?' ghost':'')+'" data-kf-x="'+x.k+'"'+(st!=null?' aria-pressed="'+st+'"':'')+'>'
-        +(st==null?'Open':st?(x.k==='voice'?'Turn off':'On'):'Turn on')+'</button></div></div>';
-    }).join('');
-    if(focused()) h+='<button class="kf-all" data-kf-all="1">Show every area in the tab bar</button>';
-    else if(picked()) h+='<button class="kf-all" data-kf-all="0">Back to just '+esc(picked().map(function(k){ return AREAS.filter(function(a){ return a.k===k; })[0].n; }).join(', '))+'</button>';
-    openSheet(h+'</div>');
-    var el=document.querySelector('#sheetIn .kf'); if(el) el.addEventListener('click',onMore);
-    track('more_open',{count:hid.length});
-  }
-  function onMore(ev){
-    var b=ev.target.closest('button'); if(!b) return;
-    if(b.hasAttribute('data-kf-go')){ if(window.closeSheet) closeSheet(); try{ go(b.getAttribute('data-kf-go')); }catch(e){} return; }
-    if(b.hasAttribute('data-kf-add')){ add(b.getAttribute('data-kf-add')); open(); return; }
-    if(b.hasAttribute('data-kf-all')){ S.all=b.getAttribute('data-kf-all')==='1'; save(); paint(); open(); return; }
-    if(b.hasAttribute('data-kf-x')){
-      var x=EXTRA.filter(function(e){ return e.k===b.getAttribute('data-kf-x'); })[0]; if(!x) return;
-      var stays=x.k==='voice';
-      if(!stays&&window.closeSheet) closeSheet();
-      setTimeout(function(){ try{ x.act(); }catch(e){} if(stays) open(); },stays?0:260);
-    }
-  }
-  function add(k){
-    if(!S.extra) S.extra=[];
-    if(S.extra.indexOf(k)<0) S.extra.push(k);
-    save(); paint();
-    var a=AREAS.filter(function(x){ return x.k===k; })[0];
-    track('area_added',{answer:k}); if(a) say(a.n+' is in your tab bar.');
-  }
-
-  /* ---------------- one a day, after the first win ---------------- */
-  function offerAreas(){
-    var F=window.KovaFirstWeek; if(!F||!F.PROMPTS||F.__kfAreas) return;
-    var st=F._S&&F._S(); if(!st||!st.win||!focused()) return;
-    F.__kfAreas=1;
-    AREAS.forEach(function(a){
-      F.PROMPTS.push({id:'area-'+a.k,min:1,when:function(){ return focused()&&areas().indexOf(a.k)<0; },
-        q:'Kova does '+a.n.toLowerCase()+' too',why:a.why,opts:[['add','Add it'],['no','Not now']],
-        pick:function(v){ if(v==='add') add(a.k); }});
-    });
-  }
-  function watchWin(){
-    var A=window.KovaAnalytics; if(!A||A.__kf) return;
-    var real=A.track; A.track=function(name){ var r=real.apply(this,arguments); if(name==='first_win') setTimeout(offerAreas,0); return r; }; A.__kf=1;
-  }
-
-  function start(){ paint(); watchWin(); offerAreas(); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
-
-  return {areas:areas,pillars:pillars,tabs:tabs,hidden:hidden,focused:focused,open:open,add:add,paint:paint,AREAS:AREAS,_S:function(){ return S; },_set:function(s){ S=s; save(); paint(); }};
 })();
 
 </script>
