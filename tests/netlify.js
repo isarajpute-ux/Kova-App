@@ -147,12 +147,10 @@ const ck = (n, c) => R.push([n, !!c]);
   ck('an unknown route is 404', (await call('GET', '/api/nope')).status === 404);
 
   // every private route refuses a missing or forged token
-  const priv = [['GET', '/status'], ['POST', '/connect/google'], ['GET', '/targets/facebook'], ['POST', '/disconnect/google'],
-    ['POST', '/call/google'], ['GET', '/inbound'], ['POST', '/script'], ['POST', '/publish'], ['GET', '/posts'], ['POST', '/write'],
-    ['POST', '/foods/search'], ['POST', '/crew/step'], ['POST', '/hashtags'], ['POST', '/assist'], ['POST', '/assist/email'],
-    ['POST', '/traction/refresh'], ['POST', '/card/push'], ['GET', '/agent'], ['POST', '/agent/settings'], ['POST', '/agent/run'],
-    ['POST', '/health/token'], ['POST', '/chat'], ['GET', '/account/export'], ['POST', '/account/delete'], ['POST', '/media/upload'], ['POST', '/media/remove'], ['POST', '/meal/read'], ['GET', '/social/me'], ['GET', '/social/feed'], ['POST', '/social/profile'], ['POST', '/social/follow'], ['POST', '/social/post'], ['POST', '/social/like'], ['POST', '/social/comment'], ['GET', '/billing/status'],
-    ['POST', '/devices'], ['POST', '/reminders'], ['GET', '/ads/setup']];
+  /* every route ROUTES.md marks as signed-in only, from the router itself (build/routes.mjs) */
+  const { generate } = await import(path.join(__dirname, '..', 'build', 'routes.mjs'));
+  const priv = generate().rows.filter((r) => r.auth).map((r) => [r.method, r.path.replace(':provider', 'google').replace(/:\w+/g, 'x1')]);
+  ck('the list checked here is every signed-in route in ROUTES.md (' + priv.length + ')', priv.length >= 45);
   let all401 = true, forged401 = true;
   for (const [m, p] of priv) {
     if ((await call(m, '/api' + p, { body: m === 'POST' ? {} : undefined })).status !== 401) { all401 = false; console.log('  no token not 401:', m, p); }

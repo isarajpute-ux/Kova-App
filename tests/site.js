@@ -12,9 +12,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const src = fs.readFileSync(__dirname + '/../index.html', 'utf8');
 
 (async () => {
-  const { minifyPage, split } = await import(__dirname + '/../build/site.mjs');
-  const { page: min } = minifyPage(src);
-  const { page, files } = split(min);
+  const { build, WORK } = await import(__dirname + '/../build/site.mjs');
+  const { page, files, moved } = build(src);
   const inline = [...page.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
   let bad = 0; inline.forEach((c) => { try { new vm.Script(c); } catch (e) { bad++; console.error(e.message); } });
   ck('every script in the built page still parses (' + inline.length + ')', bad === 0 && inline.length > 50);
@@ -22,9 +21,11 @@ const src = fs.readFileSync(__dirname + '/../index.html', 'utf8');
   ck('the first load is under 500 KB compressed (' + Math.round(br / 1024) + ' KB)', br < 500 * 1024);
   const head = page.slice(0, page.indexOf('</head>'));
   const upfront = [...head.matchAll(/<script[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]);
-  ck('only sign-in and sync (Firebase) load before the first screen: the PDF reader and push load when used',
-    upfront.every((u) => /firebasejs\/[\d.]+\/firebase-(app|auth|database|analytics)-compat\.js$|googletagmanager/.test(u)) && upfront.length === 5 && /window\.KovaPdf=/.test(page));
-  ck('the AI team and Traction are separate files, loaded after the first screen', Object.keys(files).length === 4 && /id="kova-lazy"/.test(page) && !/id="p08-crew">/.test(page));
+  ck('only sign-in and sync (Firebase) load before the first screen: fonts and analytics follow it, the PDF reader and push load when used',
+    upfront.every((u) => /firebasejs\/[\d.]+\/firebase-(app|auth|database)-compat\.js$|googletagmanager/.test(u)) && upfront.length === 4 && /firebase-analytics-compat\.js'; s\.async = true/.test(src) && /media="print" onload="this\.media='all'"/.test(head) && /window\.KovaPdf=/.test(page));
+  const work = Object.keys(files).find((f) => /^m\/work\.[0-9a-f]{10}\.js$/.test(f));
+  ck('Work OS and the study tools (' + WORK.length + ' screens, ' + moved + ' blocks, the AI team included) are one file loaded after the first screen', work && moved >= 25 && /window\.KovaCrew=/.test(files[work]) && /KovaStudio=/.test(files[work]) && !/window\.KovaCrew=/.test(page) && /id="kova-lazy"/.test(page));
+  ck('Traction and the Work OS styles follow it', Object.keys(files).length === 4 && !/id="p08-crew">/.test(page));
   const crewLink = page.indexOf('<link rel="stylesheet" id="p08-crew"'), help = page.indexOf('<style id="p08-help">');
   ck('their styles keep their place in the cascade (the <link> sits where the <style> was)', crewLink > 0 && crewLink < help);
 
@@ -48,10 +49,10 @@ const src = fs.readFileSync(__dirname + '/../index.html', 'utf8');
   ck('Home paints from the built page: the four boxes of the week', d.querySelectorAll('#wheelBoxes [data-wp]').length === 4);
   d.querySelector('#wheelBoxes [data-wp="sleep"]').click(); await wait(50);
   ck('a box opens its pop-up', d.getElementById('sheet').classList.contains('on') && /eadiness/.test(d.getElementById('sheetIn').textContent));
-  ck('before the AI team arrives nothing breaks: callers check it is there', !w.KovaCrew && typeof w.KovaAgent === 'object');
+  ck('before Work OS arrives nothing breaks: callers check it is there', !w.KovaCrew && !w.KovaStudio && typeof w.KovaAgent === 'object');
   for (const f of Object.keys(files).filter((f) => f.endsWith('.js'))) w.eval(files[f]);
   await wait(400);
-  ck('when it arrives the AI team starts itself', w.KovaCrew && typeof w.KovaCrew.emps === 'function' && w.KovaTraction && w.__workTeam && w.__workTeam.draw === w.KovaCrew.paint);
+  ck('when it arrives, Work OS and the AI team start themselves', w.KovaCrew && typeof w.KovaCrew.emps === 'function' && w.KovaTraction && w.KovaStudio && w.__kovaWork === 1 && w.__workTeam && w.__workTeam.draw === w.KovaCrew.paint);
   ck('no errors while booting the built page', errs.length === 0 || (console.error(errs.slice(0, 3)), false));
 
   const failed = R.filter((x) => !x[1]);

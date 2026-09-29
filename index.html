@@ -24,7 +24,11 @@ if('serviceWorker' in navigator && location.protocol === 'https:'){
   });
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<!-- fonts do not hold up the first screen: text shows in the system font
+     and switches when these arrive (display=swap) -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet"/></noscript>
 <script>
 /* pdf.js (~320 KB) is only needed when you open a PDF (study sets, lab
    reports), so it loads then instead of holding up the first screen. */
@@ -3122,7 +3126,6 @@ body.light-mode .card.card-lg .chip,body.light-mode .card.kova .chip{
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 
 <!-- Google Analytics. gtag is the site-level tag; Firebase Analytics is
      the app-level one. They are separate products that happen to share a
@@ -3213,9 +3216,27 @@ window.KovaAnalytics = (function(){
     });
     return out;
   }
+  /* Firebase Analytics draws nothing, so it loads after the first screen;
+     events from before then wait here (gtag queues its own) */
+  var early = [];
+  function lateAnalytics(){
+    if (!ok || analytics) return;
+    var s = document.createElement('script');
+    s.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js'; s.async = true;
+    s.onload = function(){
+      try {
+        analytics = firebase.analytics();
+        if (uid) analytics.setUserId(uid);
+        early.splice(0).forEach(function(e){ analytics.logEvent(e[0], e[1]); });
+      } catch(e){}
+    };
+    document.head.appendChild(s);
+  }
+  if (document.readyState === 'complete') setTimeout(lateAnalytics, 0);
+  else window.addEventListener('load', function(){ setTimeout(lateAnalytics, 0); });
   function track(name, params){
     params = clean(params);
-    try { if (analytics) analytics.logEvent(name, params); } catch(e){}
+    try { if (analytics) analytics.logEvent(name, params); else if (early.length < 100) early.push([name, params]); } catch(e){}
     /* send_to matters: firebase.analytics() configures its own property
        (G-1BHD06BQJB) on the same gtag, and a bare gtag('event') goes to
        every configured property - so logEvent above plus a bare gtag
@@ -5745,6 +5766,52 @@ html body.light-mode .app,html body.light-mode #sheet,html body.light-mode .card
 html body.light-mode .card.card-lg,html body.light-mode .card.kova{--ron-txt-2:rgba(28,26,23,.68);--ron-txt-3:rgba(28,26,23,.6)}
 html body.light-mode .sub,html body.light-mode .li-sub{color:rgba(28,26,23,.68)}
 html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}
+
+</style>
+<style id="p08-launch">
+/* KovaLaunch: the hidden Launch check sheet. Sheet tokens only, so it reads
+   in dark, soft light and light glass; the state is in words as well as
+   colour. */
+.kla{padding:2px 4px 22px;color:var(--txt);font-family:'Outfit',sans-serif}
+.kla-sum{font-size:12.5px;color:var(--txt-2);margin:4px 0 10px}
+.kla-h{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:16px 0 4px}
+.kla-r{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:start;padding:10px 0;border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
+.kla-dot{width:9px;height:9px;border-radius:50%;margin-top:5px;background:var(--txt-3)}
+.kla-r.ok .kla-dot{background:#3FBF7F}
+.kla-r.bad .kla-dot{background:#E5484D}
+.kla-r.opt .kla-dot{background:#E0A33B}
+.kla-t{min-width:0}
+.kla-t b{display:block;font-size:13.5px;font-weight:600;line-height:1.35}
+.kla-t span{display:block;font-size:12px;line-height:1.45;color:var(--txt-2);margin-top:2px;overflow-wrap:anywhere}
+.kla-s{font-size:11px;font-weight:600;color:var(--txt-2);white-space:nowrap;padding-top:2px}
+.kla-r.bad .kla-s{color:var(--txt)}
+.kla-foot{font-size:11.5px;color:var(--txt-3);margin-top:12px;line-height:1.45}
+
+</style>
+<style id="p08-focus">
+/* KovaFocus: only the areas you picked, More for the rest. Tokens only,
+   so it reads in dark, soft light and light glass. */
+.rail .rnav.kf-off,#s-home .kf-off{display:none!important}
+.rail .kf-more{margin-top:auto}
+.rail .kf-more+.rnav.kf-after-more,.rail .rnav.kf-after-more{margin-top:0!important}
+/* Home tiles: an odd one out fills its row */
+#s-home .grid2>.card.kf-wide{grid-column:1/-1}
+#s-home .kf-none{display:none!important}
+/* the extras wait until turned on */
+body.kf-focus:not(.kf-glp1) #kg1Off,
+body.kf-focus:not(.kf-labs) #klbCard,
+body.kf-focus:not(.kf-work) [data-o="team"]{display:none!important}
+/* the More sheet */
+.kf{padding:2px 4px 22px;color:var(--txt);font-family:'Outfit',sans-serif}
+.kf-h{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:16px 0 4px}
+.kf-r{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
+.kf-t{flex:1;min-width:0}
+.kf-t b{display:block;font-size:14px;font-weight:600;line-height:1.35}
+.kf-t span{display:block;font-size:12px;line-height:1.45;color:var(--txt-2);margin-top:2px}
+.kf-b{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.kf-btn{min-height:36px;min-width:88px;padding:0 12px;border-radius:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.2));background:var(--glass,rgba(255,255,255,.08));color:var(--txt);font:600 12.5px 'Outfit',sans-serif;cursor:pointer}
+.kf-btn.ghost{background:none;color:var(--txt-2)}
+.kf-all{display:block;width:100%;min-height:44px;margin-top:14px;border:0;background:none;color:var(--txt-2);font:500 12.5px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
 </style>
 </head>
@@ -37504,13 +37571,16 @@ window.KovaAuth = (function(){
   function obDone(){ return !!rd(OBK); }
 
   var OB_Q = [
-    { k:'focus', q:'What do you want from Kova first?',
-      why:'This is where Kova opens, and what the first week leans on. You get all of it either way.',
+    /* p12: several allowed. The tab bar and Today show just these
+       (KovaFocus); the rest waits under More and comes back one a day
+       after the first win. The first one picked is where Kova opens. */
+    { k:'areas', multi:true, q:'What do you want Kova for?',
+      why:'Pick any. Your tabs and Today show just these; everything else waits under More.',
       opts:[
-        {v:'move',  t:'Get stronger',   s:'Training that adapts to your sleep'},
-        {v:'sleep', t:'Sleep better',   s:'What actually moves your nights'},
-        {v:'fuel',  t:'Eat better',     s:'Food in two taps, targets that move'},
-        {v:'work',  t:'Get work done',  s:'Work OS, AI team, content'}
+        {v:'fuel',  t:'Food',              s:'Two-tap logging, targets that move'},
+        {v:'move',  t:'Training',          s:'A split that adapts to your sleep'},
+        {v:'sleep', t:'Sleep & recovery',  s:'What moves your nights, readiness each morning'},
+        {v:'work',  t:'Work',              s:'Tasks in your sharpest hours, an AI team'}
       ]},
     { k:'cycle', q:'Do you have a menstrual cycle you want Kova to account for?',
       why:'Readiness, training and food advice shift with the cycle. It stays on this device unless you turn on sync.',
@@ -37544,20 +37614,21 @@ window.KovaAuth = (function(){
 
     function draw(){
       var sel = obA[Q.k];
+      var none = Q.multi ? !(sel && sel.length) : sel === undefined;
       inner.innerHTML =
         '<div class="ob-step">' + (i===0 ? 'Three quick questions, then your day' : 'Question ' + (i+1) + ' of ' + OB_Q.length) + '</div>'
         + '<div class="ob-q">' + Q.q + '</div>'
         + '<div class="ob-why">' + Q.why + '</div>'
         + '<div class="ob-opts">'
         + Q.opts.map(function(o){
-            var on = (sel === o.v);
-            return '<button class="ob-opt' + (on?' on':'') + '" data-v="' + o.v + '">'
+            var on = Q.multi ? (sel || []).indexOf(o.v) >= 0 : (sel === o.v);
+            return '<button class="ob-opt' + (on?' on':'') + '" data-v="' + o.v + '"' + (Q.multi ? ' aria-pressed="' + on + '"' : '') + '>'
               + '<span class="ob-tick"><i></i></span>'
               + '<span class="ob-opt-t">' + o.t + '<span class="ob-opt-s">' + o.s + '</span></span>'
               + '</button>';
           }).join('')
         + '</div>'
-        + '<button class="ob-go" id="obNext"' + (sel===undefined?' disabled':'') + '>'
+        + '<button class="ob-go" id="obNext"' + (none?' disabled':'') + '>'
         + (i === OB_Q.length-1 ? 'Done' : 'Next') + '</button>'
         + '<button class="auth-skip" id="obSkip">' + (i===0 ? 'Skip, I will explore' : 'Skip this one') + '</button>'
         + obDots(i);
@@ -37565,7 +37636,11 @@ window.KovaAuth = (function(){
       inner.querySelectorAll('.ob-opt').forEach(function(b){
         b.onclick = function(){
           var raw = b.dataset.v;
-          obA[Q.k] = /^\d+$/.test(raw) ? +raw : raw;
+          if(Q.multi){
+            var L = (obA[Q.k] || []).slice(), at = L.indexOf(raw);
+            if(at >= 0) L.splice(at, 1); else L.push(raw);
+            obA[Q.k] = L;
+          } else obA[Q.k] = /^\d+$/.test(raw) ? +raw : raw;
           draw();
         };
       });
@@ -37609,6 +37684,9 @@ window.KovaAuth = (function(){
     delete obA.__t0;
     try{ wr(OBK, {at:Date.now(), skipped:!!skipped, a:obA}); }catch(e){}
     try{ if(window.KovaAnalytics) KovaAnalytics.track('onboarding_done', {result: skipped ? 'skipped' : (win||'done'), count: secs}); }catch(e){}
+    /* which areas people pick, for the funnel */
+    var areas = (obA.areas && obA.areas.length) ? obA.areas.slice() : null;
+    try{ if(areas && window.KovaAnalytics) KovaAnalytics.track('areas_picked', {answer: areas.join(','), count: areas.length}); }catch(e){}
     /* Q2: the cycle view switches on here, not three screens deep in Vitals */
     try{ if(obA.cycle==='yes' && window.KovaCycle && KovaCycle._data){ var cd=KovaCycle._data(); if(!cd.on){ cd.on=true; KovaCycle._set(cd); } } }catch(e){}
     /* hand the answers to the profile store the rest of the app already
@@ -37616,11 +37694,12 @@ window.KovaAuth = (function(){
     try{
       if(window.KP){
         var prevOb = KP.get('onboard') || {};
-        KP.set('onboard', {focus:obA.focus||null, days:obA.days||null, cycle:obA.cycle||null,
+        KP.set('onboard', {focus:obA.focus||(areas?areas[0]:null), areas:areas, days:obA.days||null, cycle:obA.cycle||null,
                            device:obA.device||prevOb.device||null, perms:obA.perms||null,
                            skipped:!!skipped, win:win||null});
       }
     }catch(e){}
+    try{ if(window.KovaFocus) KovaFocus.paint(); }catch(e){}
     unlock();
     /* the one visible payoff: land where they said. Deferred a tick so the
        wall has started fading and the transition is not fighting it. */
@@ -43361,13 +43440,16 @@ window.KovaTour=(function(){
   }
   function follow(){
     if(!st||!$('#ksTour')) return;
+    /* the app went somewhere this tour does not cover (a notification, a
+       link, the camera): the tour ends there instead of floating over it */
+    if(st.o.screens){ var on=$('.screen.on'), id=on?on.id.replace(/^s-/,''):''; if(id&&st.o.screens.indexOf(id)<0){ end('left'); return; } }
     if(st.el&&st.ride) spot(rect(st.el));
     requestAnimationFrame(follow);
   }
-  function end(){
+  function end(why){
     var o=$('#ksTour'); if(o) o.remove();
     var s=st; st=null;
-    if(s&&s.o.done) try{ s.o.done(); }catch(e){}
+    if(s&&s.o.done) try{ s.o.done(why==='left'?'left':''); }catch(e){}
   }
   var headless=/jsdom/i.test((navigator&&navigator.userAgent)||'');
 
@@ -43634,9 +43716,11 @@ window.KovaScreenTour=(function(){
     if(!TOURS[id]||!window.KovaTour) return false;
     if(onScreen()!==id&&typeof window.go==='function') window.go(id);
     KovaTour.mark(id);
-    var home=id;
-    KovaTour.run(steps(id),{color:colour(),done:function(){
+    var home=id, where=[id];
+    (TOURS[id]||[]).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
+    KovaTour.run(steps(id),{color:colour(),screens:where,done:function(why){
       if(window.KovaWorkTour) KovaWorkTour.reset();
+      if(why==='left') return;                       /* you went elsewhere: stay there */
       if(onScreen()!==home&&typeof window.go==='function') window.go(home);
       var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
     }});
@@ -52796,6 +52880,304 @@ window.KovaA11y=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
 
   return {fix:fix,ICON:ICON};
+})();
+
+</script>
+<script id="p08-launch">
+/* =====================================================================
+   KovaLaunch - the hidden Launch check (p12).
+
+   Settings > About > tap "Version" 7 times. One row per thing Kova needs
+   before launch, green when it is set, red (or amber when optional) with
+   the exact thing to set and where. The server's GET /api/ping reports
+   which of its keys exist as yes/no; nothing secret is shown here or sent
+   there, only whether each one is set.
+   ===================================================================== */
+window.KovaLaunch=(function(){
+  'use strict';
+  var TAPS=7, WINDOW=3000, taps=[];
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function native(){ return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()); }
+  var NETLIFY='Netlify › Site configuration › Environment variables';
+  var OAUTH=[['google','Google (sign-in, Calendar, YouTube)','GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET','console.cloud.google.com › APIs & Services › Credentials'],
+    ['instagram','Instagram','INSTAGRAM_APP_ID + INSTAGRAM_APP_SECRET','developers.facebook.com › your app'],
+    ['facebook','Facebook and Meta Ads','FACEBOOK_APP_ID + FACEBOOK_APP_SECRET','developers.facebook.com › your app'],
+    ['threads','Threads','THREADS_APP_ID + THREADS_APP_SECRET','developers.facebook.com › Threads use case'],
+    ['tiktok','TikTok','TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET','developers.tiktok.com'],
+    ['linkedin','LinkedIn','LINKEDIN_CLIENT_ID + LINKEDIN_CLIENT_SECRET','linkedin.com/developers'],
+    ['x','X','X_CLIENT_ID + X_CLIENT_SECRET','developer.x.com'],
+    ['pinterest','Pinterest','PINTEREST_APP_ID + PINTEREST_APP_SECRET','developers.pinterest.com'],
+    ['reddit','Reddit','REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET','reddit.com/prefs/apps'],
+    ['tumblr','Tumblr','TUMBLR_CLIENT_ID + TUMBLR_CLIENT_SECRET','tumblr.com/oauth/apps']];
+
+  /* the server's answer: {reach, has} */
+  function ping(){
+    var base=window.KovaLink&&KovaLink.server?KovaLink.server():'/api';
+    var done=false;
+    return Promise.race([
+      fetch(base+'/ping',{cache:'no-store'}).then(function(r){ done=true; return r.ok?r.json().then(function(j){ return {reach:true,has:(j&&j.has)||null}; }):{reach:false,status:r.status}; }),
+      new Promise(function(ok){ setTimeout(function(){ if(!done) ok({reach:false,status:'timeout'}); },6000); })
+    ]).catch(function(){ return {reach:false,status:'offline'}; });
+  }
+  function health(){
+    if(!native()) return Promise.resolve(null);
+    try{ return window.KovaNative&&KovaNative.available?KovaNative.available():Promise.resolve(false); }catch(e){ return Promise.resolve(false); }
+  }
+
+  /* one row: s = 'ok' | 'bad' | 'opt' | 'na' */
+  function row(s,name,fix){ return {s:s,name:name,fix:fix||''}; }
+  function rows(P,H){
+    var R=[], has=P.has||{}, o=has.oauth||{};
+    var fb=window.KOVA_FB||{}, rc=window.KOVA_RC||{}, vap=String(window.KOVA_FB_VAPID||'');
+    var knows=!!P.has;    // an older server reports reach only
+    /* with no server yet, its keys cannot be checked: grey, not red */
+    var srv=function(ok,name,fix,optional){ return !P.reach?row('wait',name,'Needs the server first. Then: '+fix):row(!knows?'bad':ok?'ok':optional?'opt':'bad',name,!knows?'Update the server: its /api/ping does not list keys yet.':ok?'':fix); };
+
+    R.push({head:'This app'});
+    R.push(row(fb.ok&&fb.auth?'ok':'bad','Firebase (sign-in and sync)','KOVA_FB_CONFIG in index.html, from Firebase console › Project settings › Your apps.'));
+    R.push(row(rc.web?'ok':'bad','Payments on the web (RevenueCat web key)','KOVA_RC.web in index.html: RevenueCat › Project settings › API keys (the public Web Billing key). Stripe is connected inside RevenueCat › Web Billing.'));
+    R.push(row(rc.ios?'ok':'bad','Payments on iPhone (App Store)','KOVA_RC.ios in index.html: RevenueCat › API keys (the public Apple key).'));
+    R.push(row(rc.android?'ok':'bad','Payments on Android (Google Play)','KOVA_RC.android in index.html: RevenueCat › API keys (the public Google key).'));
+    R.push(row(vap?'ok':'bad','Web push key (VAPID)','KOVA_FB_VAPID in index.html: Firebase console › Project settings › Cloud Messaging › Web Push certificates › Key pair.'));
+
+    R.push({head:'Server'});
+    R.push(row(P.reach?'ok':'bad','Server reachable (/api/ping)',P.reach?'':'Deploy the site on Netlify (it runs netlify/functions/api.mjs), then open '+(window.KovaLink&&KovaLink.server?KovaLink.server():'/api')+'/ping. Answered: '+esc(P.status||'nothing')+'.'));
+    R.push(srv(has.firebaseAdmin,'Database, delete and sending push (Firebase Admin)','FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY in '+NETLIFY+', from Firebase console › Project settings › Service accounts › Generate new private key.'));
+    R.push(srv(has.ai,'AI answers (chat, meal photos, labs, AI team)','ANTHROPIC_API_KEY in '+NETLIFY+', from console.anthropic.com › API keys. Without it Kova uses its on-device guide.',true));
+    R.push(srv(has.revenuecat,'Payments check on the server (RevenueCat secret)','REVENUECAT_SECRET_KEY in '+NETLIFY+': RevenueCat › API keys › Secret key. Until set, nothing is behind the paywall.'));
+    R.push(srv(has.revenuecatWebhook,'Subscription updates (RevenueCat webhook)','REVENUECAT_WEBHOOK_AUTH in '+NETLIFY+', and the same value in RevenueCat › Integrations › Webhooks, pointed at /api/billing/webhook.'));
+    R.push(srv(has.email,'Email (assistant replies, reports)','RESEND_API_KEY in '+NETLIFY+', from resend.com › API keys.',true));
+    R.push(srv(has.usda,'USDA food search (own key)','FDC_API_KEY in '+NETLIFY+', free from api.data.gov. The shared DEMO_KEY works but is rate-limited.',true));
+    R.push(srv(has.tokenKey,'Token encryption key','KOVA_TOKEN_KEY (32+ random characters) in '+NETLIFY+'. Without it the key is derived from the Firebase key.',true));
+    R.push({head:'Sign-in and publishing'});
+    OAUTH.forEach(function(p){ R.push(srv(!!o[p[0]],p[1],p[2]+' in '+NETLIFY+', from '+p[3]+'.',p[0]!=='google')); });
+
+    R.push({head:'This device'});
+    R.push(native()?row(H?'ok':'bad','Apple Health / Health Connect',H?'':'Install the Kova app build with the Health plugin (native/README.md), and on Android install Health Connect.')
+      :row('na','Apple Health / Health Connect','Only inside the iPhone and Android app.'));
+    var perm=typeof Notification==='undefined'?'unsupported':Notification.permission;
+    var pushOn=!!(window.KovaPush&&KovaPush.active&&KovaPush.active());
+    R.push(row(pushOn?'ok':perm==='denied'?'bad':perm==='unsupported'?'na':'opt','Push notifications on this device',pushOn?'':perm==='denied'?'Blocked in this browser’s site settings.':perm==='unsupported'?'This browser cannot receive them; the app can.':'Turn on any reminder and allow notifications when asked.'));
+    return R;
+  }
+  var LABEL={ok:'Set',bad:'Missing',opt:'Optional',na:'Not here',wait:'After server'};
+  function paint(R,P){
+    var el=document.querySelector('#sheetIn .kla'); if(!el) return;
+    var n={ok:0,bad:0,opt:0,wait:0};
+    R.forEach(function(r){ if(r.s&&n[r.s]!=null) n[r.s]++; });
+    el.innerHTML='<div class="title-s" style="font-size:19px">Launch check</div>'
+      +'<div class="kla-sum" role="status">'+n.ok+' set · '+n.bad+' missing · '+n.opt+' optional'+(n.wait?' · '+n.wait+' to check once the server is up':'')+'</div>'
+      +R.map(function(r){
+        if(r.head) return '<div class="kla-h">'+esc(r.head)+'</div>';
+        return '<div class="kla-r '+r.s+'"><span class="kla-dot" aria-hidden="true"></span><div class="kla-t"><b>'+esc(r.name)+'</b>'
+          +(r.fix?'<span>'+esc(r.fix)+'</span>':'')+'</div><span class="kla-s">'+LABEL[r.s]+'</span></div>';
+      }).join('')
+      +'<div class="kla-foot">Only whether each key is set is checked. No key is shown or sent.</div>'
+      +'<button class="btn" data-kla="again" style="margin-top:12px">Check again</button>';
+  }
+  function open(){
+    if(!window.openSheet) return;
+    openSheet('<div class="grab"></div><div class="kla"><div class="title-s" style="font-size:19px">Launch check</div><div class="kla-sum" role="status">Checking…</div></div>');
+    var el=document.querySelector('#sheetIn .kla');
+    if(el) el.addEventListener('click',function(ev){ if(ev.target.closest('[data-kla="again"]')) run(); });
+    return run();
+  }
+  function run(){ return Promise.all([ping(),health()]).then(function(r){ var R=rows(r[0],r[1]); paint(R,r[0]); return R; }); }
+
+  /* 7 taps on Version within 3 seconds */
+  function onTap(){
+    var now=Date.now(); taps=taps.filter(function(t){ return now-t<WINDOW; }); taps.push(now);
+    if(taps.length>=TAPS){ taps=[]; open(); return true; }
+    return false;
+  }
+  function hook(){
+    var rows=[].slice.call(document.querySelectorAll('#s-settings .list-item')).filter(function(r){ var n=r.querySelector('.li-name'); return n&&n.textContent.trim()==='Version'; });
+    var v=rows[0]; if(!v||v.__kla) return;
+    v.__kla=1;
+    /* the version toast stays for one tap; the 7th opens the check */
+    v.addEventListener('click',function(ev){ if(onTap()){ ev.stopImmediatePropagation(); } },true);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',hook); else setTimeout(hook,0);
+
+  return {open:open,rows:rows,ping:ping,_tap:onTap};
+})();
+
+</script>
+<script id="p08-focus">
+/* =====================================================================
+   KovaFocus - show new people less (p12).
+
+   The first question asks what you want Kova for: Food, Training, Sleep &
+   recovery, Work (any of them). From then on:
+     - the tab bar shows Home and those areas only, never more than five
+       (Sleep & recovery brings Sleep and Vitals; when all four areas are
+       picked, Vitals is the one that waits under More);
+     - Home shows those areas' tiles, and the Work OS card only if Work
+       was picked;
+     - the extras stay off the main path until turned on from More: the AI
+       team, Studio publishing, calling your team by voice, lab results and
+       GLP-1 mode;
+     - after the first win, the areas not picked come back as the first
+       week's one-a-day suggestion (KovaFirstWeek), one at a time.
+   More sits at the bottom of the rail, above Settings, one tap from all of
+   it. Nobody who skipped the question, or set up Kova before it, loses
+   anything: they keep every area, with Vitals under More to stay at five.
+   ===================================================================== */
+window.KovaFocus=(function(){
+  'use strict';
+  var KEY='kova.focus.v1', MAX=5;
+  var AREAS=[
+    {k:'fuel',n:'Food',p:['fuel'],why:'Two-tap meal logging, and targets that move with your sleep and training.'},
+    {k:'move',n:'Training',p:['move'],why:'Your split, last time on every set, and plates worked out for you.'},
+    {k:'sleep',n:'Sleep & recovery',p:['sleep','vitals'],why:'What moves your nights, readiness each morning, and your vitals.'},
+    {k:'work',n:'Work',p:['work'],why:'Tasks placed in your sharpest hours, your calendar, and an AI team.'}
+  ];
+  var ORDER=['home','fuel','sleep','move','vitals','work'];
+  var DROP=['vitals','work','sleep','move','fuel'];          // what waits under More first when there are too many
+  var NAME={fuel:'Fuel',sleep:'Sleep',move:'Workout',vitals:'Vitals',work:'Work OS'};
+  var CAPPED={vitals:'Resting heart rate, HRV, blood oxygen and your trends. Also the Vitals tile on Home.'};
+  var S=lsJ(KEY,{extra:[],adv:{},all:false});
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+
+  /* what was picked on the first run; null = everything */
+  function picked(){ try{ var o=(window.KP&&KP.get('onboard'))||{}; return Array.isArray(o.areas)&&o.areas.length?o.areas:null; }catch(e){ return null; } }
+  function focused(){ return !S.all&&!!picked(); }
+  function areas(){
+    if(!focused()) return AREAS.map(function(a){ return a.k; });
+    var a=picked().slice(); (S.extra||[]).forEach(function(k){ if(a.indexOf(k)<0) a.push(k); }); return a;
+  }
+  function pillars(){ var on=areas(), p=[]; AREAS.forEach(function(a){ if(on.indexOf(a.k)>=0) p=p.concat(a.p); }); return p; }
+  function tabs(){
+    var p=pillars(), t=ORDER.filter(function(id){ return id==='home'||p.indexOf(id)>=0; });
+    for(var i=0;t.length>MAX&&i<DROP.length;i++){ var at=t.indexOf(DROP[i]); if(at>0) t.splice(at,1); }
+    return t;
+  }
+  function hidden(){ var t=tabs(); return ORDER.filter(function(id){ return id!=='home'&&t.indexOf(id)<0; }); }
+
+  /* ---------------- the rail ---------------- */
+  function paintRail(){
+    var rail=document.querySelector('.rail'); if(!rail) return;
+    var t=tabs();
+    [].forEach.call(rail.querySelectorAll('.rnav[data-go]'),function(n){
+      var id=n.getAttribute('data-go'); if(ORDER.indexOf(id)<0) return;
+      n.classList.toggle('kf-off',t.indexOf(id)<0);
+    });
+    var more=document.getElementById('kfMore'), set=rail.querySelector('.rnav[data-go="settings"]');
+    if(!more){
+      more=document.createElement('div'); more.id='kfMore'; more.className='rnav kf-more'; more.setAttribute('role','button'); more.setAttribute('tabindex','0');
+      more.setAttribute('title','More'); more.setAttribute('aria-label','More: everything else in Kova');
+      more.innerHTML='<svg class="ic" aria-hidden="true"><use href="#i-dots"/></svg>';
+      more.addEventListener('click',open);
+      more.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); open(); } });
+      if(set) set.parentNode.insertBefore(more,set); else rail.appendChild(more);
+    }
+    if(set) set.classList.add('kf-after-more');
+  }
+  /* ---------------- Home ---------------- */
+  function paintHome(){
+    var home=document.getElementById('s-home'); if(!home) return;
+    var p=pillars(), f=focused(), grid=null, vis=[];
+    [].forEach.call(home.querySelectorAll('.card.tap[data-go]'),function(c){
+      var id=c.getAttribute('data-go'); if(['sleep','move','fuel','vitals'].indexOf(id)<0) return;
+      var on=!f||p.indexOf(id)>=0; c.classList.toggle('kf-off',!on); c.classList.remove('kf-wide'); if(on) vis.push(c); grid=c.parentElement;
+    });
+    /* an odd one out fills its row, so the grid has no hole */
+    if(vis.length%2) vis[vis.length-1].classList.add('kf-wide');
+    if(grid) grid.classList.toggle('kf-none',!vis.length);
+    var os=document.getElementById('osHero'); if(os) os.classList.toggle('kf-off',f&&p.indexOf('work')<0);
+    var b=document.body;
+    b.classList.toggle('kf-focus',f);
+    b.classList.toggle('kf-work',!f||p.indexOf('work')>=0);
+    b.classList.toggle('kf-glp1',!f||!!S.adv.glp1||!!(window.KovaGLP1&&KovaGLP1.on()));
+    var labs=0; try{ labs=window.KovaLabs?KovaLabs.markers().length:0; }catch(e){}
+    b.classList.toggle('kf-labs',!f||!!S.adv.labs||labs>0);
+  }
+  function paint(){ paintRail(); paintHome(); }
+
+  /* ---------------- More ---------------- */
+  var EXTRA=[
+    {k:'crew',n:'Your AI team',d:'AI employees that draft, research and follow up, with your approval.',need:'work',act:function(){ go('workteam'); }},
+    {k:'studio',n:'Studio publishing',d:'Write once, post to 16 platforms, and see what worked.',need:'work',act:function(){ go('work'); }},
+    {k:'voice',n:'Call your team by voice',d:'Say an employee’s name and ask. Uses the microphone only while on.',need:'work',
+      on:function(){ return !!(window.KovaListen&&KovaListen.on()); },
+      act:function(){ if(!window.KovaListen||!KovaListen.supported()){ say('This browser cannot listen. The app can.'); return; } KovaListen.set(!KovaListen.on()); say(KovaListen.on()?'Listening for your team’s names.':'Voice off.'); }},
+    {k:'labs',n:'Lab results',d:'Read a blood test PDF or photo; you confirm every row. Never a diagnosis.',
+      on:function(){ return !!S.adv.labs; },
+      act:function(){ S.adv.labs=true; save(); paint(); track('feature_on',{feature:'labs'}); if(window.KovaLabs&&KovaLabs.open) KovaLabs.open(); }},
+    {k:'glp1',n:'GLP-1 mode',d:'For Ozempic, Wegovy, Mounjaro and Zepbound: a protein floor, doses and side effects.',
+      on:function(){ return !!(window.KovaGLP1&&KovaGLP1.on()); },
+      act:function(){ S.adv.glp1=true; save(); paint(); track('feature_on',{feature:'glp1'}); if(window.KovaGLP1&&KovaGLP1.setup) KovaGLP1.setup(); }}
+  ];
+  function open(){
+    if(!window.openSheet) return;
+    var hid=hidden(), on=areas();
+    var h='<div class="grab"></div><div class="kf"><div class="title-s" style="font-size:19px">More</div>';
+    /* one row per area not picked; a screen of a picked area that waits
+       only because of the five-tab limit (Vitals) gets its own row */
+    var list=[];
+    AREAS.forEach(function(a){ if(on.indexOf(a.k)<0) list.push({go:a.p[0],n:a.n,why:a.why,add:a.k}); });
+    hid.forEach(function(id){ if(!list.some(function(r){ return AREAS.filter(function(a){ return a.n===r.n; })[0].p.indexOf(id)>=0; })) list.push({go:id,n:NAME[id],why:CAPPED[id]||''}); });
+    if(list.length){
+      h+='<div class="kf-h">Also in Kova</div>'+list.map(function(r){
+        return '<div class="kf-r"><div class="kf-t"><b>'+esc(r.n)+'</b><span>'+esc(r.why)+'</span></div>'
+          +'<div class="kf-b"><button class="kf-btn" data-kf-go="'+r.go+'">Open</button>'+(r.add?'<button class="kf-btn ghost" data-kf-add="'+r.add+'">Add to tabs</button>':'')+'</div></div>';
+      }).join('');
+    }
+    h+='<div class="kf-h">Turn on when you need it</div>'+EXTRA.map(function(x){
+      var st=x.on?x.on():null;
+      return '<div class="kf-r"><div class="kf-t"><b>'+esc(x.n)+'</b><span>'+esc(x.d)+'</span></div><div class="kf-b"><button class="kf-btn'+(st?' ghost':'')+'" data-kf-x="'+x.k+'"'+(st!=null?' aria-pressed="'+st+'"':'')+'>'
+        +(st==null?'Open':st?(x.k==='voice'?'Turn off':'On'):'Turn on')+'</button></div></div>';
+    }).join('');
+    if(focused()) h+='<button class="kf-all" data-kf-all="1">Show every area in the tab bar</button>';
+    else if(picked()) h+='<button class="kf-all" data-kf-all="0">Back to just '+esc(picked().map(function(k){ return AREAS.filter(function(a){ return a.k===k; })[0].n; }).join(', '))+'</button>';
+    openSheet(h+'</div>');
+    var el=document.querySelector('#sheetIn .kf'); if(el) el.addEventListener('click',onMore);
+    track('more_open',{count:hid.length});
+  }
+  function onMore(ev){
+    var b=ev.target.closest('button'); if(!b) return;
+    if(b.hasAttribute('data-kf-go')){ if(window.closeSheet) closeSheet(); try{ go(b.getAttribute('data-kf-go')); }catch(e){} return; }
+    if(b.hasAttribute('data-kf-add')){ add(b.getAttribute('data-kf-add')); open(); return; }
+    if(b.hasAttribute('data-kf-all')){ S.all=b.getAttribute('data-kf-all')==='1'; save(); paint(); open(); return; }
+    if(b.hasAttribute('data-kf-x')){
+      var x=EXTRA.filter(function(e){ return e.k===b.getAttribute('data-kf-x'); })[0]; if(!x) return;
+      var stays=x.k==='voice';
+      if(!stays&&window.closeSheet) closeSheet();
+      setTimeout(function(){ try{ x.act(); }catch(e){} if(stays) open(); },stays?0:260);
+    }
+  }
+  function add(k){
+    if(!S.extra) S.extra=[];
+    if(S.extra.indexOf(k)<0) S.extra.push(k);
+    save(); paint();
+    var a=AREAS.filter(function(x){ return x.k===k; })[0];
+    track('area_added',{answer:k}); if(a) say(a.n+' is in your tab bar.');
+  }
+
+  /* ---------------- one a day, after the first win ---------------- */
+  function offerAreas(){
+    var F=window.KovaFirstWeek; if(!F||!F.PROMPTS||F.__kfAreas) return;
+    var st=F._S&&F._S(); if(!st||!st.win||!focused()) return;
+    F.__kfAreas=1;
+    AREAS.forEach(function(a){
+      F.PROMPTS.push({id:'area-'+a.k,min:1,when:function(){ return focused()&&areas().indexOf(a.k)<0; },
+        q:'Kova does '+a.n.toLowerCase()+' too',why:a.why,opts:[['add','Add it'],['no','Not now']],
+        pick:function(v){ if(v==='add') add(a.k); }});
+    });
+  }
+  function watchWin(){
+    var A=window.KovaAnalytics; if(!A||A.__kf) return;
+    var real=A.track; A.track=function(name){ var r=real.apply(this,arguments); if(name==='first_win') setTimeout(offerAreas,0); return r; }; A.__kf=1;
+  }
+
+  function start(){ paint(); watchWin(); offerAreas(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
+
+  return {areas:areas,pillars:pillars,tabs:tabs,hidden:hidden,focused:focused,open:open,add:add,paint:paint,AREAS:AREAS,_S:function(){ return S; },_set:function(s){ S=s; save(); paint(); }};
 })();
 
 </script>

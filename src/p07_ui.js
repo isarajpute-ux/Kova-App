@@ -23,13 +23,16 @@ window.KovaTour=(function(){
   }
   function follow(){
     if(!st||!$('#ksTour')) return;
+    /* the app went somewhere this tour does not cover (a notification, a
+       link, the camera): the tour ends there instead of floating over it */
+    if(st.o.screens){ var on=$('.screen.on'), id=on?on.id.replace(/^s-/,''):''; if(id&&st.o.screens.indexOf(id)<0){ end('left'); return; } }
     if(st.el&&st.ride) spot(rect(st.el));
     requestAnimationFrame(follow);
   }
-  function end(){
+  function end(why){
     var o=$('#ksTour'); if(o) o.remove();
     var s=st; st=null;
-    if(s&&s.o.done) try{ s.o.done(); }catch(e){}
+    if(s&&s.o.done) try{ s.o.done(why==='left'?'left':''); }catch(e){}
   }
   var headless=/jsdom/i.test((navigator&&navigator.userAgent)||'');
 
@@ -296,9 +299,11 @@ window.KovaScreenTour=(function(){
     if(!TOURS[id]||!window.KovaTour) return false;
     if(onScreen()!==id&&typeof window.go==='function') window.go(id);
     KovaTour.mark(id);
-    var home=id;
-    KovaTour.run(steps(id),{color:colour(),done:function(){
+    var home=id, where=[id];
+    (TOURS[id]||[]).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
+    KovaTour.run(steps(id),{color:colour(),screens:where,done:function(why){
       if(window.KovaWorkTour) KovaWorkTour.reset();
+      if(why==='left') return;                       /* you went elsewhere: stay there */
       if(onScreen()!==home&&typeof window.go==='function') window.go(home);
       var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
     }});

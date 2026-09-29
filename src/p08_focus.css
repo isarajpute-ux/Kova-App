@@ -1,0 +1,23 @@
+/* KovaFocus: only the areas you picked, More for the rest. Tokens only,
+   so it reads in dark, soft light and light glass. */
+.rail .rnav.kf-off,#s-home .kf-off{display:none!important}
+.rail .kf-more{margin-top:auto}
+.rail .kf-more+.rnav.kf-after-more,.rail .rnav.kf-after-more{margin-top:0!important}
+/* Home tiles: an odd one out fills its row */
+#s-home .grid2>.card.kf-wide{grid-column:1/-1}
+#s-home .kf-none{display:none!important}
+/* the extras wait until turned on */
+body.kf-focus:not(.kf-glp1) #kg1Off,
+body.kf-focus:not(.kf-labs) #klbCard,
+body.kf-focus:not(.kf-work) [data-o="team"]{display:none!important}
+/* the More sheet */
+.kf{padding:2px 4px 22px;color:var(--txt);font-family:'Outfit',sans-serif}
+.kf-h{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3);margin:16px 0 4px}
+.kf-r{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
+.kf-t{flex:1;min-width:0}
+.kf-t b{display:block;font-size:14px;font-weight:600;line-height:1.35}
+.kf-t span{display:block;font-size:12px;line-height:1.45;color:var(--txt-2);margin-top:2px}
+.kf-b{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.kf-btn{min-height:36px;min-width:88px;padding:0 12px;border-radius:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.2));background:var(--glass,rgba(255,255,255,.08));color:var(--txt);font:600 12.5px 'Outfit',sans-serif;cursor:pointer}
+.kf-btn.ghost{background:none;color:var(--txt-2)}
+.kf-all{display:block;width:100%;min-height:44px;margin-top:14px;border:0;background:none;color:var(--txt-2);font:500 12.5px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}

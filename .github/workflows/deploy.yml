@@ -1,22 +1,19 @@
-name: Deploy Kova
+name: Check and deploy Kova
 
-# Netlify deploys the site itself on push (its GitHub app watches the
-# repo). What CI is for here is the two things Netlify will not do:
-# validate the build before it goes out, and push the Firebase security
-# rules - rules live in this repo but Netlify has no idea they exist, so
-# without this step they only ever change when someone remembers to run
-# `firebase deploy` by hand.
+# Runs on every push to any branch and on every pull request. Netlify
+# builds and deploys the site itself (its GitHub app watches main); CI is
+# what stops a broken build from getting there, and it deploys the
+# Firebase rules, which Netlify knows nothing about.
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
   validate:
-    name: Validate build
+    name: Tests (app in jsdom, server against fakes)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,146 +21,76 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
 
-      - name: Install test deps
-        run: npm install
+      - name: Install
+        run: npm ci
 
       # the Claude Agent SDK and zod, for the wellness agent tests; the SDK's
       # native binary is an optional download the tests never run
       - name: Install function deps
         run: cd functions && npm ci --omit=optional
 
-      - name: Check every inline script parses
+      - name: Every inline script parses
         run: node tests/syntax.js
 
-      - name: Check the backend layer is wired, not just present
-        run: node tests/backend.js
+      - name: The server files parse
+        run: for f in functions/*.js; do node --check "$f"; done
 
-      - name: Check required deploy files exist
-        run: node tests/files.js
+      # every file in tests/, so a new test can never be left out of CI
+      - name: Every test in tests/
+        run: |
+          fail=0
+          for f in tests/*.js; do
+            echo "::group::$f"
+            node "$f" || { echo "::error file=$f::$f failed"; fail=1; }
+            echo "::endgroup::"
+          done
+          exit $fail
 
-      - name: Check analytics and settings wiring
-        run: node tests/integration.js
+      - name: ROUTES.md matches the server, and every call the app makes has a route
+        run: node build/routes.mjs --check
 
-      - name: Check media capture points are wired
-        run: node tests/media.js
-
-      - name: Check the sleep efficiency card
-        run: node tests/efficiency.js
-
-      - name: Check the chat (model path, offline fallback, signed out)
-        run: node tests/chat.js
-
-      - name: Check the page talks to the api function (tokens, health sync, sign-in)
-        run: node tests/link.js
-
-      - name: Check every api route against a fake Firebase
-        run: node tests/api.js
-
-      - name: Check publishing to every platform against fake servers
-        run: node tests/publish.js
-
-      - name: Check Facebook, Meta Ads, Threads, Pinterest, Bluesky, Reddit, Tumblr, Mastodon, Discord, Telegram, Business Profile
-        run: node tests/platforms.js
-
-      - name: Check the Work OS Studio (rules, payload, controls)
-        run: node tests/studio.js
-
-      - name: Check the wellness agent (seven metrics, Claude Agent SDK loop, schedule, alerts)
-        run: node tests/agent.js
-
-      - name: Check Traction (numbers, drop-off, comments, advice) and the business card
-        run: node tests/traction.js
-
-      - name: Check sport programming (swimming, hiking, cycling, running weeks)
-        run: node tests/workout.js
-
-      - name: Check vitamins and minerals (USDA values, daily targets, USDA search)
-        run: node tests/micros.js
-
-      - name: Check supersets and live heart rate
-        run: node tests/session.js
-
-      - name: Check the native app bridge (Apple Health / Health Connect)
-        run: node tests/native.js
-
-      - name: Check one Kova (orb opens chat plus the agent tabs)
-        run: node tests/onekova.js
-
-      - name: Check the AI employees (routing, tool loop, approvals, routines, analysis)
-        run: node tests/crew.js
-
-      - name: Check help (tour or find anything) and the AI team entry
-        run: node tests/help.js
-
-      - name: Check calling employees by name, form fill-ins and tours
-        run: node tests/listen.js
-
-      - name: Check the server on Netlify (auth on every route, files, delete, push, billing, token sealing)
-        run: node tests/netlify.js
-
-      - name: Check export, delete and the privacy screens
-        run: node tests/privacy.js
-
-      - name: Check push reminders
-        run: node tests/push.js
-
-      - name: Check payments (RevenueCat)
-        run: node tests/billing.js
-
-      - name: Check src/ rebuilds index.html exactly
-        run: node tests/build.js
-
-      - name: Check two-tap meal logging (photo, chips, Kova line)
-        run: node tests/quick.js
-
-      - name: Check the first run (three questions, first win, funnel, week-box pop-ups)
-        run: node tests/firstrun.js
-
-      - name: Check the weekly recap (share card, percentages unless numbers are on)
-        run: node tests/recap.js
-
-      - name: Check GLP-1 mode (protein floor, doses, side effects)
-        run: node tests/glp1.js
-
-      - name: Check importers (MyFitnessPal, Strong, Hevy, Apple Health)
-        run: node tests/import.js
-
-      - name: Check lifting (last and target, plates, exercise demos)
-        run: node tests/lift.js
-
-      - name: Check lab results (PDF and photo reading, confirm, trends)
-        run: node tests/labs.js
-
-      - name: Check the 350 recipes
-        run: node tests/recipes.js
-
-      - name: Check Work OS time blocks and Google Calendar both ways
-        run: node tests/blocks.js
-
-      - name: Check the smart alarm
-        run: node tests/alarm.js
-
-      - name: Check accessibility (names, labels, keyboard, focus, motion)
-        run: node tests/a11y.js
-
-      - name: Check the built site (minified, under 500 KB, lazy AI team)
-        run: node tests/site.js
-
-      - name: Check recipes.json matches src/recipes
+      - name: recipes.json matches src/recipes
         run: python3 src/recipes/build.py --check
+
+  browser:
+    name: The built site in a real browser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Chromium for Playwright
+        run: npx playwright install --with-deps chromium
 
       - name: Build dist/ the way Netlify will
         run: npm run build -- --size
 
-      - name: Check the server files parse
-        run: for f in functions/*.js; do node --check "$f"; done
+      - name: All 71 screens open without an error, and match the source page handler for handler
+        run: node tests/e2e/compare.mjs
+
+      - name: "Core journeys: skip sign-in, three questions, a meal from search, a one-set workout, GLP-1 mode, the plan"
+        run: node tests/e2e/flows.mjs
+
+      - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
+        run: node tests/e2e/perf.mjs
 
   rules:
     name: Deploy Firebase rules
-    needs: validate
+    needs: [validate, browser]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    # secrets cannot be read in a step's if:, so it comes in as env
+    env:
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -181,7 +108,5 @@ jobs:
       # database only: Storage needs the paid Blaze plan since Feb 2026, and
       # files now live on Netlify Blobs
       - name: Deploy database rules
-        if: ${{ secrets.FIREBASE_TOKEN != '' }}
+        if: env.FIREBASE_TOKEN != ''
         run: firebase deploy --only database --token "$FIREBASE_TOKEN" --non-interactive
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

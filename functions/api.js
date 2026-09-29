@@ -9,7 +9,7 @@
    token is signed by Google and expires in an hour.
 
    Routes
-     GET  /ping                         health check for "Test the connection"
+     GET  /ping                         health check; `has` says which keys are set (yes/no only)
      POST /auth/code    {email}         email a 6-digit sign-in code
      POST /auth/verify  {email,code}    -> {ok, token, name}  (Firebase custom token)
      POST /health/token                 -> {url}  personal Apple Health sync URL      [auth]
@@ -56,8 +56,15 @@
      POST /devices      {token,platform}  this device's push token                     [auth]
      POST /devices/remove {token}       stop pushing to this device                     [auth]
      POST /reminders    {tz,quiet,items}  the reminder list the push schedule uses      [auth]
-     GET  /social/me, /social/feed      the opt-in friends feed                        [auth]
-     POST /social/profile|follow|followers/remove|post|unpost|like|comment             [auth]
+     GET  /social/me                    your friends-feed profile, followers, following [auth]
+     GET  /social/feed                  the opt-in friends feed: workouts and PRs of people you follow [auth]
+     POST /social/profile {handle,on}   switch the feed on or off, pick a handle        [auth]
+     POST /social/follow {handle,on}    follow or unfollow someone                     [auth]
+     POST /social/followers/remove {handle}  remove a follower                          [auth]
+     POST /social/post  {stats}         share a finished workout or PR (no health data) [auth]
+     POST /social/unpost {id}           take a share back                               [auth]
+     POST /social/like  {handle,id,on}  like or unlike a friend's post                  [auth]
+     POST /social/comment {handle,id,text}  comment on a friend's post                  [auth]
      GET  /billing/status               {configured, pro, until}  Kova Pro, from RevenueCat [auth]
      POST /billing/webhook              RevenueCat events (its own Authorization value)
 
@@ -1096,7 +1103,7 @@ async function handle(req, res, cfg) {
   const M = req.method;
 
   try {
-    if (M === 'GET' && path === '/ping') return res.json({ ok: true, service: 'kova-api' });
+    if (M === 'GET' && path === '/ping') return res.json({ ok: true, service: 'kova-api', has: cfg.has || null });
     if (M === 'POST' && path === '/auth/code') return await authCode(req, res, cfg);
     if (M === 'POST' && path === '/auth/verify') return await authVerify(req, res, cfg);
     if (M === 'POST' && path === '/health/token') return await healthToken(req, res, cfg);

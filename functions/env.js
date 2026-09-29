@@ -71,7 +71,37 @@ function fromEnv(env) {
     rcWebhookAuth: str(env, 'REVENUECAT_WEBHOOK_AUTH'),
     rcEntitlement: str(env, 'KOVA_PRO_ENTITLEMENT', 'kova_pro'),
     chatDaily: +(str(env, 'KOVA_CHAT_DAILY', '150')),
-    chatGlobalDaily: +(str(env, 'KOVA_GLOBAL_DAILY_LIMIT', '5000'))
+    chatGlobalDaily: +(str(env, 'KOVA_GLOBAL_DAILY_LIMIT', '5000')),
+    has: capabilities(env)
+  };
+}
+
+/* which keys are set: yes or no only, never a value. /ping returns this
+   for the app's hidden Launch check (Settings > tap Version 7 times). */
+function capabilities(env) {
+  env = env || process.env;
+  const both = (a, b) => !!(str(env, a) && str(env, b));
+  let admin = false; try { admin = !!credentialOf(env); } catch (e) { admin = false; }
+  return {
+    firebaseAdmin: admin,                        // database, delete, push sending all need it
+    ai: !!str(env, 'ANTHROPIC_API_KEY'),
+    email: !!str(env, 'RESEND_API_KEY'),
+    revenuecat: !!str(env, 'REVENUECAT_SECRET_KEY'),
+    revenuecatWebhook: !!str(env, 'REVENUECAT_WEBHOOK_AUTH'),
+    usda: !!str(env, 'FDC_API_KEY') && str(env, 'FDC_API_KEY') !== 'DEMO_KEY',
+    tokenKey: !!str(env, 'KOVA_TOKEN_KEY'),
+    oauth: {
+      google: both('GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'),
+      instagram: both('INSTAGRAM_APP_ID', 'INSTAGRAM_APP_SECRET'),
+      facebook: both('FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET'),
+      threads: both('THREADS_APP_ID', 'THREADS_APP_SECRET'),
+      tiktok: both('TIKTOK_CLIENT_KEY', 'TIKTOK_CLIENT_SECRET'),
+      linkedin: both('LINKEDIN_CLIENT_ID', 'LINKEDIN_CLIENT_SECRET'),
+      x: both('X_CLIENT_ID', 'X_CLIENT_SECRET'),
+      pinterest: both('PINTEREST_APP_ID', 'PINTEREST_APP_SECRET'),
+      reddit: both('REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET'),
+      tumblr: both('TUMBLR_CLIENT_ID', 'TUMBLR_CLIENT_SECRET')
+    }
   };
 }
 
@@ -118,4 +148,4 @@ function missing(env) {
   return out;
 }
 
-module.exports = { fromEnv, initAdmin, credentialOf, missing, baseOf, MODEL_DEFAULT };
+module.exports = { fromEnv, initAdmin, credentialOf, missing, baseOf, capabilities, MODEL_DEFAULT };

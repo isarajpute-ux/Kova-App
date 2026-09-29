@@ -9,8 +9,10 @@ database and push notifications on **Firebase's free Spark plan**. Nothing here 
 - `netlify/functions/` - three small files that run `functions/` on Netlify.
 - `privacy.html` - the privacy policy (also shown inside the app).
 - `build/site.mjs` - `npm run build` writes `dist/`, the folder Netlify publishes: the same page
-  minified (about 480 KB compressed instead of 880 KB), the AI team and Traction split into files that
-  load after the first screen, and only the files the site serves (server code and tests are not public).
+  minified (about 420 KB compressed instead of 880 KB), Work OS and the study tools (32 screens) split
+  into a file that loads after the first screen, and only the files the site serves.
+- `SETUP.md` - every key, where to get it and where it goes. `ROUTES.md` - every server route, which
+  file implements it and where the app calls it (generated; CI keeps it true).
 - `native/` - the iPhone and Android app (Capacitor). See `native/README.md`.
 
 Why not Firebase Cloud Functions: since 2020 they need the paid Blaze plan, and since February 2026
@@ -153,7 +155,19 @@ node tests/recipes.js      # the 350 recipes load and add up
 node tests/blocks.js       # Work OS time blocks and Google Calendar both ways
 node tests/alarm.js        # smart alarm: light-sleep window, fallback, grogginess log
 node tests/a11y.js         # every control named, every field labelled, keyboard, focus, motion
-node tests/site.js         # the built page: minified, under 500 KB, AI team after first screen
+node tests/site.js         # the built page: minified, Work OS split out, under 450 KB
+node tests/launch.js       # the hidden Launch check and what /api/ping reports
+node tests/focus.js        # only the areas you picked: tab bar (5 at most), Home, More, one-a-day
+```
+
+In a real browser (Playwright; `npx playwright install chromium` once), against the built site:
+
+```bash
+npm run build
+node tests/e2e/compare.mjs # all 71 screens open without an error, same elements and handlers as the source page
+node tests/e2e/flows.mjs   # skip sign-in, three questions, a meal from search, a one-set workout, GLP-1, the plan
+node tests/e2e/perf.mjs    # first visit on slow 4G + 4x CPU: first load, time to usable, elements
+node build/routes.mjs --check  # ROUTES.md matches the server, every call has a route
 ```
 
 Or all of them: `npm test`.
