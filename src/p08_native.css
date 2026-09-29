@@ -1,0 +1,8 @@
+/* ---- native app: Health card on Vitals ---- */
+.kn{--n-bg:rgba(255,255,255,.05);--n-ink:#F2F3F5;--n-mute:rgba(242,243,245,.55);--n-line:rgba(255,255,255,.1);display:flex;align-items:center;gap:10px;padding:11px 12px;margin:0 0 12px;border-radius:18px;background:var(--n-bg);border:1px solid var(--n-line);color:var(--n-ink);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+body.soft-light .kn{--n-bg:rgba(255,255,255,.09);--n-line:rgba(255,255,255,.16)}
+body.light-mode .kn{--n-bg:rgba(255,255,255,.8);--n-ink:#141a22;--n-mute:rgba(20,26,34,.55);--n-line:rgba(20,26,34,.1)}
+.kn-i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,94,87,.15);color:#FF5E57;font-size:14px;flex-shrink:0}
+.kn-t{flex:1;min-width:0}.kn-t b{display:block;font-size:13px}.kn-t span{font-size:11px;color:var(--n-mute);line-height:1.35}
+.kn-b{border:0;border-radius:999px;padding:7px 13px;font:inherit;font-size:12px;font-weight:600;background:var(--n-ink);color:#111;cursor:pointer;flex-shrink:0}
+body.light-mode .kn-b{color:#fff}

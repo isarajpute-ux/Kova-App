@@ -1,0 +1,6 @@
+/* KovaBilling: the checkout message and the manage / restore links on the plan screen */
+.kbi-msg{font-size:11.5px;line-height:1.5;text-align:center;margin-top:9px;color:var(--txt-2,rgba(255,255,255,.9));min-height:0}
+.kbi-msg:empty{display:none}
+.kbi-msg.bad{color:var(--bad,#E5484D)}
+.kbi-links{display:flex;justify-content:center;gap:6px 14px;flex-wrap:wrap;margin-top:12px}
+.kbi-l{background:none;border:0;padding:8px 4px;min-height:36px;font:500 11.5px 'Outfit',sans-serif;color:var(--txt-2,rgba(255,255,255,.9));text-decoration:underline;text-underline-offset:3px;cursor:pointer}

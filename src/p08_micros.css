@@ -1,0 +1,49 @@
+/* ---- Vitamins and minerals ---- */
+.kmi-grid{--m-card:rgba(255,255,255,.05);--m-ink:#F2F3F5;--m-mute:rgba(242,243,245,.55);--m-line:rgba(255,255,255,.1);--m-bar:rgba(255,255,255,.1);--m-fill:#F2F3F5;--m-ok:#7FD6A4;--m-low:#F0B35B;--m-over:#FF7A6B;
+  display:block!important;color:var(--m-ink)}
+body.soft-light .kmi-grid{--m-card:rgba(255,255,255,.08);--m-line:rgba(255,255,255,.15)}
+body.light-mode .kmi-grid{--m-card:rgba(255,255,255,.78);--m-ink:#141a22;--m-mute:rgba(20,26,34,.55);--m-line:rgba(20,26,34,.1);--m-bar:rgba(20,26,34,.08);--m-fill:#141a22;--m-ok:#1F9D5B;--m-low:#B7791F;--m-over:#D64532}
+.kmi-top{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:center;font-size:11px;color:var(--m-mute)}
+.kmi-sx{display:inline-flex;border:1px solid var(--m-line);border-radius:999px;padding:2px}
+.kmi-sx button{border:0;background:none;color:var(--m-mute);font:inherit;font-size:10.5px;padding:3px 9px;border-radius:999px;cursor:pointer}
+.kmi-sx button.on{background:var(--m-fill);color:var(--m-card)}
+body:not(.light-mode) .kmi-sx button.on{color:#111}
+.kmi-c{background:var(--m-card);border:1px solid var(--m-line);border-radius:14px;padding:10px 10px 9px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);min-width:0}
+.kmi-l{font-size:10.5px;color:var(--m-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kmi-v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin:2px 0 1px}
+.kmi-t{font-size:10px;color:var(--m-mute)}
+.kmi-b{height:4px;border-radius:4px;background:var(--m-bar);margin-top:7px;overflow:hidden}
+.kmi-b i{display:block;height:100%;border-radius:4px;background:var(--m-fill);transition:width .4s}
+.kmi-c.met .kmi-b i{background:var(--m-ok)}.kmi-c.low .kmi-b i{background:var(--m-low)}.kmi-c.over .kmi-b i{background:var(--m-over)}
+.kmi-src{grid-column:1/-1;font-size:10px;color:var(--m-mute)}
+/* USDA search rows */
+#usdaResults{--m-ink:#F2F3F5;--m-mute:rgba(242,243,245,.55);--m-line:rgba(255,255,255,.1);--m-card:rgba(255,255,255,.05);color:var(--m-ink)}
+body.light-mode #usdaResults{--m-ink:#141a22;--m-mute:rgba(20,26,34,.55);--m-line:rgba(20,26,34,.1);--m-card:rgba(20,26,34,.03)}
+.kmi-note{font-size:11px;color:var(--m-mute);margin:10px 2px 6px}
+.kmi-f{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--m-line);background:var(--m-card);border-radius:12px;margin-bottom:6px}
+.kmi-f>div{flex:1;min-width:0}.kmi-f b{display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kmi-f span{font-size:10.5px;color:var(--m-mute)}
+.kmi-g{width:52px;padding:5px 6px;border-radius:8px;border:1px solid var(--m-line);background:transparent;color:inherit;font:inherit;font-size:12px;text-align:right}
+.kmi-add{border:0;border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;background:var(--m-ink);color:#111}
+body.light-mode .kmi-add{color:#fff}
+
+/* the dropdown */
+.kmi-dd{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 14px;border-radius:16px;border:1px solid var(--m-line);background:var(--m-card);color:var(--m-ink);font:inherit;cursor:pointer;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.kmi-ddl{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kmi-ddl b{font-size:14px;font-weight:600}
+.kmi-ddl small{font-size:11.5px;color:var(--m-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kmi-dots{display:flex;gap:3px;flex-shrink:0}
+.kmi-dots i{width:6px;height:6px;border-radius:50%;background:var(--m-bar)}
+.kmi-dots i.s-met{background:var(--m-ok)}.kmi-dots i.s-low{background:var(--m-low)}.kmi-dots i.s-over{background:var(--m-over)}.kmi-dots i.s-mid,.kmi-dots i.s-ok{background:var(--m-fill);opacity:.5}
+.kmi-chev{font-size:13px;color:var(--m-mute);transition:transform .2s}
+.kmi-dd[aria-expanded="true"] .kmi-chev{transform:rotate(180deg)}
+.kmi-menu{margin-top:6px;padding:10px 12px;border-radius:16px;border:1px solid var(--m-line);background:var(--m-card)}
+.kmi-menu .kmi-top{margin-bottom:6px}
+.kmi-r{display:grid;grid-template-columns:88px minmax(40px,1fr) 146px;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--m-line)}
+.kmi-r:last-of-type{border-bottom:0}
+.kmi-n{font-size:12.5px}
+.kmi-r .kmi-b{margin-top:0}
+.kmi-r .kmi-v{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;margin:0;text-align:right;white-space:nowrap}
+.kmi-r .kmi-v small{font-weight:400;color:var(--m-mute);font-size:10.5px}
+.kmi-r.s-met .kmi-b i{background:var(--m-ok)}.kmi-r.s-low .kmi-b i{background:var(--m-low)}.kmi-r.s-over .kmi-b i{background:var(--m-over)}
+.kmi-menu .kmi-src{margin-top:8px}

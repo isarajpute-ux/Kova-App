@@ -1,0 +1,7 @@
+/* KovaPush: the quiet-hours line inside the reminders note card */
+.kpu-quiet{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.kpu-quiet span{font-size:11px;font-weight:600;color:var(--txt);margin-right:2px}
+.kpu-q{border:.5px solid var(--glass-brd,rgba(255,255,255,.22));background:var(--glass,rgba(255,255,255,.07));color:var(--txt);
+  border-radius:100px;padding:5px 11px;font:500 11px 'Outfit',sans-serif;cursor:pointer;min-height:30px}
+.kpu-q.on{background:var(--acc-bg,rgba(255,255,255,.12));border-color:var(--acc-brd,rgba(255,255,255,.4));color:var(--acc,#fff)}
+.kpu-sub{font-size:10.5px;color:var(--txt-3,rgba(255,255,255,.7));margin-top:5px}

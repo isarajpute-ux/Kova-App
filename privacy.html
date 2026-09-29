@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kova Privacy Policy</title>
+<meta name="description" content="What Kova collects, why, where it is kept, and how to export or delete it.">
+<style>
+  :root{--bg:#F4F4F6;--card:#FFFFFF;--ink:#15161A;--mute:#5B5E66;--line:rgba(21,22,26,.1);--acc:#2A2C33}
+  @media (prefers-color-scheme:dark){:root{--bg:#0B0C0E;--card:#15161A;--ink:#EDEEF1;--mute:#9A9DA6;--line:rgba(255,255,255,.1);--acc:#EDEEF1}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,'Outfit','Segoe UI',sans-serif}
+  main{max-width:720px;margin:0 auto;padding:40px 16px 64px}
+  .brand{font:italic 600 22px/1 'Outfit',-apple-system,sans-serif;letter-spacing:-.02em;margin-bottom:28px}
+  h1{font-weight:300;font-size:clamp(30px,7vw,44px);letter-spacing:-.02em;line-height:1.1;margin:0 0 8px}
+  .upd{color:var(--mute);font-size:14px;margin-bottom:28px}
+  h2{font-size:19px;font-weight:600;margin:34px 0 8px}
+  p,li{color:var(--ink)}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:14px 0}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--mute);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+  .wrap{overflow-x:auto}
+  a{color:var(--acc)}
+  .todo{background:rgba(229,72,77,.12);border-radius:6px;padding:1px 6px}
+</style>
+</head>
+<body>
+<main id="kova-privacy">
+  <div class="brand">kova</div>
+  <h1>Privacy Policy</h1>
+  <div class="upd">Last updated 28 September 2026</div>
+
+  <div class="card"><b>The short version.</b> Kova keeps your data on your phone first. If you sign in, a copy syncs to your own private space so it follows you to other devices. Health data is only used to show you your own numbers. It is never sold, never used for ads, and never sent to analytics. You can download everything, or delete your account and all of it, from Settings at any time.</div>
+
+  <h2>What Kova collects</h2>
+  <div class="wrap"><table>
+    <tr><th>Data</th><th>Where it comes from</th><th>Why</th></tr>
+    <tr><td>Sleep, heart rate, HRV, resting heart rate, steps, energy, exercise minutes, blood oxygen, breathing rate, VO₂ max, weight, wrist temperature</td><td>Apple Health or Health Connect (read only, only after you allow it), a watch sync you set up, or what you type in</td><td>Your readiness, sleep, recovery and training screens, and the "how it connects" insights</td></tr>
+    <tr><td>Meals, food photos, water, vitamins and minerals</td><td>What you log or photograph</td><td>Your food targets and the Fuel screens</td></tr>
+    <tr><td>Workouts, sets, form-check videos</td><td>What you log or record</td><td>Progress, personal records, form feedback</td></tr>
+    <tr><td>Cycle information (optional)</td><td>What you enter</td><td>Adjusting readiness, training and food advice to your cycle</td></tr>
+    <tr><td>Tasks, projects, notes, posts and AI team jobs (Work OS)</td><td>What you create</td><td>The Work OS and your AI team</td></tr>
+    <tr><td>Connected accounts (Google, Instagram, TikTok and others)</td><td>Only when you connect one</td><td>Publishing, reading comments and numbers back, calendar</td></tr>
+    <tr><td>Email address</td><td>If you sign in with email</td><td>Signing you in</td></tr>
+    <tr><td>Usage events (which screen was opened, which feature was used)</td><td>The app</td><td>Making Kova better. These never contain health values.</td></tr>
+  </table></div>
+
+  <h2>Where it is kept</h2>
+  <ul>
+    <li><b>On your device</b> first. Kova works offline and your phone holds the main copy.</li>
+    <li><b>Your synced copy</b> (if you sign in) is kept in Google Firebase, in a space only your account can read. The database rules block every other account.</li>
+    <li><b>Photos and videos</b> you upload are kept in Netlify's file storage, under your account, reachable only through signed links.</li>
+    <li><b>Connected-account tokens</b> are kept on the Kova server only, encrypted, and never sent to your device or anyone else.</li>
+  </ul>
+
+  <h2>Who else processes it</h2>
+  <ul>
+    <li><b>Google Firebase</b>: sign-in, your synced data, push notifications, and usage analytics (Google Analytics for Firebase).</li>
+    <li><b>Netlify</b>: hosts the app, the Kova server and your uploaded files.</li>
+    <li><b>Anthropic (Claude)</b>: when you use the chat, the AI team or the wellness check, the question and the data it needs are sent to Anthropic to write the answer. Under Anthropic's commercial terms this is not used to train their models.</li>
+    <li><b>USDA FoodData Central</b>: food searches (the search words only).</li>
+    <li><b>Resend</b>: sends the sign-in code email.</li>
+    <li><b>The accounts you connect</b> (Google, Meta, TikTok and others): only what you ask Kova to post or read.</li>
+    <li><b>Payments</b>: Apple, Google or Stripe handle payment through RevenueCat. Kova never sees your card.</li>
+  </ul>
+
+  <h2>What Kova never does</h2>
+  <ul>
+    <li>Sell your data, or share it for advertising.</li>
+    <li>Use health data for ads or marketing, or send it to analytics.</li>
+    <li>Write to Apple Health or Health Connect.</li>
+    <li>Diagnose. Kova is not a medical device; it points you to a clinician when something looks off.</li>
+  </ul>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li><b>Export:</b> Settings → Data &amp; privacy → Export my data downloads everything, from your phone and the server, as one file.</li>
+    <li><b>Delete:</b> Settings → Data &amp; privacy → Delete my account removes your account, your synced data, your files, your connected accounts and your reminders, then clears the phone.</li>
+    <li><b>Health access:</b> turn it off any time in the Health app (iPhone) or Health Connect (Android).</li>
+    <li><b>Notifications:</b> only turned on when you ask for a reminder, and off any time in Settings.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>Kova is not meant for anyone under 16 and does not knowingly collect their data.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes in a way that matters, Kova tells you in the app before it takes effect.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or requests: <span class="todo">add your support email here before publishing</span>.</p>
+</main>
+</body>
+</html>

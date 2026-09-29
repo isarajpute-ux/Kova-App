@@ -1,0 +1,14 @@
+/* KovaToday: the pop-up behind each "This week" box. Tokens only. */
+.kt{padding:2px 4px 20px;color:var(--txt)}
+.kt-row{display:grid;grid-template-columns:74px 1fr;gap:2px 10px;width:100%;padding:12px 0;border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12));color:var(--txt);font-family:'Outfit',sans-serif}
+.kt-l{grid-row:1/3;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3,rgba(255,255,255,.7));padding-top:5px}
+.kt-v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-width:0}
+.kt-v b{font:300 26px/1.2 'Outfit',sans-serif;letter-spacing:-.02em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kt-v small{font-size:12.5px;color:var(--txt-2,rgba(255,255,255,.85))}
+.kt-why{font-size:12.5px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.85))}
+.kt-src{grid-column:2;font-size:11px;line-height:1.45;color:var(--txt-3,rgba(255,255,255,.72));margin-top:3px}
+.kt-row.empty .kt-v b{opacity:.55}
+.kt-am{display:block;width:100%;min-height:40px;margin-top:8px;border:0;background:none;color:var(--txt-3,rgba(255,255,255,.72));font:500 12px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.kt-am.on{color:var(--txt-2,rgba(255,255,255,.9))}
+#wheelBoxes [data-wp]:focus-visible{outline:2px solid var(--txt);outline-offset:2px}
+@media (max-width:360px){.kt-row{grid-template-columns:1fr}.kt-l{grid-row:auto;padding-top:0}.kt-src{grid-column:1}}

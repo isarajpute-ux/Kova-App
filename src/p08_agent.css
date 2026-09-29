@@ -1,0 +1,161 @@
+/* ---- KovaAgent: the wellness alert pop-up and "Your plan" ---- */
+.kg-pop{position:fixed;z-index:350;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);width:min(420px,calc(100vw - 24px));
+  transform:translate(-50%,-14px);opacity:0;transition:opacity .3s ease,transform .35s cubic-bezier(.3,.7,.2,1);
+  padding:16px 16px 14px;border-radius:22px;color:#fff;font-family:'Urbanist','Outfit',-apple-system,sans-serif;
+  background:linear-gradient(160deg,rgba(28,28,31,.92),rgba(16,16,18,.94));-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  border:1px solid color-mix(in srgb,var(--kc,#fff) 45%,transparent);
+  box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04),0 0 32px color-mix(in srgb,var(--kc,#fff) 22%,transparent)}
+.kg-pop.on{opacity:1;transform:translate(-50%,0)}
+.kg-top{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.04em;color:rgba(255,255,255,.6);margin-bottom:8px}
+.kg-n{margin-left:auto;color:rgba(255,255,255,.45)}
+.kg-x{margin-left:auto;width:28px;height:28px;border-radius:9px;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.kg-n+.kg-x{margin-left:6px}
+.kg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block;background:var(--kc,#fff);box-shadow:0 0 8px var(--kc,#fff)}
+.kg-dot.urgent{background:#FF6B5E;box-shadow:0 0 10px #FF6B5E}
+.kg-dot.soon{background:#F4C95E;box-shadow:0 0 8px #F4C95E}
+.kg-dot.fyi,.kg-dot.ok{background:#7DE0A6;box-shadow:0 0 8px #7DE0A6}
+.kg-t{font-size:18px;font-weight:600;line-height:1.25;margin-bottom:4px}
+.kg-w{font-size:14px;line-height:1.45;color:rgba(255,255,255,.72);margin-bottom:10px}
+.kg-do{font-size:14.5px;line-height:1.45;padding:11px 12px;border-radius:14px;background:color-mix(in srgb,var(--kc,#fff) 12%,rgba(0,0,0,.25));
+  border:1px solid color-mix(in srgb,var(--kc,#fff) 28%,transparent);margin-bottom:12px}
+.kg-when{display:block;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--kc,#fff);margin-bottom:3px}
+.kg-b{display:flex;gap:8px;flex-wrap:wrap}
+.kg-btn{height:38px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;
+  font:500 13.5px 'Urbanist','Outfit',sans-serif;cursor:pointer}
+.kg-btn.main{background:var(--kc,#fff);border-color:var(--kc,#fff);color:#111;font-weight:600}
+.kg-btn.ic{width:38px;padding:0;font-size:20px;margin-left:auto}
+.kg-btn.sm{height:32px;font-size:12.5px;margin-top:8px}
+.kg-veil{position:fixed;inset:0;z-index:360;background:rgba(4,4,6,.62);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+@media (min-width:700px){ .kg-veil{align-items:center} }
+.kg-card{width:min(520px,100%);max-height:88vh;overflow:auto;padding:22px 20px 18px;border-radius:26px;color:#fff;
+  font-family:'Urbanist','Outfit',-apple-system,sans-serif;background:linear-gradient(170deg,rgba(30,30,33,.97),rgba(15,15,17,.98));
+  border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.kg-ph{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.kg-ph .kg-x{margin-left:auto;flex-shrink:0}
+.kg-pt{font-size:22px;font-weight:600;margin-bottom:4px}
+.kg-ps{font-size:14px;line-height:1.45;color:rgba(255,255,255,.75)}
+.kg-pm{font-size:12px;color:rgba(255,255,255,.45);margin-top:5px}
+.kg-g{margin-bottom:12px}
+.kg-gh{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 2px 7px}
+.kg-item{padding:12px 13px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid color-mix(in srgb,var(--kc,#fff) 30%,transparent);margin-bottom:8px}
+.kg-it{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:3px}
+.kg-iw{font-size:13px;color:rgba(255,255,255,.6);line-height:1.4}
+.kg-ia{font-size:13.5px;line-height:1.45;margin-top:5px}
+.kg-none{font-size:13px;color:rgba(255,255,255,.4);padding:4px 2px 2px}
+.kg-fs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.kg-f{display:flex;justify-content:space-between;gap:6px;font-size:12.5px;padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.04)}
+.kg-f b{font-weight:500;color:rgba(255,255,255,.8)}
+.kg-f span{color:rgba(255,255,255,.5)}
+.kg-f.fix span{color:#FF8A7E}.kg-f.watch span{color:#F4C95E}.kg-f.ok span{color:#7DE0A6}
+.kg-fine{font-size:11.5px;line-height:1.45;color:rgba(255,255,255,.4);margin-top:12px}
+.kg-strip{display:flex;align-items:center;gap:9px;width:100%;margin:-4px 0 12px;padding:11px 14px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:var(--txt,#fff);font:500 13.5px 'Urbanist','Outfit',sans-serif;text-align:left}
+.kg-strip .kg-go{margin-left:auto;color:var(--acc,#fff);font-weight:600}
+body.light-mode .kg-strip{background:rgba(0,0,0,.035);border-color:rgba(0,0,0,.08)}
+
+/* ---- KovaOrb: a small glowing sphere, and the panel it opens ---- */
+.ko{position:fixed;right:28px;bottom:calc(env(safe-area-inset-bottom,0px) + 30px);z-index:345;width:26px;height:26px;padding:0;border:0;border-radius:50%;
+  background:none;cursor:pointer;transition:opacity .3s,transform .35s cubic-bezier(.3,.7,.2,1);-webkit-tap-highlight-color:transparent}
+/* a dark grey glass sphere: smoky body, a bright specular spot, a soft
+   caustic at the bottom and a thin rim of light so it reads on any ground */
+.ko::before{content:"";position:absolute;inset:-12px;border-radius:50%}
+.ko-core{display:block;width:100%;height:100%;border-radius:50%;position:relative;
+  background:
+    radial-gradient(circle at 31% 25%,rgba(255,255,255,.95) 0,rgba(255,255,255,.55) 7%,rgba(255,255,255,0) 24%),
+    radial-gradient(circle at 68% 84%,rgba(255,255,255,.28) 0,rgba(255,255,255,0) 34%),
+    radial-gradient(circle at 50% 42%,rgba(104,106,112,.62) 0,rgba(58,60,65,.82) 52%,rgba(22,23,26,.96) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),inset 0 -3px 6px rgba(0,0,0,.5),inset 0 2px 3px rgba(255,255,255,.16),
+    0 0 10px rgba(205,210,220,.22),0 5px 12px rgba(0,0,0,.4);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  animation:koBreathe 4.2s ease-in-out infinite}
+.ko-core.sm{width:14px;height:14px;animation:none;flex-shrink:0}
+@keyframes koBreathe{50%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.26),inset 0 -3px 6px rgba(0,0,0,.5),inset 0 2px 3px rgba(255,255,255,.2),0 0 16px rgba(205,210,220,.36),0 5px 12px rgba(0,0,0,.4)}}
+.ko.alert .ko-n{background:#E5484D;border-color:rgba(255,255,255,.5);color:#fff}
+.ko:hover,.ko:focus-visible{transform:scale(1.15)}
+.ko:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.ko.open{transform:translateY(-6px) scale(1.2)}
+.ko-n{position:absolute;right:-7px;top:-7px;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:#0B0B0C;color:#fff;
+  font:700 9px/14px 'Urbanist','Outfit',sans-serif;text-align:center;border:1px solid rgba(255,255,255,.3)}
+.ko.ko-hide{opacity:0;pointer-events:none}
+body.light-mode .ko-n{background:#fff;color:#111;border-color:rgba(0,0,0,.2)}
+@media (prefers-reduced-motion:reduce){.ko-core{animation:none}}
+
+.kop{--p-bg:rgba(20,21,24,.94);--p-card:rgba(255,255,255,.05);--p-ink:#F2F3F5;--p-mute:rgba(242,243,245,.55);--p-line:rgba(255,255,255,.1);--p-on:#F2F3F5;--p-onInk:#111;
+  position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 130px);z-index:346;width:min(380px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 170px));
+  display:flex;flex-direction:column;border-radius:24px;background:var(--p-bg);color:var(--p-ink);border:1px solid var(--p-line);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 24px 60px rgba(0,0,0,.45);
+  font-family:'Urbanist','Outfit',-apple-system,sans-serif;transform-origin:calc(100% - 20px) calc(100% + 30px);transform:scale(.4);opacity:0;
+  transition:transform .32s cubic-bezier(.3,.7,.2,1),opacity .2s}
+.kop.on{transform:none;opacity:1}
+body.soft-light .kop{--p-bg:rgba(62,66,74,.95);--p-card:rgba(255,255,255,.07);--p-line:rgba(255,255,255,.14)}
+body.light-mode .kop{--p-bg:rgba(255,255,255,.96);--p-card:#F4F5F6;--p-ink:#101820;--p-mute:rgba(16,24,32,.5);--p-line:rgba(16,24,32,.1);--p-on:#101820;--p-onInk:#fff;box-shadow:0 20px 50px rgba(20,30,50,.18)}
+.kop-hd{display:flex;align-items:center;gap:9px;padding:14px 14px 8px 16px}
+.kop-hd b{flex:1;font-size:16px;font-weight:600}
+.kop-x{width:30px;height:30px;border-radius:50%;border:1px solid var(--p-line);background:transparent;color:var(--p-ink);font-size:18px;cursor:pointer}
+.kop-tabs{display:flex;gap:6px;padding:0 14px 10px}
+.kop-tabs button{height:32px;padding:0 13px;border-radius:16px;border:1px solid var(--p-line);background:transparent;color:var(--p-ink);font:500 12.5px 'Urbanist',sans-serif;cursor:pointer}
+.kop-tabs button.on{background:var(--p-on);color:var(--p-onInk);border-color:transparent}
+.kop-body{overflow:auto;padding:0 14px 14px}
+.kop-sum{display:flex;align-items:baseline;justify-content:space-between;margin:2px 2px 10px}
+.kop-sum b{font-size:20px;font-weight:600}
+.kop-sum span{font-size:11.5px;color:var(--p-mute)}
+.kop-g{margin-bottom:12px}
+.kop-gh{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--p-mute);margin:0 2px 6px}
+.kop-m{background:var(--p-card);border-radius:14px;padding:10px 12px;margin-bottom:6px}
+.kop-mh{display:flex;align-items:center;gap:7px;font-size:13px}
+.kop-mh i{width:7px;height:7px;border-radius:50%}
+.kop-mh b{flex:1;font-weight:600}
+.kop-st{font-size:11px;padding:2px 8px;border-radius:9px;background:var(--p-line)}
+.kop-m.fix .kop-st{background:rgba(232,96,122,.2);color:#E8607A}
+.kop-m.watch .kop-st{background:rgba(244,201,94,.2);color:#C9971F}
+.kop-m.ok .kop-st{background:rgba(125,224,166,.2);color:#2E9D62}
+.kop-mv{display:flex;align-items:baseline;gap:6px;margin-top:4px}
+.kop-mv strong{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.kop-mv small{font-size:11px;color:var(--p-mute)}
+.kop-bar{height:4px;border-radius:3px;background:var(--p-line);margin-top:6px;overflow:hidden}
+.kop-bar em{display:block;height:100%;border-radius:3px}
+.kop-sp{display:block;width:100%;height:26px;margin-top:6px}
+.kop-sp path{fill:none;stroke-width:1.6;vector-effect:non-scaling-stroke}
+.kop-f{font-size:11.5px;color:var(--p-mute);margin-top:5px;line-height:1.4}
+.kop-a{display:flex;gap:10px;align-items:flex-start;background:var(--p-card);border-radius:14px;padding:10px 12px;margin-bottom:6px}
+.kop-a div{flex:1}
+.kop-a b{display:block;font-size:13.5px}
+.kop-a span{display:block;font-size:11.5px;color:var(--p-mute);margin-top:2px}
+.kop-a p{font-size:12.5px;margin:5px 0 0;line-height:1.4}
+.kop-none{font-size:12px;color:var(--p-mute);padding:4px 2px}
+.kop-btn{height:38px;padding:0 14px;border-radius:12px;border:0;background:var(--p-on);color:var(--p-onInk);font:600 13px 'Urbanist',sans-serif;cursor:pointer;margin-top:6px}
+.kop-btn.ghost{background:transparent;color:var(--p-ink);border:1px solid var(--p-line)}
+.kop-sm{height:28px;padding:0 10px;border-radius:9px;border:1px solid var(--p-line);background:transparent;color:var(--p-ink);font:500 11.5px 'Urbanist',sans-serif;cursor:pointer;flex-shrink:0}
+.kop-in{width:100%;border-radius:12px;border:1px solid var(--p-line);background:var(--p-card);color:var(--p-ink);padding:9px 11px;font:400 13.5px 'Urbanist',sans-serif;resize:vertical;box-sizing:border-box}
+.kop-draft label{display:block;font-size:11px;color:var(--p-mute);margin-bottom:8px}
+.kop-draft label .kop-in{margin-top:4px}
+.kop-row{display:flex;gap:6px;flex-wrap:wrap}
+.kop-fine{font-size:11px;color:var(--p-mute);margin-top:8px;line-height:1.45}
+.kop-ans{font-size:13.5px;line-height:1.5;background:var(--p-card);border-radius:14px;padding:10px 12px;white-space:pre-wrap}
+.kop-empty{padding:20px;text-align:center;color:var(--p-mute)}
+
+/* light mode: a pale ground needs a darker rim so the sphere still reads */
+body.light-mode .ko-core{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.45),inset 0 2px 3px rgba(255,255,255,.2),0 0 0 .5px rgba(16,20,26,.25),0 6px 14px rgba(16,20,26,.28)}
+
+/* ---- one Kova: the orb replaces the chat button, and the agent's tabs
+       live inside the chat panel (p10) ---- */
+#kovaFab{display:none!important}
+.kc-tabs{display:flex;gap:6px;margin:14px 0 2px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.kc-tabs::-webkit-scrollbar{display:none}
+.kc-tabs button{flex-shrink:0;height:34px;padding:0 14px;border-radius:999px;cursor:pointer;
+  font:400 13px 'Outfit','Urbanist',sans-serif;color:var(--kc-ink2,rgba(255,255,255,.65));
+  background:var(--kc-glass,rgba(255,255,255,.08));border:.5px solid var(--kc-glass-b,rgba(255,255,255,.14));
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);transition:background .2s,color .2s}
+.kc-tabs button.on{background:var(--kc-bub,#fff);color:var(--kc-bub-ink,#111);border-color:transparent;font-weight:500}
+.kc-tabs button em{font-style:normal;font-size:10.5px;font-weight:700;margin-left:3px;padding:1px 6px;border-radius:8px;background:#E8607A;color:#fff}
+.kc-tabs button:focus-visible{outline:2px solid var(--kc-ink,#fff);outline-offset:2px}
+.kc-agent{display:none}
+.kchat.agent-mode .kc-scroll,.kchat.agent-mode .kc-bar,.kchat.agent-mode .kc-foot{display:none}
+.kchat.agent-mode .kc-agent{display:block;flex:1;min-height:0;overflow-y:auto;margin:10px -4px 0;padding:0 4px 12px;scrollbar-width:none;
+  --p-card:var(--kc-glass,rgba(255,255,255,.07));--p-ink:var(--kc-ink,#F2F3F5);--p-mute:var(--kc-ink2,rgba(242,243,245,.6));
+  --p-line:var(--kc-glass-b,rgba(255,255,255,.14));--p-on:var(--kc-bub,#F2F3F5);--p-onInk:var(--kc-bub-ink,#111);color:var(--p-ink)}
+.kc-agent::-webkit-scrollbar{display:none}
+.kc-agent .kop-body{padding:0;overflow:visible;max-width:640px;margin:0}
+.kc-agent .kop-m,.kc-agent .kop-a,.kc-agent .kop-ans{border:.5px solid var(--p-line);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.kc-agent .kop-in{background:var(--p-card)}
+body.light-mode .kc-agent .kop-m,body.light-mode .kc-agent .kop-a{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 22px -14px rgba(30,40,60,.25)}

@@ -1,0 +1,45 @@
+/* ---- Cycle tracking ---- */
+#s-cycle,.kc-mini{--c-card:rgba(255,255,255,.05);--c-ink:#F2F3F5;--c-mute:rgba(242,243,245,.55);--c-line:rgba(255,255,255,.1);--c-btn:#F2F3F5;--c-btnInk:#111}
+body.soft-light #s-cycle,body.soft-light .kc-mini{--c-card:rgba(255,255,255,.08);--c-line:rgba(255,255,255,.15)}
+body.light-mode #s-cycle,body.light-mode .kc-mini{--c-card:rgba(255,255,255,.75);--c-ink:#141a22;--c-mute:rgba(20,26,34,.55);--c-line:rgba(20,26,34,.1);--c-btn:#141a22;--c-btnInk:#fff}
+#s-cycle{color:var(--c-ink)}
+.kc-card{background:var(--c-card);border:1px solid var(--c-line);border-radius:22px;padding:16px;margin-bottom:12px}
+.kc-h{font-size:16px;font-weight:600;margin-bottom:6px}
+.kc-p{font-size:13.5px;line-height:1.5;color:var(--c-mute);margin:0 0 10px}
+.kc-ul{margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6}
+.kc-btn{height:44px;padding:0 18px;border-radius:14px;border:0;background:var(--c-btn);color:var(--c-btnInk);font:600 14px 'Urbanist','Outfit',sans-serif;cursor:pointer;width:100%}
+.kc-row{margin-bottom:12px}
+.kc-fine{font-size:11.5px;color:var(--c-mute);margin:10px 0 0;line-height:1.45}
+.kc-link{border:0;background:none;color:#E8607A;font:500 12.5px 'Urbanist',sans-serif;cursor:pointer;padding:8px 0 0}
+.kc-tg{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.kc-hero{display:flex;align-items:center;gap:16px;background:var(--c-card);border:1px solid var(--c-line);border-radius:24px;padding:16px;margin-bottom:12px}
+.kc-ring{position:relative;width:112px;height:112px;flex-shrink:0}
+.kc-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.kc-trk{fill:none;stroke:var(--c-line);stroke-width:8}
+.kc-val{fill:none;stroke:var(--kc);stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--kc))}
+.kc-ring div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kc-ring b{font-size:19px}.kc-ring span{font-size:11.5px;color:var(--kc);font-weight:600}
+.kc-big{font-size:30px;font-weight:600;line-height:1.1}
+.kc-sub{font-size:12px;color:var(--c-mute);margin-top:3px}
+.kc-fx{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--c-line);font-size:13px;line-height:1.45}
+.kc-fx b{flex:0 0 62px;font-weight:600}
+.kc-fx span{color:var(--c-mute)}
+.kc-sym{display:flex;flex-wrap:wrap;gap:6px}
+.kc-sym button{height:34px;padding:0 12px;border-radius:17px;border:1px solid var(--c-line);background:transparent;color:var(--c-ink);font:500 12.5px 'Urbanist',sans-serif;cursor:pointer}
+.kc-sym button.on{background:var(--c-btn);color:var(--c-btnInk);border-color:transparent}
+.kc-cal{background:var(--c-card);border:1px solid var(--c-line);border-radius:22px;padding:14px;margin-bottom:12px}
+.kc-mh{font-size:14px;font-weight:600;margin-bottom:8px}
+.kc-wd,.kc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.kc-wd i{font-style:normal;font-size:10.5px;color:var(--c-mute)}
+.kc-grid button{aspect-ratio:1;border-radius:50%;border:1px solid transparent;background:transparent;color:var(--c-ink);font:500 12.5px 'Urbanist',sans-serif;cursor:pointer;position:relative;padding:0}
+.kc-grid .per{background:#E8607A;color:#fff}
+.kc-grid .pred{border:1.5px dashed #E8607A}
+.kc-grid .fert{background:rgba(143,190,234,.25)}
+.kc-grid .today{box-shadow:0 0 0 2px var(--c-ink)}
+.kc-grid .sym::after{content:'';position:absolute;bottom:3px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor}
+.kc-key{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--c-mute);margin-top:10px}
+.kc-key span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.kc-key .per::before{background:#E8607A}.kc-key .pred::before{border:1.5px dashed #E8607A;width:7px;height:7px}.kc-key .fert::before{background:rgba(143,190,234,.5)}
+.kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:1px solid var(--c-line);background:var(--c-card);color:var(--c-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
+.kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
+.kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--c-mute)}.kc-mini em{font-style:normal;color:var(--c-mute)}

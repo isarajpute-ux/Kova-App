@@ -1,0 +1,15 @@
+/* KovaRecap: the Sunday card and the share sheet. Tokens only. */
+.krc{padding:2px 4px 20px;color:var(--txt)}
+.krc-card{display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;margin-bottom:12px;padding:14px 15px;cursor:pointer;color:var(--txt);font-family:'Outfit',sans-serif}
+.krc-ct{font:300 20px/1.25 'Outfit',sans-serif;letter-spacing:-.02em}
+.krc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+.krc-p{display:flex;flex-direction:column;gap:5px;aspect-ratio:9/16;padding:14px 12px;border-radius:18px;border:.5px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg,#1A1B1F,#0E0F12 55%,#050506);color:#F3F4F7;text-align:left;cursor:pointer;overflow:hidden;font-family:'Outfit',sans-serif}
+.krc-k{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75;margin-top:30%}
+.krc-b{font:200 46px/1 'Outfit',sans-serif;letter-spacing:-.03em}
+.krc-l{font-size:12.5px;line-height:1.35}
+.krc-f{font-size:10px;line-height:1.35;opacity:.55;margin-top:auto}
+.krc-s{align-self:flex-start;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.12)}
+.krc-t{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:12.5px;color:var(--txt-2,rgba(255,255,255,.9));min-height:36px;cursor:pointer}
+.krc-t input{width:18px;height:18px;accent-color:var(--acc,#fff)}
+.krc-t small{color:var(--txt-3,rgba(255,255,255,.65))}

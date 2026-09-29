@@ -1,0 +1,34 @@
+/* KovaPrivacy sheets: export, delete, what Kova reads, the policy.
+   Built on the app's own sheet, card and button, so all three
+   appearances come from their existing rules; only the list rows,
+   the confirm field and the policy's table are new. */
+.kpv{padding:2px 4px 20px;color:var(--txt)}
+.kpv-list{border-top:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
+.kpv-row{display:flex;flex-direction:column;gap:2px;padding:10px 2px;border-bottom:.5px solid var(--glass-brd,rgba(255,255,255,.12))}
+.kpv-row b{font-size:13.5px;font-weight:600;color:var(--txt)}
+.kpv-row span{font-size:12.5px;line-height:1.45;color:var(--txt-3,rgba(255,255,255,.7))}
+.kpv-never{margin-top:12px;padding:12px 14px}
+.kpv-never b{font-size:13px}
+.kpv-never ul{margin:6px 0 0;padding-left:18px}
+.kpv-never li{font-size:12.5px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9));margin:3px 0}
+.kpv-in{display:block;width:100%;box-sizing:border-box;border-radius:14px;padding:13px 14px;font:600 16px 'Outfit',sans-serif;letter-spacing:.14em;text-align:center;
+  background:var(--glass,rgba(255,255,255,.06));border:1px solid var(--glass-brd,rgba(255,255,255,.18));color:var(--txt);outline:none}
+.kpv-in:focus{border-color:var(--bad,#E5484D)}
+.kpv-err{color:var(--bad,#E5484D)!important;margin-top:8px;min-height:1em;line-height:1.45}
+.kpv .btn.kpv-go{background:var(--bad,#E5484D)!important;color:#fff!important;border:0!important}
+.kpv .btn.kpv-go[disabled]{opacity:.4;cursor:default}
+.kpv .btn.kpv-danger{color:var(--bad,#E5484D)!important}
+/* the policy, as it comes from privacy.html */
+.kpv-doc{font-size:13.5px;line-height:1.55;color:var(--txt-2,rgba(255,255,255,.9))}
+.kpv-doc .brand{display:none}
+.kpv-doc h1{font-size:24px;font-weight:300;letter-spacing:-.02em;margin:0 0 4px;color:var(--txt)}
+.kpv-doc h2{font-size:15px;font-weight:600;margin:18px 0 6px;color:var(--txt)}
+.kpv-doc .upd{font-size:12px;color:var(--txt-3,rgba(255,255,255,.6));margin-bottom:12px}
+.kpv-doc .card{padding:12px 14px;margin:10px 0}
+.kpv-doc ul{padding-left:18px;margin:4px 0}
+.kpv-doc li{margin:4px 0}
+.kpv-doc .wrap{overflow-x:auto}
+.kpv-doc table{width:100%;border-collapse:collapse;font-size:12px}
+.kpv-doc th,.kpv-doc td{text-align:left;padding:7px 6px;border-bottom:.5px solid var(--glass-brd,rgba(255,255,255,.12));vertical-align:top}
+.kpv-doc th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-3,rgba(255,255,255,.6))}
+.kpv-doc .todo{background:rgba(229,72,77,.16);border-radius:6px;padding:1px 6px}

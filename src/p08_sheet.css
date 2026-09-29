@@ -1,0 +1,12 @@
+/* The bottom sheet (#sheet) is a child of <body>, not of .app, so the
+   app's colour tokens never reached it: anything in a sheet that used
+   var(--txt) fell back to white, unreadable in light glass. The same
+   values the app uses, per appearance, defined on the sheet itself. */
+#sheet{--txt:#FFFFFF;--txt-2:rgba(255,255,255,.92);--txt-3:rgba(255,255,255,.72);
+  --glass:rgba(255,255,255,.10);--glass-2:rgba(255,255,255,.06);--glass-brd:rgba(255,255,255,.26);
+  --good:#5FD08A;--warn:#F4E18E;--bad:#EF6B70;
+  --acc:#E6E6E6;--acc-bg:rgba(230,230,230,.12);--acc-brd:rgba(230,230,230,.45);--acc-dim:rgba(230,230,230,.16)}
+body.light-mode #sheet{--txt:#1C1A17;--txt-2:rgba(28,26,23,.84);--txt-3:rgba(28,26,23,.6);
+  --glass:rgba(20,24,32,.055);--glass-2:rgba(20,24,32,.032);--glass-brd:rgba(30,40,60,.16);
+  --good:#1E7A4B;--warn:#8A6D0F;--bad:#C2383D;
+  --acc:#3A3732;--acc-bg:rgba(58,55,50,.08);--acc-brd:rgba(58,55,50,.38);--acc-dim:rgba(58,55,50,.12)}

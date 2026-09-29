@@ -1,0 +1,8 @@
+{
+  "appId": "com.kova.app",
+  "appName": "Kova",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "ios": { "contentInset": "never", "backgroundColor": "#0B0C0E" },
+  "android": { "backgroundColor": "#0B0C0E" }
+}
