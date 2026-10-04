@@ -52,6 +52,8 @@ function boot(opts) {
   const items = parseItems('```json\n[{"ingredient":"Egg","estimated_weight_grams":"50","calories":72,"protein_grams":6.3,"confidence_percentage":140}]\n```');
   ck('the server read is sanitised (numbers, confidence capped at 100)', items.length === 1 && items[0].estimated_weight_grams === 50 && items[0].confidence_percentage === 100);
   ck('a reply with no food is an empty list', parseItems('[]').length === 0);
+  const sk = parseItems('[{"n":"Rice","g":180,"c":90,"kcal":234,"p":4.3,"cb":51,"f":0.5,"fib":0.6,"na":2,"fe":0.3,"v":"one cup"}]');
+  ck('the short keys the fast reader writes come back as the long names the page reads', sk.length === 1 && sk[0].ingredient === 'Rice' && sk[0].calories === 234 && sk[0].carbs_grams === 51 && sk[0].iron_mg === 0.3 && sk[0].volume_clue === 'one cup');
   let sent = null;
   const out = await readMeal({ cfg: { anthropicKey: 'k', model: 'm' }, body: { image: 'A'.repeat(400), note: 'olive oil' },
     fetch: async (u, o) => { sent = JSON.parse(o.body); return { ok: true, json: async () => ({ content: [{ type: 'text', text: JSON.stringify(PLATE) }] }) }; } });

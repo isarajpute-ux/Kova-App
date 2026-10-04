@@ -22,8 +22,9 @@
 /* =====================================================================
    KovaOrb - Kova's one entry point: a small glowing sphere (p09, p10).
 
-   The orb replaces the old chat button, so there is one Kova in the
-   corner, not two. It never opens anything by itself: when something
+   The orb replaces the old chat button, so there is one Kova, not two.
+   It sits in the sidebar as its own item (p14), not floating over every
+   screen. It never opens anything by itself: when something
    needs fixing it only shows a small count (red when urgent). It is a
    dark grey glass sphere in every appearance. Tap it and the
    Kova panel opens with four tabs:
@@ -44,23 +45,32 @@ window.KovaOrb=(function(){
   function $(s,r){ return (r||document).querySelector(s); }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  /* Kova lives in the sidebar, the way Grok sits in X's tab bar: one item
+     next to Work, with the same glass sphere and the count. Nothing floats
+     over the screens. Without a sidebar (an embedded page) it falls back
+     to the corner. */
   function mount(){
     if(O.el) return O.el;
-    var el=document.createElement('button'); el.id='kgOrb'; el.className='ko'; el.type='button';
-    el.setAttribute('aria-label','Kova agent');
+    var rail=document.querySelector('nav.rail'), set=rail&&rail.querySelector('[data-go="settings"]');
+    var el=document.createElement('button'); el.id='kgOrb'; el.type='button';
+    el.className=rail?'ko ko-rail rnav':'ko'; el.title='Kova';
+    el.setAttribute('aria-label','Kova: chat, your 7 checks and your plan');
     el.innerHTML='<i class="ko-core"></i><b class="ko-n" hidden></b>';
     el.addEventListener('click',function(){ isOpen()?close():open(); });
-    document.body.appendChild(el); O.el=el;
+    if(rail) rail.insertBefore(el,set||null); else document.body.appendChild(el);
+    O.el=el;
     embed();
-    /* stay out of the way of sign-in and first-run screens */
-    setInterval(function(){
+    if(!rail) setInterval(function(){
       var app=document.getElementById('app'), hit=document.elementFromPoint&&document.elementFromPoint(window.innerWidth/2,window.innerHeight/2);
       var covered=(app&&app.classList.contains('auth-locked'))||!(hit&&hit.closest&&(hit.closest('.screen.on')||hit.closest('#kgOrbPanel')));
       el.classList.toggle('ko-hide',(!!covered&&!isOpen())||chatOpen());
     },1200);
     return el;
   }
-  function badge(n,urgent){ mount(); O.n=n||0; var b=O.el.querySelector('.ko-n'); b.hidden=!n; b.textContent=n>9?'9+':String(n||''); O.el.classList.toggle('alert',!!urgent); paintTabs(); }
+  function badge(n,urgent){ mount();
+    /* a new urgent alert while you are here gets Kova's sound, once */
+    if(O.seen&&urgent&&(n||0)>O.n&&!document.hidden){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} }
+    O.seen=true; O.n=n||0; var b=O.el.querySelector('.ko-n'); b.hidden=!n; b.textContent=n>9?'9+':String(n||''); O.el.classList.toggle('alert',!!urgent); paintTabs(); }
 
   /* ---- the chat panel is the one panel: the agent's tabs live inside it ---- */
   function chatPanel(){ return window.KovaChat?document.getElementById('kovaPanel'):null; }
@@ -79,7 +89,7 @@ window.KovaOrb=(function(){
     /* anything else that opens Kova (go('chat'), "ask Kova about this") lands on Chat */
     var raw=KovaChat.open;
     KovaChat.open=function(q){ var t=q?'chat':(O.next||'chat'); O.next=null; var r=raw.apply(KovaChat,arguments); setTab(t); return r; };
-    if(window.MutationObserver) new MutationObserver(function(){ if(O.el) O.el.classList.toggle('ko-hide',chatOpen()); }).observe(p,{attributes:true,attributeFilter:['class']});
+    if(window.MutationObserver) new MutationObserver(function(){ if(O.el){ var on=chatOpen(); if(O.el.classList.contains('ko-rail')){ O.el.classList.toggle('on',on); O.el.setAttribute('aria-expanded',String(on)); } else O.el.classList.toggle('ko-hide',on); } }).observe(p,{attributes:true,attributeFilter:['class']});
     O.panel=host; O.embed=true;
     paintTabs();
     return true;

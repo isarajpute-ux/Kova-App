@@ -55,6 +55,12 @@ Once, in the Firebase console (Project settings):
 
 Kova asks for notification permission only when you switch a reminder on, never on launch. Tapping a notification opens its screen.
 
+**Kova's own alert sound.** Reminders play the sound picked in Settings > Reminders > Alert sound (Kova, Pulse, Dawn, Ripple, the phone's own, or silent), like Snapchat's sound is Snapchat's.
+- `npm run sync` renders the sounds from the app's own synth (`src/p08_chime.js`) into `android/app/src/main/res/raw/` and into `native/sounds/`.
+- On Android the app makes one notification channel per sound on start (`kova_kova`, `kova_pulse`, ...). The server sends each push on the channel for your choice.
+- On iPhone the app writes the same `.wav` files into its `Library/Sounds` folder on start (with `@capacitor/filesystem`), which is where iOS looks for a push's sound. Nothing to add in Xcode.
+- Websites cannot give a notification its own sound, so on the web a push with Kova closed uses the system sound. While Kova is open, its own sound plays.
+
 ## Things to know
 
 - **Sign-in:** the email code sign-in works inside the app. A Google or Apple sign-in popup cannot open inside an app web view. If you add those later, use a native sign-in plugin (for example `@capacitor-firebase/authentication`).

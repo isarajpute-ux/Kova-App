@@ -111,7 +111,7 @@ function cfg() {
   };
 }
 
-const MODEL = process.env.KOVA_MODEL || 'claude-sonnet-5';
+const MODEL = process.env.KOVA_MODEL || 'claude-sonnet-5-5';
 const DAILY_LIMIT = 150;         // messages per user per day
 /* Guest (anonymous) accounts are free to create, so a per-user limit
    alone does not bound spend. This caps the whole project per day. */

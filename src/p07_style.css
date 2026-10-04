@@ -320,7 +320,35 @@
 .ks-ptext .hd b.bad{color:#FF8A80}
 .ks-ptext .tx{font-size:13px;line-height:1.45;color:#E7E7E9;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .ks-ptext .tx.ph{color:var(--ks-t4)}
-.ks-plats{display:flex;gap:6px;margin:10px 6px 0;overflow-x:auto;scrollbar-width:none}
+.ks-plats{display:flex;gap:6px;margin:10px 6px 0;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:0 8px;overscroll-behavior-x:contain}
+.ks-plats div{scroll-snap-align:start}
+.ks-plats div.off{opacity:.55}
+.ks-plats div.off.on{opacity:1}
+.ks-plats div:focus-visible{outline:2px solid #fff;outline-offset:1px}
+/* the slider: soft edges where there is more, small round arrows */
+.ks-pslide{position:relative}
+.ks-pslide .ks-plats{-webkit-mask:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);mask:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);padding:0 20px}
+.ks-pslide.at-start .ks-plats{-webkit-mask:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);padding-left:0}
+.ks-pslide.at-end .ks-plats{-webkit-mask:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);mask:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);padding-right:0}
+.ks-pslide.at-start.at-end .ks-plats{-webkit-mask:none;mask:none}
+.ks-parw{position:absolute;top:50%;margin-top:-1px;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(40,40,44,.9);border:.5px solid rgba(255,255,255,.18);color:#fff;transition:opacity .2s}
+.ks-parw .ki{width:13px;height:13px}
+.ks-parw.l{left:0}.ks-parw.r{right:0}
+.ks-pslide.at-start .ks-parw.l,.ks-pslide.at-end .ks-parw.r{opacity:0;pointer-events:none}
+body.light-mode .ks-parw{background:rgba(255,255,255,.95);border-color:rgba(18,20,24,.14);color:#16181C}
+/* the buttons over the video: there while the pointer is over it (or a
+   key is on them), gone otherwise; on touch, shown on a tap and gone after
+   a moment of playing */
+.ks-media :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){transition:opacity .28s ease,transform .28s ease}
+@media (hover:hover) and (pointer:fine){
+  .ks-media:not(:hover):not(:focus-within) :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){opacity:0;pointer-events:none}
+  .ks-media:not(:hover):not(:focus-within) .ks-trans{transform:translate(-50%,-50%) scale(.94)}
+  .ks-media:not(:hover):not(:focus-within) .fade{opacity:0}
+  .ks-media .fade{transition:opacity .28s ease}
+}
+.ks-media.idle :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.ks-media :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){transition:none}}
 .ks-plats::-webkit-scrollbar{display:none}
 .ks-plats div{height:30px;padding:0 12px;border-radius:10px;font-size:12.5px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);color:var(--ks-t2);cursor:pointer;flex-shrink:0}
 .ks-plats div.on{background:rgba(255,255,255,.92);color:var(--ks-ink)}

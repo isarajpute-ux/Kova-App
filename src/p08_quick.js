@@ -70,12 +70,12 @@ window.KovaQuick=(function(){
       try{
         var img=new Image();
         img.onload=function(){
-          var m=1280, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height, s=Math.min(1,m/Math.max(w,h));
+          var m=1024, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height, s=Math.min(1,m/Math.max(w,h));
           if(!w||!h){ ok(dataUrl); return; }
           var c=document.createElement('canvas'); c.width=Math.round(w*s); c.height=Math.round(h*s);
           var x=c.getContext('2d'); if(!x){ ok(dataUrl); return; }
           x.drawImage(img,0,0,c.width,c.height);
-          try{ ok(c.toDataURL('image/jpeg',.82)); }catch(e){ ok(dataUrl); }
+          try{ ok(c.toDataURL('image/jpeg',.8)); }catch(e){ ok(dataUrl); }
         };
         img.onerror=function(){ ok(dataUrl); };
         img.src=dataUrl;
@@ -167,12 +167,12 @@ window.KovaQuick=(function(){
   function paint(state){
     var el=document.querySelector('#sheetIn .kq'); if(!el) return;
     var body='';
-    if(state==='reading') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-reading"><span class="kq-dot"></span>Reading the plate…</div>';
+    if(state==='reading') body='<div class="kq-shot kq-scan"><img alt="" src="'+R.shot+'"><i class="kq-beam" aria-hidden="true"></i></div><div class="kq-reading" role="status"><span class="kq-dot"></span>Reading the plate…</div>';
     else if(state==='result'){
       var t=R.total, k=Math.round(t.kcal*scale), p=Math.round(t.p*scale), pm=Math.round(k*band(t.conf));
       body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div>'
         +'<div class="kq-res"><div class="kq-big">'+k+'<small>kcal</small></div><div class="kq-p">'+p+' g protein · '+Math.round(t.c*scale)+' c · '+Math.round(t.f*scale)+' f</div></div>'
-        +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+'</div>'
+        +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+(R.ms?' · read in '+(R.ms/1000).toFixed(1)+' s':'')+'</div>'
         +'<div class="kq-line"><span class="kova-dot"></span>'+esc(line({kcal:k,p:p}))+'</div>'
         +'<div class="kq-por" role="group" aria-label="Portion">'+[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.25,'1¼×'],[1.5,'1½×']].map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
         +'<button class="btn kq-log" data-kq="log">Log it</button>';
@@ -222,11 +222,12 @@ window.KovaQuick=(function(){
     KovaCam.open({title:'Log a meal',hint:'Fill the square with the plate. Closer is more accurate.',onShot:shot});
   }
   function shot(dataUrl){
-    R={shot:dataUrl,items:[],total:null}; scale=1; busy=true;
+    R={shot:dataUrl,items:[],total:null,t0:Date.now()}; scale=1; busy=true;
     openSheet2('reading');
     try{ if(window.KovaMedia) KovaMedia.attach('food',dataUrl,{name:'meal.jpg',ref:'quick-log'}); }catch(e){}
     read(dataUrl,'').then(function(items){
-      busy=false; R.items=items||[]; R.total=totalOf(R.items);
+      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0;
+      try{ if(window.KovaAnalytics) KovaAnalytics.track('meal_read',{ms:R.ms,items:R.items.length}); }catch(x){}
       paint(R.items.length?'result':'empty');
     },function(e){
       busy=false;

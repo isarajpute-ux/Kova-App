@@ -226,7 +226,7 @@ window.KovaScreenTour=(function(){
       ['Work OS','What is due today at work. Tap to open it.','#osHero'],
       ['Daily goals','Small wins for today. Tick them off.',up('goalsList')],
       ['Move around','Every area is one tap away here.',rail],
-      ['Kova, one tap away','Chat, your seven health checks and your AI team, all in this glass orb.','#kgOrb']
+      ['Kova, one tap away','Chat, your seven health checks and your AI team. Kova sits in the sidebar, like the other areas.','#kgOrb']
     ],
     move:[
       ['Today’s session','What to train today, and why.','#s-move .card.kova[data-go="session"]'],
@@ -793,9 +793,12 @@ window.KovaCanvas=(function(){
       +inc.map(function(_,i){ return '<i class="'+(i<=S.slide?'on':'')+'"></i>'; }).join('')+'</div>';
     else if(m&&m.kind==='video') timeBar='<div class="tl"><span id="ksCur">0:00</span><span>'+mmss(m.dur).replace(/^0/,'')+'</span></div><div class="bar"><i id="ksBar" style="width:0%"></i></div>';
     else timeBar='<div class="tl"><span>'+(m?'Photo':'')+'</span><span>'+KPo.PLAT[k].n+'</span></div><div class="bar"><i style="width:100%"></i></div>';
-    var plats=(targets().length?targets():KPo.ORDER).map(function(x){
-      var cc=KPo.check(p,x,KPo.linkState(x));
-      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'">'+mark(x,16)+KPo.PLAT[x].n+(cc.ok?'':'<i class="bad" aria-label="needs a fix"></i>')+'</div>';
+    /* every platform in a slider under the video: the ones this post goes
+       to first, the rest after them, dimmer. Tap one to preview it there. */
+    var tg=targets(), order=tg.concat(KPo.ORDER.filter(function(x){ return tg.indexOf(x)<0; }));
+    var plats=order.map(function(x){
+      var cc=KPo.check(p,x,KPo.linkState(x)), isT=tg.indexOf(x)>=0;
+      return '<div class="'+(x===k?'on':'')+(isT?' tg':' off')+'" data-a="plat" data-k="'+x+'" role="tab" tabindex="0" aria-selected="'+(x===k)+'" aria-label="'+esc(KPo.PLAT[x].n+(isT?', posting there':', not posting there')+(cc.ok||!isT?'':', needs a fix'))+'">'+mark(x,16)+KPo.PLAT[x].n+(isT&&!cc.ok?'<i class="bad" aria-hidden="true"></i>':'')+'</div>';
     }).join('');
     var r=(p.results||{})[k];
     var note='';
@@ -817,7 +820,9 @@ window.KovaCanvas=(function(){
           +'<button class="ks-sq glass" data-a="play" aria-label="Play">'+ic(m.kind==='video'?'play':(slider?'play':'eye'))+'</button>'
           +'<button class="ks-sq glass" data-a="next" aria-label="Next">'+ic('next')+'</button></div>':'')
         +'<div class="ks-time">'+timeBar+'</div></div>'
-      +'<div class="ks-plats">'+plats+'</div>'
+      +'<div class="ks-pslide"><button class="ks-parw l" data-a="pscroll" data-d="-1" aria-label="Earlier platforms">'+ic('left')+'</button>'
+        +'<div class="ks-plats" role="tablist" aria-label="Preview on">'+plats+'</div>'
+        +'<button class="ks-parw r" data-a="pscroll" data-d="1" aria-label="More platforms">'+ic('right')+'</button></div>'
       +'<div class="ks-ptext" data-a="edit"><div class="hd"><span>'+KPo.PLAT[k].n+(p.over&&p.over[k]?' · edited':'')+'</span><b class="'+(len>lim?'bad':'')+'">'+len+' / '+lim+'</b></div>'
         +'<div class="tx'+(txt?'':' ph')+'">'+esc(txt||'Write a heading, caption or primary text below.')+'</div></div>'
       +note
@@ -841,6 +846,7 @@ window.KovaCanvas=(function(){
         +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>'
       +nodeMedia(p)+nodeText(p)+nodeCover(p)+nodeFormat(p)+nodePublish(p)+nodePreview(p);
     wires=$('#ksWires');
+    platsInView();
     loadPreviewMedia(t);
     if(rec) rec.disconnect();
     if(window.ResizeObserver){
@@ -1075,12 +1081,38 @@ window.KovaCanvas=(function(){
           var oi=$('#ksImg'), ni=nu.querySelector('#ksImg');
           if(oi&&ni&&oi.dataset.mid===ni.dataset.mid){ ni.style.backgroundImage=oi.style.backgroundImage; reuse=true; }
         }
+        var sl=n==='preview'?$('.ks-plats',old):null, sx=sl?sl.scrollLeft:0;
         old.parentNode.replaceChild(nu,old);
+        if(sl) platsInView(sx);
         if(rec) rec.observe(nu);
         if(n==='preview'&&!reuse) loadPreviewMedia(0);
       });
       paintTop(); paintStats(); layout();
     },120);
+  }
+  /* the platform slider: same place after a repaint, the chosen one in view,
+     and the arrows only where there is more to see */
+  function platsInView(x){
+    var sl=$('.ks-plats',world); if(!sl) return;
+    if(x!=null) sl.scrollLeft=x;
+    var on=$('.on',sl);
+    if(on){ var a=on.offsetLeft-sl.offsetLeft, b=a+on.offsetWidth; if(a<sl.scrollLeft+8) sl.scrollLeft=a-8; else if(b>sl.scrollLeft+sl.clientWidth-8) sl.scrollLeft=b-sl.clientWidth+8; }
+    platsEdges(sl);
+    if(!sl._kw){ sl._kw=1; sl.addEventListener('scroll',function(){ platsEdges(sl); },{passive:true}); }
+  }
+  function platsEdges(sl){
+    var w=sl.parentNode; if(!w) return;
+    w.classList.toggle('at-start',sl.scrollLeft<4);
+    w.classList.toggle('at-end',sl.scrollLeft+sl.clientWidth>=sl.scrollWidth-4);
+  }
+  /* on a touch screen the buttons over the video show on a tap and fade
+     after a moment of playing; with a mouse they show while it is over the
+     video (the stylesheet does that) */
+  var idleT=null;
+  function wake(){
+    var m=$('.ks-media',world); if(!m) return;
+    m.classList.remove('idle'); clearTimeout(idleT);
+    idleT=setTimeout(function(){ var v=$('#ksVid'); var mm=$('.ks-media',world); if(mm&&v&&!v.paused) mm.classList.add('idle'); },2600);
   }
   function setField(f,focus){
     S.field=f; S.sugg='';
@@ -1702,7 +1734,7 @@ window.KovaCanvas=(function(){
     softPaint();
     if(auto) setTimeout(function(){ var v=$('#ksVid'); if(v) v.play().catch(function(){}); },300);
   }
-  function setPlayIcon(on){ var b=$('[data-a="play"]',world); if(b) b.innerHTML=ic(on?'pause':'play'); }
+  function setPlayIcon(on){ var b=$('[data-a="play"]',world); if(b){ b.innerHTML=ic(on?'pause':'play'); b.setAttribute('aria-label',on?'Pause':'Play'); } if(on) wake(); else { clearTimeout(idleT); var m=$('.ks-media',world); if(m) m.classList.remove('idle'); } }
   var slideT=null;
   /* A tap is what lets a browser play sound, so every play starts from one.
      If the page is inside a frame that still blocks sound, the clip plays
@@ -1926,6 +1958,7 @@ window.KovaCanvas=(function(){
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
       case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); paintDock(); break;
+      case 'pscroll': { var sl=$('.ks-plats',world); if(sl){ var d=+el.getAttribute('data-d')||1; if(sl.scrollBy) sl.scrollBy({left:d*Math.max(120,sl.clientWidth*.7),behavior:'smooth'}); else sl.scrollLeft+=d*160; } } break;
       case 'nextplat': { var list=targets().length?targets():KPo.ORDER; S.plat=list[(list.indexOf(currentPlat())+1)%list.length]; softPaint(); } break;
       case 'edit': editFor(currentPlat()); break;
       case 'share': shareIt(); break;
@@ -1957,6 +1990,8 @@ window.KovaCanvas=(function(){
 
   /* =============================== events ============================ */
   function wireEvents(){
+    root.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'&&e.target.closest&&e.target.closest('.ks-media')) wake(); },true);
+    root.addEventListener('keydown',function(e){ var t=e.target.closest&&e.target.closest('.ks-plats [data-a="plat"]'); if(t&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); t.click(); } });
     root.addEventListener('click',function(e){
       if(S.menu&&!S.menu.contains(e.target)) closeMenu();
       var st=e.target.closest('[data-step]');

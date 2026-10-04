@@ -59,6 +59,7 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   ck('onboarding_done is logged with how long it took', od && od[1].result === 'meal' && typeof od[1].count === 'number' && od[1].count < 60);
   ck('the answers are saved (areas, cycle, activity), and the picks are logged', (() => { const o = w.KP.get('onboard'); return o.focus === 'fuel' && JSON.stringify(o.areas) === '["fuel"]' && o.cycle === 'yes' && o.days === 4; })() && A.events.some((e) => e[0] === 'areas_picked' && e[1].answer === 'fuel' && e[1].count === 1));
   ck('"yes" to the cycle question turns cycle tracking on', w.KovaCycle._data().on === true);
+  for (let i = 0; i < 30 && A.cam.opened !== 1; i++) await wait(100);   // slower under a busy machine
   ck('"Snap your next meal" lands on Fuel and opens its camera', doc.getElementById('s-fuel').classList.contains('on') && A.cam.opened === 1);
 
   // ---------- the next launch goes straight in ----------

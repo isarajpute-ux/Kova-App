@@ -79,6 +79,8 @@ jobs:
 
       - name: "Core journeys: skip sign-in, three questions, a meal from search, a one-set workout, GLP-1 mode, the plan"
         run: node tests/e2e/flows.mjs
+      - name: Sign-in in a real browser (forgiving email and code steps)
+        run: node tests/e2e/signin.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

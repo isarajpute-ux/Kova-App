@@ -443,4 +443,4 @@ body.soft-light #s-workstudio{background:radial-gradient(ellipse 135% 100% at 50
 body.light-mode #s-workstudio{background:radial-gradient(ellipse 140% 105% at 50% -10%,#EAE8E4 0%,#DFDDD8 44%,#D4D2CD 100%)}
 body.soft-light .ks-grid-bg,body.light-mode .ks-grid-bg{background-color:transparent}
 /* the one Kova orb moves up beside the Studio's top buttons, off the composer */
-body.ks-on .ko{top:calc(env(safe-area-inset-top,0px) + 132px);bottom:auto;right:36px}
+body.ks-on .ko:not(.ko-rail){top:calc(env(safe-area-inset-top,0px) + 132px);bottom:auto;right:36px}

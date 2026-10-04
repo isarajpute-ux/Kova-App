@@ -20,6 +20,14 @@ const W = require('./wellness');
 
 const KINDS = ['bedtime', 'wind_down', 'water', 'meds', 'meal', 'workout', 'weigh_in', 'glp1', 'custom', 'today', 'recap'];
 const SCREENS = /^[a-z][a-z0-9_-]{0,30}$/;
+/* Kova's alert sounds (src/p08_chime.js): the phone has a kova_<id>.wav
+   for each and, on Android, a kova_<id> channel that plays it */
+const SOUNDS = ['kova', 'pulse', 'dawn', 'ripple', 'default', 'silent'];
+function soundOpts(sound) {
+  sound = SOUNDS.includes(sound) ? sound : 'kova';
+  const aps = sound === 'silent' ? {} : { sound: sound === 'default' ? 'default' : `kova_${sound}.wav` };
+  return { apns: { payload: { aps } }, android: { priority: 'high', notification: { channelId: sound === 'default' ? 'reminders' : `kova_${sound}` } } };
+}
 const hm = (s) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s || '')); return m && +m[1] < 24 && +m[2] < 60 ? +m[1] * 60 + +m[2] : -1; };
 const WINDOW = 10;                   // minutes after the set time a reminder may still go out
 
@@ -51,7 +59,8 @@ function cleanList(b) {
   const q = b.quiet || {};
   const quiet = hm(q.from) >= 0 && hm(q.to) >= 0 ? { from: q.from, to: q.to } : null;
   const tz = typeof b.tz === 'string' && b.tz.length <= 64 ? b.tz : 'UTC';
-  return { tz, quiet, items };
+  const sound = SOUNDS.includes(b.sound) ? b.sound : 'kova';
+  return { tz, quiet, sound, items };
 }
 
 function inQuiet(quiet, mins) {
@@ -116,8 +125,7 @@ function makePush(deps) {
       notification: { title: note.title, body: note.body },
       data: { screen: note.screen, rid: note.id || '', kind: note.kind || '' },
       webpush: { fcmOptions: { link }, notification: { icon: '/icon-192.png', badge: '/icon-192.png', tag: 'kova-' + (note.id || note.kind) } },
-      apns: { payload: { aps: { sound: 'default' } } },
-      android: { priority: 'high', notification: { channelId: 'reminders' } }
+      ...soundOpts(note.sound)
     });
     /* forget devices the push service says are gone */
     (r.responses || []).forEach((x, i) => {
@@ -138,7 +146,7 @@ function makePush(deps) {
       const list = all[uid] || {};
       for (const d of dueItems(list, list.sent, t)) {
         await db.ref(`srv/reminders/${uid}/sent/${d.id}`).set(d.date);   // mark first: never twice
-        try { n += (await send(uid, Object.assign({ id: d.id }, d.it))).sent; }
+        try { n += (await send(uid, Object.assign({ id: d.id, sound: list.sound }, d.it))).sent; }
         catch (e) { console.error('push', uid, d.id, e.message); }
       }
     }
@@ -148,4 +156,4 @@ function makePush(deps) {
   return { register, unregister, save, send, tick };
 }
 
-module.exports = { makePush, cleanList, cleanItem, dueItems, inQuiet, KINDS };
+module.exports = { makePush, cleanList, cleanItem, dueItems, inQuiet, KINDS, SOUNDS, soundOpts };

@@ -3636,10 +3636,10 @@ window.KovaCloudAuth = (function(){
      because an error you cannot name is an error you cannot fix. */
   function human(e){
     var c = (e && e.code) || '';
-    if (c === 'auth/invalid-email')        return 'That email address is not valid.';
-    if (c === 'auth/user-not-found')       return 'No account with that email. Create one below.';
+    if (c === 'auth/invalid-email')        return 'Check the email: it needs an @ and a domain, like name@gmail.com.';
+    if (c === 'auth/user-not-found')       return 'There is no account with that email yet. Tap "Create account" to make one.';
     if (c === 'auth/wrong-password' ||
-        c === 'auth/invalid-credential')   return 'That password does not match.';
+        c === 'auth/invalid-credential')   return 'That email and password do not match. Check both (capital letters count in the password), or reset it.';
     if (c === 'auth/email-already-in-use') return 'That email already has an account. Sign in instead.';
     if (c === 'auth/weak-password')        return 'Password needs to be at least 6 characters.';
     if (c === 'auth/too-many-requests')    return 'Too many attempts. Wait a minute and try again.';
@@ -3693,6 +3693,7 @@ window.KovaCloudAuth = (function(){
   return {
     signIn: function(email, pw){
       if (!auth) return err('Backend unavailable. Working offline on this device.');
+      email = String(email || '').replace(/\s+/g, '').toLowerCase();
       err(''); busy(true, 'Signing in...');
       auth.signInWithEmailAndPassword(email, pw)
         .then(function(){ KovaAnalytics.track('login', { method: 'email' }); })
@@ -3701,6 +3702,7 @@ window.KovaCloudAuth = (function(){
     },
     signUp: function(email, pw){
       if (!auth) return err('Backend unavailable. Working offline on this device.');
+      email = String(email || '').replace(/\s+/g, '').toLowerCase();
       err(''); busy(true, 'Creating...');
       auth.createUserWithEmailAndPassword(email, pw)
         .then(function(){
@@ -4010,6 +4012,26 @@ body.light-mode .ko-core{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),inset 0
 .kc-agent .kop-m,.kc-agent .kop-a,.kc-agent .kop-ans{border:.5px solid var(--p-line);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 .kc-agent .kop-in{background:var(--p-card)}
 body.light-mode .kc-agent .kop-m,body.light-mode .kc-agent .kop-a{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 22px -14px rgba(30,40,60,.25)}
+
+/* ---- Kova in the sidebar (p14): an item like the others, the sphere as
+       its icon; on laptops it reads "Kova" like the rest ---- */
+.ko.ko-rail{position:relative;right:auto;bottom:auto;z-index:auto;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:transparent;transform:none}
+.ko.ko-rail::before{inset:-4px}
+.ko.ko-rail .ko-core{width:21px;height:21px;flex-shrink:0}
+.ko.ko-rail:hover,.ko.ko-rail.open{transform:none}
+.ko.ko-rail:hover .ko-core{transform:scale(1.1)}
+.ko.ko-rail .ko-core{transition:transform .25s ease}
+.ko.ko-rail.on{background:rgba(255,255,255,.1)}
+.ko.ko-rail .ko-n{right:auto;left:22px;top:3px}
+.ko.ko-rail:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+body.light-mode .ko.ko-rail.on{background:rgba(16,20,26,.08)}
+@media (min-width:1024px){
+  .rail .ko.ko-rail{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 11px;color:var(--ink-3,rgba(255,255,255,.62))}
+  .rail .ko.ko-rail .ko-n{left:26px;top:6px}
+  body.light-mode .rail .ko.ko-rail{color:rgba(16,20,26,.62)}
+}
+@media (max-width:340px){.ko.ko-rail{width:34px;height:34px}.ko.ko-rail .ko-core{width:19px;height:19px}}
 
 </style>
 <style id="p08-traction">
@@ -4880,7 +4902,7 @@ body.soft-light #s-workstudio{background:radial-gradient(ellipse 135% 100% at 50
 body.light-mode #s-workstudio{background:radial-gradient(ellipse 140% 105% at 50% -10%,#EAE8E4 0%,#DFDDD8 44%,#D4D2CD 100%)}
 body.soft-light .ks-grid-bg,body.light-mode .ks-grid-bg{background-color:transparent}
 /* the one Kova orb moves up beside the Studio's top buttons, off the composer */
-body.ks-on .ko{top:calc(env(safe-area-inset-top,0px) + 132px);bottom:auto;right:36px}
+body.ks-on .ko:not(.ko-rail){top:calc(env(safe-area-inset-top,0px) + 132px);bottom:auto;right:36px}
 
 </style>
 <style id="p08-crew">
@@ -5572,6 +5594,13 @@ body.ks-on .kl2-pill{top:calc(env(safe-area-inset-top,0px) + 134px);bottom:auto;
 /* Fuel: the one-tap chips under the quick actions */
 .kq-fuel{margin:0 0 12px}
 
+/* reading: a light sweeps down the photo while the plate is read */
+.kq-scan{position:relative;overflow:hidden}
+.kq-beam{position:absolute;left:0;right:0;top:-30%;height:30%;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.28) 70%,rgba(255,255,255,.75) 98%,transparent);mix-blend-mode:screen;animation:kqBeam 1.4s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes kqBeam{to{top:100%}}
+@media (prefers-reduced-motion:reduce){.kq-beam{animation:none;display:none}}
+
 </style>
 <style id="p08-firstweek">
 /* KovaFirstWeek: the one-a-day prompt on Today, and the plan offer after
@@ -5993,8 +6022,11 @@ body.light-mode .app{--hair:rgba(28,26,23,.1)}
    bar. Now:
      phones (under 700px)   as before, minus the pretend status bar;
      tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
-     laptops (1024px+)      an 800px page and a sidebar with names;
-     big screens (1440px+)  a 920px page.
+     laptops (1024px+)      a 720px page and a sidebar with names;
+     big screens (1440px+)  a 760px page.
+   The charts are drawn for a phone and grow with the page, so the page
+   stops at a width where a chart still fits on the screen with its card,
+   and no chart is ever taller than 300px.
    The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
    their own wide layouts. The real safe area keeps the notch and the home
    bar clear on phones. */
@@ -6007,7 +6039,7 @@ body.light-mode .app{--hair:rgba(28,26,23,.1)}
   .sheet-in{max-width:560px}
 }
 @media (min-width:1024px){
-  .wrap{max-width:800px;padding-left:32px;padding-right:32px}
+  .wrap{max-width:720px;padding-left:32px;padding-right:32px}
   /* the rail becomes a sidebar: icon and name */
   .rail{width:212px;align-items:stretch;padding-left:14px;padding-right:14px}
   .rail .rnav{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 12px;font-size:18px}
@@ -6016,7 +6048,17 @@ body.light-mode .app{--hair:rgba(28,26,23,.1)}
   .rail .avatar{align-self:flex-start;margin:0 0 6px 8px}
 }
 @media (min-width:1440px){
-  .wrap{max-width:920px}
+  .wrap{max-width:760px}
+}
+/* charts that scale with the page: never taller than 300px. The drawing
+   keeps its shape and sits in the middle of its card. Vitals' signal bars
+   have their labels in a row under them, so both narrow together. */
+@media (min-width:700px){
+  :is(#wkchart,#fxTrend,#hsOrbit,#hsDial,#prChart,#recDial,#ecChart,#btChart,#actChart,#studyChart,#hrvChart,#stressDial,#stressChart,#slpChart,#ssGraph,#nrgCurve),
+  :is(#s-progress,#s-recovery,#s-prs,#s-watch) .card>svg[viewBox]{max-height:300px;margin-left:auto;margin-right:auto}
+  #s-prs .prgrid svg[viewBox]{max-height:220px}
+  #sigBars,#sigAxis{max-width:540px;margin-left:auto;margin-right:auto}
+  #recGrid{grid-template-columns:repeat(3,1fr)!important}
 }
 /* the smallest phones (iPhone SE, 320px): a little more room for content */
 @media (max-width:340px){
@@ -6128,9 +6170,32 @@ body.light-mode #s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(50,170,105,.2
 @media (prefers-reduced-motion:reduce){#s-workstudio .ks-dt{transition:none}}
 
 </style>
+<style id="p08-chime">
+/* KovaChime: the alert sound picker in Settings > Reminders (p14).
+   Dark, soft light and light glass. */
+.kch{padding:14px 14px 12px;margin:10px 0 0}
+.kch-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.kch-h span{font-size:12.5px;font-weight:700}
+.kch-h small{font-size:11px;color:var(--ink-3,rgba(255,255,255,.55));text-align:right}
+.kch-row{display:flex;flex-wrap:wrap;gap:7px}
+.kch-b{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:17px;cursor:pointer;
+  font:500 12.5px 'Outfit','Urbanist',system-ui,sans-serif;color:var(--txt,#fff);
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);transition:background .18s,border-color .18s,transform .12s}
+.kch-b:active{transform:scale(.96)}
+.kch-b.on{background:var(--acc,#fff);border-color:transparent;color:#0B0B0C}
+.kch-b:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.kch-w{display:inline-flex;align-items:center;gap:1.5px;height:14px;font-style:normal}
+.kch-w b{display:block;width:2px;border-radius:1px;background:currentColor;opacity:.75}
+.kch-f{font-size:11px;line-height:1.45;color:var(--ink-3,rgba(255,255,255,.55));margin-top:10px}
+body.soft-light .kch-b{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+body.light-mode .kch-b{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,.14);color:#1C1A17}
+body.light-mode .kch-b.on{background:#1C1A17;color:#F6F4F0;border-color:transparent}
+body.light-mode .kch-h small,body.light-mode .kch-f{color:rgba(28,26,23,.58)}
+
+</style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
 
 <!-- ─── KOVA AUTH ────────────────────────────────────────
      Restyled onto the app's own design language: neutral ground, one
@@ -6217,7 +6282,7 @@ body.light-mode #s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(50,170,105,.2
   <div class="rnav on" data-go="move" title="Workout"><svg class="ic"><use href="#i-barbell"/></svg></div>
   <div class="rnav" data-go="vitals" title="Vitals"><svg class="ic"><use href="#i-heart"/></svg></div>
   <div class="rnav" data-go="learn" title="Learn" data-learn-only><svg class="ic"><use href="#i-book-2"/></svg></div>
-  <div class="rnav" data-go="work" title="Work"><svg class="ic"><use href="#i-wallet"/></svg></div>
+  <div class="rnav" data-go="work" title="Work"><svg class="ic"><use href="#i-workflow"/></svg></div>
   <div class="rnav" data-go="settings" style="margin-top:auto" title="Settings"><svg class="ic"><use href="#i-settings"/></svg></div>
 </nav>
 
@@ -8391,7 +8456,35 @@ body.light-mode .wk-tab.on i{background:#F2F5FA}
 .ks-ptext .hd b.bad{color:#FF8A80}
 .ks-ptext .tx{font-size:13px;line-height:1.45;color:#E7E7E9;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .ks-ptext .tx.ph{color:var(--ks-t4)}
-.ks-plats{display:flex;gap:6px;margin:10px 6px 0;overflow-x:auto;scrollbar-width:none}
+.ks-plats{display:flex;gap:6px;margin:10px 6px 0;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:0 8px;overscroll-behavior-x:contain}
+.ks-plats div{scroll-snap-align:start}
+.ks-plats div.off{opacity:.55}
+.ks-plats div.off.on{opacity:1}
+.ks-plats div:focus-visible{outline:2px solid #fff;outline-offset:1px}
+/* the slider: soft edges where there is more, small round arrows */
+.ks-pslide{position:relative}
+.ks-pslide .ks-plats{-webkit-mask:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);mask:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);padding:0 20px}
+.ks-pslide.at-start .ks-plats{-webkit-mask:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);padding-left:0}
+.ks-pslide.at-end .ks-plats{-webkit-mask:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);mask:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);padding-right:0}
+.ks-pslide.at-start.at-end .ks-plats{-webkit-mask:none;mask:none}
+.ks-parw{position:absolute;top:50%;margin-top:-1px;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(40,40,44,.9);border:.5px solid rgba(255,255,255,.18);color:#fff;transition:opacity .2s}
+.ks-parw .ki{width:13px;height:13px}
+.ks-parw.l{left:0}.ks-parw.r{right:0}
+.ks-pslide.at-start .ks-parw.l,.ks-pslide.at-end .ks-parw.r{opacity:0;pointer-events:none}
+body.light-mode .ks-parw{background:rgba(255,255,255,.95);border-color:rgba(18,20,24,.14);color:#16181C}
+/* the buttons over the video: there while the pointer is over it (or a
+   key is on them), gone otherwise; on touch, shown on a tap and gone after
+   a moment of playing */
+.ks-media :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){transition:opacity .28s ease,transform .28s ease}
+@media (hover:hover) and (pointer:fine){
+  .ks-media:not(:hover):not(:focus-within) :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){opacity:0;pointer-events:none}
+  .ks-media:not(:hover):not(:focus-within) .ks-trans{transform:translate(-50%,-50%) scale(.94)}
+  .ks-media:not(:hover):not(:focus-within) .fade{opacity:0}
+  .ks-media .fade{transition:opacity .28s ease}
+}
+.ks-media.idle :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.ks-media :is(.ks-chip,.ks-tr,.ks-trans,.ks-time){transition:none}}
 .ks-plats::-webkit-scrollbar{display:none}
 .ks-plats div{height:30px;padding:0 12px;border-radius:10px;font-size:12.5px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);color:var(--ks-t2);cursor:pointer;flex-shrink:0}
 .ks-plats div.on{background:rgba(255,255,255,.92);color:var(--ks-ink)}
@@ -23310,8 +23403,11 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   };
 
   function fire(a){
+    /* Kova's own sound (Settings > Alert sound) while Kova is open; the
+       banner then stays quiet so the two do not play at once */
+    var own=false; try{ own=!!(window.KovaChime&&!document.hidden&&KovaChime.play()); }catch(e){}
     if(permState()==='granted'){
-      try{ new Notification('Kova \u00b7 '+a.title,{body:a.body,tag:a.id}); return; }catch(e){}
+      try{ new Notification('Kova \u00b7 '+a.title,{body:a.body,tag:a.id,silent:own}); return; }catch(e){}
     }
     toast(a.title+' \u2014 '+a.body);
   }
@@ -36465,6 +36561,7 @@ window.KovaCam=(function(){
 
   function stop(){
     if(stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream=null; }
+    track=null; cap=null;
   }
 
   function close(){
@@ -36479,7 +36576,7 @@ window.KovaCam=(function(){
       '<div class="kcam-bar">'
       +'<div class="kcam-x" id="kcamX"><svg class="ic"><use href="#i-x"/></svg></div>'
       +'<div class="kcam-t">'+title+'</div>'
-      +'<div style="width:34px"></div></div>'
+      +'<div class="kcam-hd" id="kcamHd" aria-hidden="true"></div></div>'
       +'<div class="kcam-stage">'
       +'<video id="kcamV" playsinline muted autoplay></video>'
       +'<div class="kcam-mask"></div>'
@@ -36498,16 +36595,35 @@ window.KovaCam=(function(){
     return d;
   }
 
+  /* The camera used to open at the browser's default size, which on most
+     phones is 640 x 480: a 480-pixel square, blown up on screen. Now it
+     asks for the sensor's best video (up to 4K), uses the phone's real
+     still-photo pipeline where the browser has one (ImageCapture: full
+     resolution, the phone's own processing), keeps focus continuous, and
+     lets you tap to focus and turn the torch on. The photo you see is up to
+     2048 px; the copy sent to be read is made smaller where it is read. */
+  var MAX=2048, Q=.92, track=null, cap=null;
+  function square(src,w,h){
+    var side=Math.min(w,h), out=Math.min(side,MAX);
+    var c=document.createElement('canvas'); c.width=c.height=out;
+    var x=c.getContext('2d'); x.imageSmoothingEnabled=true; if('imageSmoothingQuality' in x) x.imageSmoothingQuality='high';
+    x.drawImage(src,(w-side)/2,(h-side)/2,side,side,0,0,out,out);
+    return c.toDataURL('image/jpeg',Q);
+  }
   function grab(video){
     /* crop the square the guide shows, so what you framed is what gets read */
     var vw=video.videoWidth, vh=video.videoHeight;
     if(!vw||!vh) return null;
-    var side=Math.min(vw,vh);
-    var sx=(vw-side)/2, sy=(vh-side)/2;
-    var c=document.createElement('canvas');
-    c.width=c.height=Math.min(side,1080);
-    c.getContext('2d').drawImage(video,sx,sy,side,side,0,0,c.width,c.height);
-    return c.toDataURL('image/jpeg',0.86);
+    return square(video,vw,vh);
+  }
+  /* a full-resolution still where the browser can take one */
+  function still(video){
+    if(cap&&cap.takePhoto){
+      return cap.takePhoto().then(function(blob){
+        return (window.createImageBitmap?createImageBitmap(blob):Promise.reject()).then(function(bmp){ var u=square(bmp,bmp.width,bmp.height); try{ bmp.close(); }catch(e){} return u; });
+      }).catch(function(){ return grab(video); });
+    }
+    return Promise.resolve(grab(video));
   }
 
   function fromFile(file,done){
@@ -36515,13 +36631,7 @@ window.KovaCam=(function(){
     fr.onload=function(){
       /* centre-crop an uploaded photo to the same square */
       var im=new Image();
-      im.onload=function(){
-        var side=Math.min(im.width,im.height);
-        var c=document.createElement('canvas');
-        c.width=c.height=Math.min(side,1080);
-        c.getContext('2d').drawImage(im,(im.width-side)/2,(im.height-side)/2,side,side,0,0,c.width,c.height);
-        done(c.toDataURL('image/jpeg',0.86));
-      };
+      im.onload=function(){ done(square(im,im.naturalWidth||im.width,im.naturalHeight||im.height)); };
       im.onerror=function(){ done(String(fr.result)); };
       im.src=String(fr.result);
     };
@@ -36549,20 +36659,61 @@ window.KovaCam=(function(){
     /* live preview where the browser allows it */
     var ok=navigator.mediaDevices&&navigator.mediaDevices.getUserMedia;
     if(ok){
-      navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false})
+      var want={facingMode:{ideal:'environment'},width:{ideal:3840},height:{ideal:2160},frameRate:{ideal:30}};
+      navigator.mediaDevices.getUserMedia({video:want,audio:false})
+        .catch(function(){ return navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}); })
         .then(function(st){
+          if(!el){ st.getTracks().forEach(function(t){ t.stop(); }); return; }
           stream=st; video.srcObject=st;
+          track=st.getVideoTracks()[0]||null;
+          try{ cap=window.ImageCapture&&track?new ImageCapture(track):null; }catch(e){ cap=null; }
+          tune();
+          var busy=false;
           shot.onclick=function(){
-            var url=grab(video);
-            if(!url) return;
-            var fn=cb; close(); fn(url);
+            if(busy) return; busy=true; shot.classList.add('busy');
+            flash();
+            still(video).then(function(url){
+              busy=false;
+              if(!url){ shot.classList.remove('busy'); return; }
+              var fn=cb; close(); fn(url);
+            });
           };
         })
-        .catch(function(){ degrade(shot,'Camera blocked \u2014 use the roll button'); });
+        .catch(function(){ degrade(shot,'Camera blocked — use the roll button'); });
     } else {
-      degrade(shot,'Live camera needs a hosted page \u2014 use the roll button');
+      degrade(shot,'Live camera needs a hosted page — use the roll button');
     }
   }
+  /* continuous focus and exposure, tap to focus, and the torch when the
+     camera has one - each only where the browser supports it */
+  function tune(){
+    if(!track||!track.getCapabilities) return;
+    var c={}; try{ c=track.getCapabilities()||{}; }catch(e){}
+    var adv={};
+    if((c.focusMode||[]).indexOf('continuous')>=0) adv.focusMode='continuous';
+    if((c.exposureMode||[]).indexOf('continuous')>=0) adv.exposureMode='continuous';
+    if((c.whiteBalanceMode||[]).indexOf('continuous')>=0) adv.whiteBalanceMode='continuous';
+    if(Object.keys(adv).length) track.applyConstraints({advanced:[adv]}).catch(function(){});
+    var stage=document.querySelector('.kcam-stage');
+    if(stage&&c.pointsOfInterest!==undefined) stage.addEventListener('click',function(e){
+      if(e.target.closest('.kcam-torch')) return;
+      var r=stage.getBoundingClientRect(), pt={x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};
+      var m=(c.focusMode||[]).indexOf('single-shot')>=0?'single-shot':adv.focusMode;
+      track.applyConstraints({advanced:[{pointsOfInterest:[pt],focusMode:m}]}).catch(function(){});
+      var ring=document.createElement('i'); ring.className='kcam-focus'; ring.style.left=(pt.x*100)+'%'; ring.style.top=(pt.y*100)+'%'; stage.appendChild(ring); setTimeout(function(){ ring.remove(); },900);
+    });
+    if(c.torch&&stage){
+      var t=document.createElement('button'); t.type='button'; t.className='kcam-torch'; t.setAttribute('aria-label','Torch'); t.setAttribute('aria-pressed','false');
+      t.innerHTML='<svg class="ic"><use href="#i-bolt"/></svg>';
+      var on=false;
+      t.onclick=function(e){ e.stopPropagation(); on=!on; track.applyConstraints({advanced:[{torch:on}]}).then(function(){ t.setAttribute('aria-pressed',String(on)); t.classList.toggle('on',on); }).catch(function(){}); };
+      stage.appendChild(t);
+    }
+    var s=track.getSettings?track.getSettings():{};
+    var hd=document.getElementById('kcamHd');
+    if(hd&&s.width) hd.textContent=(Math.max(s.width,s.height)>=3000?'4K':(Math.max(s.width,s.height)>=1900?'HD':Math.min(s.width,s.height)+'p'))+(cap?' · photo':'');
+  }
+  function flash(){ var f=document.createElement('i'); f.className='kcam-flash'; var st=document.querySelector('.kcam-stage'); if(st){ st.appendChild(f); setTimeout(function(){ f.remove(); },320); } }
 
   /* no live stream: the shutter opens the system camera instead of
      pretending to be one */
@@ -36623,6 +36774,16 @@ window.KovaCam=(function(){
 .kcam-roll{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.14);
   display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-1,#FFF)}
 .kcam-roll input{display:none}
+.kcam-hd{min-width:34px;height:22px;padding:0 7px;border-radius:11px;font:600 10.5px/22px 'Outfit',system-ui,sans-serif;text-align:center;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12)}
+.kcam-hd:empty{background:none}
+.kcam-shot.busy span{transform:scale(.86);opacity:.7}
+.kcam-flash{position:absolute;inset:0;background:#fff;opacity:0;animation:kcamFlash .32s ease-out;pointer-events:none;z-index:4}
+@keyframes kcamFlash{0%{opacity:.55}100%{opacity:0}}
+.kcam-focus{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border:1.5px solid #FFD54A;border-radius:14px;z-index:4;pointer-events:none;animation:kcamFocus .9s ease-out forwards}
+@keyframes kcamFocus{0%{transform:scale(1.4);opacity:0}25%{transform:scale(1);opacity:1}100%{opacity:0}}
+.kcam-torch{position:absolute;right:16px;top:16px;z-index:5;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px}
+.kcam-torch.on{background:#FFD54A;color:#111}
+@media (prefers-reduced-motion:reduce){.kcam-flash,.kcam-focus{animation:none}}
 </style>
 
 <style>
@@ -37278,6 +37439,46 @@ body.light-mode .usual{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,
   letter-spacing:-.02em;color:var(--txt,#FFFFFF);margin-bottom:14px}
 
 /* six code boxes */
+.auth-inner.af-in{animation:afIn .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes afIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.af-tip{text-align:left;font-size:12px;line-height:1.45;color:var(--ink-3,rgba(255,255,255,.62));margin:-8px 0 0 8px;max-height:0;overflow:hidden;opacity:0;transition:max-height .25s ease,opacity .25s ease,margin .25s ease}
+.af-tip.on{max-height:60px;opacity:1;margin:-8px 0 14px 8px}
+.af-tip.soft{color:#F2C46D}
+.af-tip b{color:var(--txt,#FFFFFF);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.af-note{font-size:12px;color:var(--ink-4,rgba(255,255,255,.46));margin-top:10px;font-family:Outfit,sans-serif}
+.af-go.busy{position:relative;color:transparent!important}
+.af-go.busy::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(17,18,20,.25);border-top-color:#111214;animation:afSpin .7s linear infinite}
+body.light-mode .af-go.busy::after{border-color:rgba(246,244,240,.3);border-top-color:#F6F4F0}
+@keyframes afSpin{to{transform:rotate(360deg)}}
+.af-foot b.off{opacity:.45;cursor:default}
+/* one box drawn as six slots */
+.af-codew{position:relative;display:block;width:max-content;margin:0 auto 18px;cursor:text}
+.af-code1{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;caret-color:transparent;letter-spacing:40px}
+.af-slots{display:flex;gap:8px}
+.af-slots i{width:46px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font:400 22px Outfit,sans-serif;font-style:normal;color:var(--txt,#FFFFFF);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.20);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:border-color .18s,background .18s,transform .18s}
+.af-slots i.cur{border-color:rgba(255,255,255,.62);background:rgba(255,255,255,.12)}
+.af-slots i.cur:empty::after{content:"";width:1.5px;height:24px;background:currentColor;animation:afCaret 1s steps(1) infinite}
+@keyframes afCaret{50%{opacity:0}}
+.af-codew.soft .af-slots i{border-color:rgba(242,196,109,.6)}
+.af-codew.nudge .af-slots{animation:afNudge .32s ease}
+@keyframes afNudge{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (max-width:340px){.af-slots i{width:40px;height:50px;font-size:19px}.af-slots{gap:6px}}
+body.light-mode .af-slots i{background:rgba(28,26,23,.05);border-color:rgba(28,26,23,.18);color:#1C1A17}
+body.light-mode .af-slots i.cur{border-color:rgba(28,26,23,.5)}
+body.light-mode .af-tip{color:rgba(28,26,23,.62)}
+body.light-mode .af-tip.soft{color:#9A6A12}
+body.light-mode .af-tip b{color:#1C1A17}
+body.light-mode .af-note{color:rgba(28,26,23,.5)}
+body.light-mode .af-codew.soft .af-slots i{border-color:rgba(154,106,18,.55)}
+.af-done{padding:30px 0}
+.af-tick{display:inline-flex;width:64px;height:64px;border-radius:50%;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);animation:afPop .45s cubic-bezier(.2,1.4,.4,1)}
+.af-tick svg{width:30px;height:30px;fill:none;stroke:var(--txt,#FFFFFF);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;animation:afDraw .45s .15s ease forwards}
+body.light-mode .af-tick{background:rgba(28,26,23,.06);border-color:rgba(28,26,23,.18)}
+body.light-mode .af-tick svg{stroke:#1C1A17}
+@keyframes afPop{from{transform:scale(.6);opacity:0}}
+@keyframes afDraw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.auth-inner.af-in,.af-tick,.af-codew.nudge .af-slots{animation:none}.af-tick svg{animation:none;stroke-dashoffset:0}.af-go.busy::after{animation-duration:1.6s}}
 .af-code{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
 .af-code input{width:46px;height:56px;text-align:center;border-radius:16px;
   font-family:Outfit,sans-serif;font-size:22px;font-weight:400;color:var(--txt,#FFFFFF);
@@ -37496,135 +37697,185 @@ window.KovaAuth = (function(){
        and the code that never arrives is the real validator. */
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v||'').trim());
   }
+  /* small slips are fixed or suggested, never shouted about: spaces and
+     capitals are cleaned up, and a misspelt common domain gets a "Did you
+     mean" you can tap */
+  var DOMAINS=['gmail.com','icloud.com','outlook.com','hotmail.com','yahoo.com','live.com','me.com','aol.com','proton.me','protonmail.com','msn.com'];
+  function cleanEmail(v){ return String(v||'').replace(/\s+/g,'').toLowerCase(); }
+  function dist(a,b){
+    var m=a.length,n=b.length,d=[],i,j; for(i=0;i<=m;i++){ d[i]=[i]; } for(j=0;j<=n;j++) d[0][j]=j;
+    for(i=1;i<=m;i++) for(j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1),
+      (i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])?d[i-2][j-2]+1:99);
+    return d[m][n];
+  }
+  function suggest(v){
+    v=cleanEmail(v); var at=v.lastIndexOf('@'); if(at<1) return '';
+    var dom=v.slice(at+1).replace(/\.(con|cpm|comm|cm|vom|om)$/,'.com').replace(/\.co$/,DOMAINS.some(function(d){ return d.indexOf(v.slice(at+1).split('.')[0]+'.com')===0; })?'.com':'.co');
+    if(DOMAINS.indexOf(dom)>=0) return dom!==v.slice(at+1)?v.slice(0,at+1)+dom:'';
+    var best='',bd=3; DOMAINS.forEach(function(d){ var x=dist(dom,d); if(x<bd){ bd=x; best=d; } });
+    return best&&bd<=2?v.slice(0,at+1)+best:'';
+  }
 
   function esc(x){ var d=document.createElement('div'); d.textContent=x==null?'':String(x); return d.innerHTML; }
 
-  function renderWelcome(){
-    inner.innerHTML =
+  /* every step slides in instead of snapping, so moving from email to code
+     to "you're in" reads as one flow */
+  function step(html){
+    inner.classList.remove('af-in'); void inner.offsetWidth;
+    inner.innerHTML=html; inner.classList.add('af-in');
+  }
+
+  function renderWelcome(prefill){
+    step(
       '<div class="af-mark">kova</div>'
       + '<div class="af-h">Log in, start<br/>with your body</div>'
       + '<label class="af-lbl" for="afEmail">Email</label>'
       + '<div class="af-wrap">'
         + '<svg class="ic af-ico"><use href="#i-message-circle"/></svg>'
-        + '<input class="af" id="afEmail" type="email" inputmode="email" autocomplete="email" '
-          + 'placeholder="Enter your email"/>'
+        + '<input class="af" id="afEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" '
+          + 'placeholder="Enter your email" value="'+esc(prefill||'')+'"/>'
       + '</div>'
-      + '<div class="af-err" id="afErr"></div>'
-      + '<button class="af-go" id="afSend" disabled>Send code</button>'
+      + '<div class="af-tip" id="afTip" aria-live="polite"></div>'
+      + '<button class="af-go" id="afSend"'+(validEmail(prefill)?'':' disabled')+'>Send code</button>'
+      + '<div class="af-note">New here? The same code creates your account.</div>'
       + '<div class="af-div"><i></i><span>Or continue with</span><i></i></div>'
       + '<div class="af-provs">'
         + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
         + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
       + '</div>'
-      + '<div class="af-foot">No account needed. <b id="authSkip">Use Kova without one</b></div>';
+      + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>');
 
-    var em=document.getElementById('afEmail'), go=document.getElementById('afSend');
-    em.oninput=function(){
-      go.disabled=!validEmail(em.value);
-      em.classList.remove('bad');
-      document.getElementById('afErr').textContent='';
-    };
+    var em=document.getElementById('afEmail'), go=document.getElementById('afSend'), tip=document.getElementById('afTip');
+    function hint(final){
+      var v=cleanEmail(em.value), sg=v?suggest(v):'';
+      go.disabled=!validEmail(v);
+      if(sg){ tip.className='af-tip on'; tip.innerHTML='Did you mean <b role="button" tabindex="0" id="afFix">'+esc(sg)+'</b>?'; var f=document.getElementById('afFix'); f.onclick=f.onkeydown=function(e){ if(e.type==='keydown'&&e.key!=='Enter') return; em.value=sg; hint(); em.focus(); }; return; }
+      /* only after you leave the box, and only gently */
+      if(final&&v&&!validEmail(v)){ tip.className='af-tip on'; tip.textContent='That address needs an @ and a domain, like name@gmail.com.'; return; }
+      tip.className='af-tip'; tip.textContent='';
+    }
+    /* tapping the suggestion must not blur the box first and redraw it away */
+    tip.onmousedown=function(e){ if(e.target.id==='afFix') e.preventDefault(); };
+    em.oninput=function(){ em.classList.remove('bad'); hint(false); };
+    em.onblur=function(){ hint(true); };
     em.onkeydown=function(e){ if(e.key==='Enter'&&!go.disabled) go.click(); };
-    go.onclick=function(){ sendCode(em.value.trim()); };
+    go.onclick=function(){ sendCode(cleanEmail(em.value)); };
 
     document.getElementById('authGoogle').onclick = function(){ oauthFlow('google'); };
     document.getElementById('authApple').onclick  = function(){ oauthFlow('apple'); };
-    document.getElementById('authSkip').onclick   = function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); };
+    var sk=document.getElementById('authSkip');
+    sk.onclick = function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); };
+    sk.onkeydown = function(e){ if(e.key==='Enter') sk.click(); };
+    if(prefill) hint(false);
   }
 
   function sendCode(email){
     var go=document.getElementById('afSend');
-    if(go){ go.disabled=true; go.textContent='Sending\u2026'; }
+    if(go){ go.disabled=true; go.classList.add('busy'); go.textContent='Sending…'; }
     postJSON('/auth/code',{email:email}).then(function(r){
       if(r.state==='ok'){ renderCode(email); return; }
-      renderCodeBlocked(email, r.state);
+      renderCodeBlocked(email, r.state, r.body);
     });
   }
 
   /* The Worker is not deployed yet, so this is the path that actually runs
      today. It says exactly what is missing and does not pretend a code is
      in flight to a mailbox that will never receive one. */
-  function renderCodeBlocked(email, state){
+  function renderCodeBlocked(email, state, body){
     var why = state==='no-server'
         ? 'No sign-in server is configured yet, so Kova has nowhere to send the code from.'
       : state==='no-endpoint'
         ? 'The Kova server is not deployed yet, so there is nothing to send the code from.'
       : state==='error'
-        ? 'The Kova server could not send the email right now. Use Google, or try again shortly.'
+        ? ((body&&body.error)||'The Kova server could not send the email right now.')+' Use Google, or try again shortly.'
       : 'The sign-in server did not answer. You may be offline.';
 
-    inner.innerHTML =
+    step(
       '<div class="af-mark">kova</div>'
       + '<div class="af-h">Code not sent</div>'
       + '<div class="af-lbl" style="margin:0 0 18px 4px;line-height:1.55">' + esc(why) + '</div>'
       + '<button class="af-go" id="afRetry">Try again</button>'
+      + '<div class="af-foot" style="margin-top:14px"><b id="afBack" role="button" tabindex="0">Change the email</b></div>'
       + '<div class="af-div"><i></i><span>Meanwhile</span><i></i></div>'
       + '<div class="af-provs">'
         + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
         + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
       + '</div>'
-      + '<div class="af-foot">Everything works offline. <b id="authSkip">Use Kova without an account</b></div>';
+      + '<div class="af-foot">Everything works offline. <b id="authSkip">Use Kova without an account</b></div>');
 
     document.getElementById('afRetry').onclick   = function(){ sendCode(email); };
+    document.getElementById('afBack').onclick    = function(){ renderWelcome(email); };
     document.getElementById('authGoogle').onclick= function(){ oauthFlow('google'); };
     document.getElementById('authApple').onclick = function(){ oauthFlow('apple'); };
     document.getElementById('authSkip').onclick  = function(){ promptBiometric(function(){ firstRunDone(); }); };
   }
 
+  /* One box for the six digits (drawn as six slots), so fixing one digit is
+     one tap and a backspace, and the phone's "from Messages/Mail" code fills
+     it in one go. A typed code is checked after a short pause, not the
+     instant the sixth digit lands; a wrong code keeps your digits, says how
+     many tries are left in a calm colour, and lets you fix it. */
   function renderCode(email){
-    var N=6;
-    inner.innerHTML =
+    var N=6, sentAt=Date.now(), timer=null, wait=null;
+    step(
       '<div class="af-mark">kova</div>'
       + '<div class="af-h">Check your email</div>'
       + '<div class="af-lbl" style="margin:-14px 0 22px 4px;line-height:1.5">'
         + 'Six digits, sent to ' + esc(email) + '.</div>'
-      + '<div class="af-code" id="afCode">'
-        + Array.apply(null,{length:N}).map(function(_,i){
-            return '<input inputmode="numeric" maxlength="1" autocomplete="'
-              + (i===0?'one-time-code':'off') + '" data-i="' + i + '"/>';
-          }).join('')
-      + '</div>'
-      + '<div class="af-err" id="afErr"></div>'
+      + '<label class="af-codew" id="afCodeW">'
+        + '<input class="af-code1" id="afCode1" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-label="Six-digit code"/>'
+        + '<span class="af-slots" aria-hidden="true">'+Array.apply(null,{length:N}).map(function(_,i){ return '<i data-i="'+i+'"></i>'; }).join('')+'</span>'
+      + '</label>'
+      + '<div class="af-tip" id="afTip" aria-live="polite"></div>'
       + '<button class="af-go" id="afVerify" disabled>Verify</button>'
-      + '<div class="af-foot">Wrong address? <b id="afBack">Use a different email</b></div>';
+      + '<div class="af-foot">Nothing yet? <b id="afResend" role="button" tabindex="0">Send a new code</b><span id="afWait"></span><br/>Wrong address? <b id="afBack" role="button" tabindex="0">Use a different email</b></div>');
 
-    var boxes=[].slice.call(document.querySelectorAll('#afCode input'));
-    var go=document.getElementById('afVerify');
+    var box=document.getElementById('afCode1'), go=document.getElementById('afVerify'), tip=document.getElementById('afTip'), wrap=document.getElementById('afCodeW');
+    var slots=[].slice.call(wrap.querySelectorAll('.af-slots i'));
+    function paintSlots(){
+      var v=box.value, f=document.activeElement===box;
+      slots.forEach(function(sl,i){ sl.textContent=v[i]||''; sl.classList.toggle('cur',f&&(i===Math.min(v.length,N-1))); sl.classList.toggle('fill',!!v[i]); });
+    }
+    function calm(msg,tone){ tip.className='af-tip on'+(tone?' '+tone:''); tip.textContent=msg; }
+    box.oninput=function(e){
+      var before=box._v||'', v=box.value.replace(/\D/g,'').slice(0,N); box.value=v; box._v=v;
+      wrap.classList.remove('soft','bad'); if(tip.className.indexOf('keep')<0){ tip.className='af-tip'; tip.textContent=''; }
+      go.disabled=v.length!==N; paintSlots();
+      clearTimeout(timer);
+      if(v.length===N){
+        /* pasted or filled by the phone: check now; typed: after a beat */
+        timer=setTimeout(function(){ if(box.value.length===N) go.click(); }, v.length-before.length>1?60:650);
+      }
+    };
+    box.onfocus=box.onblur=paintSlots;
+    box.onkeydown=function(e){ if(e.key==='Enter'&&!go.disabled){ clearTimeout(timer); go.click(); } };
 
-    function code(){ return boxes.map(function(b){ return b.value; }).join(''); }
-    function sync(){ go.disabled = code().length!==N; }
-
-    boxes.forEach(function(b,i){
-      b.oninput=function(){
-        b.value=b.value.replace(/\D/g,'').slice(0,1);
-        b.classList.remove('bad');
-        if(b.value && boxes[i+1]) boxes[i+1].focus();
-        sync();
-        if(code().length===N) go.click();
-      };
-      b.onkeydown=function(e){
-        /* backspace on an empty box walks back, which is what every
-           code field does and what fingers expect */
-        if(e.key==='Backspace' && !b.value && boxes[i-1]){ boxes[i-1].focus(); e.preventDefault(); }
-      };
-      b.onpaste=function(e){
-        var t=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'');
-        if(!t) return;
-        e.preventDefault();
-        boxes.forEach(function(x,k){ x.value=t[k]||''; });
-        sync();
-        (boxes[Math.min(t.length,N-1)]||boxes[N-1]).focus();
-        if(code().length===N) go.click();
-      };
-    });
+    function resendWait(){
+      var el=document.getElementById('afWait'), rs=document.getElementById('afResend'); if(!el||!rs) return;
+      var left=Math.max(0,30-Math.round((Date.now()-sentAt)/1000));
+      rs.classList.toggle('off',left>0); el.textContent=left>0?' in '+left+' s':'';
+      if(left>0) wait=setTimeout(resendWait,1000);
+    }
+    resendWait();
+    document.getElementById('afResend').onclick=function(){
+      if(Date.now()-sentAt<30000) return;
+      calm('Sending a new code…');
+      postJSON('/auth/code',{email:email}).then(function(r){
+        if(r.state==='ok'){ sentAt=Date.now(); box.value=''; box._v=''; paintSlots(); go.disabled=true; calm('A new code is on its way. Use the newest email.','keep'); resendWait(); box.focus(); }
+        else calm('Could not send a new code right now. Try again in a minute.','soft');
+      });
+    };
 
     go.onclick=function(){
-      if(go.disabled) return;
-      go.disabled=true; go.textContent='Checking\u2026';
-      postJSON('/auth/verify',{email:email,code:code()}).then(function(r){
+      if(go.disabled||go._busy) return;
+      clearTimeout(timer); go._busy=true;
+      go.disabled=true; go.classList.add('busy'); go.textContent='Checking…';
+      postJSON('/auth/verify',{email:email,code:box.value}).then(function(r){
+        go._busy=false; go.classList.remove('busy');
         if(r.state==='ok' && r.body && r.body.ok){
+          clearTimeout(wait);
           var acct={provider:'email',name:(r.body.name||email.split('@')[0]),email:email,ts:Date.now()};
-          var finish=function(){ wr(AK,acct); promptBiometric(function(){ firstRunDone(); }); };
+          var finish=function(){ wr(AK,acct); welcomeIn(acct.name,function(){ promptBiometric(function(){ firstRunDone(); }); }); };
           /* the server proved the code; this turns that into a real
              Firebase session so sync, chat and linked accounts follow */
           var FB=window.KOVA_FB;
@@ -37633,17 +37884,28 @@ window.KovaAuth = (function(){
           }else finish();
           return;
         }
-        boxes.forEach(function(b){ b.classList.add('bad'); });
-        document.getElementById('afErr').textContent =
-          (r.state==='ok') ? 'That code did not match. Check the latest email.'
-                           : 'Could not reach the server to check that code.';
-        go.disabled=false; go.textContent='Verify';
-        boxes[0].focus();
+        go.textContent='Verify'; go.disabled=box.value.length!==N;
+        if(r.state==='ok'&&r.body&&r.body.expired){ wrap.classList.add('soft'); calm('That code has expired or was used up. Tap "Send a new code".','soft'); return; }
+        if(r.state==='ok'){
+          wrap.classList.add('soft'); wrap.classList.remove('nudge'); void wrap.offsetWidth; wrap.classList.add('nudge');
+          var left=r.body&&r.body.left!=null?r.body.left:null;
+          calm('Those digits do not match the latest code'+(left!=null?' ('+left+' '+(left===1?'try':'tries')+' left)':'')+'. Fix the one that is off, or send a new code.','soft');
+          box.focus(); try{ box.setSelectionRange(0,N); }catch(e){}
+          return;
+        }
+        calm('Could not reach the server to check that code. Your digits are kept; tap Verify to try again.','soft');
       });
     };
 
-    document.getElementById('afBack').onclick=function(){ renderWelcome(); };
-    setTimeout(function(){ boxes[0].focus(); },60);
+    var back=document.getElementById('afBack');
+    back.onclick=function(){ clearTimeout(wait); clearTimeout(timer); renderWelcome(email); };
+    setTimeout(function(){ box.focus(); paintSlots(); },60);
+  }
+  /* a moment of "you're in" before the app, instead of a jump cut */
+  function welcomeIn(name,next){
+    step('<div class="af-done" role="status"><span class="af-tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>'
+      +'<div class="af-h" style="margin:18px 0 6px">You’re in'+(name?', '+esc(String(name).split(/[\s.@]/)[0]):'')+'</div><div class="af-lbl">Setting up Kova…</div></div>');
+    setTimeout(next,matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches?150:850);
   }
 
   /* --- Google / Apple: real Firebase Auth ---------------------------
@@ -43957,7 +44219,7 @@ window.KovaScreenTour=(function(){
       ['Work OS','What is due today at work. Tap to open it.','#osHero'],
       ['Daily goals','Small wins for today. Tick them off.',up('goalsList')],
       ['Move around','Every area is one tap away here.',rail],
-      ['Kova, one tap away','Chat, your seven health checks and your AI team, all in this glass orb.','#kgOrb']
+      ['Kova, one tap away','Chat, your seven health checks and your AI team. Kova sits in the sidebar, like the other areas.','#kgOrb']
     ],
     move:[
       ['Today’s session','What to train today, and why.','#s-move .card.kova[data-go="session"]'],
@@ -44524,9 +44786,12 @@ window.KovaCanvas=(function(){
       +inc.map(function(_,i){ return '<i class="'+(i<=S.slide?'on':'')+'"></i>'; }).join('')+'</div>';
     else if(m&&m.kind==='video') timeBar='<div class="tl"><span id="ksCur">0:00</span><span>'+mmss(m.dur).replace(/^0/,'')+'</span></div><div class="bar"><i id="ksBar" style="width:0%"></i></div>';
     else timeBar='<div class="tl"><span>'+(m?'Photo':'')+'</span><span>'+KPo.PLAT[k].n+'</span></div><div class="bar"><i style="width:100%"></i></div>';
-    var plats=(targets().length?targets():KPo.ORDER).map(function(x){
-      var cc=KPo.check(p,x,KPo.linkState(x));
-      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'">'+mark(x,16)+KPo.PLAT[x].n+(cc.ok?'':'<i class="bad" aria-label="needs a fix"></i>')+'</div>';
+    /* every platform in a slider under the video: the ones this post goes
+       to first, the rest after them, dimmer. Tap one to preview it there. */
+    var tg=targets(), order=tg.concat(KPo.ORDER.filter(function(x){ return tg.indexOf(x)<0; }));
+    var plats=order.map(function(x){
+      var cc=KPo.check(p,x,KPo.linkState(x)), isT=tg.indexOf(x)>=0;
+      return '<div class="'+(x===k?'on':'')+(isT?' tg':' off')+'" data-a="plat" data-k="'+x+'" role="tab" tabindex="0" aria-selected="'+(x===k)+'" aria-label="'+esc(KPo.PLAT[x].n+(isT?', posting there':', not posting there')+(cc.ok||!isT?'':', needs a fix'))+'">'+mark(x,16)+KPo.PLAT[x].n+(isT&&!cc.ok?'<i class="bad" aria-hidden="true"></i>':'')+'</div>';
     }).join('');
     var r=(p.results||{})[k];
     var note='';
@@ -44548,7 +44813,9 @@ window.KovaCanvas=(function(){
           +'<button class="ks-sq glass" data-a="play" aria-label="Play">'+ic(m.kind==='video'?'play':(slider?'play':'eye'))+'</button>'
           +'<button class="ks-sq glass" data-a="next" aria-label="Next">'+ic('next')+'</button></div>':'')
         +'<div class="ks-time">'+timeBar+'</div></div>'
-      +'<div class="ks-plats">'+plats+'</div>'
+      +'<div class="ks-pslide"><button class="ks-parw l" data-a="pscroll" data-d="-1" aria-label="Earlier platforms">'+ic('left')+'</button>'
+        +'<div class="ks-plats" role="tablist" aria-label="Preview on">'+plats+'</div>'
+        +'<button class="ks-parw r" data-a="pscroll" data-d="1" aria-label="More platforms">'+ic('right')+'</button></div>'
       +'<div class="ks-ptext" data-a="edit"><div class="hd"><span>'+KPo.PLAT[k].n+(p.over&&p.over[k]?' · edited':'')+'</span><b class="'+(len>lim?'bad':'')+'">'+len+' / '+lim+'</b></div>'
         +'<div class="tx'+(txt?'':' ph')+'">'+esc(txt||'Write a heading, caption or primary text below.')+'</div></div>'
       +note
@@ -44572,6 +44839,7 @@ window.KovaCanvas=(function(){
         +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>'
       +nodeMedia(p)+nodeText(p)+nodeCover(p)+nodeFormat(p)+nodePublish(p)+nodePreview(p);
     wires=$('#ksWires');
+    platsInView();
     loadPreviewMedia(t);
     if(rec) rec.disconnect();
     if(window.ResizeObserver){
@@ -44806,12 +45074,38 @@ window.KovaCanvas=(function(){
           var oi=$('#ksImg'), ni=nu.querySelector('#ksImg');
           if(oi&&ni&&oi.dataset.mid===ni.dataset.mid){ ni.style.backgroundImage=oi.style.backgroundImage; reuse=true; }
         }
+        var sl=n==='preview'?$('.ks-plats',old):null, sx=sl?sl.scrollLeft:0;
         old.parentNode.replaceChild(nu,old);
+        if(sl) platsInView(sx);
         if(rec) rec.observe(nu);
         if(n==='preview'&&!reuse) loadPreviewMedia(0);
       });
       paintTop(); paintStats(); layout();
     },120);
+  }
+  /* the platform slider: same place after a repaint, the chosen one in view,
+     and the arrows only where there is more to see */
+  function platsInView(x){
+    var sl=$('.ks-plats',world); if(!sl) return;
+    if(x!=null) sl.scrollLeft=x;
+    var on=$('.on',sl);
+    if(on){ var a=on.offsetLeft-sl.offsetLeft, b=a+on.offsetWidth; if(a<sl.scrollLeft+8) sl.scrollLeft=a-8; else if(b>sl.scrollLeft+sl.clientWidth-8) sl.scrollLeft=b-sl.clientWidth+8; }
+    platsEdges(sl);
+    if(!sl._kw){ sl._kw=1; sl.addEventListener('scroll',function(){ platsEdges(sl); },{passive:true}); }
+  }
+  function platsEdges(sl){
+    var w=sl.parentNode; if(!w) return;
+    w.classList.toggle('at-start',sl.scrollLeft<4);
+    w.classList.toggle('at-end',sl.scrollLeft+sl.clientWidth>=sl.scrollWidth-4);
+  }
+  /* on a touch screen the buttons over the video show on a tap and fade
+     after a moment of playing; with a mouse they show while it is over the
+     video (the stylesheet does that) */
+  var idleT=null;
+  function wake(){
+    var m=$('.ks-media',world); if(!m) return;
+    m.classList.remove('idle'); clearTimeout(idleT);
+    idleT=setTimeout(function(){ var v=$('#ksVid'); var mm=$('.ks-media',world); if(mm&&v&&!v.paused) mm.classList.add('idle'); },2600);
   }
   function setField(f,focus){
     S.field=f; S.sugg='';
@@ -45433,7 +45727,7 @@ window.KovaCanvas=(function(){
     softPaint();
     if(auto) setTimeout(function(){ var v=$('#ksVid'); if(v) v.play().catch(function(){}); },300);
   }
-  function setPlayIcon(on){ var b=$('[data-a="play"]',world); if(b) b.innerHTML=ic(on?'pause':'play'); }
+  function setPlayIcon(on){ var b=$('[data-a="play"]',world); if(b){ b.innerHTML=ic(on?'pause':'play'); b.setAttribute('aria-label',on?'Pause':'Play'); } if(on) wake(); else { clearTimeout(idleT); var m=$('.ks-media',world); if(m) m.classList.remove('idle'); } }
   var slideT=null;
   /* A tap is what lets a browser play sound, so every play starts from one.
      If the page is inside a frame that still blocks sound, the clip plays
@@ -45657,6 +45951,7 @@ window.KovaCanvas=(function(){
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
       case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); paintDock(); break;
+      case 'pscroll': { var sl=$('.ks-plats',world); if(sl){ var d=+el.getAttribute('data-d')||1; if(sl.scrollBy) sl.scrollBy({left:d*Math.max(120,sl.clientWidth*.7),behavior:'smooth'}); else sl.scrollLeft+=d*160; } } break;
       case 'nextplat': { var list=targets().length?targets():KPo.ORDER; S.plat=list[(list.indexOf(currentPlat())+1)%list.length]; softPaint(); } break;
       case 'edit': editFor(currentPlat()); break;
       case 'share': shareIt(); break;
@@ -45688,6 +45983,8 @@ window.KovaCanvas=(function(){
 
   /* =============================== events ============================ */
   function wireEvents(){
+    root.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'&&e.target.closest&&e.target.closest('.ks-media')) wake(); },true);
+    root.addEventListener('keydown',function(e){ var t=e.target.closest&&e.target.closest('.ks-plats [data-a="plat"]'); if(t&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); t.click(); } });
     root.addEventListener('click',function(e){
       if(S.menu&&!S.menu.contains(e.target)) closeMenu();
       var st=e.target.closest('[data-step]');
@@ -46167,8 +46464,9 @@ window.KovaWellness=module.exports;
 /* =====================================================================
    KovaOrb - Kova's one entry point: a small glowing sphere (p09, p10).
 
-   The orb replaces the old chat button, so there is one Kova in the
-   corner, not two. It never opens anything by itself: when something
+   The orb replaces the old chat button, so there is one Kova, not two.
+   It sits in the sidebar as its own item (p14), not floating over every
+   screen. It never opens anything by itself: when something
    needs fixing it only shows a small count (red when urgent). It is a
    dark grey glass sphere in every appearance. Tap it and the
    Kova panel opens with four tabs:
@@ -46189,23 +46487,32 @@ window.KovaOrb=(function(){
   function $(s,r){ return (r||document).querySelector(s); }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  /* Kova lives in the sidebar, the way Grok sits in X's tab bar: one item
+     next to Work, with the same glass sphere and the count. Nothing floats
+     over the screens. Without a sidebar (an embedded page) it falls back
+     to the corner. */
   function mount(){
     if(O.el) return O.el;
-    var el=document.createElement('button'); el.id='kgOrb'; el.className='ko'; el.type='button';
-    el.setAttribute('aria-label','Kova agent');
+    var rail=document.querySelector('nav.rail'), set=rail&&rail.querySelector('[data-go="settings"]');
+    var el=document.createElement('button'); el.id='kgOrb'; el.type='button';
+    el.className=rail?'ko ko-rail rnav':'ko'; el.title='Kova';
+    el.setAttribute('aria-label','Kova: chat, your 7 checks and your plan');
     el.innerHTML='<i class="ko-core"></i><b class="ko-n" hidden></b>';
     el.addEventListener('click',function(){ isOpen()?close():open(); });
-    document.body.appendChild(el); O.el=el;
+    if(rail) rail.insertBefore(el,set||null); else document.body.appendChild(el);
+    O.el=el;
     embed();
-    /* stay out of the way of sign-in and first-run screens */
-    setInterval(function(){
+    if(!rail) setInterval(function(){
       var app=document.getElementById('app'), hit=document.elementFromPoint&&document.elementFromPoint(window.innerWidth/2,window.innerHeight/2);
       var covered=(app&&app.classList.contains('auth-locked'))||!(hit&&hit.closest&&(hit.closest('.screen.on')||hit.closest('#kgOrbPanel')));
       el.classList.toggle('ko-hide',(!!covered&&!isOpen())||chatOpen());
     },1200);
     return el;
   }
-  function badge(n,urgent){ mount(); O.n=n||0; var b=O.el.querySelector('.ko-n'); b.hidden=!n; b.textContent=n>9?'9+':String(n||''); O.el.classList.toggle('alert',!!urgent); paintTabs(); }
+  function badge(n,urgent){ mount();
+    /* a new urgent alert while you are here gets Kova's sound, once */
+    if(O.seen&&urgent&&(n||0)>O.n&&!document.hidden){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} }
+    O.seen=true; O.n=n||0; var b=O.el.querySelector('.ko-n'); b.hidden=!n; b.textContent=n>9?'9+':String(n||''); O.el.classList.toggle('alert',!!urgent); paintTabs(); }
 
   /* ---- the chat panel is the one panel: the agent's tabs live inside it ---- */
   function chatPanel(){ return window.KovaChat?document.getElementById('kovaPanel'):null; }
@@ -46224,7 +46531,7 @@ window.KovaOrb=(function(){
     /* anything else that opens Kova (go('chat'), "ask Kova about this") lands on Chat */
     var raw=KovaChat.open;
     KovaChat.open=function(q){ var t=q?'chat':(O.next||'chat'); O.next=null; var r=raw.apply(KovaChat,arguments); setTab(t); return r; };
-    if(window.MutationObserver) new MutationObserver(function(){ if(O.el) O.el.classList.toggle('ko-hide',chatOpen()); }).observe(p,{attributes:true,attributeFilter:['class']});
+    if(window.MutationObserver) new MutationObserver(function(){ if(O.el){ var on=chatOpen(); if(O.el.classList.contains('ko-rail')){ O.el.classList.toggle('on',on); O.el.setAttribute('aria-expanded',String(on)); } else O.el.classList.toggle('ko-hide',on); } }).observe(p,{attributes:true,attributeFilter:['class']});
     O.panel=host; O.embed=true;
     paintTabs();
     return true;
@@ -50516,7 +50823,31 @@ window.KovaPush=(function(){
     return out;
   }
   function tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } }
-  function payload(){ return {tz:tz(),quiet:S.quiet,items:items()}; }
+  function sound(){ try{ return window.KovaChime?KovaChime.sound():'kova'; }catch(e){ return 'kova'; } }
+  function payload(){ return {tz:tz(),quiet:S.quiet,sound:sound(),items:items()}; }
+  /* the phone needs Kova's sounds before a push can use them:
+       Android  one channel per sound (its .wav is in res/raw)
+       iPhone   the .wav files in Library/Sounds, written from the same
+                synth the page plays (needs @capacitor/filesystem) */
+  function nativeSounds(){
+    var P=nplug(), C=window.KovaChime; if(!P||!C) return;
+    var plat=(window.Capacitor&&Capacitor.getPlatform&&Capacitor.getPlatform())||'';
+    if(plat==='android'&&P.createChannel){
+      C.LIST.forEach(function(x){
+        if(x.id==='default') return;
+        P.createChannel({id:'kova_'+x.id,name:'Kova \u00b7 '+x.n,description:'Reminders with the '+x.n+' sound',importance:x.id==='silent'?2:4,
+          sound:x.id==='silent'?undefined:C.file(x.id),vibration:x.id!=='silent'}).catch(function(){});
+      });
+    }
+    var FS=null; try{ FS=Capacitor.registerPlugin?Capacitor.registerPlugin('Filesystem'):(Capacitor.Plugins&&Capacitor.Plugins.Filesystem); }catch(e){}
+    if(plat==='ios'&&FS&&FS.writeFile){
+      C.LIST.forEach(function(x){
+        if(!C.wav||x.id==='default'||x.id==='silent') return;
+        var b=C.wav(x.id,22050), str=''; for(var i=0;i<b.length;i+=8192) str+=String.fromCharCode.apply(null,b.subarray(i,i+8192));
+        FS.writeFile({path:'Sounds/'+C.file(x.id)+'.wav',data:btoa(str),directory:'LIBRARY',recursive:true}).catch(function(){});
+      });
+    }
+  }
   function sync(){
     if(!S.on||!window.KovaLink) return Promise.resolve(false);
     var body=payload();
@@ -50659,6 +50990,7 @@ window.KovaPush=(function(){
     }catch(e){}
   }
   function listenNative(){
+    try{ nativeSounds(); }catch(e){}
     var P=nplug(); if(!P||!P.addListener) return;
     try{ P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); }); }catch(e){}
   }
@@ -50998,12 +51330,12 @@ window.KovaQuick=(function(){
       try{
         var img=new Image();
         img.onload=function(){
-          var m=1280, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height, s=Math.min(1,m/Math.max(w,h));
+          var m=1024, w=img.naturalWidth||img.width, h=img.naturalHeight||img.height, s=Math.min(1,m/Math.max(w,h));
           if(!w||!h){ ok(dataUrl); return; }
           var c=document.createElement('canvas'); c.width=Math.round(w*s); c.height=Math.round(h*s);
           var x=c.getContext('2d'); if(!x){ ok(dataUrl); return; }
           x.drawImage(img,0,0,c.width,c.height);
-          try{ ok(c.toDataURL('image/jpeg',.82)); }catch(e){ ok(dataUrl); }
+          try{ ok(c.toDataURL('image/jpeg',.8)); }catch(e){ ok(dataUrl); }
         };
         img.onerror=function(){ ok(dataUrl); };
         img.src=dataUrl;
@@ -51095,12 +51427,12 @@ window.KovaQuick=(function(){
   function paint(state){
     var el=document.querySelector('#sheetIn .kq'); if(!el) return;
     var body='';
-    if(state==='reading') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-reading"><span class="kq-dot"></span>Reading the plate…</div>';
+    if(state==='reading') body='<div class="kq-shot kq-scan"><img alt="" src="'+R.shot+'"><i class="kq-beam" aria-hidden="true"></i></div><div class="kq-reading" role="status"><span class="kq-dot"></span>Reading the plate…</div>';
     else if(state==='result'){
       var t=R.total, k=Math.round(t.kcal*scale), p=Math.round(t.p*scale), pm=Math.round(k*band(t.conf));
       body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div>'
         +'<div class="kq-res"><div class="kq-big">'+k+'<small>kcal</small></div><div class="kq-p">'+p+' g protein · '+Math.round(t.c*scale)+' c · '+Math.round(t.f*scale)+' f</div></div>'
-        +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+'</div>'
+        +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+(R.ms?' · read in '+(R.ms/1000).toFixed(1)+' s':'')+'</div>'
         +'<div class="kq-line"><span class="kova-dot"></span>'+esc(line({kcal:k,p:p}))+'</div>'
         +'<div class="kq-por" role="group" aria-label="Portion">'+[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.25,'1¼×'],[1.5,'1½×']].map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
         +'<button class="btn kq-log" data-kq="log">Log it</button>';
@@ -51150,11 +51482,12 @@ window.KovaQuick=(function(){
     KovaCam.open({title:'Log a meal',hint:'Fill the square with the plate. Closer is more accurate.',onShot:shot});
   }
   function shot(dataUrl){
-    R={shot:dataUrl,items:[],total:null}; scale=1; busy=true;
+    R={shot:dataUrl,items:[],total:null,t0:Date.now()}; scale=1; busy=true;
     openSheet2('reading');
     try{ if(window.KovaMedia) KovaMedia.attach('food',dataUrl,{name:'meal.jpg',ref:'quick-log'}); }catch(e){}
     read(dataUrl,'').then(function(items){
-      busy=false; R.items=items||[]; R.total=totalOf(R.items);
+      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0;
+      try{ if(window.KovaAnalytics) KovaAnalytics.track('meal_read',{ms:R.ms,items:R.items.length}); }catch(x){}
       paint(R.items.length?'result':'empty');
     },function(e){
       busy=false;
@@ -53627,6 +53960,161 @@ window.KovaBrand=(function(){
   }
   return {logo:logo,chip:chip,name:function(k){ return NAME[k]||k; },has:function(k){ return !!B[k]; }};
 })();
+
+</script>
+<script id="p08-chime">
+/* =====================================================================
+   KovaChime - Kova's own alert sound (p14).
+
+   Snapchat has a sound you know is Snapchat before you look. Kova now
+   has its own too, picked in Settings > Reminders > Alert sound:
+     Kova     two glass notes, rising a fifth (the default)
+     Pulse    a soft double beat, like a heartbeat
+     Dawn     three warm notes going up
+     Ripple   a quick bright sparkle
+     Phone    your phone's normal sound
+     Silent   the banner only
+
+   One synth makes every sound, so they are identical everywhere:
+     in the app    played through Web Audio when a reminder or alert
+                   shows while Kova is open (nothing to download)
+     iPhone        the same samples written as .wav files into the app's
+                   Library/Sounds folder (where iOS looks for push sounds)
+     Android       one notification channel per sound, its .wav copied
+                   into res/raw by native/scripts/copy-web.mjs
+   The server sends each push with the sound you picked. A website's
+   notifications cannot carry their own sound (browsers do not allow it),
+   so on the web a closed-tab push uses the system sound.
+   The file also loads in Node (module.exports), which is how the native
+   build renders the .wav files from the same code.
+   ===================================================================== */
+(function(root){
+  'use strict';
+  var KEY='kova.chime';
+  var LIST=[
+    {id:'kova',n:'Kova',d:'Two glass notes, rising'},
+    {id:'pulse',n:'Pulse',d:'A soft double beat'},
+    {id:'dawn',n:'Dawn',d:'Three warm notes'},
+    {id:'ripple',n:'Ripple',d:'A quick bright sparkle'},
+    {id:'default',n:'Phone',d:'Your phone’s normal sound'},
+    {id:'silent',n:'Silent',d:'The banner only'}
+  ];
+  var LEN={kova:1.1,pulse:.75,dawn:1.25,ripple:.9};
+
+  /* ---- the synth: pure numbers, no browser needed ---- */
+  function bell(o,sr,t0,f,amp,decay,parts){
+    parts=parts||[[1,1],[2.01,.32],[2.76,.18],[5.4,.06]];
+    var start=Math.floor(t0*sr), n=o.length, atk=Math.floor(.004*sr);
+    parts.forEach(function(p){
+      var w=2*Math.PI*f*p[0]/sr, a=amp*p[1], d=decay/Math.sqrt(p[0]);
+      for(var i=start;i<n;i++){
+        var k=i-start, env=(k<atk?k/atk:1)*Math.exp(-(k/sr)/d);
+        if(env<1e-4&&k>atk) break;
+        o[i]+=a*env*Math.sin(w*k);
+      }
+    });
+  }
+  function thump(o,sr,t0,amp){
+    var start=Math.floor(t0*sr), ph=0;
+    for(var i=start;i<o.length;i++){
+      var t=(i-start)/sr, f=62+90*Math.exp(-t/.035), env=Math.min(1,t/.003)*Math.exp(-t/.11);
+      if(t>.6) break;
+      ph+=2*Math.PI*f/sr; o[i]+=amp*env*Math.sin(ph);
+    }
+  }
+  function render(id,sr){
+    sr=sr||44100;
+    var o=new Float32Array(Math.ceil((LEN[id]||1)*sr));
+    if(id==='pulse'){ thump(o,sr,0,.9); thump(o,sr,.24,.62); bell(o,sr,0,880,.05,.12,[[1,1]]); }
+    else if(id==='dawn'){ bell(o,sr,0,1046.5,.34,.38,[[1,1],[4,.12],[10,.03]]); bell(o,sr,.14,1318.5,.32,.4,[[1,1],[4,.12],[10,.03]]); bell(o,sr,.28,1568,.34,.55,[[1,1],[4,.1],[10,.02]]); }
+    else if(id==='ripple'){ [2093,2637,3136,3951,3136].forEach(function(f,i){ bell(o,sr,i*.055,f,.16-i*.015,.22,[[1,1],[2.01,.2]]); }); }
+    else { bell(o,sr,0,1318.5,.38,.42); bell(o,sr,.16,1975.5,.34,.6); }
+    /* soft limiter and a short fade so nothing clicks */
+    var peak=0, i; for(i=0;i<o.length;i++) peak=Math.max(peak,Math.abs(o[i]));
+    var g=peak?.85/peak:1, fade=Math.floor(.03*sr);
+    for(i=0;i<o.length;i++){ var v=o[i]*g; if(i>o.length-fade) v*=(o.length-i)/fade; o[i]=v; }
+    return o;
+  }
+  /* 16-bit mono .wav, for the native app's sound files */
+  function wav(id,sr){
+    sr=sr||44100;
+    var s=render(id,sr), n=s.length, buf=new ArrayBuffer(44+n*2), v=new DataView(buf), p=0;
+    function str(t){ for(var j=0;j<t.length;j++) v.setUint8(p++,t.charCodeAt(j)); }
+    str('RIFF'); v.setUint32(p,36+n*2,true); p+=4; str('WAVE'); str('fmt '); v.setUint32(p,16,true); p+=4;
+    v.setUint16(p,1,true); p+=2; v.setUint16(p,1,true); p+=2; v.setUint32(p,sr,true); p+=4; v.setUint32(p,sr*2,true); p+=4;
+    v.setUint16(p,2,true); p+=2; v.setUint16(p,16,true); p+=2; str('data'); v.setUint32(p,n*2,true); p+=4;
+    for(var i=0;i<n;i++){ v.setInt16(p,Math.max(-1,Math.min(1,s[i]))*32767,true); p+=2; }
+    return new Uint8Array(buf);
+  }
+  function file(id){ return 'kova_'+id; }
+
+  var api={LIST:LIST,render:render,wav:wav,file:file};
+  if(typeof window==='undefined'||!window.document){ root.KovaChime=api; return; }
+
+  /* ---- in the app ---- */
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  var S=lsJ(KEY,{sound:'kova'});
+  if(!LIST.some(function(x){ return x.id===S.sound; })) S.sound='kova';
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+  var ctx=null, cache={};
+  function audio(){
+    var A=window.AudioContext||window.webkitAudioContext; if(!A) return null;
+    if(!ctx){ try{ ctx=new A(); }catch(e){ return null; } }
+    if(ctx.state==='suspended'&&ctx.resume) ctx.resume().catch(function(){});
+    return ctx;
+  }
+  /* plays the chosen sound (or the one named); quiet when the phone is on
+     silent is up to the phone, and "Phone"/"Silent" play nothing here */
+  function play(id){
+    id=id||S.sound;
+    if(!LEN[id]) return false;
+    var c=audio(); if(!c) return false;
+    try{
+      var b=cache[id+c.sampleRate];
+      if(!b){ var s=render(id,c.sampleRate); b=c.createBuffer(1,s.length,c.sampleRate); b.getChannelData(0).set(s); cache[id+c.sampleRate]=b; }
+      var src=c.createBufferSource(), g=c.createGain(); g.gain.value=.7;
+      src.buffer=b; src.connect(g); g.connect(c.destination); src.start();
+      return true;
+    }catch(e){ return false; }
+  }
+  function set(id){
+    if(!LIST.some(function(x){ return x.id===id; })) return;
+    S.sound=id; save(); paint();
+    try{ if(window.KovaPush&&KovaPush.sync) KovaPush.sync(); }catch(e){}
+    try{ if(window.KovaAnalytics) KovaAnalytics.track('alert_sound',{feature:id}); }catch(e){}
+  }
+
+  /* ---- Settings > Reminders: the picker under "Send a test notification" ---- */
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function paint(){
+    var el=document.getElementById('kchPick');
+    if(!el){
+      var t=document.getElementById('alertTest'); if(!t||!t.parentNode) return;
+      el=document.createElement('div'); el.id='kchPick'; el.className='kch card';
+      t.parentNode.insertBefore(el,t);
+      el.addEventListener('click',function(ev){ var b=ev.target.closest('[data-kch]'); if(!b) return; var id=b.getAttribute('data-kch'); set(id); play(id); });
+    }
+    var cur=LIST.filter(function(x){ return x.id===S.sound; })[0];
+    el.innerHTML='<div class="kch-h"><span>Alert sound</span><small>'+esc(cur.d)+'</small></div>'
+      +'<div class="kch-row" role="radiogroup" aria-label="Alert sound">'+LIST.map(function(x){
+        return '<button type="button" role="radio" aria-checked="'+(x.id===S.sound)+'" class="kch-b'+(x.id===S.sound?' on':'')+'" data-kch="'+x.id+'">'
+          +(LEN[x.id]?'<i class="kch-w" aria-hidden="true">'+wave(x.id)+'</i>':'')+esc(x.n)+'</button>'; }).join('')+'</div>'
+      +'<div class="kch-f">Tap one to hear it. Reminders and Kova’s alerts use it in the app, and on your phone even when Kova is closed.</div>';
+  }
+  /* a tiny drawing of each sound's shape */
+  function wave(id){
+    var s=render(id,2000), n=18, step=Math.floor(s.length/n), h='';
+    for(var i=0;i<n;i++){ var m=0; for(var j=i*step;j<(i+1)*step&&j<s.length;j++) m=Math.max(m,Math.abs(s[j])); h+='<b style="height:'+Math.max(2,Math.round(m*14))+'px"></b>'; }
+    return h;
+  }
+  function start(){ paint(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
+  /* the browser only lets sound play after a tap; open the audio on the first one */
+  document.addEventListener('pointerdown',function once(){ document.removeEventListener('pointerdown',once,true); audio(); },true);
+
+  api.play=play; api.set=set; api.sound=function(){ return S.sound; }; api.paint=paint;
+  root.KovaChime=api;
+})(typeof window!=='undefined'&&window.document?window:module.exports);
 
 </script>
 </body>

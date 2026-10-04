@@ -10,7 +10,8 @@
    which caps them at 4 KB in total. The Firebase private key is most of
    that, so only set the keys you actually use. */
 
-const MODEL_DEFAULT = 'claude-sonnet-5';
+const MODEL_DEFAULT = 'claude-sonnet-5-5';
+const MEAL_MODEL_DEFAULT = 'claude-haiku-4-5-20251001';
 
 function str(env, k, d) {
   const v = env[k];
@@ -58,6 +59,7 @@ function fromEnv(env) {
     fdcKey: str(env, 'FDC_API_KEY', 'DEMO_KEY'),
     model,
     agentModel: str(env, 'KOVA_AGENT_MODEL', model),
+    mealModel: str(env, 'KOVA_MEAL_MODEL', MEAL_MODEL_DEFAULT),
     agentBudgetUsd: +(str(env, 'KOVA_AGENT_BUDGET_USD', '0.4')),
     /* Netlify functions cannot start the Agent SDK's own process, so the
        audit runs as a plain tool-use loop there (agent.js viaApi) */
@@ -148,4 +150,4 @@ function missing(env) {
   return out;
 }
 
-module.exports = { fromEnv, initAdmin, credentialOf, missing, baseOf, capabilities, MODEL_DEFAULT };
+module.exports = { fromEnv, initAdmin, credentialOf, missing, baseOf, capabilities, MODEL_DEFAULT, MEAL_MODEL_DEFAULT };

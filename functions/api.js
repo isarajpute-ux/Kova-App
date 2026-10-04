@@ -188,7 +188,7 @@ async function authVerify(req, res) {
   const a = Buffer.from(rec.h), b = Buffer.from(sha(k + ':' + code));
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
     await ref.child('tries').set((rec.tries || 0) + 1);
-    return res.json({ ok: false });
+    return res.json({ ok: false, left: Math.max(0, 5 - ((rec.tries || 0) + 1)) });
   }
   await ref.remove();
 

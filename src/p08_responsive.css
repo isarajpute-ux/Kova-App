@@ -3,8 +3,11 @@
    bar. Now:
      phones (under 700px)   as before, minus the pretend status bar;
      tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
-     laptops (1024px+)      an 800px page and a sidebar with names;
-     big screens (1440px+)  a 920px page.
+     laptops (1024px+)      a 720px page and a sidebar with names;
+     big screens (1440px+)  a 760px page.
+   The charts are drawn for a phone and grow with the page, so the page
+   stops at a width where a chart still fits on the screen with its card,
+   and no chart is ever taller than 300px.
    The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
    their own wide layouts. The real safe area keeps the notch and the home
    bar clear on phones. */
@@ -17,7 +20,7 @@
   .sheet-in{max-width:560px}
 }
 @media (min-width:1024px){
-  .wrap{max-width:800px;padding-left:32px;padding-right:32px}
+  .wrap{max-width:720px;padding-left:32px;padding-right:32px}
   /* the rail becomes a sidebar: icon and name */
   .rail{width:212px;align-items:stretch;padding-left:14px;padding-right:14px}
   .rail .rnav{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 12px;font-size:18px}
@@ -26,7 +29,17 @@
   .rail .avatar{align-self:flex-start;margin:0 0 6px 8px}
 }
 @media (min-width:1440px){
-  .wrap{max-width:920px}
+  .wrap{max-width:760px}
+}
+/* charts that scale with the page: never taller than 300px. The drawing
+   keeps its shape and sits in the middle of its card. Vitals' signal bars
+   have their labels in a row under them, so both narrow together. */
+@media (min-width:700px){
+  :is(#wkchart,#fxTrend,#hsOrbit,#hsDial,#prChart,#recDial,#ecChart,#btChart,#actChart,#studyChart,#hrvChart,#stressDial,#stressChart,#slpChart,#ssGraph,#nrgCurve),
+  :is(#s-progress,#s-recovery,#s-prs,#s-watch) .card>svg[viewBox]{max-height:300px;margin-left:auto;margin-right:auto}
+  #s-prs .prgrid svg[viewBox]{max-height:220px}
+  #sigBars,#sigAxis{max-width:540px;margin-left:auto;margin-right:auto}
+  #recGrid{grid-template-columns:repeat(3,1fr)!important}
 }
 /* the smallest phones (iPhone SE, 320px): a little more room for content */
 @media (max-width:340px){

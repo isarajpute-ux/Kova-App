@@ -28,3 +28,10 @@
 .kq-chip.kq-y{border-color:var(--acc-brd,rgba(255,255,255,.4))}
 /* Fuel: the one-tap chips under the quick actions */
 .kq-fuel{margin:0 0 12px}
+
+/* reading: a light sweeps down the photo while the plate is read */
+.kq-scan{position:relative;overflow:hidden}
+.kq-beam{position:absolute;left:0;right:0;top:-30%;height:30%;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.28) 70%,rgba(255,255,255,.75) 98%,transparent);mix-blend-mode:screen;animation:kqBeam 1.4s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes kqBeam{to{top:100%}}
+@media (prefers-reduced-motion:reduce){.kq-beam{animation:none;display:none}}

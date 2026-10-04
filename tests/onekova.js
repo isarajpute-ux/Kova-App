@@ -28,9 +28,10 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
 
 (async () => {
   await wait(1900);
+  for (let i = 0; i < 40 && !w.document.getElementById('kgOrb'); i++) await wait(100);   // slower under a busy machine
   const doc = w.document, orb = doc.getElementById('kgOrb'), panel = doc.getElementById('kovaPanel');
   ck('the old chat button is hidden by the stylesheet', /#kovaFab\{display:none!important\}/.test(html));
-  ck('one orb sits in the corner', !!orb && doc.querySelectorAll('#kgOrb').length === 1);
+  ck('one orb, in the sidebar next to the other areas (not floating over the screen)', !!orb && doc.querySelectorAll('#kgOrb').length === 1 && !!orb.closest('nav.rail') && orb.classList.contains('rnav'));
   ck('the tab row sits inside the chat panel', !!panel.querySelector('#kcTabs') && !!panel.querySelector('#kcAgent'));
   w.go('sleep'); await wait(40);
   ck('the orb is a dark grey glass sphere', /\.ko-core\{[^}]*rgba\(58,60,65,\.82\)/.test(html));
@@ -40,7 +41,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('tapping the orb opens the Kova panel', panel.classList.contains('on'));
   ck('four tabs: Chat, Your 7, Plan, Do it for me', tabs().map((b) => b.childNodes[0].textContent.trim()).join('|') === 'Chat|Your 7|Plan|Do it for me');
   ck('it opens on Chat with the message box showing', tabs()[0].classList.contains('on') && !panel.classList.contains('agent-mode'));
-  ck('the orb steps aside while the panel is open', orb.classList.contains('ko-hide'));
+  ck('the sidebar item shows Kova is open', orb.classList.contains('on') && orb.getAttribute('aria-expanded') === 'true');
 
   tabs()[1].click(); await wait(60);
   const ag = doc.getElementById('kcAgent');

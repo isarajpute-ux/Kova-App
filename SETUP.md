@@ -34,7 +34,8 @@ A production deploy uses about 15 of the 300 monthly credits. When credits run o
 | Variable | Where to get it | Without it |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | console.anthropic.com › API keys | Chat, meal photos, lab reading, the AI team and Studio writing fall back to the on-device guide |
-| `KOVA_MODEL`, `KOVA_AGENT_MODEL` | Optional | Default `claude-sonnet-5` |
+| `KOVA_MODEL`, `KOVA_AGENT_MODEL` | Optional | Default `claude-sonnet-5-5` |
+| `KOVA_MEAL_MODEL` | Optional | The model that reads meal photos. Default `claude-haiku-4-5-20251001` (fast: about 2-3 s a plate). A bigger model is a little more accurate and slower. |
 | `KOVA_CHAT_DAILY`, `KOVA_GLOBAL_DAILY_LIMIT`, `KOVA_AGENT_BUDGET_USD` | Optional spending caps | Defaults 150 chats per person per day, 5,000 in total, $0.40 per audit |
 
 ## 4. Payments (RevenueCat, with Stripe on the web and the App Store / Google Play in the app)
