@@ -6572,6 +6572,101 @@ body.light-mode .ks-fpill .st{background:rgba(18,20,24,.06);color:rgba(22,24,28,
 }
 
 </style>
+<style id="p08-noise">
+/* ---- Hearing & noise (p14), laid out like the record-card reference:
+   a "Record:" row that opens in place, then one warm glass card lit from
+   behind - three labelled values, a dashed trend line, and a risk row
+   with a status dot and two values on lines. The glow warms as it gets
+   louder. Dark, soft light and light glass. ---- */
+.knx,.kn-chip,.kn-alert{--n-card:rgba(34,24,24,.7);--n-ink:#F6F1F1;--n-mute:rgba(246,241,241,.55);--n-faint:rgba(246,241,241,.32);--n-line:rgba(255,255,255,.09);
+  --n-glow:rgba(232,96,122,.28);--n-red:#E8484F;--n-amber:#F2B84B;--n-green:#5FD08A;--n-btn:#F6F1F1;--n-btnInk:#170F10}
+body.soft-light .knx,body.soft-light .kn-chip,body.soft-light .kn-alert{--n-card:rgba(104,80,82,.6);--n-line:rgba(255,255,255,.15);--n-mute:rgba(255,248,248,.66)}
+body.light-mode .knx,body.light-mode .kn-chip,body.light-mode .kn-alert{--n-card:rgba(255,255,255,.8);--n-ink:#1E1416;--n-mute:rgba(30,20,22,.56);--n-faint:rgba(30,20,22,.32);--n-line:rgba(30,20,22,.09);
+  --n-glow:rgba(176,36,68,.14);--n-red:#C2383D;--n-amber:#A8690E;--n-green:#1E7A4B;--n-btn:#1E1416;--n-btnInk:#fff}
+.knx{color:var(--n-ink);font-family:'Outfit','Urbanist',system-ui,sans-serif}
+.kn-rec{border-radius:24px;margin:0 0 8px;background:var(--n-card);border:.5px solid var(--n-line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.kn-rh{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:58px;padding:0 20px;border:0;background:none;color:var(--n-ink);font:400 15.5px 'Outfit',sans-serif;text-align:left;cursor:pointer}
+.kn-rh em{font-style:normal;color:var(--n-mute)}
+.kn-rh .ic{font-size:15px;opacity:.6;flex-shrink:0}
+.kn-rb{padding:0 20px 14px}
+.kn-sp{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:.5px solid var(--n-line);font-size:13px}
+.kn-sp:first-child{border-top:0}.kn-sp span{color:var(--n-mute)}.kn-sp b{font-weight:400;text-align:right}
+.kn-p{font-size:13px;color:var(--n-mute);margin:0}
+.kn-card{position:relative;overflow:hidden;border-radius:26px;padding:20px 20px 18px;margin:0 0 10px;border:.5px solid var(--n-line);
+  background:radial-gradient(85% 70% at 70% 8%,var(--n-glow),transparent 66%),radial-gradient(70% 60% at 0% 100%,rgba(232,96,122,.1),transparent 60%),var(--n-card);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);transition:background .6s}
+.kn-card.busy{--n-glow:rgba(242,184,75,.26)}
+.kn-card.loud{--n-glow:rgba(232,72,79,.42)}
+.kn-card.danger{--n-glow:rgba(232,72,79,.6);animation:knPulse 2s ease-in-out infinite}
+@keyframes knPulse{50%{box-shadow:0 0 0 1px rgba(232,72,79,.4),0 0 40px -6px rgba(232,72,79,.5)}}
+.kn-ch{display:flex;align-items:center;justify-content:space-between;font-size:19px;font-weight:400;letter-spacing:-.01em;margin-bottom:18px}
+.kn-live{width:8px;height:8px;border-radius:50%;background:var(--n-red);box-shadow:0 0 10px var(--n-red);animation:knBeat 1.4s ease-in-out infinite}
+@keyframes knBeat{50%{opacity:.35}}
+.kn-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.kn-3 small{display:block;font-size:13px;color:var(--n-mute);margin-bottom:4px}
+.kn-3 b{font-weight:400;font-size:16px;font-variant-numeric:tabular-nums}
+.kn-3>div:last-child{text-align:right}
+.kn-tl{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:24px 0 12px;font-size:15.5px}
+.kn-tl span{white-space:nowrap}
+.kn-tl b{font-weight:400;text-align:right}.kn-tl b i{font-style:normal;color:var(--n-mute);font-size:12.5px}
+.kn-dash{display:flex;align-items:center;gap:3px;height:10px}
+.kn-dash i{flex:var(--w) 1 0;height:2px;border-radius:2px;background:var(--n-faint)}
+.kn-dash i.none{opacity:.45}
+.kn-dash i.quiet{background:var(--n-ink);opacity:.55}
+.kn-dash i.busy{background:var(--n-ink);height:3px}
+.kn-dash i.loud{background:var(--n-ink);height:4px;box-shadow:0 0 6px rgba(255,255,255,.4)}
+.kn-dash i.danger{background:var(--n-red);height:4px;box-shadow:0 0 8px var(--n-red)}
+body.light-mode .kn-dash i.loud{box-shadow:none}
+.kn-risk{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;gap:10px 16px;margin-top:22px;padding-top:16px;border-top:.5px solid var(--n-line)}
+.kn-risk .kn-rl{grid-column:1;grid-row:1}.kn-risk .kn-rs{grid-column:1;grid-row:2}.kn-risk .kn-rv{grid-column:2;grid-row:1/3}
+.kn-rl b{display:block;font-weight:400;font-size:15.5px}
+.kn-rl small{display:block;font-size:12px;color:var(--n-mute);margin-top:4px}
+.kn-rs{display:flex;align-items:center;gap:8px;font-size:14px;white-space:nowrap}
+.kn-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--n-faint);flex-shrink:0}
+.kn-dot.quiet{background:var(--n-green)}.kn-dot.busy{background:var(--n-amber)}.kn-dot.loud,.kn-dot.danger{background:var(--n-red);box-shadow:0 0 8px var(--n-red)}
+.kn-rv{display:flex;flex-direction:column;gap:8px;min-width:120px}
+.kn-rv>div i{width:40px}
+.kn-rv>div{position:relative;display:flex;align-items:center;gap:7px;font-size:15px;font-variant-numeric:tabular-nums}
+.kn-rv>div b{font-weight:400;min-width:28px}
+.kn-rv>div i{display:block;height:2px;border-radius:2px;background:var(--n-red);flex-shrink:1}
+.kn-rv small{font-size:11px;color:var(--n-mute)}
+.kn-err{font-size:12.5px;color:var(--n-red);margin:0 4px 10px}
+.kn-acts{display:flex;gap:8px;margin:0 0 10px}
+.kn-btn{flex:1;min-height:46px;padding:0 16px;border-radius:999px;border:0;background:var(--n-btn);color:var(--n-btnInk);font:600 14px 'Outfit',sans-serif;cursor:pointer}
+.kn-btn.ghost{background:transparent;color:var(--n-ink);border:1px solid var(--n-line)}
+.kn-cal{display:flex;align-items:flex-end;gap:8px;margin:0 0 10px;padding:12px 14px;border-radius:18px;background:var(--n-card);border:.5px solid var(--n-line)}
+.kn-cal label{flex:1;font-size:12.5px;color:var(--n-mute)}
+.kn-cal label span{display:flex;align-items:center;gap:6px;margin-top:6px;color:var(--n-ink)}
+.kn-cal input{width:90px;height:40px;border-radius:12px;border:1px solid var(--n-line);background:transparent;color:var(--n-ink);padding:0 10px;font:400 15px 'Outfit',sans-serif}
+.kn-cal .kn-btn{flex:0 0 auto;min-height:40px}
+.kn-tg{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:4px 4px 6px}
+.kn-fine{font-size:11.5px;line-height:1.5;color:var(--n-faint);margin:6px 4px 4px}
+.knx :focus-visible,.kn-chip :focus-visible,.kn-alert :focus-visible{outline:2px solid var(--n-ink);outline-offset:2px}
+@media (max-width:360px){.kn-3{grid-template-columns:1fr 1fr}.kn-3>div:last-child{grid-column:1/-1;text-align:left}.kn-rv{min-width:100px}}
+/* in a workout */
+.kn-chip{display:flex;align-items:center;gap:9px;margin:8px 0 10px;padding:10px 12px 10px 14px;border-radius:18px;background:var(--n-card);border:.5px solid var(--n-line);color:var(--n-ink);font:400 13px 'Outfit',sans-serif}
+.kn-chip b{font-weight:600;white-space:nowrap}
+.kn-chip span:not(.kn-dot){flex:1;min-width:0;color:var(--n-mute);font-size:12px;line-height:1.35}
+.kn-chip button{height:32px;padding:0 14px;border-radius:16px;border:0;background:var(--n-btn);color:var(--n-btnInk);font:600 12.5px 'Outfit',sans-serif;cursor:pointer;flex-shrink:0}
+/* the alert */
+.kn-alert{position:fixed;z-index:9000;left:50%;top:max(14px,env(safe-area-inset-top));width:min(420px,calc(100vw - 24px));transform:translate(-50%,-140%);opacity:0;
+  padding:16px 18px;border-radius:26px;color:var(--n-ink);font-family:'Outfit',sans-serif;border:.5px solid var(--n-line);
+  background:radial-gradient(90% 80% at 80% 0%,rgba(232,72,79,.45),transparent 65%),var(--n-card);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);
+  box-shadow:0 24px 50px -16px rgba(0,0,0,.6);transition:transform .4s cubic-bezier(.2,.9,.3,1),opacity .3s}
+.kn-alert.on{transform:translate(-50%,0);opacity:1}
+.kn-alert.danger{background:radial-gradient(90% 80% at 80% 0%,rgba(232,72,79,.7),transparent 70%),var(--n-card)}
+.kn-ah{display:flex;align-items:center;gap:8px;font-size:17px}
+.kn-ah b{flex:1;font-weight:500}
+.kn-ah button{width:30px;height:30px;border-radius:50%;border:.5px solid var(--n-line);background:transparent;color:var(--n-ink);font-size:17px;cursor:pointer}
+.kn-a3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 10px}
+.kn-a3 small{display:block;font-size:12px;color:var(--n-mute);margin-bottom:2px}.kn-a3 b{font-weight:400;font-size:16px}
+.kn-alert p{font-size:13px;line-height:1.5;margin:0 0 12px;color:var(--n-ink);opacity:.86}
+.kn-ab{display:flex;gap:6px;flex-wrap:wrap}
+.kn-ab button{flex:1;min-width:90px;height:38px;border-radius:19px;border:1px solid var(--n-line);background:transparent;color:var(--n-ink);font:500 12.5px 'Outfit',sans-serif;cursor:pointer}
+.kn-ab button:first-child{background:var(--n-btn);color:var(--n-btnInk);border-color:transparent}
+@media (prefers-reduced-motion:reduce){.kn-card.danger,.kn-live{animation:none}.kn-alert{transition:none}}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -14434,7 +14529,8 @@ var KSESS=(function(){
             var o={w:s.w||0,r:s.r||0,role:s.role,tech:s.tech,segs:s.segs||[]}; if(s.hr) o.hr=s.hr; return o;
           }), ss:e.ss?1:0};
       }),
-      hr:(window.KovaHR&&KovaHR.summary)?KovaHR.summary(Date.now()-elapsed()*1000):null
+      hr:(window.KovaHR&&KovaHR.summary)?KovaHR.summary(Date.now()-elapsed()*1000):null,
+      noise:(window.KovaNoise&&KovaNoise.summary)?KovaNoise.summary(Date.now()-elapsed()*1000):null
     });
     if(log.length>600) log=log.slice(-600);            /* years of sessions, imports included */
     wr(LKEY,log);
@@ -55097,6 +55193,256 @@ window.KovaBrand=(function(){
   api.play=play; api.set=set; api.sound=function(){ return S.sound; }; api.paint=paint;
   root.KovaChime=api;
 })(typeof window!=='undefined'&&window.document?window:module.exports);
+
+</script>
+<script id="p08-noise">
+/* =====================================================================
+   KovaNoise - loud places, and what they cost your hearing (p14).
+
+   Spin classes and weight rooms often run past 85 dB with music and
+   dropped weights. Long enough above that and the damage is permanent
+   (noise-induced hearing loss, tinnitus). Kova listens for loudness only
+   - nothing is recorded, kept or sent - and:
+     - shows the level now, in A-weighted decibels (dBA, how the ear hears);
+     - adds up today's dose the NIOSH way: 85 dBA is safe for 8 hours, and
+       every 3 dB louder halves that (88 for 4 h, 91 for 2 h, 100 for 15 min);
+     - warns when it has been 85 dBA or more for a minute: how loud, how
+       long it is safe at this level, and what to do (earplugs, step out,
+       move away from the speakers);
+     - logs each workout's noise with the session (average, peak, minutes
+       over 85), and keeps 14 days of loud spells in Vitals.
+   Honest limits, said on screen: a phone microphone is not a sound level
+   meter. Until you calibrate it once against a watch or a meter, the
+   reading can be 5-10 dB off. It only listens while Kova is open (a web
+   page cannot listen in the background), and only after you say so.
+   ===================================================================== */
+window.KovaNoise=(function(){
+  'use strict';
+  var KEY='kova.noise.v1', DAY=864e5, CAL0=105;
+  var S={on:false,why:'',stream:null,ctx:null,an:null,buf:null,w:null,timer:null,db:null,peak:0,secs:[],loudFrom:0,lastAlert:0,mute:0,err:''};
+  var D=lsJ(KEY,{cal:null,auto:true,days:{},spells:[]});
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(D)); }catch(e){} }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function key(t){ var d=new Date(t); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function hm(m){ m=Math.max(0,Math.round(m)); return m>=60?Math.floor(m/60)+' h'+(m%60?' '+(m%60)+' m':''):m+' m'; }
+  function supported(){ return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&(window.AudioContext||window.webkitAudioContext)); }
+
+  /* ---- the maths ---- */
+  /* minutes a level is safe for in a day (NIOSH: 85 dBA for 8 h, 3 dB exchange) */
+  function safeMins(db){ return db<80?Infinity:480/Math.pow(2,(db-85)/3); }
+  function aWeight(f){
+    var f2=f*f, r=(12194*12194*f2*f2)/((f2+20.6*20.6)*Math.sqrt((f2+107.7*107.7)*(f2+737.9*737.9))*(f2+12194*12194));
+    return 20*Math.log10(r)+2;
+  }
+  function level(){
+    if(!S.an) return null;
+    S.an.getFloatFrequencyData(S.buf);
+    var p=0, n=S.buf.length;
+    for(var i=1;i<n;i++){ var v=S.buf[i]; if(!isFinite(v)) continue; p+=Math.pow(10,(v+S.w[i])/10); }
+    if(!p) return null;
+    return 10*Math.log10(p)+(D.cal!=null?D.cal:CAL0);
+  }
+  function cat(db){ return db>=100?'danger':db>=85?'loud':db>=70?'busy':'quiet'; }
+  var CAT_N={quiet:'Quiet',busy:'Busy',loud:'Loud',danger:'Very loud'};
+  function today(){ var k=key(Date.now()); return D.days[k]||(D.days[k]={dose:0,loudS:0,max:0,mins:{}}); }
+
+  /* ---- listening ---- */
+  function start(why){
+    if(S.on) return Promise.resolve(true);
+    if(!supported()){ S.err='This browser cannot measure sound. It works in Chrome, Safari and the Kova app.'; paintAll(); return Promise.resolve(false); }
+    S.err='';
+    return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}).then(function(st){
+      var A=window.AudioContext||window.webkitAudioContext;
+      S.ctx=new A(); S.stream=st;
+      var src=S.ctx.createMediaStreamSource(st);
+      S.an=S.ctx.createAnalyser(); S.an.fftSize=4096; S.an.smoothingTimeConstant=0;
+      src.connect(S.an);
+      S.buf=new Float32Array(S.an.frequencyBinCount); S.w=new Float32Array(S.an.frequencyBinCount);
+      for(var i=1;i<S.w.length;i++) S.w[i]=aWeight(i*S.ctx.sampleRate/S.an.fftSize);
+      if(S.ctx.state==='suspended'&&S.ctx.resume) S.ctx.resume().catch(function(){});
+      S.on=true; S.why=why||''; S.db=null; S.peak=0; S.secs=[]; S.loudFrom=0;
+      var acc=[], last=Date.now();
+      S.timer=setInterval(function(){
+        var v=level(); if(v==null) return;
+        S.db=S.db==null?v:S.db+(v-S.db)*.25;          /* about a second's "slow" response */
+        acc.push(S.db);
+        var now=Date.now();
+        if(now-last>=1000){ tick(acc.reduce(function(a,b){ return a+b; },0)/acc.length,(now-last)/1000); acc=[]; last=now; }
+        paintLive();
+      },250);
+      try{ if(window.KovaAnalytics) KovaAnalytics.track('noise_on',{feature:why||'manual'}); }catch(e){}
+      paintAll(); return true;
+    }).catch(function(e){
+      S.err=e&&e.name==='NotAllowedError'?'Microphone access is off for Kova. Turn it on in your browser or phone settings to measure noise.':'Could not open the microphone.';
+      paintAll(); return false;
+    });
+  }
+  function stop(){
+    if(S.timer) clearInterval(S.timer); S.timer=null;
+    if(S.stream) S.stream.getTracks().forEach(function(t){ t.stop(); });
+    if(S.ctx&&S.ctx.close) S.ctx.close().catch(function(){});
+    closeSpell();
+    S.on=false; S.stream=null; S.ctx=null; S.an=null; S.db=null; save(); paintAll(); hideAlert();
+  }
+  /* one second of sound: dose, the minute's average, loud spells, alerts */
+  function tick(db,secs){
+    var T=today(), now=Date.now(), m=new Date(now), mk=('0'+m.getHours()).slice(-2)+':'+('0'+m.getMinutes()).slice(-2);
+    S.secs.push({t:now,db:db}); if(S.secs.length>900) S.secs.shift();
+    S.peak=Math.max(S.peak,db); T.max=Math.max(T.max||0,Math.round(db));
+    if(db>=80) T.dose+=secs/60/safeMins(db)*100;
+    if(db>=85) T.loudS=(T.loudS||0)+secs;
+    var cur=T.mins[mk]||[0,0,0]; cur[0]+=db; cur[1]++; cur[2]=Math.max(cur[2],db); T.mins[mk]=cur;
+    /* counted in seconds of sound, not clock time, so a spell is a spell
+       however the timer is throttled */
+    if(db>=85){ if(!S.loudFrom) S.loudFrom=now; S.loudRun=(S.loudRun||0)+secs; S.quietRun=0; }
+    else if(S.loudFrom){ S.quietRun=(S.quietRun||0)+secs; if(S.quietRun>20) closeSpell(); }
+    if(S.loudFrom&&S.loudRun>=60&&now>S.mute){
+      var again=!S.lastAlert||now-S.lastAlert>15*60e3||(S.lastLevel&&db>=S.lastLevel+5);
+      if(again){ S.lastAlert=now; S.lastLevel=db; alert(db); }
+    }
+    if(Object.keys(D.days).length>14){ Object.keys(D.days).sort().slice(0,-14).forEach(function(k){ delete D.days[k]; }); }
+    if(S.secs.length%30===0) save();
+  }
+  function closeSpell(){
+    if(!S.loudFrom) return;
+    var dur=S.loudRun||0, seg=S.secs.filter(function(x){ return x.t>=S.loudFrom&&x.db>=85; });
+    if(dur>=60&&seg.length){
+      var avg=seg.reduce(function(a,b){ return a+b.db; },0)/seg.length, mx=Math.max.apply(null,seg.map(function(x){ return x.db; }));
+      D.spells.push({at:S.loudFrom,secs:Math.round(dur),avg:Math.round(avg),max:Math.round(mx),why:S.why||''});
+      D.spells=D.spells.filter(function(x){ return x.at>Date.now()-14*DAY; }).slice(-60);
+    }
+    S.loudFrom=0; S.loudRun=0; S.quietRun=0; save();
+  }
+  /* a workout's noise, for the session log */
+  function summary(since){
+    var seg=S.secs.filter(function(x){ return x.t>=since; });
+    if(seg.length<20) return null;
+    var avg=seg.reduce(function(a,b){ return a+b.db; },0)/seg.length;
+    return {avg:Math.round(avg),max:Math.round(Math.max.apply(null,seg.map(function(x){ return x.db; }))),loudMin:Math.round(seg.filter(function(x){ return x.db>=85; }).length/60),est:D.cal==null};
+  }
+  function calibrate(actual){
+    var v=+actual; if(!isFinite(v)||v<30||v>130||S.db==null){ say('Start listening, then type what your watch or meter shows right now.'); return false; }
+    var raw=S.db-(D.cal!=null?D.cal:CAL0); D.cal=Math.round((v-raw)*10)/10; S.db=v; save(); paintAll(); say('Calibrated. Readings now match your meter.'); return true;
+  }
+
+  /* ---- the alert: a glass card over the screen ---- */
+  function alert(db){
+    try{ if(navigator.vibrate) navigator.vibrate([120,80,120]); }catch(e){}
+    var el=document.getElementById('knAlert');
+    if(!el){ el=document.createElement('div'); el.id='knAlert'; el.className='kn-alert'; el.setAttribute('role','alert'); document.body.appendChild(el);
+      el.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; var n=b.getAttribute('data-n');
+        if(n==='mute'){ S.mute=Date.now()+60*60e3; say('No noise alerts for an hour.'); }
+        if(n==='stop') stop();
+        if(n==='more'){ try{ go('vitals'); }catch(x){} setTimeout(focus,120); }
+        hideAlert(); }); }
+    var c=cat(db), sm=safeMins(db);
+    el.className='kn-alert on '+c;
+    el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+(c==='danger'?'Very loud here':'Loud here')+'</b><button data-n="x" aria-label="Close">×</button></div>'
+      +'<div class="kn-a3"><div><small>Now:</small><b>~'+Math.round(db)+' dB</b></div><div><small>Safe for:</small><b>'+hm(sm)+'</b></div><div><small>Today:</small><b>'+Math.round(today().dose)+'%</b></div></div>'
+      +'<p>'+(db>=100?'Minutes at this level can damage hearing for good. Put in earplugs or step outside now.':'Above 85 dB, long sessions wear down hearing for good. Earplugs, a step outside, or a spot away from the speakers all help.')+'</p>'
+      +'<div class="kn-ab"><button data-n="more">See today</button><button data-n="mute">Quiet for 1 h</button><button data-n="stop">Stop listening</button></div>';
+  }
+  function hideAlert(){ var el=document.getElementById('knAlert'); if(el) el.classList.remove('on'); }
+
+  /* ---- Vitals: Hearing & noise, laid out like the record card ---- */
+  var UI={rec:false};
+  function dashLine(){
+    var T=today(), now=new Date(), h='', from=7*60, to=Math.max(from+60,now.getHours()*60+now.getMinutes()), step=Math.max(5,Math.ceil((to-from)/48));
+    for(var m=from;m<to;m+=step){
+      var mx=0, sum=0, n=0;
+      for(var j=m;j<m+step;j++){ var k=('0'+Math.floor(j/60)).slice(-2)+':'+('0'+(j%60)).slice(-2), v=T.mins[k]; if(v){ sum+=v[0]; n+=v[1]; mx=Math.max(mx,v[2]); } }
+      var a=n?sum/n:0, c=n?cat(a):'none';
+      h+='<i class="'+c+'" style="--w:'+(c==='danger'?3:c==='loud'?2.4:c==='busy'?1.6:1)+'"></i>';
+    }
+    return '<div class="kn-dash" role="img" aria-label="Today since 7 am, each dash a few minutes, longer and brighter when louder">'+h+'</div>';
+  }
+  function section(){
+    var T=today(), live=S.on&&S.db!=null, db=live?S.db:null, c=db!=null?cat(db):null;
+    var wk=D.spells.filter(function(x){ return x.at>Date.now()-7*DAY; });
+    var avgToday=(function(){ var s=0,n=0; Object.keys(T.mins).forEach(function(k){ s+=T.mins[k][0]; n+=T.mins[k][1]; }); return n?Math.round(s/n):null; })();
+    var h='<div class="kn-rec'+(UI.rec?' open':'')+'"><button class="kn-rh" data-n="rec" aria-expanded="'+UI.rec+'"><span><em>Record:</em> Loud spells this week</span><svg class="ic"><use href="#i-chevron-'+(UI.rec?'up':'down')+'"/></svg></button>'
+      +(UI.rec?'<div class="kn-rb">'+(wk.length?wk.slice().reverse().slice(0,8).map(function(x){ return '<div class="kn-sp"><span>'+new Date(x.at).toLocaleDateString('en-US',{weekday:'short'})+' '+new Date(x.at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+(x.why==='workout'?' · workout':'')+'</span><b>'+x.avg+' dB avg · '+x.max+' peak · '+hm(x.secs/60)+'</b></div>'; }).join(''):'<p class="kn-p">No spell of 85 dB or more for a minute this week.</p>')+'</div>':'')+'</div>';
+    h+='<div class="kn-card'+(c?' '+c:'')+'">'
+      +'<div class="kn-ch"><span>Noise'+(live?' · listening':'')+'</span>'+(live?'<span class="kn-live" aria-hidden="true"></span>':'')+'</div>'
+      +'<div class="kn-3"><div><small>Now:</small><b id="knNow">'+(db!=null?'~'+Math.round(db)+' dB':'—')+'</b></div><div><small>Safe for:</small><b id="knSafe">'+(db!=null?(db<80?'All day':hm(safeMins(db))):'—')+'</b></div><div><small>Level:</small><b id="knCat">'+(c?CAT_N[c]:'Not listening')+'</b></div></div>'
+      +'<div class="kn-tl"><span>Exposure and trend</span><b>'+Math.round(T.dose)+'% <i>of a day’s safe dose</i></b></div>'+dashLine()
+      +'<div class="kn-risk"><div class="kn-rl"><b>Hearing risk</b><small>From: '+(D.cal==null?'phone mic, estimate ±5–10 dB':'phone mic, calibrated')+'</small></div>'
+        +'<div class="kn-rs"><span class="kn-dot '+(T.dose>=100?'danger':T.dose>=50?'loud':'quiet')+'"></span>'+(T.dose>=100?'Over today':T.dose>=50?'Watch it':'Fine today')+'</div>'
+        +'<div class="kn-rv"><div><b>'+(T.max||'—')+'</b><span class="kn-dot danger"></span><i style="width:'+Math.min(100,Math.max(0,((T.max||0)-50)*1.6))+'%"></i><small>peak</small></div>'
+        +'<div><b>'+(avgToday||'—')+'</b><span class="kn-dot busy"></span><small>average</small></div></div></div>'
+      +'</div>'
+      +(S.err?'<p class="kn-err">'+esc(S.err)+'</p>':'')
+      +'<div class="kn-acts"><button class="kn-btn" data-n="'+(S.on?'stop':'start')+'">'+(S.on?'Stop listening':'Check how loud it is')+'</button>'
+        +'<button class="kn-btn ghost" data-n="cal">'+(D.cal==null?'Calibrate':'Recalibrate')+'</button></div>'
+      +(UI.cal?'<div class="kn-cal"><label>What does your watch or meter say right now?<span><input type="number" id="knCalV" inputmode="numeric" placeholder="e.g. 72"> dB</span></label><button class="kn-btn" data-n="calok">Save</button></div>':'')
+      +'<label class="kn-tg"><input type="checkbox" data-n="auto"'+(D.auto?' checked':'')+'> Listen during workouts and warn me</label>'
+      +'<p class="kn-fine">Kova measures loudness only: nothing is recorded, kept or sent. It listens while Kova is open, after you say so. 85 dB is safe for 8 hours a day; every 3 dB louder halves that (NIOSH).</p>';
+    return h;
+  }
+  function host(){
+    var scr=document.getElementById('s-vitals'); if(!scr) return null;
+    var el=document.getElementById('knSec'); if(el) return el;
+    var wrap=document.createElement('div'); wrap.className='vsec kn-vsec';
+    wrap.innerHTML='<div class="vsec-h" data-s="noise" role="button" tabindex="0" aria-expanded="false"><div class="vsec-i"><svg class="ic" style="font-size:15px"><use href="#i-headphones"/></svg></div><div class="vsec-n">Hearing & noise</div><div class="vsec-c" id="knSecN"></div><span class="vsec-v"><svg class="ic" style="font-size:15px"><use href="#i-chevron-down"/></svg></span></div>'
+      +'<div class="vsec-b" data-b="noise"><div class="knx" id="knSec"></div></div>';
+    var cyc=scr.querySelector('.kcx-vsec'), secs=scr.querySelectorAll('.vsec'), after=cyc||secs[1]||secs[0];
+    if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
+    var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
+    var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
+    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+    el=wrap.querySelector('#knSec');
+    el.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b||b.tagName==='INPUT') return; var n=b.getAttribute('data-n');
+      if(n==='start') start('manual'); else if(n==='stop') stop(); else if(n==='rec'){ UI.rec=!UI.rec; paint(); }
+      else if(n==='cal'){ UI.cal=!UI.cal; if(UI.cal&&!S.on) start('calibrate'); paint(); }
+      else if(n==='calok'){ if(calibrate((document.getElementById('knCalV')||{}).value)){ UI.cal=false; paint(); } } });
+    el.addEventListener('change',function(e){ if(e.target.getAttribute('data-n')==='auto'){ D.auto=e.target.checked; save(); } });
+    return el;
+  }
+  function paint(){ var el=host(); if(!el) return; el.innerHTML=section(); var n=document.getElementById('knSecN'); if(n) n.textContent=S.on&&S.db!=null?Math.round(S.db)+' dB':Math.round(today().dose)+'%'; }
+  function paintLive(){
+    var db=S.db; if(db==null) return;
+    var a=document.getElementById('knNow'), b=document.getElementById('knSafe'), c=document.getElementById('knCat'), n=document.getElementById('knSecN');
+    if(a) a.textContent='~'+Math.round(db)+' dB'; if(b) b.textContent=db<80?'All day':hm(safeMins(db)); if(c) c.textContent=CAT_N[cat(db)]; if(n) n.textContent=Math.round(db)+' dB';
+    var card=document.querySelector('.kn-card'); if(card){ card.classList.remove('quiet','busy','loud','danger'); card.classList.add(cat(db)); }
+    var chip=document.getElementById('knChip'); if(chip) chip.innerHTML=chipHTML();
+  }
+  /* in a workout: a chip under the heart rate */
+  function chipHTML(){
+    return S.on&&S.db!=null?'<span class="kn-dot '+cat(S.db)+'"></span><b>~'+Math.round(S.db)+' dB</b><span>'+CAT_N[cat(S.db)]+(S.db>=80?' · safe for '+hm(safeMins(S.db)):'')+'</span><button data-n="stop">Stop</button>'
+      :'<span class="kn-dot"></span><b>Noise</b><span>Is the gym too loud? Kova can listen and warn you.</span><button data-n="start">Listen</button>';
+  }
+  function paintSession(){
+    var slot=document.getElementById('hrSlot'); if(!slot) return;
+    var chip=document.getElementById('knChip');
+    if(!chip){ chip=document.createElement('div'); chip.id='knChip'; chip.className='kn-chip'; slot.parentNode.insertBefore(chip,slot.nextSibling);
+      chip.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; if(b.getAttribute('data-n')==='start') start('workout'); else stop(); }); }
+    chip.innerHTML=chipHTML();
+  }
+  function paintAll(){ paint(); paintSession(); }
+  function focus(){
+    var el=host(); if(!el) return; paint();
+    var w=el.closest('.vsec'), hd=w&&w.querySelector('.vsec-h'), bd=w&&w.querySelector('.vsec-b');
+    if(hd&&!hd.classList.contains('open')){ hd.classList.add('open'); bd.classList.add('open'); }
+    if(w&&w.scrollIntoView) w.scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  /* "Listen during workouts": starts with the session (a tap started it) */
+  function onGo(){
+    var s=document.getElementById('s-session');
+    if(s&&s.classList.contains('on')){ paintSession(); if(D.auto&&!S.on&&D.granted) start('workout'); }
+  }
+  function start0(){
+    var tries=0;
+    (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll(); })();
+    document.addEventListener('click',function(){ setTimeout(onGo,50); },true);
+    try{ if(navigator.permissions&&navigator.permissions.query) navigator.permissions.query({name:'microphone'}).then(function(p){ D.granted=p.state==='granted'; p.onchange=function(){ D.granted=p.state==='granted'; }; }).catch(function(){}); }catch(e){}
+    window.addEventListener('pagehide',function(){ if(S.on){ closeSpell(); save(); } });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start0,400); }); else setTimeout(start0,400);
+  return {start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
+    _tick:tick,_alert:alert,_S:S,_D:function(){ return D; }};
+})();
 
 </script>
 </body>
