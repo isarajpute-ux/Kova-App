@@ -1,0 +1,37 @@
+/* KovaImpact in the scanner (p14): one row per body area with a verdict,
+   opening to the reasons, each with its evidence and source; then "For
+   you, today" and "Next time". Uses the app's own tokens, so dark, soft
+   light and light glass follow. */
+.kim{display:flex;flex-direction:column;gap:6px}
+.kim-a{border-radius:16px;background:rgba(255,255,255,.04);border:.5px solid var(--ron-line,rgba(255,255,255,.1))}
+.kim-a summary{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;cursor:pointer;list-style:none;font-size:13.5px}
+.kim-a summary::-webkit-details-marker{display:none}
+.kim-a summary b{flex:1;font-weight:500}
+.kim-a summary em{font-style:normal;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.06)}
+.kim-a summary::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.5;transition:transform .2s}
+.kim-a[open] summary::after{transform:rotate(225deg) translateY(-1px)}
+.kim-dot{width:8px;height:8px;border-radius:50%;background:var(--ron-txt-3,rgba(255,255,255,.4));flex-shrink:0}
+.kim-a.v-good .kim-dot,.kim-a.v-good em{background:var(--good);color:#06210F}
+.kim-a.v-watch .kim-dot{background:var(--warn)}.kim-a.v-watch em{background:var(--warn);color:#2A1E00}
+.kim-a.v-bad .kim-dot{background:var(--bad);box-shadow:0 0 8px var(--bad)}.kim-a.v-bad em{background:var(--bad);color:#fff}
+.kim-a.v-good .kim-dot{color:inherit}
+.kim-a ul{list-style:none;margin:0;padding:0 14px 12px}
+.kim-a li{padding:9px 0 9px 14px;border-top:.5px solid var(--ron-line,rgba(255,255,255,.08));position:relative}
+.kim-a li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--ron-txt-3,rgba(255,255,255,.4))}
+.kim-a li.g::before{background:var(--good)}.kim-a li.b::before{background:var(--bad)}
+.kim-a li b{display:block;font-size:13px;font-weight:500}
+.kim-a li span{display:block;font-size:12px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin-top:2px}
+.kim-a li small{display:block;font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.5));margin-top:4px}
+.kim-a li small i{font-style:normal;font-weight:600}
+.kim-a li small i.ev-strong,.kim-a li small i.ev-rule{color:var(--good)}.kim-a li small i.ev-some{color:var(--warn)}.kim-a li small i.ev-early{color:var(--ron-txt-2,rgba(255,255,255,.7))}
+.kim-fine{font-size:10.5px;line-height:1.45;color:var(--ron-txt-3,rgba(255,255,255,.5));margin:10px 2px 0}
+.kim-p{display:flex;flex-direction:column;gap:8px}
+.kim-p>div{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;background:var(--acc-dim,rgba(255,255,255,.06));border:.5px solid var(--acc-brd,rgba(255,255,255,.12))}
+.kim-p span{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.kim-p p{margin:3px 0 0;font-size:12.5px;line-height:1.5}
+.kim-n{margin-top:12px}
+.kim-n b{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.kim-n ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55}
+body.light-mode .kim-a{background:rgba(28,26,23,.03)}
+body.light-mode .kim-a summary em{background:rgba(28,26,23,.06)}
+body.light-mode .kim-a.v-good em{color:#fff}

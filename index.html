@@ -6667,6 +6667,46 @@ body.light-mode .kn-dash i.loud{box-shadow:none}
 @media (prefers-reduced-motion:reduce){.kn-card.danger,.kn-live{animation:none}.kn-alert{transition:none}}
 
 </style>
+<style id="p08-impact">
+/* KovaImpact in the scanner (p14): one row per body area with a verdict,
+   opening to the reasons, each with its evidence and source; then "For
+   you, today" and "Next time". Uses the app's own tokens, so dark, soft
+   light and light glass follow. */
+.kim{display:flex;flex-direction:column;gap:6px}
+.kim-a{border-radius:16px;background:rgba(255,255,255,.04);border:.5px solid var(--ron-line,rgba(255,255,255,.1))}
+.kim-a summary{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;cursor:pointer;list-style:none;font-size:13.5px}
+.kim-a summary::-webkit-details-marker{display:none}
+.kim-a summary b{flex:1;font-weight:500}
+.kim-a summary em{font-style:normal;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.06)}
+.kim-a summary::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.5;transition:transform .2s}
+.kim-a[open] summary::after{transform:rotate(225deg) translateY(-1px)}
+.kim-dot{width:8px;height:8px;border-radius:50%;background:var(--ron-txt-3,rgba(255,255,255,.4));flex-shrink:0}
+.kim-a.v-good .kim-dot,.kim-a.v-good em{background:var(--good);color:#06210F}
+.kim-a.v-watch .kim-dot{background:var(--warn)}.kim-a.v-watch em{background:var(--warn);color:#2A1E00}
+.kim-a.v-bad .kim-dot{background:var(--bad);box-shadow:0 0 8px var(--bad)}.kim-a.v-bad em{background:var(--bad);color:#fff}
+.kim-a.v-good .kim-dot{color:inherit}
+.kim-a ul{list-style:none;margin:0;padding:0 14px 12px}
+.kim-a li{padding:9px 0 9px 14px;border-top:.5px solid var(--ron-line,rgba(255,255,255,.08));position:relative}
+.kim-a li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--ron-txt-3,rgba(255,255,255,.4))}
+.kim-a li.g::before{background:var(--good)}.kim-a li.b::before{background:var(--bad)}
+.kim-a li b{display:block;font-size:13px;font-weight:500}
+.kim-a li span{display:block;font-size:12px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin-top:2px}
+.kim-a li small{display:block;font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.5));margin-top:4px}
+.kim-a li small i{font-style:normal;font-weight:600}
+.kim-a li small i.ev-strong,.kim-a li small i.ev-rule{color:var(--good)}.kim-a li small i.ev-some{color:var(--warn)}.kim-a li small i.ev-early{color:var(--ron-txt-2,rgba(255,255,255,.7))}
+.kim-fine{font-size:10.5px;line-height:1.45;color:var(--ron-txt-3,rgba(255,255,255,.5));margin:10px 2px 0}
+.kim-p{display:flex;flex-direction:column;gap:8px}
+.kim-p>div{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:14px;background:var(--acc-dim,rgba(255,255,255,.06));border:.5px solid var(--acc-brd,rgba(255,255,255,.12))}
+.kim-p span{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.kim-p p{margin:3px 0 0;font-size:12.5px;line-height:1.5}
+.kim-n{margin-top:12px}
+.kim-n b{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.kim-n ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.55}
+body.light-mode .kim-a{background:rgba(28,26,23,.03)}
+body.light-mode .kim-a summary em{background:rgba(28,26,23,.06)}
+body.light-mode .kim-a.v-good em{color:#fff}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -11177,7 +11217,7 @@ body.ks-on #kovaFab{display:none!important}
     <!-- body impact card -->
     <div class="card" id="scnImpact">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="lbl" style="letter-spacing:.16em">BODY IMPACT</div>
+        <div class="lbl" style="letter-spacing:.16em">WHAT IT DOES TO YOUR BODY</div>
         <div class="nrgpulse"></div>
       </div>
       <div id="scnImpactGrid"></div>
@@ -11188,9 +11228,9 @@ body.ks-on #kovaFab{display:none!important}
       <svg class="roncorner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
         stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
-        <div class="lbl" style="letter-spacing:.16em">GOAL ALIGNMENT</div>
+        <div class="lbl" style="letter-spacing:.16em">FOR YOU, TODAY</div>
         <span class="nrgpulse"></span>
-        <span style="font-size:9.5px;font-weight:300;color:var(--ron-txt-3)">Move · Fuel</span>
+        <span style="font-size:9.5px;font-weight:300;color:var(--ron-txt-3)">From your data</span>
       </div>
       <div id="scnGoalBody"></div>
     </div>
@@ -41610,27 +41650,27 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
   var ADD_RISK = {
     /* high risk (avoid) */
     'en:e102':{n:'Tartrazine',r:3,why:'Synthetic azo dye linked to hyperactivity'},
-    'en:e104':{n:'Quinoline Yellow',r:3,why:'Synthetic dye, limited evidence of genotoxicity'},
+    'en:e104':{n:'Quinoline Yellow',r:2,why:'Synthetic dye; linked to hyperactivity in some children, EU warning label'},
     'en:e110':{n:'Sunset Yellow',r:3,why:'Azo dye linked to hyperactivity in children'},
-    'en:e122':{n:'Carmoisine',r:3,why:'Azo dye, possible allergen'},
+    'en:e122':{n:'Carmoisine',r:2,why:'Azo dye; linked to hyperactivity in some children, EU warning label'},
     'en:e124':{n:'Ponceau 4R',r:3,why:'Azo dye linked to hyperactivity'},
     'en:e129':{n:'Allura Red',r:3,why:'Synthetic dye, hyperactivity concerns'},
-    'en:e131':{n:'Patent Blue V',r:3,why:'Synthetic dye, rare allergic reactions'},
+    'en:e131':{n:'Patent Blue V',r:1,why:'Synthetic dye, rare allergic reactions'},
     'en:e133':{n:'Brilliant Blue',r:2,why:'Synthetic dye, generally low risk'},
-    'en:e150d':{n:'Sulphite Ammonia Caramel',r:2,why:'Contains 4-MEI, a possible carcinogen in large amounts'},
-    'en:e171':{n:'Titanium Dioxide',r:3,why:'Banned in EU since 2022, nanoparticle concerns'},
+    'en:e150d':{n:'Sulphite Ammonia Caramel',r:1,why:'Contains traces of 4-MEI (IARC 2B, possible carcinogen); levels in food are kept low'},
+    'en:e171':{n:'Titanium Dioxide',r:3,why:'Not allowed in EU food since 2022: EFSA could not rule out harm to DNA'},
     'en:e211':{n:'Sodium Benzoate',r:2,why:'Preservative, can form benzene with vitamin C'},
     'en:e220':{n:'Sulphur Dioxide',r:2,why:'Preservative, can trigger asthma'},
-    'en:e250':{n:'Sodium Nitrite',r:3,why:'Forms nitrosamines, linked to cancer risk'},
+    'en:e250':{n:'Sodium Nitrite',r:3,why:'In processed meat, part of why it is a known cause of bowel cancer (IARC group 1)'},
     'en:e251':{n:'Sodium Nitrate',r:3,why:'Precursor to nitrosamines'},
-    'en:e320':{n:'BHA',r:3,why:'Possible endocrine disruptor and carcinogen'},
-    'en:e321':{n:'BHT',r:2,why:'Antioxidant preservative, endocrine concerns'},
-    'en:e338':{n:'Phosphoric Acid',r:2,why:'Interferes with calcium absorption'},
-    'en:e385':{n:'Calcium Disodium EDTA',r:2,why:'Chelating agent, may affect mineral absorption'},
-    'en:e407':{n:'Carrageenan',r:2,why:'Thickener, gut inflammation concerns'},
+    'en:e320':{n:'BHA',r:2,why:'IARC 2B (possible carcinogen); under EU review as a possible hormone disruptor'},
+    'en:e321':{n:'BHT',r:1,why:'Antioxidant preservative; evidence of harm at food levels is weak'},
+    'en:e338':{n:'Phosphoric Acid',r:1,why:'In colas; some studies link it with lower bone density (limited evidence)'},
+    'en:e385':{n:'Calcium Disodium EDTA',r:1,why:'Chelating agent; safe within its daily limit (EFSA)'},
+    'en:e407':{n:'Carrageenan',r:2,why:'Thickener; early studies, mostly in animals, link it to gut inflammation'},
     'en:e420':{n:'Sorbitol',r:1,why:'Sugar alcohol, may cause bloating in large amounts'},
     'en:e421':{n:'Mannitol',r:1,why:'Sugar alcohol, laxative effect in excess'},
-    'en:e450':{n:'Diphosphates',r:2,why:'Emulsifier, excess phosphorus concerns'},
+    'en:e450':{n:'Diphosphates',r:1,why:'Adds phosphorus; only a concern in large amounts or with kidney disease'},
     'en:e466':{n:'Sodium CMC',r:1,why:'Thickener, gut microbiome concerns at high doses'},
     'en:e471':{n:'Mono/Diglycerides',r:1,why:'Emulsifier derived from fats, usually low risk'},
     'en:e472e':{n:'DATEM',r:1,why:'Dough conditioner, generally low risk'},
@@ -41640,9 +41680,9 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
     'en:e621':{n:'MSG',r:1,why:'Flavor enhancer, mild sensitivity in some people'},
     'en:e627':{n:'Disodium Guanylate',r:1,why:'Flavor enhancer, avoid with gout'},
     'en:e631':{n:'Disodium Inosinate',r:1,why:'Flavor enhancer, purine source'},
-    'en:e950':{n:'Acesulfame K',r:2,why:'Artificial sweetener, limited long-term data'},
-    'en:e951':{n:'Aspartame',r:2,why:'Artificial sweetener, IARC class 2B possible carcinogen'},
-    'en:e955':{n:'Sucralose',r:2,why:'Artificial sweetener, may affect gut microbiome'},
+    'en:e950':{n:'Acesulfame K',r:1,why:'Sweetener with limited long-term data; WHO advises against sweeteners for weight control'},
+    'en:e951':{n:'Aspartame',r:2,why:'IARC 2B (possible carcinogen, limited evidence); the safe daily amount is unchanged'},
+    'en:e955':{n:'Sucralose',r:1,why:'Sweetener; early studies suggest gut bacteria changes; WHO advises against sweeteners for weight control'},
     'en:e960':{n:'Stevia',r:0,why:'Natural sweetener, no significant risk'},
     'en:e965':{n:'Maltitol',r:1,why:'Sugar alcohol, GI discomfort in excess'},
     'en:e967':{n:'Xylitol',r:1,why:'Sugar alcohol, GI discomfort; toxic to dogs'}
@@ -41819,7 +41859,12 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
       sugar: num(nut['sugars' + suf]),
       satFat: num(nut['saturated-fat' + suf]),
       fiber: num(nut['fiber' + suf]),
-      sodium: num(nut['sodium' + suf]) != null ? num(nut['sodium' + suf]) : (num(nut['salt' + suf]) != null ? num(nut['salt' + suf]) / 2.5 : null)
+      sodium: num(nut['sodium' + suf]) != null ? num(nut['sodium' + suf]) : (num(nut['salt' + suf]) != null ? num(nut['salt' + suf]) / 2.5 : null),
+      /* for the body-effects read (KovaImpact): grams, as Open Food Facts gives them; alcohol in % vol */
+      iron: num(nut['iron' + suf]),
+      folate: num(nut['folates' + suf]) != null ? num(nut['folates' + suf]) : num(nut['vitamin-b9' + suf]),
+      caffeine: num(nut['caffeine' + suf]),
+      alcohol: num(nut['alcohol' + suf])
     };
     var any = Object.keys(m).some(function(k){ return m[k] != null; });
     return any ? m : null;
@@ -42067,6 +42112,9 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
         + '<div class="scn-impact-val" style="color:' + clr + '">' + label + '</div></div>';
     });
     document.getElementById('scnImpactGrid').innerHTML = impactHtml;
+    /* the evidence-graded read replaces the rough bars, when it is loaded */
+    var kimDone = false;
+    try{ if(window.KovaImpact){ KovaImpact.render(prod, document.getElementById('scnImpactGrid')); kimDone = true; } }catch(e){}
 
     /* ── goal alignment ── */
     var goalHtml = '';
@@ -42083,6 +42131,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
       });
     }
     document.getElementById('scnGoalBody').innerHTML = goalHtml;
+    try{ if(kimDone) KovaImpact.render(prod, null, document.getElementById('scnGoalBody')); }catch(e){}
 
     /* ── macros ── */
     paintMacros();
@@ -42119,6 +42168,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
 
     /* ── kova verdict ── */
     document.getElementById('scnKovaTxt').textContent = kovaVerdict(prod, sc, impact, goals);
+    try{ if(kimDone) KovaImpact.render(prod, null, null, document.getElementById('scnKovaTxt')); }catch(e){}
   }
 
   function paintMacros(){
@@ -42372,7 +42422,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
   }
 
   /* ── public API ── */
-  window.KovaScanner = {mount:mount, scan:openBarcodeScan, photo:openIngredientPhoto};
+  window.KovaScanner = {mount:mount, scan:openBarcodeScan, photo:openIngredientPhoto, show:function(raw){ paint(shapeFull(raw)); }, shape:shapeFull};
 
   /* ── hook into go() ── */
   var _origGo = window.go;
@@ -55442,6 +55492,192 @@ window.KovaNoise=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start0,400); }); else setTimeout(start0,400);
   return {start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
     _tick:tick,_alert:alert,_S:S,_D:function(){ return D; }};
+})();
+
+</script>
+<script id="p08-impact">
+/* =====================================================================
+   KovaImpact - what a scanned food does to your body, and to you today
+   (p14). Used by the scanner (Fuel > Scanner).
+
+   Yuka says good or bad. Kova says what, where in the body, how strong
+   the evidence is, and what it means for you today:
+     - per body area: digestion and bloating, blood sugar and energy,
+       heart and blood pressure, sleep, training and recovery, hormones
+       and cycle (fertility, pregnancy), skin, long-term risk;
+     - every reason carries its evidence: Strong (large trials, WHO, EFSA,
+       FDA, IARC group 1), Some (observational, smaller trials) or Early
+       (animal or single studies), and the source by name;
+     - "For you today" ties it to your own data: caffeine against your
+       bedtime, salt against what you have already eaten, protein after
+       today's workout, alcohol against a low HRV, your cycle phase,
+       pregnancy;
+     - "Next time": what to look for on the label instead.
+   It never claims more than the evidence: no "hormone disruption" score
+   from sugar, and it says when a scary-sounding thing (MSG, soy) has no
+   good evidence of harm at normal amounts.
+   Thresholds: UK FSA front-of-pack "high/low" per 100 g (drinks per
+   100 ml), EU nutrition claims (source/high fibre and protein), WHO daily
+   limits (free sugars 50 g, sodium 2 g).
+   ===================================================================== */
+window.KovaImpact=(function(){
+  'use strict';
+  var AREAS=[
+    ['gut','Digestion & bloating'],['sugar','Blood sugar & energy'],['heart','Heart & blood pressure'],['sleep','Sleep'],
+    ['train','Training & recovery'],['horm','Hormones, cycle & fertility'],['skin','Skin'],['long','Long-term risk']
+  ];
+  var EV={strong:'Strong evidence',some:'Some evidence',early:'Early evidence',rule:'Food safety rule'};
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function r1(x){ return Math.round(x*10)/10; }
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function has(arr,re){ return (arr||[]).some(function(a){ return re.test(a); }); }
+
+  function analyze(prod,ctx){
+    ctx=ctx||context();
+    var p100=prod.per100||{}, ps=prod.perServ||null, ing=String(prod._ingredientsText||'').toLowerCase(), adds=prod._additiveTags||[], cats=String(prod._categories||'');
+    var drink=/beverage|drinks|sodas|juices|waters|coffees|teas|milks|energy-drinks/.test(cats)&&!/milk-powder|tea-leaves|coffee-beans|ground-coffee/.test(cats);
+    var serve=ps&&ps.kcal!=null?ps:null, sv=function(k){ return serve&&serve[k]!=null?serve[k]:null; };
+    var out=[], add=function(o){ out.push(o); };
+    var sugar=p100.sugar, salt=p100.sodium!=null?p100.sodium*2.5:null, sat=p100.satFat, fib=p100.fiber, prot=p100.p, kcal=p100.kcal;
+    /* sugar */
+    if(sugar!=null){
+      var hiS=drink?11.25:22.5, loS=drink?2.5:5;
+      if(sugar>hiS){
+        var sS=sv('sugar');
+        add({a:['sugar','skin','long'],v:-1,t:'High in sugar',d:r1(sugar)+' g per 100 '+(drink?'ml':'g')+(sS!=null?' ('+r1(sS)+' g a serving, '+Math.round(sS/50*100)+'% of the WHO daily limit)':'')+'. A quick rise in blood sugar, often a dip in energy after.',ev:'strong',src:'WHO sugars guideline; UK FSA'});
+        add({a:['skin'],v:-1,minor:true,t:'Sugary, fast carbs and acne',d:'Diets high in fast carbs are linked with more acne in trials.',ev:'some',src:'Smith 2007, AJCN'});
+      } else if(sugar<=loS) add({a:['sugar'],v:1,t:'Low in sugar',d:r1(sugar)+' g per 100 '+(drink?'ml':'g')+'.',ev:'strong',src:'UK FSA'});
+    }
+    /* salt */
+    if(salt!=null){
+      var na=sv('sodium');
+      if(salt>1.5){
+        add({a:['heart'],v:-1,t:'High in salt',d:r1(salt)+' g salt per 100 g'+(na!=null?' ('+Math.round(na*1000)+' mg sodium a serving, '+Math.round(na*1000/2000*100)+'% of the WHO daily limit)':'')+'. Salt raises blood pressure.',ev:'strong',src:'WHO sodium guideline'});
+        add({a:['gut'],v:-1,t:'Salty food and bloating',d:'In a large diet trial, more salt meant more bloating.',ev:'some',src:'DASH-Sodium, Peng 2019'});
+      } else if(salt<=0.3) add({a:['heart'],v:1,t:'Low in salt',d:r1(salt)+' g per 100 g.',ev:'strong',src:'UK FSA'});
+    }
+    /* fats */
+    if(sat!=null&&sat>5) add({a:['heart'],v:-1,t:'High in saturated fat',d:r1(sat)+' g per 100 g. Saturated fat raises LDL cholesterol.',ev:'strong',src:'WHO 2023; UK FSA'});
+    if(/partially hydrogenated|partly hydrogenated|hydrogenated vegetable/.test(ing)){
+      add({a:['heart','long'],v:-1,t:'Trans fat (hydrogenated oil)',d:'Raises LDL and lowers HDL cholesterol; banned in the US and limited in the EU.',ev:'strong',src:'WHO; FDA'});
+      add({a:['horm'],v:-1,t:'Trans fat and ovulation',d:'Women eating more trans fat had more ovulatory infertility in a large study.',ev:'some',src:'Nurses’ Health Study II, Chavarro 2007'});
+    }
+    /* fibre and protein */
+    if(fib!=null&&fib>=6) add({a:['gut','sugar'],v:1,t:'High in fibre',d:r1(fib)+' g per 100 g. Feeds gut bacteria, slows the sugar rise, keeps you full. More than you are used to can cause wind at first.',ev:'strong',src:'EU claim; Reynolds 2019, Lancet'});
+    else if(fib!=null&&fib>=3) add({a:['gut'],v:1,t:'A source of fibre',d:r1(fib)+' g per 100 g.',ev:'strong',src:'EU claim'});
+    if(prot!=null&&kcal){
+      var pe=prot*4/kcal, pS=sv('p');
+      if(pe>=.2) add({a:['train','sugar'],v:1,t:'High in protein',d:Math.round(pe*100)+'% of its calories'+(pS!=null?' ('+Math.round(pS)+' g a serving)':'')+'. Protein repairs muscle after training and keeps you full.',ev:'strong',src:'EU claim; ISSN 2017'});
+      else if(pe>=.12) add({a:['train'],v:1,t:'A source of protein',d:Math.round(pe*100)+'% of its calories.',ev:'strong',src:'EU claim'});
+    }
+    /* processing */
+    if(prod._nova===4) add({a:['long','sugar'],v:-1,t:'Ultra-processed',d:'In a controlled trial, people ate about 500 kcal a day more on ultra-processed food without noticing.',ev:'strong',src:'NIH, Hall 2019'});
+    else if(prod._nova===1) add({a:['long'],v:1,t:'Unprocessed or minimally processed',d:'Whole foods, as they come.',ev:'some',src:'NOVA'});
+    /* additives */
+    var A=function(re){ return has(adds,re); };
+    if(A(/e42[01]|e95[3]|e96[5-8]/)) add({a:['gut'],v:-1,t:'Sugar alcohols (polyols)',d:'Sorbitol, maltitol, xylitol and the like pull water into the gut: gas, bloating and loose stools in larger amounts. The EU requires a warning when they are over 10%.',ev:'strong',src:'EU Regulation 1169/2011'});
+    if(A(/e968/)) add({a:['heart'],v:-1,t:'Erythritol',d:'One study linked high blood erythritol with clotting events; more research is needed.',ev:'early',src:'Witkowski 2023, Nat Med'});
+    if(A(/e407|e466|e433/)) add({a:['gut'],v:-1,t:'Emulsifiers (carrageenan, CMC, polysorbate 80)',d:'In mice, and one small human trial, these thinned the gut’s protective mucus.',ev:'early',src:'Chassaing 2015, 2022'});
+    if(A(/e25[0-2]|e249/)&&/meat|sausage|ham|bacon|salami|charcut|hot-dog/.test(cats+' '+ing)) add({a:['long'],v:-1,t:'Processed meat with nitrite',d:'Processed meat is a known cause of bowel cancer (IARC group 1): about 18% higher risk for each 50 g eaten a day.',ev:'strong',src:'IARC 2015; WCRF'});
+    if(A(/e951/)) add({a:['long'],v:0,t:'Aspartame',d:'IARC calls it "possibly carcinogenic" (2B, limited evidence); the safe daily amount (40 mg per kg) is unchanged.',ev:'early',src:'IARC & JECFA 2023'});
+    if(A(/e95[015]|e962/)) add({a:['sugar'],v:0,t:'Sweeteners',d:'The WHO advises against relying on sweeteners for weight control: long-term, they do not help.',ev:'some',src:'WHO 2023'});
+    if(A(/e10[24]|e11[0]|e12[249]/)) add({a:['long'],v:-1,t:'Azo food dyes',d:'Linked to hyperactivity in some children; the EU makes them carry a warning.',ev:'some',src:'Southampton study, McCann 2007'});
+    if(A(/e171/)) add({a:['long'],v:-1,t:'Titanium dioxide (E171)',d:'No longer allowed in EU food since 2022: harm to DNA could not be ruled out.',ev:'rule',src:'EFSA 2021'});
+    if(A(/e320/)) add({a:['horm','long'],v:-1,t:'BHA (E320)',d:'Rated "possibly carcinogenic" and under EU review as a possible hormone disruptor.',ev:'early',src:'IARC 2B; EU ED list'});
+    if(A(/e211/)&&A(/e300/)) add({a:['long'],v:-1,t:'Benzoate with vitamin C',d:'Together they can form small amounts of benzene, especially in warm drinks kept a long time.',ev:'early',src:'FDA'});
+    if(A(/e22[0-8]/)) add({a:['gut'],v:-1,t:'Sulphites',d:'Can set off asthma in people who are sensitive to them.',ev:'strong',src:'EU allergen rules'});
+    if(A(/e621/)) add({a:['long'],v:0,t:'MSG',d:'No good evidence of harm at normal amounts; a few people notice headaches after large doses.',ev:'some',src:'EFSA 2017'});
+    /* drinks: caffeine, alcohol, fizz */
+    /* Open Food Facts gives vitamins, minerals and caffeine in grams */
+    var caf=p100.caffeine!=null?p100.caffeine*1000:null, hasCaf=caf>0||/caffeine|guarana|coffee|green tea extract|mate\b/.test(ing)||/energy-drinks|coffees/.test(cats);
+    if(hasCaf) add({a:['sleep'],v:-1,t:'Caffeine'+(caf?' ('+Math.round(caf)+' mg per 100 ml)':''),d:'Caffeine lasts about 5 hours in the body. Even 6 hours before bed it cut sleep by about an hour in a trial.',ev:'strong',src:'Drake 2013, JCSM'});
+    var alc=p100.alcohol!=null?p100.alcohol:null, hasAlc=alc>0||/alcoholic-beverages|beers|wines|spirits|ciders/.test(cats);
+    if(hasAlc){
+      add({a:['sleep'],v:-1,t:'Alcohol',d:'Helps you fall asleep, then breaks up the second half of the night and cuts REM sleep.',ev:'strong',src:'Ebrahim 2013 review'});
+      add({a:['heart','train'],v:-1,t:'Alcohol and recovery',d:'Raises resting heart rate and lowers HRV that night; after training it slows muscle repair.',ev:'some',src:'Pietilä 2018; Parr 2014'});
+      add({a:['horm'],v:-1,t:'Alcohol and pregnancy',d:'No amount is known to be safe in pregnancy. Heavy drinking also lowers fertility.',ev:'strong',src:'CDC; ACOG'});
+    }
+    if(/carbonated|sparkling|soda/.test(ing+' '+cats)) add({a:['gut'],v:-1,t:'Fizzy',d:'Carbonation adds gas: bloating for some people.',ev:'some',src:'Clinical consensus'});
+    if(/\blactose\b|whey|milk powder|skimmed milk|\bmilk\b/.test(ing)&&!/lactose[- ]free/.test(ing)) add({a:['gut'],v:0,t:'Contains lactose',d:'Bloating and wind only if you are lactose intolerant (most adults worldwide make less lactase).',ev:'strong',src:'NIH'});
+    if(/\bsoy|soya/.test(ing)) add({a:['horm'],v:0,t:'Soy',d:'Normal amounts of soy do not lower testosterone or harm fertility, in reviews of the trials.',ev:'some',src:'Reed 2021 meta-analysis'});
+    if(/swordfish|shark|king mackerel|tilefish|bigeye/.test(ing+' '+cats)) add({a:['horm'],v:-1,t:'High-mercury fish',d:'Not for anyone pregnant, breastfeeding or trying to conceive.',ev:'strong',src:'FDA/EPA fish advice'});
+    var fe=p100.iron!=null?p100.iron*1000:null, fol=p100.folate!=null?p100.folate*1e6:null;
+    if(fe!=null&&fe>=2.1) add({a:['horm'],v:1,t:'Iron-rich',d:r1(fe)+' mg per 100 g. Periods cost iron; low iron means tiredness.',ev:'strong',src:'EU claim; NIH'});
+    if((fol!=null&&fol>=30)||/folic acid/.test(ing)) add({a:['horm'],v:1,t:'Folate / folic acid',d:'Anyone who could become pregnant is advised 400 mcg of folic acid a day to prevent neural tube defects.',ev:'strong',src:'CDC; ACOG'});
+    if(prod._allergens&&prod._allergens.length) add({a:['gut'],v:0,t:'Allergens: '+prod._allergens.slice(0,5).join(', '),d:'Only matters if you are allergic or intolerant.',ev:'rule',src:'EU allergen labelling'});
+
+    /* group by area */
+    var areas={};
+    AREAS.forEach(function(x){ var L=out.filter(function(o){ return o.a.indexOf(x[0])>=0; }); if(!L.length) return;
+      var s=L.reduce(function(a,o){ return a+o.v*(o.ev==='strong'||o.ev==='rule'?1:o.ev==='some'?.6:.3); },0);
+      areas[x[0]]={n:x[1],items:L,verdict:s>.4?'good':s<-.9?'bad':s<-.2?'watch':'ok'}; });
+    return {items:out,areas:areas,personal:personal(out,prod,ctx),next:nextTime(out,drink),drink:drink};
+  }
+
+  /* what Kova knows about today */
+  function context(){
+    var c={now:new Date(),bed:23*60,phase:'',preg:false,naToday:null,trained:false,lowHRV:false};
+    try{ var log=lsJ('kova_sleeplog_v1',{}), ks=Object.keys(log).sort().slice(-7), beds=ks.map(function(k){ return log[k]&&log[k].bed; }).filter(Boolean);
+      var mins=beds.map(function(b){ var m=String(b).match(/(\d+):(\d+)\s*([ap])/i); if(!m) return null; var h=+m[1]%12+(m[3].toLowerCase()==='p'?12:0); var t=h*60+(+m[2]); return t<12*60?t+1440:t; }).filter(function(x){ return x!=null; });
+      if(mins.length){ mins.sort(function(a,b){ return a-b; }); c.bed=mins[Math.floor(mins.length/2)]%1440; } }catch(e){}
+    try{ if(window.KovaCycle){ c.phase=KovaCycle.phase(); var cd=KovaCycle._data(); c.preg=!!(cd&&cd.status&&cd.status.preg); } }catch(e){}
+    try{ if(window.KovaFuel&&KovaFuel.today){ var na=0, any=false; KovaFuel.today().forEach(function(e){ if(e&&e.m&&e.m.na!=null){ na+=+e.m.na; any=true; } }); c.naToday=any?Math.round(na):null; } }catch(e){}
+    try{ var L=lsJ('kova_log_v1',[]), d0=new Date(); d0.setHours(0,0,0,0); c.trained=L.some(function(s){ return s&&!s.seed&&s.t>=d0.getTime(); }); }catch(e){}
+    try{ var h=lsJ('kova.health.v2',{}), f=h.f||{}; if(f.hrv&&f.hrv_base&&f.hrv<f.hrv_base*.85) c.lowHRV=true; }catch(e){}
+    return c;
+  }
+  function hm(m){ var h=Math.floor(m/60)%24, mm=m%60, ap=h<12?'am':'pm'; return (h%12||12)+(mm?':'+('0'+mm).slice(-2):'')+' '+ap; }
+  function personal(items,prod,c){
+    var P=[], is=function(re){ return items.some(function(o){ return re.test(o.t); }); };
+    var nowM=c.now.getHours()*60+c.now.getMinutes(), toBed=((c.bed-nowM)+1440)%1440;
+    if(is(/^Caffeine/)){
+      if(toBed<8*60) P.push({area:'Sleep',t:'You usually sleep around '+hm(c.bed)+'. That is '+Math.floor(toBed/60)+' h '+(toBed%60)+' m away, so about '+Math.round(Math.pow(.5,toBed/300)*100)+'% of this caffeine will still be working at bedtime.'});
+      else P.push({area:'Sleep',t:'More than 8 hours to your usual bedtime ('+hm(c.bed)+'): this one should not touch tonight’s sleep.'});
+      if(c.preg) P.push({area:'Pregnancy',t:'In pregnancy, keep caffeine under 200 mg a day from everything (ACOG).'});
+    }
+    if(is(/^Alcohol$/)){
+      if(c.lowHRV) P.push({area:'Vitals',t:'Your HRV is already below your normal. Alcohol tonight usually pushes it lower and your resting heart rate up tomorrow.'});
+      if(c.trained) P.push({area:'Workout',t:'You trained today: alcohol tonight slows the muscle repair that session started.'});
+      if(c.preg) P.push({area:'Pregnancy',t:'No amount of alcohol is known to be safe in pregnancy.'});
+    }
+    var na=prod.perServ&&prod.perServ.sodium!=null?Math.round(prod.perServ.sodium*1000):null;
+    if(na!=null&&na>=300){ var tot=c.naToday!=null?c.naToday+na:null; P.push({area:'Vitals',t:'A serving adds '+na+' mg sodium'+(tot!=null?': '+tot.toLocaleString()+' of the WHO’s 2,000 mg today.':' (WHO: 2,000 mg a day).')}); }
+    if(is(/protein/)&&c.trained) P.push({area:'Workout',t:'You trained today: protein now helps the repair. Aim for 20 to 40 g in this meal.'});
+    if(c.phase==='menstrual'&&is(/Iron-rich/)) P.push({area:'Cycle',t:'You are on your period: iron-rich food helps replace what you lose.'});
+    if(c.phase==='luteal'&&is(/High in sugar/)) P.push({area:'Cycle',t:'Luteal phase: cravings run higher now. A protein-first snack usually holds you longer than sugar.'});
+    if(c.preg&&is(/High-mercury fish/)) P.push({area:'Pregnancy',t:'You logged a pregnancy: skip this fish; salmon, sardines and trout are good choices.'});
+    if(c.preg&&is(/Folate/)) P.push({area:'Pregnancy',t:'Good: folate matters most early in pregnancy.'});
+    return P;
+  }
+  function nextTime(items,drink){
+    var N=[], is=function(re){ return items.some(function(o){ return o.v<0&&re.test(o.t); }); };
+    if(is(/High in sugar/)) N.push('Under '+(drink?'2.5 g sugar per 100 ml':'5 g sugar per 100 g')+' is "low" on any label.');
+    if(is(/High in salt/)) N.push('Under 0.3 g salt per 100 g is "low"; over 1.5 g is "high".');
+    if(is(/saturated/)) N.push('Under 1.5 g saturated fat per 100 g is "low".');
+    if(is(/Processed meat/)) N.push('Fresh meat, fish, eggs or beans instead of cured meat with E250/E252.');
+    if(is(/polyols|Sugar alcohols/)) N.push('If you bloat easily, skip "sugar-free" sweets with sorbitol, maltitol or xylitol.');
+    if(is(/Ultra-processed/)) N.push('A version with a shorter ingredient list you would cook with yourself.');
+    if(is(/Caffeine/)) N.push('After about 2 pm, decaf or caffeine-free.');
+    return N.slice(0,4);
+  }
+
+  var VERD={good:'Good',ok:'Neutral',watch:'Watch',bad:'Bad'};
+  function render(prod,grid,goal,ktxt){
+    var r=analyze(prod), ks=Object.keys(r.areas);
+    if(grid) grid.innerHTML=ks.length?'<div class="kim">'+ks.map(function(k){ var A=r.areas[k];
+        return '<details class="kim-a v-'+A.verdict+'"><summary><span class="kim-dot"></span><b>'+esc(A.n)+'</b><em>'+VERD[A.verdict]+'</em></summary><ul>'
+          +A.items.map(function(o){ return '<li class="'+(o.v>0?'g':o.v<0?'b':'n')+'"><b>'+esc(o.t)+'</b><span>'+esc(o.d)+'</span><small><i class="ev-'+o.ev+'">'+EV[o.ev]+'</i> · '+esc(o.src)+'</small></li>'; }).join('')+'</ul></details>'; }).join('')
+        +'</div><p class="kim-fine">Every reason shows how strong the evidence is and where it comes from. Kova does not diagnose; if you have a condition, your doctor’s advice comes first.</p>'
+      :'<div class="sub">Not enough on the label to say more.</div>';
+    if(goal) goal.innerHTML=(r.personal.length?'<div class="kim-p">'+r.personal.map(function(x){ return '<div><span>'+esc(x.area)+'</span><p>'+esc(x.t)+'</p></div>'; }).join('')+'</div>':'<div class="sub">Nothing about this product changes your day.</div>')
+      +(r.next.length?'<div class="kim-n"><b>Next time, look for</b><ul>'+r.next.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>':'');
+    if(ktxt){
+      var good=r.items.filter(function(o){ return o.v>0; }), bad=r.items.filter(function(o){ return o.v<0&&o.ev!=='early'&&!o.minor; });
+      ktxt.textContent=(good.length?'Good: '+good.slice(0,2).map(function(o){ return o.t.toLowerCase(); }).join(', ')+'. ':'')+(bad.length?'Watch: '+bad.slice(0,2).map(function(o){ return o.t.toLowerCase(); }).join(', ')+'. ':'')+(r.personal[0]?r.personal[0].t:(bad.length?'Fine now and then.':'A good everyday choice.'));
+    }
+    return r;
+  }
+  return {analyze:analyze,render:render,context:context,AREAS:AREAS};
 })();
 
 </script>
