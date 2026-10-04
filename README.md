@@ -158,6 +158,7 @@ node tests/a11y.js         # every control named, every field labelled, keyboard
 node tests/site.js         # the built page: minified, Work OS split out, under 450 KB
 node tests/launch.js       # the hidden Launch check and what /api/ping reports
 node tests/teamtiles.js    # Work OS team tiles: what each number means, and the pop-up behind each
+node tests/crewall.js      # every AI employee: all 9 roles, every tool on the server, every skill offline, Run, by name, undo
 ```
 
 In a real browser (Playwright; `npx playwright install chromium` once), against the built site:

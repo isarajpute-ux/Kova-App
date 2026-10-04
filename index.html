@@ -48242,18 +48242,20 @@ window.KovaCrew=(function(){
       label:function(r,a){ return 'Wrote the report: '+String(a.title||''); }},
     hand_off:{g:'always',kind:'self',d:'Give a job to a teammate whose job description owns it. to = their name or title; job = clear instructions.',
       s:obj({to:S_STR,job:S_STR},['to','job']), run:function(a,ctx){
-        var t=byName(a.to); if(!t||t.id===ctx.emp.id) return {error:'no teammate called '+a.to+'. Team: '+emps().map(function(e){ return e.n+' ('+e.title+')'; }).join(', ')};
+        var t=byName(a.to), others=emps().filter(function(e){ return e.id!==ctx.emp.id; }).map(function(e){ return e.n+' ('+e.title+')'; }).join(', ');
+        if(t&&t.id===ctx.emp.id) return {error:'that is you, '+ctx.emp.n+'. Hand it to a teammate: '+others};
+        if(!t) return {error:'no teammate called '+a.to+'. Team: '+others};
         if(!t.enabled) return {error:t.n+' is switched off'};
         (ctx.job.after=ctx.job.after||[]).push({to:t.id,job:String(a.job||'').slice(0,1200)});
         return {ok:true,handed_to:t.n+' ('+t.title+')'};
       },
-      label:function(r){ return r.handed_to?'Handed off to '+r.handed_to:'Hand-off failed'; }},
+      label:function(r){ return r.handed_to?'Handed off to '+r.handed_to:'Hand-off failed: '+String(r.error||'no teammate for it').split('. Team:')[0]; }},
     assign_task:{g:'tasks',kind:'write',d:'Assign an existing task to a teammate (by task name and teammate name).',
       s:obj({task:S_STR,to:S_STR},['task','to']),
       run:function(a,ctx){ var i=findItem(a.task), t=byName(a.to); if(!i) return {error:'no task called '+a.task}; if(!t) return {error:'no teammate called '+a.to};
         ctx.undo({coll:'items',id:i.id,prev:{assignee:i.assignee||''}}); W.update('items',i.id,{assignee:t.id},ctx.emp.n); return {ok:true,task:i.name,assignee:t.n}; },
       describe:function(a){ return {t:'Assign',n:a.task,s:'to '+a.to}; },
-      label:function(r){ return r.ok?'Assigned \u201c'+r.task+'\u201d to '+r.assignee:'Could not assign'; }},
+      label:function(r){ return r.ok?'Assigned \u201c'+r.task+'\u201d to '+r.assignee:'Could not assign: '+String(r.error||'not found'); }},
     post_draft:{g:'content',kind:'write',d:'Save a post draft in the Studio (never publishes). platforms: any of '+((window.KovaPost&&KovaPost.ORDER)||[]).join(', ')+'.',
       s:obj({heading:S_STR,body:S_STR,caption:S_STR,tags:S_STR,platforms:{type:'array',items:S_STR}},['heading']),
       run:function(a,ctx){
@@ -48271,10 +48273,15 @@ window.KovaCrew=(function(){
         if(!window.KovaLink||!KovaLink.authFetch) return Promise.resolve({ok:true,manual:true,note:'The user will send it from their own mail app.'});
         return KovaLink.authFetch('/assist/email',{json:{to:a.to,subject:a.subject,body:a.body,send:send}}).then(function(r){
           return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok) throw new Error(j.error||('HTTP '+r.status)); return {ok:true,sent:send,saved_as_draft:!send,to:a.to}; });
-        }).catch(function(e){ return {error:String(e.message||e)}; });
+        }).catch(function(e){
+          var m=String(e&&e.message||e);
+          /* no server or not signed in: nothing is lost, the email is handed to you to send */
+          if(/no-backend|signed|network|failed to fetch|load failed/i.test(m)) return {ok:true,manual:true,offline:true,note:'Kova could not reach its server, so the email is ready for the user to send from their own mail app.'};
+          return {error:m};
+        });
       },
       describe:function(a){ return {t:'Email',n:a.subject,s:'to '+a.to}; },
-      label:function(r,a){ return r.error?'Email not sent: '+r.error:(r.manual?'Email handed to you to send':(r.sent?'Sent email to '+a.to:'Saved Gmail draft to '+a.to)); }}
+      label:function(r,a){ return r.error?'Email not sent: '+r.error:(r.manual?'Email handed to you to send'+(r.offline?' (Kova is offline)':''):(r.sent?'Sent email to '+a.to:'Saved Gmail draft to '+a.to)); }}
   };
   /* the Work OS write tools, reusing WorkAI's validation and execution */
   var WAI={create_task:['tasks',obj({name:S_STR,priority:PRI,due:{type:'string',description:DUE},status:STA,notes:S_STR,project:S_STR},['name'])],
@@ -49801,7 +49808,7 @@ window.KovaCrew=(function(){
 
   return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData};
+    slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();
 
 </script>

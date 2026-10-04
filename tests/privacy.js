@@ -53,7 +53,7 @@ function boot(opts) {
   const { w, doc } = A;
   ck('Settings has Export, What Kova reads, Privacy policy, Delete', ['kpvExport', 'kpvReads', 'kpvPolicy', 'kpvDelete'].every((id) => !!doc.getElementById(id)));
   ck('the old "Delete all data" placeholder is gone', !doc.querySelector('#s-settings [data-toast^="This clears everything"]'));
-  ck('the rows sit under Data & privacy', (() => { const e = doc.getElementById('kpvExport'); let p = e.previousElementSibling; while (p && !p.classList.contains('sec-h')) p = p.previousElementSibling; return p && /Data & privacy/.test(p.textContent); })());
+  ck('the rows sit under Data & privacy', (() => { const e0 = doc.getElementById('kpvExport'), e = e0.closest('.setg') || e0; let p = e.previousElementSibling; while (p && !p.classList.contains('sec-h')) p = p.previousElementSibling; return p && /Data & privacy/.test(p.textContent); })());
 
   // ---------- export ----------
   await w.KovaPrivacy.exportAll();
