@@ -1,0 +1,47 @@
+/* Every screen size (p13). The app used to be one 420px phone column on
+   every device, even a 27" monitor, under a pretend "9:41 · 5G" status
+   bar. Now:
+     phones (under 700px)   as before, minus the pretend status bar;
+     tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
+     laptops (1024px+)      an 800px page and a sidebar with names;
+     big screens (1440px+)  a 920px page.
+   The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
+   their own wide layouts. The real safe area keeps the notch and the home
+   bar clear on phones. */
+.status{display:none}
+.wrap{padding-top:max(16px,env(safe-area-inset-top))}
+
+@media (min-width:700px){
+  .wrap{max-width:680px;padding-left:24px;padding-right:24px}
+  .grid2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .sheet-in{max-width:560px}
+}
+@media (min-width:1024px){
+  .wrap{max-width:800px;padding-left:32px;padding-right:32px}
+  /* the rail becomes a sidebar: icon and name */
+  .rail{width:212px;align-items:stretch;padding-left:14px;padding-right:14px}
+  .rail .rnav{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 12px;font-size:18px}
+  .rail .rnav::after{content:attr(title);font:500 14px 'Outfit','Inter',system-ui,-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rail .rnav .ic{flex-shrink:0}
+  .rail .avatar{align-self:flex-start;margin:0 0 6px 8px}
+}
+@media (min-width:1440px){
+  .wrap{max-width:920px}
+}
+/* the smallest phones (iPhone SE, 320px): a little more room for content */
+@media (max-width:340px){
+  .rail{width:48px}
+  .wrap{padding-left:10px;padding-right:10px}
+}
+/* a card's title never runs under its round arrow button */
+.wgl-arw~.wgl-t{padding-right:42px}
+/* small phones (360px and under): the Fuel ring a little smaller, and a
+   macro's "+24g" on its own line instead of past the card's edge */
+@media (max-width:360px){
+  #fuelRingCard .ring-wrap{transform:scale(.84);transform-origin:left center;margin-right:-20px}
+  #fuelRingCard .volval{font-size:10.5px;min-width:0!important}
+  #fuelRingCard .volval span{display:block;text-align:right}
+  .volnote{font-size:10px;white-space:normal}
+  .volrow:has(.volnote){flex-wrap:wrap;row-gap:2px}
+  .volrow .volnote{flex-basis:100%;max-width:none!important;text-align:left!important}
+}

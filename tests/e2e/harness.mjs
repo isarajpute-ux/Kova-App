@@ -61,8 +61,8 @@ const FIREBASE_STUB = `
 })();`;
 
 /* a page with Firebase, fonts and analytics answered locally */
-export async function openPage(browser, url, { viewport = { width: 390, height: 844 }, storage = {}, throttle = null } = {}) {
-  const context = await browser.newContext({ viewport, serviceWorkers: 'block' });
+export async function openPage(browser, url, { viewport = { width: 390, height: 844 }, storage = {}, throttle = null, scale = 1 } = {}) {
+  const context = await browser.newContext({ viewport, serviceWorkers: 'block', deviceScaleFactor: scale });
   await context.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: FIREBASE_STUB }));
   await context.route(/gstatic\.com\/firebasejs\//, (r) => r.fulfill({ contentType: 'text/javascript', body: '' }));
   await context.route(/googletagmanager\.com|google-analytics\.com|fonts\.googleapis\.com|fonts\.gstatic\.com|jsdelivr\.net|cdnjs\.cloudflare\.com/, (r) =>

@@ -873,7 +873,7 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .qback{font-size:12px;font-style:italic;color:var(--txt-2);cursor:pointer}
 .qnext{background:var(--acc-dim);border:.5px solid var(--acc-brd);border-radius:20px;padding:8px 16px;font-size:12px;font-weight:500;color:var(--acc);cursor:pointer;display:flex;align-items:center;gap:4px}
 
-.field{width:100%;background:transparent;border:none;border-bottom:.5px solid rgba(242,236,240,.22);color:var(--txt,#FFFFFF);font-family:'Inter';font-size:17px;font-weight:500;padding:4px 0;outline:none}
+.field{width:100%;background:transparent;border:none;border-bottom:.5px solid rgba(242,236,240,.22);color:var(--txt,#FFFFFF);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:17px;font-weight:500;padding:4px 0;outline:none}
 .toggle{display:flex;background:rgba(255,255,255,.10);border:.5px solid rgba(255,255,255,.28);border-radius:20px;padding:2px;backdrop-filter:blur(12px)}
 .tog{flex:1;padding:5px;text-align:center;font-size:11px;font-weight:500;border-radius:16px;cursor:pointer;color:var(--txt-2)}
 .tog.on{background:var(--acc-dim);color:var(--txt,#FFFFFF)}
@@ -888,7 +888,7 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .sheet.on .sheet-in{animation:sheetDown .28s cubic-bezier(.2,.9,.3,1)}
 .sheet-in{width:100%;max-width:420px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.07));backdrop-filter:blur(50px) saturate(1.6);border:.5px solid rgba(255,255,255,.30);border-radius:0 0 22px 22px;padding:16px 16px 22px;color:var(--txt);box-shadow:0 12px 44px rgba(0,0,0,.42),inset 0 -1px 0 rgba(255,255,255,.18)}
 .sheet-in::-webkit-scrollbar{display:none}
-.srch{width:100%;background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.30);border-radius:12px;padding:10px 12px;color:var(--txt,#FFFFFF);font-family:Inter;font-size:13px;outline:none;backdrop-filter:blur(14px)}
+.srch{width:100%;background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.30);border-radius:12px;padding:10px 12px;color:var(--txt,#FFFFFF);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13px;outline:none;backdrop-filter:blur(14px)}
 .srch::placeholder{color:var(--ink-2,rgba(255,255,255,.72))}
 .srch:focus{border-color:var(--acc-brd);background:rgba(255,255,255,.16)}
 .htable{width:100%;border-collapse:collapse;font-size:11.5px}
@@ -902,7 +902,7 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 
 
 /* ===== ADDED: expandables, animations, glow (items 2,6,7,8,10) ===== */
-.exp-btn{width:100%;background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,255,255,.05));backdrop-filter:blur(26px) saturate(1.5);border:.5px solid rgba(255,255,255,.30);border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;color:var(--txt);font-family:'Inter';font-size:13px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.32);transition:border-color .2s}
+.exp-btn{width:100%;background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,255,255,.05));backdrop-filter:blur(26px) saturate(1.5);border:.5px solid rgba(255,255,255,.30);border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;color:var(--txt);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.32);transition:border-color .2s}
 .exp-btn:active{border-color:var(--acc-brd)}
 .exp-btn .cnt{font-size:10px;font-weight:600;color:var(--txt-2);background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 8px;margin-left:auto;margin-right:8px}
 .exp-chev{transition:transform .28s cubic-bezier(.4,0,.2,1);display:inline-flex;color:var(--acc)}
@@ -1071,7 +1071,7 @@ body.light-mode .wtraf-d{color:rgba(20,24,32,.6);background:rgba(20,24,32,.05);
   backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.13);
   border:.5px solid rgba(255,255,255,.14);
-  border-radius:18px;padding:13px 14px;color:var(--txt);font-family:'Inter';font-size:13.5px;
+  border-radius:18px;padding:13px 14px;color:var(--txt);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13.5px;
   line-height:1.5;resize:none;outline:none;min-height:84px}
 .wta:focus{border-color:var(--ink-4,rgba(255,255,255,.34));background:rgba(255,255,255,.07)}
 .wta::placeholder{color:var(--ink-4,rgba(255,255,255,.34))}
@@ -5882,6 +5882,159 @@ html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}
 .kla-s{font-size:11px;font-weight:600;color:var(--txt-2);white-space:nowrap;padding-top:2px}
 .kla-r.bad .kla-s{color:var(--txt)}
 .kla-foot{font-size:11.5px;color:var(--txt-3);margin-top:12px;line-height:1.45}
+
+</style>
+<style id="p08-zpolish">
+/* Polish (p13): shadows that sit under their own box.
+
+   Cards are frosted glass (backdrop-filter). A big soft drop shadow
+   (0 18px 48px) fell 30-60px past each card, behind its neighbours, and
+   their glass blurred it back into view: a grey smudge with the shadow's
+   corners showing through, and a hard cut where the scroll area clips it.
+   Every surface in the page now gets a tight contact shadow: a hairline
+   one right under the edge and a short one pulled in by a negative spread,
+   so it ends within ~12px and never reaches the next card. The inset
+   highlights each surface had are kept. Floating things (sheets, menus,
+   pop-ups) keep their depth: nothing sits beside them.
+   Named zpolish so it loads after the other p08 styles; !important only
+   where the rule it replaces had it, or where a p07 style loads later. */
+
+/* ---- dark (and the default soft light inherits where it has no rule) ---- */
+.card,.warm,.paper,.cfg,.rdl,.ronpicker,.ronstage,
+:is(#s-hrv,#s-efficiency,#s-factors,#s-bedtime,#s-sounds) .card{
+  box-shadow:0 1px 2px rgba(0,0,0,.32),0 8px 16px -12px rgba(0,0,0,.7),inset 0 .5px 0 rgba(255,255,255,.13)}
+.fx-card,.fx-panel{box-shadow:0 1px 2px rgba(3,8,14,.3),0 8px 16px -12px rgba(3,8,14,.6),inset 0 .5px 0 rgba(255,255,255,.1)}
+.wgl,.wvar{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 1px 2px rgba(0,0,0,.3),0 8px 16px -12px rgba(0,0,0,.65)}
+.wglow{box-shadow:0 0 16px rgba(226,235,248,.12),0 8px 18px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9)}
+.ws-dock{box-shadow:0 0 18px rgba(var(--ws-rgb),calc(var(--ws-glow,.24) * .7)),0 8px 18px -12px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.55)}
+.wk-lit{box-shadow:0 0 16px rgba(var(--wk-rgb),calc(var(--wk-glow,.2) * .7)),0 8px 16px -12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.5)}
+.oshero{box-shadow:0 0 0 1px rgba(255,255,255,.14),0 8px 18px -12px rgba(190,208,230,.35),inset 0 1px 0 rgba(255,255,255,.9)}
+body:not(.light-mode):not(.soft-light) .app[data-pillar="work"] :is(.wgl,.card):not(.wglow){
+  box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px -12px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)!important}
+body:not(.light-mode):not(.soft-light) .app[data-pillar="work"] .wglow{
+  box-shadow:0 0 18px rgba(255,255,255,.12),0 8px 18px -12px rgba(0,0,0,.6),inset 0 1px 0 #fff!important}
+/* the AI team's tiles */
+.crd{--t-g-glow:0 1px 2px rgba(0,0,0,.3),0 8px 18px -12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.07);
+  --t-lit-glow:0 0 18px rgba(255,255,255,.12),0 8px 18px -12px rgba(0,0,0,.55)}
+
+/* ---- soft light ---- */
+body.soft-light .cfg,body.soft-light .paper,body.soft-light .warm{
+  box-shadow:0 1px 2px rgba(30,52,86,.14),0 8px 16px -12px rgba(30,52,86,.38),inset 0 1px 0 rgba(255,255,255,.8)}
+body.soft-light .oshero{box-shadow:0 0 0 1px rgba(126,160,198,.2),0 8px 18px -12px rgba(70,104,146,.45),inset 0 1px 0 rgba(255,255,255,.7)}
+body.soft-light .crd{--t-g-glow:0 1px 2px rgba(0,0,0,.18),0 8px 16px -12px rgba(0,0,0,.4);--t-lit-glow:0 0 16px rgba(255,255,255,.1),0 8px 16px -12px rgba(0,0,0,.35)}
+
+/* ---- light glass ---- */
+body.light-mode .card{box-shadow:0 1px 2px rgba(58,52,45,.07),0 8px 16px -12px rgba(58,52,45,.22),inset 0 .5px 0 rgba(255,255,255,.85)}
+body.light-mode .card.card-lg,body.light-mode .card.kova{
+  box-shadow:0 1px 2px rgba(58,52,45,.08),0 8px 18px -12px rgba(58,52,45,.26),inset 0 .5px 0 rgba(255,255,255,.88)!important}
+body.light-mode .cfg,body.light-mode .paper,body.light-mode .warm{
+  box-shadow:0 1px 2px rgba(30,52,86,.08),0 8px 16px -12px rgba(30,52,86,.26),inset 0 1px 0 rgba(255,255,255,.88)}
+body.light-mode .fx-card,body.light-mode .fx-panel{box-shadow:0 1px 2px rgba(60,90,130,.07),0 8px 16px -12px rgba(60,90,130,.2),inset 0 .5px 0 rgba(255,255,255,.7)}
+body.light-mode .wgl{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 1px 2px rgba(20,24,32,.06),0 8px 16px -12px rgba(20,24,32,.16)}
+body.light-mode .wvar{box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(20,24,32,.06),0 8px 16px -12px rgba(20,24,32,.16)}
+body.light-mode .wglow{box-shadow:0 0 14px rgba(20,24,32,.1),0 8px 18px -12px rgba(20,24,32,.3)}
+body.light-mode .oshero{box-shadow:0 0 0 1px rgba(10,14,22,.5),0 8px 18px -12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09)}
+body.light-mode .crd{--t-g-glow:0 1px 2px rgba(20,24,32,.1),0 8px 18px -12px rgba(20,24,32,.32);--t-lit-glow:0 1px 2px rgba(20,24,32,.12),0 8px 18px -12px rgba(20,24,32,.34)}
+
+/* ---- outlines: rings drawn on the page read in every appearance ---- */
+.app{--ring:rgba(242,236,240,.3)}
+body.soft-light .app{--ring:rgba(255,255,255,.46)}
+body.light-mode .app{--ring:rgba(28,26,23,.34)}
+
+/* Small controls (chips, pills, round icon buttons, toggles, tabs, the
+   "?" buttons) had a fixed faint white outline: nearly invisible on dark
+   and gone on light glass. Their outline is now a quarter of their own
+   text colour, which always contrasts with the surface they sit on, even
+   a dark slab inside light glass. State borders (.on, selected, pressed)
+   are left alone. The html body prefix outranks the per-theme rules. */
+html body :is(.chip,.iconbtn,.back,.qa,.tog,.gcirc,.altog,.cnt,.srch,.miniact,.schk,.tagbtn,.exnum,.modeseg,
+  .ronpill,.roncirc,.ronnode,.wpill,.wk-tab,.wgl-arw,.kt-help,.fuelnav-b,.fuelrow-x,.intcount,.khr,.glass-disc,.ssread,.gsw,.pgex):not(.on):not(.sel):not(.active):not([aria-pressed="true"]){
+  border-color:rgba(128,128,128,.3);border-color:color-mix(in srgb,currentColor 24%,transparent)}
+/* light glass: cards get a faint dark edge now the big shadow is gone;
+   the white inset line on top still reads as the frosted highlight */
+body.light-mode .card:not(.card-lg):not(.kova){border-color:rgba(28,26,23,.09)}
+body.soft-light .card{border-color:rgba(255,255,255,.2)}
+
+</style>
+<style id="p08-settings">
+/* Settings as grouped lists (p13). A section's rows share one panel (the
+   card surface, so it follows all three appearances) with a hairline
+   between rows. Headings are small and tinted, like a system settings
+   screen. Nothing inside a row changes. */
+#s-settings .sec-h{font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--acc);margin:18px 16px 7px}
+#s-settings .setg{padding:0!important;margin:0 0 4px!important;border-radius:22px;overflow:hidden}
+#s-settings .setg>*{margin:0!important}
+/* rows: no card of their own, full width, a line between them */
+#s-settings .setg>.list-item,#s-settings .setg>.exp-btn,#s-settings .setg #prefList>.list-item{
+  background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;min-height:52px;padding:10px 16px!important}
+#s-settings .setg>*+*:not(input):not(.exp-body:not(.open)),#s-settings .setg #prefList>.list-item+.list-item{
+  border-top:.5px solid var(--hair,rgba(255,255,255,.12))!important}
+#s-settings .setg>.list-item:active,#s-settings .setg>.exp-btn:active,#s-settings .setg #prefList>.list-item:active{background:var(--glass-2,rgba(255,255,255,.05))!important}
+#s-settings .setg .li-name{font-size:13.5px;font-weight:500}
+#s-settings .setg .li-sub{font-size:11.5px;line-height:1.4;margin-top:2px}
+#s-settings .setg .li-ico{width:32px;height:32px;border-radius:10px}
+/* an opened list sits inside its panel, a step in */
+#s-settings .setg>.exp-body.open{padding:4px 12px 14px}
+/* a notice or a card inside a section becomes part of the panel */
+#s-settings .setg>.card{background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:14px 16px!important}
+#s-settings .setg>.btn{width:auto;margin:12px 16px!important}
+#s-settings .setg>.sub{padding:12px 16px 0}
+#s-settings .setg>.sub+*{border-top:0!important}
+/* the hairline, per appearance */
+.app{--hair:rgba(255,255,255,.1)}
+body.soft-light .app{--hair:rgba(255,255,255,.16)}
+body.light-mode .app{--hair:rgba(28,26,23,.1)}
+
+</style>
+<style id="p08-responsive">
+/* Every screen size (p13). The app used to be one 420px phone column on
+   every device, even a 27" monitor, under a pretend "9:41 · 5G" status
+   bar. Now:
+     phones (under 700px)   as before, minus the pretend status bar;
+     tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
+     laptops (1024px+)      an 800px page and a sidebar with names;
+     big screens (1440px+)  a 920px page.
+   The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
+   their own wide layouts. The real safe area keeps the notch and the home
+   bar clear on phones. */
+.status{display:none}
+.wrap{padding-top:max(16px,env(safe-area-inset-top))}
+
+@media (min-width:700px){
+  .wrap{max-width:680px;padding-left:24px;padding-right:24px}
+  .grid2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .sheet-in{max-width:560px}
+}
+@media (min-width:1024px){
+  .wrap{max-width:800px;padding-left:32px;padding-right:32px}
+  /* the rail becomes a sidebar: icon and name */
+  .rail{width:212px;align-items:stretch;padding-left:14px;padding-right:14px}
+  .rail .rnav{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 12px;font-size:18px}
+  .rail .rnav::after{content:attr(title);font:500 14px 'Outfit','Inter',system-ui,-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rail .rnav .ic{flex-shrink:0}
+  .rail .avatar{align-self:flex-start;margin:0 0 6px 8px}
+}
+@media (min-width:1440px){
+  .wrap{max-width:920px}
+}
+/* the smallest phones (iPhone SE, 320px): a little more room for content */
+@media (max-width:340px){
+  .rail{width:48px}
+  .wrap{padding-left:10px;padding-right:10px}
+}
+/* a card's title never runs under its round arrow button */
+.wgl-arw~.wgl-t{padding-right:42px}
+/* small phones (360px and under): the Fuel ring a little smaller, and a
+   macro's "+24g" on its own line instead of past the card's edge */
+@media (max-width:360px){
+  #fuelRingCard .ring-wrap{transform:scale(.84);transform-origin:left center;margin-right:-20px}
+  #fuelRingCard .volval{font-size:10.5px;min-width:0!important}
+  #fuelRingCard .volval span{display:block;text-align:right}
+  .volnote{font-size:10px;white-space:normal}
+  .volrow:has(.volnote){flex-wrap:wrap;row-gap:2px}
+  .volrow .volnote{flex-basis:100%;max-width:none!important;text-align:left!important}
+}
 
 </style>
 </head>
@@ -17808,7 +17961,7 @@ function openLibrary(title,rec,onPick){
   if(vr) vr.innerHTML=VR.map(function(x){
     return '<div class="volrow"><div class="volname" style="min-width:96px">'+x[0]+'</div><div style="flex:1"></div>'
       +'<div class="volval" style="color:'+x[3]+';min-width:70px;text-align:right">'+x[1]+'</div>'
-      +'<div class="volnote" style="min-width:84px">'+x[2]+'</div></div>';
+      +'<div class="volnote" style="min-width:0;max-width:84px;text-align:right">'+x[2]+'</div></div>';
   }).join('');
 
   var SS=[['stop','Scrolling in bed','Screens before sleep delay melatonin by up to an hour and are the single biggest lever on your sleep score.'],
@@ -19888,7 +20041,7 @@ var METAPHORS={
     document.getElementById('goalsList').innerHTML=GOALS.map(function(g){
       var on=!!saved[g.id];
       return '<div class="list-item goalrow" data-id="'+g.id+'" style="margin-bottom:2px;background:none;border:none;padding:9px 12px;cursor:pointer">'
-        +'<div style="width:23px;height:23px;border-radius:50%;flex-shrink:0;border:1.5px solid '+(on?'transparent':'rgba(242,236,240,.22)')+';background:'+(on?'var(--acc)':'transparent')+';display:flex;align-items:center;justify-content:center;transition:all .15s">'
+        +'<div style="width:23px;height:23px;border-radius:50%;flex-shrink:0;border:1.5px solid '+(on?'transparent':'var(--ring,rgba(242,236,240,.3))')+';background:'+(on?'var(--acc)':'transparent')+';display:flex;align-items:center;justify-content:center;transition:all .15s">'
         +(on?'<svg class="ic" style="font-size:13px;color:var(--txt,#FFFFFF)"><use href="#i-check"/></svg>':'')+'</div>'
         +'<div style="flex:1;margin-left:11px"><div class="li-name" style="font-size:13px;'+(on?'opacity:.5;text-decoration:line-through':'')+'">'+g.n+'</div>'
         +'<div class="li-sub">'+g.sub+'</div></div></div>';
@@ -33091,7 +33244,7 @@ window.KovaStudio=(function(){
       '<div style="display:flex;align-items:baseline;gap:5px"><div class="wgl-n" style="font-size:38px">'
       +q.length+'</div><div class="wgl-sub" style="margin:0">in the pipeline</div></div>'
       +'<div class="wtrk"><i style="width:'+Math.round(pct*100)+'%;background:#FFFFFF;box-shadow:0 0 8px rgba(255,255,255,.6)"></i></div>'
-      +'<div style="display:flex;gap:14px;margin-top:11px">'
+      +'<div style="display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:11px">'
       +'<div><div class="wgl-k">Sent</div><div class="wgl-d" style="margin-top:3px">'+sent+'</div></div>'
       +'<div><div class="wgl-k">Waiting</div><div class="wgl-d" style="margin-top:3px">'+(q.length-sent)+'</div></div>'
       +'<div><div class="wgl-k">Linked</div><div class="wgl-d" style="margin-top:3px">'+linkedN+' / '+ORDER.length+'</div></div>'
@@ -53245,6 +53398,52 @@ window.KovaLaunch=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',hook); else setTimeout(hook,0);
 
   return {open:open,rows:rows,ping:ping,_tap:onTap};
+})();
+
+</script>
+<script id="p08-settings">
+/* =====================================================================
+   KovaSettingsGroups - Settings as grouped lists (p13).
+
+   Everything in Settings stays exactly as it was: same rows, same order,
+   same taps. What changes is the arrangement: each heading ("Appearance",
+   "Data & privacy", ...) now holds its rows in one rounded panel with thin
+   lines between them, instead of every row being its own card with a gap
+   under it. Less scrolling, and the sections read as sections.
+
+   Rows are only moved into their section's panel; they keep their ids and
+   handlers. Modules that add rows later (backup, import, privacy, recap,
+   billing, friends) insert next to an existing row, so they land inside
+   the right panel; anything appended straight to the screen is picked up
+   by a watcher and placed in the section it follows.
+   ===================================================================== */
+window.KovaSettingsGroups=(function(){
+  'use strict';
+  var busy=false;
+  function group(){
+    var s=document.getElementById('s-settings'); if(!s||busy) return;
+    busy=true;
+    try{
+      var cur=null, kids=[].slice.call(s.children);
+      kids.forEach(function(el){
+        if(el.classList.contains('sec-h')){
+          var nx=el.nextElementSibling;
+          if(nx&&nx.classList.contains('setg')) cur=nx;
+          else { cur=document.createElement('div'); cur.className='setg card'; cur.setAttribute('role','group'); cur.setAttribute('aria-label',el.textContent.trim()); s.insertBefore(cur,nx); }
+          return;
+        }
+        if(!cur||el===cur||el.classList.contains('setg')||el.classList.contains('hdr')) return;
+        cur.appendChild(el);                       // keeps its place: sections are walked in order
+      });
+    }finally{ busy=false; }
+  }
+  function start(){
+    group();
+    var s=document.getElementById('s-settings');
+    if(s&&window.MutationObserver) new MutationObserver(function(){ if(!busy) setTimeout(group,0); }).observe(s,{childList:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
+  return {group:group};
 })();
 
 </script>
