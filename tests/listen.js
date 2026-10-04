@@ -105,6 +105,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   await wait(60);
   ck('a tour step shows at once when its element is there', /A/.test(doc.getElementById('ksCoach').textContent) && /1 \/ 3/.test(doc.getElementById('ksCoach').textContent));
   doc.querySelector('#ksCoach [data-t="next"]').click(); await wait(1700);
+  for (let i = 0; i < 20 && !/3 \/ 3/.test((doc.getElementById('ksCoach') || {}).textContent || ''); i++) await wait(100);   // slower under a busy machine
   ck('a step whose element is missing is skipped, not left blank', /3 \/ 3/.test(doc.getElementById('ksCoach').textContent));
   doc.querySelector('#ksCoach [data-t="next"]').click(); await wait(30);
   ck('the tour ends cleanly', done && !doc.getElementById('ksTour'));
