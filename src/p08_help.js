@@ -32,7 +32,7 @@ window.KovaHelp=(function(){
     {t:'Your 7 health checks',k:'seven 7 metrics checks readiness alerts plan agent orb',act:function(){ if(window.KovaOrb) KovaOrb.open('seven'); }},
     {t:'Do it for me (email and tasks)',k:'email gmail draft task do it for me send',act:function(){ if(window.KovaOrb) KovaOrb.open('do'); }},
     {t:'Sleep sounds and timer',k:'sounds noise rain white brown noise wind down timer mixes music',s:'sounds'},
-    {t:'Cycle tracking',k:'cycle period menstrual ovulation fertile luteal pms',s:'cycle'},
+    {t:'Cycle and fertility (in Vitals)',k:'cycle period menstrual ovulation fertile fertility luteal pms cramps bloating spotting pregnancy test lh basal temperature mucus contraception',s:'cycle'},
     {t:'Vitamins and minerals',k:'micronutrients vitamins minerals iron vitamin d magnesium fiber sodium potassium calcium b12 folate',s:'fuel',q:'#microGrid'},
     {t:'Log food',k:'log food add meal eat search food usda calories macros protein',s:'fuel'},
     {t:'Recipes',k:'recipes meals cook dinner lunch breakfast',s:'recipes'},

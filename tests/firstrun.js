@@ -48,8 +48,10 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   ck('no biometric prompt before the first win', !/Enable biometric unlock/.test(wallText(doc)));
   ck('question 1 comes straight away: what Kova is for, several allowed', /Three quick questions, then your day/.test(wallText(doc)) && /What do you want Kova for/.test(wallText(doc)) && doc.getElementById('obNext').disabled);
   pick(doc, 'fuel'); doc.getElementById('obNext').click(); await wait(30);
-  ck('question 2 is the cycle', /menstrual cycle/.test(wallText(doc)));
-  pick(doc, 'yes'); doc.getElementById('obNext').click(); await wait(30);
+  ck('question 2 is your body: female, male or prefer not to say', /Which body is Kova reading/.test(wallText(doc)) && ['female', 'male', 'skip'].every((v) => !!doc.querySelector('.ob-opt[data-v="' + v + '"]')));
+  pick(doc, 'female'); await wait(20);
+  ck('female adds a small follow-up on the same screen: track the cycle (yes by default)', !!doc.querySelector('[data-cy="yes"].on') && !!doc.querySelector('[data-cy="no"]'));
+  doc.getElementById('obNext').click(); await wait(30);
   ck('question 3 is activity', /How active are you/.test(wallText(doc)));
   pick(doc, '4'); doc.getElementById('obNext').click(); await wait(30);
   ck('then the first win, not permissions or a recap', /Your first win/.test(wallText(doc)) && !/Two permissions/.test(wallText(doc)) && doc.querySelectorAll('#authInner [data-w]').length === 3);
@@ -57,8 +59,8 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   await wait(900);
   const od = A.events.find((e) => e[0] === 'onboarding_done');
   ck('onboarding_done is logged with how long it took', od && od[1].result === 'meal' && typeof od[1].count === 'number' && od[1].count < 60);
-  ck('the answers are saved (areas, cycle, activity), and the picks are logged', (() => { const o = w.KP.get('onboard'); return o.focus === 'fuel' && JSON.stringify(o.areas) === '["fuel"]' && o.cycle === 'yes' && o.days === 4; })() && A.events.some((e) => e[0] === 'areas_picked' && e[1].answer === 'fuel' && e[1].count === 1));
-  ck('"yes" to the cycle question turns cycle tracking on', w.KovaCycle._data().on === true);
+  ck('the answers are saved (areas, sex, cycle, activity), and the picks are logged', (() => { const o = w.KP.get('onboard'); return o.focus === 'fuel' && JSON.stringify(o.areas) === '["fuel"]' && o.sex === 'female' && o.cycle === 'yes' && o.days === 4; })() && A.events.some((e) => e[0] === 'areas_picked' && e[1].answer === 'fuel' && e[1].count === 1));
+  ck('"yes" to tracking turns cycle tracking on, and the micronutrient ranges are set for women', w.KovaCycle._data().on === true && JSON.parse(w.localStorage.getItem('kova.micro.sex')) === 'f');
   for (let i = 0; i < 30 && A.cam.opened !== 1; i++) await wait(100);   // slower under a busy machine
   ck('"Snap your next meal" lands on Fuel and opens its camera', doc.getElementById('s-fuel').classList.contains('on') && A.cam.opened === 1);
 
