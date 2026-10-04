@@ -31,9 +31,11 @@ function boot() {
     database: () => ({ ref: () => ({ child() { return this; }, set: () => Promise.resolve(), update: () => Promise.resolve(),
       remove: () => Promise.resolve(), once: () => Promise.resolve({ val: () => null }), on() {}, off() {} }) }),
     analytics: () => ({ logEvent() {}, setUserId() {} }) };
-  const posts = [];
+  const posts = [], favPosts = [];
   w.fetch = (u, o = {}) => {
     if (/\/api\/social\/post$/.test(String(u))) { posts.push(JSON.parse(o.body)); return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ ok: true, id: 'abcdef0123456789' }) }); }
+    if (/\/api\/social\/favs$/.test(String(u))) { favPosts.push(JSON.parse(o.body)); return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ ok: true }) }); }
+    if (/\/api\/social\/feed$/.test(String(u))) return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ posts: [], favs: [{ handle: 'ana_lifts', favs: { sound: { n: 'Rain', ids: ['rain'] }, meals: ['Overnight oats'] } }, { handle: 'bo_b', favs: { meals: ['Overnight oats'] } }] }) });
     return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}) });
   };
   w.localStorage.setItem('kova_mode_v1', 'sample');
@@ -41,11 +43,11 @@ function boot() {
   w.localStorage.setItem('kova.onboarded', JSON.stringify({ at: 1 }));
   w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));
   w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
-  return { w, doc: w.document, posts };
+  return { w, doc: w.document, posts, favPosts };
 }
 
 (async () => {
-  const { w, doc, posts } = boot();
+  const { w, doc, posts, favPosts } = boot();
   await wait(900);
   const L = w.KovaLift;
 
@@ -112,6 +114,14 @@ function boot() {
   await S.setProfile('cy', { handle: 'cyra', on: true });
   let nf = null; try { await S.comment('cy', 'ana_lifts', pid, 'hi'); } catch (e) { nf = e; }
   ck('people who do not follow you cannot comment', nf && nf.status === 403);
+  // favourites: only names, only what is switched on, only for followers
+  const fv = await S.setFavs('ana', { favs: { sound: { n: 'Rain + Brown noise', ids: ['rain', 'brown', '../x'] }, meals: ['Overnight oats', 'Chicken bowl', 'Salmon', 'Fourth'], workout: 'Push day', lift: 'Bench press', nap: 20, weight: 70, hr: 55, kcal: 2100 } });
+  ck('favourites keep names only (sound ids, 3 meals, workout, lift, nap), never weight, heart rate or calories', fv.favs.sound.ids.join() === 'rain,brown' && fv.favs.meals.length === 3 && fv.favs.nap === 20 && fv.favs.weight === undefined && fv.favs.hr === undefined && fv.favs.kcal === undefined);
+  const ana = await S.profileOf('bo', 'ana_lifts');
+  ck('a follower sees them on the profile, with workouts and records shared', ana.favs.workout === 'Push day' && ana.workouts === 1 && ana.prs === 1);
+  let pv = null; try { await S.profileOf('cy', 'ana_lifts'); } catch (e) { pv = e; }
+  ck('someone who does not follow you cannot see your favourites', pv && pv.status === 403);
+  ck('the feed brings favourites of the people you follow', (await S.feed('bo')).favs.some((f) => f.handle === 'ana_lifts' && f.favs.lift === 'Bench press'));
   await S.forget('bo');
   ck('deleting an account removes its likes, comments and follows', db.get(`srv/social/posts/ana/${pid}/likes/bo`) == null && Object.keys(db.get(`srv/social/posts/ana/${pid}/comments`) || {}).length === 0 && Object.keys(db.get('srv/social/followers/ana') || {}).length === 0 && db.get('srv/social/handles/bo_b') == null);
 
@@ -130,6 +140,18 @@ function boot() {
   doc.querySelector('#sheetIn [data-so="always"]').click(); await wait(50);
   ck('"Share future workouts" shares this one and remembers', posts.length === 1 && posts[0].title === 'Push' && w.KovaSocial._S().auto === true);
   ck('every share can be undone', !!doc.getElementById('ksoUndo'));
+
+  // favourites in the app
+  w.localStorage.setItem('kova_mix_log', JSON.stringify([{ s: 'brown,rain', ids: ['rain', 'brown'] }, { s: 'brown,rain', ids: ['rain', 'brown'] }, { s: 'ocean', ids: ['ocean'] }]));
+  const fc = w.KovaSocial.favCandidates();
+  ck('favourites are suggested from your own log (your usual sleep mix, your most-done workout)', fc.sound && fc.sound.ids.join() === 'brown,rain' && !!fc.workout);
+  w.KovaSocial.openFeed(); await wait(60);
+  const sh = doc.querySelector('#sheetIn .kso');
+  ck('the feed lists your favourites, each off until you switch it on', !!sh.querySelector('.kso-favs') && [...sh.querySelectorAll('[data-fav]')].every((c) => !c.checked));
+  ck('...and spells out what friends see and never see', /They never see/.test(sh.textContent) && /calories/.test(sh.textContent) && /cycle/.test(sh.textContent));
+  ck('"Popular with your friends" shows what the people you follow share', /Popular with your friends/.test(sh.textContent) && /Overnight oats/.test(sh.textContent) && /@ana_lifts, @bo_b/.test(sh.textContent) && !!sh.querySelector('[data-a="play"]'));
+  const sc = sh.querySelector('[data-fav="sound"]'); sc.checked = true; sc.dispatchEvent(new w.Event('change', { bubbles: true })); await wait(40);
+  ck('switching one on shares only that one', favPosts.length === 1 && Object.keys(favPosts[0].favs).join() === 'sound' && favPosts[0].favs.sound.ids.join() === 'brown,rain');
 
   const failed = R.filter((x) => !x[1]);
   R.forEach((x) => console.log((x[1] ? 'PASS ' : 'FAIL ') + x[0]));

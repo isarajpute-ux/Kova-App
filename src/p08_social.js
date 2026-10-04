@@ -11,11 +11,20 @@
        record by how much - never heart rate, sleep, food or body data.
    Remove a follower or switch it off any time; deleting your account
    removes you from everyone's lists (functions/social.js).
+
+   Favourites (p14): the small things friends swap - your usual sleep
+   sound mix, the meals you eat most, your usual workout, a favourite
+   lift, how long you nap. Kova suggests them from your own log; each is
+   shared only if you switch it on, and the sheet says exactly what
+   friends see and what they never see. Tap a friend's handle for their
+   favourites ("Play this mix" plays their sleep sounds); the feed opens
+   with what is popular among the people you follow.
    ===================================================================== */
 window.KovaSocial=(function(){
   'use strict';
   var KEY='kova.social.v1';
   var S=lsJ(KEY,{on:false,handle:'',auto:null});
+  S.share=S.share||{};
   function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
   function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -77,11 +86,74 @@ window.KovaSocial=(function(){
     });
   }
 
+  /* ---------------- favourites ---------------- */
+  function top(list,n){ var c={}; list.forEach(function(x){ if(x) c[x]=(c[x]||0)+1; }); return Object.keys(c).sort(function(a,b){ return c[b]-c[a]; }).slice(0,n||1); }
+  /* suggested from your own log; only names, never amounts */
+  function favCandidates(){
+    var F={};
+    try{
+      var mix=lsJ('kova_mix_log',[])||[], sig=top(mix.map(function(m){ return m.s; }),1)[0];
+      if(sig){ var ids=sig.split(','), SND=window.KovaSound, names=ids.map(function(i){ var x=SND&&SND.byId&&SND.byId(i); return x?x.n:null; }).filter(Boolean);
+        if(names.length) F.sound={n:names.length>2?names[0]+' + '+(names.length-1)+' more':names.join(' + '),ids:ids}; }
+    }catch(e){}
+    try{
+      var all=window.KovaFuel&&KovaFuel.all?KovaFuel.all():[], nm=all.filter(function(e){ return e&&e.src!=='seed'; }).map(function(e){ var it=(e.items||[])[0]; return String(e.name||(it&&it.n)||'').split(',')[0].trim(); }).filter(function(x){ return x&&x.length<=48; });
+      var meals=top(nm,3); if(meals.length) F.meals=meals;
+    }catch(e){}
+    try{
+      var L=(lsJ('kova_log_v1',[])||[]).filter(function(x){ return x&&!x.seed; }), w=top(L.map(function(x){ return x.day; }),1)[0]; if(w) F.workout=String(w).slice(0,40);
+      var H=lsJ('kova_hist_v1',{})||{}, lift=Object.keys(H).sort(function(a,b){ return (H[b]||[]).length-(H[a]||[]).length; })[0]; if(lift&&(H[lift]||[]).length>=3) F.lift=lift.slice(0,40);
+    }catch(e){}
+    try{ var naps=(window.KovaNap&&KovaNap.log?KovaNap.log():[]).filter(function(n){ return !n.rest; }).map(function(n){ return n.min; }).sort(function(a,b){ return a-b; });
+      if(naps.length>=2){ var med=naps[Math.floor(naps.length/2)]; if(med>=5&&med<=120) F.nap=med; } }catch(e){}
+    return F;
+  }
+  var FAV_N={sound:'Sleep sound',meals:'Meals I eat most',workout:'Usual workout',lift:'Favourite lift',nap:'Nap length'};
+  function favLine(k,v){ return k==='sound'?v.n:k==='meals'?v.join(', '):k==='nap'?v+'-minute naps':v; }
+  function sharedFavs(){ var C=favCandidates(), out={}; Object.keys(C).forEach(function(k){ if(S.share[k]) out[k]=C[k]; }); return out; }
+  function pushFavs(){ if(!S.on) return Promise.resolve(); return api('/social/favs',{favs:sharedFavs()}).catch(function(e){ say('Favourites not saved: '+e.message); }); }
+  function favsHTML(){
+    var C=favCandidates(), ks=Object.keys(FAV_N).filter(function(k){ return C[k]; });
+    return '<div class="kso-favs"><div class="kso-fh"><b>Your favourites</b><span>Pick what friends can see</span></div>'
+      +(ks.length?ks.map(function(k){ var on=!!S.share[k]; return '<label class="kso-fr"><span><small>'+FAV_N[k]+'</small>'+esc(favLine(k,C[k]))+'</span><input type="checkbox" data-fav="'+k+'"'+(on?' checked':'')+' aria-label="Share '+FAV_N[k].toLowerCase()+'"></label>'; }).join('')
+        :'<div class="sub">Kova suggests favourites once you have used sleep sounds, logged meals or finished a few workouts.</div>')
+      +'<details class="kso-priv"><summary>What friends see, and never see</summary><p><b>They see</b> your handle, finished workouts and records, likes and comments, and only the favourites switched on above: names, never amounts.</p>'
+      +'<p><b>They never see</b> your name or email, weight or body data, calories or what you ate in a day, sleep times or scores, heart rate or HRV, your cycle, lab results, location, or anything from Work OS.</p></details></div>';
+  }
+  function popularHTML(list){
+    var c={};
+    (list||[]).forEach(function(p){ var f=p.favs||{};
+      if(f.sound) c['s:'+f.sound.n]=(c['s:'+f.sound.n]||{n:f.sound.n,k:'Sleep sound',who:[],ids:f.sound.ids}), c['s:'+f.sound.n].who.push(p.handle);
+      (f.meals||[]).forEach(function(m){ (c['m:'+m]=c['m:'+m]||{n:m,k:'Meal',who:[]}).who.push(p.handle); });
+      if(f.workout) (c['w:'+f.workout]=c['w:'+f.workout]||{n:f.workout,k:'Workout',who:[]}).who.push(p.handle); });
+    var L=Object.keys(c).map(function(k){ return c[k]; }).sort(function(a,b){ return b.who.length-a.who.length; }).slice(0,6);
+    if(!L.length) return '';
+    return '<div class="kso-pop"><div class="kso-fh"><b>Popular with your friends</b></div><div class="kso-popr">'+L.map(function(x){
+      return '<div class="kso-pc"><small>'+esc(x.k)+'</small><b>'+esc(x.n)+'</b><span>'+x.who.slice(0,2).map(function(h){ return '@'+esc(h); }).join(', ')+(x.who.length>2?' +'+(x.who.length-2):'')+'</span>'
+        +(x.ids?'<button class="kso-l" data-a="play" data-ids="'+esc(x.ids.join(','))+'">Play this mix</button>':'')+'</div>'; }).join('')+'</div></div>';
+  }
+  function person(h){
+    api('/social/person',{handle:h}).then(function(p){
+      var f=p.favs||{}, ks=Object.keys(FAV_N).filter(function(k){ return f[k]; });
+      openSheet('<div class="grab"></div><div class="kso"><div class="kso-top"><div class="title-s" style="font-size:19px">@'+esc(p.handle)+'</div><button class="kso-l" data-a="back">Back</button></div>'
+        +'<div class="kso-stats"><div><b>'+(p.workouts||0)+'</b><span>workouts shared</span></div><div><b>'+(p.prs||0)+'</b><span>records</span></div><div><b>'+(p.followers||0)+'</b><span>followers</span></div></div>'
+        +'<div class="kso-favs"><div class="kso-fh"><b>Favourites</b></div>'+(ks.length?ks.map(function(k){ return '<div class="kso-fr"><span><small>'+FAV_N[k]+'</small>'+esc(favLine(k,f[k]))+'</span>'+(k==='sound'?'<button class="kso-l" data-a="play" data-ids="'+esc(f.sound.ids.join(','))+'">Play</button>':'')+'</div>'; }).join('')
+          :'<div class="sub">'+(p.mine?'You have not shared any favourites yet.':'@'+esc(p.handle)+' has not shared any favourites.')+'</div>')+'</div></div>');
+      var el=document.querySelector('#sheetIn .kso'); if(el) el.addEventListener('click',onFeedClick);
+    },function(e){ say(e.message); });
+  }
+  function playMix(ids){
+    var L=String(ids||'').split(',').filter(Boolean); if(!L.length||!window.KovaSound) return;
+    try{ KovaSound.load({ids:L}); KovaSound.play(); }catch(e){}
+    if(window.closeSheet) closeSheet(); try{ go('sounds'); }catch(e){}
+    say('Playing their mix.');
+  }
+
   /* ---------------- the feed ---------------- */
   function postHTML(p){
     var st=p.stats||{}, line=[st.mins?st.mins+' min':'',st.sets?st.sets+' sets':'',st.lifts?st.lifts+' lifts':''].filter(Boolean).join(' · ');
     return '<div class="kso-post" data-h="'+esc(p.owner)+'" data-id="'+esc(p.id)+'">'
-      +'<div class="kso-ph"><b>@'+esc(p.owner)+'</b><span>'+ago(p.at)+'</span></div>'
+      +'<div class="kso-ph"><button class="kso-h" data-a="person" data-h="'+esc(p.owner)+'">@'+esc(p.owner)+'</button><span>'+ago(p.at)+'</span></div>'
       +'<div class="kso-pt">'+(p.kind==='pr'?'🏆 ':'')+esc(p.title)+'</div>'
       +(line?'<div class="kso-pl">'+esc(line)+'</div>':'')
       +((st.prs||[]).length?'<div class="kso-prs">'+st.prs.map(function(x){ return '<span>'+esc(x.n)+(x.up?' +'+x.up+'%':'')+'</span>'; }).join('')+'</div>':'')
@@ -96,9 +168,12 @@ window.KovaSocial=(function(){
     openSheet('<div class="grab"></div><div class="kso">'
       +'<div class="kso-top"><div class="title-s" style="font-size:19px">Friends</div><button class="kso-l" data-a="settings">@'+esc(S.handle)+'</button></div>'
       +'<form class="kso-cf kso-follow" data-a="follow"><input placeholder="Follow someone: their handle" aria-label="Handle to follow" autocapitalize="none" autocorrect="off"><button>Follow</button></form>'
-      +'<div class="kso-feed" id="ksoFeed"><div class="sub">Loading…</div></div></div>');
+      +'<div id="ksoPop"></div>'
+      +'<div class="kso-feed" id="ksoFeed"><div class="sub">Loading…</div></div>'
+      +favsHTML()+'</div>');
     var el=document.querySelector('#sheetIn .kso'); if(!el) return;
     el.addEventListener('click',onFeedClick);
+    el.addEventListener('change',function(ev){ var c=ev.target.closest&&ev.target.closest('[data-fav]'); if(!c) return; S.share[c.getAttribute('data-fav')]=c.checked; save(); pushFavs().then(function(){ say(c.checked?'Friends can see it.':'Hidden from friends.'); }); });
     el.addEventListener('submit',onFeedSubmit);
     loadFeed();
   }
@@ -106,12 +181,16 @@ window.KovaSocial=(function(){
     api('/social/feed').then(function(j){
       var f=document.getElementById('ksoFeed'); if(!f) return;
       f.innerHTML=(j.posts||[]).length?j.posts.map(postHTML).join(''):'<div class="sub" style="line-height:1.5">Nothing here yet. Follow a friend by their handle, and finish a workout to share your first one.</div>';
+      var pp=document.getElementById('ksoPop'); if(pp) pp.innerHTML=popularHTML(j.favs);
     }).catch(function(e){ var f=document.getElementById('ksoFeed'); if(f) f.innerHTML='<div class="sub">'+esc(e.message)+'</div>'; });
   }
   function onFeedClick(ev){
     var b=ev.target.closest('[data-a]'); if(!b||b.tagName==='FORM') return;
     var a=b.getAttribute('data-a'), post=b.closest('.kso-post');
     if(a==='settings'){ setup(); return; }
+    if(a==='person'){ person(b.getAttribute('data-h')); return; }
+    if(a==='play'){ playMix(b.getAttribute('data-ids')); return; }
+    if(a==='back'){ openFeed(); return; }
     if(a==='like'&&post){ var on=!b.classList.contains('on'); api('/social/like',{handle:post.dataset.h,id:post.dataset.id,on:on}).then(loadFeed,function(e){ say(e.message); }); }
     if(a==='unpost'&&post){ api('/social/unpost',{id:post.dataset.id}).then(loadFeed); }
   }
@@ -168,5 +247,6 @@ window.KovaSocial=(function(){
   function start(){ watch(); paintEntry(); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,100); }); else setTimeout(start,100);
 
-  return {setup:setup,openFeed:openFeed,lastPost:lastPost,afterWorkout:afterWorkout,share:share,_S:function(){ return S; },_set:function(s){ S=s; save(); paintEntry(); }};
+  return {setup:setup,openFeed:openFeed,lastPost:lastPost,afterWorkout:afterWorkout,share:share,favCandidates:favCandidates,sharedFavs:sharedFavs,person:person,
+    _S:function(){ return S; },_set:function(s){ S=s; S.share=S.share||{}; save(); paintEntry(); }};
 })();

@@ -65,6 +65,8 @@
      POST /social/unpost {id}           take a share back                               [auth]
      POST /social/like  {handle,id,on}  like or unlike a friend's post                  [auth]
      POST /social/comment {handle,id,text}  comment on a friend's post                  [auth]
+     POST /social/favs  {favs}          share your favourites (sound, meals, workout, lift, nap) [auth]
+     POST /social/person {handle}       a friend's favourites and counts (followers only)  [auth]
      GET  /billing/status               {configured, pro, until}  Kova Pro, from RevenueCat [auth]
      POST /billing/webhook              RevenueCat events (its own Authorization value)
 
@@ -1159,6 +1161,8 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/social/unpost') return await socialRoute(req, res, (S, uid, b) => S.unpost(uid, b.id));
     if (M === 'POST' && path === '/social/like') return await socialRoute(req, res, (S, uid, b) => S.like(uid, b.handle, b.id, b.on));
     if (M === 'POST' && path === '/social/comment') return await socialRoute(req, res, (S, uid, b) => S.comment(uid, b.handle, b.id, b.text));
+    if (M === 'POST' && path === '/social/favs') return await socialRoute(req, res, (S, uid, b) => S.setFavs(uid, b));
+    if (M === 'POST' && path === '/social/person') return await socialRoute(req, res, (S, uid, b) => S.profileOf(uid, b.handle));
     if (M === 'POST' && path === '/billing/webhook') return await billingWebhook(req, res, cfg);
     return res.status(404).json({ error: 'Not found.' });
   } catch (e) {

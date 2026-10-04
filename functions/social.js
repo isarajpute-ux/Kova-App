@@ -14,6 +14,7 @@
      srv/social/follows/{uid}/{target}    at
      srv/social/followers/{target}/{uid}  at
      srv/social/posts/{uid}/{pid}  {kind, title, stats, at, likes:{uid:1}, comments:{cid:{uid,handle,text,at}}}
+     srv/social/profiles/{uid}/favs {sound:{n,ids}, meals[], workout, lift, nap}  only what you switched on
 
    srv/ is closed to clients by the rules; everything goes through here. */
 
@@ -134,7 +135,9 @@ function makeSocial(deps) {
           likes: Object.keys(x.likes || {}).length, liked: !!(x.likes || {})[uid], comments });
       });
     }
-    return { posts: out.sort((a, b) => b.at - a.at).slice(0, 50) };
+    const favs = [];
+    for (const id of who) { if (id === uid) continue; const f = await val(`srv/social/profiles/${id}/favs`); const h = await val(`srv/social/profiles/${id}/handle`); if (f && h) favs.push({ handle: h, favs: f }); }
+    return { posts: out.sort((a, b) => b.at - a.at).slice(0, 50), favs };
   }
   async function like(uid, handle, pid, on) {
     await mustBeOn(uid);
@@ -157,6 +160,42 @@ function makeSocial(deps) {
     return { ok: true, id: cid };
   }
 
+  /* favourites (p14): the small things friends like to swap - a sleep
+     mix, the meals you eat most, your usual workout, a favourite lift, how
+     long you nap. Each one is shared only if you switch it on; never an
+     amount of food, a calorie, a weight, a heart rate or a sleep score. */
+  const ID = /^[a-z0-9_-]{1,32}$/;
+  function cleanFavs(f) {
+    f = f || {};
+    const out = {};
+    if (f.sound && typeof f.sound === 'object') {
+      const n = clean(f.sound.n, 48), ids = (Array.isArray(f.sound.ids) ? f.sound.ids : []).filter((x) => ID.test(String(x))).slice(0, 6);
+      if (n && ids.length) out.sound = { n, ids };
+    }
+    const meals = (Array.isArray(f.meals) ? f.meals : []).map((x) => clean(x, 48)).filter(Boolean).slice(0, 3);
+    if (meals.length) out.meals = meals;
+    ['workout', 'lift'].forEach((k) => { const v = clean(f[k], 40); if (v) out[k] = v; });
+    const nap = Math.round(+f.nap || 0); if (nap >= 5 && nap <= 120) out.nap = nap;
+    return out;
+  }
+  async function setFavs(uid, b) {
+    await mustBeOn(uid);
+    const favs = cleanFavs(b && b.favs);
+    await db.ref(`srv/social/profiles/${uid}/favs`).set(Object.keys(favs).length ? favs : null);
+    return { ok: true, favs };
+  }
+  /* someone's profile: only for yourself or the people you follow */
+  async function profileOf(uid, handle) {
+    await mustBeOn(uid);
+    const owner = await uidOf(handle);
+    if (!(await canSee(uid, owner))) throw new SocialError(403, 'Follow them to see their favourites.');
+    const p = (await val(`srv/social/profiles/${owner}`)) || {};
+    const followers = Object.keys((await val(`srv/social/followers/${owner}`)) || {}).length;
+    const ps = (await val(`srv/social/posts/${owner}`)) || {};
+    const prs = Object.keys(ps).filter((k) => ps[k].kind === 'pr').length;
+    return { handle: p.handle, favs: p.favs || {}, since: p.at || null, followers, workouts: Object.keys(ps).length, prs, mine: owner === uid };
+  }
+
   /* account deletion: out of everyone's lists too */
   async function forget(uid) {
     const p = await val(`srv/social/profiles/${uid}`);
@@ -175,7 +214,7 @@ function makeSocial(deps) {
     }
   }
 
-  return { me, setProfile, follow, removeFollower, post, unpost, feed, like, comment, forget, cleanStats };
+  return { me, setProfile, follow, removeFollower, post, unpost, feed, like, comment, forget, cleanStats, cleanFavs, setFavs, profileOf };
 }
 
 module.exports = { makeSocial, SocialError, HANDLE };
