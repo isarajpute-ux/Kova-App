@@ -350,6 +350,7 @@ window.KovaCanvas=(function(){
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
     ast:'<path d="M12 2.6v18.8M2.6 12h18.8M5.35 5.35l13.3 13.3M18.65 5.35L5.35 18.65" stroke-width="2.5"/>',
+    chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
     folder:'<path fill="currentColor" stroke="none" d="M1.5 5.2A2.7 2.7 0 0 1 4.2 2.5h6.1c.8 0 1.5.3 2 .9l1.5 1.7h8A2.7 2.7 0 0 1 24.5 7.8V19a2.7 2.7 0 0 1-2.7 2.7H4.2A2.7 2.7 0 0 1 1.5 19z"/><path fill="rgba(0,0,0,.14)" stroke="none" d="M1.5 8.6h23V19a2.7 2.7 0 0 1-2.7 2.7H4.2A2.7 2.7 0 0 1 1.5 19z"/>',
@@ -518,7 +519,7 @@ window.KovaCanvas=(function(){
     S.desk=isDesk();
     root.classList.toggle('ks-desk',S.desk);
     root.classList.toggle('panel-open',!!S.panel);
-    paintTop(); paintPanel(); paintWorld(); paintDock(); paintStats(); paintVeil();
+    paintTop(); paintPanel(); paintWorld(); paintDock(); paintStats(); paintVeil(); paintFlowPanel(); paintNext();
     layout();
   }
 
@@ -532,8 +533,10 @@ window.KovaCanvas=(function(){
         +'<button class="ks-tab doc" data-a="rename" title="Rename"><span>'+esc(p.title||'Untitled post')+'</span>'
           +'<i class="'+(p.status==='draft'?'':'saved')+'"></i></button>'
       +'</div>'
+      +flowPill(p)
       +'<div class="ks-top-sp"></div>'
       +'<div class="ks-top-r">'
+        +'<button class="ks-sq ks-nextb'+(S.next?' on':'')+'" data-a="next" aria-label="What happens next?" aria-expanded="'+!!S.next+'">'+ic('plus')+'</button>'
         +'<button class="ks-queue" data-a="queue">Queue'+(active?'<b>'+active+'</b>':'')+ic('down')+'</button>'
         +'<button class="ks-sq'+(S.panel?' on':'')+'" data-a="panel" aria-label="Media and accounts">'+ic('sidebar')+'</button>'
         +'<button class="ks-sq" data-a="menu" aria-label="Menu">'+ic('menu')+'</button>'
@@ -947,7 +950,7 @@ window.KovaCanvas=(function(){
           +' L'+(lx+r)+' '+gy+' Q'+lx+' '+gy+' '+lx+' '+(gy+r)
           +' L'+lx+' '+(b.y-r)+' Q'+lx+' '+b.y+' '+(lx+r)+' '+b.y+' L'+b.x+' '+b.y;
       }
-      out.push('<path class="w" d="'+d+'"/>');
+      out.push('<path class="w'+(a.hot&&b.hot?' on':'')+'" d="'+d+'"/>');
       if(a.hot&&b.hot) out.push('<path class="w '+(busy&&i>=4?'flow':'lit')+'" d="'+d+'"/>');
     });
     wires.innerHTML=defs+out.join('');
@@ -1087,7 +1090,7 @@ window.KovaCanvas=(function(){
         if(rec) rec.observe(nu);
         if(n==='preview'&&!reuse) loadPreviewMedia(0);
       });
-      paintTop(); paintStats(); layout();
+      paintTop(); paintStats(); if(S.flow) paintFlowPanel(); layout();
     },120);
   }
   /* the platform slider: same place after a repaint, the chosen one in view,
@@ -1130,8 +1133,9 @@ window.KovaCanvas=(function(){
   function write(){
     var p=P(); if(!p||S.suggBusy||S.writerOff) return;
     S.suggBusy=true; paintDock();
+    logIt('Kova is writing the '+S.field,'run');
     KPo.write(p,S.field,'').then(function(t){
-      S.suggBusy=false; S.sugg=t; paintDock();
+      S.suggBusy=false; S.sugg=t; paintDock(); logIt('Wrote a '+S.field+' for you to use or change','ok');
       var ta=$('#ksTa'); if(ta) ta.focus();
     }).catch(function(e){
       S.suggBusy=false; paintDock();
@@ -1183,6 +1187,96 @@ window.KovaCanvas=(function(){
       +'<div class="row"><button class="ks-pill" data-a="v-drafts">Drafts only</button>'
       +'<button class="ks-pill white" data-a="v-start">'+ic('wand')+'Get Started</button></div></div>';
     (S.desk?$('#ksStage'):root).appendChild(v);
+  }
+
+  /* ====================== flow: progress, next step, logs ============
+     The Studio reads like a workflow: five steps from photos to posted,
+     each one green when it is done, a light running along the wires that
+     carry work, a progress card that says how ready the post is (and what
+     is happening right now, with a log), and "What happens next?": the one
+     right next action first, the rest a tap away. */
+  var LOG=[];
+  function logIt(t,kind){ LOG.push({at:Date.now(),t:t,k:kind||'ok'}); if(LOG.length>80) LOG.shift(); if(S.flow) paintFlowPanel(); }
+  function readiness(p){
+    var tg=targets(), media=KPo.included(p).length>0, words=['heading','body','caption'].some(function(f){ return String(p[f]||'').trim(); });
+    var checks=tg.length>0&&tg.every(function(k){ return KPo.check(p,k,KPo.linkState(k)).ok; }), busy=locked(), out=/^(sent|drafted|scheduled)$/.test(p.status);
+    var steps=[{k:'media',n:'Photos or clips',d:media},{k:'words',n:'The words',d:words},{k:'where',n:'Where it goes',d:tg.length>0},
+      {k:'checks',n:'Every app\u2019s checks',d:checks},{k:'send',n:busy?'Sending\u2026':(p.status==='scheduled'?'Scheduled':'Posted'),d:out,live:busy}];
+    var done=steps.filter(function(x){ return x.d; }).length, cur=steps.filter(function(x){ return !x.d; })[0]||null;
+    var pct=busy&&S.prog>=0?Math.round(80+S.prog*20):Math.round(done/steps.length*100);
+    return {steps:steps,done:done,pct:pct,cur:cur,n:steps.length,idx:cur?steps.indexOf(cur)+1:steps.length,busy:busy};
+  }
+  function dotStrip(pct,cols,rows){
+    var h='', w=cols*9, on=Math.round(pct/100*cols);
+    for(var x=0;x<cols;x++) for(var y=0;y<rows;y++){ var lit=x<on&&((x*7+y*3)%5!==0||y===rows-1); h+='<circle cx="'+(4+x*9)+'" cy="'+(4+y*9)+'" r="'+(lit?1.6:1)+'" class="'+(lit?'on':'')+'" style="--d:'+((x+y)%7)+'"/>'; }
+    return '<svg class="ks-dots" viewBox="0 0 '+w+' '+(rows*9)+'" aria-hidden="true">'+h+'</svg>';
+  }
+  function flowPill(p){
+    var r=readiness(p);
+    return '<button class="ks-fpill'+(r.busy?' live':'')+(r.pct===100?' done':'')+'" data-a="flow" aria-expanded="'+!!S.flow+'" aria-label="Post progress: step '+r.idx+' of '+r.n+', '+r.pct+'% ready. Open the progress and log">'
+      +'<span class="st">Step '+r.idx+'/'+r.n+'</span><span class="nm">'+esc(r.busy?'Sending\u2026':(r.cur?r.cur.n:'All done'))+'</span>'
+      +dotStrip(r.pct,12,2)+'<span class="pc"><i aria-hidden="true"></i>'+r.pct+'%</span></button>';
+  }
+  function paintFlowPanel(){
+    var old=$('.ks-flowp'); if(!S.flow){ if(old) old.remove(); return; }
+    var p=P(); if(!p) return;
+    var r=readiness(p), el=old||document.createElement('div');
+    el.className='ks-flowp'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Post progress');
+    var logs=LOG.slice(-8).reverse();
+    var rows=(p.targets||[]).map(function(k){ var x=(p.results||{})[k]; return x&&x.at?{at:x.at,t:KPo.PLAT[k].n+': '+(x.state==='ok'?'posted':x.state==='draft'?'draft sent':x.state==='working'?'working\u2026':x.state==='skipped'?'kept in Kova':'failed')+(x.msg?' \u2014 '+x.msg:''),k:x.state==='error'?'bad':'ok'}:null; }).filter(Boolean);
+    logs=logs.concat(rows).sort(function(a,b){ return b.at-a.at; }).slice(0,8);
+    el.innerHTML='<div class="ks-pc'+(r.busy?' live':'')+'">'
+        +'<div class="ks-pch"><span>Step '+r.idx+'/'+r.n+'</span><b>'+ic('chart')+'Ready '+r.pct+'%</b></div>'
+        +'<div class="ks-pct">'+esc(r.busy?'Sending to '+(p.targets||[]).length+' app'+((p.targets||[]).length===1?'':'s'):(r.cur?'Next: '+r.cur.n:'Done: '+(p.status==='scheduled'?'scheduled':'posted')))+'</div>'
+        +'<div class="ks-pcg">'+dotStrip(r.pct,26,6)+'<i class="ks-pcm" style="left:'+r.pct+'%"></i></div>'
+        +'<div class="ks-pcx"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div></div>'
+      +'<ol class="ks-fsteps">'+r.steps.map(function(x,i){ return '<li class="'+(x.d?'d':(x===r.cur?'c':''))+(x.live?' live':'')+'"><i aria-hidden="true">'+(x.d?ic('check'):(i+1))+'</i><span>'+esc(x.n)+'</span><em>'+(x.d?'Done':(x===r.cur?'Up next':'Waiting'))+'</em></li>'; }).join('')+'</ol>'
+      +'<div class="ks-logh">Latest logs</div>'
+      +(logs.length?'<ul class="ks-logs">'+logs.map(function(l){ var d=new Date(l.at); return '<li class="'+l.k+'"><time>'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2)+'</time><i></i><span>'+esc(l.t)+'</span></li>'; }).join('')+'</ul>'
+        :'<div class="ks-empty" style="padding:6px 2px">Nothing has run yet. Add a photo or write a line and it shows here.</div>');
+    if(!old){ (S.desk?$('#ksStage'):root).appendChild(el); }
+  }
+  var NEXT=[
+    {id:'media',g:'Add',ic:'upload',t:'Photos or clips',s:'Drop them in; two or more make a slider',a:'n-media'},
+    {id:'words',g:'AI',ic:'wand',t:'Write it with Kova',s:'A heading, caption and tags in your voice',a:'n-write'},
+    {id:'where',g:'Action in an app',ic:'link',t:'Post to an app',s:'Instagram, TikTok, YouTube, LinkedIn, X and more',a:'n-where'},
+    {id:'shape',g:'Transform',ic:'crop',t:'Shape it for each app',s:'Crop, cover frame and size per platform',a:'n-shape'},
+    {id:'checks',g:'Check',ic:'eye',t:'Run every app\u2019s checks',s:'See what an app would reject, before you post',a:'n-checks'},
+    {id:'sched',g:'Flow',ic:'cal',t:'Schedule it',s:'Pick a time, or the next good slot',a:'n-sched'},
+    {id:'human',g:'Human in the loop',ic:'inbox',t:'Send as drafts',s:'It lands in each app for you to approve',a:'n-drafts'},
+    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'}
+  ];
+  function nextList(p){
+    var r=readiness(p), want={media:'media',words:'words',where:'where',checks:'checks',send:'send'}[r.cur?r.cur.k:'send']||'send', q=String(S.nextQ||'').toLowerCase().trim();
+    var L=NEXT.filter(function(x){ return !q||(x.t+' '+x.s+' '+x.g).toLowerCase().indexOf(q)>=0; });
+    L.sort(function(a,b){ return (a.id===want?-1:0)-(b.id===want?-1:0); });
+    return {L:L,want:want};
+  }
+  function paintNext(){
+    var old=$('.ks-next'); if(!S.next){ if(old) old.remove(); return; }
+    var p=P(); if(!p) return;
+    var el=old||document.createElement('div'), n=nextList(p), keep=old&&$('#ksNextQ',old)===document.activeElement;
+    el.className='ks-next'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','What happens next?');
+    el.innerHTML='<div class="ks-nxh">What happens next?<button class="ks-x" data-a="next" aria-label="Close">'+ic('x')+'</button></div>'
+      +'<label class="ks-nxs">'+ic('search')+'<input id="ksNextQ" placeholder="Search actions\u2026" value="'+esc(S.nextQ||'')+'" aria-label="Search actions"></label>'
+      +'<div class="ks-nxl">'+(n.L.length?n.L.map(function(x){ return '<button class="ks-nxr'+(x.id===n.want?' rec':'')+'" data-a="'+x.a+'"><span class="ic">'+ic(x.ic)+'</span><span class="tx"><b>'+esc(x.g==='Add'||x.g==='Publish'?x.t:x.g)+'</b><small>'+esc(x.g==='Add'||x.g==='Publish'?x.s:x.t+' \u00b7 '+x.s)+'</small></span>'+(x.id===n.want?'<em>Next</em>':'')+'<span class="go" aria-hidden="true">'+ic('arrow')+'</span></button>'; }).join(''):'<div class="ks-empty" style="padding:10px">Nothing matches.</div>')+'</div>';
+    if(!old){ (S.desk?$('#ksStage'):root).appendChild(el); }
+    if(keep){ var i=$('#ksNextQ',el); if(i){ i.focus(); try{ i.setSelectionRange(i.value.length,i.value.length); }catch(e){} } }
+  }
+  function doNext(a){
+    var p=P(); S.next=false; paintNext(); paintTop();
+    if(a==='n-media'){ lsSet('ks.started',true); paintVeil(); $('#ksFile').dataset.at=''; $('#ksFile').click(); }
+    else if(a==='n-write'){ if(!S.field) S.field='heading'; setField(S.field,true); write(); }
+    else if(a==='n-where'){ S.panel=true; lsSet('ks.panel',true); root.classList.add('panel-open'); paintTop(); }
+    else if(a==='n-shape'){ zoomTo(function(){ return $('.ks-node[data-n="cover"]',world); }); var c=$('.ks-node[data-n="cover"]',world); if(c){ c.classList.add('ks-ping'); setTimeout(function(){ c.classList.remove('ks-ping'); },1600); } }
+    else if(a==='n-checks'){
+      var tg=targets(); if(!tg.length){ toast('Pick where it goes first.'); S.panel=true; root.classList.add('panel-open'); paintTop(); return; }
+      tg.forEach(function(k){ var c=KPo.check(p,k,KPo.linkState(k)); logIt(KPo.PLAT[k].n+': '+(c.ok?(c.warnings[0]?'passes \u2014 '+c.warnings[0]:'passes every check'):c.problems[0]),c.ok?'ok':'bad'); });
+      S.flow=true; paintFlowPanel(); paintTop();
+    }
+    else if(a==='n-sched') publish('schedule');
+    else if(a==='n-drafts') publish('draft');
+    else if(a==='n-send') publish('now');
   }
 
   /* =============================== menus ============================= */
@@ -1268,7 +1362,7 @@ window.KovaCanvas=(function(){
     var p=P(); if(!p||locked()) return;
     var files=Array.prototype.slice.call(list||[]).filter(function(f){ return /^(image|video)\//.test(f.type); });
     if(!files.length) return toast('Pick photos or videos.');
-    toast('Adding '+files.length+' file'+(files.length>1?'s':'')+'…');
+    toast('Adding '+files.length+' file'+(files.length>1?'s':'')+'…'); logIt('Adding '+files.length+' file'+(files.length>1?'s':''),'run');
     var chain=Promise.resolve(), added=[];
     files.forEach(function(f){ chain=chain.then(function(){ return KPo.probe(f).then(function(m){ added.push(m); },function(e){ toast(e.message); }); }); });
     chain.then(function(){
@@ -1856,10 +1950,12 @@ window.KovaCanvas=(function(){
     if(mode==null) mode=p.mode||'now';
     if(mode==='schedule'&&!(p.when>Date.now()+60e3)){ p.mode='schedule'; p.when=nextSlot(); KPo.save(p); render(); pickTime(); return; }
     var t0=Date.now();
+    logIt((mode==='schedule'?'Scheduling for '+when(p.when):(mode==='draft'?'Sending drafts to ':'Publishing to '))+(mode==='schedule'?'':(p.targets||[]).map(function(k){ return KPo.PLAT[k].n; }).join(', ')),'run');
     S.prog=0; softPaint();
     KPo.publish(p,mode,function(f){ S.prog=f; var b=$('.ks-prog i'); if(b) b.style.width=Math.round(f*100)+'%'; else softPaint(); })
       .then(function(){
         S.prog=-1; S.lastRun=Date.now()-t0;
+        logIt('Handed to the Kova server in '+(S.lastRun/1000).toFixed(1)+' s','ok');
         var srvN=(p.targets||[]).filter(function(k){ return KPo.linkState(k)!=='manual'; }).length;
         if(srvN) toast(mode==='schedule'?'Scheduled for '+when(p.when)+'.':(mode==='draft'?'Sending drafts…':'Publishing…'));
         render(); if(p.status==='publishing') poll();
@@ -1867,6 +1963,7 @@ window.KovaCanvas=(function(){
       })
       .catch(function(e){
         S.prog=-1; render();
+        logIt('Stopped: '+((e&&e.message)||'could not publish'),'bad');
         if(pendingHand(p).length) setTimeout(handoff,700);
         if(e&&e.signin) return signinPrompt(e.message);
         toast((e&&e.message)||'Could not publish.');
@@ -1954,6 +2051,9 @@ window.KovaCanvas=(function(){
           if(v==='all'){ S.q=''; } else { Object.keys(S.open).forEach(function(f){ S.open[f]=v==='open'; }); } paintPanel(); }); break;
       case 'field': setField(el.getAttribute('data-f'),true); break;
       case 'write': write(); break;
+      case 'flow': S.flow=!S.flow; S.next=false; paintNext(); paintFlowPanel(); paintTop(); break;
+      case 'next': S.next=!S.next; S.flow=false; S.nextQ=''; paintFlowPanel(); paintNext(); paintTop(); if(S.next){ var nq=$('#ksNextQ'); if(nq&&S.desk) nq.focus(); } break;
+      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': doNext(a); break;
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
@@ -1992,7 +2092,10 @@ window.KovaCanvas=(function(){
   function wireEvents(){
     root.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'&&e.target.closest&&e.target.closest('.ks-media')) wake(); },true);
     root.addEventListener('keydown',function(e){ var t=e.target.closest&&e.target.closest('.ks-plats [data-a="plat"]'); if(t&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); t.click(); } });
+    root.addEventListener('input',function(e){ if(e.target&&e.target.id==='ksNextQ'){ S.nextQ=e.target.value; paintNext(); } });
+    root.addEventListener('keydown',function(e){ if(e.key==='Escape'&&(S.next||S.flow)){ S.next=false; S.flow=false; paintNext(); paintFlowPanel(); paintTop(); } });
     root.addEventListener('click',function(e){
+      if((S.next||S.flow)&&!(e.target.closest&&e.target.closest('.ks-next,.ks-flowp,[data-a="next"],[data-a="flow"]'))){ S.next=false; S.flow=false; paintNext(); paintFlowPanel(); paintTop(); }
       if(S.menu&&!S.menu.contains(e.target)) closeMenu();
       var st=e.target.closest('[data-step]');
       if(st&&root.contains(st)){ var pr=st.closest('[data-param]'); stepParam(pr.getAttribute('data-param'),+st.getAttribute('data-step')); return; }

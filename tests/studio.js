@@ -116,10 +116,32 @@ function boot() {
   ck('the Publish node is the lit one', doc.querySelector('.ks-node[data-n="publish"]').classList.contains('ks-lit'));
   // jsdom has no layout, so the wire paths themselves are checked in the browser pass
   ck('wire layer is on the canvas', !!doc.getElementById('ksWires') && !!doc.getElementById('ksWireGlow'));
-  ck('the top bar is calm: post name, Queue, panel, menu', doc.querySelectorAll('#ksTop .ks-tab').length === 1 && doc.querySelectorAll('#ksTop .ks-sq').length === 2 && !!doc.querySelector('#ksTop .ks-queue'));
+  ck('the top bar is calm: post name, progress, what next, Queue, panel, menu', doc.querySelectorAll('#ksTop .ks-tab').length === 1 && doc.querySelectorAll('#ksTop .ks-sq').length === 3 && !!doc.querySelector('#ksTop .ks-queue') && !!doc.querySelector('#ksTop .ks-fpill') && !!doc.querySelector('#ksTop [data-a="next"]'));
   ck('the media and accounts panel starts closed', !root.classList.contains('panel-open'));
   ck('no stats readout or "+" buttons on the wires', !doc.querySelector('.ks-plus') && w.getComputedStyle(doc.getElementById('ksStats')).display === 'none');
   ck('the writing dock rests as one line', doc.getElementById('ksDock').classList.contains('min'));
+  // ---- the workflow: progress, what happens next, logs
+  const pill = () => doc.querySelector('#ksTop .ks-fpill');
+  ck('the top bar says which step the post is on and how ready it is', /Step \d\/5/.test(pill().textContent) && /\d+%/.test(pill().textContent) && !!pill().querySelector('svg.ks-dots'));
+  pill().click(); await wait(30);
+  let flp = doc.querySelector('.ks-flowp');
+  ck('tapping it opens the progress card: five steps, a dot chart, a 0-100% scale and the latest logs', !!flp && flp.querySelectorAll('.ks-fsteps li').length === 5 && !!flp.querySelector('.ks-pc .ks-dots') && /0%25%50%75%100%/.test(flp.querySelector('.ks-pcx').textContent) && /Latest logs/.test(flp.textContent));
+  doc.querySelector('#ksTop [data-a="next"]').click(); await wait(30);
+  const nx = doc.querySelector('.ks-next');
+  ck('"+" opens What happens next? and closes the progress card', !!nx && /What happens next\?/.test(nx.textContent) && !doc.querySelector('.ks-flowp'));
+  ck('...eight actions, the right next one first and marked', nx.querySelectorAll('.ks-nxr').length === 8 && nx.querySelector('.ks-nxr').classList.contains('rec') && /Next/.test(nx.querySelector('.ks-nxr.rec').textContent));
+  const nq = nx.querySelector('#ksNextQ'); nq.value = 'draft'; nq.dispatchEvent(new w.Event('input', { bubbles: true })); await wait(20);
+  ck('...and a search that narrows them', doc.querySelectorAll('.ks-next .ks-nxr').length === 1 && /Human in the loop/.test(doc.querySelector('.ks-next .ks-nxr').textContent));
+  doc.body.dispatchEvent(new w.MouseEvent('click', { bubbles: true })); doc.getElementById('s-workstudio').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);
+  ck('clicking elsewhere closes it', !doc.querySelector('.ks-next'));
+  doc.querySelector('#ksTop [data-a="next"]').click(); await wait(20);
+  doc.querySelector('.ks-next [data-a="n-checks"]').click(); await wait(40);
+  flp = doc.querySelector('.ks-flowp');
+  ck('"Run every app\u2019s checks" writes one log line per app (or asks where it goes first)', (flp && flp.querySelectorAll('.ks-logs li').length >= 1) || /Pick where it goes/.test((doc.querySelector('.ks-toast,#toast') || {}).textContent || '') || doc.getElementById('s-workstudio').classList.contains('panel-open'));
+  const css14 = fs.readFileSync(__dirname + '/../src/p08_studioflow.css', 'utf8');
+  ck('wires that carry work are green with a light running along them, and it all stops for reduced motion', /\.w\.lit\{stroke:var\(--go\)[^}]*animation:ksGo/.test(css14) && /prefers-reduced-motion/.test(css14) && /body\.light-mode #s-workstudio\{--go:#16A34A/.test(css14));
+  doc.getElementById('s-workstudio').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);
+
   doc.querySelector('#ksTop [data-a="menu"]').click(); await wait(40);
   const menuText = (doc.querySelector('.ks-drop-menu') || {}).textContent || '';
   ck('Board, Inbox and the tour live in the menu', /Board/.test(menuText) && /Inbox/.test(menuText) && /Show me around/.test(menuText));

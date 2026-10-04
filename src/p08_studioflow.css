@@ -1,0 +1,117 @@
+/* The Studio as a workflow builder (p14): dark and focused, with green
+   only where something is done or running, so status reads at a glance.
+   Wires that carry work glow green with a light running along them; the
+   progress card is green glass with a dot chart and live logs; "What
+   happens next?" offers the right next step first. Dark, soft light and
+   light glass; phones get the same panels as bottom sheets. */
+#s-workstudio{--go:#4ADE80;--go-2:#22C55E;--go-ink:#06210F;--go-glow:rgba(74,222,128,.5);--go-soft:rgba(74,222,128,.16);
+  --fp-bg:rgba(24,24,27,.94);--fp-line:rgba(255,255,255,.1);--fp-ink:#F2F3F5;--fp-mute:rgba(242,243,245,.55);--fp-row:rgba(255,255,255,.04)}
+body.soft-light #s-workstudio{--fp-bg:rgba(66,68,74,.96);--fp-line:rgba(255,255,255,.16);--fp-row:rgba(255,255,255,.07)}
+body.light-mode #s-workstudio{--go:#16A34A;--go-2:#15803D;--go-ink:#fff;--go-glow:rgba(22,163,74,.35);--go-soft:rgba(22,163,74,.12);
+  --fp-bg:rgba(255,255,255,.97);--fp-line:rgba(18,20,24,.1);--fp-ink:#16181C;--fp-mute:rgba(22,24,28,.55);--fp-row:rgba(18,20,24,.03)}
+
+/* wires: grey when idle, green when they carry work, a light running along */
+#s-workstudio .ks-wires .w.on{stroke:var(--go);stroke-opacity:.42;stroke-width:1.8}
+#s-workstudio .ks-wires .w.lit{stroke:var(--go);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:7 24;animation:ksGo 1.9s linear infinite;filter:url(#ksWireBlur)}
+#s-workstudio .ks-wires .w.flow{stroke:var(--go);stroke-width:2.6;stroke-dasharray:4 12;animation:ksGo .7s linear infinite;filter:url(#ksWireBlur)}
+@keyframes ksGo{to{stroke-dashoffset:-31}}
+#s-workstudio .ks-port.hot{background:radial-gradient(circle at 40% 35%,#E9FFF1,var(--go) 72%);box-shadow:0 0 0 3.5px #171719,0 0 12px var(--go-glow)}
+body.soft-light #s-workstudio .ks-port.hot{box-shadow:0 0 0 3.5px rgb(84,84,84),0 0 12px var(--go-glow)}
+body.light-mode #s-workstudio .ks-port.hot{box-shadow:0 0 0 3.5px rgb(247,247,247),0 0 10px var(--go-glow)}
+#s-workstudio .ks-nh i.live{background:var(--go);box-shadow:0 0 10px var(--go-glow);animation:ksBeat 1.6s ease-in-out infinite}
+@keyframes ksBeat{50%{box-shadow:0 0 2px var(--go-glow);opacity:.7}}
+#s-workstudio .ks-node.ks-ping{outline:2px solid var(--go);outline-offset:4px;animation:ksPing 1.6s ease}
+@keyframes ksPing{0%,60%{outline-color:var(--go)}100%{outline-color:transparent}}
+
+/* the progress pill in the top bar */
+.ks-fpill{display:inline-flex;align-items:center;gap:10px;height:44px;min-width:0;max-width:440px;padding:0 14px 0 6px;margin-left:4px;border-radius:999px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(40,40,44,.95),rgba(26,26,29,.95));border:.5px solid rgba(255,255,255,.12);color:#F2F3F5;font:500 13px 'Outfit',sans-serif;box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
+.ks-fpill .st{flex-shrink:0;height:32px;padding:0 11px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(255,255,255,.08);font-size:12px;color:rgba(242,243,245,.7)}
+.ks-fpill .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks-fpill .ks-dots{width:62px;height:18px;flex-shrink:0}
+.ks-fpill .pc{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;font-variant-numeric:tabular-nums;color:var(--go)}
+.ks-fpill .pc i{width:3px;height:12px;border-radius:2px;background:currentColor;box-shadow:-5px 3px 0 -0px currentColor,5px -3px 0 0 currentColor;opacity:.9;margin:0 5px}
+.ks-fpill.live{border-color:var(--go);box-shadow:0 0 0 1px var(--go-soft),0 0 22px var(--go-soft)}
+.ks-fpill.done .st{background:var(--go);color:var(--go-ink)}
+body.soft-light .ks-fpill{background:linear-gradient(180deg,rgba(92,92,96,.95),rgba(70,70,74,.95));border-color:rgba(255,255,255,.18)}
+body.light-mode .ks-fpill{background:rgba(255,255,255,.95);border-color:rgba(18,20,24,.12);color:#16181C;box-shadow:0 8px 20px -12px rgba(20,24,32,.3)}
+body.light-mode .ks-fpill .st{background:rgba(18,20,24,.06);color:rgba(22,24,28,.7)}
+.ks-dots circle{fill:currentColor;opacity:.22}
+.ks-dots circle.on{fill:var(--go);opacity:1;animation:ksTw 2.4s ease-in-out infinite;animation-delay:calc(var(--d)*.25s)}
+@keyframes ksTw{50%{opacity:.45}}
+.ks-nextb.on{background:var(--go)!important;color:var(--go-ink)!important}
+
+/* the progress card (green glass), steps and live logs */
+.ks-flowp,.ks-next{position:absolute;z-index:30;color:var(--fp-ink);font-family:'Outfit','Urbanist',sans-serif;
+  background:var(--fp-bg);border:.5px solid var(--fp-line);border-radius:26px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);animation:ksPop .26s cubic-bezier(.2,.9,.3,1)}
+@keyframes ksPop{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+.ks-flowp{top:16px;left:50%;margin-left:-200px;width:400px;max-height:calc(100% - 140px);overflow:auto;padding:10px 10px 14px}
+.ks-pc{position:relative;padding:14px 16px 10px;border-radius:20px;color:#fff;overflow:hidden;
+  background:radial-gradient(120% 90% at 85% 0%,rgba(140,255,170,.35),transparent 55%),linear-gradient(160deg,#2FA046 0%,#1E7A33 48%,#0E3D19 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -14px rgba(20,120,50,.55)}
+.ks-pc.live{animation:ksGlow 2s ease-in-out infinite}
+@keyframes ksGlow{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 40px -10px rgba(60,220,110,.75)}}
+.ks-pch{display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:.75}
+.ks-pch b{display:inline-flex;align-items:center;gap:6px;font-weight:500;opacity:1;font-size:13px}
+.ks-pch .ki{width:15px;height:15px}
+.ks-pct{font-size:16px;margin:4px 0 10px;font-weight:500}
+.ks-pcg{position:relative;padding:8px;border-radius:14px;background:rgba(0,0,0,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ks-pcg .ks-dots{display:block;width:100%;height:auto;color:#fff}
+.ks-pcg .ks-dots circle.on{fill:#C9FFD8}
+.ks-pcm{position:absolute;top:4px;bottom:4px;width:1.5px;margin-left:-1px;background:#fff;box-shadow:0 0 10px #B9FFCB;border-radius:1px;transition:left .5s ease}
+.ks-pcx{display:flex;justify-content:space-between;font-size:10.5px;opacity:.7;margin-top:6px;font-variant-numeric:tabular-nums}
+.ks-fsteps{list-style:none;margin:12px 4px 0;padding:0}
+.ks-fsteps li{display:flex;align-items:center;gap:10px;min-height:38px;border-top:.5px solid var(--fp-line);font-size:13.5px}
+.ks-fsteps li:first-child{border-top:0}
+.ks-fsteps i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:600 11px 'Outfit',sans-serif;font-style:normal;border:1px solid var(--fp-line);color:var(--fp-mute);flex-shrink:0}
+.ks-fsteps i .ki{width:12px;height:12px}
+.ks-fsteps span{flex:1}
+.ks-fsteps em{font-style:normal;font-size:11.5px;color:var(--fp-mute)}
+.ks-fsteps li.d i{background:var(--go);border-color:transparent;color:var(--go-ink)}
+.ks-fsteps li.c i{border-color:var(--go);color:var(--go)}
+.ks-fsteps li.c em{color:var(--go)}
+.ks-fsteps li.live i{animation:ksBeat 1.2s ease-in-out infinite;box-shadow:0 0 10px var(--go-glow)}
+.ks-logh{margin:14px 6px 6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fp-mute)}
+.ks-logs{list-style:none;margin:0;padding:8px 10px;border-radius:16px;background:var(--fp-row);font:12px/1.5 ui-monospace,'SF Mono',Menlo,monospace}
+.ks-logs li{display:flex;align-items:baseline;gap:8px;padding:3px 0}
+.ks-logs time{flex-shrink:0;color:var(--fp-mute)}
+.ks-logs i{width:7px;height:7px;border-radius:50%;background:var(--go);flex-shrink:0;transform:translateY(-1px);box-shadow:0 0 6px var(--go-glow)}
+.ks-logs li.bad i{background:#EF5B5B;box-shadow:none}
+.ks-logs li.run i{animation:ksBeat 1.2s ease-in-out infinite}
+.ks-logs span{min-width:0;overflow-wrap:anywhere}
+
+/* What happens next? */
+.ks-next{top:16px;right:16px;width:380px;max-height:calc(100% - 130px);display:flex;flex-direction:column;padding:16px 12px 12px}
+.ks-nxh{display:flex;align-items:center;justify-content:space-between;font-size:19px;font-weight:500;letter-spacing:-.01em;padding:0 6px 12px}
+.ks-x{width:32px;height:32px;border-radius:50%;border:.5px solid var(--fp-line);background:transparent;color:var(--fp-ink);display:grid;place-items:center;cursor:pointer}
+.ks-x .ki{width:14px;height:14px}
+.ks-nxs{display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;margin:0 2px 8px;border-radius:16px;background:var(--fp-row);border:.5px solid var(--fp-line)}
+.ks-nxs .ki{width:17px;height:17px;opacity:.6}
+.ks-nxs input{flex:1;min-width:0;border:0;background:none;outline:none;color:var(--fp-ink);font:400 15px 'Outfit',sans-serif}
+.ks-nxs input::placeholder{color:var(--fp-mute)}
+.ks-nxl{overflow:auto;display:flex;flex-direction:column;gap:2px}
+.ks-nxr{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:8px 8px 8px 10px;border-radius:18px;border:1.5px solid transparent;background:none;color:var(--fp-ink);text-align:left;font:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+.ks-nxr:hover,.ks-nxr:focus-visible{background:var(--fp-row);outline:none}
+.ks-nxr .ic{width:30px;display:grid;place-items:center;flex-shrink:0;opacity:.85}
+.ks-nxr .ic .ki{width:19px;height:19px}
+.ks-nxr .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.ks-nxr b{font-weight:500;font-size:15px}
+.ks-nxr small{font-size:12px;color:var(--fp-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks-nxr em{font-style:normal;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--go-soft);color:var(--go);flex-shrink:0}
+.ks-nxr .go{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--fp-row);border:.5px solid var(--fp-line);flex-shrink:0}
+.ks-nxr .go .ki{width:16px;height:16px}
+.ks-nxr.rec{border-color:var(--fp-ink);background:var(--fp-row)}
+.ks-nxr.rec .go{background:var(--go);color:var(--go-ink);border-color:transparent;box-shadow:0 0 16px var(--go-glow)}
+
+/* phones and tablets: the top bar wraps, the panels are bottom sheets */
+@media (max-width:999.98px){
+  .ks-top .ks-fpill{order:4;flex:1 1 100%;max-width:none;margin:6px 0 0}
+  .ks-top .ks-fpill .ks-dots{width:48px}
+  .ks-flowp,.ks-next{position:fixed;left:64px;right:8px;top:auto;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;margin:0;max-height:76vh;z-index:62;border-radius:26px;animation-name:ksUp}
+  @keyframes ksUp{from{opacity:0;transform:translateY(20px)}}
+}
+@media (max-width:340px){.ks-flowp,.ks-next{left:52px}}
+@media (prefers-reduced-motion:reduce){
+  #s-workstudio .ks-wires .w.lit,#s-workstudio .ks-wires .w.flow,.ks-dots circle.on,#s-workstudio .ks-nh i.live,.ks-pc.live,.ks-fsteps li.live i,.ks-logs li.run i,.ks-flowp,.ks-next{animation:none}
+}

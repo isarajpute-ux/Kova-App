@@ -6318,6 +6318,126 @@ body.light-mode .kch-b.on{background:#1C1A17;color:#F6F4F0;border-color:transpar
 body.light-mode .kch-h small,body.light-mode .kch-f{color:rgba(28,26,23,.58)}
 
 </style>
+<style id="p08-studioflow">
+/* The Studio as a workflow builder (p14): dark and focused, with green
+   only where something is done or running, so status reads at a glance.
+   Wires that carry work glow green with a light running along them; the
+   progress card is green glass with a dot chart and live logs; "What
+   happens next?" offers the right next step first. Dark, soft light and
+   light glass; phones get the same panels as bottom sheets. */
+#s-workstudio{--go:#4ADE80;--go-2:#22C55E;--go-ink:#06210F;--go-glow:rgba(74,222,128,.5);--go-soft:rgba(74,222,128,.16);
+  --fp-bg:rgba(24,24,27,.94);--fp-line:rgba(255,255,255,.1);--fp-ink:#F2F3F5;--fp-mute:rgba(242,243,245,.55);--fp-row:rgba(255,255,255,.04)}
+body.soft-light #s-workstudio{--fp-bg:rgba(66,68,74,.96);--fp-line:rgba(255,255,255,.16);--fp-row:rgba(255,255,255,.07)}
+body.light-mode #s-workstudio{--go:#16A34A;--go-2:#15803D;--go-ink:#fff;--go-glow:rgba(22,163,74,.35);--go-soft:rgba(22,163,74,.12);
+  --fp-bg:rgba(255,255,255,.97);--fp-line:rgba(18,20,24,.1);--fp-ink:#16181C;--fp-mute:rgba(22,24,28,.55);--fp-row:rgba(18,20,24,.03)}
+
+/* wires: grey when idle, green when they carry work, a light running along */
+#s-workstudio .ks-wires .w.on{stroke:var(--go);stroke-opacity:.42;stroke-width:1.8}
+#s-workstudio .ks-wires .w.lit{stroke:var(--go);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:7 24;animation:ksGo 1.9s linear infinite;filter:url(#ksWireBlur)}
+#s-workstudio .ks-wires .w.flow{stroke:var(--go);stroke-width:2.6;stroke-dasharray:4 12;animation:ksGo .7s linear infinite;filter:url(#ksWireBlur)}
+@keyframes ksGo{to{stroke-dashoffset:-31}}
+#s-workstudio .ks-port.hot{background:radial-gradient(circle at 40% 35%,#E9FFF1,var(--go) 72%);box-shadow:0 0 0 3.5px #171719,0 0 12px var(--go-glow)}
+body.soft-light #s-workstudio .ks-port.hot{box-shadow:0 0 0 3.5px rgb(84,84,84),0 0 12px var(--go-glow)}
+body.light-mode #s-workstudio .ks-port.hot{box-shadow:0 0 0 3.5px rgb(247,247,247),0 0 10px var(--go-glow)}
+#s-workstudio .ks-nh i.live{background:var(--go);box-shadow:0 0 10px var(--go-glow);animation:ksBeat 1.6s ease-in-out infinite}
+@keyframes ksBeat{50%{box-shadow:0 0 2px var(--go-glow);opacity:.7}}
+#s-workstudio .ks-node.ks-ping{outline:2px solid var(--go);outline-offset:4px;animation:ksPing 1.6s ease}
+@keyframes ksPing{0%,60%{outline-color:var(--go)}100%{outline-color:transparent}}
+
+/* the progress pill in the top bar */
+.ks-fpill{display:inline-flex;align-items:center;gap:10px;height:44px;min-width:0;max-width:440px;padding:0 14px 0 6px;margin-left:4px;border-radius:999px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(40,40,44,.95),rgba(26,26,29,.95));border:.5px solid rgba(255,255,255,.12);color:#F2F3F5;font:500 13px 'Outfit',sans-serif;box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
+.ks-fpill .st{flex-shrink:0;height:32px;padding:0 11px;border-radius:999px;display:inline-flex;align-items:center;background:rgba(255,255,255,.08);font-size:12px;color:rgba(242,243,245,.7)}
+.ks-fpill .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks-fpill .ks-dots{width:62px;height:18px;flex-shrink:0}
+.ks-fpill .pc{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;font-variant-numeric:tabular-nums;color:var(--go)}
+.ks-fpill .pc i{width:3px;height:12px;border-radius:2px;background:currentColor;box-shadow:-5px 3px 0 -0px currentColor,5px -3px 0 0 currentColor;opacity:.9;margin:0 5px}
+.ks-fpill.live{border-color:var(--go);box-shadow:0 0 0 1px var(--go-soft),0 0 22px var(--go-soft)}
+.ks-fpill.done .st{background:var(--go);color:var(--go-ink)}
+body.soft-light .ks-fpill{background:linear-gradient(180deg,rgba(92,92,96,.95),rgba(70,70,74,.95));border-color:rgba(255,255,255,.18)}
+body.light-mode .ks-fpill{background:rgba(255,255,255,.95);border-color:rgba(18,20,24,.12);color:#16181C;box-shadow:0 8px 20px -12px rgba(20,24,32,.3)}
+body.light-mode .ks-fpill .st{background:rgba(18,20,24,.06);color:rgba(22,24,28,.7)}
+.ks-dots circle{fill:currentColor;opacity:.22}
+.ks-dots circle.on{fill:var(--go);opacity:1;animation:ksTw 2.4s ease-in-out infinite;animation-delay:calc(var(--d)*.25s)}
+@keyframes ksTw{50%{opacity:.45}}
+.ks-nextb.on{background:var(--go)!important;color:var(--go-ink)!important}
+
+/* the progress card (green glass), steps and live logs */
+.ks-flowp,.ks-next{position:absolute;z-index:30;color:var(--fp-ink);font-family:'Outfit','Urbanist',sans-serif;
+  background:var(--fp-bg);border:.5px solid var(--fp-line);border-radius:26px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);animation:ksPop .26s cubic-bezier(.2,.9,.3,1)}
+@keyframes ksPop{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+.ks-flowp{top:16px;left:50%;margin-left:-200px;width:400px;max-height:calc(100% - 140px);overflow:auto;padding:10px 10px 14px}
+.ks-pc{position:relative;padding:14px 16px 10px;border-radius:20px;color:#fff;overflow:hidden;
+  background:radial-gradient(120% 90% at 85% 0%,rgba(140,255,170,.35),transparent 55%),linear-gradient(160deg,#2FA046 0%,#1E7A33 48%,#0E3D19 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 30px -14px rgba(20,120,50,.55)}
+.ks-pc.live{animation:ksGlow 2s ease-in-out infinite}
+@keyframes ksGlow{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 16px 40px -10px rgba(60,220,110,.75)}}
+.ks-pch{display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:.75}
+.ks-pch b{display:inline-flex;align-items:center;gap:6px;font-weight:500;opacity:1;font-size:13px}
+.ks-pch .ki{width:15px;height:15px}
+.ks-pct{font-size:16px;margin:4px 0 10px;font-weight:500}
+.ks-pcg{position:relative;padding:8px;border-radius:14px;background:rgba(0,0,0,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ks-pcg .ks-dots{display:block;width:100%;height:auto;color:#fff}
+.ks-pcg .ks-dots circle.on{fill:#C9FFD8}
+.ks-pcm{position:absolute;top:4px;bottom:4px;width:1.5px;margin-left:-1px;background:#fff;box-shadow:0 0 10px #B9FFCB;border-radius:1px;transition:left .5s ease}
+.ks-pcx{display:flex;justify-content:space-between;font-size:10.5px;opacity:.7;margin-top:6px;font-variant-numeric:tabular-nums}
+.ks-fsteps{list-style:none;margin:12px 4px 0;padding:0}
+.ks-fsteps li{display:flex;align-items:center;gap:10px;min-height:38px;border-top:.5px solid var(--fp-line);font-size:13.5px}
+.ks-fsteps li:first-child{border-top:0}
+.ks-fsteps i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:600 11px 'Outfit',sans-serif;font-style:normal;border:1px solid var(--fp-line);color:var(--fp-mute);flex-shrink:0}
+.ks-fsteps i .ki{width:12px;height:12px}
+.ks-fsteps span{flex:1}
+.ks-fsteps em{font-style:normal;font-size:11.5px;color:var(--fp-mute)}
+.ks-fsteps li.d i{background:var(--go);border-color:transparent;color:var(--go-ink)}
+.ks-fsteps li.c i{border-color:var(--go);color:var(--go)}
+.ks-fsteps li.c em{color:var(--go)}
+.ks-fsteps li.live i{animation:ksBeat 1.2s ease-in-out infinite;box-shadow:0 0 10px var(--go-glow)}
+.ks-logh{margin:14px 6px 6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fp-mute)}
+.ks-logs{list-style:none;margin:0;padding:8px 10px;border-radius:16px;background:var(--fp-row);font:12px/1.5 ui-monospace,'SF Mono',Menlo,monospace}
+.ks-logs li{display:flex;align-items:baseline;gap:8px;padding:3px 0}
+.ks-logs time{flex-shrink:0;color:var(--fp-mute)}
+.ks-logs i{width:7px;height:7px;border-radius:50%;background:var(--go);flex-shrink:0;transform:translateY(-1px);box-shadow:0 0 6px var(--go-glow)}
+.ks-logs li.bad i{background:#EF5B5B;box-shadow:none}
+.ks-logs li.run i{animation:ksBeat 1.2s ease-in-out infinite}
+.ks-logs span{min-width:0;overflow-wrap:anywhere}
+
+/* What happens next? */
+.ks-next{top:16px;right:16px;width:380px;max-height:calc(100% - 130px);display:flex;flex-direction:column;padding:16px 12px 12px}
+.ks-nxh{display:flex;align-items:center;justify-content:space-between;font-size:19px;font-weight:500;letter-spacing:-.01em;padding:0 6px 12px}
+.ks-x{width:32px;height:32px;border-radius:50%;border:.5px solid var(--fp-line);background:transparent;color:var(--fp-ink);display:grid;place-items:center;cursor:pointer}
+.ks-x .ki{width:14px;height:14px}
+.ks-nxs{display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;margin:0 2px 8px;border-radius:16px;background:var(--fp-row);border:.5px solid var(--fp-line)}
+.ks-nxs .ki{width:17px;height:17px;opacity:.6}
+.ks-nxs input{flex:1;min-width:0;border:0;background:none;outline:none;color:var(--fp-ink);font:400 15px 'Outfit',sans-serif}
+.ks-nxs input::placeholder{color:var(--fp-mute)}
+.ks-nxl{overflow:auto;display:flex;flex-direction:column;gap:2px}
+.ks-nxr{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:8px 8px 8px 10px;border-radius:18px;border:1.5px solid transparent;background:none;color:var(--fp-ink);text-align:left;font:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+.ks-nxr:hover,.ks-nxr:focus-visible{background:var(--fp-row);outline:none}
+.ks-nxr .ic{width:30px;display:grid;place-items:center;flex-shrink:0;opacity:.85}
+.ks-nxr .ic .ki{width:19px;height:19px}
+.ks-nxr .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.ks-nxr b{font-weight:500;font-size:15px}
+.ks-nxr small{font-size:12px;color:var(--fp-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ks-nxr em{font-style:normal;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--go-soft);color:var(--go);flex-shrink:0}
+.ks-nxr .go{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--fp-row);border:.5px solid var(--fp-line);flex-shrink:0}
+.ks-nxr .go .ki{width:16px;height:16px}
+.ks-nxr.rec{border-color:var(--fp-ink);background:var(--fp-row)}
+.ks-nxr.rec .go{background:var(--go);color:var(--go-ink);border-color:transparent;box-shadow:0 0 16px var(--go-glow)}
+
+/* phones and tablets: the top bar wraps, the panels are bottom sheets */
+@media (max-width:999.98px){
+  .ks-top .ks-fpill{order:4;flex:1 1 100%;max-width:none;margin:6px 0 0}
+  .ks-top .ks-fpill .ks-dots{width:48px}
+  .ks-flowp,.ks-next{position:fixed;left:64px;right:8px;top:auto;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;margin:0;max-height:76vh;z-index:62;border-radius:26px;animation-name:ksUp}
+  @keyframes ksUp{from{opacity:0;transform:translateY(20px)}}
+}
+@media (max-width:340px){.ks-flowp,.ks-next{left:52px}}
+@media (prefers-reduced-motion:reduce){
+  #s-workstudio .ks-wires .w.lit,#s-workstudio .ks-wires .w.flow,.ks-dots circle.on,#s-workstudio .ks-nh i.live,.ks-pc.live,.ks-fsteps li.live i,.ks-logs li.run i,.ks-flowp,.ks-next{animation:none}
+}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -44468,6 +44588,7 @@ window.KovaCanvas=(function(){
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
     ast:'<path d="M12 2.6v18.8M2.6 12h18.8M5.35 5.35l13.3 13.3M18.65 5.35L5.35 18.65" stroke-width="2.5"/>',
+    chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
     folder:'<path fill="currentColor" stroke="none" d="M1.5 5.2A2.7 2.7 0 0 1 4.2 2.5h6.1c.8 0 1.5.3 2 .9l1.5 1.7h8A2.7 2.7 0 0 1 24.5 7.8V19a2.7 2.7 0 0 1-2.7 2.7H4.2A2.7 2.7 0 0 1 1.5 19z"/><path fill="rgba(0,0,0,.14)" stroke="none" d="M1.5 8.6h23V19a2.7 2.7 0 0 1-2.7 2.7H4.2A2.7 2.7 0 0 1 1.5 19z"/>',
@@ -44636,7 +44757,7 @@ window.KovaCanvas=(function(){
     S.desk=isDesk();
     root.classList.toggle('ks-desk',S.desk);
     root.classList.toggle('panel-open',!!S.panel);
-    paintTop(); paintPanel(); paintWorld(); paintDock(); paintStats(); paintVeil();
+    paintTop(); paintPanel(); paintWorld(); paintDock(); paintStats(); paintVeil(); paintFlowPanel(); paintNext();
     layout();
   }
 
@@ -44650,8 +44771,10 @@ window.KovaCanvas=(function(){
         +'<button class="ks-tab doc" data-a="rename" title="Rename"><span>'+esc(p.title||'Untitled post')+'</span>'
           +'<i class="'+(p.status==='draft'?'':'saved')+'"></i></button>'
       +'</div>'
+      +flowPill(p)
       +'<div class="ks-top-sp"></div>'
       +'<div class="ks-top-r">'
+        +'<button class="ks-sq ks-nextb'+(S.next?' on':'')+'" data-a="next" aria-label="What happens next?" aria-expanded="'+!!S.next+'">'+ic('plus')+'</button>'
         +'<button class="ks-queue" data-a="queue">Queue'+(active?'<b>'+active+'</b>':'')+ic('down')+'</button>'
         +'<button class="ks-sq'+(S.panel?' on':'')+'" data-a="panel" aria-label="Media and accounts">'+ic('sidebar')+'</button>'
         +'<button class="ks-sq" data-a="menu" aria-label="Menu">'+ic('menu')+'</button>'
@@ -45065,7 +45188,7 @@ window.KovaCanvas=(function(){
           +' L'+(lx+r)+' '+gy+' Q'+lx+' '+gy+' '+lx+' '+(gy+r)
           +' L'+lx+' '+(b.y-r)+' Q'+lx+' '+b.y+' '+(lx+r)+' '+b.y+' L'+b.x+' '+b.y;
       }
-      out.push('<path class="w" d="'+d+'"/>');
+      out.push('<path class="w'+(a.hot&&b.hot?' on':'')+'" d="'+d+'"/>');
       if(a.hot&&b.hot) out.push('<path class="w '+(busy&&i>=4?'flow':'lit')+'" d="'+d+'"/>');
     });
     wires.innerHTML=defs+out.join('');
@@ -45205,7 +45328,7 @@ window.KovaCanvas=(function(){
         if(rec) rec.observe(nu);
         if(n==='preview'&&!reuse) loadPreviewMedia(0);
       });
-      paintTop(); paintStats(); layout();
+      paintTop(); paintStats(); if(S.flow) paintFlowPanel(); layout();
     },120);
   }
   /* the platform slider: same place after a repaint, the chosen one in view,
@@ -45248,8 +45371,9 @@ window.KovaCanvas=(function(){
   function write(){
     var p=P(); if(!p||S.suggBusy||S.writerOff) return;
     S.suggBusy=true; paintDock();
+    logIt('Kova is writing the '+S.field,'run');
     KPo.write(p,S.field,'').then(function(t){
-      S.suggBusy=false; S.sugg=t; paintDock();
+      S.suggBusy=false; S.sugg=t; paintDock(); logIt('Wrote a '+S.field+' for you to use or change','ok');
       var ta=$('#ksTa'); if(ta) ta.focus();
     }).catch(function(e){
       S.suggBusy=false; paintDock();
@@ -45301,6 +45425,96 @@ window.KovaCanvas=(function(){
       +'<div class="row"><button class="ks-pill" data-a="v-drafts">Drafts only</button>'
       +'<button class="ks-pill white" data-a="v-start">'+ic('wand')+'Get Started</button></div></div>';
     (S.desk?$('#ksStage'):root).appendChild(v);
+  }
+
+  /* ====================== flow: progress, next step, logs ============
+     The Studio reads like a workflow: five steps from photos to posted,
+     each one green when it is done, a light running along the wires that
+     carry work, a progress card that says how ready the post is (and what
+     is happening right now, with a log), and "What happens next?": the one
+     right next action first, the rest a tap away. */
+  var LOG=[];
+  function logIt(t,kind){ LOG.push({at:Date.now(),t:t,k:kind||'ok'}); if(LOG.length>80) LOG.shift(); if(S.flow) paintFlowPanel(); }
+  function readiness(p){
+    var tg=targets(), media=KPo.included(p).length>0, words=['heading','body','caption'].some(function(f){ return String(p[f]||'').trim(); });
+    var checks=tg.length>0&&tg.every(function(k){ return KPo.check(p,k,KPo.linkState(k)).ok; }), busy=locked(), out=/^(sent|drafted|scheduled)$/.test(p.status);
+    var steps=[{k:'media',n:'Photos or clips',d:media},{k:'words',n:'The words',d:words},{k:'where',n:'Where it goes',d:tg.length>0},
+      {k:'checks',n:'Every app\u2019s checks',d:checks},{k:'send',n:busy?'Sending\u2026':(p.status==='scheduled'?'Scheduled':'Posted'),d:out,live:busy}];
+    var done=steps.filter(function(x){ return x.d; }).length, cur=steps.filter(function(x){ return !x.d; })[0]||null;
+    var pct=busy&&S.prog>=0?Math.round(80+S.prog*20):Math.round(done/steps.length*100);
+    return {steps:steps,done:done,pct:pct,cur:cur,n:steps.length,idx:cur?steps.indexOf(cur)+1:steps.length,busy:busy};
+  }
+  function dotStrip(pct,cols,rows){
+    var h='', w=cols*9, on=Math.round(pct/100*cols);
+    for(var x=0;x<cols;x++) for(var y=0;y<rows;y++){ var lit=x<on&&((x*7+y*3)%5!==0||y===rows-1); h+='<circle cx="'+(4+x*9)+'" cy="'+(4+y*9)+'" r="'+(lit?1.6:1)+'" class="'+(lit?'on':'')+'" style="--d:'+((x+y)%7)+'"/>'; }
+    return '<svg class="ks-dots" viewBox="0 0 '+w+' '+(rows*9)+'" aria-hidden="true">'+h+'</svg>';
+  }
+  function flowPill(p){
+    var r=readiness(p);
+    return '<button class="ks-fpill'+(r.busy?' live':'')+(r.pct===100?' done':'')+'" data-a="flow" aria-expanded="'+!!S.flow+'" aria-label="Post progress: step '+r.idx+' of '+r.n+', '+r.pct+'% ready. Open the progress and log">'
+      +'<span class="st">Step '+r.idx+'/'+r.n+'</span><span class="nm">'+esc(r.busy?'Sending\u2026':(r.cur?r.cur.n:'All done'))+'</span>'
+      +dotStrip(r.pct,12,2)+'<span class="pc"><i aria-hidden="true"></i>'+r.pct+'%</span></button>';
+  }
+  function paintFlowPanel(){
+    var old=$('.ks-flowp'); if(!S.flow){ if(old) old.remove(); return; }
+    var p=P(); if(!p) return;
+    var r=readiness(p), el=old||document.createElement('div');
+    el.className='ks-flowp'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Post progress');
+    var logs=LOG.slice(-8).reverse();
+    var rows=(p.targets||[]).map(function(k){ var x=(p.results||{})[k]; return x&&x.at?{at:x.at,t:KPo.PLAT[k].n+': '+(x.state==='ok'?'posted':x.state==='draft'?'draft sent':x.state==='working'?'working\u2026':x.state==='skipped'?'kept in Kova':'failed')+(x.msg?' \u2014 '+x.msg:''),k:x.state==='error'?'bad':'ok'}:null; }).filter(Boolean);
+    logs=logs.concat(rows).sort(function(a,b){ return b.at-a.at; }).slice(0,8);
+    el.innerHTML='<div class="ks-pc'+(r.busy?' live':'')+'">'
+        +'<div class="ks-pch"><span>Step '+r.idx+'/'+r.n+'</span><b>'+ic('chart')+'Ready '+r.pct+'%</b></div>'
+        +'<div class="ks-pct">'+esc(r.busy?'Sending to '+(p.targets||[]).length+' app'+((p.targets||[]).length===1?'':'s'):(r.cur?'Next: '+r.cur.n:'Done: '+(p.status==='scheduled'?'scheduled':'posted')))+'</div>'
+        +'<div class="ks-pcg">'+dotStrip(r.pct,26,6)+'<i class="ks-pcm" style="left:'+r.pct+'%"></i></div>'
+        +'<div class="ks-pcx"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div></div>'
+      +'<ol class="ks-fsteps">'+r.steps.map(function(x,i){ return '<li class="'+(x.d?'d':(x===r.cur?'c':''))+(x.live?' live':'')+'"><i aria-hidden="true">'+(x.d?ic('check'):(i+1))+'</i><span>'+esc(x.n)+'</span><em>'+(x.d?'Done':(x===r.cur?'Up next':'Waiting'))+'</em></li>'; }).join('')+'</ol>'
+      +'<div class="ks-logh">Latest logs</div>'
+      +(logs.length?'<ul class="ks-logs">'+logs.map(function(l){ var d=new Date(l.at); return '<li class="'+l.k+'"><time>'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2)+'</time><i></i><span>'+esc(l.t)+'</span></li>'; }).join('')+'</ul>'
+        :'<div class="ks-empty" style="padding:6px 2px">Nothing has run yet. Add a photo or write a line and it shows here.</div>');
+    if(!old){ (S.desk?$('#ksStage'):root).appendChild(el); }
+  }
+  var NEXT=[
+    {id:'media',g:'Add',ic:'upload',t:'Photos or clips',s:'Drop them in; two or more make a slider',a:'n-media'},
+    {id:'words',g:'AI',ic:'wand',t:'Write it with Kova',s:'A heading, caption and tags in your voice',a:'n-write'},
+    {id:'where',g:'Action in an app',ic:'link',t:'Post to an app',s:'Instagram, TikTok, YouTube, LinkedIn, X and more',a:'n-where'},
+    {id:'shape',g:'Transform',ic:'crop',t:'Shape it for each app',s:'Crop, cover frame and size per platform',a:'n-shape'},
+    {id:'checks',g:'Check',ic:'eye',t:'Run every app\u2019s checks',s:'See what an app would reject, before you post',a:'n-checks'},
+    {id:'sched',g:'Flow',ic:'cal',t:'Schedule it',s:'Pick a time, or the next good slot',a:'n-sched'},
+    {id:'human',g:'Human in the loop',ic:'inbox',t:'Send as drafts',s:'It lands in each app for you to approve',a:'n-drafts'},
+    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'}
+  ];
+  function nextList(p){
+    var r=readiness(p), want={media:'media',words:'words',where:'where',checks:'checks',send:'send'}[r.cur?r.cur.k:'send']||'send', q=String(S.nextQ||'').toLowerCase().trim();
+    var L=NEXT.filter(function(x){ return !q||(x.t+' '+x.s+' '+x.g).toLowerCase().indexOf(q)>=0; });
+    L.sort(function(a,b){ return (a.id===want?-1:0)-(b.id===want?-1:0); });
+    return {L:L,want:want};
+  }
+  function paintNext(){
+    var old=$('.ks-next'); if(!S.next){ if(old) old.remove(); return; }
+    var p=P(); if(!p) return;
+    var el=old||document.createElement('div'), n=nextList(p), keep=old&&$('#ksNextQ',old)===document.activeElement;
+    el.className='ks-next'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','What happens next?');
+    el.innerHTML='<div class="ks-nxh">What happens next?<button class="ks-x" data-a="next" aria-label="Close">'+ic('x')+'</button></div>'
+      +'<label class="ks-nxs">'+ic('search')+'<input id="ksNextQ" placeholder="Search actions\u2026" value="'+esc(S.nextQ||'')+'" aria-label="Search actions"></label>'
+      +'<div class="ks-nxl">'+(n.L.length?n.L.map(function(x){ return '<button class="ks-nxr'+(x.id===n.want?' rec':'')+'" data-a="'+x.a+'"><span class="ic">'+ic(x.ic)+'</span><span class="tx"><b>'+esc(x.g==='Add'||x.g==='Publish'?x.t:x.g)+'</b><small>'+esc(x.g==='Add'||x.g==='Publish'?x.s:x.t+' \u00b7 '+x.s)+'</small></span>'+(x.id===n.want?'<em>Next</em>':'')+'<span class="go" aria-hidden="true">'+ic('arrow')+'</span></button>'; }).join(''):'<div class="ks-empty" style="padding:10px">Nothing matches.</div>')+'</div>';
+    if(!old){ (S.desk?$('#ksStage'):root).appendChild(el); }
+    if(keep){ var i=$('#ksNextQ',el); if(i){ i.focus(); try{ i.setSelectionRange(i.value.length,i.value.length); }catch(e){} } }
+  }
+  function doNext(a){
+    var p=P(); S.next=false; paintNext(); paintTop();
+    if(a==='n-media'){ lsSet('ks.started',true); paintVeil(); $('#ksFile').dataset.at=''; $('#ksFile').click(); }
+    else if(a==='n-write'){ if(!S.field) S.field='heading'; setField(S.field,true); write(); }
+    else if(a==='n-where'){ S.panel=true; lsSet('ks.panel',true); root.classList.add('panel-open'); paintTop(); }
+    else if(a==='n-shape'){ zoomTo(function(){ return $('.ks-node[data-n="cover"]',world); }); var c=$('.ks-node[data-n="cover"]',world); if(c){ c.classList.add('ks-ping'); setTimeout(function(){ c.classList.remove('ks-ping'); },1600); } }
+    else if(a==='n-checks'){
+      var tg=targets(); if(!tg.length){ toast('Pick where it goes first.'); S.panel=true; root.classList.add('panel-open'); paintTop(); return; }
+      tg.forEach(function(k){ var c=KPo.check(p,k,KPo.linkState(k)); logIt(KPo.PLAT[k].n+': '+(c.ok?(c.warnings[0]?'passes \u2014 '+c.warnings[0]:'passes every check'):c.problems[0]),c.ok?'ok':'bad'); });
+      S.flow=true; paintFlowPanel(); paintTop();
+    }
+    else if(a==='n-sched') publish('schedule');
+    else if(a==='n-drafts') publish('draft');
+    else if(a==='n-send') publish('now');
   }
 
   /* =============================== menus ============================= */
@@ -45386,7 +45600,7 @@ window.KovaCanvas=(function(){
     var p=P(); if(!p||locked()) return;
     var files=Array.prototype.slice.call(list||[]).filter(function(f){ return /^(image|video)\//.test(f.type); });
     if(!files.length) return toast('Pick photos or videos.');
-    toast('Adding '+files.length+' file'+(files.length>1?'s':'')+'…');
+    toast('Adding '+files.length+' file'+(files.length>1?'s':'')+'…'); logIt('Adding '+files.length+' file'+(files.length>1?'s':''),'run');
     var chain=Promise.resolve(), added=[];
     files.forEach(function(f){ chain=chain.then(function(){ return KPo.probe(f).then(function(m){ added.push(m); },function(e){ toast(e.message); }); }); });
     chain.then(function(){
@@ -45974,10 +46188,12 @@ window.KovaCanvas=(function(){
     if(mode==null) mode=p.mode||'now';
     if(mode==='schedule'&&!(p.when>Date.now()+60e3)){ p.mode='schedule'; p.when=nextSlot(); KPo.save(p); render(); pickTime(); return; }
     var t0=Date.now();
+    logIt((mode==='schedule'?'Scheduling for '+when(p.when):(mode==='draft'?'Sending drafts to ':'Publishing to '))+(mode==='schedule'?'':(p.targets||[]).map(function(k){ return KPo.PLAT[k].n; }).join(', ')),'run');
     S.prog=0; softPaint();
     KPo.publish(p,mode,function(f){ S.prog=f; var b=$('.ks-prog i'); if(b) b.style.width=Math.round(f*100)+'%'; else softPaint(); })
       .then(function(){
         S.prog=-1; S.lastRun=Date.now()-t0;
+        logIt('Handed to the Kova server in '+(S.lastRun/1000).toFixed(1)+' s','ok');
         var srvN=(p.targets||[]).filter(function(k){ return KPo.linkState(k)!=='manual'; }).length;
         if(srvN) toast(mode==='schedule'?'Scheduled for '+when(p.when)+'.':(mode==='draft'?'Sending drafts…':'Publishing…'));
         render(); if(p.status==='publishing') poll();
@@ -45985,6 +46201,7 @@ window.KovaCanvas=(function(){
       })
       .catch(function(e){
         S.prog=-1; render();
+        logIt('Stopped: '+((e&&e.message)||'could not publish'),'bad');
         if(pendingHand(p).length) setTimeout(handoff,700);
         if(e&&e.signin) return signinPrompt(e.message);
         toast((e&&e.message)||'Could not publish.');
@@ -46072,6 +46289,9 @@ window.KovaCanvas=(function(){
           if(v==='all'){ S.q=''; } else { Object.keys(S.open).forEach(function(f){ S.open[f]=v==='open'; }); } paintPanel(); }); break;
       case 'field': setField(el.getAttribute('data-f'),true); break;
       case 'write': write(); break;
+      case 'flow': S.flow=!S.flow; S.next=false; paintNext(); paintFlowPanel(); paintTop(); break;
+      case 'next': S.next=!S.next; S.flow=false; S.nextQ=''; paintFlowPanel(); paintNext(); paintTop(); if(S.next){ var nq=$('#ksNextQ'); if(nq&&S.desk) nq.focus(); } break;
+      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': doNext(a); break;
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
@@ -46110,7 +46330,10 @@ window.KovaCanvas=(function(){
   function wireEvents(){
     root.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse'&&e.target.closest&&e.target.closest('.ks-media')) wake(); },true);
     root.addEventListener('keydown',function(e){ var t=e.target.closest&&e.target.closest('.ks-plats [data-a="plat"]'); if(t&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); t.click(); } });
+    root.addEventListener('input',function(e){ if(e.target&&e.target.id==='ksNextQ'){ S.nextQ=e.target.value; paintNext(); } });
+    root.addEventListener('keydown',function(e){ if(e.key==='Escape'&&(S.next||S.flow)){ S.next=false; S.flow=false; paintNext(); paintFlowPanel(); paintTop(); } });
     root.addEventListener('click',function(e){
+      if((S.next||S.flow)&&!(e.target.closest&&e.target.closest('.ks-next,.ks-flowp,[data-a="next"],[data-a="flow"]'))){ S.next=false; S.flow=false; paintNext(); paintFlowPanel(); paintTop(); }
       if(S.menu&&!S.menu.contains(e.target)) closeMenu();
       var st=e.target.closest('[data-step]');
       if(st&&root.contains(st)){ var pr=st.closest('[data-param]'); stepParam(pr.getAttribute('data-param'),+st.getAttribute('data-step')); return; }
