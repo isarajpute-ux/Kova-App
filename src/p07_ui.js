@@ -414,6 +414,8 @@ window.KovaCanvas=(function(){
              metaads:'metaads',threads:'threads',pinterest:'pinterest',bluesky:'bluesky',reddit:'reddit',tumblr:'tumblr',
              mastodon:'mastodon',discord:'discord',telegram:'telegram',gbusiness:'gbusiness'};
   function ic(n,cls){ return '<svg class="ki'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(IC[n]||'')+'</svg>'; }
+  /* a platform in its own colours (KovaBrand), else its glyph */
+  function mark(k,size){ return window.KovaBrand&&KovaBrand.has(k)?KovaBrand.logo(k,size):ic(BRAND[k]); }
   function tri(dir){ return '<svg viewBox="0 0 10 10"><path d="'+(dir==='l'?'M8 1.2v7.6L1.6 5z':'M2 1.2v7.6L8.4 5z')+'"/></svg>'; }
   function esc(x){ return String(x==null?'':x).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function $(s,r){ return (r||document).querySelector(s); }
@@ -584,8 +586,8 @@ window.KovaCanvas=(function(){
       var inc=KPo.postMedia(p).filter(function(m){ return m.thumb; }).slice(0,2);
       var pics=inc.length
         ? inc.map(function(m,i){ return '<div class="ph '+(i?'b':'a')+'" style="'+thumbOf(m)+'"></div>'; }).join('')
-          +(inc.length<2?'<div class="ph b g">'+ic(BRAND[k])+'</div>':'')
-        : '<div class="ph a g">'+ic(BRAND[k])+'</div><div class="ph b g">'+ic('photo')+'</div>';
+          +(inc.length<2?'<div class="ph b g">'+mark(k,26)+'</div>':'')
+        : '<div class="ph a g">'+mark(k,26)+'</div><div class="ph b g">'+ic('photo')+'</div>';
       var sub=st==='manual'?'You post it':(st==='on'?(lab||'Connected'):(st==='unconfigured'?'Needs setup':(st==='noupload'?'Allow uploads':'Tap to connect')));
       return '<div class="ks-card'+(on?' on':'')+(st!=='on'?' off':'')+'" data-a="card" data-k="'+k+'">'
         +'<div class="n">'+KPo.PLAT[k].n+'</div><div class="s">'+esc(sub)+'</div>'
@@ -793,7 +795,7 @@ window.KovaCanvas=(function(){
     else timeBar='<div class="tl"><span>'+(m?'Photo':'')+'</span><span>'+KPo.PLAT[k].n+'</span></div><div class="bar"><i style="width:100%"></i></div>';
     var plats=(targets().length?targets():KPo.ORDER).map(function(x){
       var cc=KPo.check(p,x,KPo.linkState(x));
-      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'"><i class="'+(cc.ok?'':'bad')+'"></i>'+KPo.PLAT[x].n+'</div>';
+      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'">'+mark(x,16)+KPo.PLAT[x].n+(cc.ok?'':'<i class="bad" aria-label="needs a fix"></i>')+'</div>';
     }).join('');
     var r=(p.results||{})[k];
     var note='';
@@ -996,6 +998,18 @@ window.KovaCanvas=(function(){
     var n=L.tags?KPo.tagList(v).length:(L.w==='X'?KPo.xLength(v):KPo.chars(v));
     return {t:n+' / '+L.n+(L.tags?' tags':' · '+L.w),bad:n>L.n};
   }
+  /* where this post goes, as the platforms' own marks: tap one to see the
+     post as it will look there; the badge is how many posts are in
+     progress for that platform (drafts, scheduled, sending) */
+  function brands(){
+    if(!window.KovaBrand) return '';
+    var t=targets(); if(!t.length) return '<div class="ks-brands"><span class="lb">Posting to</span><button class="ks-pill" data-a="panel">Pick where it goes</button></div>';
+    var live=KPo.all().filter(function(x){ return /^(draft|scheduled|publishing|uploading)$/.test(x.status); }), cur=currentPlat();
+    return '<div class="ks-brands" role="group" aria-label="Posting to"><span class="lb">Posting to</span>'+t.map(function(k){
+      var n=live.filter(function(x){ return (x.targets||[]).indexOf(k)>=0; }).length;
+      return KovaBrand.chip(k,n,{on:k===cur,attrs:' data-a="plat" data-k="'+k+'"',label:n+' post'+(n===1?'':'s')+' in progress. Show the preview there'});
+    }).join('')+'</div>';
+  }
   function paintDock(){
     var p=P(), el=$('#ksDock'); if(!el||!p) return;
     var tabs=KPo.FIELDS.map(function(f){
@@ -1003,7 +1017,8 @@ window.KovaCanvas=(function(){
     }).join('');
     var c=counter(), v=String(p[S.field]||'');
     var speech=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
-    el.innerHTML='<div class="ks-dtabs">'+tabs+'</div>'
+    el.setAttribute('data-f',S.field);
+    el.innerHTML=brands()+'<div class="ks-dtabs">'+tabs+'</div>'
       +'<div class="ks-front"><span class="ks-cnt'+(c.bad?' bad':'')+'" id="ksCnt">'+esc(c.t)+'</span>'
         +'<div class="ks-fin"><div class="gh" id="ksGh"></div>'
         +'<textarea id="ksTa" rows="2" placeholder="'+esc(FIELD[S.field].ph)+'"'+(locked()?' readonly':'')+'>'+esc(v)+'</textarea></div>'
@@ -1910,7 +1925,7 @@ window.KovaCanvas=(function(){
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
-      case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); break;
+      case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); paintDock(); break;
       case 'nextplat': { var list=targets().length?targets():KPo.ORDER; S.plat=list[(list.indexOf(currentPlat())+1)%list.length]; softPaint(); } break;
       case 'edit': editFor(currentPlat()); break;
       case 'share': shareIt(); break;
@@ -2059,7 +2074,7 @@ window.KovaCanvas=(function(){
     return p;
   }
 
-  return {onScreen:onScreen, toast:toast, tour:tour, connect:connect, open:function(id){ S.post=null; lsSet('ks.last',id); go('workstudio'); },
+  return {icons:IC, onScreen:onScreen, toast:toast, tour:tour, connect:connect, open:function(id){ S.post=null; lsSet('ks.last',id); go('workstudio'); },
           newPost:function(){ go('workstudio'); newPost(); }, fromVariant:fromVariant,
           _state:S, _render:render, _addFiles:addFiles, _publish:publish, _act:act,
           /* for the accounts folders (p09) */

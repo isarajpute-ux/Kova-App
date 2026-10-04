@@ -45,3 +45,20 @@
   .volrow:has(.volnote){flex-wrap:wrap;row-gap:2px}
   .volrow .volnote{flex-basis:100%;max-width:none!important;text-align:left!important}
 }
+/* the Studio's full-screen cards (Get started, sheets) start where the
+   rail ends on phones and tablets, so they centre in the page you see
+   instead of sliding under the rail */
+@media (max-width:999px){#s-workstudio .ks-veil{left:56px}}
+@media (max-width:340px){#s-workstudio .ks-veil{left:48px}}
+/* the Studio's Get started card on a phone: its two buttons share the row
+   when there is room and stack when there is not; text sized to fit */
+@media (max-width:520px){
+  #s-workstudio .ks-start{padding:30px 22px 22px}
+  #s-workstudio .ks-start .ast{margin-bottom:34px}
+  #s-workstudio .ks-start h3{font-size:24px}
+  #s-workstudio .ks-start p{font-size:16px;margin-bottom:26px}
+  #s-workstudio .ks-start .ks-big{height:56px;font-size:17px}
+  #s-workstudio .ks-start .row{flex-wrap:wrap}
+  #s-workstudio .ks-start .row>*{flex:1 1 130px;min-width:0}
+}
+@media (max-width:340px){#s-workstudio .ks-start .ks-big{font-size:15.5px;gap:10px}}

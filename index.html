@@ -6035,6 +6035,97 @@ body.light-mode .app{--hair:rgba(28,26,23,.1)}
   .volrow:has(.volnote){flex-wrap:wrap;row-gap:2px}
   .volrow .volnote{flex-basis:100%;max-width:none!important;text-align:left!important}
 }
+/* the Studio's full-screen cards (Get started, sheets) start where the
+   rail ends on phones and tablets, so they centre in the page you see
+   instead of sliding under the rail */
+@media (max-width:999px){#s-workstudio .ks-veil{left:56px}}
+@media (max-width:340px){#s-workstudio .ks-veil{left:48px}}
+/* the Studio's Get started card on a phone: its two buttons share the row
+   when there is room and stack when there is not; text sized to fit */
+@media (max-width:520px){
+  #s-workstudio .ks-start{padding:30px 22px 22px}
+  #s-workstudio .ks-start .ast{margin-bottom:34px}
+  #s-workstudio .ks-start h3{font-size:24px}
+  #s-workstudio .ks-start p{font-size:16px;margin-bottom:26px}
+  #s-workstudio .ks-start .ks-big{height:56px;font-size:17px}
+  #s-workstudio .ks-start .row{flex-wrap:wrap}
+  #s-workstudio .ks-start .row>*{flex:1 1 130px;min-width:0}
+}
+@media (max-width:340px){#s-workstudio .ks-start .ks-big{font-size:15.5px;gap:10px}}
+
+</style>
+<style id="p08-brand">
+/* KovaBrand (p13): platform marks, the "Posting to" chips, and the Studio
+   field tabs with a colour of their own. Dark, soft light and light glass. */
+.kb-logo{display:block;flex-shrink:0;border-radius:6px}
+
+/* round glass chip with a mark and a count badge */
+.kb-chip{position:relative;width:44px;height:44px;flex-shrink:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:.5px solid rgba(255,255,255,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px -8px rgba(0,0,0,.6);transition:transform .18s ease,box-shadow .18s ease}
+.kb-chip:active{transform:scale(.94)}
+.kb-chip.on{border-color:rgba(255,255,255,.55);box-shadow:0 0 0 2px rgba(255,255,255,.18),inset 0 1px 0 rgba(255,255,255,.2),0 6px 16px -8px rgba(0,0,0,.6)}
+.kb-badge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font:600 10.5px/1 'Outfit',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#fff;background:#2A2B30;border:1px solid rgba(255,255,255,.22)}
+body.light-mode .kb-chip{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(255,255,255,.7));border-color:rgba(18,20,24,.12);box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(20,24,32,.3)}
+body.light-mode .kb-chip.on{border-color:rgba(18,20,24,.45);box-shadow:0 0 0 2px rgba(18,20,24,.1),inset 0 1px 0 #fff,0 6px 16px -8px rgba(20,24,32,.3)}
+body.light-mode .kb-badge{background:#fff;color:#16181C;border-color:rgba(18,20,24,.18)}
+
+/* the row in the Studio editor */
+/* a glass tray, like a task tray: "Posting to" and the marks */
+.ks-brands{display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 44px);margin:0 22px 14px;padding:6px 8px 6px 16px;
+  border-radius:999px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:1;
+  background:linear-gradient(150deg,rgba(40,40,44,.92),rgba(26,26,29,.92));border:.5px solid rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
+.ks-brands::-webkit-scrollbar{display:none}
+.ks-brands .lb{flex-shrink:0;font-size:12.5px;letter-spacing:.01em;color:rgba(255,255,255,.6);margin-right:4px}
+.ks-brands .kb-chip{width:40px;height:40px}
+body.soft-light .ks-brands{background:linear-gradient(150deg,rgba(92,92,96,.92),rgba(70,70,74,.92));border-color:rgba(255,255,255,.18)}
+body.light-mode .ks-brands{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(246,247,249,.92));border-color:rgba(18,20,24,.1);box-shadow:0 8px 20px -12px rgba(20,24,32,.3)}
+body.light-mode .ks-brands .lb{color:rgba(18,20,24,.6)}
+@media (max-width:999px){.ks-brands{margin:0 8px 10px;max-width:calc(100% - 16px)}}
+.ks-plats div{gap:7px}
+.ks-plats div .kb-logo{border-radius:4px}
+.ks-plats div i.bad{width:6px;height:6px;border-radius:50%;background:#E5484D;margin-left:2px}
+.ks-card .ph.g .kb-logo{margin:auto}
+.wpill .kb-logo{border-radius:4px;margin-right:1px}
+
+/* ---- Studio field tabs: the one you tap rises, curves and takes its own
+   colour; the text panel under it glows the same way ---- */
+#s-workstudio .ks-dt{transition:transform .28s cubic-bezier(.2,.9,.3,1),background .28s ease,box-shadow .28s ease,border-radius .28s ease}
+#s-workstudio .ks-dt.on{transform:translateY(-9px);border-radius:28px 28px 0 0;color:#fff;border-color:rgba(255,255,255,.28)}
+#s-workstudio .ks-dt.on .a{color:#fff}
+#s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.8)}
+#s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#5A2E16 0%,#9A5527 50%,#D9955A 100%);box-shadow:0 0 28px rgba(217,140,80,.32),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#1C2C58 0%,#2E55A6 50%,#79A3F2 100%);box-shadow:0 0 28px rgba(110,150,240,.32),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#5A1622 0%,#A3283A 50%,#E8707C 100%);box-shadow:0 0 28px rgba(230,90,105,.32),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#143D2C 0%,#21774E 50%,#5FC892 100%);box-shadow:0 0 28px rgba(90,200,140,.3),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.done .a::after{background:currentColor;box-shadow:none}
+/* the glow behind the words, in the open field's colour */
+#s-workstudio .ks-dock[data-f] .ks-front::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;transition:background .35s ease;
+  background:radial-gradient(70% 120% at 8% 100%,var(--fglow) 0%,transparent 62%),radial-gradient(50% 90% at 95% 0%,var(--fglow2) 0%,transparent 70%)}
+#s-workstudio .ks-dock[data-f="heading"]{--fglow:rgba(214,112,48,.5);--fglow2:rgba(214,112,48,.18)}
+#s-workstudio .ks-dock[data-f="body"]{--fglow:rgba(70,120,235,.48);--fglow2:rgba(70,120,235,.16)}
+#s-workstudio .ks-dock[data-f="caption"]{--fglow:rgba(220,55,70,.5);--fglow2:rgba(220,55,70,.18)}
+#s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(55,185,115,.42);--fglow2:rgba(55,185,115,.15)}
+/* soft light: a touch brighter */
+body.soft-light #s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#7A4220 0%,#B36A35 50%,#E8AA72 100%)}
+body.soft-light #s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#2A3F78 0%,#3E69C0 50%,#93B6F6 100%)}
+body.soft-light #s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#7A2030 0%,#BA3A4C 50%,#F08A95 100%)}
+body.soft-light #s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#1E5A40 0%,#2E9262 50%,#78D8A6 100%)}
+/* light glass: pale tints, dark words */
+body.light-mode #s-workstudio .ks-dt.on{color:#1B1D21;border-color:rgba(18,20,24,.14)}
+body.light-mode #s-workstudio .ks-dt.on .a{color:#1B1D21}
+body.light-mode #s-workstudio .ks-dt.on .b{color:rgba(27,29,33,.66)}
+body.light-mode #s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#FFF4EA 0%,#F6D2B0 55%,#EDB07C 100%);box-shadow:0 0 24px rgba(220,140,80,.25),0 -6px 18px rgba(40,44,54,.1)}
+body.light-mode #s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#F1F5FF 0%,#C9D9FA 55%,#9DBAF2 100%);box-shadow:0 0 24px rgba(90,130,230,.22),0 -6px 18px rgba(40,44,54,.1)}
+body.light-mode #s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#FFF0F2 0%,#F7C6CC 55%,#EE9AA4 100%);box-shadow:0 0 24px rgba(220,80,100,.22),0 -6px 18px rgba(40,44,54,.1)}
+body.light-mode #s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#EEFAF3 0%,#BFE8D0 55%,#8ED3AE 100%);box-shadow:0 0 24px rgba(60,170,110,.22),0 -6px 18px rgba(40,44,54,.1)}
+body.light-mode #s-workstudio .ks-dock[data-f="heading"]{--fglow:rgba(230,140,70,.3);--fglow2:rgba(230,140,70,.12)}
+body.light-mode #s-workstudio .ks-dock[data-f="body"]{--fglow:rgba(80,130,235,.26);--fglow2:rgba(80,130,235,.1)}
+body.light-mode #s-workstudio .ks-dock[data-f="caption"]{--fglow:rgba(225,70,90,.26);--fglow2:rgba(225,70,90,.1)}
+body.light-mode #s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(50,170,105,.24);--fglow2:rgba(50,170,105,.1)}
+@media (prefers-reduced-motion:reduce){#s-workstudio .ks-dt{transition:none}}
 
 </style>
 </head>
@@ -33231,7 +33322,7 @@ window.KovaStudio=(function(){
     g.innerHTML=ORDER.map(function(k){
       var m=modeOf(k);
       var bg=m==='direct'?'#3FA463':(m==='draft'?'#C9A227':'rgba(10,10,12,.25)');
-      return '<span class="wpill onglow"><i style="background:'+bg+'"></i>'+esc(P[k].n)+'</span>';
+      return '<span class="wpill onglow">'+(window.KovaBrand?KovaBrand.logo(k,15):'')+'<i style="background:'+bg+'" title="'+(m==='direct'?'Posts directly':m==='draft'?'Sends a draft':'Not connected')+'"></i>'+esc(P[k].n)+'</span>';
     }).join('');
 
     var q=queued();
@@ -44054,6 +44145,8 @@ window.KovaCanvas=(function(){
              metaads:'metaads',threads:'threads',pinterest:'pinterest',bluesky:'bluesky',reddit:'reddit',tumblr:'tumblr',
              mastodon:'mastodon',discord:'discord',telegram:'telegram',gbusiness:'gbusiness'};
   function ic(n,cls){ return '<svg class="ki'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(IC[n]||'')+'</svg>'; }
+  /* a platform in its own colours (KovaBrand), else its glyph */
+  function mark(k,size){ return window.KovaBrand&&KovaBrand.has(k)?KovaBrand.logo(k,size):ic(BRAND[k]); }
   function tri(dir){ return '<svg viewBox="0 0 10 10"><path d="'+(dir==='l'?'M8 1.2v7.6L1.6 5z':'M2 1.2v7.6L8.4 5z')+'"/></svg>'; }
   function esc(x){ return String(x==null?'':x).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function $(s,r){ return (r||document).querySelector(s); }
@@ -44224,8 +44317,8 @@ window.KovaCanvas=(function(){
       var inc=KPo.postMedia(p).filter(function(m){ return m.thumb; }).slice(0,2);
       var pics=inc.length
         ? inc.map(function(m,i){ return '<div class="ph '+(i?'b':'a')+'" style="'+thumbOf(m)+'"></div>'; }).join('')
-          +(inc.length<2?'<div class="ph b g">'+ic(BRAND[k])+'</div>':'')
-        : '<div class="ph a g">'+ic(BRAND[k])+'</div><div class="ph b g">'+ic('photo')+'</div>';
+          +(inc.length<2?'<div class="ph b g">'+mark(k,26)+'</div>':'')
+        : '<div class="ph a g">'+mark(k,26)+'</div><div class="ph b g">'+ic('photo')+'</div>';
       var sub=st==='manual'?'You post it':(st==='on'?(lab||'Connected'):(st==='unconfigured'?'Needs setup':(st==='noupload'?'Allow uploads':'Tap to connect')));
       return '<div class="ks-card'+(on?' on':'')+(st!=='on'?' off':'')+'" data-a="card" data-k="'+k+'">'
         +'<div class="n">'+KPo.PLAT[k].n+'</div><div class="s">'+esc(sub)+'</div>'
@@ -44433,7 +44526,7 @@ window.KovaCanvas=(function(){
     else timeBar='<div class="tl"><span>'+(m?'Photo':'')+'</span><span>'+KPo.PLAT[k].n+'</span></div><div class="bar"><i style="width:100%"></i></div>';
     var plats=(targets().length?targets():KPo.ORDER).map(function(x){
       var cc=KPo.check(p,x,KPo.linkState(x));
-      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'"><i class="'+(cc.ok?'':'bad')+'"></i>'+KPo.PLAT[x].n+'</div>';
+      return '<div class="'+(x===k?'on':'')+'" data-a="plat" data-k="'+x+'">'+mark(x,16)+KPo.PLAT[x].n+(cc.ok?'':'<i class="bad" aria-label="needs a fix"></i>')+'</div>';
     }).join('');
     var r=(p.results||{})[k];
     var note='';
@@ -44636,6 +44729,18 @@ window.KovaCanvas=(function(){
     var n=L.tags?KPo.tagList(v).length:(L.w==='X'?KPo.xLength(v):KPo.chars(v));
     return {t:n+' / '+L.n+(L.tags?' tags':' · '+L.w),bad:n>L.n};
   }
+  /* where this post goes, as the platforms' own marks: tap one to see the
+     post as it will look there; the badge is how many posts are in
+     progress for that platform (drafts, scheduled, sending) */
+  function brands(){
+    if(!window.KovaBrand) return '';
+    var t=targets(); if(!t.length) return '<div class="ks-brands"><span class="lb">Posting to</span><button class="ks-pill" data-a="panel">Pick where it goes</button></div>';
+    var live=KPo.all().filter(function(x){ return /^(draft|scheduled|publishing|uploading)$/.test(x.status); }), cur=currentPlat();
+    return '<div class="ks-brands" role="group" aria-label="Posting to"><span class="lb">Posting to</span>'+t.map(function(k){
+      var n=live.filter(function(x){ return (x.targets||[]).indexOf(k)>=0; }).length;
+      return KovaBrand.chip(k,n,{on:k===cur,attrs:' data-a="plat" data-k="'+k+'"',label:n+' post'+(n===1?'':'s')+' in progress. Show the preview there'});
+    }).join('')+'</div>';
+  }
   function paintDock(){
     var p=P(), el=$('#ksDock'); if(!el||!p) return;
     var tabs=KPo.FIELDS.map(function(f){
@@ -44643,7 +44748,8 @@ window.KovaCanvas=(function(){
     }).join('');
     var c=counter(), v=String(p[S.field]||'');
     var speech=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
-    el.innerHTML='<div class="ks-dtabs">'+tabs+'</div>'
+    el.setAttribute('data-f',S.field);
+    el.innerHTML=brands()+'<div class="ks-dtabs">'+tabs+'</div>'
       +'<div class="ks-front"><span class="ks-cnt'+(c.bad?' bad':'')+'" id="ksCnt">'+esc(c.t)+'</span>'
         +'<div class="ks-fin"><div class="gh" id="ksGh"></div>'
         +'<textarea id="ksTa" rows="2" placeholder="'+esc(FIELD[S.field].ph)+'"'+(locked()?' readonly':'')+'>'+esc(v)+'</textarea></div>'
@@ -45550,7 +45656,7 @@ window.KovaCanvas=(function(){
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
-      case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); break;
+      case 'plat': S.plat=k; S.slide=Math.min(S.slide,Math.max(0,KPo.postMedia(p).length-1)); softPaint(); paintDock(); break;
       case 'nextplat': { var list=targets().length?targets():KPo.ORDER; S.plat=list[(list.indexOf(currentPlat())+1)%list.length]; softPaint(); } break;
       case 'edit': editFor(currentPlat()); break;
       case 'share': shareIt(); break;
@@ -45699,7 +45805,7 @@ window.KovaCanvas=(function(){
     return p;
   }
 
-  return {onScreen:onScreen, toast:toast, tour:tour, connect:connect, open:function(id){ S.post=null; lsSet('ks.last',id); go('workstudio'); },
+  return {icons:IC, onScreen:onScreen, toast:toast, tour:tour, connect:connect, open:function(id){ S.post=null; lsSet('ks.last',id); go('workstudio'); },
           newPost:function(){ go('workstudio'); newPost(); }, fromVariant:fromVariant,
           _state:S, _render:render, _addFiles:addFiles, _publish:publish, _act:act,
           /* for the accounts folders (p09) */
@@ -53444,6 +53550,75 @@ window.KovaSettingsGroups=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
   return {group:group};
+})();
+
+</script>
+<script id="p08-brand">
+/* =====================================================================
+   KovaBrand - the platforms in their own colours (p13).
+
+   Wherever the Studio and Work OS show where a post goes, each platform
+   is its real mark: Instagram's gradient, YouTube's red, TikTok's cyan and
+   red offset, LinkedIn's blue, and so on, drawn as a small rounded tile.
+   chip() wraps a logo in a round glass button with a count badge, like a
+   task tray: "Instagram, 3 posts in progress".
+   The glyph shapes are the Studio's own (KovaCanvas icons), so a mark looks
+   the same here as everywhere else in Kova.
+   ===================================================================== */
+window.KovaBrand=(function(){
+  'use strict';
+  var uid=0;
+  /* bg: tile colour or gradient; ink: glyph colour; fill: glyph is solid */
+  var B={
+    instagram:{bg:'ig',ink:'#fff'},
+    youtube:{bg:'#FF0033',ink:'#fff',custom:'yt'},
+    tiktok:{bg:'#010101',ink:'#fff',custom:'tt'},
+    linkedin:{bg:'#0A66C2',ink:'#fff',custom:'li'},
+    x:{bg:'#000000',ink:'#fff',fill:true},
+    facebook:{bg:'#0866FF',ink:'#fff',custom:'fb'},
+    metaads:{bg:'#0866FF',ink:'#fff'},
+    threads:{bg:'#000000',ink:'#fff'},
+    pinterest:{bg:'#E60023',ink:'#fff'},
+    bluesky:{bg:'#1185FE',ink:'#fff',fill:true},
+    reddit:{bg:'#FF4500',ink:'#fff'},
+    tumblr:{bg:'#001935',ink:'#fff',fill:true},
+    mastodon:{bg:'#6364FF',ink:'#fff'},
+    discord:{bg:'#5865F2',ink:'#fff'},
+    telegram:{bg:'#229ED9',ink:'#fff'},
+    gbusiness:{bg:'#FFFFFF',ink:'#1A73E8'}
+  };
+  var NAME={instagram:'Instagram',youtube:'YouTube',tiktok:'TikTok',linkedin:'LinkedIn',x:'X',facebook:'Facebook',metaads:'Meta Ads',threads:'Threads',
+    pinterest:'Pinterest',bluesky:'Bluesky',reddit:'Reddit',tumblr:'Tumblr',mastodon:'Mastodon',discord:'Discord',telegram:'Telegram',gbusiness:'Google Business'};
+  var GLYPH={x:'xlogo'};
+  function glyph(k){ var I=(window.KovaCanvas&&KovaCanvas.icons)||{}; return I[GLYPH[k]||k]||''; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* the mark on its tile, as an inline SVG of the given size */
+  function logo(k,size){
+    var b=B[k]; if(!b) return '';
+    size=size||24; var id='kb'+(++uid), defs='', bg=b.bg, inner='';
+    if(bg==='ig'){ defs='<radialGradient id="'+id+'" cx="30%" cy="107%" r="150%"><stop offset="0" stop-color="#FDF497"/><stop offset=".05" stop-color="#FDF497"/><stop offset=".45" stop-color="#FD5949"/><stop offset=".6" stop-color="#D6249F"/><stop offset=".9" stop-color="#285AEB"/></radialGradient>'; bg='url(#'+id+')'; }
+    var tile='<rect width="24" height="24" rx="6.5" fill="'+bg+'"/>';
+    if(b.custom==='yt') inner='<path d="M7.6 8.3l8.7 3.7-8.7 3.7z" fill="#fff"/>';
+    else if(b.custom==='tt'){
+      /* the note three times: cyan up-left, red down-right, white on top */
+      var note=glyph('tiktok'), pass=function(col,d){ return '<g fill="none" stroke="'+col+'" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate('+d+' '+d+') scale(.8)">'+note+'</g>'; };
+      inner=pass('#25F4EE',1.9)+pass('#FE2C55',2.9)+pass('#fff',2.4);
+    }
+    else if(b.custom==='li') inner='<path d="M7.6 10.4v6.4M7.6 7.3v.1M11.4 16.8v-3.6a2.3 2.3 0 0 1 4.6 0v3.6M11.4 10.4v6.4" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>';
+    else if(b.custom==='fb') inner='<path d="M13.4 21v-7.1h2.4l.4-2.8h-2.8V9.4c0-.8.3-1.4 1.4-1.4h1.5V5.5a19 19 0 0 0-2.2-.1c-2.2 0-3.7 1.3-3.7 3.8v1.9H8v2.8h2.4V21z" fill="#fff"/>';
+    else inner='<g transform="translate(3.6 3.6) scale(.7)" '+(b.fill?'fill="'+b.ink+'" stroke="none"':'fill="none" stroke="'+b.ink+'" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"')+' color="'+b.ink+'">'+glyph(k)+'</g>';
+    if(k==='gbusiness') tile='<rect width="24" height="24" rx="6.5" fill="#fff"/><rect x=".5" y=".5" width="23" height="23" rx="6" fill="none" stroke="rgba(0,0,0,.12)"/>';
+    return '<svg class="kb-logo" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" aria-hidden="true">'+(defs?'<defs>'+defs+'</defs>':'')+tile+inner+'</svg>';
+  }
+  /* a round glass button holding the mark, with a count badge */
+  function chip(k,count,o){
+    o=o||{};
+    var n=+count||0, label=NAME[k]+(o.label?': '+o.label:'');
+    return '<button class="kb-chip'+(o.on?' on':'')+(o.cls?' '+o.cls:'')+'"'+(o.attrs||'')+' aria-label="'+esc(label)+'"'+(o.on!=null?' aria-pressed="'+!!o.on+'"':'')+'>'
+      +logo(k,o.size||22)+(n?'<span class="kb-badge" aria-hidden="true">'+(n>99?'99+':n)+'</span>':'')+'</button>';
+  }
+  return {logo:logo,chip:chip,name:function(k){ return NAME[k]||k; },has:function(k){ return !!B[k]; }};
 })();
 
 </script>
