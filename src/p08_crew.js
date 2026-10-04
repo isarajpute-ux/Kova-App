@@ -151,6 +151,12 @@ window.KovaCrew=(function(){
       memory:[], enabled:true, runs:0, lastRun:0, lastRoutine:0
     },'user');
   }
+  /* the template's name, or the first free one if someone already has it */
+  function freeName(t){
+    var used=emps().map(function(e){ return e.n; });
+    if(used.indexOf(t.n)<0) return t.n;
+    return ((typeof FILL!=='undefined'&&FILL.names)||['Sam','Noor','Iris','Theo','Lena','Omar']).filter(function(n){ return used.indexOf(n)<0; })[0]||t.n;
+  }
   function seed(){
     if(emps().length||(window.KP&&KP.get('crewSeeded'))) return;
     SEED.forEach(function(id){ hire(tpl(id),null,true); });
@@ -1329,7 +1335,10 @@ window.KovaCrew=(function(){
       ideas:W.list('content',function(c){ return c.kind!=='post'; }).length};
   }
   /* pieces of a pop-up */
-  function dOpen(title,sub){ return '<div class="grab"></div><div class="cwd"><div class="cwd-t">'+esc(title)+'</div>'+(sub?'<div class="cwd-s">'+esc(sub)+'</div>':''); }
+  /* each tile's details are a page of their own inside the team area (with
+     the pills above and a back button), not a sheet that drops over it */
+  function dOpen(title,sub){ return '<div class="cwd cwd-page"><button class="cwd-back" data-cd="back" aria-label="Back to your team">'+svg(IC.back)+'<span>Your team</span></button>'
+    +'<div class="cwd-t">'+esc(title)+'</div>'+(sub?'<div class="cwd-s">'+esc(sub)+'</div>':''); }
   function dBig(v,unit,cap,soft){ return '<div class="cwd-big'+(soft?' soft':'')+'"><b>'+esc(v)+'</b>'+(unit?'<span>'+esc(unit)+'</span>':'')+'</div>'+(cap?'<p class="cwd-cap">'+esc(cap)+'</p>':''); }
   function dStats(L){ return '<div class="cwd-stats c'+L.length+'">'+L.map(function(x){ return '<div class="cwd-st'+(x.tone?' '+x.tone:'')+'"><b>'+esc(x.v)+'</b><span>'+esc(x.l)+'</span></div>'; }).join('')+'</div>'; }
   function dSec(h,body,note){ return '<section class="cwd-sec"><h3 class="cwd-h">'+esc(h)+(note?'<small>'+esc(note)+'</small>':'')+'</h3>'+body+'</section>'; }
@@ -1433,26 +1442,107 @@ window.KovaCrew=(function(){
     h+=dSec('Overdue',dList(od,function(i){ return dTask(i,overBy(i)+' d overdue','bad'); },'Nothing overdue.'));
     return h+dBtns([{l:'Open Approvals',a:'data-cd="nav" data-n="approvals"'}].concat(od.length?[{l:'Have the team triage what is late',a:'data-cd="ask" data-q="Triage my overdue tasks"'}]:[]))+'</div>';
   }
-  var DETAIL={ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
+  var DETAIL={jobs:dJobs,ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
+  var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
   function detail(k){
-    if(!DETAIL[k]||!window.openSheet) return;
-    dCur=k; openSheet(DETAIL[k]());
-    var el=document.querySelector('#sheetIn .cwd'); if(el) el.addEventListener('click',onDetail);
-    try{ if(window.KovaAnalytics) KovaAnalytics.track('team_tile',{feature:k}); }catch(e){}
+    if(!DETAIL[k]) return;
+    var was=S.view==='detail'&&dCur===k;
+    dCur=k; S.view='detail'; S.dk=k; S.draft=null; paint(); if(!was) top0();
+    if(!was) try{ if(window.KovaAnalytics) KovaAnalytics.track('team_tile',{feature:k}); }catch(e){}
   }
+  function detailPage(){ var k=S.dk&&DETAIL[S.dk]?S.dk:'jobs'; dCur=k; return '<div class="crd">'+topBar()+DETAIL[k]()+'</div>'; }
   function onDetail(ev){
     var b=ev.target.closest&&ev.target.closest('[data-cd]'); if(!b) return;
-    var c=b.getAttribute('data-cd');
+    var c=b.getAttribute('data-cd'), sheet=!!b.closest('#sheet'), later=function(f){ if(sheet){ if(window.closeSheet) closeSheet(); setTimeout(f,220); } else f(); };
+    if(c==='back'){ S.view='team'; S.nav='team'; paint(); top0(); return; }
     if(c==='range'){ dRange=+b.getAttribute('data-r')||30; detail(dCur); return; }
+    if(c==='jday'){ S.jday=+b.getAttribute('data-i'); detail(dCur); return; }
     if(c==='skip'){ skip(b.getAttribute('data-j'),'You skipped this from Needs you.'); detail(dCur); return; }
-    if(window.closeSheet) closeSheet();
-    if(c==='item'){ var id=b.getAttribute('data-id'); setTimeout(function(){ if(window.__openWorkItem) __openWorkItem(id); },220); return; }
-    if(c==='go'){ var s=b.getAttribute('data-s'); setTimeout(function(){ try{ go(s); }catch(e){} },220); return; }
-    if(c==='traction'){ var pid=b.getAttribute('data-id'); setTimeout(function(){ if(window.KovaTraction&&KovaTraction.open) KovaTraction.open(pid); else try{ go('workstudio'); }catch(e){} },220); return; }
+    if(c==='emp'){ var eid=b.getAttribute('data-id'); S.view='team'; S.nav='team'; S.tab=eid||'all'; paint(); top0(); return; }
+    if(c==='job'){ var jj=S.jobs[b.getAttribute('data-j')]; if(jj){ S.view='team'; S.nav='team'; S.tab=jj.emp; paint(); var n=document.getElementById('job-'+jj.id); if(n&&n.scrollIntoView) n.scrollIntoView({block:'center'}); } return; }
+    if(c==='item'){ var id=b.getAttribute('data-id'); later(function(){ if(window.__openWorkItem) __openWorkItem(id); }); return; }
+    if(c==='go'){ var s=b.getAttribute('data-s'); later(function(){ try{ go(s); }catch(e){} }); return; }
+    if(c==='traction'){ var pid=b.getAttribute('data-id'); later(function(){ if(window.KovaTraction&&KovaTraction.open) KovaTraction.open(pid); else try{ go('workstudio'); }catch(e){} }); return; }
     if(c==='nav'){ S.view='team'; S.nav=b.getAttribute('data-n')||'team'; S.draft=null; paint(); top0(); return; }
     if(c==='ask'){ var q=b.getAttribute('data-q'), r=route(q); if(!r){ say('Hire someone first.'); return; }
-      var j=start(r.emp,q,'team'); if(j) log(j,'From the '+({ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'}[dCur]||'team')+' tile. Routed to '+r.emp.n+'.','handoff');
+      var j=start(r.emp,q,'team'); if(j) log(j,'From the '+(TILE_N[dCur]||'team')+' tile. Routed to '+r.emp.n+'.','handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return; }
+  }
+
+  /* ---- jobs done: per day, who did them, and the chart ---- */
+  function jobsDays(rng){
+    var all=jobsOf().filter(function(j){ return j.state==='done'; }), out=[], wk=rng>45, step=wk?7:1, n=Math.ceil(rng/step), s0=sod();
+    for(var i=n-1;i>=0;i--){
+      var a=s0-(i*step+(step-1))*DAY, b=s0-i*step*DAY+DAY;
+      var js=all.filter(function(j){ var t=j.end||j.at; return t>=a&&t<b; }), by={};
+      js.forEach(function(j){ by[j.emp]=(by[j.emp]||0)+1; });
+      out.push({a:a,b:b,v:js.length,jobs:js,by:by,wk:wk,today:i===0});
+    }
+    return out;
+  }
+  function dayName(d){ return d.wk?'Week of '+new Date(d.a).toLocaleDateString('en-US',{month:'short',day:'numeric'}):(d.today?'Today':new Date(d.a).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})); }
+  function whoLine(by){ return Object.keys(by).sort(function(x,y){ return by[y]-by[x]; }).map(function(id){ var e=emp(id); return (e?e.n:'?')+' '+by[id]; }).join(', '); }
+  /* columns with a light that sweeps across them in a loop (the "working"
+     glow), today's column brightest; tap or hover one to read it */
+  function jobsChart(days,sel,big){
+    var act=big?'data-cd="jday"':'data-c="jsel"';
+    var n=days.length, W0=300, H0=big?150:118, gap=n>20?2:(n>10?3:6), bw=(W0-gap*(n-1))/n, mx=Math.max.apply(null,days.map(function(d){ return d.v; }).concat([1])), base=H0-18, h='';
+    var empty=!days.some(function(d){ return d.v; });
+    days.forEach(function(d,i){
+      var x=i*(bw+gap), vh=d.v?Math.max(6,d.v/mx*(base-14)):0, ghost=empty?(10+((i*37)%5)*7):0;
+      h+='<g class="jb'+(d.today?' now':'')+(i===sel?' sel':'')+(d.v?'':' z')+'" '+act+' data-i="'+i+'" data-a="'+esc(d.v+' '+dayName(d))+'" data-b="'+esc(d.v?whoLine(d.by):'Nothing finished')+'" style="--i:'+i+'" tabindex="0" role="button" aria-label="'+esc(dayName(d)+': '+d.v+' job'+(d.v===1?'':'s')+' done'+(d.v?' ('+whoLine(d.by)+')':''))+'">'
+        +'<rect class="hit" x="'+x.toFixed(1)+'" y="0" width="'+bw.toFixed(1)+'" height="'+H0+'"/>'
+        +'<rect class="bg" x="'+x.toFixed(1)+'" y="10" width="'+bw.toFixed(1)+'" height="'+(base-10)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>'
+        +(ghost?'<rect class="gh" x="'+x.toFixed(1)+'" y="'+(base-ghost)+'" width="'+bw.toFixed(1)+'" height="'+ghost+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>':'')
+        +(vh?'<rect class="v" x="'+x.toFixed(1)+'" y="'+(base-vh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+vh.toFixed(1)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>':'')
+        +(vh&&(big||n<=14)?'<text class="n" x="'+(x+bw/2).toFixed(1)+'" y="'+(base-vh-5).toFixed(1)+'">'+d.v+'</text>':'')
+        +'</g>';
+      var lab=d.wk?(i%3===0?dm(d.a):''):(n<=7?new Date(d.a).toLocaleDateString('en-US',{weekday:'narrow'}):(i%5===0||d.today?String(new Date(d.a).getDate()):''));
+      if(lab) h+='<text class="l'+(d.today?' t':'')+'" x="'+(x+bw/2).toFixed(1)+'" y="'+(H0-3)+'">'+esc(lab)+'</text>';
+    });
+    return '<svg class="crd-jc'+(empty?' empty':'')+'" viewBox="0 0 '+W0+' '+H0+'" role="group" aria-label="Jobs done per '+(days[0]&&days[0].wk?'week':'day')+'">'
+      +'<defs><linearGradient id="jcSweep" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+      +'<clipPath id="jcClip'+(big?'B':'')+'">'+days.map(function(d,i){ var x=i*(bw+gap); return '<rect x="'+x.toFixed(1)+'" y="10" width="'+bw.toFixed(1)+'" height="'+(base-10)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>'; }).join('')+'</clipPath></defs>'
+      +h+'<g clip-path="url(#jcClip'+(big?'B':'')+')" class="sw" aria-hidden="true"><rect x="-90" y="0" width="90" height="'+H0+'" fill="url(#jcSweep)"/></g></svg>';
+  }
+  function jobsReadout(days,sel){
+    var d=days[sel];
+    if(!d) return '<div class="crd-jtip" aria-live="polite"><span>Tap or point at a column to see that '+(days[0]&&days[0].wk?'week':'day')+'</span></div>';
+    return '<div class="crd-jtip on" aria-live="polite"><b>'+d.v+'</b> '+esc(dayName(d))+'<span>'+(d.v?esc(whoLine(d.by)):'Nothing finished')+'</span></div>';
+  }
+  /* the latest few, under the chart where the tile has room (laptops) */
+  function jobsLast(days){
+    var L=jobsOf().filter(function(j){ return j.state==='done'&&(j.end||j.at)>=days[0].a; }).slice(-4).reverse();
+    if(!L.length) return '';
+    return '<div class="crd-jlast"><small>Latest</small>'+L.map(function(j){ var e=emp(j.emp)||{n:'?'}; return '<button data-c="job" data-j="'+esc(j.id)+'">'+av(e)+'<span>'+esc(j.text.split('\n')[0].slice(0,70))+'</span><em>'+esc(ago(j.end||j.at))+'</em></button>'; }).join('')+'</div>';
+  }
+  function rangeSeg(cur,attr){ return '<div class="crd-seg" role="group" aria-label="Period">'+[[7,'7d'],[30,'30d'],[90,'90d']].map(function(r){ return '<button '+attr+' data-r="'+r[0]+'" aria-pressed="'+(cur===r[0])+'"'+(cur===r[0]?' class="on"':'')+'>'+r[1]+'</button>'; }).join('')+'</div>'; }
+  function jobsTile(L){
+    var rng=S.range||30, days=jobsDays(rng), tot=days.reduce(function(a,d){ return a+d.v; },0), sel=S.jsel!=null&&S.jsel<days.length?S.jsel:null;
+    var by={}; days.forEach(function(d){ Object.keys(d.by).forEach(function(k){ by[k]=(by[k]||0)+d.by[k]; }); });
+    return '<div class="crd-t t-big t-lit crd-jd">'
+      +'<div class="crd-th"><button class="crd-jopen" data-c="detail" data-k="jobs" aria-label="Jobs done: '+tot+' in '+rng+' days. Open the details"><span class="crd-tt">Jobs done</span>'+svg(IC.arrow)+'</button>'+rangeSeg(rng,'data-c="jrange"')+'</div>'
+      +'<div class="crd-tv"><i class="crd-bul"></i>'+tot+'<small>/in '+rng+' days</small></div>'
+      +jobsReadout(days,sel)
+      +'<div class="crd-tc crd-jcw">'+jobsChart(days,sel,false)+'</div>'
+      +jobsLast(days)
+      +'<div class="crd-javs">'+L.slice(0,9).map(function(e){ return '<button class="crd-jav" data-c="open" data-id="'+esc(e.id)+'" aria-label="'+esc(e.n+': '+(by[e.id]||0)+' done. Open '+e.n)+'">'+av(e)+'<em>'+(by[e.id]||0)+'</em></button>'; }).join('')+'</div>'
+      +(tot?'':'<div class="crd-jempty">No finished jobs yet. <button data-c="search">Give the team a job</button></div>')
+      +'</div>';
+  }
+  function dJobs(){
+    var rng=dRange, days=jobsDays(rng), tot=days.reduce(function(a,d){ return a+d.v; },0), sel=S.jday!=null&&S.jday<days.length?S.jday:null;
+    var by={}; days.forEach(function(d){ Object.keys(d.by).forEach(function(k){ by[k]=(by[k]||0)+d.by[k]; }); });
+    var best=days.reduce(function(a,d){ return d.v>a.v?d:a; },{v:0}), mx=Math.max.apply(null,Object.keys(by).map(function(k){ return by[k]; }).concat([1]));
+    var h=dOpen('Jobs done','Every job your team finished, day by day')
+      +'<div class="cwd-seg" role="group" aria-label="Period">'+[7,30,90].map(function(n){ return '<button data-cd="range" data-r="'+n+'" aria-pressed="'+(n===rng)+'"'+(n===rng?' class="on"':'')+'>'+n+' days</button>'; }).join('')+'</div>'
+      +dBig(tot,tot===1?'job done':'jobs done',tot?'Most in one '+(days[0].wk?'week':'day')+': '+best.v+' ('+dayName(best)+').':'Nothing finished yet in the last '+rng+' days. Give the team a job, or turn on a routine.')
+      +'<div class="cwd-jchart">'+jobsReadout(days,sel)+jobsChart(days,sel,true)+'</div>';
+    h+=dSec('Who did them',emps().length?emps().map(function(e){ var v=by[e.id]||0; return '<button class="cwd-who" data-cd="emp" data-id="'+esc(e.id)+'">'+av(e)+'<span class="nm">'+esc(e.n)+'<small>'+esc(e.title)+'</small></span><i><b style="width:'+(v/mx*100).toFixed(0)+'%"></b></i><em>'+v+'</em></button>'; }).join(''):'<p class="cwd-none">Hire someone first.</p>');
+    var list=sel!=null?days[sel].jobs:jobsOf().filter(function(j){ return j.state==='done'&&(j.end||j.at)>=days[0].a; }).slice(-12).reverse();
+    h+=dSec(sel!=null?dayName(days[sel]):'Latest',list.length?list.map(function(j){ var e=emp(j.emp)||{n:'?'}; return '<button class="cwd-row" data-cd="job" data-j="'+esc(j.id)+'"><span class="cwd-rn">'+esc(e.n+': '+j.text.split('\n')[0].slice(0,90))+'</span><span class="cwd-rm">'+esc(ago(j.end||j.at))+'</span></button>'; }).join(''):'<p class="cwd-none">Nothing finished '+(sel!=null?'that '+(days[sel].wk?'week':'day'):'in this period')+'.</p>',sel!=null?'tap the chart for another day':'tap a column to filter');
+    h+='<p class="cwd-note">A job counts when its employee finishes it, on the device or on the Kova server. Stopped and failed jobs are not counted.</p>';
+    return h+dBtns([{l:'Give the team a job',a:'data-cd="nav" data-n="team"'},{l:'Open all jobs',a:'data-cd="nav" data-n="jobs"'}])+'</div>';
   }
 
   /* ---- the team page ---- */
@@ -1467,7 +1557,7 @@ window.KovaCrew=(function(){
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
       +tabsRow('all')
       +'<div class="crd-tiles">'
-        +tileBig({tone:'lit',value:days.reduce(function(x,y){ return x+y.v; },0),label:'jobs done',range:rng,avatars:L,chart:ringsChart(days.map(function(x){ return x.v; }),days.map(function(x){ return x.s; }))})
+        +jobsTile(L)
         +tileSm({tone:'g1',title:'On time',k:'ontime',value:ot.rate==null?'No score yet':ot.rate+'%',soft:ot.rate==null,suf:ot.rate==null?'':'/on time',chart:gaugeChart(ot.rate||0,'%',false),
           cap:ot.rate==null?(ot.soon.length?ot.soon.length+' due soon. Finish one by its date and the score starts.':'Starts with the first dated task you finish.'):ot.ok+' of '+ot.dated+' by their date, last 30 days'})
         +tileSm({tone:'g2',title:'Work by status',k:'status',value:a.open,suf:'/open',chart:statusRows(statusData(a)),
@@ -1648,12 +1738,28 @@ window.KovaCrew=(function(){
     Object.keys(FILL.jobs).forEach(function(k){ out.push([k,FILL.jobs[k]]); });
     return out;
   }
+  /* Hiring: one tap. Each role says in a line what they do and what you
+     can ask them; "Hire" puts them on the team with sensible settings
+     (change anything later), "Customize" opens the full form. */
+  function roleCard(t){
+    var e=emps().filter(function(x){ return x.tpl===t.id; })[0], sk=SK[(SK_FOR[t.id]||[])[0]];
+    var j0=String(t.job||''), cut=j0.indexOf('. '), line=cut>0?j0.slice(0,cut+1):j0;
+    var n=e?e.n:freeName(t);
+    return '<div class="crd-role'+(e?' hired':'')+'">'
+      +'<div class="crd-rh">'+av(e||{n:n})+'<div class="crd-rn"><b>'+esc(n)+'</b><span>'+esc(t.title)+'</span></div>'+(e?'<span class="crw-st s-done">On the team</span>':'')+'</div>'
+      +'<p class="crd-rj">'+esc(line)+'</p>'
+      +((t.chips||[]).length?'<div class="crd-rask"><small>Ask '+esc(n)+':</small>'+t.chips.slice(0,2).map(function(q){ return '<span>\u201c'+esc(q)+'\u201d</span>'; }).join('')+'</div>':'')
+      +(sk?'<div class="crd-rsk">Skill: '+esc(sk.n)+'</div>':'')
+      +'<div class="crd-rb">'+(e?'<button class="crd-btn" data-c="open" data-id="'+esc(e.id)+'">Open '+esc(e.n)+'</button><button class="crd-btn ghost" data-c="tpl" data-t="'+t.id+'" aria-label="Hire another '+esc(t.title)+'">Hire another</button>'
+        :'<button class="crd-btn" data-c="hirenow" data-t="'+t.id+'">Hire '+esc(n)+'</button><button class="crd-btn ghost" data-c="tpl" data-t="'+t.id+'">Customize</button>')+'</div></div>';
+  }
   function hireView(){
-    var have=emps().map(function(e){ return e.tpl; });
-    return '<div class="crd">'+topBar()+head(0,'Hire an employee','Start from a role and change anything, or write the job yourself')
-      +'<div class="crd-roles">'+TPL.map(function(t){ var sk=SK[(SK_FOR[t.id]||[])[0]];
-        return '<button class="crd-role" data-c="tpl" data-t="'+t.id+'"><span class="crd-rh">'+av(t)+(have.indexOf(t.id)>=0?'<span class="crw-st s-idle">On the team</span>':'')+'</span><b>'+esc(t.title)+'</b><span class="crd-rj">'+esc(t.job)+'</span><small>'+(sk?'Skill: '+esc(sk.n):'')+'</small></button>'; }).join('')
-      +'<button class="crd-role add" data-c="tpl" data-t=""><span class="crw-plus">'+svg(IC.plus)+'</span><b>Start from scratch</b><span class="crd-rj">Write the name, the job and the playbook yourself</span></button></div></div>';
+    var have=emps().map(function(e){ return e.tpl; }), off=TPL.filter(function(t){ return have.indexOf(t.id)<0; }), on=TPL.filter(function(t){ return have.indexOf(t.id)>=0; });
+    return '<div class="crd">'+topBar()+head(0,'Hire an employee',on.length+' of '+TPL.length+' roles on your team · hire in one tap, change anything later')
+      +(off.length?'<div class="crd-sh2">Ready to hire ('+off.length+')</div><div class="crd-roles">'+off.map(roleCard).join('')+'</div>':'<div class="crd-card"><div class="crw-empty">Every role is on your team. Start one from scratch below.</div></div>')
+      +'<div class="crd-sh2">Something else?</div><div class="crd-roles"><button class="crd-role add" data-c="tpl" data-t=""><span class="crw-plus">'+svg(IC.plus)+'</span><b>Start from scratch</b><span class="crd-rj">Name them, say what they own, and they get to work.</span></button></div>'
+      +(on.length?'<div class="crd-sh2">On your team ('+on.length+')</div><div class="crd-roles">'+on.map(roleCard).join('')+'</div>':'')
+      +'</div>';
   }
   function field(label,control,menu){ return '<div class="crd-f"><div class="crd-fl"><span>'+label+'</span>'+(menu||'')+'</div>'+control+'</div>'; }
   function editView(){
@@ -1669,6 +1775,8 @@ window.KovaCrew=(function(){
         +field('Job description','<textarea id="crwJ" rows="5" maxlength="4000" placeholder="e.g. I keep the content pipeline full. I turn ideas into drafts for Instagram and TikTok in my voice." aria-label="Job description">'+esc(d.job)+'</textarea><small class="crw-count" data-for="crwJ">'+String(d.job||'').length+' / 4000</small>',
           sug('j','Suggestions',[{h:'Start like a role',items:jobStarters().map(function(x){ return {t:'crwJ',m:'set',v:x[1],l:x[0],s:x[1].split('. ')[0]+'.'}; })},{h:'Add a rule',items:FILL.adds.map(function(a){ return {t:'crwJ',m:'append',v:a,l:a}; })}]))
       +'</div>'
+      +(S.more?'':'<button class="crd-more2" data-c="more2" aria-expanded="false"><b>More settings</b><span>Playbook, what they can do, approvals and schedule. The defaults work.</span>'+svg(IC.chev,'sm')+'</button>')
+      +(S.more?'<div class="crd-morewrap">':'<div class="crd-morewrap" hidden>')
       +'<div class="crd-card crw-form"><div class="crd-chd"><span>How they work</span><small>Their playbook, step by step. Optional.</small></div>'
         +field('Playbook','<textarea id="crwP" rows="5" maxlength="4000" placeholder="1. Read the work first.&#10;2. Draft it, then wait for my approval.&#10;3. Finish with a short report." aria-label="Playbook">'+esc(d.playbook)+'</textarea>',
           sug('p','Suggestions',[{h:'Add a step',items:FILL.steps.map(function(s){ return {t:'crwP',m:'append',v:s,l:s}; })}]))
@@ -1686,6 +1794,7 @@ window.KovaCrew=(function(){
         +(r.freq==='event'?field('When','<select id="crwEv" aria-label="When">'+[['overdue','A task becomes overdue'],['new_task','A task is added'],['assigned','A task is assigned to them']].map(function(o){ return sel(r.event,o); }).join('')+'</select>'):'')
       +'</div>'
         +(r.freq&&r.freq!=='off'?field('The job they run','<textarea id="crwRJ" rows="2" placeholder="e.g. Brief me on today." aria-label="The job they run">'+esc(r.job||'')+'</textarea>',sug('r','Suggestions',[{h:'Ideas',items:FILL.routine.map(function(x){ return {t:'crwRJ',m:'set',v:x,l:x}; })}])):'')
+      +'</div>'
       +'</div>'
       +(d.id&&(d.memory||[]).length?'<div class="crd-card"><div class="crd-chd"><span>Memory</span></div><div class="crw-mem">'+d.memory.map(function(m,i){ return '<div><span>'+esc(m.t)+'</span><button class="crw-link" data-c="forget" data-i="'+i+'">Forget</button></div>'; }).join('')+'</div></div>':'')
       +'<div class="crd-row crd-save"><button class="crd-btn" data-c="save">'+(d.id?'Save':'Hire '+esc(d.n||'them'))+'</button>'
@@ -1711,7 +1820,7 @@ window.KovaCrew=(function(){
     var keep={}, act=document.activeElement, ak=act&&el.contains(act)?keyOf(act):'', sel=null;
     el.querySelectorAll('textarea,input').forEach(function(x){ var k=keyOf(x); if(k&&x.type!=='time') keep[k]=x.value; });
     if(ak&&act.selectionStart!=null) sel=[act.selectionStart,act.selectionEnd];
-    el.innerHTML=S.view==='edit'?editView():(S.view==='hire'?hireView():dash());
+    el.innerHTML=S.view==='edit'?editView():(S.view==='hire'?hireView():(S.view==='detail'?detailPage():dash()));
     el.querySelectorAll('textarea,input').forEach(function(x){ var k=keyOf(x); if(k&&keep[k]!=null&&x.type!=='time'&&x.value!==keep[k]&&!(S.clear&&S.clear[k])) x.value=keep[k]; });
     S.clear=null;
     if(ak){ var back=null; el.querySelectorAll('textarea,input').forEach(function(x){ if(keyOf(x)===ak) back=x; }); if(back){ try{ back.focus({preventScroll:true}); if(sel) back.setSelectionRange(sel[0],sel[1]); }catch(x){} } }
@@ -1721,6 +1830,15 @@ window.KovaCrew=(function(){
     var app=document.getElementById('app'); if(app) app.classList.toggle('crd-wide',visible());
   }
   function top0(){ var m=document.getElementById('main'); if(m) m.scrollTop=0; }
+  /* with a mouse (or the keyboard), the readout follows the column you are on */
+  function onHoverBar(ev){
+    if(ev.type==='pointerover'&&ev.pointerType&&ev.pointerType!=='mouse') return;
+    var g=ev.target.closest&&ev.target.closest('.jb'); if(!g) return;
+    var wrap=g.closest('.crd-jd,.cwd-jchart'), tip=wrap&&wrap.querySelector('.crd-jtip'); if(!tip) return;
+    var a=g.getAttribute('data-a')||'', n=a.split(' ')[0];
+    tip.className='crd-jtip on'; tip.innerHTML='<b>'+esc(n)+'</b> '+esc(a.slice(n.length+1))+'<span>'+esc(g.getAttribute('data-b')||'')+'</span>';
+    wrap.querySelectorAll('.jb.hov').forEach(function(x){ x.classList.remove('hov'); }); g.classList.add('hov');
+  }
   function saveIdea(b){
     var jid=b.getAttribute('data-j'), eid=b.getAttribute('data-id'), i=+b.getAttribute('data-i');
     var list=jid&&S.jobs[jid]&&S.jobs[jid].report?S.jobs[jid].report.ideas:(SNAP[eid]&&SNAP[eid].ideas);
@@ -1733,6 +1851,8 @@ window.KovaCrew=(function(){
     ev.__crwInside=true;                              /* the page-level "click outside" check skips this one */
     var b=ev.target.closest&&ev.target.closest('[data-c]');
     if(S.sug&&!(ev.target.closest&&ev.target.closest('.crd-sug'))){ S.sug=null; if(!b){ if(S.draft) readForm(); paint(); return; } }
+    var cd=ev.target.closest&&ev.target.closest('[data-cd]');
+    if(cd&&host().contains(cd)&&(!b||b.contains(cd))){ ev.preventDefault(); onDetail(ev); return; }
     if(!b||!host().contains(b)) return;
     var c=b.getAttribute('data-c'), id=b.getAttribute('data-id'), jid=b.getAttribute('data-j');
     if(c==='mailto') return;
@@ -1747,6 +1867,10 @@ window.KovaCrew=(function(){
     if(c==='detail'){ detail(b.getAttribute('data-k')); return; }
     if(c==='settings'){ S.showSet=!S.showSet; paint(); return; }
     if(c==='range'){ S.range={7:30,30:90,90:7}[S.range||30]; paint(); return; }
+    if(c==='jrange'){ S.range=+b.getAttribute('data-r')||30; S.jsel=null; paint(); return; }
+    if(c==='jsel'){ var ji=+b.getAttribute('data-i'); S.jsel=S.jsel===ji?null:ji; paint(); return; }
+    if(c==='hirenow'){ var th=tpl(b.getAttribute('data-t')); if(th){ var ne=hire(th,{n:freeName(th)},true); say(ne.n+' joined your team.'); try{ if(window.KovaAnalytics) KovaAnalytics.track('crew_hire',{feature:th.id}); }catch(x){} S.view='team'; S.nav='team'; S.tab=ne.id; paint(); top0(); } return; }
+    if(c==='more2'){ S.more=!S.more; if(S.draft) readForm(); paint(); return; }
     if(c==='hire'){ S.view='hire'; S.draft=null; paint(); top0(); return; }
     if(c==='more'){ S.open.jd=!S.open.jd; paint(); return; }
     if(c==='idea'){ saveIdea(b); return; }
@@ -1778,12 +1902,12 @@ window.KovaCrew=(function(){
       approve(jid,edits,b.getAttribute('data-a')); return;
     }
     if(c==='skip'){ skip(jid); return; }
-    if(c==='edit'){ var e4=emp(id); if(e4){ S.draft=JSON.parse(JSON.stringify(e4)); S.view='edit'; S.confirmFire=false; S.sug=null; paint(); top0(); } return; }
+    if(c==='edit'){ var e4=emp(id); if(e4){ S.draft=JSON.parse(JSON.stringify(e4)); S.view='edit'; S.more=false; S.confirmFire=false; S.sug=null; paint(); top0(); } return; }
     if(c==='tpl'){
       var t2=tpl(b.getAttribute('data-t'));
       S.draft={id:null,tpl:t2?t2.id:'custom',n:t2?t2.n:'',title:t2?t2.title:'',job:t2?t2.job:'',playbook:t2?t2.playbook:'',tools:t2?t2.tools.slice():['tasks'],approval:'external',
         routine:Object.assign({freq:'off',time:'09:00',dow:1,event:'overdue',job:''},t2?t2.routine:{}),memory:[]};
-      S.view='edit'; S.sug=null; paint(); top0(); return;
+      S.view='edit'; S.more=false; S.sug=null; paint(); top0(); return;
     }
     if(!S.draft) return;
     readForm();
@@ -1837,7 +1961,7 @@ window.KovaCrew=(function(){
   function mount(){
     var el=host(); if(!el) return;
     seed(); loadJobs(); hookWork();
-    if(!el.__crew){ el.__crew=true; el.addEventListener('click',onClick); el.addEventListener('keydown',onKey); el.addEventListener('input',onKey); el.addEventListener('change',onChange);
+    if(!el.__crew){ el.__crew=true; el.addEventListener('pointerover',onHoverBar); el.addEventListener('focusin',onHoverBar); el.addEventListener('click',onClick); el.addEventListener('keydown',onKey); el.addEventListener('input',onKey); el.addEventListener('change',onChange);
       document.addEventListener('click',function(ev){ if(S.sug&&!ev.__crwInside&&!el.contains(ev.target)){ S.sug=null; if(S.draft) readForm(); paint(); } }); }
     window.__workTeam={draw:paint};
     var ab=document.getElementById('wtmAsk');

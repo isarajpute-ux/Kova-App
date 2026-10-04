@@ -5420,6 +5420,131 @@ body.light-mode #sheet .cwd-btn{--sheet-ink:#FFFFFF}
 .crd-srows em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;opacity:.85}
 @container (max-width:559px){.crd-t:not(.t-big) .crd-tv.soft{font-size:19px}}
 
+/* ---- p14: the team page, alive ----
+   Jobs done is a real chart: one column a day (a week at 90 days), today
+   brightest, a light that sweeps across in a loop like work in progress,
+   and a readout that follows the column you tap or hover. Every tile opens
+   a page of its own. The other tiles move too: the dashed tracks flow,
+   the live dots breathe, the status bars shimmer. Reduced motion stops it. */
+.crd-jd{min-height:0!important;gap:0}
+.crd-jd .crd-th{align-items:center;flex-wrap:wrap;row-gap:8px}
+.crd-jopen{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:inherit;padding:4px 0;cursor:pointer}
+.crd-jopen .crd-tt{max-width:none}
+.crd-jopen .crd-ic{width:16px;height:16px;opacity:.75}
+.crd-seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:rgba(0,0,0,.07)}
+.crd-seg button{min-width:40px;height:28px;padding:0 10px;border:0;border-radius:999px;background:none;color:inherit;opacity:.62;font:600 11.5px 'Outfit',sans-serif;cursor:pointer}
+.crd-seg button.on{opacity:1;background:currentColor}
+.crd-seg button.on{background:#14161A;color:#fff}
+.crd-jd .crd-tv{margin-top:10px}
+.crd-jtip{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-height:20px;margin:8px 0 2px;font-size:12.5px;opacity:.8}
+.crd-jtip b{font-size:15px;font-weight:600}
+.crd-jtip span{flex-basis:100%;font-size:11.5px;opacity:.75}
+.crd-jtip.on{opacity:1}
+.crd-jcw{margin-top:4px}
+.crd-jc{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
+.crd-jc .hit{fill:transparent}
+.crd-jc .bg{fill:currentColor;opacity:.06}
+.crd-jc .v{fill:currentColor;opacity:.78;animation:jcPulse 2.8s ease-in-out infinite;animation-delay:calc(var(--i)*70ms)}
+.crd-jc .jb.now .v{opacity:1}
+.crd-jc .jb.now .bg{opacity:.12}
+.crd-jc .jb.sel .bg,.crd-jc .jb.hov .bg{opacity:.18}
+.crd-jc .jb.sel .v,.crd-jc .jb.hov .v{opacity:1;animation:none}
+.crd-jc .jb{cursor:pointer;outline:none}
+.crd-jc .jb:focus-visible .bg{opacity:.3;stroke:currentColor;stroke-width:1}
+.crd-jc .gh{fill:currentColor;opacity:.08;animation:jcGhost 1.6s ease-in-out infinite;animation-delay:calc(var(--i)*55ms)}
+.crd-jc .n{fill:currentColor;font:600 9px 'Outfit',sans-serif;text-anchor:middle}
+.crd-jc .l{fill:currentColor;opacity:.55;font:500 9px 'Outfit',sans-serif;text-anchor:middle}
+.crd-jc .l.t{opacity:1;font-weight:700}
+.crd-jc .sw rect{animation:jcSweep 3.6s cubic-bezier(.45,.05,.55,.95) infinite;mix-blend-mode:soft-light}
+.crd-jc.empty .sw rect{animation-duration:2.2s}
+@keyframes jcSweep{from{transform:translateX(0)}to{transform:translateX(400px)}}
+@keyframes jcPulse{0%,100%{opacity:.7}50%{opacity:.95}}
+@keyframes jcGhost{0%,100%{opacity:.06}50%{opacity:.16}}
+.crd-javs{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:12px}
+.crd-jd .crd-jcw{margin-bottom:0}
+.crd-jav{position:relative;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px 0 2px;border-radius:999px;border:0;background:rgba(0,0,0,.06);color:inherit;font:600 12px 'Outfit',sans-serif;cursor:pointer}
+.crd-jav .crw-av{width:30px;height:30px}
+.crd-jav em{font-style:normal}
+.crd-jempty{margin-top:10px;font-size:12.5px;opacity:.8}
+.crd-jempty button{border:0;background:none;color:inherit;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:0}
+body.light-mode .crd-seg{background:rgba(255,255,255,.1)}
+body.light-mode .crd-seg button.on{background:#fff;color:#14161A}
+body.light-mode .crd-jav{background:rgba(255,255,255,.1)}
+body.soft-light .crd-seg button.on{background:#14161A;color:#fff}
+/* the other tiles move too */
+.crd-t .crd-ch .track,.crd-t .crd-ch .hill{animation:crdFlow 2.6s linear infinite}
+@keyframes crdFlow{to{stroke-dashoffset:-16}}
+.crd-t .crd-ch .hot,.crd-t .crd-ch .solid:not(.soft){animation:crdBreath 2.4s ease-in-out infinite}
+@keyframes crdBreath{0%,100%{opacity:.75}50%{opacity:1}}
+.crd-t .crd-ch circle.dot:nth-child(3n){animation:crdTw 3.2s ease-in-out infinite}
+.crd-t .crd-ch circle.dot:nth-child(3n+1){animation:crdTw 3.2s ease-in-out infinite;animation-delay:1.1s}
+@keyframes crdTw{0%,100%{opacity:1}50%{opacity:.35}}
+.crd-srows i b{background-image:linear-gradient(90deg,transparent 0,rgba(255,255,255,.55) 50%,transparent 100%);background-size:220% 100%;background-repeat:no-repeat;animation:crdShim 2.8s linear infinite}
+@keyframes crdShim{from{background-position:180% 0}to{background-position:-80% 0}}
+@media (prefers-reduced-motion:reduce){
+  .crd-jc .v,.crd-jc .gh,.crd-jc .sw rect,.crd-t .crd-ch .track,.crd-t .crd-ch .hill,.crd-t .crd-ch .hot,.crd-t .crd-ch .solid,.crd-t .crd-ch circle.dot,.crd-srows i b{animation:none}
+  .crd-jc .sw{display:none}
+}
+
+/* ---- each tile's page (no longer a sheet) ---- */
+.crd .cwd-page{--txt:var(--d-ink);--txt-2:var(--d-mute);--txt-3:var(--d-faint);--glass:var(--d-card);--glass-2:var(--d-card);--glass-brd:var(--d-line);
+  --acc-bg:var(--d-card2);--acc-brd:var(--d-line);--good:#5FD08A;--warn:#F4C95E;--bad:#EF6B70;padding:0 0 30px;max-width:760px}
+body.light-mode .crd .cwd-page{--good:#1E7A4B;--warn:#8A6D0F;--bad:#C2383D;--c0:#3E6FD8;--c1:#A86B12;--c2:#7B55C9;--c3:#1E7A4B}
+.cwd-back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 8px;margin:0 0 14px;border-radius:999px;border:1px solid var(--d-pill-b);background:var(--d-pill);color:var(--d-pill-ink);font:500 13px 'Outfit',sans-serif;cursor:pointer}
+.cwd-back .crd-ic{width:18px;height:18px}
+.crd .cwd-page .cwd-t{font-size:30px;font-weight:300;letter-spacing:-.02em}
+.cwd-jchart{margin-top:16px;padding:14px 14px 10px;border-radius:22px;background:var(--t-lit);color:var(--t-lit-ink);box-shadow:var(--t-lit-glow)}
+.cwd-jchart .crd-jtip{margin-top:0}
+.cwd-who{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:8px 2px;border:0;border-top:.5px solid var(--glass-brd);background:none;color:var(--txt);font:inherit;text-align:left;cursor:pointer}
+.cwd-who .nm{width:34%;min-width:96px;font-size:14px;line-height:1.25}
+.cwd-who .nm small{display:block;font-size:11px;color:var(--txt-3)}
+.cwd-who>i{flex:1;height:6px;border-radius:3px;background:var(--glass);overflow:hidden}
+.cwd-who>i b{display:block;height:100%;border-radius:3px;background:currentColor;opacity:.8}
+.cwd-who .crw-av{width:34px;height:34px}
+.cwd-who em{font-style:normal;font-weight:600;min-width:22px;text-align:right}
+
+/* ---- hiring: one tap ---- */
+.crd-role{cursor:default;gap:8px}
+.crd-role .crd-rh{justify-content:flex-start;gap:12px;margin:0}
+.crd-role .crd-rh .crw-av{width:40px;height:40px}
+.crd-rn{flex:1;min-width:0;display:flex;flex-direction:column}
+.crd-rn b{font-size:17px;font-weight:500}
+.crd-rn span{font-size:12.5px;color:var(--d-mute)}
+.crd-role .crd-rj{margin:0;-webkit-line-clamp:2;color:var(--d-ink);opacity:.82;font-size:13px}
+.crd-rask{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crd-rask small{font-size:11px;color:var(--d-faint);margin:0}
+.crd-rask span{font-size:11.5px;padding:4px 9px;border-radius:999px;background:var(--d-card2);color:var(--d-mute)}
+.crd-rsk{font-size:11px;color:var(--d-faint)}
+.crd-rb{display:flex;gap:8px;margin-top:4px}
+.crd-rb .crd-btn{flex:1;height:40px;padding:0 12px}
+.crd-rb .crd-btn:first-child{flex:1.4}
+.crd-role.hired{opacity:.92}
+.crd-role.add{cursor:pointer}
+.crd-more2{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;margin:0 0 12px;border-radius:20px;border:1px dashed var(--d-line);background:transparent;color:var(--d-ink);font:inherit;cursor:pointer}
+.crd-more2 b{font-weight:600;font-size:14px;white-space:nowrap}
+.crd-more2 span{flex:1;font-size:12px;color:var(--d-mute)}
+.crd-more2 .crd-ic{width:18px;height:18px;flex-shrink:0}
+
+.crd-jlast{display:none}
+@container (min-width:760px){
+  .crd-jlast{display:flex;flex-direction:column;gap:2px;margin-top:14px}
+  .crd-jlast small{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.55;margin-bottom:4px}
+  .crd-jlast button{display:flex;align-items:center;gap:10px;min-height:40px;padding:4px 6px;border:0;border-radius:12px;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+  .crd-jlast button:hover{background:rgba(0,0,0,.05)}
+  .crd-jlast .crw-av{width:26px;height:26px}
+  .crd-jlast .crw-av b{font-size:11px}
+  .crd-jlast span{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crd-jlast em{font-style:normal;font-size:11.5px;opacity:.6}
+  body.light-mode .crd-jlast button:hover{background:rgba(255,255,255,.08)}
+}
+/* the employees' own charts breathe too, and the step that is running pulses */
+.crd-t .crd-ch rect.f{animation:crdBreath 2.6s ease-in-out infinite}
+.crd-t .crd-ch rect.f:nth-of-type(2n){animation-delay:.4s}
+.crd-t .crd-ch rect.f:nth-of-type(3n){animation-delay:.8s}
+.crd-t .crd-ch .s{stroke-dasharray:4 0}
+.crd-step.s-active .pl,.crd-step.s-up .pl{animation:crdBreath 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.crd-t .crd-ch rect.f,.crd-step .pl{animation:none}}
+
 </style>
 <style id="p08-help">
 /* ---- Help: two choices, and "Find anything" ---- */
@@ -48412,6 +48537,12 @@ window.KovaCrew=(function(){
       memory:[], enabled:true, runs:0, lastRun:0, lastRoutine:0
     },'user');
   }
+  /* the template's name, or the first free one if someone already has it */
+  function freeName(t){
+    var used=emps().map(function(e){ return e.n; });
+    if(used.indexOf(t.n)<0) return t.n;
+    return ((typeof FILL!=='undefined'&&FILL.names)||['Sam','Noor','Iris','Theo','Lena','Omar']).filter(function(n){ return used.indexOf(n)<0; })[0]||t.n;
+  }
   function seed(){
     if(emps().length||(window.KP&&KP.get('crewSeeded'))) return;
     SEED.forEach(function(id){ hire(tpl(id),null,true); });
@@ -49590,7 +49721,10 @@ window.KovaCrew=(function(){
       ideas:W.list('content',function(c){ return c.kind!=='post'; }).length};
   }
   /* pieces of a pop-up */
-  function dOpen(title,sub){ return '<div class="grab"></div><div class="cwd"><div class="cwd-t">'+esc(title)+'</div>'+(sub?'<div class="cwd-s">'+esc(sub)+'</div>':''); }
+  /* each tile's details are a page of their own inside the team area (with
+     the pills above and a back button), not a sheet that drops over it */
+  function dOpen(title,sub){ return '<div class="cwd cwd-page"><button class="cwd-back" data-cd="back" aria-label="Back to your team">'+svg(IC.back)+'<span>Your team</span></button>'
+    +'<div class="cwd-t">'+esc(title)+'</div>'+(sub?'<div class="cwd-s">'+esc(sub)+'</div>':''); }
   function dBig(v,unit,cap,soft){ return '<div class="cwd-big'+(soft?' soft':'')+'"><b>'+esc(v)+'</b>'+(unit?'<span>'+esc(unit)+'</span>':'')+'</div>'+(cap?'<p class="cwd-cap">'+esc(cap)+'</p>':''); }
   function dStats(L){ return '<div class="cwd-stats c'+L.length+'">'+L.map(function(x){ return '<div class="cwd-st'+(x.tone?' '+x.tone:'')+'"><b>'+esc(x.v)+'</b><span>'+esc(x.l)+'</span></div>'; }).join('')+'</div>'; }
   function dSec(h,body,note){ return '<section class="cwd-sec"><h3 class="cwd-h">'+esc(h)+(note?'<small>'+esc(note)+'</small>':'')+'</h3>'+body+'</section>'; }
@@ -49694,26 +49828,107 @@ window.KovaCrew=(function(){
     h+=dSec('Overdue',dList(od,function(i){ return dTask(i,overBy(i)+' d overdue','bad'); },'Nothing overdue.'));
     return h+dBtns([{l:'Open Approvals',a:'data-cd="nav" data-n="approvals"'}].concat(od.length?[{l:'Have the team triage what is late',a:'data-cd="ask" data-q="Triage my overdue tasks"'}]:[]))+'</div>';
   }
-  var DETAIL={ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
+  var DETAIL={jobs:dJobs,ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
+  var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
   function detail(k){
-    if(!DETAIL[k]||!window.openSheet) return;
-    dCur=k; openSheet(DETAIL[k]());
-    var el=document.querySelector('#sheetIn .cwd'); if(el) el.addEventListener('click',onDetail);
-    try{ if(window.KovaAnalytics) KovaAnalytics.track('team_tile',{feature:k}); }catch(e){}
+    if(!DETAIL[k]) return;
+    var was=S.view==='detail'&&dCur===k;
+    dCur=k; S.view='detail'; S.dk=k; S.draft=null; paint(); if(!was) top0();
+    if(!was) try{ if(window.KovaAnalytics) KovaAnalytics.track('team_tile',{feature:k}); }catch(e){}
   }
+  function detailPage(){ var k=S.dk&&DETAIL[S.dk]?S.dk:'jobs'; dCur=k; return '<div class="crd">'+topBar()+DETAIL[k]()+'</div>'; }
   function onDetail(ev){
     var b=ev.target.closest&&ev.target.closest('[data-cd]'); if(!b) return;
-    var c=b.getAttribute('data-cd');
+    var c=b.getAttribute('data-cd'), sheet=!!b.closest('#sheet'), later=function(f){ if(sheet){ if(window.closeSheet) closeSheet(); setTimeout(f,220); } else f(); };
+    if(c==='back'){ S.view='team'; S.nav='team'; paint(); top0(); return; }
     if(c==='range'){ dRange=+b.getAttribute('data-r')||30; detail(dCur); return; }
+    if(c==='jday'){ S.jday=+b.getAttribute('data-i'); detail(dCur); return; }
     if(c==='skip'){ skip(b.getAttribute('data-j'),'You skipped this from Needs you.'); detail(dCur); return; }
-    if(window.closeSheet) closeSheet();
-    if(c==='item'){ var id=b.getAttribute('data-id'); setTimeout(function(){ if(window.__openWorkItem) __openWorkItem(id); },220); return; }
-    if(c==='go'){ var s=b.getAttribute('data-s'); setTimeout(function(){ try{ go(s); }catch(e){} },220); return; }
-    if(c==='traction'){ var pid=b.getAttribute('data-id'); setTimeout(function(){ if(window.KovaTraction&&KovaTraction.open) KovaTraction.open(pid); else try{ go('workstudio'); }catch(e){} },220); return; }
+    if(c==='emp'){ var eid=b.getAttribute('data-id'); S.view='team'; S.nav='team'; S.tab=eid||'all'; paint(); top0(); return; }
+    if(c==='job'){ var jj=S.jobs[b.getAttribute('data-j')]; if(jj){ S.view='team'; S.nav='team'; S.tab=jj.emp; paint(); var n=document.getElementById('job-'+jj.id); if(n&&n.scrollIntoView) n.scrollIntoView({block:'center'}); } return; }
+    if(c==='item'){ var id=b.getAttribute('data-id'); later(function(){ if(window.__openWorkItem) __openWorkItem(id); }); return; }
+    if(c==='go'){ var s=b.getAttribute('data-s'); later(function(){ try{ go(s); }catch(e){} }); return; }
+    if(c==='traction'){ var pid=b.getAttribute('data-id'); later(function(){ if(window.KovaTraction&&KovaTraction.open) KovaTraction.open(pid); else try{ go('workstudio'); }catch(e){} }); return; }
     if(c==='nav'){ S.view='team'; S.nav=b.getAttribute('data-n')||'team'; S.draft=null; paint(); top0(); return; }
     if(c==='ask'){ var q=b.getAttribute('data-q'), r=route(q); if(!r){ say('Hire someone first.'); return; }
-      var j=start(r.emp,q,'team'); if(j) log(j,'From the '+({ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'}[dCur]||'team')+' tile. Routed to '+r.emp.n+'.','handoff');
+      var j=start(r.emp,q,'team'); if(j) log(j,'From the '+(TILE_N[dCur]||'team')+' tile. Routed to '+r.emp.n+'.','handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return; }
+  }
+
+  /* ---- jobs done: per day, who did them, and the chart ---- */
+  function jobsDays(rng){
+    var all=jobsOf().filter(function(j){ return j.state==='done'; }), out=[], wk=rng>45, step=wk?7:1, n=Math.ceil(rng/step), s0=sod();
+    for(var i=n-1;i>=0;i--){
+      var a=s0-(i*step+(step-1))*DAY, b=s0-i*step*DAY+DAY;
+      var js=all.filter(function(j){ var t=j.end||j.at; return t>=a&&t<b; }), by={};
+      js.forEach(function(j){ by[j.emp]=(by[j.emp]||0)+1; });
+      out.push({a:a,b:b,v:js.length,jobs:js,by:by,wk:wk,today:i===0});
+    }
+    return out;
+  }
+  function dayName(d){ return d.wk?'Week of '+new Date(d.a).toLocaleDateString('en-US',{month:'short',day:'numeric'}):(d.today?'Today':new Date(d.a).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})); }
+  function whoLine(by){ return Object.keys(by).sort(function(x,y){ return by[y]-by[x]; }).map(function(id){ var e=emp(id); return (e?e.n:'?')+' '+by[id]; }).join(', '); }
+  /* columns with a light that sweeps across them in a loop (the "working"
+     glow), today's column brightest; tap or hover one to read it */
+  function jobsChart(days,sel,big){
+    var act=big?'data-cd="jday"':'data-c="jsel"';
+    var n=days.length, W0=300, H0=big?150:118, gap=n>20?2:(n>10?3:6), bw=(W0-gap*(n-1))/n, mx=Math.max.apply(null,days.map(function(d){ return d.v; }).concat([1])), base=H0-18, h='';
+    var empty=!days.some(function(d){ return d.v; });
+    days.forEach(function(d,i){
+      var x=i*(bw+gap), vh=d.v?Math.max(6,d.v/mx*(base-14)):0, ghost=empty?(10+((i*37)%5)*7):0;
+      h+='<g class="jb'+(d.today?' now':'')+(i===sel?' sel':'')+(d.v?'':' z')+'" '+act+' data-i="'+i+'" data-a="'+esc(d.v+' '+dayName(d))+'" data-b="'+esc(d.v?whoLine(d.by):'Nothing finished')+'" style="--i:'+i+'" tabindex="0" role="button" aria-label="'+esc(dayName(d)+': '+d.v+' job'+(d.v===1?'':'s')+' done'+(d.v?' ('+whoLine(d.by)+')':''))+'">'
+        +'<rect class="hit" x="'+x.toFixed(1)+'" y="0" width="'+bw.toFixed(1)+'" height="'+H0+'"/>'
+        +'<rect class="bg" x="'+x.toFixed(1)+'" y="10" width="'+bw.toFixed(1)+'" height="'+(base-10)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>'
+        +(ghost?'<rect class="gh" x="'+x.toFixed(1)+'" y="'+(base-ghost)+'" width="'+bw.toFixed(1)+'" height="'+ghost+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>':'')
+        +(vh?'<rect class="v" x="'+x.toFixed(1)+'" y="'+(base-vh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+vh.toFixed(1)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>':'')
+        +(vh&&(big||n<=14)?'<text class="n" x="'+(x+bw/2).toFixed(1)+'" y="'+(base-vh-5).toFixed(1)+'">'+d.v+'</text>':'')
+        +'</g>';
+      var lab=d.wk?(i%3===0?dm(d.a):''):(n<=7?new Date(d.a).toLocaleDateString('en-US',{weekday:'narrow'}):(i%5===0||d.today?String(new Date(d.a).getDate()):''));
+      if(lab) h+='<text class="l'+(d.today?' t':'')+'" x="'+(x+bw/2).toFixed(1)+'" y="'+(H0-3)+'">'+esc(lab)+'</text>';
+    });
+    return '<svg class="crd-jc'+(empty?' empty':'')+'" viewBox="0 0 '+W0+' '+H0+'" role="group" aria-label="Jobs done per '+(days[0]&&days[0].wk?'week':'day')+'">'
+      +'<defs><linearGradient id="jcSweep" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+      +'<clipPath id="jcClip'+(big?'B':'')+'">'+days.map(function(d,i){ var x=i*(bw+gap); return '<rect x="'+x.toFixed(1)+'" y="10" width="'+bw.toFixed(1)+'" height="'+(base-10)+'" rx="'+Math.min(8,bw/2).toFixed(1)+'"/>'; }).join('')+'</clipPath></defs>'
+      +h+'<g clip-path="url(#jcClip'+(big?'B':'')+')" class="sw" aria-hidden="true"><rect x="-90" y="0" width="90" height="'+H0+'" fill="url(#jcSweep)"/></g></svg>';
+  }
+  function jobsReadout(days,sel){
+    var d=days[sel];
+    if(!d) return '<div class="crd-jtip" aria-live="polite"><span>Tap or point at a column to see that '+(days[0]&&days[0].wk?'week':'day')+'</span></div>';
+    return '<div class="crd-jtip on" aria-live="polite"><b>'+d.v+'</b> '+esc(dayName(d))+'<span>'+(d.v?esc(whoLine(d.by)):'Nothing finished')+'</span></div>';
+  }
+  /* the latest few, under the chart where the tile has room (laptops) */
+  function jobsLast(days){
+    var L=jobsOf().filter(function(j){ return j.state==='done'&&(j.end||j.at)>=days[0].a; }).slice(-4).reverse();
+    if(!L.length) return '';
+    return '<div class="crd-jlast"><small>Latest</small>'+L.map(function(j){ var e=emp(j.emp)||{n:'?'}; return '<button data-c="job" data-j="'+esc(j.id)+'">'+av(e)+'<span>'+esc(j.text.split('\n')[0].slice(0,70))+'</span><em>'+esc(ago(j.end||j.at))+'</em></button>'; }).join('')+'</div>';
+  }
+  function rangeSeg(cur,attr){ return '<div class="crd-seg" role="group" aria-label="Period">'+[[7,'7d'],[30,'30d'],[90,'90d']].map(function(r){ return '<button '+attr+' data-r="'+r[0]+'" aria-pressed="'+(cur===r[0])+'"'+(cur===r[0]?' class="on"':'')+'>'+r[1]+'</button>'; }).join('')+'</div>'; }
+  function jobsTile(L){
+    var rng=S.range||30, days=jobsDays(rng), tot=days.reduce(function(a,d){ return a+d.v; },0), sel=S.jsel!=null&&S.jsel<days.length?S.jsel:null;
+    var by={}; days.forEach(function(d){ Object.keys(d.by).forEach(function(k){ by[k]=(by[k]||0)+d.by[k]; }); });
+    return '<div class="crd-t t-big t-lit crd-jd">'
+      +'<div class="crd-th"><button class="crd-jopen" data-c="detail" data-k="jobs" aria-label="Jobs done: '+tot+' in '+rng+' days. Open the details"><span class="crd-tt">Jobs done</span>'+svg(IC.arrow)+'</button>'+rangeSeg(rng,'data-c="jrange"')+'</div>'
+      +'<div class="crd-tv"><i class="crd-bul"></i>'+tot+'<small>/in '+rng+' days</small></div>'
+      +jobsReadout(days,sel)
+      +'<div class="crd-tc crd-jcw">'+jobsChart(days,sel,false)+'</div>'
+      +jobsLast(days)
+      +'<div class="crd-javs">'+L.slice(0,9).map(function(e){ return '<button class="crd-jav" data-c="open" data-id="'+esc(e.id)+'" aria-label="'+esc(e.n+': '+(by[e.id]||0)+' done. Open '+e.n)+'">'+av(e)+'<em>'+(by[e.id]||0)+'</em></button>'; }).join('')+'</div>'
+      +(tot?'':'<div class="crd-jempty">No finished jobs yet. <button data-c="search">Give the team a job</button></div>')
+      +'</div>';
+  }
+  function dJobs(){
+    var rng=dRange, days=jobsDays(rng), tot=days.reduce(function(a,d){ return a+d.v; },0), sel=S.jday!=null&&S.jday<days.length?S.jday:null;
+    var by={}; days.forEach(function(d){ Object.keys(d.by).forEach(function(k){ by[k]=(by[k]||0)+d.by[k]; }); });
+    var best=days.reduce(function(a,d){ return d.v>a.v?d:a; },{v:0}), mx=Math.max.apply(null,Object.keys(by).map(function(k){ return by[k]; }).concat([1]));
+    var h=dOpen('Jobs done','Every job your team finished, day by day')
+      +'<div class="cwd-seg" role="group" aria-label="Period">'+[7,30,90].map(function(n){ return '<button data-cd="range" data-r="'+n+'" aria-pressed="'+(n===rng)+'"'+(n===rng?' class="on"':'')+'>'+n+' days</button>'; }).join('')+'</div>'
+      +dBig(tot,tot===1?'job done':'jobs done',tot?'Most in one '+(days[0].wk?'week':'day')+': '+best.v+' ('+dayName(best)+').':'Nothing finished yet in the last '+rng+' days. Give the team a job, or turn on a routine.')
+      +'<div class="cwd-jchart">'+jobsReadout(days,sel)+jobsChart(days,sel,true)+'</div>';
+    h+=dSec('Who did them',emps().length?emps().map(function(e){ var v=by[e.id]||0; return '<button class="cwd-who" data-cd="emp" data-id="'+esc(e.id)+'">'+av(e)+'<span class="nm">'+esc(e.n)+'<small>'+esc(e.title)+'</small></span><i><b style="width:'+(v/mx*100).toFixed(0)+'%"></b></i><em>'+v+'</em></button>'; }).join(''):'<p class="cwd-none">Hire someone first.</p>');
+    var list=sel!=null?days[sel].jobs:jobsOf().filter(function(j){ return j.state==='done'&&(j.end||j.at)>=days[0].a; }).slice(-12).reverse();
+    h+=dSec(sel!=null?dayName(days[sel]):'Latest',list.length?list.map(function(j){ var e=emp(j.emp)||{n:'?'}; return '<button class="cwd-row" data-cd="job" data-j="'+esc(j.id)+'"><span class="cwd-rn">'+esc(e.n+': '+j.text.split('\n')[0].slice(0,90))+'</span><span class="cwd-rm">'+esc(ago(j.end||j.at))+'</span></button>'; }).join(''):'<p class="cwd-none">Nothing finished '+(sel!=null?'that '+(days[sel].wk?'week':'day'):'in this period')+'.</p>',sel!=null?'tap the chart for another day':'tap a column to filter');
+    h+='<p class="cwd-note">A job counts when its employee finishes it, on the device or on the Kova server. Stopped and failed jobs are not counted.</p>';
+    return h+dBtns([{l:'Give the team a job',a:'data-cd="nav" data-n="team"'},{l:'Open all jobs',a:'data-cd="nav" data-n="jobs"'}])+'</div>';
   }
 
   /* ---- the team page ---- */
@@ -49728,7 +49943,7 @@ window.KovaCrew=(function(){
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
       +tabsRow('all')
       +'<div class="crd-tiles">'
-        +tileBig({tone:'lit',value:days.reduce(function(x,y){ return x+y.v; },0),label:'jobs done',range:rng,avatars:L,chart:ringsChart(days.map(function(x){ return x.v; }),days.map(function(x){ return x.s; }))})
+        +jobsTile(L)
         +tileSm({tone:'g1',title:'On time',k:'ontime',value:ot.rate==null?'No score yet':ot.rate+'%',soft:ot.rate==null,suf:ot.rate==null?'':'/on time',chart:gaugeChart(ot.rate||0,'%',false),
           cap:ot.rate==null?(ot.soon.length?ot.soon.length+' due soon. Finish one by its date and the score starts.':'Starts with the first dated task you finish.'):ot.ok+' of '+ot.dated+' by their date, last 30 days'})
         +tileSm({tone:'g2',title:'Work by status',k:'status',value:a.open,suf:'/open',chart:statusRows(statusData(a)),
@@ -49909,12 +50124,28 @@ window.KovaCrew=(function(){
     Object.keys(FILL.jobs).forEach(function(k){ out.push([k,FILL.jobs[k]]); });
     return out;
   }
+  /* Hiring: one tap. Each role says in a line what they do and what you
+     can ask them; "Hire" puts them on the team with sensible settings
+     (change anything later), "Customize" opens the full form. */
+  function roleCard(t){
+    var e=emps().filter(function(x){ return x.tpl===t.id; })[0], sk=SK[(SK_FOR[t.id]||[])[0]];
+    var j0=String(t.job||''), cut=j0.indexOf('. '), line=cut>0?j0.slice(0,cut+1):j0;
+    var n=e?e.n:freeName(t);
+    return '<div class="crd-role'+(e?' hired':'')+'">'
+      +'<div class="crd-rh">'+av(e||{n:n})+'<div class="crd-rn"><b>'+esc(n)+'</b><span>'+esc(t.title)+'</span></div>'+(e?'<span class="crw-st s-done">On the team</span>':'')+'</div>'
+      +'<p class="crd-rj">'+esc(line)+'</p>'
+      +((t.chips||[]).length?'<div class="crd-rask"><small>Ask '+esc(n)+':</small>'+t.chips.slice(0,2).map(function(q){ return '<span>\u201c'+esc(q)+'\u201d</span>'; }).join('')+'</div>':'')
+      +(sk?'<div class="crd-rsk">Skill: '+esc(sk.n)+'</div>':'')
+      +'<div class="crd-rb">'+(e?'<button class="crd-btn" data-c="open" data-id="'+esc(e.id)+'">Open '+esc(e.n)+'</button><button class="crd-btn ghost" data-c="tpl" data-t="'+t.id+'" aria-label="Hire another '+esc(t.title)+'">Hire another</button>'
+        :'<button class="crd-btn" data-c="hirenow" data-t="'+t.id+'">Hire '+esc(n)+'</button><button class="crd-btn ghost" data-c="tpl" data-t="'+t.id+'">Customize</button>')+'</div></div>';
+  }
   function hireView(){
-    var have=emps().map(function(e){ return e.tpl; });
-    return '<div class="crd">'+topBar()+head(0,'Hire an employee','Start from a role and change anything, or write the job yourself')
-      +'<div class="crd-roles">'+TPL.map(function(t){ var sk=SK[(SK_FOR[t.id]||[])[0]];
-        return '<button class="crd-role" data-c="tpl" data-t="'+t.id+'"><span class="crd-rh">'+av(t)+(have.indexOf(t.id)>=0?'<span class="crw-st s-idle">On the team</span>':'')+'</span><b>'+esc(t.title)+'</b><span class="crd-rj">'+esc(t.job)+'</span><small>'+(sk?'Skill: '+esc(sk.n):'')+'</small></button>'; }).join('')
-      +'<button class="crd-role add" data-c="tpl" data-t=""><span class="crw-plus">'+svg(IC.plus)+'</span><b>Start from scratch</b><span class="crd-rj">Write the name, the job and the playbook yourself</span></button></div></div>';
+    var have=emps().map(function(e){ return e.tpl; }), off=TPL.filter(function(t){ return have.indexOf(t.id)<0; }), on=TPL.filter(function(t){ return have.indexOf(t.id)>=0; });
+    return '<div class="crd">'+topBar()+head(0,'Hire an employee',on.length+' of '+TPL.length+' roles on your team · hire in one tap, change anything later')
+      +(off.length?'<div class="crd-sh2">Ready to hire ('+off.length+')</div><div class="crd-roles">'+off.map(roleCard).join('')+'</div>':'<div class="crd-card"><div class="crw-empty">Every role is on your team. Start one from scratch below.</div></div>')
+      +'<div class="crd-sh2">Something else?</div><div class="crd-roles"><button class="crd-role add" data-c="tpl" data-t=""><span class="crw-plus">'+svg(IC.plus)+'</span><b>Start from scratch</b><span class="crd-rj">Name them, say what they own, and they get to work.</span></button></div>'
+      +(on.length?'<div class="crd-sh2">On your team ('+on.length+')</div><div class="crd-roles">'+on.map(roleCard).join('')+'</div>':'')
+      +'</div>';
   }
   function field(label,control,menu){ return '<div class="crd-f"><div class="crd-fl"><span>'+label+'</span>'+(menu||'')+'</div>'+control+'</div>'; }
   function editView(){
@@ -49930,6 +50161,8 @@ window.KovaCrew=(function(){
         +field('Job description','<textarea id="crwJ" rows="5" maxlength="4000" placeholder="e.g. I keep the content pipeline full. I turn ideas into drafts for Instagram and TikTok in my voice." aria-label="Job description">'+esc(d.job)+'</textarea><small class="crw-count" data-for="crwJ">'+String(d.job||'').length+' / 4000</small>',
           sug('j','Suggestions',[{h:'Start like a role',items:jobStarters().map(function(x){ return {t:'crwJ',m:'set',v:x[1],l:x[0],s:x[1].split('. ')[0]+'.'}; })},{h:'Add a rule',items:FILL.adds.map(function(a){ return {t:'crwJ',m:'append',v:a,l:a}; })}]))
       +'</div>'
+      +(S.more?'':'<button class="crd-more2" data-c="more2" aria-expanded="false"><b>More settings</b><span>Playbook, what they can do, approvals and schedule. The defaults work.</span>'+svg(IC.chev,'sm')+'</button>')
+      +(S.more?'<div class="crd-morewrap">':'<div class="crd-morewrap" hidden>')
       +'<div class="crd-card crw-form"><div class="crd-chd"><span>How they work</span><small>Their playbook, step by step. Optional.</small></div>'
         +field('Playbook','<textarea id="crwP" rows="5" maxlength="4000" placeholder="1. Read the work first.&#10;2. Draft it, then wait for my approval.&#10;3. Finish with a short report." aria-label="Playbook">'+esc(d.playbook)+'</textarea>',
           sug('p','Suggestions',[{h:'Add a step',items:FILL.steps.map(function(s){ return {t:'crwP',m:'append',v:s,l:s}; })}]))
@@ -49947,6 +50180,7 @@ window.KovaCrew=(function(){
         +(r.freq==='event'?field('When','<select id="crwEv" aria-label="When">'+[['overdue','A task becomes overdue'],['new_task','A task is added'],['assigned','A task is assigned to them']].map(function(o){ return sel(r.event,o); }).join('')+'</select>'):'')
       +'</div>'
         +(r.freq&&r.freq!=='off'?field('The job they run','<textarea id="crwRJ" rows="2" placeholder="e.g. Brief me on today." aria-label="The job they run">'+esc(r.job||'')+'</textarea>',sug('r','Suggestions',[{h:'Ideas',items:FILL.routine.map(function(x){ return {t:'crwRJ',m:'set',v:x,l:x}; })}])):'')
+      +'</div>'
       +'</div>'
       +(d.id&&(d.memory||[]).length?'<div class="crd-card"><div class="crd-chd"><span>Memory</span></div><div class="crw-mem">'+d.memory.map(function(m,i){ return '<div><span>'+esc(m.t)+'</span><button class="crw-link" data-c="forget" data-i="'+i+'">Forget</button></div>'; }).join('')+'</div></div>':'')
       +'<div class="crd-row crd-save"><button class="crd-btn" data-c="save">'+(d.id?'Save':'Hire '+esc(d.n||'them'))+'</button>'
@@ -49972,7 +50206,7 @@ window.KovaCrew=(function(){
     var keep={}, act=document.activeElement, ak=act&&el.contains(act)?keyOf(act):'', sel=null;
     el.querySelectorAll('textarea,input').forEach(function(x){ var k=keyOf(x); if(k&&x.type!=='time') keep[k]=x.value; });
     if(ak&&act.selectionStart!=null) sel=[act.selectionStart,act.selectionEnd];
-    el.innerHTML=S.view==='edit'?editView():(S.view==='hire'?hireView():dash());
+    el.innerHTML=S.view==='edit'?editView():(S.view==='hire'?hireView():(S.view==='detail'?detailPage():dash()));
     el.querySelectorAll('textarea,input').forEach(function(x){ var k=keyOf(x); if(k&&keep[k]!=null&&x.type!=='time'&&x.value!==keep[k]&&!(S.clear&&S.clear[k])) x.value=keep[k]; });
     S.clear=null;
     if(ak){ var back=null; el.querySelectorAll('textarea,input').forEach(function(x){ if(keyOf(x)===ak) back=x; }); if(back){ try{ back.focus({preventScroll:true}); if(sel) back.setSelectionRange(sel[0],sel[1]); }catch(x){} } }
@@ -49982,6 +50216,15 @@ window.KovaCrew=(function(){
     var app=document.getElementById('app'); if(app) app.classList.toggle('crd-wide',visible());
   }
   function top0(){ var m=document.getElementById('main'); if(m) m.scrollTop=0; }
+  /* with a mouse (or the keyboard), the readout follows the column you are on */
+  function onHoverBar(ev){
+    if(ev.type==='pointerover'&&ev.pointerType&&ev.pointerType!=='mouse') return;
+    var g=ev.target.closest&&ev.target.closest('.jb'); if(!g) return;
+    var wrap=g.closest('.crd-jd,.cwd-jchart'), tip=wrap&&wrap.querySelector('.crd-jtip'); if(!tip) return;
+    var a=g.getAttribute('data-a')||'', n=a.split(' ')[0];
+    tip.className='crd-jtip on'; tip.innerHTML='<b>'+esc(n)+'</b> '+esc(a.slice(n.length+1))+'<span>'+esc(g.getAttribute('data-b')||'')+'</span>';
+    wrap.querySelectorAll('.jb.hov').forEach(function(x){ x.classList.remove('hov'); }); g.classList.add('hov');
+  }
   function saveIdea(b){
     var jid=b.getAttribute('data-j'), eid=b.getAttribute('data-id'), i=+b.getAttribute('data-i');
     var list=jid&&S.jobs[jid]&&S.jobs[jid].report?S.jobs[jid].report.ideas:(SNAP[eid]&&SNAP[eid].ideas);
@@ -49994,6 +50237,8 @@ window.KovaCrew=(function(){
     ev.__crwInside=true;                              /* the page-level "click outside" check skips this one */
     var b=ev.target.closest&&ev.target.closest('[data-c]');
     if(S.sug&&!(ev.target.closest&&ev.target.closest('.crd-sug'))){ S.sug=null; if(!b){ if(S.draft) readForm(); paint(); return; } }
+    var cd=ev.target.closest&&ev.target.closest('[data-cd]');
+    if(cd&&host().contains(cd)&&(!b||b.contains(cd))){ ev.preventDefault(); onDetail(ev); return; }
     if(!b||!host().contains(b)) return;
     var c=b.getAttribute('data-c'), id=b.getAttribute('data-id'), jid=b.getAttribute('data-j');
     if(c==='mailto') return;
@@ -50008,6 +50253,10 @@ window.KovaCrew=(function(){
     if(c==='detail'){ detail(b.getAttribute('data-k')); return; }
     if(c==='settings'){ S.showSet=!S.showSet; paint(); return; }
     if(c==='range'){ S.range={7:30,30:90,90:7}[S.range||30]; paint(); return; }
+    if(c==='jrange'){ S.range=+b.getAttribute('data-r')||30; S.jsel=null; paint(); return; }
+    if(c==='jsel'){ var ji=+b.getAttribute('data-i'); S.jsel=S.jsel===ji?null:ji; paint(); return; }
+    if(c==='hirenow'){ var th=tpl(b.getAttribute('data-t')); if(th){ var ne=hire(th,{n:freeName(th)},true); say(ne.n+' joined your team.'); try{ if(window.KovaAnalytics) KovaAnalytics.track('crew_hire',{feature:th.id}); }catch(x){} S.view='team'; S.nav='team'; S.tab=ne.id; paint(); top0(); } return; }
+    if(c==='more2'){ S.more=!S.more; if(S.draft) readForm(); paint(); return; }
     if(c==='hire'){ S.view='hire'; S.draft=null; paint(); top0(); return; }
     if(c==='more'){ S.open.jd=!S.open.jd; paint(); return; }
     if(c==='idea'){ saveIdea(b); return; }
@@ -50039,12 +50288,12 @@ window.KovaCrew=(function(){
       approve(jid,edits,b.getAttribute('data-a')); return;
     }
     if(c==='skip'){ skip(jid); return; }
-    if(c==='edit'){ var e4=emp(id); if(e4){ S.draft=JSON.parse(JSON.stringify(e4)); S.view='edit'; S.confirmFire=false; S.sug=null; paint(); top0(); } return; }
+    if(c==='edit'){ var e4=emp(id); if(e4){ S.draft=JSON.parse(JSON.stringify(e4)); S.view='edit'; S.more=false; S.confirmFire=false; S.sug=null; paint(); top0(); } return; }
     if(c==='tpl'){
       var t2=tpl(b.getAttribute('data-t'));
       S.draft={id:null,tpl:t2?t2.id:'custom',n:t2?t2.n:'',title:t2?t2.title:'',job:t2?t2.job:'',playbook:t2?t2.playbook:'',tools:t2?t2.tools.slice():['tasks'],approval:'external',
         routine:Object.assign({freq:'off',time:'09:00',dow:1,event:'overdue',job:''},t2?t2.routine:{}),memory:[]};
-      S.view='edit'; S.sug=null; paint(); top0(); return;
+      S.view='edit'; S.more=false; S.sug=null; paint(); top0(); return;
     }
     if(!S.draft) return;
     readForm();
@@ -50098,7 +50347,7 @@ window.KovaCrew=(function(){
   function mount(){
     var el=host(); if(!el) return;
     seed(); loadJobs(); hookWork();
-    if(!el.__crew){ el.__crew=true; el.addEventListener('click',onClick); el.addEventListener('keydown',onKey); el.addEventListener('input',onKey); el.addEventListener('change',onChange);
+    if(!el.__crew){ el.__crew=true; el.addEventListener('pointerover',onHoverBar); el.addEventListener('focusin',onHoverBar); el.addEventListener('click',onClick); el.addEventListener('keydown',onKey); el.addEventListener('input',onKey); el.addEventListener('change',onChange);
       document.addEventListener('click',function(ev){ if(S.sug&&!ev.__crwInside&&!el.contains(ev.target)){ S.sug=null; if(S.draft) readForm(); paint(); } }); }
     window.__workTeam={draw:paint};
     var ab=document.getElementById('wtmAsk');

@@ -174,9 +174,9 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('four labelled stats with the real numbers', body.querySelectorAll('.crd-stat').length === 4 && /Finished3/.test(body.querySelector('.crd-stats').textContent.replace(/\s+/g, '')));
   ck('a stage timeline and a focus card with the wireframe globe', !!body.querySelector('.crd-flow .crd-step') && !!body.querySelector('.crd-focus .crd-globe'));
   ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 5 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
-  ck('five tiles, the big one with a date range, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && !!body.querySelector('.crd-t.t-big .crd-date') && [...body.querySelectorAll('.crd-tiles .crd-t')].every((t) => t.querySelector('svg.crd-ch, .crd-srows')));
-  body.querySelector('.crd-t.t-big .crd-date').click(); await wait(10);
-  ck('the date range changes', /–/.test(body.querySelector('.crd-t.t-big .crd-date').textContent) && C._S.range === 90);
+  ck('five tiles, the big one with 7d / 30d / 90d, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && body.querySelectorAll('.crd-t.t-big [data-c="jrange"]').length === 3 && [...body.querySelectorAll('.crd-tiles .crd-t')].every((t) => t.querySelector('svg.crd-ch, svg.crd-jc, .crd-srows')));
+  body.querySelector('.crd-t.t-big [data-c="jrange"][data-r="90"]').click(); await wait(10);
+  ck('the date range changes', C._S.range === 90 && body.querySelector('.crd-t.t-big [data-r="90"]').classList.contains('on'));
   for (const n of ['jobs', 'approvals', 'routines', 'reports']) { body.querySelector('.crd-nav [data-n="' + n + '"]').click(); await wait(10); }
   ck('every page under the pills works (Reports shows the reports with charts)', /Reports/.test(body.querySelector('.crd-title').textContent) && !!body.querySelector('.crw-rep'));
   body.querySelector('.crd-nav [data-n="team"]').click(); await wait(10);
@@ -211,7 +211,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   // ---- hiring and editing, with grouped suggestions
   C._S.view = 'team'; C._S.tab = 'all'; C.paint(); await wait(10);
   body.querySelector('.crd-tabs [data-c="hire"]').click(); await wait(20);
-  [...body.querySelectorAll('[data-c="tpl"]')].filter((b) => /Content Producer/.test(b.textContent))[0].click(); await wait(20);
+  body.querySelector('[data-c="tpl"][data-t="content"]').click(); await wait(20);
   ck('hiring opens the job to edit before they join', !!doc.getElementById('crwJ') && /content pipeline/.test(doc.getElementById('crwJ').value));
   ck('suggestions are one closed menu per field, not rows of buttons', body.querySelectorAll('.crd-sug').length >= 4 && [...body.querySelectorAll('.crd-menu')].every((m) => m.hidden));
   body.querySelector('[data-c="sug"][data-s="j"]').click(); await wait(10);

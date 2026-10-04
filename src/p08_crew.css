@@ -511,3 +511,128 @@ body.light-mode #sheet .cwd-btn{--sheet-ink:#FFFFFF}
 .crd-srows i b{position:absolute;left:0;top:0;bottom:0;min-width:0;border-radius:3px;background:currentColor}
 .crd-srows em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;opacity:.85}
 @container (max-width:559px){.crd-t:not(.t-big) .crd-tv.soft{font-size:19px}}
+
+/* ---- p14: the team page, alive ----
+   Jobs done is a real chart: one column a day (a week at 90 days), today
+   brightest, a light that sweeps across in a loop like work in progress,
+   and a readout that follows the column you tap or hover. Every tile opens
+   a page of its own. The other tiles move too: the dashed tracks flow,
+   the live dots breathe, the status bars shimmer. Reduced motion stops it. */
+.crd-jd{min-height:0!important;gap:0}
+.crd-jd .crd-th{align-items:center;flex-wrap:wrap;row-gap:8px}
+.crd-jopen{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:inherit;padding:4px 0;cursor:pointer}
+.crd-jopen .crd-tt{max-width:none}
+.crd-jopen .crd-ic{width:16px;height:16px;opacity:.75}
+.crd-seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:rgba(0,0,0,.07)}
+.crd-seg button{min-width:40px;height:28px;padding:0 10px;border:0;border-radius:999px;background:none;color:inherit;opacity:.62;font:600 11.5px 'Outfit',sans-serif;cursor:pointer}
+.crd-seg button.on{opacity:1;background:currentColor}
+.crd-seg button.on{background:#14161A;color:#fff}
+.crd-jd .crd-tv{margin-top:10px}
+.crd-jtip{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-height:20px;margin:8px 0 2px;font-size:12.5px;opacity:.8}
+.crd-jtip b{font-size:15px;font-weight:600}
+.crd-jtip span{flex-basis:100%;font-size:11.5px;opacity:.75}
+.crd-jtip.on{opacity:1}
+.crd-jcw{margin-top:4px}
+.crd-jc{display:block;width:100%;height:auto;overflow:visible;touch-action:manipulation}
+.crd-jc .hit{fill:transparent}
+.crd-jc .bg{fill:currentColor;opacity:.06}
+.crd-jc .v{fill:currentColor;opacity:.78;animation:jcPulse 2.8s ease-in-out infinite;animation-delay:calc(var(--i)*70ms)}
+.crd-jc .jb.now .v{opacity:1}
+.crd-jc .jb.now .bg{opacity:.12}
+.crd-jc .jb.sel .bg,.crd-jc .jb.hov .bg{opacity:.18}
+.crd-jc .jb.sel .v,.crd-jc .jb.hov .v{opacity:1;animation:none}
+.crd-jc .jb{cursor:pointer;outline:none}
+.crd-jc .jb:focus-visible .bg{opacity:.3;stroke:currentColor;stroke-width:1}
+.crd-jc .gh{fill:currentColor;opacity:.08;animation:jcGhost 1.6s ease-in-out infinite;animation-delay:calc(var(--i)*55ms)}
+.crd-jc .n{fill:currentColor;font:600 9px 'Outfit',sans-serif;text-anchor:middle}
+.crd-jc .l{fill:currentColor;opacity:.55;font:500 9px 'Outfit',sans-serif;text-anchor:middle}
+.crd-jc .l.t{opacity:1;font-weight:700}
+.crd-jc .sw rect{animation:jcSweep 3.6s cubic-bezier(.45,.05,.55,.95) infinite;mix-blend-mode:soft-light}
+.crd-jc.empty .sw rect{animation-duration:2.2s}
+@keyframes jcSweep{from{transform:translateX(0)}to{transform:translateX(400px)}}
+@keyframes jcPulse{0%,100%{opacity:.7}50%{opacity:.95}}
+@keyframes jcGhost{0%,100%{opacity:.06}50%{opacity:.16}}
+.crd-javs{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:12px}
+.crd-jd .crd-jcw{margin-bottom:0}
+.crd-jav{position:relative;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px 0 2px;border-radius:999px;border:0;background:rgba(0,0,0,.06);color:inherit;font:600 12px 'Outfit',sans-serif;cursor:pointer}
+.crd-jav .crw-av{width:30px;height:30px}
+.crd-jav em{font-style:normal}
+.crd-jempty{margin-top:10px;font-size:12.5px;opacity:.8}
+.crd-jempty button{border:0;background:none;color:inherit;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:0}
+body.light-mode .crd-seg{background:rgba(255,255,255,.1)}
+body.light-mode .crd-seg button.on{background:#fff;color:#14161A}
+body.light-mode .crd-jav{background:rgba(255,255,255,.1)}
+body.soft-light .crd-seg button.on{background:#14161A;color:#fff}
+/* the other tiles move too */
+.crd-t .crd-ch .track,.crd-t .crd-ch .hill{animation:crdFlow 2.6s linear infinite}
+@keyframes crdFlow{to{stroke-dashoffset:-16}}
+.crd-t .crd-ch .hot,.crd-t .crd-ch .solid:not(.soft){animation:crdBreath 2.4s ease-in-out infinite}
+@keyframes crdBreath{0%,100%{opacity:.75}50%{opacity:1}}
+.crd-t .crd-ch circle.dot:nth-child(3n){animation:crdTw 3.2s ease-in-out infinite}
+.crd-t .crd-ch circle.dot:nth-child(3n+1){animation:crdTw 3.2s ease-in-out infinite;animation-delay:1.1s}
+@keyframes crdTw{0%,100%{opacity:1}50%{opacity:.35}}
+.crd-srows i b{background-image:linear-gradient(90deg,transparent 0,rgba(255,255,255,.55) 50%,transparent 100%);background-size:220% 100%;background-repeat:no-repeat;animation:crdShim 2.8s linear infinite}
+@keyframes crdShim{from{background-position:180% 0}to{background-position:-80% 0}}
+@media (prefers-reduced-motion:reduce){
+  .crd-jc .v,.crd-jc .gh,.crd-jc .sw rect,.crd-t .crd-ch .track,.crd-t .crd-ch .hill,.crd-t .crd-ch .hot,.crd-t .crd-ch .solid,.crd-t .crd-ch circle.dot,.crd-srows i b{animation:none}
+  .crd-jc .sw{display:none}
+}
+
+/* ---- each tile's page (no longer a sheet) ---- */
+.crd .cwd-page{--txt:var(--d-ink);--txt-2:var(--d-mute);--txt-3:var(--d-faint);--glass:var(--d-card);--glass-2:var(--d-card);--glass-brd:var(--d-line);
+  --acc-bg:var(--d-card2);--acc-brd:var(--d-line);--good:#5FD08A;--warn:#F4C95E;--bad:#EF6B70;padding:0 0 30px;max-width:760px}
+body.light-mode .crd .cwd-page{--good:#1E7A4B;--warn:#8A6D0F;--bad:#C2383D;--c0:#3E6FD8;--c1:#A86B12;--c2:#7B55C9;--c3:#1E7A4B}
+.cwd-back{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 8px;margin:0 0 14px;border-radius:999px;border:1px solid var(--d-pill-b);background:var(--d-pill);color:var(--d-pill-ink);font:500 13px 'Outfit',sans-serif;cursor:pointer}
+.cwd-back .crd-ic{width:18px;height:18px}
+.crd .cwd-page .cwd-t{font-size:30px;font-weight:300;letter-spacing:-.02em}
+.cwd-jchart{margin-top:16px;padding:14px 14px 10px;border-radius:22px;background:var(--t-lit);color:var(--t-lit-ink);box-shadow:var(--t-lit-glow)}
+.cwd-jchart .crd-jtip{margin-top:0}
+.cwd-who{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:8px 2px;border:0;border-top:.5px solid var(--glass-brd);background:none;color:var(--txt);font:inherit;text-align:left;cursor:pointer}
+.cwd-who .nm{width:34%;min-width:96px;font-size:14px;line-height:1.25}
+.cwd-who .nm small{display:block;font-size:11px;color:var(--txt-3)}
+.cwd-who>i{flex:1;height:6px;border-radius:3px;background:var(--glass);overflow:hidden}
+.cwd-who>i b{display:block;height:100%;border-radius:3px;background:currentColor;opacity:.8}
+.cwd-who .crw-av{width:34px;height:34px}
+.cwd-who em{font-style:normal;font-weight:600;min-width:22px;text-align:right}
+
+/* ---- hiring: one tap ---- */
+.crd-role{cursor:default;gap:8px}
+.crd-role .crd-rh{justify-content:flex-start;gap:12px;margin:0}
+.crd-role .crd-rh .crw-av{width:40px;height:40px}
+.crd-rn{flex:1;min-width:0;display:flex;flex-direction:column}
+.crd-rn b{font-size:17px;font-weight:500}
+.crd-rn span{font-size:12.5px;color:var(--d-mute)}
+.crd-role .crd-rj{margin:0;-webkit-line-clamp:2;color:var(--d-ink);opacity:.82;font-size:13px}
+.crd-rask{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crd-rask small{font-size:11px;color:var(--d-faint);margin:0}
+.crd-rask span{font-size:11.5px;padding:4px 9px;border-radius:999px;background:var(--d-card2);color:var(--d-mute)}
+.crd-rsk{font-size:11px;color:var(--d-faint)}
+.crd-rb{display:flex;gap:8px;margin-top:4px}
+.crd-rb .crd-btn{flex:1;height:40px;padding:0 12px}
+.crd-rb .crd-btn:first-child{flex:1.4}
+.crd-role.hired{opacity:.92}
+.crd-role.add{cursor:pointer}
+.crd-more2{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;margin:0 0 12px;border-radius:20px;border:1px dashed var(--d-line);background:transparent;color:var(--d-ink);font:inherit;cursor:pointer}
+.crd-more2 b{font-weight:600;font-size:14px;white-space:nowrap}
+.crd-more2 span{flex:1;font-size:12px;color:var(--d-mute)}
+.crd-more2 .crd-ic{width:18px;height:18px;flex-shrink:0}
+
+.crd-jlast{display:none}
+@container (min-width:760px){
+  .crd-jlast{display:flex;flex-direction:column;gap:2px;margin-top:14px}
+  .crd-jlast small{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.55;margin-bottom:4px}
+  .crd-jlast button{display:flex;align-items:center;gap:10px;min-height:40px;padding:4px 6px;border:0;border-radius:12px;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+  .crd-jlast button:hover{background:rgba(0,0,0,.05)}
+  .crd-jlast .crw-av{width:26px;height:26px}
+  .crd-jlast .crw-av b{font-size:11px}
+  .crd-jlast span{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crd-jlast em{font-style:normal;font-size:11.5px;opacity:.6}
+  body.light-mode .crd-jlast button:hover{background:rgba(255,255,255,.08)}
+}
+/* the employees' own charts breathe too, and the step that is running pulses */
+.crd-t .crd-ch rect.f{animation:crdBreath 2.6s ease-in-out infinite}
+.crd-t .crd-ch rect.f:nth-of-type(2n){animation-delay:.4s}
+.crd-t .crd-ch rect.f:nth-of-type(3n){animation-delay:.8s}
+.crd-t .crd-ch .s{stroke-dasharray:4 0}
+.crd-step.s-active .pl,.crd-step.s-up .pl{animation:crdBreath 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.crd-t .crd-ch rect.f,.crd-step .pl{animation:none}}
