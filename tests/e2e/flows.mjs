@@ -26,7 +26,7 @@ try {
   await page.waitForSelector('text=What do you want Kova for?');
   ck('a new person can skip sign-in and gets the first question', true);
   await tap('.ob-opt[data-v="fuel"]'); await tap('#obNext');
-  await page.waitForSelector('text=menstrual cycle'); await tap('#obSkip');
+  await page.waitForSelector('text=Which body is Kova reading'); await tap('#obSkip');
   await page.waitForSelector('text=How active are you'); await tap('.ob-opt[data-v="4"]'); await tap('#obNext');
   await page.waitForSelector('[data-w="today"]'); await tap('[data-w="today"]');
   await page.waitForFunction(() => document.getElementById('s-home').classList.contains('on'), null, { timeout: 10000 });
