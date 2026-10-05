@@ -177,3 +177,87 @@ body.light-mode .kcl-day input{color-scheme:light}
 .kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
 .kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
 .kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
+
+/* ---- image 5: three numbers, then a curved three-way switch ---- */
+.kcx-dialc{padding-bottom:12px}
+.kcx-s3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.kcx-s3 small{display:block;font-size:12.5px;color:var(--x-mute);margin-bottom:4px}
+.kcx-s3 b{font:300 30px/1 'Outfit',sans-serif;letter-spacing:-.02em}
+.kcx-s3 b i{font-style:normal;font-size:14px;color:var(--x-mute);margin-left:3px}
+.kcx-arc{display:flex;justify-content:center;align-items:flex-end;gap:0;margin:2px auto 22px;max-width:330px;height:70px}
+.kcx-arc button{position:relative;flex:1;height:58px;border:0;cursor:pointer;color:var(--x-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 11.5px 'Outfit',sans-serif;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--x-rose) 30%,transparent),color-mix(in srgb,var(--x-rose) 14%,transparent));background-color:rgba(232,96,122,.18);transition:transform .25s,background .25s}
+.kcx-arc button .ic{font-size:16px}
+.kcx-arc .s0{border-radius:34px 6px 10px 26px;transform:rotate(-14deg) translate(6px,8px);transform-origin:right bottom}
+.kcx-arc .s1{border-radius:10px 10px 18px 18px;height:62px;z-index:1}
+.kcx-arc .s2{border-radius:6px 34px 26px 10px;transform:rotate(14deg) translate(-6px,8px);transform-origin:left bottom}
+.kcx-arc button.on{background:linear-gradient(180deg,var(--x-rose),color-mix(in srgb,var(--x-rose) 70%,#000));color:#fff;box-shadow:0 10px 22px -10px var(--x-rose)}
+.kcx-arc .s1.on{transform:translateY(-6px)}
+.kcx-arc .s0.on{transform:rotate(-14deg) translate(6px,2px)}
+.kcx-arc .s2.on{transform:rotate(14deg) translate(-6px,2px)}
+body.light-mode .kcx-arc button{color:#1E1418}
+body.light-mode .kcx-arc button.on{color:#fff}
+/* ---- image 4: a half dial with tick marks, a needle, and the number above ---- */
+.kcx-dialw{position:relative;margin-top:6px}
+.kcx-hdt{text-align:center;margin:4px 0 -2px}
+.kcx-hdt small{display:block;font-size:13px;color:var(--x-mute)}
+.kcx-hdt b{display:block;font:300 34px/1.15 'Outfit',sans-serif;letter-spacing:-.02em;margin-top:2px}
+.kcx-hdt span{font-size:13px;color:var(--x-mute)}
+.kcx-dialw{display:flex;flex-direction:column-reverse}
+.kcx-hd{display:block;width:100%;max-width:340px;margin:6px auto 0;height:auto}
+.kcx-hd .tk line{stroke:var(--x-ink);stroke-width:1;opacity:.35}
+.kcx-hd .bg{fill:var(--x-ink);opacity:.06}
+.kcx-hd .fill{fill:url(#kcxHdG)}
+.kcx-hd .nd{stroke:var(--x-ink);stroke-width:1.6}
+/* the tick ruler (regularity) */
+.kcx-rul{text-align:center;padding:8px 2px 4px}
+.kcx-rul small{display:block;font-size:13px;color:var(--x-mute)}
+.kcx-rul b{display:block;font:300 40px/1.1 'Outfit',sans-serif;margin:4px 0}
+.kcx-rul b i{font-style:normal;font-size:16px;color:var(--x-mute);margin-left:3px}
+.kcx-rul>span{font-size:12.5px;color:var(--x-mute)}
+.kcx-ticks{display:flex;justify-content:space-between;align-items:flex-end;height:44px;margin:18px 4px 4px}
+.kcx-ticks i{width:1px;height:14px;background:var(--x-ink);opacity:.45}
+.kcx-ticks i.l{height:20px;opacity:.7}
+.kcx-ticks i.m{height:42px;width:2px;opacity:1;background:var(--x-rose);box-shadow:0 0 8px var(--x-rose)}
+.kcx-rx{display:flex;justify-content:space-between;font-size:10.5px;color:var(--x-mute)}
+/* ---- image 6: big numbers, a curve with pills, a pill + round button, bars ---- */
+.kcx-curve{background:radial-gradient(70% 60% at 50% 45%,rgba(232,96,122,.22),transparent 70%),radial-gradient(90% 70% at 100% 0%,rgba(242,184,75,.14),transparent 60%),var(--x-card)}
+.kcx-ch,.kcx-ch2{margin-bottom:12px}.kcx-ch small,.kcx-ch2 small{font-size:13px;color:var(--x-mute)}
+.kcx-ch2{margin:18px 0 10px;padding-top:14px;border-top:.5px solid var(--x-line)}
+.kcx-two2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kcx-two2 b{display:block;font:300 30px/1.1 'Outfit',sans-serif;letter-spacing:-.02em}
+.kcx-two2 small{display:block;font-size:12.5px;color:var(--x-mute);margin-top:4px}
+.kcx-cvw{position:relative;margin:14px 0 6px}
+.kcx-cv{display:block;width:100%;height:auto}
+.kcx-cv .gd{stroke:var(--x-ink);stroke-width:.6;stroke-dasharray:3 4;opacity:.35}
+.kcx-cv .gh{stroke:var(--x-ink);stroke-width:.6;stroke-dasharray:3 4;opacity:.25}
+.kcx-cv .ar{fill:var(--x-ink);opacity:.08}
+.kcx-cv .ln{fill:none;stroke:var(--x-ink);stroke-width:1.8;stroke-linejoin:round}
+.kcx-cv .pk{fill:var(--x-amber)}
+.kcx-cv .td{fill:var(--x-rose);stroke:var(--x-card);stroke-width:2}
+.kcx-cv text{fill:var(--x-mute);font:400 9.5px 'Outfit',sans-serif;text-anchor:middle}
+.kcx-pill{position:absolute;transform:translateX(-50%);white-space:nowrap;padding:5px 10px;border-radius:999px;font-size:11px;color:var(--x-ink);background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.kcx-pill.a::first-letter{color:var(--x-amber)}
+body.light-mode .kcx-pill{background:rgba(30,20,24,.07)}
+.kcx-ctas{display:flex;gap:8px;align-items:center;margin-top:12px}
+.kcx-ctas .kcx-btn{flex:1}
+.kcx-round{width:46px;height:46px;border-radius:50%;border:0;flex-shrink:0;background:var(--x-btn);color:var(--x-btnInk);display:grid;place-items:center;cursor:pointer;font-size:18px}
+.kcx-bars{display:flex;align-items:flex-end;gap:3px;height:44px;margin-top:10px}
+.kcx-bars i{flex:1;background:var(--x-ink);opacity:.55;border-radius:1px;min-height:3px}
+.kcx-bars i:last-child{opacity:1;background:var(--x-rose)}
+/* ---- image 9: the status card ---- */
+.kcx-check{background:radial-gradient(60% 120% at 0% 50%,rgba(232,96,122,.42),transparent 70%),var(--x-card)}
+.kcx-ckh{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.kcx-ckh b{font:400 19px 'Outfit',sans-serif;letter-spacing:-.01em}
+.kcx-risk{padding:5px 12px;border-radius:999px;font-size:12.5px;background:rgba(95,208,138,.14);color:#7FE0A6}
+.kcx-risk.watch{background:rgba(242,184,75,.16);color:var(--x-amber)}
+.kcx-risk.high{background:rgba(232,72,79,.18);color:#FF6B70}
+body.light-mode .kcx-risk{color:#1E7A4B}body.light-mode .kcx-risk.high{color:#B02444}
+.kcx-ckg{display:grid;grid-template-columns:auto 1fr;gap:12px 22px;align-items:baseline}
+.kcx-ckg span{font-size:15px;color:var(--x-mute)}
+.kcx-ckg b{font-weight:400;font-size:15.5px;text-align:right}
+.kcx-ckg b.warn{color:var(--x-rose)}
+.kcx-link2{border:0;background:none;padding:12px 0 0;color:var(--x-ink);font:500 13px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@media (max-width:360px){.kcx-s3 b{font-size:24px}.kcx-two2 b{font-size:24px}.kcx-arc{height:64px}.kcx-arc button{font-size:10.5px}}
+@media (prefers-reduced-motion:reduce){.kcx-arc button{transition:none}}
+.kcx-round .ic,.kcx-arc .ic{color:inherit!important;width:1em;height:1em}

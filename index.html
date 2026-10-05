@@ -4452,6 +4452,90 @@ body.light-mode .kcl-day input{color-scheme:light}
 .kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
 .kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
 
+/* ---- image 5: three numbers, then a curved three-way switch ---- */
+.kcx-dialc{padding-bottom:12px}
+.kcx-s3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.kcx-s3 small{display:block;font-size:12.5px;color:var(--x-mute);margin-bottom:4px}
+.kcx-s3 b{font:300 30px/1 'Outfit',sans-serif;letter-spacing:-.02em}
+.kcx-s3 b i{font-style:normal;font-size:14px;color:var(--x-mute);margin-left:3px}
+.kcx-arc{display:flex;justify-content:center;align-items:flex-end;gap:0;margin:2px auto 22px;max-width:330px;height:70px}
+.kcx-arc button{position:relative;flex:1;height:58px;border:0;cursor:pointer;color:var(--x-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 11.5px 'Outfit',sans-serif;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--x-rose) 30%,transparent),color-mix(in srgb,var(--x-rose) 14%,transparent));background-color:rgba(232,96,122,.18);transition:transform .25s,background .25s}
+.kcx-arc button .ic{font-size:16px}
+.kcx-arc .s0{border-radius:34px 6px 10px 26px;transform:rotate(-14deg) translate(6px,8px);transform-origin:right bottom}
+.kcx-arc .s1{border-radius:10px 10px 18px 18px;height:62px;z-index:1}
+.kcx-arc .s2{border-radius:6px 34px 26px 10px;transform:rotate(14deg) translate(-6px,8px);transform-origin:left bottom}
+.kcx-arc button.on{background:linear-gradient(180deg,var(--x-rose),color-mix(in srgb,var(--x-rose) 70%,#000));color:#fff;box-shadow:0 10px 22px -10px var(--x-rose)}
+.kcx-arc .s1.on{transform:translateY(-6px)}
+.kcx-arc .s0.on{transform:rotate(-14deg) translate(6px,2px)}
+.kcx-arc .s2.on{transform:rotate(14deg) translate(-6px,2px)}
+body.light-mode .kcx-arc button{color:#1E1418}
+body.light-mode .kcx-arc button.on{color:#fff}
+/* ---- image 4: a half dial with tick marks, a needle, and the number above ---- */
+.kcx-dialw{position:relative;margin-top:6px}
+.kcx-hdt{text-align:center;margin:4px 0 -2px}
+.kcx-hdt small{display:block;font-size:13px;color:var(--x-mute)}
+.kcx-hdt b{display:block;font:300 34px/1.15 'Outfit',sans-serif;letter-spacing:-.02em;margin-top:2px}
+.kcx-hdt span{font-size:13px;color:var(--x-mute)}
+.kcx-dialw{display:flex;flex-direction:column-reverse}
+.kcx-hd{display:block;width:100%;max-width:340px;margin:6px auto 0;height:auto}
+.kcx-hd .tk line{stroke:var(--x-ink);stroke-width:1;opacity:.35}
+.kcx-hd .bg{fill:var(--x-ink);opacity:.06}
+.kcx-hd .fill{fill:url(#kcxHdG)}
+.kcx-hd .nd{stroke:var(--x-ink);stroke-width:1.6}
+/* the tick ruler (regularity) */
+.kcx-rul{text-align:center;padding:8px 2px 4px}
+.kcx-rul small{display:block;font-size:13px;color:var(--x-mute)}
+.kcx-rul b{display:block;font:300 40px/1.1 'Outfit',sans-serif;margin:4px 0}
+.kcx-rul b i{font-style:normal;font-size:16px;color:var(--x-mute);margin-left:3px}
+.kcx-rul>span{font-size:12.5px;color:var(--x-mute)}
+.kcx-ticks{display:flex;justify-content:space-between;align-items:flex-end;height:44px;margin:18px 4px 4px}
+.kcx-ticks i{width:1px;height:14px;background:var(--x-ink);opacity:.45}
+.kcx-ticks i.l{height:20px;opacity:.7}
+.kcx-ticks i.m{height:42px;width:2px;opacity:1;background:var(--x-rose);box-shadow:0 0 8px var(--x-rose)}
+.kcx-rx{display:flex;justify-content:space-between;font-size:10.5px;color:var(--x-mute)}
+/* ---- image 6: big numbers, a curve with pills, a pill + round button, bars ---- */
+.kcx-curve{background:radial-gradient(70% 60% at 50% 45%,rgba(232,96,122,.22),transparent 70%),radial-gradient(90% 70% at 100% 0%,rgba(242,184,75,.14),transparent 60%),var(--x-card)}
+.kcx-ch,.kcx-ch2{margin-bottom:12px}.kcx-ch small,.kcx-ch2 small{font-size:13px;color:var(--x-mute)}
+.kcx-ch2{margin:18px 0 10px;padding-top:14px;border-top:.5px solid var(--x-line)}
+.kcx-two2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kcx-two2 b{display:block;font:300 30px/1.1 'Outfit',sans-serif;letter-spacing:-.02em}
+.kcx-two2 small{display:block;font-size:12.5px;color:var(--x-mute);margin-top:4px}
+.kcx-cvw{position:relative;margin:14px 0 6px}
+.kcx-cv{display:block;width:100%;height:auto}
+.kcx-cv .gd{stroke:var(--x-ink);stroke-width:.6;stroke-dasharray:3 4;opacity:.35}
+.kcx-cv .gh{stroke:var(--x-ink);stroke-width:.6;stroke-dasharray:3 4;opacity:.25}
+.kcx-cv .ar{fill:var(--x-ink);opacity:.08}
+.kcx-cv .ln{fill:none;stroke:var(--x-ink);stroke-width:1.8;stroke-linejoin:round}
+.kcx-cv .pk{fill:var(--x-amber)}
+.kcx-cv .td{fill:var(--x-rose);stroke:var(--x-card);stroke-width:2}
+.kcx-cv text{fill:var(--x-mute);font:400 9.5px 'Outfit',sans-serif;text-anchor:middle}
+.kcx-pill{position:absolute;transform:translateX(-50%);white-space:nowrap;padding:5px 10px;border-radius:999px;font-size:11px;color:var(--x-ink);background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.kcx-pill.a::first-letter{color:var(--x-amber)}
+body.light-mode .kcx-pill{background:rgba(30,20,24,.07)}
+.kcx-ctas{display:flex;gap:8px;align-items:center;margin-top:12px}
+.kcx-ctas .kcx-btn{flex:1}
+.kcx-round{width:46px;height:46px;border-radius:50%;border:0;flex-shrink:0;background:var(--x-btn);color:var(--x-btnInk);display:grid;place-items:center;cursor:pointer;font-size:18px}
+.kcx-bars{display:flex;align-items:flex-end;gap:3px;height:44px;margin-top:10px}
+.kcx-bars i{flex:1;background:var(--x-ink);opacity:.55;border-radius:1px;min-height:3px}
+.kcx-bars i:last-child{opacity:1;background:var(--x-rose)}
+/* ---- image 9: the status card ---- */
+.kcx-check{background:radial-gradient(60% 120% at 0% 50%,rgba(232,96,122,.42),transparent 70%),var(--x-card)}
+.kcx-ckh{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.kcx-ckh b{font:400 19px 'Outfit',sans-serif;letter-spacing:-.01em}
+.kcx-risk{padding:5px 12px;border-radius:999px;font-size:12.5px;background:rgba(95,208,138,.14);color:#7FE0A6}
+.kcx-risk.watch{background:rgba(242,184,75,.16);color:var(--x-amber)}
+.kcx-risk.high{background:rgba(232,72,79,.18);color:#FF6B70}
+body.light-mode .kcx-risk{color:#1E7A4B}body.light-mode .kcx-risk.high{color:#B02444}
+.kcx-ckg{display:grid;grid-template-columns:auto 1fr;gap:12px 22px;align-items:baseline}
+.kcx-ckg span{font-size:15px;color:var(--x-mute)}
+.kcx-ckg b{font-weight:400;font-size:15.5px;text-align:right}
+.kcx-ckg b.warn{color:var(--x-rose)}
+.kcx-link2{border:0;background:none;padding:12px 0 0;color:var(--x-ink);font:500 13px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@media (max-width:360px){.kcx-s3 b{font-size:24px}.kcx-two2 b{font-size:24px}.kcx-arc{height:64px}.kcx-arc button{font-size:10.5px}}
+@media (prefers-reduced-motion:reduce){.kcx-arc button{transition:none}}
+.kcx-round .ic,.kcx-arc .ic{color:inherit!important;width:1em;height:1em}
+
 </style>
 <style id="p08-links">
 /* ---- How it connects ---- */
@@ -48548,10 +48632,7 @@ window.KovaCycle=(function(){
         +(op?('<div class="kcx-tl"><span>This cycle</span><b>'+(s.cycles?s.avg+' days'+(s.sd!=null?' ±'+Math.max(1,Math.round(s.sd)):''):'~28 days')+'</b></div>'+dash(t)
           +'<div class="kcx-key"><span class="p">Period</span><span class="fw">Fertile window</span><span class="ov">Ovulation</span><span class="now">Today</span></div>'):'')
         +'</div>';
-      h+='<div class="kcx-card kcx-fert" style="--kc:'+(t.fert==='low'?'rgba(255,255,255,.4)':AMBER)+'">'
-        +'<div class="kcx-fl"><b>Fertility today</b><small>'+esc(howSure(t))+'</small></div>'
-        +'<div class="kcx-fv"><span class="kcx-dot f-'+t.fert+'"></span>'+(t.hormonal||t.paused?'—':FERT_N[t.fert])+'</div>'
-        +tempChart()+'</div>';
+      h+=dialCard(t)+curveCard(t);
       var pt=patterns(), soon=pt.filter(function(p){ return p.kind==='before'&&Math.abs(Math.round((t.next-sod())/DAY)-p.o)<=1; })[0];
       if(soon) h+='<div class="kcx-heads"><span>Heads-up</span>'+esc(soon.t.replace(' ('+soon.n+' cycles).','.'))+' Your period is due '+(dn<=0?'today':'in '+dn+' day'+(dn===1?'':'s'))+'.</div>';
     }
@@ -48562,7 +48643,7 @@ window.KovaCycle=(function(){
     h+=rec('tests','Tests:','Ovulation, pregnancy, progesterone',testsBody());
     h+=rec('status','Status:',[st0.preg?'Pregnant':'Not pregnant',st0.lact?'Breastfeeding':'',(CONTRA.filter(function(c){ return c[0]===st0.contra; })[0]||CONTRA[0])[1]==='None'?'No birth control':(CONTRA.filter(function(c){ return c[0]===st0.contra; })[0]||CONTRA[0])[1]].filter(Boolean).join(' · '),statusBody());
     h+=rec('patterns','Patterns:',pt2.length?pt2.length+' that repeat':'Need 2 cycles',pt2.length?'<ul class="kcx-ul">'+pt2.slice(0,8).map(function(p){ return '<li>'+esc(p.t)+'</li>'; }).join('')+'</ul>':'<p class="kcx-p">Patterns show once something repeats in two cycles. Keep logging; one tap a day is enough.</p>');
-    h+=rec('flags','Worth a check:',fl.length?fl.length+' thing'+(fl.length===1?'':'s'):'Nothing unusual',fl.length?'<ul class="kcx-ul">'+fl.map(function(f){ return '<li class="'+(f.urgent?'u':'')+'"><b>'+esc(f.t)+'</b> '+esc(f.d)+'</li>'; }).join('')+'</ul><p class="kcx-fine">Kova does not diagnose. These are the things a gynaecologist would want to see; the report below has them.</p>':'<p class="kcx-p">Cycle length, period length and spotting are within the usual ranges for what you have logged.</p>',fl.length?'warn':'');
+    h+=checkCard(fl);
     /* grouped graphs */
     h+='<div class="kcx-sh">Symptoms, grouped</div><div class="kcx-grid">'+GROUPS.map(gCard).join('')+'</div>';
     if(UI.grp) h+=gDetail(GROUPS.filter(function(g){ return g.id===UI.grp; })[0]);
@@ -48572,6 +48653,97 @@ window.KovaCycle=(function(){
       +'<p class="kcx-fine">Off: it never leaves this device. Kova never shares it or uses it for ads. Estimates are not a method of birth control and not medical advice.</p>'
       +'<button class="kcx-link" data-k="off">Stop tracking and delete cycle data</button></div>';
     return h;
+  }
+  /* ---- image 4 and 5: three numbers on top, a curved three-way switch,
+     and a half dial with tick marks (or a tick ruler for regularity) ---- */
+  function regularity(){
+    var s=stats(), L=s.lens; if(L.length<2) return null;
+    var range=Math.max.apply(null,L)-Math.min.apply(null,L);
+    return {range:range,score:Math.max(0,Math.round(100-range*7)),n:L.length,word:range<=7?'Regular':(range<=9?'Mostly regular':'Irregular')};
+  }
+  function halfDial(frac,from,to,needle,big,small,sub){
+    var cx=150, cy=150, R=118, ticks='';
+    for(var i=0;i<=60;i++){ var a=Math.PI*(1-i/60), r1=R+6, r2=R+(i%5===0?16:11); ticks+='<line x1="'+(cx+r1*Math.cos(a)).toFixed(1)+'" y1="'+(cy-r1*Math.sin(a)).toFixed(1)+'" x2="'+(cx+r2*Math.cos(a)).toFixed(1)+'" y2="'+(cy-r2*Math.sin(a)).toFixed(1)+'"/>'; }
+    var arc=function(f0,f1){ var a0=Math.PI*(1-f0), a1=Math.PI*(1-f1); return 'M'+cx+' '+cy+' L'+(cx+R*Math.cos(a0)).toFixed(1)+' '+(cy-R*Math.sin(a0)).toFixed(1)+' A'+R+' '+R+' 0 0 1 '+(cx+R*Math.cos(a1)).toFixed(1)+' '+(cy-R*Math.sin(a1)).toFixed(1)+' Z'; };
+    var na=Math.PI*(1-needle);
+    return '<svg class="kcx-hd" viewBox="0 0 300 160" aria-hidden="true"><defs><linearGradient id="kcxHdG" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="var(--x-rose)" stop-opacity=".95"/><stop offset="1" stop-color="var(--x-amber)" stop-opacity=".55"/></linearGradient></defs>'
+      +'<g class="tk">'+ticks+'</g><path class="bg" d="'+arc(0,1)+'"/>'+(to>from?'<path class="fill" d="'+arc(from,to)+'"/>':'')
+      +'<line class="nd" x1="'+cx+'" y1="'+cy+'" x2="'+(cx+(R+22)*Math.cos(na)).toFixed(1)+'" y2="'+(cy-(R+22)*Math.sin(na)).toFixed(1)+'"/></svg>'
+      +'<div class="kcx-hdt"><small>'+esc(sub)+'</small><b>'+esc(big)+'</b><span>'+esc(small)+'</span></div>';
+  }
+  function dialCard(t){
+    var s=t.stats, v=UI.dial||'day', rg=regularity(), body='';
+    if(v==='day'){
+      var f=Math.min(1,t.day/Math.max(s.avg,t.day));
+      body=halfDial(f,0,f,f,'Day '+t.day,t.paused?'Pregnant':PHASE[t.phase].n,'Where you are');
+    } else if(v==='fert'){
+      var last=parse(s.starts[s.starts.length-1]), n=Math.max(s.avg,t.day), a=(t.fertile[0]-last)/DAY/n, b=((t.fertile[1]-last)/DAY+1)/n, o=((t.ov-last)/DAY+.5)/n;
+      body=t.hormonal||t.paused?halfDial(0,0,0,0,'—',t.paused?'Paused in pregnancy':'Not shown on hormonal birth control','Fertile window')
+        :halfDial(Math.max(0,a),Math.max(0,a),Math.min(1,b),Math.min(1,o),md(t.fertile[0])+'–'+md(t.fertile[1]),'Ovulation ~'+md(t.ov)+(t.confirmed?' (confirmed)':''),'Fertile window');
+    } else {
+      body=rg?'<div class="kcx-rul"><small>Regularity</small><b>'+rg.score+'<i>%</i></b><span>'+esc(rg.word)+': your last '+rg.n+' cycles vary by '+rg.range+' day'+(rg.range===1?'':'s')+'</span>'
+          +'<div class="kcx-ticks" role="img" aria-label="'+rg.score+' percent regular">'+Array.apply(null,{length:41}).map(function(_,i){ return '<i class="'+(Math.round(rg.score/2.5)===i?'m':(i%10===0?'l':''))+'"></i>'; }).join('')+'</div><div class="kcx-rx"><span>0%</span><span>100%</span></div></div>'
+        :'<div class="kcx-rul"><small>Regularity</small><b>—</b><span>Shows once two cycles are logged.</span></div>';
+    }
+    var segs=[['day','Day','#i-clock'],['fert','Fertile','#i-seedling'],['reg','Regular','#i-chart-line']];
+    return '<div class="kcx-card kcx-dialc">'
+      +'<div class="kcx-s3"><div><small>Cycles logged</small><b>'+s.cycles+'</b></div><div><small>Average cycle</small><b>'+s.avg+'<i>d</i></b></div><div><small>Period</small><b>'+s.plen+'<i>d</i></b></div></div>'
+      +'<div class="kcx-arc" role="tablist" aria-label="Dial">'+segs.map(function(x,i){ return '<button role="tab" aria-selected="'+(v===x[0])+'" class="s'+i+(v===x[0]?' on':'')+'" data-k="dial" data-v="'+x[0]+'"><svg class="ic"><use href="'+x[2]+'"/></svg><span>'+x[1]+'</span></button>'; }).join('')+'</div>'
+      +'<div class="kcx-dialw">'+body+'</div></div>';
+  }
+  /* ---- image 6: two big numbers, a curve with labelled pills, a pill
+     button with a round one beside it, and a bar sparkline under it ---- */
+  var WILCOX={'-5':.10,'-4':.16,'-3':.14,'-2':.27,'-1':.31,'0':.33};
+  function curveCard(t){
+    var s=t.stats, last=parse(s.starts[s.starts.length-1]), n=Math.max(s.avg,t.day), ovD=Math.round((t.ov-last)/DAY), today=Math.round((sod()-last)/DAY);
+    var off=t.hormonal||t.paused;
+    var pts=[], W=300, H=120, x=function(d){ return 10+d/(n-1)*(W-20); }, y=function(p){ return 100-p*240; };
+    for(var d=0;d<n;d++){ var k=String(d-ovD), p=off?0:(WILCOX[k]||0); pts.push([x(d),y(p)]); }
+    var line=pts.map(function(q,i){ return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1); }).join(' ');
+    var area=line+' L'+x(n-1).toFixed(1)+' 100 L'+x(0).toFixed(1)+' 100 Z';
+    var pTo=off?0:(WILCOX[String(today-ovD)]||0);
+    var guides=[0,7,14,21].filter(function(d){ return d<n; }).map(function(d){ return '<line class="gd" x1="'+x(d).toFixed(1)+'" y1="8" x2="'+x(d).toFixed(1)+'" y2="100"/>'; }).join('')
+      +'<line class="gh" x1="10" y1="'+y(.165).toFixed(1)+'" x2="'+(W-10)+'" y2="'+y(.165).toFixed(1)+'"/>';
+    var svg='<svg class="kcx-cv" viewBox="0 0 '+W+' '+(H+14)+'" aria-hidden="true">'+guides
+      +'<path class="ar" d="'+area+'"/><path class="ln" d="'+line+'"/>'
+      +(today>=0&&today<n?'<circle class="td" cx="'+x(today).toFixed(1)+'" cy="'+y(pTo).toFixed(1)+'" r="4"/>':'')
+      +(!off?'<circle class="pk" cx="'+x(ovD).toFixed(1)+'" cy="'+y(.33).toFixed(1)+'" r="3.5"/>':'')
+      +[0,7,14,21].filter(function(d){ return d<n; }).map(function(d){ return '<text x="'+x(d).toFixed(1)+'" y="'+(H+10)+'"'+(d===0?' style="text-anchor:start"':'')+'>Day '+(d+1)+'</text>'; }).join('')+'</svg>';
+    var pills=off?'':'<span class="kcx-pill a" style="left:'+(x(ovD)/W*100).toFixed(1)+'%;top:6%">↑ 33% · ovulation ~'+md(t.ov)+'</span>'
+      +(today>=0&&today<n?'<span class="kcx-pill b" style="left:'+(x(today)/W*100).toFixed(1)+'%;top:'+Math.max(30,(y(pTo)/(H+14)*100-22)).toFixed(0)+'%">Today · '+Math.round(pTo*100)+'%</span>':'');
+    var src=Object.keys(D.bbt).length>=3?D.bbt:D.temp, tk=Object.keys(src).sort().slice(-14), tv=tk.map(function(k){ return +src[k]; });
+    var mx=tv.length?Math.max.apply(null,tv):0, mn=tv.length?Math.min.apply(null,tv):0, rr=(mx-mn)||.3, isB=src===D.bbt;
+    var bars=tv.length?'<div class="kcx-bars" aria-hidden="true">'+tv.map(function(v){ return '<i style="height:'+(18+((v-mn)/rr)*82).toFixed(0)+'%"></i>'; }).join('')+'</div>':'';
+    var tf=function(v){ return isB?v.toFixed(2)+'°':(v>=0?'+':'')+v.toFixed(2)+'°'; };
+    return '<div class="kcx-card kcx-curve">'
+      +'<div class="kcx-ch"><small>Fertility</small></div>'
+      +'<div class="kcx-two2"><div><b>'+(off?'—':FERT_N[t.fert])+'</b><small>Today</small></div><div><b>'+(off?'—':Math.round(pTo*100)+'%')+'</b><small>Chance of conceiving today</small></div></div>'
+      +'<div class="kcx-cvw">'+svg+pills+'</div>'
+      +'<div class="kcx-ctas"><button class="kcx-btn" data-k="logsigns">Log a test or temperature</button><button class="kcx-round" data-k="logsigns" aria-label="Log temperature"><svg class="ic"><use href="#i-temperature"/></svg></button></div>'
+      +'<p class="kcx-fine">'+esc(howSure(t))+'. Chances by day from the Wilcox 1995 study of when pregnancies started; your own signs move the window.</p>'
+      +(tv.length?'<div class="kcx-ch2"><small>'+(isB?'Basal temperature':'Wrist temperature')+'</small></div><div class="kcx-two2"><div><b>'+tf(tv[tv.length-1])+'</b><small>Last night</small></div><div><b>'+(t.retro?'+'+t.retro.rise.toFixed(2)+'°':'—')+'</b><small>'+(t.retro?'Rise after ovulation':'No rise yet this cycle')+'</small></div></div>'+bars:'')
+      +'</div>';
+  }
+  /* ---- image 9: a status card, labels on the left, what they are on the
+     right, and a risk chip ---- */
+  function checkCard(fl){
+    var C=cycles(), s=stats(), rg=regularity(), ks=fl.map(function(f){ return f.k; }), lastLen=C.filter(function(c){ return c.plen; }).slice(-1)[0];
+    var pel=Object.keys(D.sev).filter(function(k){ return sevOn(k,'pelvic')||sevOn(k,'cramps'); }).map(function(k){ return Math.max(sevOn(k,'pelvic'),sevOn(k,'cramps')); });
+    var pmax=pel.length?Math.max.apply(null,pel):0;
+    var rows=[
+      ['Length',rg?(ks.indexOf('irregular')>=0?'Irregular':(ks.indexOf('infrequent')>=0?'Infrequent':(ks.indexOf('short')>=0?'Short':rg.word))):'Needs 2 cycles',ks.some(function(k){ return /irregular|infrequent|short/.test(k); })],
+      ['Bleeding',ks.indexOf('prolonged')>=0?'Prolonged':(lastLen?'Normal, '+s.plen+' days':'Not logged'),ks.indexOf('prolonged')>=0||ks.indexOf('pregbleed')>=0],
+      ['Spotting',ks.indexOf('spotting')>=0?'Persistent':'None to speak of',ks.indexOf('spotting')>=0],
+      ['Pain',pmax===3?'Severe on some days':(pmax===2?'Moderate':(pmax?'Mild':'None logged')),ks.indexOf('pelvic')>=0]
+    ];
+    var urgent=fl.some(function(f){ return f.urgent; }), bad=rows.filter(function(r){ return r[2]; }).length;
+    var risk=urgent?['high','Tell your doctor']:(bad?['watch','Worth a check']:['ok','All clear']);
+    var op=!!UI.open.flags;
+    return '<div class="kcx-card kcx-check"><div class="kcx-ckh"><b>Cycle check</b><span class="kcx-risk '+risk[0]+'">'+risk[1]+'</span></div>'
+      +'<div class="kcx-ckg">'+rows.map(function(r){ return '<span>'+r[0]+'</span><b class="'+(r[2]?'warn':'')+'">'+esc(r[1])+'</b>'; }).join('')+'</div>'
+      +(fl.length?'<button class="kcx-link2" data-k="fold" data-f="flags" aria-expanded="'+op+'">'+(op?'Hide':'What this means')+'</button>'
+        +(op?'<ul class="kcx-ul">'+fl.map(function(f){ return '<li class="'+(f.urgent?'u':'')+'"><b>'+esc(f.t)+'</b> '+esc(f.d)+'</li>'; }).join('')+'</ul><p class="kcx-fine">Kova does not diagnose. These are the things a gynaecologist would want to see; the report below has them.</p>':''):'')
+      +'</div>';
   }
   function rec(id,a,b,body,tone){
     var op=!!UI.open[id];
@@ -48677,6 +48849,8 @@ window.KovaCycle=(function(){
     if(k==='fold'){ var f=b.getAttribute('data-f'); UI.open[f]=!UI.open[f]; paint(); return; }
     if(k==='grp'){ var g=b.getAttribute('data-g'); UI.grp=UI.grp===g?null:g; paint(); if(UI.grp){ var dt=$('.kcx-det'); if(dt&&dt.scrollIntoView) dt.scrollIntoView({block:'nearest',behavior:'smooth'}); } return; }
     if(k==='log'){ openLog(tk); return; }
+    if(k==='logsigns'){ L.tab=L.tab||'pain'; openLog(tk); setTimeout(function(){ var el=document.querySelector('#kcl .kcl-sec:nth-of-type(3)'); if(el&&el.scrollIntoView) el.scrollIntoView({block:'start'}); },60); return; }
+    if(k==='dial'){ UI.dial=b.getAttribute('data-v'); paint(); return; }
     if(k==='report'){ report(); return; }
     if(k==='start'||k==='startnow'){
       var v=k==='startnow'?tk:(($('#kcxStart')||{}).value||'');
@@ -48805,7 +48979,7 @@ window.KovaCycle=(function(){
     (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll(); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
-  return {paint:paint,focus:focus,today:today,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
+  return {paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
     setSex:setSex,sex:sex,_data:function(){ return D; },_set:function(d){ D=Object.assign(blank(),d); if(d.days&&!d.flow) Object.keys(d.days).forEach(function(k){ if(d.days[k]) D.flow[k]='med'; }); save(D); paintAll(); }};
 })();
 

@@ -112,7 +112,12 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   K._set({ on: true, flow: Object.assign(periods([120, 60, 40], 9), { [key(sod() - 50 * DAY)]: 'spot', [key(sod() - 49 * DAY)]: 'spot', [key(sod() - 48 * DAY)]: 'spot', [key(sod() - 47 * DAY)]: 'spot', [key(sod() - 46 * DAY)]: 'spot' }), sev: { [key(sod() - 3 * DAY)]: { pelvic: 3 }, [key(sod() - 4 * DAY)]: { pelvic: 3 } }, days: {} });
   const fl = K.flags().map((f) => f.k);
   ck('Kova flags infrequent periods, prolonged bleeding, persistent spotting and severe pelvic pain', ['infrequent', 'prolonged', 'spotting', 'pelvic'].every((k) => fl.includes(k)));
-  ck('...in a "Worth a check" row', /Worth a check:\s*\d+ things/.test(sec().textContent));
+  const chk = sec().querySelector('.kcx-check');
+  ck('...in a Cycle check card: Length, Bleeding, Spotting, Pain, with a risk chip', !!chk && /Worth a check|Tell your doctor/.test(chk.querySelector('.kcx-risk').textContent) && /Length/.test(chk.textContent) && /Prolonged/.test(chk.textContent) && /Persistent/.test(chk.textContent) && /Severe/.test(chk.textContent));
+  ck('the dial card: three numbers, a curved Day / Fertile / Regular switch and a half dial', !!sec().querySelector('.kcx-s3') && sec().querySelectorAll('.kcx-arc button').length === 3 && !!sec().querySelector('.kcx-hd .nd'));
+  sec().querySelector('.kcx-arc [data-v="reg"]').click(); await w.Promise.resolve();
+  ck('Regular shows a tick ruler with how much the cycles vary', !!sec().querySelector('.kcx-ticks i.m') && /vary by \d+ days?/.test(sec().textContent));
+  ck('the fertility curve: chance by day (Wilcox), pills, and a log button', !!sec().querySelector('.kcx-cv .ln') && /Wilcox 1995/.test(sec().textContent) && !!sec().querySelector('[data-k="logsigns"]'));
   const rep = K.reportHTML();
   ck('the report for a doctor has cycles, what is worth discussing, symptoms and the ranges it used', /Cycle summary/.test(rep) && /Cycles/.test(rep) && /Infrequent periods/.test(rep) && /Prolonged period/.test(rep) && /Pelvic pain/.test(rep) && /ACOG, FIGO/.test(rep));
 
