@@ -125,6 +125,8 @@ function boot() {
   ck('the top bar says which step the post is on and how ready it is', /Step \d\/5/.test(pill().textContent) && /\d+%/.test(pill().textContent) && !!pill().querySelector('svg.ks-dots'));
   pill().click(); await wait(30);
   let flp = doc.querySelector('.ks-flowp');
+  ck('the progress panel starts with the AI agent and its three branches (chat model, memory, tool)', !!doc.querySelector('.ks-flowp .ks-agent') && /Chat model/.test(doc.querySelector('.ks-flowp .ks-agent').textContent) && /Memory/.test(doc.querySelector('.ks-flowp .ks-agent').textContent) && /Tool/.test(doc.querySelector('.ks-flowp .ks-agent').textContent));
+  ck('...and ends with Your posts: a step trend by month and every post as a dot', !!doc.querySelector('.ks-flowp svg.ks-step') && !!doc.querySelector('.ks-flowp svg.ks-scat'));
   ck('tapping it opens the progress card: five steps, a dot chart, a 0-100% scale and the latest logs', !!flp && flp.querySelectorAll('.ks-fsteps li').length === 5 && !!flp.querySelector('.ks-pc .ks-dots') && /0%25%50%75%100%/.test(flp.querySelector('.ks-pcx').textContent) && /Latest logs/.test(flp.textContent));
   doc.querySelector('#ksTop [data-a="next"]').click(); await wait(30);
   const nx = doc.querySelector('.ks-next');

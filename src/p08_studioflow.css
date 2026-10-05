@@ -115,3 +115,31 @@ body.light-mode .ks-fpill .st{background:rgba(18,20,24,.06);color:rgba(22,24,28,
 @media (prefers-reduced-motion:reduce){
   #s-workstudio .ks-wires .w.lit,#s-workstudio .ks-wires .w.flow,.ks-dots circle.on,#s-workstudio .ks-nh i.live,.ks-pc.live,.ks-fsteps li.live i,.ks-logs li.run i,.ks-flowp,.ks-next{animation:none}
 }
+/* image 3: the AI agent node with three branches */
+.ks-agent{margin:0 0 10px;padding:12px 12px 10px;border-radius:20px;background:radial-gradient(90% 80% at 50% 0%,rgba(74,222,128,.16),transparent 70%),var(--fp-row);border:.5px solid var(--fp-line)}
+.ks-agn{display:flex;align-items:center;gap:10px;margin:0 auto;max-width:220px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.06);border:.5px solid var(--fp-line);position:relative}
+.ks-agi{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.08)}
+.ks-agi .ki{width:16px;height:16px}
+.ks-agn b{display:block;font-weight:500;font-size:14.5px}.ks-agn small{font-size:12px;color:var(--fp-mute)}
+.ks-agk{position:absolute;top:8px;right:10px;color:var(--go)}.ks-agk .ki{width:14px;height:14px}
+.ks-agw{display:block;width:100%;height:40px}
+.ks-agw path{fill:none;stroke:var(--go);stroke-width:1.6;stroke-dasharray:5 9;animation:ksGo 2.2s linear infinite;filter:drop-shadow(0 0 3px var(--go-glow));vector-effect:non-scaling-stroke}
+.ks-agb{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.ks-agb b{display:block;font-weight:500;font-size:12px}.ks-agb small{display:block;font-size:10.5px;color:var(--fp-mute);line-height:1.3}
+body.light-mode .ks-agn{background:#fff}
+/* image 2 and 3: steps with labels, and every post as a dot */
+.ks-posts{margin-top:4px}
+.ks-big{margin:10px 6px 4px}
+.ks-big small{display:block;font-size:12px;color:var(--fp-mute)}
+.ks-big b{display:block;font:300 34px/1.1 'Outfit',sans-serif;letter-spacing:-.02em}
+.ks-big span{display:block;font-size:11.5px;color:var(--fp-mute)}
+.ks-step,.ks-scat{display:block;width:100%;height:auto;margin-bottom:6px}
+.ks-step .gl,.ks-scat .gl{stroke:var(--fp-ink);stroke-width:.5;stroke-dasharray:2 4;opacity:.25}
+.ks-step .ax,.ks-scat .ax{fill:var(--fp-mute);font:400 8.5px 'Outfit',sans-serif}
+.ks-step .gd{fill:var(--fp-ink);opacity:.35}
+.ks-step .sl{fill:none;stroke:var(--go);stroke-width:1.6;filter:drop-shadow(0 0 4px var(--go-glow))}
+.ks-step .pt{fill:var(--go)}
+.ks-step .nv,.ks-scat .nv{fill:var(--fp-ink);font:300 13px 'Outfit',sans-serif}
+.ks-step .nt{fill:var(--fp-mute);font:400 8px 'Outfit',sans-serif}
+.ks-scat .pd{fill:var(--fp-ink);opacity:.8}.ks-scat .ps{fill:var(--go);opacity:.6}.ks-scat .pp{fill:var(--go);filter:drop-shadow(0 0 3px var(--go-glow))}
+@media (prefers-reduced-motion:reduce){.ks-agw path{animation:none}}

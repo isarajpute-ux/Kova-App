@@ -1198,8 +1198,8 @@ window.KovaCanvas=(function(){
   var LOG=[];
   function logIt(t,kind){ LOG.push({at:Date.now(),t:t,k:kind||'ok'}); if(LOG.length>80) LOG.shift(); if(S.flow) paintFlowPanel(); }
   function readiness(p){
-    var tg=targets(), media=KPo.included(p).length>0, words=['heading','body','caption'].some(function(f){ return String(p[f]||'').trim(); });
-    var checks=tg.length>0&&tg.every(function(k){ return KPo.check(p,k,KPo.linkState(k)).ok; }), busy=locked(), out=/^(sent|drafted|scheduled)$/.test(p.status);
+    var tg=(p&&p.targets)||[], media=KPo.included(p).length>0, words=['heading','body','caption'].some(function(f){ return String(p[f]||'').trim(); });
+    var checks=tg.length>0&&tg.every(function(k){ return KPo.check(p,k,KPo.linkState(k)).ok; }), busy=p===P()?locked():/^(publishing|uploading)$/.test(p.status), out=/^(sent|drafted|scheduled)$/.test(p.status);
     var steps=[{k:'media',n:'Photos or clips',d:media},{k:'words',n:'The words',d:words},{k:'where',n:'Where it goes',d:tg.length>0},
       {k:'checks',n:'Every app\u2019s checks',d:checks},{k:'send',n:busy?'Sending\u2026':(p.status==='scheduled'?'Scheduled':'Posted'),d:out,live:busy}];
     var done=steps.filter(function(x){ return x.d; }).length, cur=steps.filter(function(x){ return !x.d; })[0]||null;
@@ -1225,7 +1225,7 @@ window.KovaCanvas=(function(){
     var logs=LOG.slice(-8).reverse();
     var rows=(p.targets||[]).map(function(k){ var x=(p.results||{})[k]; return x&&x.at?{at:x.at,t:KPo.PLAT[k].n+': '+(x.state==='ok'?'posted':x.state==='draft'?'draft sent':x.state==='working'?'working\u2026':x.state==='skipped'?'kept in Kova':'failed')+(x.msg?' \u2014 '+x.msg:''),k:x.state==='error'?'bad':'ok'}:null; }).filter(Boolean);
     logs=logs.concat(rows).sort(function(a,b){ return b.at-a.at; }).slice(0,8);
-    el.innerHTML='<div class="ks-pc'+(r.busy?' live':'')+'">'
+    el.innerHTML=agentCard(r)+'<div class="ks-pc'+(r.busy?' live':'')+'">'
         +'<div class="ks-pch"><span>Step '+r.idx+'/'+r.n+'</span><b>'+ic('chart')+'Ready '+r.pct+'%</b></div>'
         +'<div class="ks-pct">'+esc(r.busy?'Sending to '+(p.targets||[]).length+' app'+((p.targets||[]).length===1?'':'s'):(r.cur?'Next: '+r.cur.n:'Done: '+(p.status==='scheduled'?'scheduled':'posted')))+'</div>'
         +'<div class="ks-pcg">'+dotStrip(r.pct,26,6)+'<i class="ks-pcm" style="left:'+r.pct+'%"></i></div>'
@@ -1233,8 +1233,49 @@ window.KovaCanvas=(function(){
       +'<ol class="ks-fsteps">'+r.steps.map(function(x,i){ return '<li class="'+(x.d?'d':(x===r.cur?'c':''))+(x.live?' live':'')+'"><i aria-hidden="true">'+(x.d?ic('check'):(i+1))+'</i><span>'+esc(x.n)+'</span><em>'+(x.d?'Done':(x===r.cur?'Up next':'Waiting'))+'</em></li>'; }).join('')+'</ol>'
       +'<div class="ks-logh">Latest logs</div>'
       +(logs.length?'<ul class="ks-logs">'+logs.map(function(l){ var d=new Date(l.at); return '<li class="'+l.k+'"><time>'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2)+'</time><i></i><span>'+esc(l.t)+'</span></li>'; }).join('')+'</ul>'
-        :'<div class="ks-empty" style="padding:6px 2px">Nothing has run yet. Add a photo or write a line and it shows here.</div>');
+        :'<div class="ks-empty" style="padding:6px 2px">Nothing has run yet. Add a photo or write a line and it shows here.</div>')
+      +postsCharts();
     if(!old){ (S.desk?$('#ksStage'):root).appendChild(el); }
+  }
+  /* image 3: the AI agent as a node, with its three branches */
+  function agentCard(r){
+    var signed=false; try{ signed=!!(window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){}
+    var biz=''; try{ biz=String(((window.WorkOS&&WorkOS.all&&WorkOS.all())||{}).profile&&WorkOS.all().profile.business||''); }catch(e){}
+    var br=[['Chat model',signed?'Claude, on the Kova server':'Sign in to use it'],['Memory',biz?'This post and '+biz.slice(0,24):'This post and your profile'],['Tool','Hashtags · checks · publish']];
+    return '<div class="ks-agent"><div class="ks-agn"><span class="ks-agi" aria-hidden="true">'+ic('ast')+'</span><div><b>AI Agent</b><small>Kova writer</small></div>'+(signed&&r.done>=2?'<span class="ks-agk" aria-label="Ready">'+ic('check')+'</span>':'')+'</div>'
+      +'<svg class="ks-agw" viewBox="0 0 300 54" preserveAspectRatio="none" aria-hidden="true"><path d="M150 0 C150 28 50 20 50 54"/><path d="M150 0 L150 54"/><path d="M150 0 C150 28 250 20 250 54"/></svg>'
+      +'<div class="ks-agb">'+br.map(function(b){ return '<div><b>'+b[0]+'</b><small>'+esc(b[1])+'</small></div>'; }).join('')+'</div></div>';
+  }
+  /* image 2: the trend as steps with labels; image 3: every post as a dot */
+  function postsCharts(){
+    var all=KPo.all().slice(), cur=P(); if(cur&&!all.some(function(x){ return x.id===cur.id; })) all.push(cur);
+    if(all.length<1) return '';
+    var M=[], now=new Date();
+    for(var i=3;i>=0;i--){ var a=new Date(now.getFullYear(),now.getMonth()-i,1).getTime(), b=new Date(now.getFullYear(),now.getMonth()-i+1,1).getTime();
+      var made=all.filter(function(p){ var t=p.created||p.updated||0; return t>=a&&t<b; }), out=made.filter(function(p){ return /^(sent|drafted|scheduled)$/.test(p.status); });
+      M.push({lab:new Date(a).toLocaleDateString('en-US',{month:'short'}),n:made.length,v:made.length?Math.round(out.length/made.length*100):null}); }
+    var V=M.filter(function(m){ return m.v!=null; }), last=V.length?V[V.length-1].v:0;
+    var W=300, H=120, x=function(i){ return 14+i*(W-28)/3; }, y=function(v){ return 104-v/100*92; };
+    var steps='', pv=null, notes='';
+    M.forEach(function(m,i){ if(m.v==null) return; if(pv==null) steps+='M'+x(i).toFixed(1)+' '+y(m.v).toFixed(1); else steps+=' H'+x(i).toFixed(1)+' V'+y(m.v).toFixed(1); pv=m.v;
+      var end=i===3, tx=end?x(i)-5:x(i)+5, an=end?' style="text-anchor:end"':'', ty=Math.max(22,y(m.v));
+      notes+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(m.v).toFixed(1)+'" r="2.6" class="pt"/><text x="'+tx.toFixed(1)+'" y="'+(ty-12).toFixed(1)+'" class="nv"'+an+'>'+m.v+'%</text><text x="'+tx.toFixed(1)+'" y="'+(ty-3).toFixed(1)+'" class="nt"'+an+'>'+m.n+' made</text>'; });
+    if(pv!=null) steps+=' H'+(W-6);
+    var grid=[0,25,50,75].map(function(v){ return '<line x1="14" x2="'+(W-6)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'" class="gl"/><text x="2" y="'+(y(v)+3).toFixed(1)+'" class="ax">'+v+'%</text>'; }).join('');
+    var dots=''; for(var gx=0;gx<26;gx++) for(var gy=0;gy<5;gy++) if((gx*7+gy*11)%9===0) dots+='<circle cx="'+(20+gx*10.5)+'" cy="'+(70+gy*7)+'" r=".8" class="gd"/>';
+    var step='<svg class="ks-step" viewBox="0 0 '+W+' '+(H+12)+'" aria-label="Share of posts that went out, by month">'+grid+dots+(steps?'<path d="'+steps+'" class="sl"/>':'')+notes
+      +M.map(function(m,i){ return '<text x="'+x(i).toFixed(1)+'" y="'+(H+9)+'" class="ax" style="text-anchor:middle">'+m.lab+'</text>'; }).join('')+'</svg>';
+    var R=all.map(function(p){ return {r:readiness(p).pct,st:p.status}; }).sort(function(a,b){ return a.r-b.r; });
+    var avg=function(L){ return L.length?Math.round(L.reduce(function(a,b){ return a+b.r; },0)/L.length):null; };
+    var gD=R.filter(function(z){ return !/^(sent|drafted|scheduled)$/.test(z.st); }), gS=R.filter(function(z){ return z.st==='scheduled'; }), gP=R.filter(function(z){ return /^(sent|drafted)$/.test(z.st); });
+    var sx=function(i){ return 16+(R.length>1?i/(R.length-1):.5)*(W-30); };
+    var sc='<svg class="ks-scat" viewBox="0 0 '+W+' '+(H+12)+'" aria-label="How ready each post is">'+[0,25,50,75,100].map(function(v){ return '<line x1="14" x2="'+(W-6)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'" class="gl"/><text x="2" y="'+(y(v)+3).toFixed(1)+'" class="ax">'+v+'%</text>'; }).join('')
+      +R.map(function(z,i){ return '<circle cx="'+sx(i).toFixed(1)+'" cy="'+(y(z.r)+((i*13)%7-3)).toFixed(1)+'" r="3" class="'+(/^(sent|drafted)$/.test(z.st)?'pp':z.st==='scheduled'?'ps':'pd')+'"/>'; }).join('')
+      +[[gD,'drafts'],[gS,'scheduled'],[gP,'out']].filter(function(g){ return g[0].length; }).map(function(g,j){ var a2=avg(g[0]); return '<text x="'+(30+j*92)+'" y="'+(y(a2)-8).toFixed(1)+'" class="nv">'+a2+'%</text>'; }).join('')
+      +'<text x="16" y="'+(H+9)+'" class="ax">Low</text><text x="'+(W-8)+'" y="'+(H+9)+'" class="ax" style="text-anchor:end">High</text></svg>';
+    return '<div class="ks-posts"><div class="ks-logh">Your posts</div>'
+      +'<div class="ks-big"><small>Went out this month</small><b>'+last+'%</b></div>'+step
+      +'<div class="ks-big"><small>Average readiness</small><b>'+(avg(R)||0)+'%</b><span>Every post, from least to most ready: drafts, scheduled and out</span></div>'+sc+'</div>';
   }
   var NEXT=[
     {id:'media',g:'Add',ic:'upload',t:'Photos or clips',s:'Drop them in; two or more make a slider',a:'n-media'},
