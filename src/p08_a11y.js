@@ -26,6 +26,7 @@ window.KovaA11y=(function(){
   var INTERACTIVE='button,a[href],input,select,textarea,[role="button"],[tabindex]';
 
   function txt(el){ return (el.textContent||'').replace(/\s+/g,' ').trim(); }
+  var GO_N={maint:'the maintenance calculator',home:'Today',fuel:'Fuel',sleep:'Sleep',move:'Workout',vitals:'Vitals',work:'Work OS',settings:'Settings',profile:'your profile',plan:'your plan',cycle:'Cycle and fertility'};
   function named(el){ return !!(el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.getAttribute('title')); }
   function human(s){ s=String(s||'').replace(/^(k|ks|kb|wq|op)(?=[A-Z])/,'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[-_]+/g,' ').trim(); return s?s.charAt(0).toUpperCase()+s.slice(1).toLowerCase():''; }
   function iconName(el){
@@ -56,12 +57,17 @@ window.KovaA11y=(function(){
   }
   /* clickable things that are not buttons: reachable by keyboard */
   function clickables(root){
-    var list=root.querySelectorAll('[onclick]:not(button):not(a):not(input):not(select):not(textarea):not(label):not(body):not([tabindex]),.iconbtn:not(button):not([tabindex]),.back:not(button):not(a):not([tabindex]),[role="button"]:not(button):not([tabindex])');
+    var list=root.querySelectorAll('[onclick]:not(button):not(a):not(input):not(select):not(textarea):not(label):not(body):not([tabindex]),.iconbtn:not(button):not([tabindex]),.back:not(button):not(a):not([tabindex]),[role="button"]:not(button):not([tabindex]),'
+      /* the sidebar's areas and every card that opens a screen (p14) */
+      +'.rnav:not(button):not([tabindex]),[data-go]:not(button):not(a):not(input):not(select):not(textarea):not(section):not(svg):not([tabindex])');
     for(var i=0;i<list.length;i++){
       var el=list[i];
       if(el.querySelector(INTERACTIVE)) continue;            // a card holding its own buttons stays as it is
       if(!el.getAttribute('role')) el.setAttribute('role','button');
       el.setAttribute('tabindex','0');
+      /* an icon-only link to a screen is named after the screen */
+      var g=el.getAttribute('data-go');
+      if(g&&!named(el)&&!txt(el)) el.setAttribute('aria-label','Open '+(GO_N[g]||human(g).toLowerCase()));
     }
   }
   /* fields: a label, not just a placeholder */
@@ -100,8 +106,11 @@ window.KovaA11y=(function(){
     try{ controls(root); clickables(root); fields(root); svgs(root); }catch(e){}
   }
 
-  /* Enter / Space press a role=button that is not a real button */
+  /* Enter / Space press a role=button that is not a real button; Escape
+     closes the sheet and puts focus back where it was */
+  var opener=null;
   function onKey(ev){
+    if(ev.key==='Escape'){ var sh=document.getElementById('sheet'); if(sh&&sh.classList.contains('on')&&window.closeSheet){ ev.preventDefault(); closeSheet(); if(opener&&opener.focus) try{ opener.focus(); }catch(e){} } return; }
     if(ev.key!=='Enter'&&ev.key!==' ') return;
     var el=ev.target; if(!el||!el.getAttribute) return;
     if(el.getAttribute('role')!=='button'||/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
@@ -113,6 +122,7 @@ window.KovaA11y=(function(){
   function start(){
     fix(document.body);
     document.addEventListener('keydown',onKey);
+    document.addEventListener('focusin',function(e){ if(!(e.target.closest&&e.target.closest('#sheet'))) opener=e.target; });
     if(window.MutationObserver) new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);

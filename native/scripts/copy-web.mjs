@@ -10,7 +10,7 @@ import { createRequire } from 'node:module';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..', '..');
 const www = join(here, '..', 'www');
-const FILES = ['index.html', 'privacy.html', 'recipes.json', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
+const FILES = ['index.html', 'privacy.html', 'terms.html', 'refunds.html', 'cookies.html', 'licenses.html', 'recipes.json', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
 
 rmSync(www, { recursive: true, force: true });
 mkdirSync(www, { recursive: true });

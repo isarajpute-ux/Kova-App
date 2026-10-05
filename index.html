@@ -3128,15 +3128,23 @@ body.light-mode .card.card-lg .chip,body.light-mode .card.kova .chip{
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <!-- Google Analytics. gtag is the site-level tag; Firebase Analytics is
-     the app-level one. They are separate products that happen to share a
-     backend, so both are kept - gtag gives page/traffic data, Firebase
-     gives the in-app event funnel tied to a uid. -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PRTZHJVKRT"></script>
+     the app-level one. Neither loads, sets a cookie or sends anything until
+     you say yes (the banner, or Settings > Privacy choices); "only what is
+     needed" keeps it that way. Ads storage is always denied. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-PRTZHJVKRT', { send_page_view: true });
+  gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' });
+  window.__kovaConsent = function(){ try { var c = JSON.parse(localStorage.getItem('kova.consent') || 'null'); return c && c.a === true; } catch(e){ return false; } };
+  window.__kovaGA = function(){
+    if (window.__kovaGAon || !__kovaConsent()) return;
+    window.__kovaGAon = 1;
+    gtag('consent', 'update', { analytics_storage: 'granted' });
+    var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-PRTZHJVKRT'; document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', 'G-PRTZHJVKRT', { send_page_view: true });
+  };
+  window.__kovaGA();
 </script>
 
 <script>
@@ -3221,6 +3229,8 @@ window.KovaAnalytics = (function(){
   var early = [];
   function lateAnalytics(){
     if (!ok || analytics) return;
+    /* nothing loads, and nothing queued is sent, until analytics is allowed */
+    if (!(window.__kovaConsent && __kovaConsent())) { early.length = 0; return; }
     var s = document.createElement('script');
     s.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js'; s.async = true;
     s.onload = function(){
@@ -3236,6 +3246,7 @@ window.KovaAnalytics = (function(){
   else window.addEventListener('load', function(){ setTimeout(lateAnalytics, 0); });
   function track(name, params){
     params = clean(params);
+    if (!(window.__kovaConsent && __kovaConsent())) { if (window.__kovaTrackLocal) try { __kovaTrackLocal(name, params); } catch(e){} return; }
     try { if (analytics) analytics.logEvent(name, params); else if (early.length < 100) early.push([name, params]); } catch(e){}
     /* send_to matters: firebase.analytics() configures its own property
        (G-1BHD06BQJB) on the same gtag, and a bare gtag('event') goes to
@@ -3252,7 +3263,16 @@ window.KovaAnalytics = (function(){
     },
     /* screen views come off the existing go() router, see the hook below */
     screen: function(id){ track('screen_view', { screen_name: id }); },
-    clean: clean
+    clean: clean,
+    /* the banner and Settings > Privacy choices call this */
+    consent: function(yes){
+      try { localStorage.setItem('kova.consent', JSON.stringify({ a: !!yes, at: Date.now() })); } catch(e){}
+      if (yes) { try { window.__kovaGA(); } catch(e){} lateAnalytics(); return; }
+      analytics = null; early.length = 0;
+      try { gtag('consent', 'update', { analytics_storage: 'denied' }); } catch(e){}
+      try { document.cookie.split(';').forEach(function(c){ var n = c.split('=')[0].trim(); if (/^_ga/.test(n)) document.cookie = n + '=; Max-Age=0; path=/; domain=' + location.hostname.replace(/^www\./, '.'); document.cookie = n + '=; Max-Age=0; path=/'; }); } catch(e){}
+    },
+    allowed: function(){ return !!(window.__kovaConsent && __kovaConsent()); }
   };
 })();
 
@@ -4447,10 +4467,6 @@ body.light-mode .kcl-day input{color-scheme:light}
   body.kc-printing #kcPrint{display:block;color:#000;background:#fff;padding:24px;--x-mute:#555;--x-line:#ccc}
 }
 
-/* ---- the slim line on Home ---- */
-.kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
-.kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
-.kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
 
 /* ---- image 5: three numbers, then a curved three-way switch ---- */
 .kcx-dialc{padding-bottom:12px}
@@ -6888,6 +6904,47 @@ body.light-mode .li-name[style*="E8607A"],body.light-mode .li-name[style*="var(-
 /* the light-glass big cards had their own !important quiet colours */
 body.light-mode .card.card-lg .lbl,body.light-mode .card.kova .lbl,body.light-mode .card.card-lg .eyebrow,body.light-mode .card.kova .kova-lbl,body.light-mode .card.card-lg .unit{color:rgba(28,26,23,.68)!important}
 body.light-mode .card.card-lg .sub,body.light-mode .card.kova .sub,body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.74)!important}
+
+</style>
+<style id="p08-legal">
+/* The privacy banner and Settings > Legal (p14). Both buttons the same
+   size and weight: saying no is as easy as saying yes. */
+.klg-ban{position:fixed;z-index:9100;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(520px,calc(100vw - 24px));transform:translate(-50%,130%);opacity:0;
+  padding:16px 18px;border-radius:24px;font-family:'Outfit','Urbanist',sans-serif;color:#F4F4F6;background:rgba(26,26,30,.94);border:.5px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 24px 50px -16px rgba(0,0,0,.6);transition:transform .4s cubic-bezier(.2,.9,.3,1),opacity .3s}
+.klg-ban.on{transform:translate(-50%,0);opacity:1}
+.klg-ban b{display:block;font-size:16px;font-weight:600;margin-bottom:4px}
+.klg-ban p{font-size:13px;line-height:1.5;margin:0 0 12px;color:rgba(244,244,246,.86)}
+.klg-ban a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.klg-bb{display:flex;gap:8px}
+.klg-bb button{flex:1;min-height:44px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#F4F4F6;font:600 13.5px 'Outfit',sans-serif;cursor:pointer}
+.klg-bb button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+body.soft-light .klg-ban{background:rgba(70,72,78,.96);border-color:rgba(255,255,255,.2)}
+body.light-mode .klg-ban{background:rgba(255,255,255,.97);color:#1C1A17;border-color:rgba(28,26,23,.12);box-shadow:0 20px 44px -14px rgba(28,26,23,.25)}
+body.light-mode .klg-ban p{color:rgba(28,26,23,.78)}
+body.light-mode .klg-bb button{border-color:rgba(28,26,23,.25);background:rgba(28,26,23,.04);color:#1C1A17}
+body.light-mode .klg-bb button:focus-visible{outline-color:#1C1A17}
+@media (prefers-reduced-motion:reduce){.klg-ban{transition:none}}
+.klg-biz p{font-size:14px;line-height:1.6}
+.klg-tog{position:relative;width:46px;height:28px;border-radius:14px;border:0;flex-shrink:0;cursor:pointer;background:rgba(255,255,255,.18);transition:background .2s}
+.klg-tog span{position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.klg-tog.on{background:var(--acc,#5FD08A)}
+.klg-tog.on span{transform:translateX(18px)}
+.klg-tog:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+body.light-mode .klg-tog{background:rgba(28,26,23,.18)}
+body.light-mode .klg-tog.on{background:var(--acc-2,#1C1A17)}
+
+</style>
+<style id="p08-cyclemini">
+/* The slim cycle line on Home (p14): on the first screen, so it loads
+   with it; the rest of the cycle styles follow the first screen. */
+.kc-mini{--x-card:rgba(30,26,29,.72);--x-ink:#F5F1F3;--x-mute:rgba(245,241,243,.62);--x-line:rgba(255,255,255,.09)}
+body.soft-light .kc-mini{--x-card:rgba(98,78,88,.62);--x-line:rgba(255,255,255,.15);--x-mute:rgba(255,248,251,.72)}
+body.light-mode .kc-mini{--x-card:rgba(255,255,255,.78);--x-ink:#1E1418;--x-mute:rgba(30,20,24,.62);--x-line:rgba(30,20,24,.09)}
+/* ---- the slim line on Home ---- */
+.kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
+.kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
+.kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
 
 </style>
 </head>
@@ -11052,7 +11109,7 @@ body.ks-on #kovaFab{display:none!important}
   </div>
 
   <div class="grid4">
-    <div class="qa" data-toast="CBT-I: clinically validated sleep retraining."><svg class="ic" style="color:#B0C4E0"><use href="#i-brain"/></svg><span>CBT-I</span></div>
+    <div class="qa" data-toast="CBT-I is the first treatment doctors recommend for insomnia (American College of Physicians). Kova\u2019s version is a guide, not therapy."><svg class="ic" style="color:#B0C4E0"><use href="#i-brain"/></svg><span>CBT-I</span></div>
     <div class="qa" data-go="sounds"><svg class="ic" style="color:#7FB2FF"><use href="#i-headphones"/></svg><span>Sounds</span></div>
     <div class="qa" data-go="naps"><svg class="ic" style="color:#7FB2FF"><use href="#i-cloud"/></svg><span>Naps</span></div>
     <div class="qa" class="askk" data-q="How do I fix my sleep?"><svg class="ic"><use href="#i-message-circle"/></svg><span>Ask Kova</span></div>
@@ -11446,6 +11503,7 @@ body.ks-on #kovaFab{display:none!important}
       <div class="sub" id="scnIngList" style="line-height:1.65;font-size:11.5px">—</div>
     </div>
 
+    <div class="sub" style="font-size:10.5px;margin:-4px 4px 12px">Product data from <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener" style="color:inherit">Open Food Facts</a>, under the Open Database License.</div>
     <!-- kova suggestion card -->
     <div class="card kova" id="scnKovaCard">
       <div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA · VERDICT</div></div>
@@ -22595,7 +22653,13 @@ var METAPHORS={
   var qi=document.getElementById('rcpQ');
   if(qi) qi.oninput=function(){ curQ=qi.value.trim(); drawGrid(); };
 
-  drawTabs(); drawGrid();
+  /* the grid (a thousand elements with the photos) is drawn the first
+     time Recipes opens, not at start-up (p14) */
+  drawTabs();
+  var shown=false, rs=document.getElementById('s-recipes');
+  function firstDraw(){ if(shown) return; shown=true; drawGrid(); }
+  if(!rs||rs.classList.contains('on')||!window.MutationObserver) firstDraw();
+  else new MutationObserver(function(){ if(rs.classList.contains('on')) firstDraw(); }).observe(rs,{attributes:true,attributeFilter:['class']});
   /* p11: the extra library (recipes.json, 50 per meal) arrives when the
      screen is first opened; each carries three colours for its plate */
   window.__addRecipes=function(list){
@@ -22607,7 +22671,7 @@ var METAPHORS={
       r.viz=plate(c[0],c[1],c[2]); r.tools=r.tools||[]; r.note=r.note||''; r.tag=r.tag||'';
       RECIPES.push(r); have[r.id]=1; n++;
     });
-    if(n){ drawTabs(); drawGrid(); }
+    if(n){ drawTabs(); if(shown) drawGrid(); }
     return n;
   };
 })();
@@ -38145,6 +38209,11 @@ body.light-mode .usual{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,
 .af-tip.on{max-height:60px;opacity:1;margin:-8px 0 14px 8px}
 .af-tip.soft{color:#F2C46D}
 .af-tip b{color:var(--txt,#FFFFFF);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.af-legal{margin-top:16px;font-size:11.5px;line-height:1.5;color:var(--ink-3,rgba(255,255,255,.62));font-family:Outfit,sans-serif}
+.af-legal a{color:var(--txt,#fff)}
+body.light-mode .af-legal{color:rgba(28,26,23,.66)}body.light-mode .af-legal a{color:#1C1A17}
+.af-sel{padding-left:22px;appearance:none;-webkit-appearance:none;background-image:none}
+.af-sel option{color:#111}
 .af-note{font-size:12px;color:var(--ink-4,rgba(255,255,255,.46));margin-top:10px;font-family:Outfit,sans-serif}
 .af-go.busy{position:relative;color:transparent!important}
 .af-go.busy::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(17,18,20,.25);border-top-color:#111214;animation:afSpin .7s linear infinite}
@@ -38454,7 +38523,8 @@ window.KovaAuth = (function(){
         + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
         + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
       + '</div>'
-      + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>');
+      + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>'
+      + '<div class="af-legal">By continuing you agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
 
     var em=document.getElementById('afEmail'), go=document.getElementById('afSend'), tip=document.getElementById('afTip');
     function hint(final){
@@ -38470,14 +38540,45 @@ window.KovaAuth = (function(){
     em.oninput=function(){ em.classList.remove('bad'); hint(false); };
     em.onblur=function(){ hint(true); };
     em.onkeydown=function(e){ if(e.key==='Enter'&&!go.disabled) go.click(); };
-    go.onclick=function(){ sendCode(cleanEmail(em.value)); };
+    go.onclick=function(){ var v=cleanEmail(em.value); ageGate(function(){ sendCode(v); }, v); };
 
-    document.getElementById('authGoogle').onclick = function(){ oauthFlow('google'); };
-    document.getElementById('authApple').onclick  = function(){ oauthFlow('apple'); };
+    document.getElementById('authGoogle').onclick = function(){ ageGate(function(){ oauthFlow('google'); }); };
+    document.getElementById('authApple').onclick  = function(){ ageGate(function(){ oauthFlow('apple'); }); };
     var sk=document.getElementById('authSkip');
-    sk.onclick = function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); };
+    sk.onclick = function(){ ageGate(function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); }); };
     sk.onkeydown = function(e){ if(e.key==='Enter') sk.click(); };
     if(prefill) hint(false);
+  }
+
+  /* Kova is for people 16 and over (GDPR's highest age of digital consent;
+     COPPA's 13 in the US). A neutral question - the year, not "are you
+     16?" - asked once, before the first way in. Only the yes is kept,
+     never the year; a no is remembered for the session so it cannot just
+     be tried again. */
+  function ageGate(next, email){
+    if(rd('kova.age16')) { next(); return; }
+    var blocked=false; try{ blocked=sessionStorage.getItem('kova.under16')==='1'; }catch(e){}
+    if(blocked){ underAge(); return; }
+    var y=new Date().getFullYear(), opts='<option value="">Year you were born</option>';
+    for(var i=y; i>=y-100; i--) opts+='<option value="'+i+'">'+i+'</option>';
+    step('<div class="af-mark">kova</div>'
+      + '<div class="af-h">Before you start</div>'
+      + '<div class="af-lbl" style="margin:-14px 0 20px 4px;line-height:1.5">Kova is for people 16 and over. What year were you born?</div>'
+      + '<div class="af-wrap"><select class="af af-sel" id="afYear" aria-label="Year you were born">'+opts+'</select></div>'
+      + '<button class="af-go" id="afAgeGo" disabled>Continue</button>'
+      + '<div class="af-foot">Kova keeps only that you are 16 or over, not the year.<br/><b id="afAgeBack" role="button" tabindex="0">Back</b></div>');
+    var sel=document.getElementById('afYear'), g=document.getElementById('afAgeGo');
+    sel.onchange=function(){ g.disabled=!sel.value; };
+    document.getElementById('afAgeBack').onclick=function(){ renderWelcome(email); };
+    g.onclick=function(){
+      var age=y-(+sel.value);
+      if(age>=16){ wr('kova.age16',{at:Date.now()}); try{ if(window.KovaAnalytics) KovaAnalytics.track('age_confirmed',{}); }catch(e){} next(); }
+      else { try{ sessionStorage.setItem('kova.under16','1'); }catch(e){} underAge(); }
+    };
+  }
+  function underAge(){
+    step('<div class="af-mark">kova</div><div class="af-h">Kova is for people<br/>16 and over</div>'
+      + '<div class="af-lbl" style="margin:-10px 0 18px 4px;line-height:1.55">Nothing has been saved. When you are 16, Kova will be here.</div>');
   }
 
   function sendCode(email){
@@ -48892,12 +48993,18 @@ window.KovaCycle=(function(){
     if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
     var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
     var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
-    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); tog(); } });
     el=wrap.querySelector('#kcSec'); el.addEventListener('click',onClick); el.addEventListener('change',onChange);
     return el;
   }
-  function paint(){
+  /* the section's insides are drawn the first time Vitals opens, not at
+     start-up: nothing on the first screen needs them */
+  var drawn=false;
+  function vitalsOn(){ var v=document.getElementById('s-vitals'); return !!(v&&v.classList.contains('on')); }
+  function paint(force){
     var el=host(); if(!el) return;
+    if(!drawn&&!force&&!vitalsOn()){ var n0=document.getElementById('kcSecN'); if(n0){ var t0=D.on?today():null; n0.textContent=t0?'Day '+t0.day:(D.on?'Start':'Off'); } return; }
+    drawn=true;
     el.innerHTML=section();
     var n=document.getElementById('kcSecN'); if(n){ var t=D.on?today():null; n.textContent=t?'Day '+t.day:(D.on?'Start':'Off'); }
   }
@@ -48906,7 +49013,7 @@ window.KovaCycle=(function(){
     (function f(){
       var el=host();
       if(!el){ if(++tries<20) return setTimeout(f,150); return; }
-      paint();
+      paint(true);
       var w=el.closest('.vsec'), hd=w&&w.querySelector('.vsec-h'), bd=w&&w.querySelector('.vsec-b');
       if(hd&&!hd.classList.contains('open')){ hd.classList.add('open'); bd.classList.add('open'); }
       if(w&&w.scrollIntoView) w.scrollIntoView({block:'start',behavior:'smooth'});
@@ -49045,7 +49152,8 @@ window.KovaCycle=(function(){
   function start(){
     takeTemp();
     var tries=0;
-    (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll(); })();
+    (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
+      if(sc&&window.MutationObserver) new MutationObserver(function(){ if(!drawn&&vitalsOn()) paint(); }).observe(sc,{attributes:true,attributeFilter:['class']}); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
   return {paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
@@ -55154,6 +55262,7 @@ window.KovaA11y=(function(){
   var INTERACTIVE='button,a[href],input,select,textarea,[role="button"],[tabindex]';
 
   function txt(el){ return (el.textContent||'').replace(/\s+/g,' ').trim(); }
+  var GO_N={maint:'the maintenance calculator',home:'Today',fuel:'Fuel',sleep:'Sleep',move:'Workout',vitals:'Vitals',work:'Work OS',settings:'Settings',profile:'your profile',plan:'your plan',cycle:'Cycle and fertility'};
   function named(el){ return !!(el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.getAttribute('title')); }
   function human(s){ s=String(s||'').replace(/^(k|ks|kb|wq|op)(?=[A-Z])/,'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/[-_]+/g,' ').trim(); return s?s.charAt(0).toUpperCase()+s.slice(1).toLowerCase():''; }
   function iconName(el){
@@ -55184,12 +55293,17 @@ window.KovaA11y=(function(){
   }
   /* clickable things that are not buttons: reachable by keyboard */
   function clickables(root){
-    var list=root.querySelectorAll('[onclick]:not(button):not(a):not(input):not(select):not(textarea):not(label):not(body):not([tabindex]),.iconbtn:not(button):not([tabindex]),.back:not(button):not(a):not([tabindex]),[role="button"]:not(button):not([tabindex])');
+    var list=root.querySelectorAll('[onclick]:not(button):not(a):not(input):not(select):not(textarea):not(label):not(body):not([tabindex]),.iconbtn:not(button):not([tabindex]),.back:not(button):not(a):not([tabindex]),[role="button"]:not(button):not([tabindex]),'
+      /* the sidebar's areas and every card that opens a screen (p14) */
+      +'.rnav:not(button):not([tabindex]),[data-go]:not(button):not(a):not(input):not(select):not(textarea):not(section):not(svg):not([tabindex])');
     for(var i=0;i<list.length;i++){
       var el=list[i];
       if(el.querySelector(INTERACTIVE)) continue;            // a card holding its own buttons stays as it is
       if(!el.getAttribute('role')) el.setAttribute('role','button');
       el.setAttribute('tabindex','0');
+      /* an icon-only link to a screen is named after the screen */
+      var g=el.getAttribute('data-go');
+      if(g&&!named(el)&&!txt(el)) el.setAttribute('aria-label','Open '+(GO_N[g]||human(g).toLowerCase()));
     }
   }
   /* fields: a label, not just a placeholder */
@@ -55228,8 +55342,11 @@ window.KovaA11y=(function(){
     try{ controls(root); clickables(root); fields(root); svgs(root); }catch(e){}
   }
 
-  /* Enter / Space press a role=button that is not a real button */
+  /* Enter / Space press a role=button that is not a real button; Escape
+     closes the sheet and puts focus back where it was */
+  var opener=null;
   function onKey(ev){
+    if(ev.key==='Escape'){ var sh=document.getElementById('sheet'); if(sh&&sh.classList.contains('on')&&window.closeSheet){ ev.preventDefault(); closeSheet(); if(opener&&opener.focus) try{ opener.focus(); }catch(e){} } return; }
     if(ev.key!=='Enter'&&ev.key!==' ') return;
     var el=ev.target; if(!el||!el.getAttribute) return;
     if(el.getAttribute('role')!=='button'||/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
@@ -55241,6 +55358,7 @@ window.KovaA11y=(function(){
   function start(){
     fix(document.body);
     document.addEventListener('keydown',onKey);
+    document.addEventListener('focusin',function(e){ if(!(e.target.closest&&e.target.closest('#sheet'))) opener=e.target; });
     if(window.MutationObserver) new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
@@ -55348,7 +55466,10 @@ window.KovaLaunch=(function(){
     if(el) el.addEventListener('click',function(ev){ if(ev.target.closest('[data-kla="again"]')) run(); });
     return run();
   }
-  function run(){ return Promise.all([ping(),health()]).then(function(r){ var R=rows(r[0],r[1]); paint(R,r[0]); return R; }); }
+  function run(){
+    var legal=window.KovaLegal&&KovaLegal.checks?KovaLegal.checks().catch(function(){ return []; }):Promise.resolve([]);
+    return Promise.all([ping(),health(),legal]).then(function(r){ var R=rows(r[0],r[1]); if(r[2].length){ R.push({head:'Legal'}); R=R.concat(r[2]); } paint(R,r[0]); return R; });
+  }
 
   /* 7 taps on Version within 3 seconds */
   function onTap(){
@@ -55835,7 +55956,7 @@ window.KovaNoise=(function(){
     if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
     var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
     var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
-    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); tog(); } });
     el=wrap.querySelector('#knSec');
     el.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b||b.tagName==='INPUT') return; var n=b.getAttribute('data-n');
       if(n==='start') start('manual'); else if(n==='stop') stop(); else if(n==='rec'){ UI.rec=!UI.rec; paint(); }
@@ -56072,6 +56193,99 @@ window.KovaImpact=(function(){
     return r;
   }
   return {analyze:analyze,render:render,context:context,AREAS:AREAS};
+})();
+
+</script>
+<script id="p08-legal">
+/* =====================================================================
+   KovaLegal - the legal pieces inside the app (p14).
+
+     - Business details in one place (KOVA_BIZ, below). Settings shows them,
+       the legal pages carry them, and the Launch check goes red until the
+       name, address and email are filled in.
+     - The cookie banner: shown once, after sign-in or "Use Kova without
+       one". Two buttons of the same size and weight, "Allow analytics" and
+       "Only what is needed"; nothing analytic loads before a yes. Settings >
+       Privacy choices changes it any time.
+     - Settings > Legal: privacy, terms, refunds, cookies, licences, and the
+       business details.
+   ===================================================================== */
+/* Fill these in before launch (they appear in Settings and the Launch
+   check; the legal pages have the same blanks marked in red). */
+window.KOVA_BIZ=window.KOVA_BIZ||{name:'',address:'',email:'',country:''};
+
+window.KovaLegal=(function(){
+  'use strict';
+  var PAGES=[['privacy','Privacy policy','What Kova keeps, why, and your rights'],['terms','Terms of service','The agreement for using Kova'],
+    ['refunds','Refund policy','Trials, cancelling and getting money back'],['cookies','Cookies and storage','What is stored on your device, and analytics'],
+    ['licenses','Licences and credits','Fonts, icons, data and open-source software']];
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function chosen(){ return !!lsJ('kova.consent',null); }
+  function allowed(){ return !!(window.KovaAnalytics&&KovaAnalytics.allowed&&KovaAnalytics.allowed()); }
+  function set(yes){ try{ if(window.KovaAnalytics&&KovaAnalytics.consent) KovaAnalytics.consent(yes); else localStorage.setItem('kova.consent',JSON.stringify({a:!!yes,at:Date.now()})); }catch(e){} paintSettings(); }
+  function bizFilled(){ var B=window.KOVA_BIZ||{}; return !!(B.name&&B.address&&B.email); }
+  function url(p){ return '/'+p+'.html'; }
+
+  /* ---- the banner ---- */
+  function banner(){
+    if(chosen()||document.getElementById('klgBanner')) return;
+    var app=document.getElementById('app'); if(app&&app.classList.contains('auth-locked')) return;
+    var b=document.createElement('div'); b.id='klgBanner'; b.className='klg-ban'; b.setAttribute('role','dialog'); b.setAttribute('aria-label','Privacy choices');
+    b.innerHTML='<b>Your privacy</b><p>Kova keeps what it needs to work on this device: your data, settings and sign-in. With your OK it also counts which features get used (Google Analytics), never your health data. No ads, ever. <a href="'+url('cookies')+'" target="_blank" rel="noopener">Cookie policy</a></p>'
+      +'<div class="klg-bb"><button data-klg="yes">Allow analytics</button><button data-klg="no">Only what is needed</button></div>';
+    document.body.appendChild(b);
+    requestAnimationFrame(function(){ b.classList.add('on'); });
+    b.addEventListener('click',function(e){ var x=e.target.closest('[data-klg]'); if(!x) return; set(x.getAttribute('data-klg')==='yes'); b.classList.remove('on'); setTimeout(function(){ b.remove(); },300); });
+  }
+  /* ---- Settings: Privacy choices and Legal ---- */
+  function row(id,name,sub,attrs){ return '<div class="list-item tap" id="'+id+'" '+(attrs||'')+' role="button" tabindex="0"><div style="flex:1"><div class="li-name">'+esc(name)+'</div><div class="li-sub">'+esc(sub)+'</div></div><svg class="ic" style="font-size:14px;opacity:.5"><use href="#i-chevron-right"/></svg></div>'; }
+  /* the rows go straight into Settings (not a wrapper), so Settings groups
+     them into its rounded panels like every other section */
+  function paintSettings(){
+    var scr=document.getElementById('s-settings'); if(!scr) return;
+    var on=allowed(), B=window.KOVA_BIZ||{};
+    var ana=document.getElementById('klgAna');
+    if(!ana){
+      var h1=document.createElement('div'); h1.className='sec-h'; h1.textContent='Privacy choices'; h1.setAttribute('data-klgx','1');
+      ana=document.createElement('div'); ana.className='list-item'; ana.id='klgAna'; ana.setAttribute('data-klgx','1');
+      var h2=document.createElement('div'); h2.className='sec-h'; h2.textContent='Legal'; h2.setAttribute('data-klgx','1');
+      scr.appendChild(h1); scr.appendChild(ana); scr.appendChild(h2);
+      PAGES.filter(function(p){ return p[0]!=='privacy'; }).forEach(function(p){ var r=document.createElement('div'); r.setAttribute('data-klgx','1'); r.innerHTML=row('klg-'+p[0],p[1],p[2],'data-klg="page" data-p="'+p[0]+'"'); scr.appendChild(r.firstChild); });
+      var bz=document.createElement('div'); bz.innerHTML=row('klgBiz','Business details','','data-klg="biz"'); scr.appendChild(bz.firstChild);
+      scr.addEventListener('click',function(e){ if(e.target.closest&&e.target.closest('#klgAna,[id^="klg-"],#klgBiz')) onSet(e); });
+      scr.addEventListener('keydown',function(e){ if(e.key!=='Enter'&&e.key!==' ') return; var t=e.target.closest&&e.target.closest('[id^="klg-"],#klgBiz'); if(t){ e.preventDefault(); e.stopPropagation(); t.click(); } });
+    }
+    ana.innerHTML='<div style="flex:1"><div class="li-name">Usage analytics</div><div class="li-sub">'+(on?'On: which screens and features are used, never health data':'Off: nothing is counted')+'</div></div>'
+      +'<button class="klg-tog'+(on?' on':'')+'" data-klg="ana" role="switch" aria-checked="'+on+'" aria-label="Usage analytics"><span></span></button>';
+    var bs=document.querySelector('#klgBiz .li-sub'); if(bs) bs.textContent=bizFilled()?B.name+' · '+B.email:'Not filled in yet';
+  }
+  function onSet(e){
+    var b=e.target.closest('[data-klg]'); if(!b) return;
+    var k=b.getAttribute('data-klg');
+    if(k==='ana'){ set(!allowed()); return; }
+    if(k==='page'){ window.open(url(b.getAttribute('data-p')),'_blank','noopener'); return; }
+    if(k==='biz'&&window.openSheet){ var B=window.KOVA_BIZ||{};
+      openSheet('<div class="grab"></div><div class="klg-biz"><div class="title-s" style="font-size:19px">Business details</div>'
+        +(bizFilled()?'<p><b>'+esc(B.name)+'</b><br>'+esc(B.address)+(B.country?'<br>'+esc(B.country):'')+'<br><a href="mailto:'+esc(B.email)+'">'+esc(B.email)+'</a></p>'
+          :'<p>Not filled in yet. Set KOVA_BIZ in src/p08_legal.js (name, address, email, country), and the same details in the legal pages, before launch.</p>')+'</div>'); }
+  }
+  /* ---- the Launch check rows ---- */
+  function checks(){
+    var pages=PAGES.map(function(p){ return p[0]; });
+    return Promise.all(pages.map(function(p){ return fetch(url(p),{cache:'no-store'}).then(function(r){ return r.ok?r.text():''; }).catch(function(){ return ''; }); })).then(function(T){
+      var missing=pages.filter(function(p,i){ return !T[i]; }), blanks=pages.filter(function(p,i){ return T[i]&&/class="todo"/.test(T[i]); });
+      return [{s:bizFilled()?'ok':'bad',name:'Business details in the app',fix:bizFilled()?'':'KOVA_BIZ in src/p08_legal.js: company name, registered address, support email.'},
+        {s:missing.length?'bad':blanks.length?'bad':'ok',name:'Legal pages filled in',fix:missing.length?'Missing: '+missing.join(', ')+'.html':blanks.length?'Fill the red blanks (company, address, email, governing law) in: '+blanks.join(', ')+'.html. Have a lawyer read them before launch.':''}];
+    });
+  }
+  function start(){
+    paintSettings();
+    /* after the welcome and first questions, never over them */
+    var tries=0; (function wait(){ var app=document.getElementById('app'); if(app&&app.classList.contains('auth-locked')){ if(++tries<600) setTimeout(wait,1000); return; } setTimeout(banner,1500); })();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,500); }); else setTimeout(start,500);
+  return {banner:banner,set:set,chosen:chosen,checks:checks,PAGES:PAGES,paintSettings:paintSettings};
 })();
 
 </script>

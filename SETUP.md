@@ -82,7 +82,8 @@ Every provider uses the same redirect URL: **`https://<your-site>/api/oauth/call
 
 ## 7. Before you publish
 
-- Put your support email in `privacy.html` (search for "add your support email").
+- **Business details.** Fill in `KOVA_BIZ` at the top of `src/p08_legal.js` (company name, registered address, support email, country), then run `python3 src/inject_p07.py index.html`. Replace the red blanks in `privacy.html`, `terms.html`, `refunds.html`, `cookies.html` and `licenses.html` with the same details (search for `class="todo"`). The Launch check stays red until both are done.
+- **Have a lawyer read the legal pages.** They are written for Kova as it is built (health data on the device first, analytics only after consent, 16 and over, refunds within 14 days on the web), but they are a starting point, not legal advice. The refund policy in particular is a business decision: change it if you want different terms.
 - Open the Launch check and turn every required row green.
 - `npm test` and `node build/routes.mjs --check` pass; CI runs them on every push.
 

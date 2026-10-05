@@ -47,6 +47,8 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   await wait(900);
   const d = w.document, K = w.KovaCycle;
   const sec = () => d.getElementById('kcSec');
+  ck('the section is drawn the first time Vitals opens, not at start', sec() && !sec().children.length);
+  w.go('vitals'); await wait(80);
   ck('there is no separate cycle page: it is a section of Vitals', !d.getElementById('s-cycle') && !!sec() && !!sec().closest('#s-vitals') && /Cycle & fertility/.test(sec().closest('.vsec').textContent));
   ck('before tracking: one card that asks when the last period started', /When did your last period start/.test(sec().textContent) && !!d.getElementById('kcxStart'));
   d.getElementById('kcxStart').value = key(sod() - 30 * DAY);

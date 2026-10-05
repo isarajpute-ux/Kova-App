@@ -26,10 +26,15 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
-const FILES = ['privacy.html', 'recipes.json', 'sw.js', 'manifest.webmanifest', '_redirects',
+const FILES = ['privacy.html', 'terms.html', 'refunds.html', 'cookies.html', 'licenses.html', 'recipes.json', 'sw.js', 'manifest.webmanifest', '_redirects',
   'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
 const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
-const LAZY = ['p08-crew', 'p08-traction'];
+/* after the first screen: the Work OS team and traction, and the p14
+   pieces nothing on the first screen needs (the scanner's body read, the
+   noise meter, the privacy banner and legal rows, the alert sounds, the
+   Studio's workflow styles) */
+const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal', 'p08-chime', 'p08-studioflow',
+  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '

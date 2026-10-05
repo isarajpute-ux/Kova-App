@@ -26,6 +26,7 @@ function boot(opts) {
     analytics: () => ({ logEvent(n, p) { events.push([n, p]); }, setUserId() {} }) };
   w.fetch = () => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}), text: () => Promise.resolve('') });
   w.localStorage.setItem('kova_mode_v1', opts.mode || 'sample');
+  w.localStorage.setItem('kova.consent', JSON.stringify({ a: opts && opts.noConsent ? false : true, at: 1 }));   // analytics allowed (the banner's yes)
   (opts.pre || []).forEach(([k, v]) => w.localStorage.setItem(k, v));
   w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));
   w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
@@ -45,6 +46,9 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   const skip = doc.getElementById('authSkip');
   ck('the welcome screen offers Kova without an account', !!skip);
   skip.click(); await wait(80);
+  ck('the first way in asks your year of birth: Kova is for 16 and over', !!doc.getElementById('afYear') && /16 and over/.test(wallText(doc)));
+  doc.getElementById('afYear').value = String(new Date().getFullYear() - 25); doc.getElementById('afYear').dispatchEvent(new w.Event('change'));
+  doc.getElementById('afAgeGo').click(); await wait(80);
   ck('no biometric prompt before the first win', !/Enable biometric unlock/.test(wallText(doc)));
   ck('question 1 comes straight away: what Kova is for, several allowed', /Three quick questions, then your day/.test(wallText(doc)) && /What do you want Kova for/.test(wallText(doc)) && doc.getElementById('obNext').disabled);
   pick(doc, 'fuel'); doc.getElementById('obNext').click(); await wait(30);
@@ -155,6 +159,15 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   const row = C.doc.querySelector('.kl-panel[data-p="home"] .kl-row[data-act="fuel"]');
   if (row) row.click(); await wait(30);
   ck('in live mode the Today rows pop up the same day view (with Open Fuel), instead of jumping away', row && C.doc.getElementById('sheet').classList.contains('on') && /Open Fuel/.test(C.doc.querySelector('#sheetIn .kt').textContent) && !C.doc.getElementById('s-fuel').classList.contains('on'));
+
+  // no analytics without a yes
+  const N = boot({ noConsent: true, pre: [['kova.auth.skipped', '1'], ['kova.onboarded', JSON.stringify({ at: 1 })]] });
+  await wait(700); N.w.go('fuel'); N.w.KovaAnalytics.track('workout_complete', { sets: 3 }); await wait(60);
+  ck('without a yes to analytics, nothing is sent and the analytics library never loads', N.events.length === 0 && !N.w.document.querySelector('script[src*="firebase-analytics"]') && !N.w.document.querySelector('script[src*="googletagmanager"]'));
+  N.w.KovaAnalytics.consent(true); N.w.KovaAnalytics.track('workout_complete', { sets: 3 }); await wait(60);
+  ck('a yes (the banner or Settings) turns it on from then', N.w.KovaAnalytics.allowed() && !!N.w.document.querySelector('script[src*="googletagmanager"]'));
+  N.w.KovaAnalytics.consent(false);
+  ck('and a no turns it off again', !N.w.KovaAnalytics.allowed());
 
   const failed = R.filter((r) => !r[1]);
   R.forEach((r) => console.log((r[1] ? 'PASS ' : 'FAIL ') + r[0]));

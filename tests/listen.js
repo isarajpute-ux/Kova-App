@@ -53,6 +53,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   say('how did the work go this week', true); await wait(50);
   ck('the next sentence becomes the job, with a countdown', /how did the work go this week/i.test(doc.querySelector('.kl2-job').textContent) && /Sending in 3/.test(doc.getElementById('klPop').textContent));
   await wait(3300);
+  for (let i = 0; i < 30 && !Object.values(C.jobs()).some((x) => x.source === 'voice'); i++) await wait(100);   // slower under a busy machine
   const j = Object.values(C.jobs()).filter((x) => x.source === 'voice').pop();
   ck('after 3 seconds it goes to Maya', Object.keys(C.jobs()).length === before + 1 && j && C.emp(j.emp).n === 'Maya' && /work go this week/i.test(j.text));
   for (let i = 0; i < 20 && !/Maya is on it/.test((doc.getElementById('klPop') || {}).textContent || ''); i++) await wait(100);   // slower under a busy machine

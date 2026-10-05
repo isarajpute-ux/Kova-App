@@ -490,12 +490,18 @@ window.KovaCycle=(function(){
     if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
     var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
     var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
-    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); tog(); } });
     el=wrap.querySelector('#kcSec'); el.addEventListener('click',onClick); el.addEventListener('change',onChange);
     return el;
   }
-  function paint(){
+  /* the section's insides are drawn the first time Vitals opens, not at
+     start-up: nothing on the first screen needs them */
+  var drawn=false;
+  function vitalsOn(){ var v=document.getElementById('s-vitals'); return !!(v&&v.classList.contains('on')); }
+  function paint(force){
     var el=host(); if(!el) return;
+    if(!drawn&&!force&&!vitalsOn()){ var n0=document.getElementById('kcSecN'); if(n0){ var t0=D.on?today():null; n0.textContent=t0?'Day '+t0.day:(D.on?'Start':'Off'); } return; }
+    drawn=true;
     el.innerHTML=section();
     var n=document.getElementById('kcSecN'); if(n){ var t=D.on?today():null; n.textContent=t?'Day '+t.day:(D.on?'Start':'Off'); }
   }
@@ -504,7 +510,7 @@ window.KovaCycle=(function(){
     (function f(){
       var el=host();
       if(!el){ if(++tries<20) return setTimeout(f,150); return; }
-      paint();
+      paint(true);
       var w=el.closest('.vsec'), hd=w&&w.querySelector('.vsec-h'), bd=w&&w.querySelector('.vsec-b');
       if(hd&&!hd.classList.contains('open')){ hd.classList.add('open'); bd.classList.add('open'); }
       if(w&&w.scrollIntoView) w.scrollIntoView({block:'start',behavior:'smooth'});
@@ -643,7 +649,8 @@ window.KovaCycle=(function(){
   function start(){
     takeTemp();
     var tries=0;
-    (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll(); })();
+    (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
+      if(sc&&window.MutationObserver) new MutationObserver(function(){ if(!drawn&&vitalsOn()) paint(); }).observe(sc,{attributes:true,attributeFilter:['class']}); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
   return {paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,

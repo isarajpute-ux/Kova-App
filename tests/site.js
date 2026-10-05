@@ -21,11 +21,11 @@ const src = fs.readFileSync(__dirname + '/../index.html', 'utf8');
   ck('the first load is under 500 KB compressed (' + Math.round(br / 1024) + ' KB)', br < 500 * 1024);
   const head = page.slice(0, page.indexOf('</head>'));
   const upfront = [...head.matchAll(/<script[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]);
-  ck('only sign-in and sync (Firebase) load before the first screen: fonts and analytics follow it, the PDF reader and push load when used',
-    upfront.every((u) => /firebasejs\/[\d.]+\/firebase-(app|auth|database)-compat\.js$|googletagmanager/.test(u)) && upfront.length === 4 && /firebase-analytics-compat\.js'; s\.async = true/.test(src) && /media="print" onload="this\.media='all'"/.test(head) && /window\.KovaPdf=/.test(page));
+  ck('only sign-in and sync (Firebase) load before the first screen: fonts follow it, analytics only after consent, the PDF reader and push load when used',
+    upfront.every((u) => /firebasejs\/[\d.]+\/firebase-(app|auth|database)-compat\.js$/.test(u)) && upfront.length === 3 && /window\.__kovaGA\s*=\s*function/.test(head) && /firebase-analytics-compat\.js'; s\.async = true/.test(src) && /media="print" onload="this\.media='all'"/.test(head) && /window\.KovaPdf=/.test(page));
   const work = Object.keys(files).find((f) => /^m\/work\.[0-9a-f]{10}\.js$/.test(f));
   ck('Work OS and the study tools (' + WORK.length + ' screens, ' + moved + ' blocks, the AI team included) are one file loaded after the first screen', work && moved >= 25 && /window\.KovaCrew=/.test(files[work]) && /KovaStudio=/.test(files[work]) && !/window\.KovaCrew=/.test(page) && /id="kova-lazy"/.test(page));
-  ck('Traction and the Work OS styles follow it', Object.keys(files).length === 4 && !/id="p08-crew">/.test(page));
+  ck('Traction, the Work OS styles and the p14 pieces nothing on the first screen needs follow it', Object.keys(files).length >= 4 && !/id="p08-crew">/.test(page) && ['p08-studiotheme', 'p08-noise', 'p08-legal', 'p08-impact'].every((id) => Object.keys(files).some((f) => f.indexOf('m/' + id + '.') === 0)));
   const crewLink = page.indexOf('<link rel="stylesheet" id="p08-crew"'), help = page.indexOf('<style id="p08-help">');
   ck('their styles keep their place in the cascade (the <link> sits where the <style> was)', crewLink > 0 && crewLink < help);
 

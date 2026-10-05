@@ -23,6 +23,7 @@ try {
   // ---------- first run ----------
   await page.waitForSelector('#authSkip', { timeout: 20000 });
   await tap('#authSkip');
+  await page.waitForSelector('#afYear'); await page.selectOption('#afYear', '1995'); await tap('#afAgeGo');
   await page.waitForSelector('text=What do you want Kova for?');
   ck('a new person can skip sign-in and gets the first question', true);
   await tap('.ob-opt[data-v="fuel"]'); await tap('#obNext');

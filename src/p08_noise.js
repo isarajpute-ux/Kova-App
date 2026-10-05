@@ -193,7 +193,7 @@ window.KovaNoise=(function(){
     if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
     var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
     var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
-    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+    hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); tog(); } });
     el=wrap.querySelector('#knSec');
     el.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b||b.tagName==='INPUT') return; var n=b.getAttribute('data-n');
       if(n==='start') start('manual'); else if(n==='stop') stop(); else if(n==='rec'){ UI.rec=!UI.rec; paint(); }

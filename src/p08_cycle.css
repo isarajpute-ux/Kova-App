@@ -173,10 +173,6 @@ body.light-mode .kcl-day input{color-scheme:light}
   body.kc-printing #kcPrint{display:block;color:#000;background:#fff;padding:24px;--x-mute:#555;--x-line:#ccc}
 }
 
-/* ---- the slim line on Home ---- */
-.kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
-.kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
-.kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
 
 /* ---- image 5: three numbers, then a curved three-way switch ---- */
 .kcx-dialc{padding-bottom:12px}

@@ -40,6 +40,7 @@ function boot(opts) {
   };
   w.localStorage.setItem('kova_mode_v1', 'live');
   w.localStorage.setItem('kova.auth.skipped', '1');
+  w.localStorage.setItem('kova.consent', JSON.stringify({ a: true, at: 1 }));   // analytics allowed (the banner's yes)
   if (opts.seed) w.localStorage.setItem('kova_foodlog', JSON.stringify(opts.seed));
   w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));
   const cam = { opened: 0, onShot: null };

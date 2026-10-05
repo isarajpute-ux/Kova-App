@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kova Cookie and Storage Policy</title>
+
+<style>
+  :root{--bg:#F4F4F6;--card:#FFFFFF;--ink:#15161A;--mute:#5B5E66;--line:rgba(21,22,26,.1);--acc:#2A2C33}
+  @media (prefers-color-scheme:dark){:root{--bg:#0B0C0E;--card:#15161A;--ink:#EDEEF1;--mute:#9A9DA6;--line:rgba(255,255,255,.1);--acc:#EDEEF1}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,'Outfit','Segoe UI',sans-serif}
+  main{max-width:720px;margin:0 auto;padding:40px 16px 64px}
+  .brand{font:italic 600 22px/1 'Outfit',-apple-system,sans-serif;letter-spacing:-.02em;margin-bottom:28px}
+  h1{font-weight:300;font-size:clamp(30px,7vw,44px);letter-spacing:-.02em;line-height:1.1;margin:0 0 8px}
+  .upd{color:var(--mute);font-size:14px;margin-bottom:28px}
+  h2{font-size:19px;font-weight:600;margin:34px 0 8px}
+  p,li{color:var(--ink)}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:14px 0}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--mute);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+  .wrap{overflow-x:auto}
+  a{color:var(--acc)}
+  .todo{background:rgba(229,72,77,.12);border-radius:6px;padding:1px 6px}
+</style>
+<meta name="description" content="Kova Cookie and Storage Policy"><style>.lnav{display:flex;flex-wrap:wrap;gap:6px 14px;margin:-12px 0 26px;font-size:14px}.lnav a{color:var(--mute)}.lnav a[aria-current]{color:var(--ink);font-weight:600}.short{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:0 0 8px}</style></head>
+<body><main><div class="brand">kova</div><h1>Cookies and storage</h1><div class="upd">Last updated 4 October 2026</div><nav class="lnav"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/refunds.html">Refunds</a><a href="/cookies.html" aria-current="page">Cookies</a><a href="/licenses.html">Licences</a></nav><div class="short"><b>The short version.</b> Kova stores what it needs to work on your device: your data, your settings and your sign-in. Analytics cookies are only set if you say yes, and you can change your mind in Settings → Privacy choices. There are no advertising cookies.</div>
+<h2>Needed to run Kova (always on)</h2>
+<div class="wrap"><table><tr><th>What</th><th>Kind</th><th>Why</th><th>How long</th></tr>
+<tr><td>kova_*, kova.* (your logs, settings, cycle and noise data)</td><td>Local storage on your device</td><td>Kova works offline from these; they are your data</td><td>Until you delete them or the app</td></tr>
+<tr><td>firebaseLocalStorageDb</td><td>IndexedDB (Firebase)</td><td>Keeps you signed in</td><td>Until you sign out</td></tr>
+<tr><td>kova-* caches</td><td>Service worker cache</td><td>Lets Kova open quickly and offline</td><td>Replaced with each update</td></tr>
+<tr><td>kova.consent</td><td>Local storage</td><td>Remembers your analytics choice</td><td>Until you change it</td></tr>
+</table></div>
+<p>These are strictly necessary for a service you asked for, so they do not need consent. None of them is used to track you.</p>
+
+<h2>Analytics (only if you allow it)</h2>
+<div class="wrap"><table><tr><th>What</th><th>Set by</th><th>Why</th><th>How long</th></tr>
+<tr><td>_ga, _ga_&lt;id&gt;</td><td>Google Analytics</td><td>Counts visits and which features are used, so we know what to improve</td><td>Up to 2 years</td></tr>
+<tr><td>firebase-installations-database, firebase-heartbeat-database</td><td>Firebase Analytics (IndexedDB)</td><td>The same counts inside the app</td><td>Up to 2 years</td></tr>
+</table></div>
+<p>Analytics never receives health values: Kova lets through only a short list of plain event names (for example "workout_complete") and drops anything else.</p>
+
+<h2>Advertising</h2>
+<p>None. Kova does not use advertising or cross-site tracking cookies, and does not let anyone else place them.</p>
+
+<h2>Changing your choice</h2>
+<p>Settings → Privacy choices in the app, at any time. Your browser's settings can also clear or block cookies and storage; blocking the "needed" ones stops Kova from saving anything.</p>
+<h2>Contact</h2><p><span class="todo">[Company legal name]</span>, <span class="todo">[Registered address]</span>. Email <span class="todo">[support email]</span>.</p></main></body></html>

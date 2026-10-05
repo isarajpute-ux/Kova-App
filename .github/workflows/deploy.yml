@@ -83,6 +83,8 @@ jobs:
         run: node tests/e2e/signin.mjs
       - name: Text contrast on the main screens, all three appearances
         run: node tests/e2e/contrast.mjs
+      - name: Keyboard only (Tab, Enter, Escape)
+        run: node tests/e2e/keyboard.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

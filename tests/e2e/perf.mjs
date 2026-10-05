@@ -15,7 +15,7 @@ const SOURCE = process.argv.includes('--source');
    the machine, so CI (slower, shared) gets headroom and still catches a
    regression. Elements: the app builds every screen up front (all 71 are
    wired at start); this ratchet stops it growing while that changes. */
-const BUDGET = { firstLoadKB: 450, usableMs: process.env.CI ? 6000 : 3000, elements: 11500 };
+const BUDGET = { firstLoadKB: 450, usableMs: process.env.CI ? 6000 : 3000, elements: 10800 };
 const THROTTLE = { rtt: 150, down: 1.6e6, up: 0.75e6, cpu: 4 };
 if (process.argv.includes('--cpu-only')) Object.assign(THROTTLE, { rtt: 0, down: -1, up: -1 });
 if (process.argv.includes('--fast4g')) Object.assign(THROTTLE, { rtt: 60, down: 9e6, up: 1.5e6 });

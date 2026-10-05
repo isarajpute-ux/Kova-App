@@ -96,7 +96,10 @@ window.KovaLaunch=(function(){
     if(el) el.addEventListener('click',function(ev){ if(ev.target.closest('[data-kla="again"]')) run(); });
     return run();
   }
-  function run(){ return Promise.all([ping(),health()]).then(function(r){ var R=rows(r[0],r[1]); paint(R,r[0]); return R; }); }
+  function run(){
+    var legal=window.KovaLegal&&KovaLegal.checks?KovaLegal.checks().catch(function(){ return []; }):Promise.resolve([]);
+    return Promise.all([ping(),health(),legal]).then(function(r){ var R=rows(r[0],r[1]); if(r[2].length){ R.push({head:'Legal'}); R=R.concat(r[2]); } paint(R,r[0]); return R; });
+  }
 
   /* 7 taps on Version within 3 seconds */
   function onTap(){
