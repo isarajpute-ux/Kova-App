@@ -13,9 +13,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SOURCE = process.argv.includes('--source');
 /* bytes and elements are exact, so they are held tightly; time depends on
    the machine, so CI (slower, shared) gets headroom and still catches a
-   regression. Elements: the app builds every screen up front (all 71 are
-   wired at start); this ratchet stops it growing while that changes. */
-const BUDGET = { firstLoadKB: 450, usableMs: process.env.CI ? 6000 : 3000, elements: 10800 };
+   regression. Elements: every screen is built and wired at start, then the
+   closed ones are parked (src/p08_park.js), so the page holds about 600. */
+const BUDGET = { firstLoadKB: 450, usableMs: process.env.CI ? 6000 : 3000, elements: 1500 };
 const THROTTLE = { rtt: 150, down: 1.6e6, up: 0.75e6, cpu: 4 };
 if (process.argv.includes('--cpu-only')) Object.assign(THROTTLE, { rtt: 0, down: -1, up: -1 });
 if (process.argv.includes('--fast4g')) Object.assign(THROTTLE, { rtt: 60, down: 9e6, up: 1.5e6 });
@@ -30,6 +30,7 @@ await page.addInitScript(() => {
 await page.goto(site.url + '/index.html', { waitUntil: 'load', timeout: 180000 });
 await page.waitForFunction(() => document.querySelectorAll('#wheelBoxes [data-wp], .kl-panel[data-p="home"] .kl-row').length > 0, null, { timeout: 60000 });
 await page.waitForTimeout(6000);                                   // let the late starters and the Work OS file finish
+await page.waitForFunction(() => window.KovaPark && KovaPark.stats.done, null, { timeout: 30000 }).catch(() => {});   // closed screens parked
 const m = await page.evaluate(() => {
   const nav = performance.getEntriesByType('navigation')[0];
   const fcp = (performance.getEntriesByName('first-contentful-paint')[0] || {}).startTime || 0;

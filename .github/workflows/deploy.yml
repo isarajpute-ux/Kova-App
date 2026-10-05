@@ -85,6 +85,8 @@ jobs:
         run: node tests/e2e/contrast.mjs
       - name: Keyboard only (Tab, Enter, Escape)
         run: node tests/e2e/keyboard.mjs
+      - name: Closed screens parked, every screen opens whole
+        run: node tests/e2e/park.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

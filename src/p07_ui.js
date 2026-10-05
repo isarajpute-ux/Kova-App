@@ -312,6 +312,8 @@ window.KovaScreenTour=(function(){
   /* the "?" beside each title */
   function addButtons(){
     Object.keys(TOURS).forEach(function(id){
+      /* a parked screen (p08_park.js) gets its button when it is opened */
+      var sc=document.getElementById('s-'+id); if(sc&&sc.hasAttribute('data-kpark')) return;
       var t=q('#s-'+id+' .title')||q('#s-'+id+' .title-s'); if(!t||t.querySelector('.kt-help')) return;
       var b=document.createElement('button');
       b.type='button'; b.className='kt-help'; b.setAttribute('data-ktour',id);

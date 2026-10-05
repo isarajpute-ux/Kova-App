@@ -87,10 +87,12 @@ window.KovaAlarm=(function(){
   function watch(){
     clearInterval(timer); timer=null;
     if(!S.on) return;
-    var latest=next(Date.now()-60*MIN);
     var tick=function(){
-      var now=Date.now();
+      var now=Date.now(), latest=next(now-60*MIN);
       if(now<latest-S.window*MIN||S.fired===dk(now)) return;
+      /* set (or moved) after this morning's window had begun: the first
+         alarm is tomorrow's, not an instant ring */
+      if(S.armed&&S.armed>latest-S.window*MIN) return;
       read().then(function(d){ var r=decide({now:now,latest:latest,window:S.window,hr:d.hr,steps:d.steps}); if(r.wake) fire(r.why); });
     };
     tick(); timer=setInterval(tick,2*MIN);
@@ -133,6 +135,7 @@ window.KovaAlarm=(function(){
     if(id==='kalOn') S.on=ev.target.checked;
     if(id==='kalT') S.latest=ev.target.value||'07:00';
     if(id==='kalW') S.window=+ev.target.value;
+    S.armed=Date.now();
     save(); paint();
     if(S.on) schedule().then(function(ok){ if(ok) say('Alarm set for '+S.latest+'.'); watch(); },function(e){ say(e.message); });
     else { var P=LN(); if(P) P.cancel({notifications:[{id:NID}]}).catch(function(){}); clearInterval(timer); }

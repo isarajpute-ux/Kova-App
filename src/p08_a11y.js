@@ -103,7 +103,9 @@ window.KovaA11y=(function(){
   }
   function fix(root){
     root=root||document.body; if(!root||!root.querySelectorAll) return;
-    try{ controls(root); clickables(root); fields(root); svgs(root); }catch(e){}
+    var run=function(){ try{ controls(root); clickables(root); fields(root); svgs(root); }catch(e){} };
+    /* closed screens are parked (p08_park.js); they are fixed when they come back */
+    if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(run); else run();
   }
 
   /* Enter / Space press a role=button that is not a real button; Escape

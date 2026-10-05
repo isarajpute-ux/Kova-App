@@ -17,7 +17,7 @@ window.KovaSettingsGroups=(function(){
   'use strict';
   var busy=false;
   function group(){
-    var s=document.getElementById('s-settings'); if(!s||busy) return;
+    var s=document.getElementById('s-settings'); if(!s||busy||s.hasAttribute('data-kpark')) return;
     busy=true;
     try{
       var cur=null, kids=[].slice.call(s.children);
