@@ -1,0 +1,44 @@
+/* Text contrast to WCAG AA (p14). The quiet labels (dates, units,
+   "KOVA · MORNING BRIEF", captions) were 2-2.6:1 against their ground,
+   under the 4.5:1 small text needs. The hierarchy stays - full, then
+   secondary, then tertiary - but the quietest step is now readable, in
+   dark, soft light and light glass. Checked by tests/e2e/contrast.mjs. */
+.app{--ron-txt-2:rgba(232,232,232,.76);--ron-txt-3:rgba(232,232,232,.64)}
+body.soft-light .app{--ron-txt-2:rgba(255,255,255,.86);--ron-txt-3:rgba(255,255,255,.78);--txt-3:rgba(255,255,255,.84)}
+body.light-mode .app{--ron-txt-2:rgba(28,26,23,.74);--ron-txt-3:rgba(28,26,23,.66)}
+/* light glass's big cards are pale glass with dark ink now, so their
+   quiet text is dark too (an older rule still gave them pale text) */
+body.light-mode .card.card-lg,body.light-mode .card.kova{--ron-txt-2:rgba(28,26,23,.74);--ron-txt-3:rgba(28,26,23,.66)}
+body.light-mode .card.card-lg .eyebrow{color:rgba(28,26,23,.66)!important}
+.oshero{--ron-txt-2:rgba(var(--ws-on-rgb),.8);--ron-txt-3:rgba(var(--ws-on-rgb),.68)}
+/* light glass: the old light-only rules that set quiet text at .34-.48 */
+body.light-mode .lbl,body.light-mode .eyebrow,body.light-mode .wbeat-t,body.light-mode .ob-recap-k{color:rgba(28,26,23,.66)}
+body.light-mode .volval.low{color:rgba(28,26,23,.66)!important}
+body.light-mode .field::placeholder,body.light-mode .af::placeholder{color:rgba(28,26,23,.55)}
+body.light-mode .af-ico,body.light-mode .af-act{color:rgba(28,26,23,.6)}
+body.light-mode .ob-step,body.light-mode .auth-skip,body.light-mode .auth-pin-hint,body.light-mode .auth-date{color:rgba(28,26,23,.62)}
+body.light-mode .ob-why,body.light-mode .ob-opt-s,body.light-mode .auth-sub,body.light-mode .auth-acct-email,body.light-mode .ob-sub small{color:rgba(28,26,23,.68)}
+/* the week ring's four numbers: each area's colour, deep enough to read
+   on light glass and light enough on soft light */
+body.light-mode #wheelBoxes [style*="color:#7FB2FF"]{color:#2457B5!important}
+body.light-mode #wheelBoxes [style*="color:#C9A27E"]{color:#73532C!important}
+body.light-mode #wheelBoxes [style*="color:#FFA53D"]{color:#9A5300!important}
+body.light-mode #wheelBoxes [style*="color:#B4628C"]{color:#8A2C5A!important}
+body.soft-light #wheelBoxes [style*="color:#7FB2FF"]{color:#C2DBFF!important}
+body.soft-light #wheelBoxes [style*="color:#C9A27E"]{color:#F0D7BE!important}
+body.soft-light #wheelBoxes [style*="color:#FFA53D"]{color:#FFD39A!important}
+body.soft-light #wheelBoxes [style*="color:#B4628C"]{color:#F6C2DC!important}
+/* small coloured notes on soft light's warm grey */
+body.soft-light .volval span,body.soft-light .volval{color:#FFE3D6}
+body.soft-light .volname{color:rgba(255,255,255,.88)}
+/* quiet chips, tabs and counters */
+body.soft-light .vsec-c,body.soft-light .vall-s,body.soft-light .ronpill:not(.on),body.soft-light .stgtab:not(.on),body.soft-light .blktab-n,body.soft-light .plan-opt-l,body.soft-light .km-empty,body.soft-light .kch-f,body.soft-light .kch-h small,body.soft-light .claim-lbl{color:rgba(255,255,255,.86)}
+body.soft-light .kch-b:not(.on){color:#fff;border-color:rgba(255,255,255,.3)}
+body.light-mode .vsec-c,body.light-mode .stgtab:not(.on),body.light-mode .blktab-n,body.light-mode .km-empty,body.light-mode .kch-f,body.light-mode .kch-h small,body.light-mode .claim-lbl,body.light-mode .ring-pill{color:rgba(28,26,23,.72)}
+.ronpill:not(.on){color:rgba(255,255,255,.8)}
+body.light-mode .ronpill:not(.on){color:rgba(28,26,23,.74)}
+/* red text that means "this deletes something" stays red, just deeper on light */
+body.light-mode .li-name[style*="E8607A"],body.light-mode .li-name[style*="var(--bad)"]{color:#A8262B!important}
+/* the light-glass big cards had their own !important quiet colours */
+body.light-mode .card.card-lg .lbl,body.light-mode .card.kova .lbl,body.light-mode .card.card-lg .eyebrow,body.light-mode .card.kova .kova-lbl,body.light-mode .card.card-lg .unit{color:rgba(28,26,23,.68)!important}
+body.light-mode .card.card-lg .sub,body.light-mode .card.kova .sub,body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.74)!important}

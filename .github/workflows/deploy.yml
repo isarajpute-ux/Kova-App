@@ -81,6 +81,8 @@ jobs:
         run: node tests/e2e/flows.mjs
       - name: Sign-in in a real browser (forgiving email and code steps)
         run: node tests/e2e/signin.mjs
+      - name: Text contrast on the main screens, all three appearances
+        run: node tests/e2e/contrast.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs
