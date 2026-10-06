@@ -111,17 +111,14 @@ function boot(opts) {
   ck('the page does not double a reminder the push already showed', /KovaPush&&KovaPush\.active\(\)&&document\.hidden/.test(html));
 
   // ---------- Kova's own alert sound ----------
-  const pick = doc.getElementById('kchPick');
-  ck('Settings > Reminders has an "Alert sound" picker: Kova, Pulse, Dawn, Ripple, Phone, Silent', !!pick && [...pick.querySelectorAll('[data-kch]')].map((b) => b.textContent.trim()).join('|') === 'Kova|Pulse|Dawn|Ripple|Phone|Silent');
-  pick.querySelector('[data-kch="dawn"]').click(); await wait(20);
-  ck('picking one saves it and the reminder list carries it to the server', w.KovaChime.sound() === 'dawn' && w.KovaPush.payload().sound === 'dawn' && cleanList(w.KovaPush.payload()).sound === 'dawn');
-  ck('an unknown sound falls back to Kova on the server', cleanList({ sound: '../../x' }).sound === 'kova');
-  const so = soundOpts('dawn'), sd = soundOpts('default'), ss = soundOpts('silent');
-  ck('the push names the sound: kova_dawn.wav on iPhone, the kova_dawn channel on Android', so.apns.payload.aps.sound === 'kova_dawn.wav' && so.android.notification.channelId === 'kova_dawn');
-  ck('"Phone" uses the normal sound; "Silent" sends none', sd.apns.payload.aps.sound === 'default' && sd.android.notification.channelId === 'reminders' && !('sound' in ss.apns.payload.aps));
-  const wav = KovaChime.wav('kova', 22050), rs = KovaChime.render('pulse', 8000);
+  ck('there is no sound picker in Settings: Kova has one sound', !doc.getElementById('kchPick') && !/Alert sound/.test(doc.getElementById('s-settings').textContent));
+  ck('the reminder list always carries Kova\'s sound to the server', w.KovaChime.sound() === 'kova' && w.KovaPush.payload().sound === 'kova' && cleanList({ sound: 'dawn' }).sound === 'kova');
+  const so = soundOpts();
+  ck('every push names it: kova_kova.wav on iPhone, the kova_kova channel on Android', so.apns.payload.aps.sound === 'kova_kova.wav' && so.android.notification.channelId === 'kova_kova');
+  ck('one sound is all the phone gets', KovaChime.LIST.length === 1 && KovaChime.LIST[0].id === 'kova');
+  const wav = KovaChime.wav('kova', 22050), rs = KovaChime.render('kova', 8000);
   ck('the same synth renders a real .wav for the phone (RIFF/WAVE, 16-bit mono)', String.fromCharCode(...wav.slice(0, 4)) === 'RIFF' && String.fromCharCode(...wav.slice(8, 12)) === 'WAVE' && wav.length > 20000);
-  ck('every sound is under 1.5 s and never clips', KovaChime.LIST.filter((x) => !/default|silent/.test(x.id)).every((x) => { const r = KovaChime.render(x.id, 8000); return r.length / 8000 <= 1.5 && Math.max(...r.map(Math.abs)) <= 0.9; }) && rs.length > 0);
+  ck('the sound is under 1.5 s and never clips', KovaChime.LIST.every((x) => { const r = KovaChime.render(x.id, 8000); return r.length / 8000 <= 1.5 && Math.max(...r.map(Math.abs)) <= 0.9; }) && rs.length > 0);
   ck('a reminder that shows while Kova is open plays the sound and keeps the banner quiet', /KovaChime\.play\(\)/.test(html) && /silent:own/.test(html));
 
   const failed = R.filter((r) => !r[1]);

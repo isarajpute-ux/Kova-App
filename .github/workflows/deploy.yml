@@ -87,6 +87,10 @@ jobs:
         run: node tests/e2e/keyboard.mjs
       - name: Closed screens parked, every screen opens whole
         run: node tests/e2e/park.mjs
+      - name: The camera (fake camera device), frame, zoom and shot
+        run: node tests/e2e/camera.mjs
+      - name: The Studio video editor records a real edit
+        run: node tests/e2e/cut.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

@@ -359,6 +359,8 @@ body.light-mode .ks-parw{background:rgba(255,255,255,.95);border-color:rgba(18,2
 .ks-acts .ks-sq{width:52px;height:52px;border-radius:17px}
 .ks-note{margin:10px 6px 0;font-size:12px;line-height:1.45;color:var(--ks-t2)}
 .ks-note.bad{color:#FF9A91}
+.ks-note.ks-addp{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ks-note.ks-addp .ks-pill{height:34px;font-size:12.5px}
 .ks-prog{height:3px;border-radius:2px;background:rgba(255,255,255,.12);margin:10px 6px 0;overflow:hidden}
 .ks-prog i{display:block;height:100%;background:#fff;box-shadow:0 0 10px #fff;transition:width .25s}
 

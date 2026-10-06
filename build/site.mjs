@@ -34,7 +34,7 @@ const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
    noise meter, the privacy banner and legal rows, the alert sounds, the
    Studio's workflow styles) */
 const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal', 'p08-chime', 'p08-studioflow',
-  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch'];
+  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '
@@ -121,7 +121,7 @@ export function split(html, work) {
       + 'function cur(){var s=document.querySelector(".screen.on");return s?s.id.slice(2):""}'
       + 'function one(i,k){if(i>=L.length)return k();var s=document.createElement("script");s.src=L[i];s.onload=s.onerror=function(){one(i+1,k)};document.body.appendChild(s)}'
       /* once it is in, a Work screen already open is drawn again */
-      + 'function load(){if(st)return;st=1;one(0,function(){st=2;var c=cur();if(W.indexOf(c)>=0&&window.go)try{go(c,{replace:true})}catch(e){}})}'
+      + 'function load(){if(st)return;st=1;one(0,function(){st=2;window.__kovaLazyDone=1;try{dispatchEvent(new Event("kova:lazy"))}catch(e){}var c=cur();if(W.indexOf(c)>=0&&window.go)try{go(c,{replace:true})}catch(e){}})}'
       + 'window.__kovaLoadWork=load;'
       /* a Work screen opened before it arrived: fetch it now */
       + 'if(window.MutationObserver)W.forEach(function(id){var el=document.getElementById("s-"+id);if(el)new MutationObserver(function(){if(el.classList.contains("on"))load()}).observe(el,{attributes:true,attributeFilter:["class"]})});'

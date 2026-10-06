@@ -444,12 +444,23 @@ window.KovaPost=(function(){
         var v=document.createElement('video'), settled=false;
         v.muted=true; v.playsInline=true; v.preload='metadata';
         var fin=function(){ if(settled) return; settled=true; res(); };
-        v.onloadedmetadata=function(){
-          item.dur=Math.round((v.duration||0)*10)/10; item.w=v.videoWidth; item.h=v.videoHeight;
+        /* a clip recorded in a browser (WebM) often says its length is
+           "infinite" until it is read to the end: seek far, then ask again */
+        var fixing=false;
+        var meta=function(){
+          var d=isFinite(v.duration)?v.duration:0;
+          item.dur=Math.round(d*10)/10; item.w=v.videoWidth; item.h=v.videoHeight;
           item.sound=soundOf(v);
-          try{ v.currentTime=Math.min(0.5,(v.duration||1)/3); }catch(e){ fin(); }
+          try{ v.currentTime=Math.min(0.5,(d||1)/3); }catch(e){ fin(); }
+        };
+        v.onloadedmetadata=function(){
+          if(isFinite(v.duration)) return meta();
+          fixing=true;
+          v.ontimeupdate=function(){ if(!isFinite(v.duration)) return; v.ontimeupdate=null; fixing=false; meta(); };
+          try{ v.currentTime=1e101; }catch(e){ fixing=false; meta(); }
         };
         v.onseeked=function(){
+          if(fixing) return;
           item.thumb=thumbFrom(v,item.w||320,item.h||180);
           /* Chrome only knows once it decodes some audio: play a moment, muted */
           if(item.sound!=null||typeof v.webkitAudioDecodedByteCount!=='number'||!v.play) return fin();

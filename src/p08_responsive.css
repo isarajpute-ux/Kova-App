@@ -5,9 +5,8 @@
      tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
      laptops (1024px+)      a 720px page and a sidebar with names;
      big screens (1440px+)  a 760px page.
-   The charts are drawn for a phone and grow with the page, so the page
-   stops at a width where a chart still fits on the screen with its card,
-   and no chart is ever taller than 300px.
+   The charts are drawn for a phone; on wider screens they stay close to
+   a phone's size (see "charts on tablets and laptops" below).
    The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
    their own wide layouts. The real safe area keeps the notch and the home
    bar clear on phones. */
@@ -31,14 +30,24 @@
 @media (min-width:1440px){
   .wrap{max-width:760px}
 }
-/* charts that scale with the page: never taller than 300px. The drawing
-   keeps its shape and sits in the middle of its card. Vitals' signal bars
-   have their labels in a row under them, so both narrow together. */
+/* charts on tablets and laptops (p15: smaller). A chart is drawn for a
+   phone; on a wider page it keeps its shape, sits in the middle of its
+   card and stops at a phone-like size instead of filling the page:
+     line and bar charts  200px tall
+     dials and rings      180px
+     the body map         300px (front and back together)
+   and any other drawing in a card at most 220px, so a new chart starts
+   small too. Phones are unchanged. Work OS and the Studio keep their own
+   wide layouts. */
 @media (min-width:700px){
-  :is(#wkchart,#fxTrend,#hsOrbit,#hsDial,#prChart,#recDial,#ecChart,#btChart,#actChart,#studyChart,#hrvChart,#stressDial,#stressChart,#slpChart,#ssGraph,#nrgCurve),
-  :is(#s-progress,#s-recovery,#s-prs,#s-watch) .card>svg[viewBox]{max-height:300px;margin-left:auto;margin-right:auto}
-  #s-prs .prgrid svg[viewBox]{max-height:220px}
-  #sigBars,#sigAxis{max-width:540px;margin-left:auto;margin-right:auto}
+  .screen:not([id^="s-work"]) .card svg[viewBox]:not(.ic){max-height:220px;margin-left:auto;margin-right:auto}
+  :is(#wkchart,#fxTrend,#prChart,#ecChart,#btChart,#actChart,#studyChart,#hrvChart,#stressChart,#slpChart,#ssGraph,#nrgCurve),
+  :is(#s-progress,#s-recovery,#s-watch) .card>svg[viewBox]{max-height:200px;margin-left:auto;margin-right:auto}
+  :is(#hsOrbit,#hsDial,#recDial,#stressDial,#wheelSvg){max-height:180px;margin-left:auto;margin-right:auto}
+  #s-prs .prgrid svg[viewBox],#s-prs :is(#conBest,#conWorst) svg[viewBox]{max-height:170px}
+  #bodySvg{max-height:300px;margin-left:auto;margin-right:auto}
+  #sigBars,#sigAxis{max-width:440px;margin-left:auto;margin-right:auto}
+  #sigBars{max-height:200px}
   #recGrid{grid-template-columns:repeat(3,1fr)!important}
 }
 /* the smallest phones (iPhone SE, 320px): a little more room for content */

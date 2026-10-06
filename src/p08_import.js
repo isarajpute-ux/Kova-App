@@ -263,7 +263,9 @@ window.KovaImport=(function(){
     at.parentNode.insertBefore(d.firstChild,at);
     document.getElementById('kimRow').addEventListener('click',open);
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,50); }); else setTimeout(mount,50);
+  /* Settings may be parked (p08_park.js): add the row when it opens */
+  function mountSoon(){ if(window.KovaPark&&KovaPark.after) KovaPark.after('s-settings',mount); else mount(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mountSoon,50); }); else setTimeout(mountSoon,50);
 
   return {csv:csv,unzip:unzip,when:when,foodRows:foodRows,addFood:addFood,sessionsFrom:sessionsFrom,addSessions:addSessions,weights:weights,addWeights:addWeights,run:run,summary:summary,open:open};
 })();

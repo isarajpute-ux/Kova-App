@@ -132,6 +132,7 @@ window.KovaNoise=(function(){
   /* ---- the alert: a glass card over the screen ---- */
   function alert(db){
     try{ if(navigator.vibrate) navigator.vibrate([120,80,120]); }catch(e){}
+    try{ if(window.KovaChime) KovaChime.play(); }catch(e){}
     var el=document.getElementById('knAlert');
     if(!el){ el=document.createElement('div'); el.id='knAlert'; el.className='kn-alert'; el.setAttribute('role','alert'); document.body.appendChild(el);
       el.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; var n=b.getAttribute('data-n');

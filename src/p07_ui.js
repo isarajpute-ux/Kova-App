@@ -467,9 +467,11 @@ window.KovaCanvas=(function(){
   }
   function locked(){ var p=P(); return !!p&&(p.status==='uploading'||p.status==='publishing'); }
   function targets(){ return (P()&&P().targets)||[]; }
+  /* the platform the preview shows: any platform can be previewed (tap it
+     in the slider), not only the ones this post goes to */
   function currentPlat(){
     var t=targets();
-    if(S.plat&&(t.indexOf(S.plat)>=0||!t.length)) return S.plat;
+    if(S.plat&&KPo.PLAT[S.plat]) return S.plat;
     return t[0]||'instagram';
   }
 
@@ -679,6 +681,8 @@ window.KovaCanvas=(function(){
       }).join('')
         +'<div class="ks-drop" data-a="add" id="ksDrop">'+ic('upload')+'Drop photos or clips</div>';
     }
+    /* edit the clips into one video (src/p08_cut.js) */
+    if(inc.length) h+='<button type="button" class="ks-cutb" data-a="cut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg>'+(inc.some(function(m){ return m.kind==='video'; })?'Edit video':'Make a video')+'</button>';
     return '<div class="ks-node" data-n="media">'+h+'</div>';
   }
 
@@ -807,7 +811,8 @@ window.KovaCanvas=(function(){
     }).join('');
     var r=(p.results||{})[k];
     var note='';
-    if(r&&r.state==='error') note='<div class="ks-note bad">'+esc(KPo.PLAT[k].n+': '+r.msg)+'</div>';
+    if(targets().indexOf(k)<0&&targets().length) note='<div class="ks-note ks-addp">Not posting to '+esc(KPo.PLAT[k].n)+' yet. <button class="ks-pill" data-a="chan" data-k="'+k+'">'+ic('plus')+'Add '+esc(KPo.PLAT[k].n)+'</button></div>';
+    else if(r&&r.state==='error') note='<div class="ks-note bad">'+esc(KPo.PLAT[k].n+': '+r.msg)+'</div>';
     else if(r&&r.msg) note='<div class="ks-note">'+esc(r.msg)+'</div>';
     else if(!c.ok&&targets().indexOf(k)>=0) note='<div class="ks-note bad">'+esc(c.problems[0])+'</div>';
     else if(c.warnings.length) note='<div class="ks-note">'+esc(c.warnings[0])+'</div>';
@@ -848,7 +853,9 @@ window.KovaCanvas=(function(){
         +'<linearGradient id="ksWireGlow" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".15"/>'
         +'<stop offset=".55" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient>'
         +'<filter id="ksWireBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.6" result="b"/>'
-        +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs></svg>'
+        +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+        +'<filter id="ksHalo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter>'
+        +'<radialGradient id="ksFlare"><stop offset="0" stop-opacity="1"/><stop offset=".35" stop-opacity=".55"/><stop offset="1" stop-opacity="0"/></radialGradient></defs></svg>'
       +nodeMedia(p)+nodeText(p)+nodeCover(p)+nodeFormat(p)+nodePublish(p)+nodePreview(p);
     wires=$('#ksWires');
     platsInView();
@@ -928,9 +935,16 @@ window.KovaCanvas=(function(){
     if(n!==world) return null;
     return {x:x,y:y,hot:el.classList.contains('hot'),node:el.closest('.ks-node')};
   }
+  /* what each wire carries: [count on the line, kind near the card] */
+  function wireLabel(i){
+    var p=P(); if(!p) return null;
+    var n=KPo.postMedia(p).length, t=targets().length;
+    var items=function(k){ return k+' item'+(k===1?'':'s'); };
+    return [[items(n),'Media'],[items(1),'Text'],[items(1),'Cover'],[items(1),'Frame'],[items(Math.max(1,t)),'Format'],[t>1?t+' posts':'1 post','Preview']][i]||null;
+  }
   function drawWires(){
     if(!wires) return;
-    var defs=wires.querySelector('defs').outerHTML, out=[], plus=[];
+    var defs=wires.querySelector('defs').outerHTML, out=[], plus=[], labels=[];
     var W=world.scrollWidth, H=world.scrollHeight;
     wires.setAttribute('width',W); wires.setAttribute('height',H);
     var busy=locked();
@@ -952,10 +966,41 @@ window.KovaCanvas=(function(){
           +' L'+(lx+r)+' '+gy+' Q'+lx+' '+gy+' '+lx+' '+(gy+r)
           +' L'+lx+' '+(b.y-r)+' Q'+lx+' '+b.y+' '+(lx+r)+' '+b.y+' L'+b.x+' '+b.y;
       }
-      out.push('<path class="w'+(a.hot&&b.hot?' on':'')+'" d="'+d+'"/>');
-      if(a.hot&&b.hot) out.push('<path class="w '+(busy&&i>=4?'flow':'lit')+'" d="'+d+'"/>');
+      if(!(a.hot&&b.hot)){ out.push('<path class="w" d="'+d+'"/>'); return; }
+      /* a wire carrying work (image 2): a white beam that glows, fades dark
+         and glows again, a braid of thin strands, flares where it meets the
+         cards, and pills on the line saying what it carries */
+      var g='<g class="wb" style="--d:'+(i*.32).toFixed(2)+'s">', mid, ang=0, near=null;
+      if(S.desk){
+        var P0=a, P1={x:a.x+dx,y:a.y}, P2={x:b.x-dx,y:b.y}, P3=b;
+        var bz=function(t){ var u=1-t; return {x:u*u*u*P0.x+3*u*u*t*P1.x+3*u*t*t*P2.x+t*t*t*P3.x,y:u*u*u*P0.y+3*u*u*t*P1.y+3*u*t*t*P2.y+t*t*t*P3.y}; };
+        var tan=function(t){ var u=1-t; return {x:3*u*u*(P1.x-P0.x)+6*u*t*(P2.x-P1.x)+3*t*t*(P3.x-P2.x),y:3*u*u*(P1.y-P0.y)+6*u*t*(P2.y-P1.y)+3*t*t*(P3.y-P2.y)}; };
+        var angAt=function(t){ var v=tan(t); return Math.max(-38,Math.min(38,Math.atan2(v.y,v.x)*180/Math.PI)); };
+        mid=bz(.5); ang=angAt(.5); if(Math.abs(b.x-a.x)>220){ near=bz(.84); near.a=angAt(.84); }
+        [[.82,5],[.9,-5]].forEach(function(k){
+          g+='<path class="w st" d="M'+a.x+' '+a.y+' C'+(a.x+dx*k[0])+' '+(a.y+k[1])+' '+(b.x-dx*k[0])+' '+(b.y-k[1])+' '+b.x+' '+b.y+'"/>';
+        });
+      }else{
+        mid={x:(gx+lx)/2,y:gy};
+      }
+      g+='<path class="w halo" d="'+d+'"/><path class="w core" d="'+d+'"/>';
+      if(busy&&i>=4) g+='<path class="w flow" d="'+d+'"/>';
+      g+='<circle class="fl" cx="'+a.x+'" cy="'+a.y+'" r="11"/><circle class="fl" cx="'+b.x+'" cy="'+b.y+'" r="11"/></g>';
+      out.push(g);
+      var L=wireLabel(i);
+      if(L){ labels.push({x:mid.x,y:mid.y,a:ang,t:L[0]}); if(near&&L[1]) labels.push({x:near.x,y:near.y,a:near.a,t:L[1],k:'t'}); }
     });
     wires.innerHTML=defs+out.join('');
+    $$('.ks-wl',world).forEach(function(n){ n.remove(); });
+    var kept=[];
+    labels.forEach(function(l){
+      if(kept.some(function(k){ return Math.abs(k.x-l.x)<70&&Math.abs(k.y-l.y)<20; })) return;
+      kept.push(l);
+      var el=document.createElement('span');
+      el.className='ks-wl'+(l.k?' '+l.k:''); el.setAttribute('aria-hidden','true');
+      el.style.left=l.x+'px'; el.style.top=l.y+'px'; el.style.setProperty('--a',l.a.toFixed(1)+'deg');
+      el.textContent=l.t; world.appendChild(el);
+    });
     $$('.ks-plus',world).forEach(function(n){ n.remove(); });
     plus.forEach(function(p){
       var el=document.createElement('button');
@@ -2104,6 +2149,7 @@ window.KovaCanvas=(function(){
       case 'pscroll': { var sl=$('.ks-plats',world); if(sl){ var d=+el.getAttribute('data-d')||1; if(sl.scrollBy) sl.scrollBy({left:d*Math.max(120,sl.clientWidth*.7),behavior:'smooth'}); else sl.scrollLeft+=d*160; } } break;
       case 'nextplat': { var list=targets().length?targets():KPo.ORDER; S.plat=list[(list.indexOf(currentPlat())+1)%list.length]; softPaint(); } break;
       case 'edit': editFor(currentPlat()); break;
+      case 'cut': if(locked()) break; if(window.KovaCut) KovaCut.open(p); else toast('The video editor is still loading. Try again in a moment.'); break;
       case 'share': shareIt(); break;
       case 'fav': p.fav=!p.fav; KPo.save(p); softPaint(); break;
       case 'prev': step(-1); break;

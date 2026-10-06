@@ -148,7 +148,7 @@ window.KovaCrew=(function(){
       job:over.job!=null?over.job:(t?t.job:''), playbook:over.playbook!=null?over.playbook:(t?t.playbook:''),
       tools:(over.tools||(t?t.tools:['tasks'])).slice(), approval:over.approval||'external',
       routine:Object.assign({freq:'off',time:'09:00',dow:1,event:'overdue',job:''},(t&&t.routine)||{},over.routine||{},quiet?{freq:'off'}:{}),
-      memory:[], enabled:true, runs:0, lastRun:0, lastRoutine:0
+      memory:[], enabled:true, runs:0, lastRun:0, lastRoutine:0, model:'auto', budget:150
     },'user');
   }
   /* the template's name, or the first free one if someone already has it */
@@ -318,6 +318,22 @@ window.KovaCrew=(function(){
       },
       describe:function(a){ return {t:'Studio draft',n:a.heading,s:(a.platforms||[]).join(', ')}; },
       label:function(r){ return r.ok?'Drafted \u201c'+r.title+'\u201d in the Studio':'Draft failed'; }},
+    delegate:{g:'chief',kind:'read',d:'Run jobs with several teammates AT THE SAME TIME and wait for all their results (for example research and a draft in parallel). jobs: up to 4 of {to: teammate name, job: clear instructions}. Use hand_off instead when only one teammate is needed.',
+      s:obj({jobs:{type:'array',items:obj({to:S_STR,job:S_STR},['to','job'])}},['jobs']),
+      run:function(a,ctx){
+        if(ctx.job.meta&&ctx.job.meta.par) return {error:'A delegated job cannot delegate again.'};
+        var subs=[];
+        (a.jobs||[]).slice(0,4).forEach(function(x){ var t=byName(x.to); if(t&&t.enabled&&t.id!==ctx.emp.id){ var sj=start(t,String(x.job||'').slice(0,1200),'handoff',{from:ctx.emp.n,parent:ctx.job.id,par:true}); if(sj) subs.push(sj); } });
+        if(!subs.length) return {error:'No teammate could take those jobs. Team: '+emps().map(function(x){ return x.n+' ('+x.title+')'; }).join(', ')};
+        count('parallel');
+        log(ctx.job,'Waiting for '+subs.map(function(j){ return (emp(j.emp)||{}).n; }).join(' and ')+', working in parallel','handoff'); paintSoon();
+        S.waits=S.waits||{};
+        return Promise.all(subs.map(function(j){ return new Promise(function(ok){ if(j.state==='done'||j.state==='failed'||j.state==='stopped') return ok(j); S.waits[j.id]=ok; }); })).then(function(done){
+          return {ok:true,results:done.map(function(j){ var r=j.report; return {from:(emp(j.emp)||{}).n,state:j.state,said:String(j.say||j.note||'').slice(0,1500),
+            report:r?{title:r.title,summary:String(r.summary||'').slice(0,1500),metrics:(r.metrics||[]).slice(0,6)}:null}; })};
+        });
+      },
+      label:function(r){ return r.ok?'Ran '+r.results.length+' jobs in parallel: '+r.results.map(function(x){ return x.from+' ('+x.state+')'; }).join(', '):'Could not delegate: '+String(r.error||''); }},
     draft_email:{g:'email',kind:'external',d:'Write an email for the user to approve. It is only sent (or saved to Gmail drafts) after they approve. to = email address.',
       s:obj({to:S_STR,subject:S_STR,body:S_STR},['to','subject','body']),
       run:function(a){
@@ -372,7 +388,7 @@ window.KovaCrew=(function(){
       }};
   });
   function toolsFor(e){
-    var g=['read','always'].concat(e.tools||[]);
+    var g=['read','always'].concat(e.tools||[]); if(e.tpl==='chief') g.push('chief');
     return Object.keys(TOOLS).filter(function(k){ return g.indexOf(TOOLS[k].g)>=0; });
   }
   function needsOK(e,T){ return T.kind==='external'||(T.kind==='write'&&e.approval==='all'); }
@@ -382,6 +398,79 @@ window.KovaCrew=(function(){
     var L=emps();
     return L.filter(function(e){ return e.n.toLowerCase()===q||e.title.toLowerCase()===q; })[0]
       ||L.filter(function(e){ return q.indexOf(e.n.toLowerCase())>=0||e.title.toLowerCase().indexOf(q)>=0||q.indexOf(e.title.toLowerCase())>=0; })[0]||null;
+  }
+
+  /* ---------------- teach by showing (p15) ----------------
+     Do the job once yourself in Work OS while Kova records it; the steps
+     become that employee's routine. Dates are kept relative ("due in 2
+     days"), so the routine still makes sense next week. It replays through
+     the same tools the employee uses, so every change can be undone. */
+  var TEACH={items:'create_task',projects:'create_project',goals:'create_goal',meetings:'schedule_meeting',content:'create_content_draft',metrics:'update_metric'};
+  function rel(t){ if(!t) return ''; var d=Math.round((new Date(t).setHours(0,0,0,0)-sod())/DAY); return d<=0?'today':d===1?'tomorrow':'+'+d+'d'; }
+  function teachStep(op,coll,row,patch){
+    if(op==='create'){
+      var k=TEACH[coll]; if(!k) return null;
+      var a={create_task:{name:row.name,priority:row.priority,status:row.status,due:rel(row.due),notes:row.notes},
+        create_project:{name:row.name,desc:row.desc},create_goal:{name:row.name,target:row.target,current:row.current,unit:row.unit},
+        schedule_meeting:{title:row.title||row.name,at:rel(row.at),prep:row.prep},create_content_draft:{title:row.title||row.name,idea:row.idea,platform:row.platform},
+        update_metric:{name:row.name,value:row.value,target:row.target,unit:row.unit}}[k];
+      Object.keys(a).forEach(function(x){ if(a[x]==null||a[x]==='') delete a[x]; });
+      return (a.name||a.title)?{tool:k,input:a}:null;
+    }
+    if(op==='update'&&coll==='items'&&row&&row.name){
+      var u={name:row.name}; ['status','priority','notes'].forEach(function(x){ if(patch[x]!=null) u[x]=patch[x]; }); if(patch.due!=null) u.due=rel(patch.due);
+      return Object.keys(u).length>1?{tool:'update_task',input:u}:null;
+    }
+    return null;
+  }
+  function hookTeach(){
+    if(W.__teach) return; W.__teach=true;
+    var c0=W.create, u0=W.update;
+    W.create=function(coll,obj,actor){ var r=c0.apply(W,arguments); try{ if(S.teach&&(actor==null||actor==='user')&&coll!=='agents'){ var st=teachStep('create',coll,r||obj); if(st){ S.teach.steps.push(st); teachBar(); } } }catch(e){} return r; };
+    W.update=function(coll,id,patch,actor){ var row=null; try{ row=W.find(coll,id); }catch(e){} var r=u0.apply(W,arguments);
+      try{ if(S.teach&&(actor==null||actor==='user')&&coll!=='agents'){ var st=teachStep('update',coll,row,patch||{}); if(st){ S.teach.steps.push(st); teachBar(); } } }catch(e){} return r; };
+  }
+  function teachStart(e){ hookTeach(); S.teach={emp:e.id,steps:[],at:Date.now()}; teachBar(); say('Recording. Do the job in Work OS the way you want '+e.n+' to do it, then tap Done.'); try{ go('worktasks'); }catch(x){} }
+  function teachBar(){
+    var b=document.getElementById('crwTeach');
+    if(!S.teach){ if(b) b.remove(); return; }
+    var e=emp(S.teach.emp); if(!e){ S.teach=null; if(b) b.remove(); return; }
+    if(!b){ b=document.createElement('div'); b.id='crwTeach'; b.className='crw-teach'; b.setAttribute('role','status'); document.body.appendChild(b);
+      b.addEventListener('click',function(ev){ var x=ev.target.closest('[data-tc]'); if(!x) return; if(x.getAttribute('data-tc')==='done') teachDone(); else { S.teach=null; teachBar(); say('Nothing was saved.'); } }); }
+    var n=S.teach.steps.length;
+    b.innerHTML='<i></i><span>Teaching <b>'+esc(e.n)+'</b> \u00b7 '+n+' step'+(n===1?'':'s')+'</span><button data-tc="done">Done</button><button data-tc="x" aria-label="Cancel teaching">\u2715</button>';
+  }
+  function teachDone(){
+    var t=S.teach; S.teach=null; teachBar();
+    var e=t&&emp(t.emp); if(!e) return;
+    if(!t.steps.length){ say('Nothing was recorded. Add or change a task while teaching.'); return; }
+    var steps=t.steps.slice(0,30);
+    saveEmp(e,{taught:{at:Date.now(),steps:steps}});
+    count('taught');
+    say(e.n+' learned '+steps.length+' step'+(steps.length>1?'s':'')+'. Run it from their page, or make it their routine.');
+    try{ go('workteam'); }catch(x){}
+    S.view='team'; S.nav='team'; S.tab=e.id; paint();
+  }
+  function teachLine(st){ var T=TOOLS[st.tool], d=T&&T.describe?T.describe(st.input):null; return d?(d.t+(d.n?' \u201c'+d.n+'\u201d':'')+(d.s?' \u00b7 '+d.s:'')):st.tool.replace(/_/g,' '); }
+  function runTaught(e,source){
+    if(!e.taught||!e.taught.steps||!e.taught.steps.length) return null;
+    var job={id:uid('j'),emp:e.id,text:'Do it the way I showed you ('+e.taught.steps.length+' steps).',source:source||'you',meta:null,at:Date.now(),
+      state:'running',steps:[],changes:[],queue:[],results:[],turns:0,convo:null,brain:'taught',left:e.taught.steps.slice()};
+    S.jobs[job.id]=job; touch(e,{runs:(e.runs||0)+1,lastRun:Date.now()});
+    log(job,'Following what you showed me','info'); saveJobs(); paintSoon();
+    setTimeout(function(){ runTaughtNext(job); },200);
+    return job;
+  }
+  function runTaughtNext(job){
+    if(job.state!=='running') return;
+    var e=emp(job.emp), st=job.left.shift();
+    if(!st){ finish(job,'Done the way you showed me.'); return; }
+    var T=TOOLS[st.tool];
+    if(!T||toolsFor(e).indexOf(st.tool)<0){ log(job,'Skipped: '+e.n+' is not allowed to '+st.tool.replace(/_/g,' '),'blocked'); }
+    else { var r=exec(job,T,JSON.parse(JSON.stringify(st.input)),st.tool); log(job,T.label?T.label(r||{},st.input):st.tool,r&&r.error?'error':'write'); }
+    job.queue=job.left.length?[{name:job.left[0].tool,input:job.left[0].input}]:[];
+    saveJobs(); paintSoon();
+    setTimeout(function(){ runTaughtNext(job); },450);
   }
 
   /* ---------------- routing: who owns this? ---------------- */
@@ -435,15 +524,53 @@ window.KovaCrew=(function(){
   function keyBrain(){ try{ if(window.KovaModel&&KovaModel.connected()){ var c=KovaModel.cfg(); if(c&&c.p==='anthropic'&&c.key) return c; } }catch(e){} return null; }
   function serverLikely(){ try{ return !S.down.server&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
   function brainName(){ return serverLikely()?'server':(keyBrain()?'key':'local'); }
-  var BRAIN_N={server:'Kova server \u00b7 Claude',key:'Your Claude key',local:'Offline routines'};
+  var BRAIN_N={server:'Kova server \u00b7 Claude',key:'Your Claude key',local:'Offline routines',taught:'What you showed them'};
+
+  /* ---------------- the model router (p15) ----------------
+     Each employee thinks with Haiku, Sonnet or Opus. "Auto" picks by the
+     role (quick triage on Haiku, writing and analysis on Sonnet) and steps
+     up to Sonnet when a job runs long. You can pin one per employee. */
+  var MODELS={haiku:'Haiku',sonnet:'Sonnet',opus:'Opus'};
+  var MODEL_ID={haiku:'claude-haiku-4-5-20251001',sonnet:'claude-sonnet-5-5',opus:'claude-opus-5-5'};
+  var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku'};
+  function pickModel(e,job){
+    if(e.model&&MODELS[e.model]) return e.model;
+    var m=AUTO[e.tpl]||'sonnet';
+    if(m==='haiku'&&job&&job.turns>=5) m='sonnet';
+    return m;
+  }
+  /* ---------------- weekly limits and the loop guard (p15) ----------------
+     Every employee has a weekly step budget (one step = one think). A job
+     stops when its employee runs out, two teammates handing the same work
+     back and forth are stopped, and if the whole team takes more than 40
+     steps in two minutes every job pauses until you look. */
+  var UKEY='kova.crew.use.v1', BUDGETS=[50,150,400,1000];
+  function weekKey(t){ var d=new Date(t||Date.now()); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); }
+  function use(){ var u=lsJ(UKEY,null); if(!u||u.wk!==weekKey()) u={wk:weekKey(),steps:{},models:{},loops:0,paused:0,parallel:0,tokens:0,taught:0}; return u; }
+  function budgetOf(e){ return +e.budget||150; }
+  function usedBy(e){ return use().steps[e.id]||0; }
+  function bump(e,model,usage){
+    var u=use(); u.steps[e.id]=(u.steps[e.id]||0)+1; u.models[model]=(u.models[model]||0)+1;
+    if(usage) u.tokens+=(+usage.input_tokens||0)+(+usage.output_tokens||0);
+    lsPut(UKEY,u);
+    S.recent=(S.recent||[]).filter(function(t){ return Date.now()-t<120e3; }); S.recent.push(Date.now());
+    if(S.recent.length>40){ S.recent=[]; runaway(); }
+  }
+  function count(k){ var u=use(); u[k]=(u[k]||0)+1; lsPut(UKEY,u); }
+  function runaway(){
+    var n=0;
+    jobsOf().forEach(function(j){ if(j.state==='running'){ j.state='paused'; log(j,'Paused by the runaway guard: the team took over 40 steps in two minutes','blocked'); n++; } });
+    if(n){ count('paused'); saveJobs(); paintSoon(); say('The runaway guard paused '+n+' job'+(n>1?'s':'')+'. Check them, then hand back.'); }
+  }
   function think(job,e){
-    var payload={system:system(e),messages:job.convo,tools:toolDefs(e),web:(e.tools||[]).indexOf('research')>=0};
+    var model=pickModel(e,job); job.model=model;
+    var payload={system:system(e),messages:job.convo,tools:toolDefs(e),web:(e.tools||[]).indexOf('research')>=0,model:model};
     function viaKey(){
       var c=keyBrain(); if(!c) return Promise.reject(new Error('no-brain'));
       var tools=payload.tools.slice(); if(payload.web) tools.push({type:'web_search_20250305',name:'web_search',max_uses:3});
       return fetch('https://api.anthropic.com/v1/messages',{method:'POST',
         headers:{'content-type':'application/json','x-api-key':c.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model:c.model||'claude-sonnet-5',max_tokens:2000,system:payload.system,tools:tools,messages:payload.messages})})
+        body:JSON.stringify({model:MODEL_ID[model]||c.model||'claude-sonnet-5-5',max_tokens:2000,system:payload.system,tools:tools,messages:payload.messages})})
         .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j.error&&j.error.message)||('HTTP '+r.status)); job.brain='key'; return j; }); });
     }
     if(serverLikely()){
@@ -461,7 +588,7 @@ window.KovaCrew=(function(){
   /* ---------------- jobs ---------------- */
   function loadJobs(){
     S.jobs=lsJ(JKEY,{});
-    Object.keys(S.jobs).forEach(function(k){ var j=S.jobs[k]; if(j.state==='running'){ j.state='stopped'; j.note='Stopped when Kova was closed.'; } });
+    Object.keys(S.jobs).forEach(function(k){ var j=S.jobs[k]; if(j.state==='running'||j.state==='paused'){ j.state='stopped'; j.note='Stopped when Kova was closed.'; } });
   }
   function saveJobs(){
     var L=Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).sort(function(a,b){ return b.at-a.at; });
@@ -470,11 +597,22 @@ window.KovaCrew=(function(){
   }
   function jobsOf(id){ return Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).filter(function(j){ return !id||j.emp===id; }).sort(function(a,b){ return a.at-b.at; }); }
   function waiting(){ return jobsOf().filter(function(j){ return j.state==='waiting'; }); }
-  function busyWith(id){ return jobsOf(id).filter(function(j){ return j.state==='running'||j.state==='waiting'; })[0]||null; }
+  function busyWith(id){ return jobsOf(id).filter(function(j){ return j.state==='running'||j.state==='waiting'||j.state==='paused'; })[0]||null; }
   function log(job,t,kind,extra){ job.steps.push(Object.assign({t:t,k:kind||'info',at:Date.now()},extra||{})); }
 
+  /* hand-offs that go round in circles are stopped, not run */
+  function chainOf(meta){ var out=[], id=meta&&meta.parent; while(id&&S.jobs[id]&&out.length<10){ out.push(S.jobs[id]); id=S.jobs[id].meta&&S.jobs[id].meta.parent; } return out; }
   function start(e,text,source,meta){
     if(!e||!String(text||'').trim()) return null;
+    if(meta&&meta.parent){
+      var ch=chainOf(meta), back=ch.some(function(j){ return j.emp===e.id; });
+      if(ch.length>=4||back){
+        var par=S.jobs[meta.parent];
+        if(par){ log(par,'Loop stopped: '+(back?'this work was already '+e.n+'\u2019s earlier in the chain':'the hand-off chain was '+ch.length+' long')+', so it was not handed on again','blocked'); saveJobs(); paintSoon(); }
+        count('loops'); return null;
+      }
+    }
+    if(source==='routine'&&e.taught&&e.routine&&e.routine.taught) return runTaught(e,'routine');
     var job={id:uid('j'),emp:e.id,text:String(text).trim().slice(0,4000),source:source||'you',meta:meta||null,at:Date.now(),
       state:'running',steps:[],changes:[],queue:[],results:[],turns:0,convo:[{role:'user',content:String(text).trim().slice(0,4000)}],brain:brainName()};
     S.jobs[job.id]=job;
@@ -493,11 +631,23 @@ window.KovaCrew=(function(){
     var e=emp(job.emp); if(!e){ fail(job,'This employee no longer exists.'); return; }
     if(job.brain==='local') return localRun(job);
     if(job.turns>=MAX_TURNS){ finish(job,'I stopped after '+MAX_TURNS+' steps to keep this job short. Tell me to carry on if you want more.'); return; }
-    log(job,job.turns?'Thinking about the results':'Reading the job','think');
+    if(usedBy(e)>=budgetOf(e)){ log(job,'Weekly limit reached ('+budgetOf(e)+' steps)','blocked'); finish(job,'I stopped: I have used my '+budgetOf(e)+' steps for this week. Raise my weekly limit in my settings if this job matters.'); return; }
+    log(job,(job.turns?'Thinking about the results':'Reading the job')+' \u00b7 '+MODELS[pickModel(e,job)],'think');
     paintSoon();
     think(job,e).then(function(res){
-      if(job.state!=='running') return;
+      if(job.state!=='running'&&job.state!=='paused') return;
       job.steps.pop();
+      bump(e,job.model||'sonnet',res&&res.usage);
+      handle(job,res);
+    }).catch(function(err){
+      if(job.state!=='running'&&job.state!=='paused') return;
+      job.steps.pop();
+      if(String(err&&err.message)==='no-brain'){ job.brain='local'; return localRun(job); }
+      fail(job,'I could not reach my brain: '+String(err&&err.message||err));
+    });
+  }
+  /* what came back from one think: say it, then do the tools (unless paused) */
+  function handle(job,res){
       var content=(res&&res.content)||[];
       job.convo.push({role:'assistant',content:content});
       content.forEach(function(b){
@@ -509,12 +659,6 @@ window.KovaCrew=(function(){
       job.results=[];
       if(!job.queue.length){ finish(job,job.say||''); return; }
       proceed(job);
-    }).catch(function(err){
-      if(job.state!=='running') return;
-      job.steps.pop();
-      if(String(err&&err.message)==='no-brain'){ job.brain='local'; return localRun(job); }
-      fail(job,'I could not reach my brain: '+String(err&&err.message||err));
-    });
   }
   function proceed(job){
     if(job.state!=='running') return;               /* you stopped it while a step was in flight */
@@ -535,6 +679,7 @@ window.KovaCrew=(function(){
       afterExec(job,tu,T,r);
     }
     if(job.brain==='local'){ localFinish(job); return; }
+    if(job.tell){ job.results.push({type:'text',text:'A note from the user while you work: '+job.tell}); job.tell=''; }
     job.convo.push({role:'user',content:job.results}); job.results=[]; job.turns++;
     saveJobs(); step(job);
   }
@@ -566,7 +711,25 @@ window.KovaCrew=(function(){
     job.results.push({type:'tool_result',tool_use_id:tu.id,content:JSON.stringify({declined:true,reason:why||'The user skipped this. Do not retry it; carry on without it.'})});
     saveJobs(); paintSoon(); proceed(job);
   }
-  function stop(jobId){ var job=S.jobs[jobId]; if(!job) return; if(job.state==='running'||job.state==='waiting'){ job.state='stopped'; job.ask=null; job.note='You stopped this job.'; job.end=Date.now(); saveJobs(); paintSoon(); } }
+  /* step in: pause a job between steps, change what it is about to do,
+     tell it something, then hand it back */
+  function pauseJob(jobId){ var job=S.jobs[jobId]; if(!job||job.state!=='running') return; job.state='paused'; log(job,'You stepped in','wait'); saveJobs(); paintSoon(); }
+  function resume(jobId,edits){
+    var job=S.jobs[jobId]; if(!job||job.state!=='paused') return;
+    if(edits&&Object.keys(edits).length){
+      var nx=job.brain==='taught'?job.left&&job.left[0]:job.queue[0];
+      if(nx){ nx.input=Object.assign({},nx.input||{},edits); log(job,'You changed the next step','ok'); }
+    }
+    job.state='running'; log(job,'You handed it back','ok'); saveJobs(); paintSoon();
+    if(job.brain==='taught') return runTaughtNext(job);
+    if(job.queue.length||job.results.length) proceed(job); else step(job);
+  }
+  function tell(jobId,text){
+    var job=S.jobs[jobId]; text=String(text||'').trim(); if(!job||!text) return;
+    if(job.state!=='running'&&job.state!=='paused'&&job.state!=='waiting') return;
+    job.tell=(job.tell?job.tell+'\n':'')+text.slice(0,600); log(job,'You said: '+text.slice(0,120),'info'); saveJobs(); paintSoon();
+  }
+  function stop(jobId){ var job=S.jobs[jobId]; if(!job) return; if(job.state==='running'||job.state==='waiting'||job.state==='paused'){ job.state='stopped'; job.ask=null; job.note='You stopped this job.'; job.end=Date.now(); settle(job); saveJobs(); paintSoon(); } }
   function undo(jobId){
     var job=S.jobs[jobId]; if(!job||!job.changes.length) return 0;
     var n=0;
@@ -577,14 +740,26 @@ window.KovaCrew=(function(){
     try{ if(window.__workDraw) __workDraw.refresh(); }catch(x){}
     return n;
   }
+  /* jobs a teammate is waiting on (delegate) */
+  function settle(job){ var w=S.waits&&S.waits[job.id]; if(w){ delete S.waits[job.id]; w(job); } }
   function finish(job,closing){
     job.state='done'; job.end=Date.now(); job.say=closing||job.say||''; job.queue=[];
+    settle(job); if(lsJ('kova.crew.voice',false)&&visible()) speak(job);
     if(!job.report&&job.say) job.report=null;
     saveJobs(); paintSoon(); notify();
     try{ if(window.__workDraw) __workDraw.refresh(); }catch(x){}
     (job.after||[]).forEach(function(h){ var t=emp(h.to), from=emp(job.emp); if(t) start(t,h.job,'handoff',{from:from?from.n:'a teammate',parent:job.id}); });
   }
-  function fail(job,why){ job.state='failed'; job.end=Date.now(); job.note=why; saveJobs(); paintSoon(); }
+  function fail(job,why){ job.state='failed'; job.end=Date.now(); job.note=why; settle(job); saveJobs(); paintSoon(); }
+  /* voice: the closing words and the report, read aloud */
+  function speak(job){
+    try{
+      if(!window.speechSynthesis||!job) return false;
+      var who=emp(job.emp), r=job.report;
+      var t=(who?who.n+'. ':'')+String(job.say||job.note||'').replace(/[*#>`]/g,'')+(r&&r.summary?' '+String(r.summary).replace(/[*#>`]/g,''):'');
+      speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t.slice(0,1200)); u.rate=1.03; speechSynthesis.speak(u); return true;
+    }catch(e){ return false; }
+  }
 
   /* =====================================================================
      SKILLS: what each role actually delivers.
@@ -1092,6 +1267,7 @@ window.KovaCrew=(function(){
     if(!e.enabled) return {k:'off',t:'Off'};
     var j=busyWith(e.id);
     if(j&&j.state==='waiting') return {k:'wait',t:'Needs you'};
+    if(j&&j.state==='paused') return {k:'wait',t:'Paused'};
     if(j) return {k:'run',t:'Working'};
     return {k:'idle',t:e.lastRun?'Idle · '+ago(e.lastRun):'Ready'};
   }
@@ -1226,7 +1402,7 @@ window.KovaCrew=(function(){
   }
 
   /* ---- the pieces of the page ---- */
-  var NAV=[['team','Team'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports']];
+  var NAV=[['team','Team'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports'],['usage','Usage']];
   function topBar(){
     var nav=S.view==='team'?(S.nav||'team'):'', wt=waiting().length, on=!!(window.KovaListen&&KovaListen.on());
     return '<div class="crd-top">'
@@ -1282,7 +1458,8 @@ window.KovaCrew=(function(){
     var b=brainName();
     return '<div class="crd-card crd-set"><div class="crd-chd"><span>Team settings</span></div>'
       +'<div class="crw-brain"><i class="'+b+'"></i>Thinking with: '+BRAIN_N[b]+(b==='local'?'. Each employee still does their full skill on this device.':'')+'</div>'
-      +listenRow()+'<div class="crd-row"><button class="crd-btn ghost" data-c="nav" data-n="routines">Routines</button><button class="crd-btn ghost" data-c="hire">Hire</button></div></div>';
+      +listenRow()+'<button class="crw-gi'+(lsJ('kova.crew.voice',false)?' on':'')+'" data-c="voice" role="switch" aria-checked="'+lsJ('kova.crew.voice',false)+'"><span><b>Read finished jobs aloud</b><small>Your team talks back when a job is done.</small></span></button>'
+      +'<div class="crd-row"><button class="crd-btn ghost" data-c="nav" data-n="routines">Routines</button><button class="crd-btn ghost" data-c="hire">Hire</button></div></div>';
   }
   function tileBig(o){
     return '<div class="crd-t t-big t-'+o.tone+'"'+(o.id?' data-c="tab" data-t="'+esc(o.id)+'" role="button" tabindex="0"':'')+'><div class="crd-th"><span class="crd-tv"><i class="crd-bul"></i>'+esc(fmtN(o.value))+'<small>/'+esc(o.label)+'</small></span>'
@@ -1577,7 +1754,17 @@ window.KovaCrew=(function(){
       +flow(cur||last,e,sn)+focusCard(cur,e,sn)+'</div>'
       +tabsRow(e.id)
       +'<div class="crd-tiles">'+empTiles(e,sn)+'</div>'
-      +'<div class="crd-below">'+(sn?skillBlock(e,sn):'')+jobBlock(e)+'</div>';
+      +'<div class="crd-below">'+teachCard(e)+(sn?skillBlock(e,sn):'')+jobBlock(e)+'</div>';
+  }
+  function teachCard(e){
+    var t=e.taught, rt=e.routine||{};
+    if(!t||!t.steps) return '<div class="crd-card crw-teachc"><div class="crd-chd"><span>Teach by showing</span><small>Do the job once yourself in Work OS. '+esc(e.n)+' watches and learns the steps.</small></div>'
+      +'<div class="crd-row"><button class="crd-btn" data-c="teach" data-id="'+esc(e.id)+'">Show '+esc(e.n)+' how</button></div></div>';
+    return '<div class="crd-card crw-teachc"><div class="crd-chd"><span>What you showed '+esc(e.n)+'</span><small>'+t.steps.length+' steps \u00b7 '+ago(t.at)+'</small></div>'
+      +'<ol class="crw-taught">'+t.steps.map(function(st){ return '<li>'+esc(teachLine(st))+'</li>'; }).join('')+'</ol>'
+      +'<div class="crd-row"><button class="crd-btn" data-c="taughtrun" data-id="'+esc(e.id)+'">Do it now</button>'
+      +'<button class="crd-btn ghost'+(rt.taught?' on':'')+'" data-c="taughtroutine" data-id="'+esc(e.id)+'" aria-pressed="'+!!rt.taught+'">'+(rt.taught?'Is their routine':'Make it their routine')+'</button>'
+      +'<button class="crd-btn ghost" data-c="teach" data-id="'+esc(e.id)+'">Show again</button><button class="crd-btn ghost" data-c="untaught" data-id="'+esc(e.id)+'">Forget it</button></div></div>';
   }
   function empTiles(e,sn){
     if(!sn) return '';
@@ -1633,7 +1820,7 @@ window.KovaCrew=(function(){
   }
   function needsYou(){ var wt=waiting(); return wt.length?'<div class="crd-sh2">Needs you ('+wt.length+')</div>'+wt.map(function(j){ return approvalCard(j,true); }).join(''):''; }
   function recent(){ var r=jobsOf().slice(-6).reverse(); return r.length?'<div class="crd-sh2">Recent work</div><div class="crw-recent">'+r.map(function(j){ var e=emp(j.emp)||{n:'?'};
-      return '<button class="crw-rj" data-c="open" data-id="'+esc(j.emp)+'">'+av(e)+'<span class="t"><b>'+esc(e.n)+'</b> '+esc(j.text.split('\n')[0].slice(0,80))+'</span><span class="crw-st s-'+j.state+'">'+({running:'Working',waiting:'Needs you',done:'Done',failed:'Failed',stopped:'Stopped'}[j.state])+'</span></button>'; }).join('')+'</div>':''; }
+      return '<button class="crw-rj" data-c="open" data-id="'+esc(j.emp)+'">'+av(e)+'<span class="t"><b>'+esc(e.n)+'</b> '+esc(j.text.split('\n')[0].slice(0,80))+'</span><span class="crw-st s-'+j.state+'">'+({running:'Working',waiting:'Needs you',paused:'Paused, you stepped in',done:'Done',failed:'Failed',stopped:'Stopped'}[j.state])+'</span></button>'; }).join('')+'</div>':''; }
   function listenRow(){
     var L=window.KovaListen; if(!L) return '';
     var ok=L.supported(), on=ok&&L.on(), err=L.error(), names=emps().filter(function(e){ return e.enabled; }).map(function(e){ return e.n; }).slice(0,2);
@@ -1659,7 +1846,7 @@ window.KovaCrew=(function(){
   function dash(){
     if(S.tab&&S.tab!=='all'&&!emp(S.tab)) S.tab='all';
     var nav=S.nav||'team', e=S.tab&&S.tab!=='all'?emp(S.tab):null;
-    var body=nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
+    var body=nav==='usage'?usagePage():nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
     return '<div class="crd">'+topBar()+body+'</div>';
   }
 
@@ -1672,18 +1859,61 @@ window.KovaCrew=(function(){
       +(j.source==='routine'||j.source==='handoff'||j.source==='voice'?'<div class="crw-src">'+esc(src)+'</div>':'')
       +'<div class="crw-you">'+md(j.text)+'</div>'
       +'<div class="crw-job s-'+j.state+'">'
-        +'<div class="crw-jh">'+av(e)+'<b>'+esc(e.n)+'</b><span>'+({running:'Working',waiting:'Needs you',done:'Done',failed:'Could not finish',stopped:'Stopped'}[j.state])+' · '+clock(j.at)+' · '+esc(BRAIN_N[j.brain]||'')+'</span>'
-        +(j.state==='running'||j.state==='waiting'?'<button class="crw-link" data-c="stop" data-j="'+esc(j.id)+'">Stop</button>':'')+'</div>'
-        +'<ol class="crw-steps">'+j.steps.map(function(s){ return '<li class="k-'+s.k+'"><i>'+(ICON[s.k]||'•')+'</i><span>'+esc(s.t)+'</span></li>'; }).join('')
-        +(j.state==='running'?'<li class="k-think live"><i></i><span>Working…</span></li>':'')+'</ol>'
+        +'<div class="crw-jh">'+av(e)+'<b>'+esc(e.n)+'</b><span>'+({running:'Working',waiting:'Needs you',paused:'Paused, you stepped in',done:'Done',failed:'Could not finish',stopped:'Stopped'}[j.state])+' · '+clock(j.at)+' · '+esc(BRAIN_N[j.brain]||'')+'</span>'
+        +(j.state==='running'||j.state==='waiting'||j.state==='paused'?'<button class="crw-link" data-c="stop" data-j="'+esc(j.id)+'">Stop</button>':'')+'</div>'
+        +(j.state==='running'||j.state==='paused'?screen(j,e):'')
+        /* while the screen shows the live feed, the full step list waits for the end */
+        +(j.state==='running'||j.state==='paused'?'':'<ol class="crw-steps">'+j.steps.map(function(s){ return '<li class="k-'+s.k+'"><i>'+(ICON[s.k]||'•')+'</i><span>'+esc(s.t)+'</span></li>'; }).join('')+'</ol>')
         +(j.state==='waiting'?approvalCard(j,false):'')
         +(j.report?reportCard(j.report,j):'')
         +(j.sources&&j.sources.length?'<div class="crw-srcs">'+j.sources.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>'; }).join('')+'</div>':'')
         +(j.say&&j.state!=='running'?'<div class="crw-say">'+md(j.say)+'</div>':'')
         +(j.note?'<div class="crw-note">'+esc(j.note)+'</div>':'')
+        +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link" data-c="speak" data-j="'+esc(j.id)+'">Read it to me</button>':'')
         +((j.state==='done'||j.state==='stopped'||j.state==='failed')&&j.changes&&j.changes.length?'<button class="crw-link" data-c="undo" data-j="'+esc(j.id)+'">Undo '+j.changes.length+' change'+(j.changes.length>1?'s':'')+'</button>':'')
         +(j.undone?'<div class="crw-note">Undid '+j.undone+' change'+(j.undone>1?'s':'')+'.</div>':'')
       +'</div></div>';
+  }
+  /* the bot's screen (p15): what it is doing right now, live, with the
+     next step it is about to take - and the controls to step in */
+  function screen(j,e){
+    var live=j.steps.filter(function(s){ return s.k!=='think'; }).slice(-4), cur=j.steps[j.steps.length-1];
+    var nx=j.brain==='taught'?(j.left&&j.left[0]?{name:j.left[0].tool,input:j.left[0].input}:null):(j.queue&&j.queue[0]);
+    var T=nx&&TOOLS[nx.name], d=T&&T.describe?T.describe(nx.input||{}):null;
+    var paused=j.state==='paused', u=usedBy(e), b=budgetOf(e), el=Math.max(1,Math.round((Date.now()-j.at)/1000));
+    var h='<div class="crw-scr'+(paused?' paused':'')+'" data-j="'+esc(j.id)+'"><div class="crw-scrbar"><i></i><i></i><i></i><span>'+esc(e.n)+'\u2019s screen \u00b7 Work OS</span>'
+      +'<em>'+(j.brain==='taught'?'Taught':esc(MODELS[j.model||pickModel(e,j)]||''))+'</em></div>'
+      +'<div class="crw-scrb"><div class="crw-now"><span class="cur" aria-hidden="true"></span>'+esc(paused?'Paused. Change the next step, tell '+e.n+' something, or hand it back.':(cur?cur.t:'Starting'))+'</div>'
+      +(d?'<div class="crw-next"><small>Next</small><b>'+esc(d.t)+(d.n?' \u201c'+esc(d.n)+'\u201d':'')+'</b>'+(d.s?'<span>'+esc(d.s)+'</span>':'')+'</div>':'')
+      +'<ol class="crw-feed">'+live.map(function(s){ return '<li><i>'+(ICON[s.k]||'\u2022')+'</i>'+esc(s.t)+'</li>'; }).join('')+'</ol>';
+    if(paused&&nx){
+      var inp=nx.input||{};
+      h+='<div class="crw-edit">'+Object.keys(inp).filter(function(k){ return k.indexOf('__')!==0&&(typeof inp[k]==='string'||typeof inp[k]==='number'); }).slice(0,6).map(function(k){
+        return '<label>'+esc(k.replace(/_/g,' '))+'<input data-f="'+esc(k)+'" value="'+esc(inp[k])+'"></label>'; }).join('')+'</div>';
+    }
+    h+='</div><div class="crw-scrf"><span>'+u+' / '+b+' steps this week \u00b7 '+(el<60?el+' s':Math.round(el/60)+' min')+'</span>'
+      +(paused?'<button class="crw-btn" data-c="resume" data-j="'+esc(j.id)+'">Hand it back</button>':'<button class="crw-btn ghost" data-c="pause" data-j="'+esc(j.id)+'">Step in</button>')+'</div>'
+      +'<div class="crw-tell"><input data-f="tell" placeholder="Tell '+esc(e.n)+' something while it works" aria-label="Tell '+esc(e.n)+' something"><button class="crw-btn ghost" data-c="tell" data-j="'+esc(j.id)+'">Send</button></div></div>';
+    return h;
+  }
+  /* Usage (p15): steps against each weekly limit, the model mix, the
+     guards that fired, and what each employee can and cannot touch */
+  function usagePage(){
+    var u=use(), L=emps(), tot=0, cap=0; L.forEach(function(e){ tot+=u.steps[e.id]||0; cap+=budgetOf(e); });
+    var wkJobs=jobsOf().filter(function(j){ return j.at>=new Date(u.wk+'T00:00:00').getTime(); }), done=wkJobs.filter(function(j){ return j.state==='done'; }).length;
+    var mm=['haiku','sonnet','opus'].map(function(k){ return [k,u.models[k]||0]; }), mt=mm.reduce(function(a,x){ return a+x[1]; },0)||1;
+    return head(0,'Usage and limits','This week, from Monday')
+      +'<div class="crd-mid"><div class="crd-stats">'+stat('Steps used',tot,'','of '+cap+' this week')+stat('Jobs done',done,'',wkJobs.length+' started')
+        +stat('Loops stopped',u.loops||0,'','hand-offs going in circles')+stat('In parallel',u.parallel||0,'','jobs run side by side')+'</div></div>'
+      +'<div class="crd-below"><div class="crd-card"><div class="crd-chd"><span>Each employee\u2019s week</span><small>A job stops when its employee reaches the limit. Change it in their settings.</small></div>'
+        +'<div class="crw-use">'+L.map(function(e){ var n=u.steps[e.id]||0, b=budgetOf(e), pc=Math.min(100,Math.round(n/b*100));
+          return '<div class="r"><span class="n">'+av(e)+esc(e.n)+'</span><span class="bar'+(pc>=90?' hi':'')+'"><i style="width:'+pc+'%"></i></span><span class="v">'+n+' / '+b+'</span><span class="m">'+esc(e.model&&MODELS[e.model]?MODELS[e.model]:'Auto \u00b7 '+MODELS[pickModel(e)])+'</span></div>'; }).join('')+'</div></div>'
+      +'<div class="crd-card"><div class="crd-chd"><span>Which model did the thinking</span><small>Auto uses Haiku for quick jobs and Sonnet for writing and analysis.</small></div>'
+        +'<div class="crw-use">'+mm.map(function(x){ var pc=Math.round(x[1]/mt*100); return '<div class="r"><span class="n">'+MODELS[x[0]]+'</span><span class="bar"><i style="width:'+pc+'%"></i></span><span class="v">'+x[1]+'</span><span class="m">'+pc+'%</span></div>'; }).join('')+'</div>'
+        +(u.tokens?'<div class="crd-hint">'+fmtN(u.tokens)+' tokens this week.</div>':'')+'</div>'
+      +'<div class="crd-card"><div class="crd-chd"><span>What each one can touch</span><small>Every employee is boxed in to its own tools. Email never leaves without your OK.</small></div>'
+        +'<div class="crw-acc">'+L.map(function(e){ return '<div class="r"><b>'+esc(e.n)+'</b><span>'+GROUPS.map(function(g){ var on=g.locked||(e.tools||[]).indexOf(g.id)>=0; return '<i class="'+(on?'on':'')+'">'+(on?'\u2713 ':'\u2715 ')+esc(g.n)+'</i>'; }).join('')+'</span></div>'; }).join('')+'</div></div>'
+      +'<div class="crd-card"><div class="crd-chd"><span>Guards</span></div><div class="crd-sum"><p>Runaway guard: if the team takes more than 40 steps in two minutes, every job pauses ('+(u.paused||0)+' time'+((u.paused||0)===1?'':'s')+' this week). Hand-offs that come back to the same employee, or go more than 4 deep, are stopped. A job stops after '+MAX_TURNS+' steps unless you tell it to carry on.</p><p>Jobs and routines run while Kova is open on any of your devices, and catch up when you open it.</p></div></div></div>';
   }
   function approvalCard(j,withWho){
     var a=j.ask; if(!a) return '';
@@ -1784,6 +2014,10 @@ window.KovaCrew=(function(){
       +'<div class="crd-card"><div class="crd-chd"><span>What they can do</span></div><div class="crw-gl">'
         +GROUPS.map(function(g){ var on=g.locked||(d.tools||[]).indexOf(g.id)>=0; return '<button class="crw-gi'+(on?' on':'')+(g.locked?' lock':'')+'" data-c="grp" data-g="'+g.id+'" role="switch" aria-checked="'+on+'"><span><b>'+esc(g.n)+'</b><small>'+esc(g.d)+'</small></span><span class="crw-tog'+(on?' on':'')+'"><span></span></span></button>'; }).join('')
       +'</div></div>'
+      +'<div class="crd-card crw-form"><div class="crd-chd"><span>Brain and limits</span><small>Auto picks the model for each job. The weekly limit stops a job going on and on.</small></div><div class="crw-two">'
+        +field('Model','<select id="crwModel" aria-label="Model">'+[['auto','Auto (recommended)'],['haiku','Haiku \u00b7 fastest'],['sonnet','Sonnet \u00b7 balanced'],['opus','Opus \u00b7 deepest']].map(function(o){ return sel(d.model||'auto',o); }).join('')+'</select>')
+        +field('Weekly limit','<select id="crwBud" aria-label="Weekly limit">'+BUDGETS.map(function(n){ return sel(+d.budget||150,[n,n+' steps']); }).join('')+'</select>')
+      +'</div></div>'
       +'<div class="crd-card"><div class="crd-chd"><span>Approvals</span></div><div class="crw-seg2">'
         +[['external','Only email and posts','Changes inside Work OS go ahead and can be undone.'],['all','Every change','Nothing changes until you approve it.']].map(function(o){ return '<button class="'+(d.approval===o[0]?'on':'')+'" data-c="appr" data-v="'+o[0]+'"><b>'+o[1]+'</b><small>'+o[2]+'</small></button>'; }).join('')
       +'</div></div>'
@@ -1809,6 +2043,7 @@ window.KovaCrew=(function(){
     if(v('crwFreq')!=null) d.routine.freq=v('crwFreq');
     if(v('crwTime')!=null) d.routine.time=v('crwTime'); if(v('crwDow')!=null) d.routine.dow=+v('crwDow');
     if(v('crwEv')!=null) d.routine.event=v('crwEv'); if(v('crwRJ')!=null) d.routine.job=v('crwRJ');
+    if(v('crwModel')!=null) d.model=v('crwModel'); if(v('crwBud')!=null) d.budget=+v('crwBud');
   }
 
   /* ---- painting ---- */
@@ -1895,6 +2130,15 @@ window.KovaCrew=(function(){
     if(c==='routineon'){ var e5=emp(id), t5=e5&&tpl(e5.tpl); if(t5){ saveEmp(e5,{routine:Object.assign({},e5.routine,{freq:t5.routine.freq,time:t5.routine.time,dow:t5.routine.dow||1,job:e5.routine.job||t5.routine.job})}); say(e5.n+' will run it '+describeRoutine(emp(id)).toLowerCase()+'.'); paint(); } return; }
     if(c==='runroutine'){ var e3=emp(id); if(e3&&e3.routine&&e3.routine.job){ if(busyWith(e3.id)){ say(e3.n+' is already working.'); return; } touch(e3,{lastRoutine:Date.now()}); start(e3,e3.routine.job,'routine'); S.view='team'; S.nav='team'; S.tab=e3.id; S.scroll=true; paint(); } return; }
     if(c==='stop'){ stop(jid); return; }
+    if(c==='pause'){ pauseJob(jid); return; }
+    if(c==='resume'){ var sc=b.closest('.crw-job'), ed={}; if(sc) sc.querySelectorAll('.crw-edit [data-f]').forEach(function(x){ var v0=x.value; ed[x.getAttribute('data-f')]=/^-?\d+(\.\d+)?$/.test(v0)?+v0:v0; }); resume(jid,ed); return; }
+    if(c==='tell'){ var ti=b.closest('.crw-tell'), tv=ti&&ti.querySelector('input'); if(tv&&tv.value.trim()){ tell(jid,tv.value); S.clear={}; S.clear[jid+':tell']=1; tv.value=''; } return; }
+    if(c==='speak'){ if(!speak(S.jobs[jid])) say('This browser cannot read aloud.'); return; }
+    if(c==='voice'){ lsPut('kova.crew.voice',!lsJ('kova.crew.voice',false)); paint(); return; }
+    if(c==='teach'){ var et=emp(id); if(et) teachStart(et); return; }
+    if(c==='taughtrun'){ var er2=emp(id); if(er2){ if(busyWith(er2.id)){ say(er2.n+' is already working.'); return; } runTaught(er2,'you'); paint(); } return; }
+    if(c==='taughtroutine'){ var e6=emp(id); if(e6){ var r6=Object.assign({},e6.routine||{}); r6.taught=!r6.taught; if(r6.taught&&(!r6.freq||r6.freq==='off')){ r6.freq='weekdays'; r6.time=r6.time||'09:00'; } if(r6.taught&&!r6.job) r6.job='Do it the way I showed you.'; saveEmp(e6,{routine:r6}); say(r6.taught?e6.n+' will do it '+describeRoutine(e6).toLowerCase()+'.':'Not their routine any more.'); paint(); } return; }
+    if(c==='untaught'){ var e7=emp(id); if(e7){ var r7=Object.assign({},e7.routine||{}); r7.taught=false; saveEmp(e7,{taught:null,routine:r7}); paint(); } return; }
     if(c==='undo'){ var nu=undo(jid); say(nu?'Undid '+nu+' change'+(nu>1?'s':'')+'.':'Nothing to undo.'); return; }
     if(c==='ok'){
       var card=b.closest('.crw-appr'), edits={};
@@ -1938,8 +2182,8 @@ window.KovaCrew=(function(){
       var d=S.draft;
       if(!d.n.trim()||!d.title.trim()){ say('Give them a name and a title.'); return; }
       if(!String(d.job||'').trim()){ say('Write the job description: it is how the team knows what they own.'); return; }
-      if(d.id){ saveEmp(emp(d.id),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine,memory:d.memory}); S.tab=d.id; say('Saved.'); }
-      else { var ne=hire(tpl(d.tpl),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine}); S.tab=ne.id; say(d.n+' joined the team.'); }
+      if(d.id){ saveEmp(emp(d.id),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine,memory:d.memory,model:d.model||'auto',budget:+d.budget||150}); S.tab=d.id; say('Saved.'); }
+      else { var ne=hire(tpl(d.tpl),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine}); saveEmp(ne,{model:d.model||'auto',budget:+d.budget||150}); S.tab=ne.id; say(d.n+' joined the team.'); }
       S.view='team'; S.nav='team'; S.draft=null; paint(); top0(); return;
     }
   }
@@ -1977,6 +2221,7 @@ window.KovaCrew=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,300); }); else setTimeout(mount,300);
 
   return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
-    start:start,approve:approve,skip:skip,stop:stop,undo:undo,jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
+    start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
+    teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
     slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

@@ -71,29 +71,24 @@ window.KovaPush=(function(){
     return out;
   }
   function tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } }
-  function sound(){ try{ return window.KovaChime?KovaChime.sound():'kova'; }catch(e){ return 'kova'; } }
+  function sound(){ return 'kova'; }
   function payload(){ return {tz:tz(),quiet:S.quiet,sound:sound(),items:items()}; }
-  /* the phone needs Kova's sounds before a push can use them:
-       Android  one channel per sound (its .wav is in res/raw)
+  /* the phone needs Kova's sound before a push can use it:
+       Android  the kova_kova channel (its .wav is in res/raw)
        iPhone   the .wav files in Library/Sounds, written from the same
                 synth the page plays (needs @capacitor/filesystem) */
   function nativeSounds(){
     var P=nplug(), C=window.KovaChime; if(!P||!C) return;
     var plat=(window.Capacitor&&Capacitor.getPlatform&&Capacitor.getPlatform())||'';
     if(plat==='android'&&P.createChannel){
-      C.LIST.forEach(function(x){
-        if(x.id==='default') return;
-        P.createChannel({id:'kova_'+x.id,name:'Kova \u00b7 '+x.n,description:'Reminders with the '+x.n+' sound',importance:x.id==='silent'?2:4,
-          sound:x.id==='silent'?undefined:C.file(x.id),vibration:x.id!=='silent'}).catch(function(){});
-      });
+      P.createChannel({id:'kova_kova',name:'Kova reminders',description:'Reminders and alerts, with Kova\u2019s sound',importance:4,sound:C.file('kova'),vibration:true}).catch(function(){});
     }
     var FS=null; try{ FS=Capacitor.registerPlugin?Capacitor.registerPlugin('Filesystem'):(Capacitor.Plugins&&Capacitor.Plugins.Filesystem); }catch(e){}
     if(plat==='ios'&&FS&&FS.writeFile){
-      C.LIST.forEach(function(x){
-        if(!C.wav||x.id==='default'||x.id==='silent') return;
-        var b=C.wav(x.id,22050), str=''; for(var i=0;i<b.length;i+=8192) str+=String.fromCharCode.apply(null,b.subarray(i,i+8192));
-        FS.writeFile({path:'Sounds/'+C.file(x.id)+'.wav',data:btoa(str),directory:'LIBRARY',recursive:true}).catch(function(){});
-      });
+      if(C.wav){
+        var b=C.wav('kova',22050), str=''; for(var i=0;i<b.length;i+=8192) str+=String.fromCharCode.apply(null,b.subarray(i,i+8192));
+        FS.writeFile({path:'Sounds/'+C.file('kova')+'.wav',data:btoa(str),directory:'LIBRARY',recursive:true}).catch(function(){});
+      }
     }
   }
   function sync(){
@@ -241,6 +236,8 @@ window.KovaPush=(function(){
     try{ nativeSounds(); }catch(e){}
     var P=nplug(); if(!P||!P.addListener) return;
     try{ P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); }); }catch(e){}
+    /* a push that lands while Kova is open: the phone shows no banner, so Kova plays its sound */
+    try{ P.addListener('notificationReceived',function(){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} }); }catch(e){}
   }
   function listenWeb(){
     if(S.on&&!native()&&webOk()) msg().then(function(m){ m.onMessage(function(){ /* in front: the page's own timer already showed it */ }); }).catch(function(){});

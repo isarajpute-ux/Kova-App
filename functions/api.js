@@ -33,7 +33,7 @@
      POST /posts/:id/cancel             unschedule a post that has not run yet        [auth]
      POST /write        {field,...}     write one field of a post with the model      [auth]
      POST /foods/search {q}          USDA FoodData Central: calories, macros and 10 micronutrients per 100 g [auth]
-     POST /crew/step   {system,messages,tools,web}  one step of an AI employee's job (Claude with tools) [auth]
+     POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools) [auth]
      POST /hashtags     {post words}    hashtag ideas, grouped, with a rough size band [auth]
      POST /assist       {text}          the agent drafts a job: an email, a task, or an answer [auth]
      POST /assist/email {to,subject,body,send}  send the APPROVED email, or save it as a Gmail draft [auth]
@@ -760,20 +760,25 @@ function cleanCrew(b) {
     .filter((m) => (typeof m.content === 'string' ? m.content.trim() : m.content.length));
   if (!messages.length || messages[0].role !== 'user') throw new HttpError(400, 'A job starts with your message.');
   if (JSON.stringify(messages).length > 240000) throw new HttpError(413, 'This job has grown too long. Start a new one.');
-  return { system: s(b.system, 24000), tools, messages, web: b.web === true };
+  return { system: s(b.system, 24000), tools, messages, web: b.web === true, model: CREW_MODELS[b.model] ? b.model : '' };
 }
+/* the AI team's model router: each employee asks for haiku, sonnet or
+   opus (src/p08_crew.js picks per job); anything else uses the server's
+   default. Opus has its own, smaller daily allowance. */
+const CREW_MODELS = { haiku: 'claude-haiku-4-5-20251001', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
 async function crewStep(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg);
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'AI employees need the Kova server\'s Claude key.');
   await rateLimit(`crew_${u.uid}`, 400, 24 * 3600e3);
   const c = cleanCrew(req.body || {});
+  if (c.model === 'opus') await rateLimit(`crew_opus_${u.uid}`, 60, 24 * 3600e3);
   const tools = c.tools.slice();
   if (c.web) tools.push({ type: 'web_search_20250305', name: 'web_search', max_uses: 3 });
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: cfg.model, max_tokens: 2000, system: c.system, tools, messages: c.messages })
+    body: JSON.stringify({ model: CREW_MODELS[c.model] || cfg.model, max_tokens: 2000, system: c.system, tools, messages: c.messages })
   });
   if (!r.ok) {
     const t = await r.text().catch(() => '');
@@ -781,7 +786,7 @@ async function crewStep(req, res, cfg) {
     throw new HttpError(502, 'Your employee could not think just now. Try again in a moment.');
   }
   const j = await r.json();
-  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null });
+  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model: c.model || 'default' });
 }
 
 async function hashtagsRoute(req, res, cfg) {

@@ -15,7 +15,7 @@
    ===================================================================== */
 window.KovaPark=(function(){
   'use strict';
-  if(/jsdom/i.test(navigator.userAgent||'')||typeof DocumentFragment==='undefined') return {off:true,quiet:function(fn){ return fn(); },parked:function(){ return []; }};
+  if(/jsdom/i.test(navigator.userAgent||'')||typeof DocumentFragment==='undefined') return {off:true,quiet:function(fn){ return fn(); },after:function(id,fn){ return fn(); },parked:function(){ return []; }};
   var P=new Map(), IDX=new Map(), NOPE=new Map(), patched=false, hush=0, stats={parked:0,back:0,done:false};
   var D=Document.prototype, E=Element.prototype, F=DocumentFragment.prototype;
   var gid=D.getElementById, dqs=D.querySelector, dqsa=D.querySelectorAll, dgc=D.getElementsByClassName, dgt=D.getElementsByTagName;
@@ -35,10 +35,20 @@ window.KovaPark=(function(){
     shell.insertBefore(f,shell.firstChild);
     shell.removeAttribute('data-kpark');
     stats.back++;
+    /* debugging: window.__parkTrace=[] records what brought each screen back */
+    if(window.__parkTrace) window.__parkTrace.push(shell.id+' | '+String(new Error().stack).split('\n').slice(2,9).join(' | '));
+    try{ shell.dispatchEvent(new CustomEvent('kpark:back')); }catch(e){}
   }
   /* run fn without bringing anything back: for page-wide passes (the
      accessibility fixer) that also run again when a screen comes back */
   function quiet(fn){ hush++; try{ return fn(); } finally{ hush--; } }
+  /* run fn now, or, if that screen is parked, when it comes back: for
+     modules that add a row to a closed screen after the page has loaded */
+  function after(id,fn){
+    var sh=gid.call(document,id);
+    if(sh&&P.has(sh)){ sh.addEventListener('kpark:back',function h(){ sh.removeEventListener('kpark:back',h); fn(); }); return; }
+    fn();
+  }
   function unparkAll(){ Array.from(P.keys()).forEach(unpark); }
   /* the screen element itself stays in the page; touching what is inside
      it brings its content back first */
@@ -109,9 +119,16 @@ window.KovaPark=(function(){
     var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); if(id==='cycle'){ var v=gid.call(document,'s-vitals'); if(v) unpark(v); } return real.apply(this,arguments); };
     w.__park=1; window.go=w;
   }
+  /* park once the modules that load after the first screen are in and
+     have set themselves up (they add rows to closed screens), or after
+     12 s at the latest */
   function start(){
-    setTimeout(function(){ hookGo(); parkSoon(); },2500);
+    var go2=function(){ setTimeout(function(){ hookGo(); parkSoon(); },1800); }, done=false;
+    var once=function(){ if(done) return; done=true; go2(); };
+    if(!window.__kovaLoadWork||window.__kovaLazyDone) return setTimeout(once,700);
+    window.addEventListener('kova:lazy',once);
+    setTimeout(once,12000);
   }
   if(document.readyState==='complete') start(); else window.addEventListener('load',start);
-  return {park:park,quiet:quiet,unpark:unpark,unparkAll:unparkAll,parked:function(){ return Array.from(P.keys()).map(function(s){ return s.id; }); },stats:stats};
+  return {park:park,quiet:quiet,after:after,unpark:unpark,unparkAll:unparkAll,parked:function(){ return Array.from(P.keys()).map(function(s){ return s.id; }); },stats:stats};
 })();

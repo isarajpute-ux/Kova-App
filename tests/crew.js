@@ -169,7 +169,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   // ---- the dashboard, laid out like the reference
   C._S.view = 'team'; C._S.nav = 'team'; C._S.tab = 'all'; C.paint(); await wait(30);
   const body = doc.getElementById('wtmBody');
-  ck('pill navigation and three round icons along the top', body.querySelectorAll('.crd-nav .crd-pill').length === 5 && body.querySelectorAll('.crd-top .crd-icons .crd-circ').length === 3);
+  ck('pill navigation and three round icons along the top', body.querySelectorAll('.crd-nav .crd-pill').length === 6 && body.querySelectorAll('.crd-top .crd-icons .crd-circ').length === 3);
   ck('an "Updated" line over a large title', /Updated/.test(body.querySelector('.crd-upd').textContent) && /team$/.test(body.querySelector('.crd-title').textContent));
   ck('four labelled stats with the real numbers', body.querySelectorAll('.crd-stat').length === 4 && /Finished3/.test(body.querySelector('.crd-stats').textContent.replace(/\s+/g, '')));
   ck('a stage timeline and a focus card with the wireframe globe', !!body.querySelector('.crd-flow .crd-step') && !!body.querySelector('.crd-focus .crd-globe'));

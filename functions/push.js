@@ -20,13 +20,11 @@ const W = require('./wellness');
 
 const KINDS = ['bedtime', 'wind_down', 'water', 'meds', 'meal', 'workout', 'weigh_in', 'glp1', 'custom', 'today', 'recap'];
 const SCREENS = /^[a-z][a-z0-9_-]{0,30}$/;
-/* Kova's alert sounds (src/p08_chime.js): the phone has a kova_<id>.wav
-   for each and, on Android, a kova_<id> channel that plays it */
-const SOUNDS = ['kova', 'pulse', 'dawn', 'ripple', 'default', 'silent'];
-function soundOpts(sound) {
-  sound = SOUNDS.includes(sound) ? sound : 'kova';
-  const aps = sound === 'silent' ? {} : { sound: sound === 'default' ? 'default' : `kova_${sound}.wav` };
-  return { apns: { payload: { aps } }, android: { priority: 'high', notification: { channelId: sound === 'default' ? 'reminders' : `kova_${sound}` } } };
+/* Kova's one alert sound (src/p08_chime.js): the phone has kova_kova.wav
+   and, on Android, a kova_kova channel that plays it. Every push uses it. */
+const SOUNDS = ['kova'];
+function soundOpts() {
+  return { apns: { payload: { aps: { sound: 'kova_kova.wav' } } }, android: { priority: 'high', notification: { channelId: 'kova_kova' } } };
 }
 const hm = (s) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s || '')); return m && +m[1] < 24 && +m[2] < 60 ? +m[1] * 60 + +m[2] : -1; };
 const WINDOW = 10;                   // minutes after the set time a reminder may still go out
@@ -59,7 +57,7 @@ function cleanList(b) {
   const q = b.quiet || {};
   const quiet = hm(q.from) >= 0 && hm(q.to) >= 0 ? { from: q.from, to: q.to } : null;
   const tz = typeof b.tz === 'string' && b.tz.length <= 64 ? b.tz : 'UTC';
-  const sound = SOUNDS.includes(b.sound) ? b.sound : 'kova';
+  const sound = 'kova';
   return { tz, quiet, sound, items };
 }
 

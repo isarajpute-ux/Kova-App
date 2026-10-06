@@ -81,7 +81,8 @@ window.KovaLegal=(function(){
     });
   }
   function start(){
-    paintSettings();
+    /* Settings may be parked (p08_park.js): its rows go in when it opens */
+    if(window.KovaPark&&KovaPark.after) KovaPark.after('s-settings',paintSettings); else paintSettings();
     /* after the welcome and first questions, never over them */
     var tries=0; (function wait(){ var app=document.getElementById('app'); if(app&&app.classList.contains('auth-locked')){ if(++tries<600) setTimeout(wait,1000); return; } setTimeout(banner,1500); })();
   }

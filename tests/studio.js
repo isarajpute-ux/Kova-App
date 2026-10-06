@@ -141,7 +141,9 @@ function boot() {
   flp = doc.querySelector('.ks-flowp');
   ck('"Run every app\u2019s checks" writes one log line per app (or asks where it goes first)', (flp && flp.querySelectorAll('.ks-logs li').length >= 1) || /Pick where it goes/.test((doc.querySelector('.ks-toast,#toast') || {}).textContent || '') || doc.getElementById('s-workstudio').classList.contains('panel-open'));
   const css14 = fs.readFileSync(__dirname + '/../src/p08_studioflow.css', 'utf8');
-  ck('wires that carry work are green with a light running along them, and it all stops for reduced motion', /\.w\.lit\{stroke:var\(--go\)[^}]*animation:ksGo/.test(css14) && /prefers-reduced-motion/.test(css14) && /body\.light-mode #s-workstudio\{--go:#16A34A/.test(css14));
+  ck('wires that carry work are white beams that glow, fade dark and glow again (graphite in light glass), and it all stops for reduced motion',
+    /#s-workstudio\{--go:#FFFFFF/.test(css14) && /\.wb\{animation:ksBreath/.test(css14) && /@keyframes ksBreath\{0%,100%\{opacity:1\}50%\{opacity:\.14\}\}/.test(css14)
+    && /body\.light-mode #s-workstudio\{--go:#111113/.test(css14) && /prefers-reduced-motion:reduce\)\{[^}]*\.ks-wires \.wb/.test(css14) && !/4ADE80|16A34A/.test(css14));
   doc.getElementById('s-workstudio').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);
 
   doc.querySelector('#ksTop [data-a="menu"]').click(); await wait(40);
