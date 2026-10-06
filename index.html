@@ -3409,6 +3409,8 @@ window.KovaCloud = (function(){
       try { if (typeof window[fn] === 'function') window[fn](); } catch(e){}
     });
     try { if (window.KovaFuel && KovaFuel.emit) KovaFuel.emit(); } catch(e){}
+    /* modules with their own copy of synced data (the cycle) listen for this */
+    try { window.dispatchEvent(new Event('kova:cloud')); } catch(e){}
   }
 
   /* ---- first pull, then live subscription ------------------------ */
@@ -48735,10 +48737,23 @@ window.KovaCycle=(function(){
     return d;
   }
   function save(d){
+    d.saved=Date.now();
     try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){}
     try{ if(window.KP) KP.set('cycle',d.sync?d:null); }catch(e){}
   }
   var D=load();
+  /* with sync on, a newer copy from your account (another phone, or this
+     one after reinstalling) replaces this one when it arrives */
+  function fromCloud(){
+    var r=null; try{ r=window.KP&&KP.get('cycle'); }catch(e){}
+    if(!r||!r.sync) return false;
+    var local=D.saved||0, hasLocal=Object.keys(D.flow||{}).length||Object.keys(D.bbt||{}).length;
+    if(hasLocal&&(r.saved||0)<=local) return false;
+    try{ localStorage.setItem(KEY,JSON.stringify(r)); }catch(e){}
+    D=load(); try{ paintAll(); }catch(e){}
+    return true;
+  }
+  window.addEventListener('kova:cloud',fromCloud);
   function sex(){ var ob=(window.KP&&KP.get('onboard'))||{}; return ob.sex||lsJ('kova.sex',null)||null; }
   function setSex(v){ try{ localStorage.setItem('kova.sex',JSON.stringify(v)); }catch(e){} try{ if(window.KP){ var ob=KP.get('onboard')||{}; ob.sex=v; KP.set('onboard',ob); } }catch(e){} paintAll(); }
 
@@ -49301,7 +49316,7 @@ window.KovaCycle=(function(){
       if(sc&&window.MutationObserver) new MutationObserver(function(){ if(!drawn&&vitalsOn()) paint(); }).observe(sc,{attributes:true,attributeFilter:['class']}); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
-  return {paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
+  return {_fromCloud:fromCloud,paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
     setSex:setSex,sex:sex,_data:function(){ return D; },_set:function(d){ D=Object.assign(blank(),d); if(d.days&&!d.flow) Object.keys(d.days).forEach(function(k){ if(d.days[k]) D.flow[k]='med'; }); save(D); paintAll(); }};
 })();
 

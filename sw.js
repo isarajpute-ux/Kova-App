@@ -32,9 +32,11 @@ try {
   firebase.messaging();
 } catch (e) { /* no push on this install; reminders still show while Kova is open */ }
 
-var VERSION = 'kova-v5-112';
+var VERSION = 'kova-v5-113';
 var SHELL   = 'kova-shell-' + VERSION;
 var ASSETS  = 'kova-assets-' + VERSION;
+/* food and recipe photos (Unsplash): kept across versions, at most 80 */
+var PHOTOS  = 'kova-photos-v1';
 
 var PRECACHE = [
   '/',
@@ -62,7 +64,7 @@ self.addEventListener('activate', function(e){
   e.waitUntil(
     caches.keys().then(function(keys){
       return Promise.all(keys.map(function(k){
-        if (k !== SHELL && k !== ASSETS) return caches.delete(k);
+        if (k !== SHELL && k !== ASSETS && k !== PHOTOS) return caches.delete(k);
       }));
     }).then(function(){ return self.clients.claim(); })
   );
@@ -102,6 +104,27 @@ self.addEventListener('fetch', function(e){
     return;
   }
 
+  /* Food and recipe photos: fetched with CORS so a real copy can be kept,
+     served from that copy next time and offline; offline with no copy, a
+     plain placeholder instead of a broken image. */
+  if (/^https:\/\/images\.unsplash\.com\//.test(url)) {
+    e.respondWith(
+      caches.open(PHOTOS).then(function(c){
+        return c.match(url).then(function(hit){
+          if (hit) return hit;
+          return fetch(url, { mode: 'cors', credentials: 'omit' }).then(function(res){
+            if (res && res.ok) {
+              c.put(url, res.clone());
+              c.keys().then(function(ks){ if (ks.length > 80) c.delete(ks[0]); });
+            }
+            return res;
+          }).catch(function(){ return fetch(req).catch(function(){ return photoStandIn(); }); });
+        });
+      })
+    );
+    return;
+  }
+
   /* Everything else: cache-first, fill on miss. */
   e.respondWith(
     caches.match(req).then(function(hit){
@@ -116,6 +139,12 @@ self.addEventListener('fetch', function(e){
     })
   );
 });
+
+function photoStandIn(){
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#2A2B2F"/>'
+    + '<path d="M150 230l40-48 32 38 22-26 56 66H120z" fill="#55575E"/><circle cx="255" cy="150" r="18" fill="#55575E"/></svg>';
+  return new Response(svg, { headers: { 'Content-Type': 'image/svg+xml' } });
+}
 
 /* Lets the page force an update without the user reinstalling. */
 self.addEventListener('message', function(e){

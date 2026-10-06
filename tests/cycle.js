@@ -132,6 +132,17 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   const s2 = w2.KovaCycle._data().sev[key(sod() - DAY)];
   ck('the old one-tap symptoms carry over (tender becomes breast pain, cravings appetite)', s2 && s2.cramps === 2 && s2.breast === 2 && s2.appetite === 2 && w2.KovaCycle.today().day === 4);
 
+  // a new phone: the synced copy arrives after the page loaded
+  const w4 = boot({ 'kova.sex': JSON.stringify('female') });
+  await wait(900);
+  const synced = { on: true, sync: true, saved: Date.now(), flow: { [key(sod() - 6 * DAY)]: 'med', [key(sod() - 5 * DAY)]: 'heavy' }, days: {}, sev: {}, temp: {} };
+  w4.KP.set('cycle', synced); w4.dispatchEvent(new w4.Event('kova:cloud')); await wait(60);
+  ck('with cycle sync on, the copy from your account lands on a new phone without a reload', Object.keys(w4.KovaCycle._data().flow).length === 2 && w4.KovaCycle.today().day === 7);
+  w4.KP.set('cycle', Object.assign({}, synced, { saved: 1, flow: {} })); w4.dispatchEvent(new w4.Event('kova:cloud')); await wait(30);
+  ck('an older copy from the account never overwrites newer data here', Object.keys(w4.KovaCycle._data().flow).length === 2);
+  w4.KP.set('cycle', null); w4.dispatchEvent(new w4.Event('kova:cloud'));
+  ck('with sync off nothing comes from the account', Object.keys(w4.KovaCycle._data().flow).length === 2);
+
   // a man
   const w3 = boot({ 'kova.sex': JSON.stringify('male') });
   await wait(900);
