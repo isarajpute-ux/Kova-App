@@ -409,9 +409,13 @@ window.KovaCrew=(function(){
     if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve(false);
     var list=emps().filter(function(e){ var r=e.routine||{}; return e.enabled&&r.cloud&&r.job&&['daily','weekdays','weekly'].indexOf(r.freq)>=0; })
       .map(function(e){ return {id:e.id,freq:e.routine.freq,time:e.routine.time||'09:00',dow:+e.routine.dow||0}; });
-    var key=JSON.stringify(list)+tzName();
+    var key=JSON.stringify(list)+tzName(), had=lsJ('kova.crew.cloud',false);
     if(key===S.cloudKey) return Promise.resolve(true);
-    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list}}).then(function(r){ if(r.ok){ S.cloudKey=key; return true; } return false; },function(){ return false; });
+    /* only for someone signed in, and only when there is something to say:
+       routines to register, or ones registered before that are now off
+       (never a sign-in just for this) */
+    if(!serverLikely()||(!list.length&&!had)) return Promise.resolve(false);
+    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list}}).then(function(r){ if(r.ok){ S.cloudKey=key; lsPut('kova.crew.cloud',list.length>0); return true; } return false; },function(){ return false; });
   }
   function importCloud(it){
     var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
