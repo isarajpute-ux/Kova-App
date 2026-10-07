@@ -38606,11 +38606,7 @@ window.KovaAuth = (function(){
       + '<div class="af-tip" id="afTip" aria-live="polite"></div>'
       + '<button class="af-go" id="afSend"'+(validEmail(prefill)?'':' disabled')+'>Send code</button>'
       + '<div class="af-note">New here? The same code creates your account.</div>'
-      + '<div class="af-div"><i></i><span>Or continue with</span><i></i></div>'
-      + '<div class="af-provs">'
-        + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
-        + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
-      + '</div>'
+      + provs('Or continue with')
       + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>'
       + '<div class="af-legal">By continuing you agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
 
@@ -38630,8 +38626,8 @@ window.KovaAuth = (function(){
     em.onkeydown=function(e){ if(e.key==='Enter'&&!go.disabled) go.click(); };
     go.onclick=function(){ var v=cleanEmail(em.value); ageGate(function(){ sendCode(v); }, v); };
 
-    document.getElementById('authGoogle').onclick = function(){ ageGate(function(){ oauthFlow('google'); }); };
-    document.getElementById('authApple').onclick  = function(){ ageGate(function(){ oauthFlow('apple'); }); };
+    onProv('authGoogle',function(){ ageGate(function(){ oauthFlow('google'); }); });
+    onProv('authApple',function(){ ageGate(function(){ oauthFlow('apple'); }); });
     var sk=document.getElementById('authSkip');
     sk.onclick = function(){ ageGate(function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); }); };
     sk.onkeydown = function(e){ if(e.key==='Enter') sk.click(); };
@@ -38696,17 +38692,13 @@ window.KovaAuth = (function(){
       + '<div class="af-lbl" style="margin:0 0 18px 4px;line-height:1.55">' + esc(why) + '</div>'
       + '<button class="af-go" id="afRetry">Try again</button>'
       + '<div class="af-foot" style="margin-top:14px"><b id="afBack" role="button" tabindex="0">Change the email</b></div>'
-      + '<div class="af-div"><i></i><span>Meanwhile</span><i></i></div>'
-      + '<div class="af-provs">'
-        + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
-        + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
-      + '</div>'
+      + provs('Meanwhile')
       + '<div class="af-foot">Everything works offline. <b id="authSkip">Use Kova without an account</b></div>');
 
     document.getElementById('afRetry').onclick   = function(){ sendCode(email); };
     document.getElementById('afBack').onclick    = function(){ renderWelcome(email); };
-    document.getElementById('authGoogle').onclick= function(){ oauthFlow('google'); };
-    document.getElementById('authApple').onclick = function(){ oauthFlow('apple'); };
+    onProv('authGoogle',function(){ oauthFlow('google'); });
+    onProv('authApple',function(){ oauthFlow('apple'); });
     document.getElementById('authSkip').onclick  = function(){ promptBiometric(function(){ firstRunDone(); }); };
   }
 
@@ -38848,6 +38840,44 @@ window.KovaAuth = (function(){
     return name+' sign-in did not complete'+(code?' ('+code.replace('auth/','')+')':'')+'.';
   }
 
+  /* Google and Apple sign-in. On the web: Firebase's pop-up (or redirect).
+     Inside the iPhone / Android app a web pop-up cannot open (Google
+     refuses sign-in in embedded web views), so the app uses the phone's
+     own sign-in sheets through @capacitor-firebase/authentication and
+     hands the credential to the same Firebase account. A build without
+     that plugin shows email sign-in only, never a button that fails. */
+  function inApp(){ try{ return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()); }catch(e){ return false; } }
+  function nativeAuth(){
+    if(!inApp()) return null;
+    try{
+      if(Capacitor.isPluginAvailable&&!Capacitor.isPluginAvailable('FirebaseAuthentication')) return null;
+      return Capacitor.registerPlugin?Capacitor.registerPlugin('FirebaseAuthentication'):(Capacitor.Plugins&&Capacitor.Plugins.FirebaseAuthentication)||null;
+    }catch(e){ return null; }
+  }
+  function provs(label){
+    if(inApp()&&!nativeAuth()) return '';
+    return '<div class="af-div"><i></i><span>'+label+'</span><i></i></div>'
+      + '<div class="af-provs">'
+        + '<button class="af-prov" id="authGoogle">' + GOOGLE_SVG + 'Google</button>'
+        + '<button class="af-prov" id="authApple">' + APPLE_SVG + 'Apple</button>'
+      + '</div>';
+  }
+  function onProv(id,fn){ var b=document.getElementById(id); if(b) b.onclick=fn; }
+  function nativeFlow(provider,FB,P){
+    var errEl=document.getElementById('afErr');
+    var go=provider==='apple'?P.signInWithApple({skipNativeAuth:true}):P.signInWithGoogle({skipNativeAuth:true});
+    return go.then(function(r){
+      var c=(r&&r.credential)||{};
+      var cred=provider==='apple'
+        ?new firebase.auth.OAuthProvider('apple.com').credential({idToken:c.idToken,rawNonce:c.nonce})
+        :firebase.auth.GoogleAuthProvider.credential(c.idToken||null,c.accessToken||null);
+      return FB.auth.signInWithCredential(cred);
+    }).then(function(r){ signedIn(r.user,provider); })
+      .catch(function(e){
+        if(/cancel/i.test(String(e&&(e.code||e.message)||''))) return;   /* you closed the sheet */
+        if(errEl) errEl.textContent=authError(e,provider);
+      });
+  }
   function oauthFlow(provider){
     var FB=window.KOVA_FB;
     var errEl=document.getElementById('afErr');
@@ -38856,6 +38886,12 @@ window.KovaAuth = (function(){
       return;
     }
     if(errEl) errEl.textContent='';
+    if(inApp()){
+      var NP=nativeAuth();
+      if(NP) return nativeFlow(provider,FB,NP);
+      if(errEl) errEl.textContent='Use your email to sign in on this version of the app.';
+      return;
+    }
     var prov=authProvider(provider);
     var standalone=(window.navigator.standalone===true)||
       (window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
@@ -52942,9 +52978,11 @@ window.KovaPush=(function(){
   function listenNative(){
     try{ nativeSounds(); }catch(e){}
     var P=nplug(); if(!P||!P.addListener) return;
-    try{ P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); }); }catch(e){}
+    /* addListener answers with a promise; a build without the plugin refuses it */
+    var quiet=function(x){ if(x&&typeof x.catch==='function') x.catch(function(){}); };
+    try{ quiet(P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); })); }catch(e){}
     /* a push that lands while Kova is open: the phone shows no banner, so Kova plays its sound */
-    try{ P.addListener('notificationReceived',function(){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} }); }catch(e){}
+    try{ quiet(P.addListener('notificationReceived',function(){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} })); }catch(e){}
   }
   function listenWeb(){
     if(S.on&&!native()&&webOk()) msg().then(function(m){ m.onMessage(function(){ /* in front: the page's own timer already showed it */ }); }).catch(function(){});

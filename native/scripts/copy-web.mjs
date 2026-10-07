@@ -26,6 +26,11 @@ const out = html.replace(/navigator\.serviceWorker\.register\(/g, '(window.Capac
 writeFileSync(page, out);
 console.log('copied ' + FILES.length + ' files to www/' + (out !== html ? ' (service worker off in the app)' : ''));
 
+/* Apple's privacy manifest goes next to Info.plist; Xcode needs it added
+   to the App target once (native/README.md). */
+const iosApp = join(here, '..', 'ios', 'App', 'App');
+if (existsSync(iosApp)) { cpSync(join(here, '..', 'store', 'PrivacyInfo.xcprivacy'), join(iosApp, 'PrivacyInfo.xcprivacy')); console.log('copied PrivacyInfo.xcprivacy to ios/App/App/'); }
+
 /* Kova's alert sounds (src/p08_chime.js), rendered by the same synth the
    page plays. Android finds them in res/raw (one channel per sound, made
    by the page on start). iPhone gets them in Library/Sounds at run time

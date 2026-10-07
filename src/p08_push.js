@@ -235,9 +235,11 @@ window.KovaPush=(function(){
   function listenNative(){
     try{ nativeSounds(); }catch(e){}
     var P=nplug(); if(!P||!P.addListener) return;
-    try{ P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); }); }catch(e){}
+    /* addListener answers with a promise; a build without the plugin refuses it */
+    var quiet=function(x){ if(x&&typeof x.catch==='function') x.catch(function(){}); };
+    try{ quiet(P.addListener('notificationActionPerformed',function(e){ var d=e&&e.notification&&e.notification.data||{}; openScreen(d.screen); })); }catch(e){}
     /* a push that lands while Kova is open: the phone shows no banner, so Kova plays its sound */
-    try{ P.addListener('notificationReceived',function(){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} }); }catch(e){}
+    try{ quiet(P.addListener('notificationReceived',function(){ try{ if(window.KovaChime) KovaChime.play(); }catch(e){} })); }catch(e){}
   }
   function listenWeb(){
     if(S.on&&!native()&&webOk()) msg().then(function(m){ m.onMessage(function(){ /* in front: the page's own timer already showed it */ }); }).catch(function(){});

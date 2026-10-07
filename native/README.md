@@ -34,11 +34,13 @@ npm run ios            # copies ../index.html into www/, syncs, opens Xcode
 
 Then, **once, in Xcode:**
 
-1. Open **App → Signing & Capabilities**, pick your team, and add the **HealthKit** capability.
-2. Paste the three keys from `ios-Info.plist-additions.xml` into `ios/App/App/Info.plist`.
-3. Change the bundle id `com.kova.app` (in `capacitor.config.json` and Xcode) to one you own.
+1. Open **App → Signing & Capabilities**, pick your team, and add the **HealthKit** and **Sign in with Apple** capabilities.
+2. Paste the keys from `ios-Info.plist-additions.xml` into `ios/App/App/Info.plist`. These are Health, camera and microphone; without the camera and microphone ones iOS blocks the camera and the noise meter.
+3. Add the privacy manifest: `npm run ios` copies `store/PrivacyInfo.xcprivacy` to `ios/App/App/`. In Xcode, right-click the **App** folder → **Add Files to "App"…**, pick `PrivacyInfo.xcprivacy`, and tick the **App** target. Apple rejects builds without one.
+4. Change the bundle id `com.kova.app` (in `capacitor.config.json` and Xcode) to one you own.
 
 **Android:**
+- Paste the lines from `android-manifest-additions.xml` into `android/app/src/main/AndroidManifest.xml` (camera, microphone, notifications, exact alarm).
 - The plugin already declares the Health Connect permissions.
 - Health Connect requires a privacy policy screen. The plugin README explains how.
 - Android 13 and older needs the Health Connect app from the Play Store.
@@ -63,7 +65,11 @@ Kova asks for notification permission only when you switch a reminder on, never 
 
 ## Things to know
 
-- **Sign-in:** the email code sign-in works inside the app. A Google or Apple sign-in popup cannot open inside an app web view. If you add those later, use a native sign-in plugin (for example `@capacitor-firebase/authentication`).
+- **Sign-in:** the email code sign-in works as it is.
+  - Google and Apple sign-in use the phone's own sign-in sheets (`@capacitor-firebase/authentication`), because a web pop-up cannot open inside an app. The credential goes to the same Firebase account as on the website.
+  - To switch them on: in the Firebase console turn on the **Apple** provider (Google is already on). In Xcode add the **Sign in with Apple** capability, and add the `REVERSED_CLIENT_ID` from `GoogleService-Info.plist` as a URL scheme under **App → Info → URL Types**. On Android, add your SHA-1 fingerprint to the Firebase Android app.
+  - A build without the plugin shows email sign-in only, never a button that fails.
+- **Store privacy forms:** `store/APP_PRIVACY.md` has the answers for App Store Connect → App Privacy and Play Console → Data safety. They match the privacy policy and `store/PrivacyInfo.xcprivacy`.
 - **The service worker is switched off inside the app.** `scripts/copy-web.mjs` does this, because the files are already on the device. The website keeps its worker.
 - **App Store review:**
   - Apple needs a privacy policy URL.

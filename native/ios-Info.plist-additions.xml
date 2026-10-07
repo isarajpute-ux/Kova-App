@@ -1,4 +1,5 @@
-<!-- Paste these into ios/App/App/Info.plist (inside the top <dict>).
+<!-- Paste these into ios/App/App/Info.plist (inside the top <dict>). The camera
+     and microphone ones are required for the camera and the noise meter.
      Apple rejects apps whose wording is vague; say what the data is used for. -->
 <key>NSHealthShareUsageDescription</key>
 <string>Kova reads your sleep, heart rate, HRV, steps, activity and wrist temperature to show your readiness, sleep and cycle insights. Nothing is written to Health and nothing is sold or shared.</string>
@@ -6,3 +7,7 @@
 <string>Kova does not write to Health. This is required by iOS for apps that use HealthKit.</string>
 <key>NSBluetoothAlwaysUsageDescription</key>
 <string>Kova connects to your heart rate strap during workouts.</string>
+<key>NSCameraUsageDescription</key>
+<string>Kova uses the camera when you scan a meal, a barcode, an ingredient list or a machine, or take a profile photo. Photos are only taken when you press the shutter.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Kova measures how loud it is around you during workouts to warn you about loud noise. It measures loudness only; nothing is recorded or sent anywhere.</string>

@@ -91,6 +91,8 @@ jobs:
         run: node tests/e2e/camera.mjs
       - name: The Studio video editor records a real edit
         run: node tests/e2e/cut.mjs
+      - name: App Store and Play readiness (privacy manifest, permissions, in-app sign-in)
+        run: node tests/e2e/store.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

@@ -1,0 +1,18 @@
+<!-- Paste these into android/app/src/main/AndroidManifest.xml, inside
+     <manifest> (before <application>). Capacitor's web view asks for the
+     camera and microphone at run time, but only for permissions declared
+     here; without them the camera and the noise meter stay blank. -->
+
+<!-- the camera: meal, barcode, ingredient and equipment scans, profile photo -->
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-feature android:name="android.hardware.camera" android:required="false" />
+
+<!-- the noise meter: loudness only, nothing recorded -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+<!-- reminders and the smart alarm with Kova closed (Android 13+ asks for
+     notifications; the alarm rings at an exact time) -->
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
