@@ -33,6 +33,9 @@
      POST /posts/:id/cancel             unschedule a post that has not run yet        [auth]
      POST /write        {field,...}     write one field of a post with the model      [auth]
      POST /foods/search {q}          USDA FoodData Central: calories, macros and 10 micronutrients per 100 g [auth]
+     POST /crew/cloud  {tz,emps:[{id,freq,time,dow}]}  which routines also run while Kova is closed (Kova Pro) [auth]
+     GET  /crew/inbox                              what they did: reports and proposed changes [auth]
+     POST /crew/inbox/ack {ids}                    picked up by the app [auth]
      POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools) [auth]
      POST /hashtags     {post words}    hashtag ideas, grouped, with a rough size band [auth]
      POST /assist       {text}          the agent drafts a job: an email, a task, or an answer [auth]
@@ -789,6 +792,31 @@ async function crewStep(req, res, cfg) {
   return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model: c.model || 'default' });
 }
 
+/* AI team routines while Kova is closed (functions/crew.js): the app
+   registers which routines may run on the server, then picks up what they
+   did (a report and proposed changes) the next time it opens. */
+async function crewCloud(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg);
+  const c = require('./crew').cleanCloud(req.body || {});
+  const ref = db().ref(`srv/crewCloud/${u.uid}`);
+  if (!Object.keys(c.emps).length) { await ref.remove(); return res.json({ ok: true, routines: 0 }); }
+  const ran = (await ref.child('ran').once('value')).val() || null;
+  await ref.set(Object.assign(c, ran ? { ran } : {}));
+  return res.json({ ok: true, routines: Object.keys(c.emps).length });
+}
+async function crewInbox(req, res) {
+  const u = await requireUser(req);
+  const all = (await db().ref(`users/${u.uid}/crewInbox`).once('value')).val() || {};
+  return res.json({ items: Object.keys(all).map((k) => all[k]).filter(Boolean).sort((a, b) => a.at - b.at).slice(-20) });
+}
+async function crewInboxAck(req, res) {
+  const u = await requireUser(req);
+  const ids = (Array.isArray(req.body && req.body.ids) ? req.body.ids : []).map((x) => String(x).replace(/[^\w-]/g, '')).filter(Boolean).slice(0, 50);
+  await Promise.all(ids.map((id) => db().ref(`users/${u.uid}/crewInbox/${id}`).remove()));
+  return res.json({ ok: true, removed: ids.length });
+}
+
 async function hashtagsRoute(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg);
@@ -1135,6 +1163,9 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/write') return await writeRoute(req, res, cfg);
     if (M === 'POST' && path === '/foods/search') return await foodsSearch(req, res, cfg);
     if (M === 'POST' && path === '/crew/step') return await crewStep(req, res, cfg);
+    if (M === 'POST' && path === '/crew/cloud') return await crewCloud(req, res, cfg);
+    if (M === 'GET' && path === '/crew/inbox') return await crewInbox(req, res);
+    if (M === 'POST' && path === '/crew/inbox/ack') return await crewInboxAck(req, res);
     if (M === 'POST' && path === '/hashtags') return await hashtagsRoute(req, res, cfg);
     if (M === 'POST' && path === '/assist') return await assistRoute(req, res, cfg);
     if (M === 'POST' && path === '/assist/email') return await assistEmail(req, res, cfg);

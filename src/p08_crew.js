@@ -400,6 +400,43 @@ window.KovaCrew=(function(){
       ||L.filter(function(e){ return q.indexOf(e.n.toLowerCase())>=0||e.title.toLowerCase().indexOf(q)>=0||q.indexOf(e.title.toLowerCase())>=0; })[0]||null;
   }
 
+  /* ---------------- routines while Kova is closed (p15) ----------------
+     The routines you mark "Also run when Kova is closed" are registered
+     with the server (functions/crew.js). What they did comes back here as
+     a finished job, its proposed changes waiting for you one by one. */
+  function tzName(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(x){ return 'UTC'; } }
+  function syncCloud(){
+    if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve(false);
+    var list=emps().filter(function(e){ var r=e.routine||{}; return e.enabled&&r.cloud&&r.job&&['daily','weekdays','weekly'].indexOf(r.freq)>=0; })
+      .map(function(e){ return {id:e.id,freq:e.routine.freq,time:e.routine.time||'09:00',dow:+e.routine.dow||0}; });
+    var key=JSON.stringify(list)+tzName();
+    if(key===S.cloudKey) return Promise.resolve(true);
+    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list}}).then(function(r){ if(r.ok){ S.cloudKey=key; return true; } return false; },function(){ return false; });
+  }
+  function importCloud(it){
+    var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
+    var props=(it.proposals||[]).filter(function(p){ return p&&TOOLS[p.name]; });
+    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
+      steps:[{t:'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
+      changes:[],queue:props.map(function(p,i){ return {id:'p'+i,name:p.name,input:p.input||{}}; }),results:[],turns:0,convo:null,brain:'cloud',
+      model:it.model||'',say:String(it.say||''),report:it.report||null};
+    S.jobs[job.id]=job;
+    touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),lastRoutine:Math.max(e.lastRoutine||0,it.at||0)});
+    if(job.queue.length) proceed(job); else finish(job,job.say||'Done.');
+    return job;
+  }
+  function pullCloud(){
+    if(S.pulling||!serverLikely()) return Promise.resolve(0);
+    S.pulling=true;
+    return KovaLink.authFetch('/crew/inbox').then(function(r){ return r.ok?r.json():{items:[]}; }).then(function(j){
+      var got=(j.items||[]).map(importCloud).filter(Boolean);
+      var ids=(j.items||[]).map(function(x){ return x&&x.id; }).filter(Boolean);
+      if(ids.length) KovaLink.authFetch('/crew/inbox/ack',{json:{ids:ids}}).catch(function(){});
+      if(got.length){ saveJobs(); paintSoon(); notify(); }
+      S.pulling=false; return got.length;
+    }).catch(function(){ S.pulling=false; return 0; });
+  }
+
   /* ---------------- teach by showing (p15) ----------------
      Do the job once yourself in Work OS while Kova records it; the steps
      become that employee's routine. Dates are kept relative ("due in 2
@@ -524,7 +561,7 @@ window.KovaCrew=(function(){
   function keyBrain(){ try{ if(window.KovaModel&&KovaModel.connected()){ var c=KovaModel.cfg(); if(c&&c.p==='anthropic'&&c.key) return c; } }catch(e){} return null; }
   function serverLikely(){ try{ return !S.down.server&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
   function brainName(){ return serverLikely()?'server':(keyBrain()?'key':'local'); }
-  var BRAIN_N={server:'Kova server \u00b7 Claude',key:'Your Claude key',local:'Offline routines',taught:'What you showed them'};
+  var BRAIN_N={server:'Kova server \u00b7 Claude',key:'Your Claude key',local:'Offline routines',taught:'What you showed them',cloud:'Kova server \u00b7 while Kova was closed'};
 
   /* ---------------- the model router (p15) ----------------
      Each employee thinks with Haiku, Sonnet or Opus. "Auto" picks by the
@@ -669,7 +706,7 @@ window.KovaCrew=(function(){
         job.results.push({type:'tool_result',tool_use_id:tu.id,content:JSON.stringify({error:'You do not have the '+tu.name+' tool. Hand off to a teammate who does, or say what you need.'}),is_error:true});
         log(job,'Blocked: '+tu.name+' is not one of '+e.n+'\u2019s tools','blocked'); job.queue.shift(); continue;
       }
-      if(needsOK(e,T)){
+      if(needsOK(e,T)||job.brain==='cloud'){
         job.state='waiting'; job.ask={id:tu.id,name:tu.name,input:tu.input||{}};
         log(job,'Waiting for your approval','wait');
         saveJobs(); paintSoon(); notify(); return;
@@ -679,6 +716,7 @@ window.KovaCrew=(function(){
       afterExec(job,tu,T,r);
     }
     if(job.brain==='local'){ localFinish(job); return; }
+    if(job.brain==='cloud'){ finish(job,job.say||'Done.'); return; }
     if(job.tell){ job.results.push({type:'text',text:'A note from the user while you work: '+job.tell}); job.tell=''; }
     job.convo.push({role:'user',content:job.results}); job.results=[]; job.turns++;
     saveJobs(); step(job);
@@ -1913,7 +1951,7 @@ window.KovaCrew=(function(){
         +(u.tokens?'<div class="crd-hint">'+fmtN(u.tokens)+' tokens this week.</div>':'')+'</div>'
       +'<div class="crd-card"><div class="crd-chd"><span>What each one can touch</span><small>Every employee is boxed in to its own tools. Email never leaves without your OK.</small></div>'
         +'<div class="crw-acc">'+L.map(function(e){ return '<div class="r"><b>'+esc(e.n)+'</b><span>'+GROUPS.map(function(g){ var on=g.locked||(e.tools||[]).indexOf(g.id)>=0; return '<i class="'+(on?'on':'')+'">'+(on?'\u2713 ':'\u2715 ')+esc(g.n)+'</i>'; }).join('')+'</span></div>'; }).join('')+'</div></div>'
-      +'<div class="crd-card"><div class="crd-chd"><span>Guards</span></div><div class="crd-sum"><p>Runaway guard: if the team takes more than 40 steps in two minutes, every job pauses ('+(u.paused||0)+' time'+((u.paused||0)===1?'':'s')+' this week). Hand-offs that come back to the same employee, or go more than 4 deep, are stopped. A job stops after '+MAX_TURNS+' steps unless you tell it to carry on.</p><p>Jobs and routines run while Kova is open on any of your devices, and catch up when you open it.</p></div></div></div>';
+      +'<div class="crd-card"><div class="crd-chd"><span>Guards</span></div><div class="crd-sum"><p>Runaway guard: if the team takes more than 40 steps in two minutes, every job pauses ('+(u.paused||0)+' time'+((u.paused||0)===1?'':'s')+' this week). Hand-offs that come back to the same employee, or go more than 4 deep, are stopped. A job stops after '+MAX_TURNS+' steps unless you tell it to carry on.</p><p>Routines run while Kova is open on any of your devices. Mark a routine \u201cAlso run when Kova is closed\u201d and the Kova server does it at its time: it reads your synced work, writes the report and proposes changes, which wait for you here.</p></div></div></div>';
   }
   function approvalCard(j,withWho){
     var a=j.ask; if(!a) return '';
@@ -2028,6 +2066,7 @@ window.KovaCrew=(function(){
         +(r.freq==='event'?field('When','<select id="crwEv" aria-label="When">'+[['overdue','A task becomes overdue'],['new_task','A task is added'],['assigned','A task is assigned to them']].map(function(o){ return sel(r.event,o); }).join('')+'</select>'):'')
       +'</div>'
         +(r.freq&&r.freq!=='off'?field('The job they run','<textarea id="crwRJ" rows="2" placeholder="e.g. Brief me on today." aria-label="The job they run">'+esc(r.job||'')+'</textarea>',sug('r','Suggestions',[{h:'Ideas',items:FILL.routine.map(function(x){ return {t:'crwRJ',m:'set',v:x,l:x}; })}])):'')
+        +(['daily','weekdays','weekly'].indexOf(r.freq)>=0?'<label class="crw-cloud"><input type="checkbox" id="crwCloud"'+(r.cloud?' checked':'')+'><span><b>Also run when Kova is closed</b><small>On the Kova server, at this time in your time zone. It reads your synced work, writes the report and proposes changes; you approve them when you open Kova. Needs you signed in.</small></span></label>':'')
       +'</div>'
       +'</div>'
       +(d.id&&(d.memory||[]).length?'<div class="crd-card"><div class="crd-chd"><span>Memory</span></div><div class="crw-mem">'+d.memory.map(function(m,i){ return '<div><span>'+esc(m.t)+'</span><button class="crw-link" data-c="forget" data-i="'+i+'">Forget</button></div>'; }).join('')+'</div></div>':'')
@@ -2044,6 +2083,7 @@ window.KovaCrew=(function(){
     if(v('crwTime')!=null) d.routine.time=v('crwTime'); if(v('crwDow')!=null) d.routine.dow=+v('crwDow');
     if(v('crwEv')!=null) d.routine.event=v('crwEv'); if(v('crwRJ')!=null) d.routine.job=v('crwRJ');
     if(v('crwModel')!=null) d.model=v('crwModel'); if(v('crwBud')!=null) d.budget=+v('crwBud');
+    var cl=document.getElementById('crwCloud'); if(cl) d.routine.cloud=!!cl.checked; else if(['daily','weekdays','weekly'].indexOf(d.routine.freq)<0) d.routine.cloud=false;
   }
 
   /* ---- painting ---- */
@@ -2184,6 +2224,7 @@ window.KovaCrew=(function(){
       if(!String(d.job||'').trim()){ say('Write the job description: it is how the team knows what they own.'); return; }
       if(d.id){ saveEmp(emp(d.id),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine,memory:d.memory,model:d.model||'auto',budget:+d.budget||150}); S.tab=d.id; say('Saved.'); }
       else { var ne=hire(tpl(d.tpl),{n:d.n,title:d.title,job:d.job,playbook:d.playbook,tools:d.tools,approval:d.approval,routine:d.routine}); saveEmp(ne,{model:d.model||'auto',budget:+d.budget||150}); S.tab=ne.id; say(d.n+' joined the team.'); }
+      syncCloud().then(function(ok){ var dd=emp(S.tab); if(dd&&dd.routine&&dd.routine.cloud&&!ok) say('Saved. Running while Kova is closed needs you signed in with Kova Pro and the Kova server.'); });
       S.view='team'; S.nav='team'; S.draft=null; paint(); top0(); return;
     }
   }
@@ -2216,12 +2257,15 @@ window.KovaCrew=(function(){
     var home=document.getElementById('s-work');
     if(home&&window.MutationObserver) new MutationObserver(function(){ if(home.classList.contains('on')) paintHome(); }).observe(home,{attributes:true,attributeFilter:['class']});
     S.lastOverdue=W.overdue().length;
+    /* what ran on the server while Kova was closed, then keep the server's list current */
+    setTimeout(function(){ pullCloud(); syncCloud(); },2500);
+    document.addEventListener('visibilitychange',function(){ if(!document.hidden) pullCloud(); });
     clearInterval(S.tick); S.tick=setInterval(tick,60e3); setTimeout(tick,4000);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,300); }); else setTimeout(mount,300);
 
   return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
-    teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
+    teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
     slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

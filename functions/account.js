@@ -29,7 +29,10 @@ const PATHS = [
   'srv/devices/{uid}',
   'srv/reminders/{uid}',
   'srv/pro/{uid}',
-  'srv/calmap/{uid}'
+  'srv/calmap/{uid}',
+  'srv/crewCloud/{uid}',
+  'srv/crewQueue/{uid}',
+  'srv/crewUse/{uid}'
 ];
 const at = (p, uid) => p.replace('{uid}', uid);
 
@@ -50,6 +53,8 @@ function makeAccount(deps) {
     const ag = (await val(`srv/agentUsers/${uid}`)) || {};
     out.wellnessAgent = { on: !!ag.on, tz: ag.tz || '', times: ag.times || {} };
     out.reminders = (await val(`srv/reminders/${uid}`)) || {};
+    const cc = (await val(`srv/crewCloud/${uid}`)) || {};
+    out.crewRoutinesWhileClosed = { tz: cc.tz || '', routines: cc.emps || {} };
     const linked = (await val(`srv/oauth/${uid}`)) || {};
     out.connectedAccounts = Object.keys(linked).map((k) => ({ provider: k, label: (linked[k] && linked[k].label) || '', note: 'token not exported' }));
     const dev = (await val(`srv/devices/${uid}`)) || {};

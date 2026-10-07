@@ -163,7 +163,9 @@ function makeWorker(deps) {
     oauth: deps.makeOAuth || require('./providers').makeOAuth,
     publisher: deps.makePublisher || require('./publish').makePublisher,
     agent: deps.makeAgent || require('./agent').makeAgent,
-    traction: deps.makeTraction || require('./traction').makeTraction
+    traction: deps.makeTraction || require('./traction').makeTraction,
+    crew: deps.makeCrew || require('./crew').makeCrew,
+    push: deps.makePush || require('./push').makePush
   };
 
   async function publishAll(cfg) {
@@ -195,6 +197,24 @@ function makeWorker(deps) {
     }
     return n;
   }
+  /* AI team routines due while Kova is closed (functions/crew.js) */
+  async function crewAll(cfg) {
+    const q = (await db.ref('srv/crewQueue').once('value')).val() || {};
+    const push = mods.push({ db, messaging: admin.messaging ? admin.messaging() : null, cfg });
+    const crew = mods.crew({ db, cfg, push });
+    let n = 0;
+    for (const uid of Object.keys(q)) {
+      for (const emp of Object.keys(q[uid] || {})) {
+        const p = `srv/crewQueue/${uid}/${emp}`;
+        const job = await claim(db, p, now());
+        if (!job) continue;
+        try { await crew.run(uid, emp, { slotAgo: job.slotAgo }); n++; }
+        catch (e) { console.error('crew', uid, emp, e.message); }
+        finally { await db.ref(p).remove(); }
+      }
+    }
+    return n;
+  }
   async function tractionAll(cfg) {
     const users = Object.keys((await db.ref('srv/posts').once('value')).val() || {});
     const tr = mods.traction({ db, cfg, tokens: mods.oauth({ db, cfg }) });
@@ -213,6 +233,7 @@ function makeWorker(deps) {
     const out = {};
     if (kind === 'publish' || kind === 'all') out.published = await publishAll(cfg);
     if (kind === 'agent' || kind === 'all') out.audits = await auditAll(cfg);
+    if (kind === 'crew' || kind === 'all') out.crew = await crewAll(cfg);
     if (kind === 'traction') out.traction = await tractionAll(cfg);
     return new Response(JSON.stringify(out), { status: 200, headers: { 'content-type': 'application/json' } });
   };
@@ -226,6 +247,7 @@ function makeCron(deps) {
   const now = deps.now || Date.now;
   const moveDue = deps.moveDue || require('./publish').moveDue;
   const due = deps.due || require('./agent').due;
+  const crewDue = deps.crewDue || require('./crew').due;
   const makePush = deps.makePush || require('./push').makePush;
 
   return async function () {
@@ -243,10 +265,18 @@ function makeCron(deps) {
       for (const j of jobs) await db.ref(`srv/agentQueue/${j.uid}`).set({ window: j.window, at: t, why: 'schedule' });
       out.audits = jobs.length;
     } catch (e) { console.error('due', e.message); }
+    /* AI team routines whose time has come, for people who turned on
+       "Also run when Kova is closed" */
+    try {
+      const runs = await crewDue(db, t);
+      for (const r of runs) await db.ref(`srv/crewQueue/${r.uid}/${r.emp}`).set({ at: t, slotAgo: r.slotAgo, date: r.date });
+      out.crew = runs.length;
+    } catch (e) { console.error('crewDue', e.message); }
     /* anything waiting goes to the background worker */
     const waiting = (await db.ref('srv/queue').once('value')).val();
     const auditing = (await db.ref('srv/agentQueue').once('value')).val();
-    if (waiting || auditing) await cfg.kick('all');
+    const crewing = (await db.ref('srv/crewQueue').once('value')).val();
+    if (waiting || auditing || crewing) await cfg.kick('all');
     /* traction every half hour */
     if (new Date(t).getUTCMinutes() % 30 < 5) await cfg.kick('traction');
     return out;

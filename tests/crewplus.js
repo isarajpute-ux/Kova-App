@@ -22,10 +22,12 @@ w.firebase = {
   storage: () => ({ ref: () => ({}) }), analytics: () => ({ logEvent() {}, setUserId() {} }),
   functions: () => ({ httpsCallable: () => () => Promise.resolve({ data: { text: '' } }) })
 };
-const calls = []; let script = []; const crewBodies = [];
+const calls = []; let script = []; const crewBodies = []; let inbox = [];
 const reply = (j, ok = true, status = 200) => Promise.resolve({ ok, status, json: () => Promise.resolve(j), text: () => Promise.resolve(JSON.stringify(j)) });
 w.fetch = (u, o) => {
   u = String(u); calls.push([u, o]);
+  if (/\/crew\/inbox$/.test(u)) return reply({ items: inbox.splice(0) });
+  if (/\/crew\/(cloud|inbox\/ack)$/.test(u)) return reply({ ok: true });
   if (/\/crew\/step$/.test(u)) { crewBodies.push(JSON.parse(o.body)); const next = script.shift(); return next ? reply(next) : reply({ error: 'no script' }, false, 500); }
   if (/\/assist\/email$/.test(u)) return reply({ ok: true });
   return reply({});
@@ -114,6 +116,32 @@ const { cleanCrew } = require(__dirname + '/../functions/api.js');
   const made = W.list('items').filter((i) => i.name === 'Send the weekly invoice');
   ck('Do it now replays the steps through the employee\'s own tools', tj.state === 'done' && made.length === 1 && made[0].status === 'In Progress' && made[0].priority === 'High');
   ck('…and the replay can be undone', C.undo(tj.id) >= 1 && !W.list('items').some((i) => i.name === 'Send the weekly invoice'));
+
+  // ---- routines while Kova is closed
+  const leo = C.emp(pm.id);
+  const ij = C.importCloud({ id: 'cX1', emp: leo.id, text: 'Triage today', at: Date.now() - 3600e3, model: 'haiku', say: 'Two things need you.',
+    steps: [{ t: 'Read the work: 3 open, 1 overdue', k: 'read' }], report: { title: 'Triage', summary: 'One overdue.' },
+    proposals: [{ name: 'create_task', input: { name: 'Chase the courier', priority: 'High', due: 'tomorrow' } }, { name: 'update_task', input: { name: 'Call the printer today', status: 'Completed' } }] });
+  ck('a routine that ran while Kova was closed comes in as a job, its first change waiting for you', ij && ij.state === 'waiting' && ij.ask && ij.ask.name === 'create_task' && /while Kova was closed/.test(ij.steps[0].t)
+    && !W.list('items').some((i) => i.name === 'Chase the courier'));
+  C.approve(ij.id, {}); await wait(30);
+  ck('each proposed change waits for its own OK (even for an employee who may change things freely)', W.list('items').some((i) => i.name === 'Chase the courier') && ij.state === 'waiting' && ij.ask.name === 'update_task');
+  C.skip(ij.id); await wait(30);
+  ck('skipping one leaves it undone, and the job finishes with its report', ij.state === 'done' && ij.report.title === 'Triage' && W.list('items').some((i) => i.name === 'Call the printer today' && i.status !== 'Completed'));
+  ck('…and it can be undone like any job', C.undo(ij.id) === 1 && !W.list('items').some((i) => i.name === 'Chase the courier'));
+  ck('the same result is never imported twice', C.importCloud({ id: 'cX1', emp: leo.id, proposals: [] }) === null);
+  W.update('agents', leo.id, { routine: Object.assign({}, leo.routine, { freq: 'weekdays', time: '17:30', job: 'Triage', cloud: false }) }, 'user');
+  C._S.view = 'edit'; C._S.more = true; C._S.draft = JSON.parse(JSON.stringify(C.emp(leo.id))); C.paint(); await wait(30);
+  const box = doc.getElementById('crwCloud');
+  ck('a daily or weekday routine offers "Also run when Kova is closed"', !!box && /Also run when Kova is closed/.test(box.closest('label').textContent));
+  box.checked = true; const nC = calls.length;
+  doc.querySelector('[data-c="save"]').click(); await wait(120);
+  const reg = calls.slice(nC).filter((c) => /\/crew\/cloud$/.test(c[0])).map((c) => JSON.parse(c[1].body))[0];
+  ck('saving registers it with the server, with your time zone', C.emp(leo.id).routine.cloud === true && reg && reg.emps.some((e) => e.id === leo.id && e.time === '17:30' && e.freq === 'weekdays') && !!reg.tz);
+  inbox = [{ id: 'cY2', emp: leo.id, text: 'Triage', at: Date.now(), proposals: [], say: 'Nothing urgent.', steps: [] }];
+  const pulled = await C.pullCloud(); await wait(30);
+  const acks = calls.filter((c) => /\/crew\/inbox\/ack$/.test(c[0])).map((c) => JSON.parse(c[1].body));
+  ck('opening Kova picks up what ran on the server and tells the server it has it', pulled === 1 && C.jobs().jc_cY2 && C.jobs().jc_cY2.state === 'done' && acks.some((a) => a.ids.includes('cY2')));
 
   // ---- Usage
   C._S.view = 'team'; C._S.nav = 'usage'; C.paint(); await wait(40);

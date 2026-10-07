@@ -690,3 +690,8 @@ body.light-mode .crw-teach button{background:#15171B;color:#fff}
 body.light-mode .crw-teach button+button{background:rgba(21,23,27,.08);color:#15171B}
 @media (max-width:520px){.crw-use .r{grid-template-columns:minmax(70px,1fr) 2fr auto}.crw-use .m{display:none}}
 @media (prefers-reduced-motion:reduce){.crw-scr,.crw-now .cur,.crw-teach>i{animation:none}}
+/* "Also run when Kova is closed" on a routine (p15) */
+.crw-cloud{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding:12px;border-radius:14px;border:1px solid var(--c-line);background:var(--c-field);cursor:pointer}
+.crw-cloud input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--c-ink);flex-shrink:0}
+.crw-cloud b{display:block;font-weight:600;font-size:13.5px}
+.crw-cloud small{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--c-mute)}
