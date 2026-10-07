@@ -2,19 +2,19 @@
    recorded in the page, edited (split, trim, speed, filter, turn, music,
    upscale) and saved; the saved file must be a real video of the edit's
    length that becomes the post. SHOTS=<dir> also saves screenshots. */
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { serve, openPage, SIGNED_OUT_LOCAL } from './harness.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
-const b = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
+const b = process.env.ENGINE === 'webkit' ? await webkit.launch() : await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
 const site = await serve(join(root, 'dist'));
 const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'ks.started': 'true', 'kova.consent': JSON.stringify({ a: false, at: 1 }), 'kova.tours.v1': JSON.stringify({ home: 1, move: 1, fuel: 1, sleep: 1, vitals: 1, customize: 1, work: 1, studio: 1 }) });
 const { context, page, pageErrors } = await openPage(b, null, { storage: STORE, viewport: { width: 390, height: 844 } });
 await page.goto(site.url + '/index.html', { waitUntil: 'load' });
 await page.waitForFunction(() => window.KovaCut && window.KovaCanvas, null, { timeout: 30000 });
-await page.evaluate(() => go('workstudio'));
+await page.evaluate(() => { KP.set('tourSeen', true); go('workstudio'); });   /* the once-ever walkthrough would open over it */
 await page.waitForTimeout(800);
 /* two short clips with sound, recorded right here, and a song */
 await page.evaluate(async () => {
@@ -66,6 +66,14 @@ await page.click('.kct-t[data-k="filter"]'); await page.waitForTimeout(200);
 const st = await page.evaluate(() => { const c = KovaCut._state().cut.clips[KovaCut._state().sel]; return { speed: c.speed, filter: c.filter, tag: document.querySelector('.kct-clip.on .tag') && document.querySelector('.kct-clip.on .tag').textContent }; });
 ck('Speed sets the chosen clip to 1.5x and shows it on the tile', st.speed === 1.5 && st.tag === '1.5x');
 ck('Filter gives it a look (Vivid)', /saturate/.test(st.filter));
+const looks = await page.evaluate(() => {
+  const src = document.createElement('canvas'); src.width = src.height = 20; const sx = src.getContext('2d'); sx.fillStyle = 'rgb(200,60,60)'; sx.fillRect(0, 0, 20, 20);
+  const px = (f) => { const c = document.createElement('canvas'); c.width = c.height = 20; const x = c.getContext('2d'); KovaCut._draw(x, 20, 20, { rot: 0, filter: f }, src); return [...x.getImageData(10, 10, 1, 1).data].slice(0, 3); };
+  return { native: 'filter' in document.createElement('canvas').getContext('2d'), none: px('none'), mono: px('grayscale(1) contrast(1.1)'), warm: px('sepia(.25) saturate(1.2) hue-rotate(-8deg)'), cool: px('saturate(1.1) hue-rotate(12deg) brightness(1.03)') };
+});
+const spread = (p) => Math.max(...p) - Math.min(...p);
+ck('each look really changes the picture' + (looks.native ? '' : ' (Safari: made with colour blending)') + ': Mono is grey, Cool is bluer than Warm (' + JSON.stringify(looks) + ')',
+  spread(looks.mono) < 12 && spread(looks.none) > 100 && (looks.cool[2] - looks.cool[0]) > (looks.warm[2] - looks.warm[0]));
 /* trim: drag the end of the last clip in */
 const before = await page.evaluate(() => KovaCut._total());
 await page.evaluate(() => { const t = document.getElementById('kctTl'); t.scrollLeft = t.scrollWidth; });
@@ -89,10 +97,22 @@ if (process.env.SHOTS) {
   for (const t of ['soft-light', 'light-mode']) { await page.evaluate((t) => { document.body.classList.remove('soft-light', 'light-mode'); document.body.classList.add(t); }, t); await page.waitForTimeout(200); await page.screenshot({ path: join(process.env.SHOTS, 'cut-' + t + '.png') }); }
   await page.evaluate(() => document.body.classList.remove('soft-light', 'light-mode'));
 }
+/* a phone that refuses to play a clip: the watchdog stops with a message, it never hangs */
+const wd = await page.evaluate(async () => {
+  const C = KovaCut._state(), msgs = []; const t0 = window.toast; window.toast = (m) => msgs.push(m);
+  const tc = window.KovaCanvas && KovaCanvas.toast; if (tc) KovaCanvas.toast = (m) => msgs.push(m);
+  const real = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { return Promise.reject(new DOMException('not allowed', 'NotAllowedError')); };
+  KovaCut._seek(0); await new Promise((r) => setTimeout(r, 300));
+  document.querySelector('#kctPlay').click();
+  await new Promise((r) => setTimeout(r, 6500));
+  HTMLMediaElement.prototype.play = real; window.toast = t0; if (tc) KovaCanvas.toast = tc;
+  return { playing: C.playing, msgs };
+});
+ck('if the phone refuses to play a clip, it stops with a clear message instead of hanging', !wd.playing && wd.msgs.some((m) => /paused the video/.test(m)));
 /* save: a real video of the edit */
 const want = await page.evaluate(() => KovaCut._total());
 await page.click('.kct-save');
-await page.waitForFunction(() => !document.querySelector('.kct'), null, { timeout: 60000 }).catch(() => {});
+await page.waitForFunction(() => !document.querySelector('.kct'), null, { timeout: Number(process.env.SAVE_WAIT || 60000) }).catch(() => {});
 await page.waitForTimeout(800);
 const out = await page.evaluate(async () => {
   const p = KovaCanvas._post(), m = p.media[0];

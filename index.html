@@ -57246,16 +57246,34 @@ window.KovaCut=(function(){
     var sw=node.videoWidth||node.naturalWidth||node.width, sh=node.videoHeight||node.naturalHeight||node.height;
     if(!sw||!sh){ ctx.restore(); return; }
     var rot=(c.rot||0)%360, rw=rot%180?sh:sw, rh=rot%180?sw:sh;
-    var hasF='filter' in ctx, f=c.filter&&c.filter!=='none'?c.filter:'none';
+    var hasF='filter' in ctx, f=c.filter&&c.filter!=='none'?c.filter:'none', tint=TINT[f];
+    if(tint) hasF=false;           /* Warm and Cool are colour tints everywhere, drawn after the frame */
     /* a soft blurred fill behind a clip of another shape, then the clip whole */
-    if(Math.abs(rw/rh-W/H)>.02&&hasF){
-      var kc=Math.max(W/rw,H/rh); ctx.filter='blur(24px) brightness(.6)'+(f!=='none'?' '+f:'');
+    if(Math.abs(rw/rh-W/H)>.02&&('filter' in ctx)){
+      var kc=Math.max(W/rw,H/rh); ctx.filter='blur(24px) brightness(.6)'+(f!=='none'&&!tint?' '+f:'');
       ctx.translate(W/2,H/2); ctx.rotate(rot*Math.PI/180); ctx.drawImage(node,-sw*kc/2,-sh*kc/2,sw*kc,sh*kc); ctx.setTransform(1,0,0,1,0,0);
     }
     var k=Math.min(W/rw,H/rh);
-    if(hasF) ctx.filter=f;
+    if('filter' in ctx) ctx.filter=hasF?f:'none';
     ctx.translate(W/2,H/2); ctx.rotate(rot*Math.PI/180);
     ctx.drawImage(node,-sw*k/2,-sh*k/2,sw*k,sh*k);
+    ctx.restore();
+    if(!hasF&&f!=='none') look(ctx,W,H,f);
+  }
+  /* Safari's canvas has no filter: the same looks made with colour
+     blending, which every browser has (drawn over the finished frame) */
+  var TINT={'sepia(.25) saturate(1.2) hue-rotate(-8deg)':1,'saturate(1.1) hue-rotate(12deg) brightness(1.03)':1};
+  var LOOK={
+    'saturate(1.35) contrast(1.08)':[['saturation','hsl(0,100%,50%)',.22],['soft-light','#808080',.0]],
+    'grayscale(1) contrast(1.1)':[['saturation','#808080',1],['soft-light','#7a7a7a',.25]],
+    'sepia(.25) saturate(1.2) hue-rotate(-8deg)':[['soft-light','#FF9A3C',.38]],
+    'saturate(1.1) hue-rotate(12deg) brightness(1.03)':[['soft-light','#3C8CFF',.34]],
+    'contrast(.88) brightness(1.08) saturate(.8)':[['screen','#FFFFFF',.14],['saturation','#808080',.22]]
+  };
+  function look(ctx,W,H,f){
+    var L=LOOK[f]; if(!L) return;
+    ctx.save();
+    L.forEach(function(x){ if(!x[2]) return; ctx.globalCompositeOperation=x[0]; ctx.globalAlpha=x[2]; ctx.fillStyle=x[1]; ctx.fillRect(0,0,W,H); });
     ctx.restore();
   }
   function paintFrame(){
@@ -57305,13 +57323,23 @@ window.KovaCut=(function(){
     seek(C.t,function(node,a2){
       if(!C||!C.playing) return;
       var c=a2.c, s0=a2.start, endT=s0+len(c), cv=rec?rec.cv:$('#kctCv'), ctx=cv.getContext('2d');
+      C.activeMid=c.mid;
       if(node&&node.tagName==='VIDEO'){
         node.playbackRate=c.speed||1; if('preservesPitch' in node) node.preservesPitch=true;
         var pr=node.play(); if(pr&&pr.catch) pr.catch(function(){});
       }
-      var t0=performance.now(), base=C.t;
+      var t0=performance.now(), base=C.t, lastT=-1, still=performance.now(), retried=false;
       (function tick(){
         if(!C||!C.playing) return;
+        /* the watchdog: a phone can refuse to play a clip that a tap did
+           not start. Try once more, then stop cleanly instead of hanging. */
+        if(node&&node.tagName==='VIDEO'){
+          if(node.currentTime!==lastT){ lastT=node.currentTime; still=performance.now(); }
+          else if(!node.ended&&performance.now()-still>2500){
+            if(!retried){ retried=true; still=performance.now(); var p2=node.play(); if(p2&&p2.catch) p2.catch(function(){}); }
+            else { var was=!!rec; pause(); toast(was?'Your phone paused the video while saving. Tap Save video again.':'Your phone paused the video. Tap play again.'); return; }
+          }
+        }
         if(node&&node.tagName==='VIDEO') C.t=s0+(node.currentTime-c.in)/(c.speed||1);
         else C.t=base+(performance.now()-t0)/1000;
         draw(ctx,cv.width,cv.height,c,node);
@@ -57329,6 +57357,21 @@ window.KovaCut=(function(){
     });
   }
   function finish(){ if(!C) return; C.playing=false; stopAll(); paintPlay(); var f=C.onEnd; C.onEnd=null; if(f) f(); }
+  /* iPhones let a clip with sound play only if a tap started it, and the
+     edit starts its clips a moment after the tap. So on the tap itself
+     every clip and the song are started (silenced through the mix) and
+     paused again, which unlocks them for the rest of the edit. */
+  function unlock(){
+    var ac=audio(); if(ac&&ac.state==='suspended') ac.resume().catch(function(){});
+    var nodes=Object.keys(C.els).map(function(k){ return [k,C.els[k]]; }).filter(function(x){ return x[1]&&x[1].tagName==='VIDEO'; });
+    if(C.music&&C.music.el) nodes.push(['__music',C.music.el]);
+    var g=C.mon, before=g?g.gain.value:1; if(g) g.gain.value=0;
+    nodes.forEach(function(x){
+      var n=x[1]; if(!n.paused) return;
+      try{ var p=n.play(); if(p&&p.then) p.then(function(){ if(C&&C.activeMid!==x[0]&&!(x[0]==='__music'&&C.playing)) n.pause(); }).catch(function(){}); }catch(e){}
+    });
+    if(g) setTimeout(function(){ if(C&&C.mon&&!C.saving) C.mon.gain.value=before||1; },250);
+  }
   function pause(){ if(!C) return; C.playing=false; cancelAnimationFrame(C.raf); stopAll(); paintPlay(); if(C.onEnd){ var f=C.onEnd; C.onEnd=null; f(); } }
   function paintPlay(){ var b=$('#kctPlay'); if(b){ b.innerHTML=ic(C.playing?'pause':'play'); b.setAttribute('aria-label',C.playing?'Pause':'Play'); } }
   /* the timeline scrolls under the playhead */
@@ -57565,7 +57608,7 @@ window.KovaCut=(function(){
       if(!b) return;
       var k=b.getAttribute('data-k'), c=C.cut.clips[C.sel];
       if(k==='close') close();
-      else if(k==='play'){ if(C.playing) pause(); else play(); }
+      else if(k==='play'){ if(C.playing) pause(); else { unlock(); play(); } }
       else if(k==='add'){ pause(); $('#kctFile').click(); }
       else if(k==='music'){ if(C.cut.music) musicOpts(); else $('#kctAud').click(); }
       else if(k==='music-new') $('#kctAud').click();
@@ -57576,7 +57619,7 @@ window.KovaCut=(function(){
       else if(k==='turn'&&c){ c.rot=((c.rot||0)+90)%360; save(); if(C.sel===0) sizeCanvas(); paintFrame(); }
       else if(k==='split') split();
       else if(k==='del') del();
-      else if(k==='save') exportVideo();
+      else if(k==='save'){ unlock(); exportVideo(); }
       else if(k==='cancel'&&C.saving){ C.saving.cancel=true; pause(); }
     });
     r.addEventListener('pointerdown',function(e){ var h=e.target.closest('[data-h]'); if(!h) return; var clip=h.closest('.kct-clip'); trimStart(e,+clip.getAttribute('data-i'),h.getAttribute('data-h')); });
@@ -57619,6 +57662,7 @@ window.KovaCut=(function(){
     wire(); paintTrack(); loadMusic();
     setTimeout(function(){ if(!C) return; sizeCanvas(); seek(0); },30);
     cut.clips.forEach(frames);
+    cut.clips.forEach(function(c){ el(c); });     /* every clip ready before the first tap (see unlock) */
     var sv=$('[data-k="save"]',C.root); if(!canSave()){ sv.title='This browser cannot save video'; }
     try{ $('#kctPlay').focus({preventScroll:true}); }catch(e){}
   }
@@ -57634,7 +57678,7 @@ window.KovaCut=(function(){
     try{ if(c.opener&&c.opener.focus) c.opener.focus({preventScroll:true}); }catch(e){}
   }
   return {open:open,close:close,isOpen:function(){ return !!C; },canSave:canSave,
-    _state:function(){ return C; },_total:function(){ return C?total():0; },_split:function(){ split(); },_seek:function(t){ seek(t); },_export:function(){ exportVideo(); },_addFiles:function(f){ addFiles(f); },_addMusic:function(f){ addMusic(f); },_outSize:function(){ return outSize(); }};
+    _state:function(){ return C; },_total:function(){ return C?total():0; },_split:function(){ split(); },_seek:function(t){ seek(t); },_export:function(){ exportVideo(); },_addFiles:function(f){ addFiles(f); },_addMusic:function(f){ addMusic(f); },_outSize:function(){ return outSize(); },_draw:draw,_look:look};
 })();
 
 </script>

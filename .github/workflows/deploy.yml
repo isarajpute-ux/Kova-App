@@ -69,7 +69,7 @@ jobs:
         run: npm ci
 
       - name: Chromium for Playwright
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Build dist/ the way Netlify will
         run: npm run build -- --size
@@ -93,6 +93,8 @@ jobs:
         run: node tests/e2e/cut.mjs
       - name: App Store and Play readiness (privacy manifest, permissions, in-app sign-in)
         run: node tests/e2e/store.mjs
+      - name: "Safari's engine: the camera and the video editor (what iPhones run)"
+        run: ENGINE=webkit node tests/e2e/camera.mjs && ENGINE=webkit node tests/e2e/cut.mjs
 
       - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
         run: node tests/e2e/perf.mjs

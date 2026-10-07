@@ -3,13 +3,13 @@
    corner, the shape changes, zoom works, and the shutter returns exactly
    what is inside the frame. SHOTS=<dir> also saves a screenshot per
    appearance. */
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { serve, openPage, SIGNED_OUT_LOCAL } from './harness.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
-const b = await chromium.launch({ args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
+const b = process.env.ENGINE === 'webkit' ? await webkit.launch() : await chromium.launch({ args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
 const site = await serve(join(root, 'dist'));
 const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), 'kova.tours.v1': JSON.stringify({ home: 1, move: 1, fuel: 1, sleep: 1, vitals: 1, customize: 1, work: 1, studio: 1 }) });
 const { context, page, pageErrors } = await openPage(b, null, { storage: STORE, viewport: { width: 390, height: 844 } });
