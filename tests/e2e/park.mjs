@@ -14,10 +14,14 @@ const { context, page, pageErrors } = await openPage(b, null, { storage: STORE }
 await page.goto(site.url + '/index.html', { waitUntil: 'load' });
 await page.waitForFunction(() => window.KovaPark && KovaPark.stats.done, null, { timeout: 30000 }).catch(() => {});
 await page.waitForTimeout(1500);
-const idle = await page.evaluate(() => ({ n: document.getElementsByTagName('*').length, parked: KovaPark.parked().length, back: KovaPark.stats.back }));
+/* modules drawing their first content may bring a screen back during
+   start-up (the second pass parks it again); after that, nothing should */
+const back0 = await page.evaluate(() => KovaPark.stats.back);
+await page.waitForTimeout(3000);
+const idle = await page.evaluate((b0) => ({ n: document.getElementsByTagName('*').length, parked: KovaPark.parked().length, back: KovaPark.stats.back - b0 }), back0);
 ck('closed screens are parked at idle (' + idle.parked + ')', idle.parked > 40);
 ck('under 1,500 elements at idle (' + idle.n + ')', idle.n < 1500);
-ck('nothing wakes a parked screen on its own (' + idle.back + ' woke)', idle.back <= 3);
+ck('once settled, nothing wakes a parked screen on its own (' + idle.back + ' woke)', idle.back === 0);
 /* a lookup by id brings its screen back, connected and filled */
 const byId = await page.evaluate(() => { const s = KovaPark.parked()[0]; const el = document.getElementById(s); const kid = el && el.firstElementChild; return { s, back: !el.hasAttribute('data-kpark'), kid: !!kid }; });
 ck('looking inside a parked screen brings it back (' + byId.s + ')', byId.back && byId.kid);

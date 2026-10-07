@@ -56835,11 +56835,11 @@ window.KovaPark=(function(){
   /* all at once (tests, or a call from the console) */
   function park(){ patch(); var n=0; Array.prototype.forEach.call(dqsa.call(document,'.screen'),function(s){ n+=one(s); }); return n; }
   /* a few screens per idle moment, so parking never holds up a tap */
-  function parkSoon(){
+  function parkSoon(last){
     patch();
     var list=Array.prototype.slice.call(dqsa.call(document,'.screen')), idle=window.requestIdleCallback||function(cb){ return setTimeout(function(){ cb({timeRemaining:function(){ return 8; }}); },60); };
-    function step(dl){ if(list.length) one(list.shift()); while(list.length&&dl.timeRemaining()>4) one(list.shift()); if(list.length) idle(step,{timeout:2000}); else stats.done=true; }
-    idle(step,{timeout:2000});
+    function step(dl){ if(list.length) one(list.shift()); while(list.length&&dl.timeRemaining()>4) one(list.shift()); if(list.length) idle(step,{timeout:1200}); else if(last) stats.done=true; }
+    idle(step,{timeout:1200});
   }
   /* opening a screen always brings it back, before go() shows it */
   function hookGo(){
@@ -56847,13 +56847,15 @@ window.KovaPark=(function(){
     var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); if(id==='cycle'){ var v=gid.call(document,'s-vitals'); if(v) unpark(v); } return real.apply(this,arguments); };
     w.__park=1; window.go=w;
   }
-  /* park once the modules that load after the first screen are in and
-     have set themselves up (they add rows to closed screens), or after
+  /* two passes: the first as soon as the page has loaded, so it holds the
+     screen in view (not all 70) within a moment of opening; the second
+     once the modules that load after the first screen are in and set up
+     (they may have brought a screen back to add their rows), or after
      12 s at the latest */
   function start(){
-    var go2=function(){ setTimeout(function(){ hookGo(); parkSoon(); },1800); }, done=false;
-    var once=function(){ if(done) return; done=true; go2(); };
-    if(!window.__kovaLoadWork||window.__kovaLazyDone) return setTimeout(once,700);
+    hookGo(); setTimeout(function(){ parkSoon(false); },120);
+    var done=false, once=function(){ if(done) return; done=true; setTimeout(function(){ hookGo(); parkSoon(true); },1500); };
+    if(!window.__kovaLoadWork||window.__kovaLazyDone) return setTimeout(once,600);
     window.addEventListener('kova:lazy',once);
     setTimeout(once,12000);
   }
