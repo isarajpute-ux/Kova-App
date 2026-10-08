@@ -7259,6 +7259,48 @@ body.light-mode .ks-cutb{border-color:rgba(18,20,24,.12);background:rgba(18,20,2
 }
 
 </style>
+<style id="p08-week">
+/* Customize workout, "Your week" (p16): the same fonts, card and pills as
+   before, said more simply. Seven day tiles; tap one and that day's exact
+   workout shows under them. One plain line about balance, one main button.
+   Dark, soft light and light glass. */
+.kwk{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:2px 0 12px}
+.kwd{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;cursor:pointer;
+  font:inherit;color:var(--ron-txt-2);background:rgba(255,255,255,.045);border:.5px solid var(--ron-line);transition:background .18s,border-color .18s,color .18s}
+.kwd b{font-size:11.5px;font-weight:500;color:var(--ron-txt)}
+.kwd i{display:block;width:16px;height:3px;border-radius:2px;background:currentColor;opacity:.75}
+.kwd.rest i{width:4px;height:4px;border-radius:50%;opacity:.5}
+.kwd.rest{opacity:.55}
+.kwd.now b::after{content:"";display:block;width:4px;height:4px;margin:3px auto 0;border-radius:50%;background:var(--acc)}
+.kwd.on{background:var(--acc);border-color:var(--acc);color:#0A0A0A;opacity:1}
+.kwd.on b{color:#0A0A0A}
+.kwd.on.now b::after{background:#0A0A0A}
+.kwd:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kwday{padding:2px 0 0}
+.kwhd{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.kwhd b{font-size:13.5px;font-weight:500;color:var(--ron-txt);letter-spacing:-.01em}
+.kwhd span{font-size:11px;font-weight:300;color:var(--ron-txt-3)}
+.kwex{align-items:center;padding:8px 0}
+.kwex .pgxn{flex:1;font-size:12.5px;color:var(--ron-txt);white-space:normal;line-height:1.3}
+.kwex .pgxr{font-size:11.5px}
+.kwn{width:18px;flex-shrink:0;font-size:10.5px;font-weight:500;color:var(--ron-txt-3);font-variant-numeric:tabular-nums}
+.kwrest{display:flex;flex-direction:column;gap:4px;padding:10px 0 4px}
+.kwrest b{font-size:13.5px;font-weight:500;color:var(--ron-txt)}
+.kwrest span{font-size:12px;font-weight:300;line-height:1.45;color:var(--ron-txt-2)}
+.kwbal{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:.5px solid var(--ron-line-2);font-size:12px;font-weight:300;color:var(--ron-txt-2)}
+.kwbal b{font-weight:500;color:var(--ron-txt)}
+.kwdot{width:7px;height:7px;border-radius:50%;background:var(--good,#6FD19D);flex-shrink:0}
+.kwdot.warn{background:var(--warn,#F0B35B)}
+.kwlink{display:block;width:100%;margin-top:10px;padding:6px;border:0;background:none;cursor:pointer;font:inherit;font-size:12.5px;font-weight:400;
+  color:var(--ron-txt-2);text-align:center;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ron-line)}
+.kwlink.sm{display:inline;width:auto;margin:0 0 0 auto;padding:2px 0;font-size:11.5px}
+.kwlink:hover{color:var(--ron-txt)}
+.rxhint{font-size:9px;font-weight:300;color:var(--ron-txt-3);margin-top:2px}
+body.light-mode .kwd{background:rgba(28,26,23,.035)}
+body.soft-light .kwd{background:rgba(255,255,255,.07)}
+@media (max-width:360px){ .kwk{gap:3px} }
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -7787,7 +7829,7 @@ body.light-mode .ks-cutb{border-color:rgba(18,20,24,.12);background:rgba(18,20,2
   <div class="sec-h">Training for</div>
   <div class="list-item on" id="modePill" style="margin-bottom:8px">
     <div class="li-ico"><span id="modeIco"><svg class="ic"><use href="#i-barbell"/></svg></span></div>
-    <div style="flex:1;min-width:0"><div class="li-name" id="modeName">Bodybuilding</div><div class="li-sub" id="modeSub">Size and shape, high volume</div></div>
+    <div style="flex:1;min-width:0"><div class="li-name" id="modeName">Bodybuilding</div><div class="li-sub" id="modeSub">Build your physique</div></div>
     <span id="modeChev" style="font-size:15px;opacity:.5"><svg class="ic"><use href="#i-chevron-down"/></svg></span>
   </div>
   <div id="modeList" style="display:none;margin-bottom:12px"></div>
@@ -7813,16 +7855,9 @@ body.light-mode .ks-cutb{border-color:rgba(18,20,24,.12);background:rgba(18,20,2
       <div class="roncirc" id="splRegen" title="Build it again"><svg class="ic" style="font-size:15px"><use href="#i-refresh"/></svg></div>
     </div>
     <div id="splList" style="margin-top:14px"></div>
-    <div style="margin-top:14px;padding-top:12px;border-top:.5px solid var(--ron-line-2)">
-      <div class="lbl" style="margin-bottom:9px">WEEKLY HARD SETS PER MUSCLE</div>
-      <div id="splVol"></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn" id="splUse" style="flex:1">Use this plan</button>
-      <button class="btn ghost" id="splEdit" style="flex:1">Tweak it</button>
-    </div>
-    <div class="sub" style="font-size:9.5px;margin-top:9px;text-align:center;opacity:.65">
-      Nothing here is locked. Tweak it lets you add, remove or change any exercise, set or day.</div>
+    <div id="splVol" class="kwbal"></div>
+    <button class="btn" id="splUse" style="width:100%;margin-top:14px">Use this week</button>
+    <button class="kwlink" id="splEdit" type="button">Change exercises or days</button>
   </div>
 
 
@@ -7853,10 +7888,10 @@ body.light-mode .ks-cutb{border-color:rgba(18,20,24,.12);background:rgba(18,20,2
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px">
-      <div style="font-size:12px;font-weight:700">Weekly hard sets per muscle</div>
-      <div class="lbl">DONE · TARGET</div>
+      <div style="font-size:12px;font-weight:700">Sets this week</div>
+      <div class="lbl">DONE · GOAL</div>
     </div>
-    <div class="sub" style="margin-bottom:8px">Per muscle, per week &mdash; not per session. A hard set is one taken close to failure, and most muscles grow best on 10 to 20 of them across the whole week.</div>
+    <div class="sub" style="margin-bottom:8px">Most muscles grow best with 10 to 20 hard sets a week, counting every session.</div>
     <div id="volNote" style="font-size:10px;color:var(--ink-1,rgba(255,255,255,.95));margin-bottom:10px"></div>
     <div id="volList"></div>
   </div>
@@ -7877,7 +7912,7 @@ body.light-mode .ks-cutb{border-color:rgba(18,20,24,.12);background:rgba(18,20,2
     <div style="flex:1"><div class="li-name">I already have a program</div><div class="li-sub">Enter it manually and Kova adapts around it</div></div>
     <svg class="ic" style="font-size:15px;opacity:.4"><use href="#i-chevron-right"/></svg>
   </div>
-  <button class="btn" data-go="session">Build my workout</button>
+  <button class="btn" data-go="session">Start today’s workout</button>
 </section>
 
 
@@ -13191,7 +13226,7 @@ window.__kovaModeId=function(v){
     'athletic performance':'athletic','athletic':'athletic','marathon and endurance':'endurance','endurance':'endurance',
     'running':'endurance','weight loss':'weightloss','weightloss':'weightloss','calisthenics':'calisthenics',
     'general health':'health','health':'health','swimming':'swimming','hiking':'hiking',
-    'cycling':'hikebike','hiking and biking':'hikebike','hikebike':'hikebike'};
+    'cycling':'hikebike','hiking and biking':'hikebike','hikebike':'hikebike','show prep':'showprep','showprep':'showprep'};
   return map[s]||'bodybuilding';
 };
 
@@ -13584,10 +13619,11 @@ window.KovaSport=(function(){
 (function(){
   var PRI='rgba(255,138,107,.34)',PRIS='rgba(255,138,107,.85)',SEC='rgba(255,196,120,.18)',SECS='rgba(255,196,120,.5)';
   var modes=[
-    {id:'bodybuilding',icon:'ti-barbell',name:'Bodybuilding',sub:'Build visible muscle',mult:1,reps:'8–12',rest:'1.5–2 min',load:'70–80%',cardio:'1–2 / wk',note:'About 12–16 hard sets per muscle each week.',rx:'Effort matters more than the exact rep count. Stop each set 1–2 reps short of failure, and add weight once it feels easy.',how:['Four to five sessions a week, each muscle trained twice.','Hardest compound first while you are fresh, isolation after.','Clear the top of the rep range on every set, then add 5 lb.']},
+    {id:'bodybuilding',icon:'ti-barbell',name:'Bodybuilding',sub:'Build your physique',mult:1,reps:'8–12',rest:'1.5–2 min',load:'70–80%',cardio:'1–2 / wk',note:'About 12–16 hard sets per muscle each week.',rx:'Effort matters more than the exact rep count. Stop each set 1–2 reps short of failure, and add weight once it feels easy.',how:['Four to five sessions a week, each muscle trained twice.','Hardest compound first while you are fresh, isolation after.','Clear the top of the rep range on every set, then add 5 lb.']},
+    {id:'athletic',icon:'ti-run',name:'Athletic performance',sub:'Performance: power, speed, explosiveness',mult:.75,reps:'3–8',rest:'2–3 min',load:'60–85%',cardio:'2–3 / wk',note:'Quality over quantity. Stop sets while bar speed is fast.',rx:'Jumps and fast lifts go first while fresh. Speed matters more than weight — stop before you slow down.',how:['Three to four days. Two with jumps or throws, all before the lifting.','Six or fewer reps on the fast work. Stop the set the moment speed drops.','Add load only while the bar still moves fast. Grinding a rep defeats the point.']},
+    {id:'showprep',icon:'ti-trophy',name:'Show prep',sub:'Stage-ready: lean, full, posed',mult:.95,reps:'6–12',rest:'1.5–2 min',load:'70–85%',cardio:'2–5 / wk',note:'Same lifting while calories come down; cardio rises as the show gets closer.',rx:'Lose about 0.5–1% of your body weight a week so the muscle stays. Keep protein high (about 2.3–3.1 g per kg of lean mass) and practise posing several times a week.',how:['Keep the weights heavy: the diet does the leaning out, not lighter sets.','Weigh in each morning and judge the weekly average, not single days.','Add cardio slowly: steps first, then short sessions as the show gets closer.']},
     {id:'powerlifting',icon:'ti-weight',name:'Powerlifting',sub:'Lift the heaviest weight',mult:.65,reps:'1–5',rest:'3–5 min',load:'85–95%',cardio:'0–1 / wk',note:'Lower volume, heavy loads. Around 8–12 sets per lift weekly.',rx:'Squat, bench, and deadlift lead every session. Long rests keep you fresh for the next heavy set.',how:['Four sessions: squat, bench, deadlift, then one repeat day.','The competition lift first, always. Accessories after, never before.','Add 5 lb a week to the main lift. Miss twice, drop 10% and rebuild.']},
     {id:'toning',icon:'ti-flame',name:'Toning',sub:'Lean and defined look',mult:.8,reps:'10–15',rest:'0.75–1.25 min',load:'55–70%',cardio:'3–4 / wk',note:'Moderate lifting volume plus a calorie deficit.',rx:'"Toning" just means building a little muscle while losing fat to reveal it. Lift with real effort, eat slightly less than you burn.',how:['Three to four lifting days plus your cardio on separate days.','Full body each session so nothing gets skipped in a busy week.','Hold the weights steady while you eat less. Losing strength means the deficit is too deep.']},
-    {id:'athletic',icon:'ti-run',name:'Athletic performance',sub:'Power, speed, explosiveness',mult:.75,reps:'3–8',rest:'2–3 min',load:'60–85%',cardio:'2–3 / wk',note:'Quality over quantity. Stop sets while bar speed is fast.',rx:'Jumps and fast lifts go first while fresh. Speed matters more than weight — stop before you slow down.',how:['Three to four days. Two with jumps or throws, all before the lifting.','Six or fewer reps on the fast work. Stop the set the moment speed drops.','Add load only while the bar still moves fast. Grinding a rep defeats the point.']},
     {id:'endurance',icon:'ti-route',name:'Marathon and endurance',sub:'Go long without fading',mult:.5,reps:'12–20',rest:'0.75–1.5 min',load:'40–60%',cardio:'4–6 / wk',note:'Lifting stays light so it never steals from your runs.',rx:'Running comes first, lifting just supports it. Keep weights light so your legs stay fresh for mileage.',how:['Lift twice a week, on your easy run days, never before a hard one.','Legs get one heavy compound; the rest is single leg and core.','Progress by reps, not load. If the lifting costs you a run, cut the lifting.']},
     {id:'weightloss',icon:'ti-trending-down',name:'Weight loss',sub:'Lose fat, keep muscle',mult:.85,reps:'10–15',rest:'0.75–1.25 min',load:'60–70%',cardio:'3–5 / wk',note:'Enough hard sets to signal your body to keep muscle.',rx:'A deficit alone can cost you muscle. Lifting with real effort tells your body to keep it while fat comes off.',how:['Three to four lifting days, cardio on top rather than instead.','Compounds first. Keep the loads you already handle rather than chasing new ones.','Hold your strength week to week. That is the signal your body keeps the muscle.']},
     {id:'calisthenics',icon:'ti-body-scan',name:'Calisthenics',sub:'Bodyweight strength and skill',mult:.9,reps:'AMRAP',rest:'1–2 min',load:'Bodyweight',cardio:'2–3 / wk',note:'Progress by harder moves, not more weight.',rx:'AMRAP means as many good reps as possible before you near failure. You progress with harder variations, not added weight.',how:['Three to four days, skill practice fresh at the start of each.','One push, one pull, one leg, one core progression per session.','When you clear the top reps twice, move to the harder variation, not more reps.']},
@@ -13625,9 +13661,9 @@ window.KovaSport=(function(){
 
   function fmt(v){var h=Math.floor(v/60),m=v%60; return h===0?m+' min':(m===0?h+'h':h+'h '+m+'m')}
   function rx(){
-    var c=[['REPS',mode.reps],['REST',mode.rest],['LOAD',mode.load],['CARDIO',mode.cardio]];
+    var c=[['REPS',mode.reps,'each set'],['REST',mode.rest,'between sets'],['WEIGHT',mode.load,'of your best'],['CARDIO',mode.cardio,'sessions']];
     document.getElementById('rxGrid').innerHTML=c.map(function(x){
-      return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div><div style="font-size:12.5px;font-weight:500;color:var(--acc);margin-top:3px">'+x[1]+'</div></div>'}).join('');
+      return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div><div style="font-size:12.5px;font-weight:500;color:var(--acc);margin-top:3px">'+x[1]+'</div><div class="rxhint">'+x[2]+'</div></div>'}).join('');
     document.getElementById('rxNote').textContent=mode.rx;
     /* the definition tells you what it is; this tells you what to do on
        Monday, which is the part that was missing */
@@ -13635,25 +13671,46 @@ window.KovaSport=(function(){
     if(hw&&mode.how) hw.innerHTML='<div class="lbl" style="margin-bottom:8px">HOW TO TRAIN IT</div>'
       +mode.how.map(function(t,i){
         return '<div class="howrow"><span class="hown">'+(i+1)+'</span><span>'+t+'</span></div>';
-      }).join('');
+      }).join('')
+      /* show prep: the program, the macros and the weight trend work together */
+      +(mode.id==='showprep'?'<button class="btn ghost" data-go="maint" style="width:100%;margin-top:12px">Set my prep calories and macros</button>':'');
   }
   function render(){
     all.forEach(function(el){el.setAttribute('fill',el.getAttribute('data-base'));el.setAttribute('stroke','rgba(242,236,240,.16)')});
     var cfg=vol[grp];
     cfg.p.forEach(function(id){var e=document.getElementById(id); if(e){e.setAttribute('fill',PRI);e.setAttribute('stroke',PRIS)}});
     cfg.s.forEach(function(id){var e=document.getElementById(id); if(e){e.setAttribute('fill',SEC);e.setAttribute('stroke',SECS)}});
+    /* p16: the sets you really logged this week (since Monday), per muscle,
+       against what this goal asks for - not sample numbers */
+    var GM={lower:['Quads','Hamstrings','Glutes','Calves'],upper:['Chest','Back','Shoulders','Biceps','Triceps'],core:['Core'],
+      push:['Chest','Shoulders','Triceps'],pull:['Back','Biceps'],full:['Chest','Back','Shoulders','Quads','Hamstrings','Glutes','Biceps','Triceps','Calves','Core'],
+      chest:['Chest'],back:['Back'],shoulders:['Shoulders'],arms:['Biceps','Triceps'],biceps:['Biceps'],triceps:['Triceps'],
+      quads:['Quads'],hams:['Hamstrings'],glutes:['Glutes'],calves:['Calves'],abs:['Core'],obliques:['Core']};
+    var BIGM=['Chest','Back','Quads','Hamstrings','Shoulders','Glutes'];
+    var pg=(window.KovaPlan&&KovaPlan.goals&&KovaPlan.goals[mode.id])||{sets:{big:16,small:10}};
+    var now=new Date(), mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)).getTime();
+    var done={}, logged=0;
+    try{ ((window.KSESS&&KSESS.log&&KSESS.log())||[]).forEach(function(x){
+      if((+x.t||0)<mon) return;
+      (x.ex||[]).forEach(function(e){
+        var m=e.m||(KSESS.lib?KSESS.lib(e.n).m:''), n=(e.sets||[]).filter(function(st){ return st&&st.role!=='warm'&&(st.r||st.w); }).length;
+        if(m&&n){ done[m]=(done[m]||0)+n; logged+=n; }
+      });
+    }); }catch(e){}
     var worst=null,gapMax=-99,h='';
-    cfg.rows.forEach(function(r){
-      var t=Math.max(2,Math.round(r[2]*mode.mult)),pct=Math.min(100,Math.round(r[1]/t*100)),gap=t-r[1];
-      if(gap>gapMax){gapMax=gap;worst=r[0]}
+    (GM[grp]||GM.lower).forEach(function(m){
+      var t=Math.max(2,BIGM.indexOf(m)>=0?pg.sets.big:pg.sets.small), d=done[m]||0, pct=Math.min(100,Math.round(d/t*100)), gap=t-d;
+      if(gap>gapMax){gapMax=gap;worst=m}
       var low=pct<75;
-      h+='<div class="volrow"><div class="volname">'+r[0]+'</div><div class="bar-track"><div class="bar-fill'+(low?' low':'')+'" style="width:'+pct+'%"></div></div><div class="volval'+(low?' low':'')+'">'+r[1]+'/'+t+'</div><div class="volnote">'+(gap>0?gap+' behind':'on target')+'</div></div>';
+      h+='<div class="volrow"><div class="volname">'+m+'</div><div class="bar-track"><div class="bar-fill'+(low?' low':'')+'" style="width:'+pct+'%"></div></div><div class="volval'+(low?' low':'')+'">'+d+'/'+t+'</div></div>';
     });
     document.getElementById('volList').innerHTML=h;
     document.getElementById('volNote').textContent=mode.note;
-    document.getElementById('cInsight').textContent = gapMax<=0
-      ? 'Every target is met at '+mode.name.toLowerCase()+' volume. '+fmt(mins)+' is a window to push intensity instead of adding sets.'
-      : worst+' sits '+gapMax+' sets behind. At '+mode.reps+' reps and '+mode.rest+' rest, '+fmt(mins)+' covers it.';
+    document.getElementById('cInsight').textContent = !logged
+      ? 'No sets logged yet this week. Follow your week and these fill in as you train.'
+      : gapMax<=0
+      ? 'Every muscle here has had enough work this week. Push a little heavier rather than adding sets.'
+      : worst+' could use '+gapMax+' more set'+(gapMax===1?'':'s')+' this week. Your '+fmt(mins)+' sessions have room for them.';
   }
   function listHtml(){
     return modes.map(function(m){
@@ -13671,7 +13728,7 @@ window.KovaSport=(function(){
       document.getElementById('modeName').textContent=mode.name;
       document.getElementById('modeSub').textContent=mode.sub;
       var mi=document.getElementById('modeIco');
-      if(mi&&mi.firstElementChild) mi.firstElementChild.setAttribute('href','#i-'+mode.icon.replace('ti-',''));
+      var mu=mi&&mi.querySelector('use'); if(mu) mu.setAttribute('href','#i-'+mode.icon.replace('ti-',''));
     }
     if(mins){
       var ti=document.getElementById('timeIn');
@@ -13694,7 +13751,7 @@ window.KovaSport=(function(){
              if(window.__paintSport) setTimeout(window.__paintSport,0);
              document.getElementById('modeName').textContent=mode.name;
           document.getElementById('modeSub').textContent=mode.sub;
-          document.getElementById('modeIco').firstElementChild.setAttribute('href','#i-'+mode.icon.replace('ti-',''));
+          var mu2=document.querySelector('#modeIco use'); if(mu2) mu2.setAttribute('href','#i-'+mode.icon.replace('ti-',''));
           open=false;L.style.display='none';
           document.getElementById('modeChev').firstElementChild.setAttribute('href','#i-chevron-down');
           rx();render();
@@ -23789,11 +23846,12 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
 
   var Q=[
     {c:'WHAT YOU WANT · 1 OF 7',q:'What are you training for?',s:'This sets your rep ranges, rest, and weekly volume.',k:'goal',t:'single',o:[
-      ['Build visible muscle','Bodybuilding · 8–12 reps','bodybuilding'],
+      ['Build my physique','Bodybuilding · 8–12 reps','bodybuilding'],
+      ['Perform: power and speed','Athletic · 3–8 reps','athletic'],
+      ['Get stage-ready','Show prep · lean down, keep the muscle','showprep'],
       ['Lift the heaviest weight','Powerlifting · 1–5 reps','powerlifting'],
       ['Lose fat, keep muscle','Weight loss · 10–15 reps','weightloss'],
       ['Lean and defined','Toning · 10–15 reps','toning'],
-      ['Power and explosiveness','Athletic · 3–8 reps','athletic'],
       ['Stay strong and mobile','General health · 10–15 reps','health'],
       ['Bodyweight strength and skills','Calisthenics · harder moves, not more weight','calisthenics'],
       ['Run farther or faster','Running · 5K to marathon','endurance'],
@@ -27415,6 +27473,8 @@ window.KovaPlan=(function(){
       why:'The competition lifts lead every day. Accessories exist to hold them up, not to tire you out.'},
     toning:{sets:{big:12,small:9},        rep:{comp:[8,12],iso:[12,15]}, comp:2, iso:3, days:3, rest:'0.75–1.25 min',
       why:'Full body so nothing gets missed in a busy week, with enough work to keep the muscle you have.'},
+    showprep:{sets:{big:14,small:9},      rep:{comp:[6,10],iso:[10,15]}, comp:2, iso:3, days:5, rest:'1.5–2 min',
+      why:'Keep lifting heavy while you diet down, so the muscle stays. Cardio and steps rise as the show gets closer.'},
     athletic:{sets:{big:12,small:7},      rep:{comp:[3,6], iso:[8,12]},  comp:2, iso:2, days:4, rest:'2–3 min',
       why:'Low reps and long rests so every rep is fast. Nothing here is taken to failure.'},
     endurance:{sets:{big:8,small:6},      rep:{comp:[5,10],iso:[10,15]}, comp:1, iso:3, days:2, rest:'1–2 min',
@@ -27731,6 +27791,9 @@ window.KovaPlan=(function(){
     document.getElementById('splName').textContent=plan.sport?(plan.days.length+' gym days for your sport'):(plan.days.length+' day split');
     document.getElementById('splWhy').textContent=(plan.why||'')+(plan.capped?' The other days are for your '+(({swimming:'swims',hiking:'hikes',hikebike:'rides',endurance:'runs'})[goal]||'sport')+'.':'');
 
+    /* p16: for a gym goal, the week itself - seven days, tap one and see
+       exactly what to do that day (the same days the Workout screen uses) */
+    if(!plan.sport){ host.innerHTML=weekHtml(); paintBalance(); return; }
     /* one row per day, folded. Six days of exercises listed at once was
        most of a screen before you had decided anything. */
     host.innerHTML=plan.days.map(function(d,i){
@@ -27767,21 +27830,64 @@ window.KovaPlan=(function(){
         }).join('')+'</div>';
     }
 
+    paintBalance();
+  }
+
+  /* ---- the week (p16): which day is which, and that day's exact workout ---- */
+  var WD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], WDL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  var SPREAD={1:[0],2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,4,5],6:[0,1,2,3,4,5],7:[0,1,2,3,4,5,6]};
+  var selDay=null;
+  function slots(){ return SPREAD[Math.min(7,plan.days.length)]||[0,1,3,4]; }
+  function minsFor(d){
+    var g=KovaPlan.goals[goal]||{}, r=parseInt((String(g.rest||'90').match(/\d+(\.\d+)?/)||[90])[0],10)||90;
+    var sec=/min/.test(g.rest||'')?parseFloat((String(g.rest).match(/\d+(\.\d+)?/)||[1.5])[0])*60:r;
+    return Math.max(15,Math.round((d.sets*(sec+40)/60+8)/5)*5);
+  }
+  function weekHtml(){
+    var sl=slots(), today=(new Date().getDay()+6)%7;
+    if(selDay==null){ selDay=today; if(sl.indexOf(today)<0){ for(var k=1;k<8;k++){ if(sl.indexOf((today+k)%7)>=0){ selDay=(today+k)%7; break; } } } }
+    var strip='<div class="kwk" role="tablist" aria-label="Your week">'+WD.map(function(n,i){
+      var at=sl.indexOf(i), d=at>=0?plan.days[at]:null;
+      return '<button type="button" role="tab" class="kwd'+(i===selDay?' on':'')+(d?'':' rest')+(i===today?' now':'')+'" data-wd="'+i+'" aria-selected="'+(i===selDay)+'" aria-label="'+WDL[i]+': '+(d?d.n:'rest day')+'">'
+        +'<b>'+n+'</b><i aria-hidden="true"></i></button>';
+    }).join('')+'</div>';
+    var at=sl.indexOf(selDay), d=at>=0?plan.days[at]:null, body;
+    if(!d) body='<div class="kwrest"><b>'+WDL[selDay]+' \u00b7 Rest</b><span>Walk, stretch and sleep well. Muscle is built on the days you rest.</span></div>';
+    else body='<div class="kwhd"><b>'+WDL[selDay]+' \u00b7 '+d.n+'</b><span>'+d.ex.length+' exercises \u00b7 about '+minsFor(d)+' min</span></div>'
+      +d.ex.map(function(e,j){
+        return '<div class="pgex kwex"><span class="kwn">'+(j+1)+'</span><span class="pgxn">'+e.e+'</span><span class="pgxr">'+e.s+' sets \u00b7 '+e.lo+'\u2013'+e.r+' reps</span></div>';
+      }).join('');
+    return strip+'<div class="kwday">'+body+'</div>';
+  }
+  /* one plain line about balance; the full count opens in a pop-up */
+  function paintBalance(){
+    var w=KovaPlan.weekly(plan), keys=Object.keys(w).sort(function(a,b){return w[b]-w[a]});
+    var low=keys.filter(function(k){ return w[k]<8; });
+    var el=document.getElementById('splVol'); if(!el) return;
+    el.innerHTML=(low.length
+      ?'<span class="kwdot warn"></span><span>Lighter on <b>'+low.slice(0,3).join(', ')+'</b> this week.</span>'
+      :'<span class="kwdot"></span><span>Every muscle gets enough work this week.</span>')
+      +'<button type="button" class="kwlink sm" id="splVolMore">Sets per muscle</button>';
+  }
+  function volSheet(){
     var w=KovaPlan.weekly(plan);
     var keys=Object.keys(w).sort(function(a,b){return w[b]-w[a]});
     var max=Math.max.apply(null,keys.map(function(k){return w[k]}).concat([16]));
-    document.getElementById('splVol').innerHTML=keys.map(function(k){
+    var html=keys.map(function(k){
       var v=w[k], low=v<8;
       return '<div class="tevrow"><div class="tevname">'+k+'</div>'
         +'<div class="tevtrack"><i style="width:'+Math.round(v/max*100)+'%;'
         +(low?'background:var(--warn)':'')+'"></i></div>'
         +'<div class="tevval">'+v+'</div></div>';
     }).join('')
-    +'<div class="sub" style="font-size:9px;margin-top:8px;opacity:.6">'
-    +'Ten to twenty a week grows most muscles. Anything amber is under that on this split.</div>';
+    +'<div class="sub" style="font-size:11px;margin-top:10px;opacity:.75">'
+    +'Ten to twenty hard sets a week grows most muscles. Amber is under that on this week.</div>';
+    if(window.openSheet) openSheet('<div class="grab"></div><div class="title-s" style="font-size:19px;margin-bottom:12px">Sets per muscle this week</div>'+html);
   }
 
   host.addEventListener('click',function(e){
+    var wd=e.target.closest('[data-wd]');
+    if(wd){ selDay=+wd.getAttribute('data-wd'); host.innerHTML=weekHtml(); var b=host.querySelector('.kwd.on'); if(b) try{ b.focus({preventScroll:true}); }catch(x){} return; }
     var d=e.target.closest('.pgdh'); if(!d) return;
     var row=d.closest('[data-day]'); if(!row) return;
     var i=+row.getAttribute('data-day');
@@ -27794,6 +27900,7 @@ window.KovaPlan=(function(){
     days=+t.getAttribute('data-d'); bump=0; paintDayPills(); build();
   });
   document.getElementById('splRegen').onclick=function(){ bump++; build(); toast('Rebuilt with different exercises.'); };
+  document.getElementById('splVol').addEventListener('click',function(e){ if(e.target.closest('#splVolMore')&&plan) volSheet(); });
 
   document.getElementById('splUse').onclick=function(){
     if(!plan) return;
@@ -27801,7 +27908,7 @@ window.KovaPlan=(function(){
       return {n:d.n, ex:d.ex.map(function(e){ return {e:e.e,s:e.s,r:e.r}; })};
     })});
     if(window.KSESS&&KSESS.reset) KSESS.reset();
-    toast('Saved. Your next session follows this split.');
+    toast('Saved. Each day now has its workout.');
     setTimeout(function(){ go('move'); },1100);
   };
   document.getElementById('splEdit').onclick=function(){
@@ -32539,8 +32646,9 @@ window.KOVA_TABS=function(cfg){
 
   var strip=document.createElement('div');
   strip.className='stgtabs tabgroup-strip'+(cfg.sticky?' sticky':'');
+  strip.setAttribute('role','tablist');
   strip.innerHTML=tabs.map(function(t,i){
-    return '<div class="stgtab'+(i===0?' on':'')+'" data-i="'+i+'">'+t.n+'</div>';
+    return '<div class="stgtab'+(i===0?' on':'')+'" data-i="'+i+'" role="tab" tabindex="0" aria-selected="'+(i===0)+'">'+t.n+'</div>';
   }).join('');
   wrap.appendChild(strip);
 
@@ -32564,6 +32672,7 @@ window.KOVA_TABS=function(cfg){
     tabs.forEach(function(t,n){ t.pane.style.display = n===i ? '' : 'none'; });
     strip.querySelectorAll('.stgtab').forEach(function(el){
       el.classList.toggle('on', +el.dataset.i===i);
+      el.setAttribute('aria-selected', String(+el.dataset.i===i));
     });
     if(cfg.onshow) cfg.onshow(i,tabs[i]);
   }
@@ -32571,6 +32680,10 @@ window.KOVA_TABS=function(cfg){
   strip.addEventListener('click',function(e){
     var el=e.target.closest('.stgtab');
     if(el) show(+el.dataset.i);
+  });
+  strip.addEventListener('keydown',function(e){
+    var el=e.target.closest&&e.target.closest('.stgtab'); if(!el) return;
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); show(+el.dataset.i); }
   });
 
   return {show:show, tabs:tabs, el:wrap};
@@ -32745,8 +32858,8 @@ window.KOVA_TABS=function(cfg){
   KOVA_TABS({
     id:'custTabs',
     tabs:[
-      {n:'Split',   els:[daysLbl, splDays, $('splCard'), timeLbl, slider, timeEnds]},
-      {n:'Muscles', els:[muscleHead, muscleBtn, musclePick, cardOf('bodySvg'), cardOf('volList')]},
+      {n:'Your week', els:[daysLbl, splDays, $('splCard'), timeLbl, slider, timeEnds]},
+      {n:'Muscles', els:[muscleHead, muscleBtn, musclePick, cardOf('bodySvg'), cardOf('volList'), cardOf('cInsight')]},
       {n:'Rules',   els:[cardOf('rxGrid')]}
     ]
   });
@@ -45201,17 +45314,17 @@ window.KovaScreenTour=(function(){
       ['Start workout','One tap. Kova logs your sets as you go.','#startBtn'],
       ['This week','Every session. Tap a day to see it.',up('wkTotal')],
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill','customize'],
-      ['The rules','Reps, rest, load and cardio for that goal - and how to train it on Monday.',up('rxGrid'),'customize'],
-      ['Days and split','Pick your days. Kova builds the split - for a sport, the sessions and the gym days that support them.','#splCard','customize'],
-      ['Weekly sets','Hard sets per muscle across the week. Amber is under target.',function(){ return q('#splVol'); },'customize'],
+      ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid'),'customize'],
+      ['Your week','Pick your days. Tap any day to see exactly what you do that day.','#splCard','customize'],
+      ['Balance','Whether every muscle gets enough work this week. Tap for the count per muscle.',function(){ return q('#splVol'); },'customize'],
       ['Target muscles','Aim a session at any muscle on the body map.',up('bodySvg'),'customize'],
       ['Session length','Drag to fit your day. The plan fits the sets to it.',function(){ var t=q('#timeIn'); return t&&t.closest('.slider-wrap'); },'customize']
     ],
     customize:[
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill'],
-      ['The rules','Reps, rest, load and cardio for that goal - and how to train it on Monday.',up('rxGrid')],
-      ['Days and split','Pick your days. Kova builds the split - for a sport, the sessions and the gym days that support them.','#splCard'],
-      ['Weekly sets','Hard sets per muscle across the week. Amber is under target.',function(){ return q('#splVol'); }],
+      ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid')],
+      ['Your week','Pick your days. Tap any day to see exactly what you do that day.','#splCard'],
+      ['Balance','Whether every muscle gets enough work this week. Tap for the count per muscle.',function(){ return q('#splVol'); }],
       ['Target muscles','Aim a session at any muscle on the body map.',up('bodySvg')],
       ['Session length','Drag to fit your day. The plan fits the sets to it.',function(){ var t=q('#timeIn'); return t&&t.closest('.slider-wrap'); }]
     ],

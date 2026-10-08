@@ -93,6 +93,40 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const hard = (t) => /Threshold|Speed|Long/.test(t);
   ck('no gym day falls the day before a hard or long swim', rows.every((r, i) => !/Dryland/.test(r) || !hard(rows[(i + 1) % 7])));
 
+  // ---- p16: the simpler Customize screen - your week, day by day
+  doc.querySelector('#modeList .mopt[data-id="bodybuilding"]') || doc.getElementById('modePill').click();
+  await wait(20);
+  doc.querySelector('#modeList .mopt[data-id="bodybuilding"]').click(); await wait(150);
+  w.__paintPlanGen(); await wait(50);
+  const tiles = [...doc.querySelectorAll('#splList .kwd')];
+  ck('Your week: seven day tiles, four of them training days on a 4-day split (Mon, Tue, Thu, Fri)', tiles.length === 7 && tiles.filter((t) => !t.classList.contains('rest')).map((t) => t.querySelector('b').textContent).join() === 'Mon,Tue,Thu,Fri');
+  tiles[0].click(); await wait(20);
+  const day = doc.querySelector('#splList .kwday').textContent;
+  ck('tapping Monday shows exactly what to do: the day, how long, and each exercise as sets and reps', /Monday · /.test(day) && /exercises · about \d+ min/.test(day) && /\d sets · \d+–\d+ reps/.test(day));
+  doc.querySelectorAll('#splList .kwd')[2].click(); await wait(20);
+  ck('a rest day says so in plain words', /Wednesday · Rest/.test(doc.querySelector('#splList .kwday').textContent));
+  ck('one plain line about balance instead of ten bars, and one main button', !!doc.querySelector('#splVol .kwdot') && doc.querySelectorAll('#splVol .tevrow').length === 0 && doc.getElementById('splUse').textContent === 'Use this week');
+  doc.getElementById('splVolMore').click(); await wait(30);
+  ck('the full sets-per-muscle count opens in a pop-up', /Sets per muscle this week/.test((doc.getElementById('sheet') || {}).textContent || '') && doc.querySelectorAll('#sheet .tevrow').length >= 6);
+  if (w.closeSheet) w.closeSheet();
+  ck('the tabs read Your week / Muscles / Rules', [...doc.querySelectorAll('#s-customize .stgtab[role="tab"]')].map((t) => t.textContent.trim()).join('|') === 'Your week|Muscles|Rules');
+  // Show prep, next to physique and performance
+  doc.getElementById('modePill').click(); await wait(20);
+  const goals = [...doc.querySelectorAll('#modeList .mopt')].map((m) => m.getAttribute('data-id'));
+  ck('the first three programs are physique, performance and show prep', goals.slice(0, 3).join() === 'bodybuilding,athletic,showprep');
+  doc.querySelector('#modeList .mopt[data-id="showprep"]').click(); await wait(150);
+  w.__paintPlanGen(); await wait(50);
+  ck('Show prep is saved and gets its own plan, on the days you picked', w.KP.get('mode') === 'showprep' && /diet down/.test(doc.getElementById('splWhy').textContent) && doc.querySelectorAll('#splList .kwd:not(.rest)').length === 4);
+  ck('its rules are plain and link to prep calories and macros in Fuel', /0\.5–1%/.test(doc.getElementById('rxNote').textContent) && !!doc.querySelector('#rxHow [data-go="maint"]') && /WEIGHT/.test(doc.getElementById('rxGrid').textContent));
+  // the Muscles tab counts sets you really logged this week
+  const monday = (() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate() - ((n.getDay() + 6) % 7), 9).getTime(); })();
+  w.localStorage.setItem('kova_log_v1', JSON.stringify([{ t: monday, date: 'x', ex: [{ n: 'Back squat', m: 'Quads', sets: [{ w: 100, r: 5, role: 'warm' }, { w: 140, r: 8, role: 'work' }, { w: 140, r: 8, role: 'work' }, { w: 140, r: 7, role: 'work' }] }] }]));
+  doc.querySelector('#modeList .mopt[data-id="bodybuilding"]') || doc.getElementById('modePill').click(); await wait(20);
+  doc.querySelector('#modeList .mopt[data-id="bodybuilding"]').click(); await wait(150);
+  const quads = [...doc.querySelectorAll('#volList .volrow')].find((r) => /Quads/.test(r.textContent));
+  ck('the Muscles tab counts the sets you logged this week (3 work sets of quads, warm-up left out)', quads && /3\/16/.test(quads.textContent));
+  ck('and the tip is about those real numbers', /Quads could use 13 more sets/.test(doc.getElementById('cInsight').textContent) || /could use/.test(doc.getElementById('cInsight').textContent));
+
   // ---- the quiz
   const quizOpts = w.document.getElementById('s-quiz') ? html.match(/'Swim stronger'/) && html.match(/'Hike bigger days'/) && html.match(/'Run farther or faster'/) : null;
   ck('the quiz offers swimming, running, hiking, cycling and calisthenics', !!quizOpts && /'Ride stronger'/.test(html) && /'Bodyweight strength and skills'/.test(html));

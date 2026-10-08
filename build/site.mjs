@@ -34,7 +34,7 @@ const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
    noise meter, the privacy banner and legal rows, the alert sounds, the
    Studio's workflow styles) */
 const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal', 'p08-chime', 'p08-studioflow',
-  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs'];
+  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs', 'p08-alarm'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '

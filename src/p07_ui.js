@@ -233,17 +233,17 @@ window.KovaScreenTour=(function(){
       ['Start workout','One tap. Kova logs your sets as you go.','#startBtn'],
       ['This week','Every session. Tap a day to see it.',up('wkTotal')],
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill','customize'],
-      ['The rules','Reps, rest, load and cardio for that goal - and how to train it on Monday.',up('rxGrid'),'customize'],
-      ['Days and split','Pick your days. Kova builds the split - for a sport, the sessions and the gym days that support them.','#splCard','customize'],
-      ['Weekly sets','Hard sets per muscle across the week. Amber is under target.',function(){ return q('#splVol'); },'customize'],
+      ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid'),'customize'],
+      ['Your week','Pick your days. Tap any day to see exactly what you do that day.','#splCard','customize'],
+      ['Balance','Whether every muscle gets enough work this week. Tap for the count per muscle.',function(){ return q('#splVol'); },'customize'],
       ['Target muscles','Aim a session at any muscle on the body map.',up('bodySvg'),'customize'],
       ['Session length','Drag to fit your day. The plan fits the sets to it.',function(){ var t=q('#timeIn'); return t&&t.closest('.slider-wrap'); },'customize']
     ],
     customize:[
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill'],
-      ['The rules','Reps, rest, load and cardio for that goal - and how to train it on Monday.',up('rxGrid')],
-      ['Days and split','Pick your days. Kova builds the split - for a sport, the sessions and the gym days that support them.','#splCard'],
-      ['Weekly sets','Hard sets per muscle across the week. Amber is under target.',function(){ return q('#splVol'); }],
+      ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid')],
+      ['Your week','Pick your days. Tap any day to see exactly what you do that day.','#splCard'],
+      ['Balance','Whether every muscle gets enough work this week. Tap for the count per muscle.',function(){ return q('#splVol'); }],
       ['Target muscles','Aim a session at any muscle on the body map.',up('bodySvg')],
       ['Session length','Drag to fit your day. The plan fits the sets to it.',function(){ var t=q('#timeIn'); return t&&t.closest('.slider-wrap'); }]
     ],

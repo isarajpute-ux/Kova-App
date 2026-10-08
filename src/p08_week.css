@@ -1,0 +1,39 @@
+/* Customize workout, "Your week" (p16): the same fonts, card and pills as
+   before, said more simply. Seven day tiles; tap one and that day's exact
+   workout shows under them. One plain line about balance, one main button.
+   Dark, soft light and light glass. */
+.kwk{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:2px 0 12px}
+.kwd{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:9px 2px 8px;border-radius:14px;cursor:pointer;
+  font:inherit;color:var(--ron-txt-2);background:rgba(255,255,255,.045);border:.5px solid var(--ron-line);transition:background .18s,border-color .18s,color .18s}
+.kwd b{font-size:11.5px;font-weight:500;color:var(--ron-txt)}
+.kwd i{display:block;width:16px;height:3px;border-radius:2px;background:currentColor;opacity:.75}
+.kwd.rest i{width:4px;height:4px;border-radius:50%;opacity:.5}
+.kwd.rest{opacity:.55}
+.kwd.now b::after{content:"";display:block;width:4px;height:4px;margin:3px auto 0;border-radius:50%;background:var(--acc)}
+.kwd.on{background:var(--acc);border-color:var(--acc);color:#0A0A0A;opacity:1}
+.kwd.on b{color:#0A0A0A}
+.kwd.on.now b::after{background:#0A0A0A}
+.kwd:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kwday{padding:2px 0 0}
+.kwhd{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.kwhd b{font-size:13.5px;font-weight:500;color:var(--ron-txt);letter-spacing:-.01em}
+.kwhd span{font-size:11px;font-weight:300;color:var(--ron-txt-3)}
+.kwex{align-items:center;padding:8px 0}
+.kwex .pgxn{flex:1;font-size:12.5px;color:var(--ron-txt);white-space:normal;line-height:1.3}
+.kwex .pgxr{font-size:11.5px}
+.kwn{width:18px;flex-shrink:0;font-size:10.5px;font-weight:500;color:var(--ron-txt-3);font-variant-numeric:tabular-nums}
+.kwrest{display:flex;flex-direction:column;gap:4px;padding:10px 0 4px}
+.kwrest b{font-size:13.5px;font-weight:500;color:var(--ron-txt)}
+.kwrest span{font-size:12px;font-weight:300;line-height:1.45;color:var(--ron-txt-2)}
+.kwbal{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:.5px solid var(--ron-line-2);font-size:12px;font-weight:300;color:var(--ron-txt-2)}
+.kwbal b{font-weight:500;color:var(--ron-txt)}
+.kwdot{width:7px;height:7px;border-radius:50%;background:var(--good,#6FD19D);flex-shrink:0}
+.kwdot.warn{background:var(--warn,#F0B35B)}
+.kwlink{display:block;width:100%;margin-top:10px;padding:6px;border:0;background:none;cursor:pointer;font:inherit;font-size:12.5px;font-weight:400;
+  color:var(--ron-txt-2);text-align:center;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ron-line)}
+.kwlink.sm{display:inline;width:auto;margin:0 0 0 auto;padding:2px 0;font-size:11.5px}
+.kwlink:hover{color:var(--ron-txt)}
+.rxhint{font-size:9px;font-weight:300;color:var(--ron-txt-3);margin-top:2px}
+body.light-mode .kwd{background:rgba(28,26,23,.035)}
+body.soft-light .kwd{background:rgba(255,255,255,.07)}
+@media (max-width:360px){ .kwk{gap:3px} }
