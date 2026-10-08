@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test": "for f in tests/*.js; do node \"$f\" || exit 1; done",
-    "build": "node build/site.mjs"
+    "build": "node build/site.mjs",
+    "build:pages": "node build/site.mjs --pages"
   },
   "dependencies": {
     "@netlify/blobs": "^11.1.1",

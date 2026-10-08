@@ -161,7 +161,17 @@ export function build(src) {
 const kb = (b) => (b / 1024).toFixed(0) + ' KB';
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const src = readFileSync(join(root, 'index.html'), 'utf8');
+  let src = readFileSync(join(root, 'index.html'), 'utf8');
+  /* KOVA_API_URL: where the server is when the page is not on the same
+     site as it (GitHub Pages, with the server on Netlify). Public: it is
+     an address, not a secret. */
+  const api = String(process.env.KOVA_API_URL || '').trim().replace(/\/+$/, '');
+  if (api) {
+    if (!/^https:\/\/[\w.-]+(:\d+)?(\/[\w./-]*)?$/.test(api)) { console.error('KOVA_API_URL must be an https address, e.g. https://kova-app.netlify.app/api'); process.exit(1); }
+    const before = src;
+    src = src.replace("window.KOVA_API = window.KOVA_API || '';", 'window.KOVA_API = window.KOVA_API || ' + JSON.stringify(api) + ';');
+    if (src === before) { console.error('KOVA_API setting not found in index.html'); process.exit(1); }
+  }
   const { page, files, blocks, moved } = build(src);
   rmSync(out, { recursive: true, force: true });
   mkdirSync(join(out, 'm'), { recursive: true });
@@ -170,9 +180,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const f of FILES) cpSync(join(root, f), join(out, f));
   /* the split files are part of the install, so Work OS opens offline */
   const sw = readFileSync(join(out, 'sw.js'), 'utf8');
-  writeFileSync(join(out, 'sw.js'), sw.replace("'/icon-180.png'\n];", "'/icon-180.png'" + Object.keys(files).map((f) => ",\n  '/" + f + "'").join('') + '\n];')
+  writeFileSync(join(out, 'sw.js'), sw.replace("'./icon-180.png'\n];", "'./icon-180.png'" + Object.keys(files).map((f) => ",\n  './" + f + "'").join('') + '\n];')
     .replace(/var VERSION = '([^']+)';/, (m, v) => "var VERSION = '" + v + '-' + hash(page + Object.keys(files).join()) .slice(0, 6) + "';"));
   console.log(`dist/: index.html (${blocks} scripts and styles minified, ${moved} Work OS blocks moved out), ${Object.keys(files).length} after-first-screen files, ${FILES.length} others`);
+  if (api) console.log('server: ' + api);
+  /* --pages: the extras GitHub Pages needs (see build/pages.mjs) */
+  if (process.argv.includes('--pages')) (await import('./pages.mjs')).finish(out, process.env.PAGES_BASE || '/');
   if (process.argv.includes('--size')) {
     const br = (t) => brotliCompressSync(Buffer.from(t), { params: { [zc.BROTLI_PARAM_QUALITY]: 11 } }).length;
     console.log(`index.html  ${kb(src.length)} -> ${kb(page.length)}; gzip ${kb(gzipSync(src, { level: 9 }).length)} -> ${kb(gzipSync(page, { level: 9 }).length)}; brotli ${kb(br(page))} (what browsers download)`);

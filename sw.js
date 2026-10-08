@@ -32,21 +32,24 @@ try {
   firebase.messaging();
 } catch (e) { /* no push on this install; reminders still show while Kova is open */ }
 
-var VERSION = 'kova-v5-113';
+var VERSION = 'kova-v5-114';
 var SHELL   = 'kova-shell-' + VERSION;
 var ASSETS  = 'kova-assets-' + VERSION;
 /* food and recipe photos (Unsplash): kept across versions, at most 80 */
 var PHOTOS  = 'kova-photos-v1';
 
+/* relative to where the worker lives, so the same file works at the root
+   (Netlify) and under /Kova-App/ (GitHub Pages) */
 var PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/icon-512-maskable.png',
-  '/icon-180.png'
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-512-maskable.png',
+  './icon-180.png'
 ];
+var HOME = new URL('index.html', self.registration ? self.registration.scope : self.location.href).href;
 
 self.addEventListener('install', function(e){
   e.waitUntil(
@@ -92,10 +95,10 @@ self.addEventListener('fetch', function(e){
     e.respondWith(
       fetch(req).then(function(res){
         var copy = res.clone();
-        caches.open(SHELL).then(function(c){ c.put('/index.html', copy); });
+        caches.open(SHELL).then(function(c){ c.put(HOME, copy); });
         return res;
       }).catch(function(){
-        return caches.match('/index.html').then(function(hit){
+        return caches.match(HOME).then(function(hit){
           return hit || new Response('<h1>Offline</h1><p>Open Kova once with a connection to install it.</p>',
             { headers: { 'Content-Type': 'text/html' } });
         });

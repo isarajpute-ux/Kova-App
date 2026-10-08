@@ -18,7 +18,7 @@ const errors = [];
   ck('refunds: trials, App Store, Google Play and the web, each spelled out', /Free trials/.test(P.refunds) && /reportaproblem\.apple\.com/.test(P.refunds) && /Google Play/.test(P.refunds) && /14 days/.test(P.refunds));
   ck('cookies: what is needed, analytics only with a yes, no advertising', /Needed to run Kova/.test(P.cookies) && /only if you allow it/.test(P.cookies) && /Advertising/.test(P.cookies));
   ck('licences: fonts (OFL), icons (MIT), Open Food Facts (ODbL), Unsplash, software', /Open Font License/.test(P.licenses) && /Tabler Icons/.test(P.licenses) && /Open Database License/.test(P.licenses) && /Unsplash/.test(P.licenses) && /Apache 2\.0/.test(P.licenses));
-  ck('every page links the others', Object.values(P).every((t) => /href="\/terms\.html"/.test(t) && /href="\/licenses\.html"/.test(t)));
+  ck('every page links the others, with relative links (so they work on GitHub Pages under /Kova-App/ too)', Object.values(P).every((t) => /href="terms\.html"/.test(t) && /href="licenses\.html"/.test(t) && !/href="\/\w+\.html"/.test(t)));
   ck('business details are marked as blanks until filled in', Object.values(P).every((t) => /class="todo"/.test(t)));
   const site = read('build/site.mjs'), red = read('_redirects'), nat = read('native/scripts/copy-web.mjs');
   ck('they ship with the site and the app, with short addresses', ['terms', 'refunds', 'cookies', 'licenses'].every((p) => site.includes("'" + p + ".html'") && nat.includes("'" + p + ".html'") && red.includes('/' + p + ' ')));
@@ -32,7 +32,7 @@ const errors = [];
     database: () => ({ ref: () => ({ child() { return this; }, set: () => Promise.resolve(), once: () => Promise.resolve({ val: () => null }), on() {}, off() {} }) }),
     analytics: () => ({ logEvent() {}, setUserId() {} }) };
   const pages = { '/privacy.html': P.privacy, '/terms.html': P.terms, '/refunds.html': P.refunds, '/cookies.html': P.cookies, '/licenses.html': P.licenses };
-  w.fetch = (u) => { const p = String(u).replace(/^https?:\/\/[^/]+/, ''); return Promise.resolve(pages[p] ? { ok: true, status: 200, text: () => Promise.resolve(pages[p]), json: () => Promise.resolve({}) } : { ok: false, status: 404, json: () => Promise.resolve({}), text: () => Promise.resolve('') }); };
+  w.fetch = (u) => { const p = '/' + String(u).replace(/^https?:\/\/[^/]+/, '').replace(/^\/+/, ''); return Promise.resolve(pages[p] ? { ok: true, status: 200, text: () => Promise.resolve(pages[p]), json: () => Promise.resolve({}) } : { ok: false, status: 404, json: () => Promise.resolve({}), text: () => Promise.resolve('') }); };
   w.localStorage.setItem('kova.auth.skipped', '1');
   w.localStorage.setItem('kova.onboarded', JSON.stringify({ at: 1 }));
   w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));

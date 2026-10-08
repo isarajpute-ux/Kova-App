@@ -29,6 +29,25 @@ To see what is still missing, open the app, go to **Settings**, tap **Version** 
 
 A production deploy uses about 15 of the 300 monthly credits. When credits run out the site pauses until the next month; it never charges.
 
+## 2b. GitHub Pages (the website, free, from the repo)
+
+GitHub Pages serves the website; the server (`/api`) keeps running on Netlify (section 2), because Pages can only serve files. The workflow (`.github/workflows/deploy.yml`, job **Publish the website on GitHub Pages**) builds and publishes on every push to `main`, once every test has passed.
+
+1. **Settings › Pages › Build and deployment › Source: GitHub Actions.**
+2. **Settings › Secrets and variables › Actions › Variables › New repository variable:** `KOVA_API_URL` = your Netlify address plus `/api`, for example `https://kova-app.netlify.app/api`. It is an address, not a secret. Without it the site loads, but sign-in codes, AI, food search and sync have no server.
+3. **Firebase › Authentication › Settings › Authorized domains:** add `isarajpute-ux.github.io`.
+4. Merge `kova-brief-waves-1-4` into `main` (a pull request). The run publishes to `https://isarajpute-ux.github.io/Kova-App/`, and the address shows on the run.
+
+The site works under `/Kova-App/`: links, the install manifest and the offline cache are all relative, `/privacy` and the other short links still open, and an unknown address goes back to the app.
+
+**A custom domain later:** Settings › Pages › Custom domain, then add the repository variable `PAGES_BASE` = `/` and push again.
+
+**Try it locally:**
+```bash
+KOVA_API_URL=https://kova-app.netlify.app/api PAGES_BASE=/Kova-App/ npm run build:pages
+```
+`node tests/e2e/pages.mjs` builds it under `/Kova-App/` in a temporary folder and checks it.
+
 ## 3. AI (Anthropic)
 
 | Variable | Where to get it | Without it |

@@ -3158,6 +3158,11 @@ body.light-mode .card.card-lg .chip,body.light-mode .card.kova .chip{
    app works it out from the page; the native app (served from
    capacitor://localhost) needs it written here to reach the api. */
 window.KOVA_SITE = window.KOVA_SITE || '';
+/* The server's address when the page is hosted somewhere else, e.g. on
+   GitHub Pages with the server on Netlify: "https://kova-app.netlify.app/api".
+   Filled in at build time from KOVA_API_URL (a GitHub repository variable);
+   empty means "the same site as the page". */
+window.KOVA_API = window.KOVA_API || '';
 /* Web push key: Firebase console > Project settings > Cloud Messaging >
    Web Push certificates > "Key pair". Public by design. Until it is set,
    reminders on the website only show while Kova is open. */
@@ -12467,6 +12472,8 @@ window.KovaLink = (function(){
      Netlify site exists. A saved override still wins (useful against
      a local server). */
   function defaultServer(){
+    var api = String(window.KOVA_API || '').replace(/\/+$/, '');
+    if (api) return api;
     var site = String(window.KOVA_SITE || '').replace(/\/+$/, '');
     var L = window.location || {};
     var web = /^https?:$/.test(L.protocol || '');
@@ -38726,7 +38733,7 @@ window.KovaAuth = (function(){
       + '<div class="af-note">New here? The same code creates your account.</div>'
       + provs('Or continue with')
       + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>'
-      + '<div class="af-legal">By continuing you agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
+      + '<div class="af-legal">By continuing you agree to the <a href="terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
 
     var em=document.getElementById('afEmail'), go=document.getElementById('afSend'), tip=document.getElementById('afTip');
     function hint(final){
@@ -56777,7 +56784,9 @@ window.KovaLegal=(function(){
   function allowed(){ return !!(window.KovaAnalytics&&KovaAnalytics.allowed&&KovaAnalytics.allowed()); }
   function set(yes){ try{ if(window.KovaAnalytics&&KovaAnalytics.consent) KovaAnalytics.consent(yes); else localStorage.setItem('kova.consent',JSON.stringify({a:!!yes,at:Date.now()})); }catch(e){} paintSettings(); }
   function bizFilled(){ var B=window.KOVA_BIZ||{}; return !!(B.name&&B.address&&B.email); }
-  function url(p){ return '/'+p+'.html'; }
+  /* relative, so the pages resolve on any address (Netlify at the root,
+     GitHub Pages under /Kova-App/) */
+  function url(p){ return p+'.html'; }
 
   /* ---- the banner ---- */
   function banner(){

@@ -1,9 +1,10 @@
 name: Check and deploy Kova
 
-# Runs on every push to any branch and on every pull request. Netlify
-# builds and deploys the site itself (its GitHub app watches main); CI is
-# what stops a broken build from getting there, and it deploys the
-# Firebase rules, which Netlify knows nothing about.
+# Runs on every push to any branch and on every pull request. On a push to
+# main, once every test has passed, it publishes the website on GitHub
+# Pages and deploys the Firebase rules. The server (/api) runs on Netlify,
+# whose GitHub app builds main itself; the Pages site reaches it through
+# the KOVA_API_URL repository variable.
 
 on:
   push:
@@ -93,6 +94,8 @@ jobs:
         run: node tests/e2e/cut.mjs
       - name: App Store and Play readiness (privacy manifest, permissions, in-app sign-in)
         run: node tests/e2e/store.mjs
+      - name: The GitHub Pages build works under /Kova-App/ and reaches the server
+        run: node tests/e2e/pages.mjs
       - name: "Safari's engine: the camera and the video editor (what iPhones run)"
         run: ENGINE=webkit node tests/e2e/camera.mjs && ENGINE=webkit node tests/e2e/cut.mjs
 
@@ -126,3 +129,53 @@ jobs:
       - name: Deploy database rules
         if: env.FIREBASE_TOKEN != ''
         run: firebase deploy --only database --token "$FIREBASE_TOKEN" --non-interactive
+
+  pages:
+    name: Publish the website on GitHub Pages
+    needs: [validate, browser]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    # one publish at a time; a newer push waits rather than cutting one off
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Settings > Secrets and variables > Actions > Variables:
+      #   KOVA_API_URL  the Netlify server, e.g. https://kova-app.netlify.app/api
+      #   PAGES_BASE    only with a custom domain: "/" (default: /<repo name>/)
+      - name: Check the server address is set
+        if: vars.KOVA_API_URL == ''
+        run: echo "::warning::KOVA_API_URL is not set, so the site cannot reach the server (AI, food search, sign-in codes). Add it under Settings > Secrets and variables > Actions > Variables."
+
+      - name: Build for GitHub Pages
+        env:
+          KOVA_API_URL: ${{ vars.KOVA_API_URL }}
+          PAGES_BASE: ${{ vars.PAGES_BASE || format('/{0}/', github.event.repository.name) }}
+        run: npm run build:pages
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Publish
+        id: deploy
+        uses: actions/deploy-pages@v4

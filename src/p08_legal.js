@@ -26,7 +26,9 @@ window.KovaLegal=(function(){
   function allowed(){ return !!(window.KovaAnalytics&&KovaAnalytics.allowed&&KovaAnalytics.allowed()); }
   function set(yes){ try{ if(window.KovaAnalytics&&KovaAnalytics.consent) KovaAnalytics.consent(yes); else localStorage.setItem('kova.consent',JSON.stringify({a:!!yes,at:Date.now()})); }catch(e){} paintSettings(); }
   function bizFilled(){ var B=window.KOVA_BIZ||{}; return !!(B.name&&B.address&&B.email); }
-  function url(p){ return '/'+p+'.html'; }
+  /* relative, so the pages resolve on any address (Netlify at the root,
+     GitHub Pages under /Kova-App/) */
+  function url(p){ return p+'.html'; }
 
   /* ---- the banner ---- */
   function banner(){
