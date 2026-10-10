@@ -19,9 +19,12 @@ function str(env, k, d) {
 }
 
 /* the public address of the api: API_BASE if set, else the site's own
-   URL (Netlify sets URL to the site's main address) + /api */
+   URL + /api. Netlify sets URL to the site's main address; Vercel sets
+   VERCEL_PROJECT_PRODUCTION_URL to it without the https:// */
 function baseOf(env) {
-  const b = str(env, 'API_BASE') || (str(env, 'URL') ? str(env, 'URL').replace(/\/+$/, '') + '/api' : '');
+  const vercel = str(env, 'VERCEL_PROJECT_PRODUCTION_URL').replace(/^https?:\/\//, '');
+  const site = str(env, 'URL') || (vercel ? 'https://' + vercel : '');
+  const b = str(env, 'API_BASE') || (site ? site.replace(/\/+$/, '') + '/api' : '');
   return b.replace(/\/+$/, '');
 }
 
@@ -92,6 +95,11 @@ function capabilities(env) {
     revenuecatWebhook: !!str(env, 'REVENUECAT_WEBHOOK_AUTH'),
     usda: !!str(env, 'FDC_API_KEY') && str(env, 'FDC_API_KEY') !== 'DEMO_KEY',
     tokenKey: !!str(env, 'KOVA_TOKEN_KEY'),
+    /* where photos and videos live: Netlify Blobs on Netlify, Supabase
+       Storage on Vercel */
+    supabase: !!(str(env, 'SUPABASE_URL') && (str(env, 'SUPABASE_SECRET_KEY') || str(env, 'SUPABASE_SERVICE_ROLE_KEY'))),
+    timer: !!str(env, 'CRON_SECRET'),
+    host: str(env, 'VERCEL') ? 'vercel' : (str(env, 'NETLIFY') || str(env, 'URL')) ? 'netlify' : '',
     oauth: {
       google: both('GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'),
       instagram: both('INSTAGRAM_APP_ID', 'INSTAGRAM_APP_SECRET'),

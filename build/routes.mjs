@@ -1,5 +1,5 @@
 /* Writes ROUTES.md: one row per server route, from the router itself
-   (functions/api.js, plus the file route in functions/netlify.js), checked
+   (functions/api.js, plus the file route in functions/netlify.js and vercel.js), checked
    against every call the app makes (index.html). A call with no route goes
    in "Missing" at the top.
      node build/routes.mjs           rewrite ROUTES.md
@@ -37,7 +37,7 @@ function serverRoutes() {
     }
     methods.forEach((m) => add(m, p, h));
   }
-  add('GET', '/media/file', 'media.serve (netlify.js)');
+  add('GET', '/media/file', 'media.serve (netlify.js, vercel.js)');
   return out;
 }
 
@@ -64,7 +64,7 @@ function modules() {
 }
 function filesFor(handler, req) {
   if (!handler || handler === 'inline') return ['api.js'];
-  if (/netlify/.test(handler)) return ['netlify.js', 'media.js'];
+  if (/netlify/.test(handler)) return ['netlify.js', 'vercel.js', 'media.js'];
   const at = api.search(new RegExp('\\n(?:async )?function ' + handler + '\\('));
   if (at < 0) return ['api.js'];
   const next = api.slice(at + 1).search(/\n(?:async )?function \w+\(|\nconst \w+ = /);

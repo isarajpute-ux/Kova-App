@@ -23,7 +23,10 @@ const { Readable } = require('stream');
 
 const CH = 3 * 1024 * 1024;          // bytes per part
 const MAX_PARTS = 40;                // 120 MB per file
-const KINDS = ['form', 'food', 'machine', 'avatar', 'doc', 'post', 'lab'];
+const KINDS = ['form', 'food', 'machine', 'avatar', 'doc', 'post', 'lab', 'body'];
+/* progress photos never get a link that lasts forever (POST /media/link
+   hands out fresh 15-minute ones) */
+const SHORT = { body: 3600e3 };
 
 class MediaError extends Error { constructor(status, msg) { super(msg); this.status = status; } }
 
@@ -78,7 +81,7 @@ function makeMedia(deps) {
     const size = (n - 1) * CH + buf.length;
     const type = String(q.type || '').slice(0, 80) || 'application/octet-stream';
     await store.setJSON(metaKey(path), { size, type, n, ch: CH, at: now() });
-    return { ok: true, path, url: link(path, 0), bytes: size, type };
+    return { ok: true, path, url: link(path, SHORT[kind] || 0), bytes: size, type };
   }
 
   /* bytes [start, end] inclusive */

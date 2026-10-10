@@ -410,8 +410,8 @@ function boot() {
   const ST = w.KovaScreenTour;
   /* the separate sport card is gone: marathon, swimming, hiking and the rest live in the split, so Customize is six steps */
   ck('five more tours: seven steps on Home, Vitals, Sleep and Fuel, six on Customize', ['home', 'vitals', 'sleep', 'fuel'].every((id) => ST.steps(id).length === 7) && ST.steps('customize').length === 6);
-  ck('the Workout tour reaches into Customize: training for, rules, split, muscles', ST.steps('move').length === 9
-    && ['Training for', 'The rules', 'Days and split', 'Target muscles'].every((t) => ST.steps('move').some((x) => x.t === t)));
+  ck('the Workout tour reaches into Customize: training for, rules, your week, balance, muscles', ST.steps('move').length === 9
+    && ['Training for', 'The rules', 'Your week', 'Balance', 'Target muscles'].every((t) => ST.steps('move').some((x) => x.t === t)));
   ck('a tour is remembered in the synced profile too', (w.KovaTour.mark('fuel'), w.KP.get('tours').fuel > 0) && w.KovaTour.seen('fuel') && !w.KovaTour.once('fuel'));
   ck('each of those screens has a ? to replay its tour', ['home', 'move', 'vitals', 'sleep', 'fuel'].every((id) => doc.querySelector('#s-' + id + ' .title .kt-help[data-ktour="' + id + '"]'))
     && doc.querySelector('#s-customize .title-s .kt-help[data-ktour="customize"]'));

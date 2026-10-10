@@ -50,10 +50,12 @@
      POST /chat         {messages,pillar,snapshot}  -> {text}  the chat (was the kovaChat callable) [auth]
      GET  /account/export               everything the server holds about you, no secrets [auth]
      POST /account/delete {confirm:"DELETE"}  delete the account and every record of it [auth]
-     POST /media/upload?kind&id&ext&i&n&type   one 3 MB part of a file (Netlify only)   [auth]
-     GET  /media/file?p&e&s             a signed link to a file (Netlify only, streamed)
-     POST /media/remove {path}          delete one of your files (Netlify only)         [auth]
+     POST /media/upload?kind&id&ext&i&n&type   one 3 MB part of a file (Netlify Blobs or Supabase Storage)   [auth]
+     GET  /media/file?p&e&s             a signed link to a file (streamed)
+     POST /media/remove {path}          delete one of your files         [auth]
+     POST /media/link   {path}  -> {url}  a fresh 15-minute link to one of your files (progress photos)   [auth]
      POST /meal/read    {image,mime,note}  -> {items}  read a plate from a photo (Pro)   [auth]
+     POST /body/estimate {image,mime,prev?,days?,sex,age,cm,kg}  -> {lo,hi,conf,notes,change}  body-fat range from a progress photo (Pro)   [auth]
      POST /labs/extract {text | image,mime}  -> {rows}  lab results, extraction only (Pro) [auth]
      POST /calendar/sync {blocks,from,to}  Work OS blocks <-> Google Calendar, both ways [auth]
      POST /devices      {token,platform}  this device's push token                     [auth]
@@ -98,6 +100,7 @@ const { makeAccount } = require('./account');
 const { makePush } = require('./push');
 const { makeBilling } = require('./billing');
 const meal = require('./meal');
+const bodyEst = require('./body');
 const labs = require('./labs');
 const { makeCalendar, CalError } = require('./calendar');
 const { makeSocial, SocialError } = require('./social');
@@ -1049,6 +1052,28 @@ async function mediaUpload(req, res, cfg) {
   }
 }
 
+/* a short-lived link to one of your own files: progress photos are not
+   given links that last forever */
+async function mediaLink(req, res, cfg) {
+  const u = await requireUser(req);
+  if (!cfg.media) throw new HttpError(501, 'File storage is not set up on this server.');
+  await rateLimit(`mlink_${u.uid}`, 600, 3600e3);
+  const p = String((req.body && req.body.path) || '');
+  if (p.indexOf(`users/${u.uid}/`) !== 0 || p.indexOf('..') >= 0 || p.length > 200) throw new HttpError(403, 'Not your file.');
+  try { await cfg.media.meta(p); } catch (e) { throw new HttpError(404, 'That file is gone.'); }
+  res.json({ url: cfg.media.link(p, 15 * 60e3) });
+}
+
+/* ---------- progress photo: body-fat range ------------------------------ */
+
+async function bodyEstimate(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg);
+  await rateLimit(`body_${u.uid}`, 20, 24 * 3600e3);
+  try { res.json(await bodyEst.estimate({ cfg, body: req.body })); }
+  catch (e) { if (e instanceof bodyEst.BodyError) throw new HttpError(e.status, e.message); throw e; }
+}
+
 /* ---------- meal photo read -------------------------------------------- */
 
 async function mealRead(req, res, cfg) {
@@ -1181,6 +1206,8 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/account/delete') return await accountDelete(req, res, cfg);
     if (M === 'POST' && path === '/media/upload') return await mediaUpload(req, res, cfg);
     if (M === 'POST' && path === '/media/remove') return await mediaRemove(req, res, cfg);
+    if (M === 'POST' && path === '/media/link') return await mediaLink(req, res, cfg);
+    if (M === 'POST' && path === '/body/estimate') return await bodyEstimate(req, res, cfg);
     if (M === 'POST' && path === '/meal/read') return await mealRead(req, res, cfg);
     if (M === 'POST' && path === '/labs/extract') return await labsExtract(req, res, cfg);
     if (M === 'POST' && path === '/calendar/sync') return await calendarSync(req, res, cfg);

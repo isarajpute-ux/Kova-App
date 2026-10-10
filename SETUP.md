@@ -3,7 +3,7 @@
 Everything below is free to start with, and nothing needs a credit card except the app stores' own developer accounts. Two places hold keys:
 
 - **`index.html`** holds only *public* keys. They identify the app and are safe in a public repo: the Firebase web config, the RevenueCat public SDK keys and the web push (VAPID) key.
-- **Netlify › Site configuration › Environment variables** holds every *secret*. Nothing secret is ever in this repo. Netlify caps all variables together at 4 KB, and the Firebase private key is most of that, so set only what you use.
+- **Your host's environment variables** hold every *secret*: Vercel › Project › Settings › Environment Variables (section 2c), or Netlify › Site configuration › Environment variables. Nothing secret is ever in this repo. Netlify caps all variables together at 4 KB, and the Firebase private key is most of that, so set only what you use.
 
 To see what is still missing, open the app, go to **Settings**, tap **Version** 7 times and read the **Launch check**. It marks each item below green or red and names what to set. It only checks *whether* a key is set; it never shows one.
 
@@ -47,6 +47,38 @@ The site works under `/Kova-App/`: links, the install manifest and the offline c
 KOVA_API_URL=https://kova-app.netlify.app/api PAGES_BASE=/Kova-App/ npm run build:pages
 ```
 `node tests/e2e/pages.mjs` builds it under `/Kova-App/` in a temporary folder and checks it.
+
+## 2c. Vercel + Supabase (the site and the server in one place)
+
+The same app and the same server as on Netlify, on Vercel's free (Hobby) plan. `vercel.json` sets the build (`npm run build`, folder `dist`), the `/api` rewrite, the headers and a daily timer; `api/index.mjs` and `api/cron.mjs` run the server (`functions/vercel.js`). Photos and videos live in **Supabase Storage** (`functions/supa.js`), because Vercel has no Netlify Blobs. The database and sign-in stay on Firebase.
+
+Vercel's Hobby plan is for personal, non-commercial projects. It is fine while you build and test; before Kova takes payments, move to Vercel Pro ($20 a month) or to Netlify's free plan (section 2), which needs no code change.
+
+**Supabase (files)**
+1. supabase.com › New project (any name, the region nearest you, a database password you keep). Leave "Enable automatic RLS" on.
+2. Copy the **Project URL** (`https://<id>.supabase.co`): the **Connect** button at the top of the project, or Project Settings › Data API. Then Project Settings › **API Keys** › Secret keys: copy a **secret key** (`sb_secret_...`; "Create new secret key" if there is none). The secret key is a password: it only ever goes into Vercel. The publishable key is not needed.
+3. Nothing to paste into the SQL editor: the server makes its own private bucket, `kova-media`, the first time it saves a file.
+
+**Vercel (site and server)**
+1. vercel.com › sign in with GitHub › Add New › Project › Import `isarajpute-ux/Kova-App`. Framework preset: **Other**. Leave the build settings alone: `vercel.json` sets them.
+2. Before Deploy, open Environment Variables and add:
+
+| Variable | Value |
+|---|---|
+| `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` | From the Firebase service account (section 1) |
+| `ANTHROPIC_API_KEY` | Section 3 |
+| `SUPABASE_URL` | The Supabase Project URL |
+| `SUPABASE_SECRET_KEY` | The Supabase secret key |
+| `CRON_SECRET` | Any long random value (`openssl rand -hex 32`). Vercel's daily timer sends it, and so does the GitHub timer below |
+| Anything else from sections 3-6 | Same names as on Netlify |
+
+3. Deploy. `https://<project>.vercel.app/api/ping` should answer `{"ok":true,...}`, with `"supabase":true` under `has`.
+4. Settings › Git › Production Branch is `main`. Every push to `main` deploys; other branches get preview addresses, which Vercel keeps behind your Vercel login.
+5. Firebase › Authentication › Settings › Authorized domains: add `<project>.vercel.app`.
+
+**The 5-minute timer.** Scheduled posts, reminders, wellness audits and AI-team routines need a timer. Vercel's free plan runs its own only once a day, so `.github/workflows/timer.yml` calls `/api/cron` every 5 minutes (free for a public repo). In GitHub › Settings › Secrets and variables › Actions add the variable `KOVA_SITE_URL` = `https://<project>.vercel.app` and the secret `CRON_SECRET` = the same value as on Vercel. GitHub sometimes starts a run a few minutes late.
+
+**Already on Netlify?** Nothing changes there; `netlify.toml` still works. Use one host for the server at a time so the timer does not run twice (it would not double-post, every job is claimed first, but it is wasted work).
 
 ## 3. AI (Anthropic)
 

@@ -1,7 +1,7 @@
 {
   "name": "kova",
   "private": true,
-  "description": "Kova: the app (index.html) and its server (functions/, run on Netlify by netlify/functions/). npm run build writes dist/, the folder Netlify publishes.",
+  "description": "Kova: the app (index.html) and its server (functions/, run on Vercel by api/ or on Netlify by netlify/functions/). npm run build writes dist/, the folder the host publishes.",
   "engines": {
     "node": ">=22.12"
   },
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@netlify/blobs": "^11.1.1",
+    "@vercel/functions": "^3.9.11",
     "firebase-admin": "^12.7.0"
   },
   "devDependencies": {

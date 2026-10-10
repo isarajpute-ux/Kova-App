@@ -155,7 +155,8 @@ async function claim(db, p, t) {
   return r && r.committed !== false && v && v.claimed === t ? v : null;
 }
 
-function makeWorker(deps) {
+/* the long jobs themselves, shared with the Vercel adapter (vercel.js) */
+function makeJobs(deps) {
   const admin = envMod.initAdmin(deps.admin, deps.env);
   const db = seal.database(admin.database());
   const now = deps.now || Date.now;
@@ -224,24 +225,36 @@ function makeWorker(deps) {
     return users.length;
   }
 
+  /* kind: publish | agent | crew | traction | all */
+  return async function (cfg, kind) {
+    kind = kind || 'all';
+    const out = {};
+    if (kind === 'publish' || kind === 'all') out.published = await publishAll(cfg);
+    if (kind === 'agent' || kind === 'all') out.audits = await auditAll(cfg);
+    if (kind === 'crew' || kind === 'all') out.crew = await crewAll(cfg);
+    if (kind === 'traction') out.traction = await tractionAll(cfg);
+    return out;
+  };
+}
+
+function makeWorker(deps) {
+  const jobs = makeJobs(deps);
   return async function (request) {
     const url = new URL(request.url);
     const cfg = config(deps, url.origin);
     if (request.headers.get('x-kova-internal') !== internalKey(cfg)) return new Response('', { status: 403 });
     let kind = 'all';
     try { kind = (await request.json()).kind || 'all'; } catch (e) { /* default */ }
-    const out = {};
-    if (kind === 'publish' || kind === 'all') out.published = await publishAll(cfg);
-    if (kind === 'agent' || kind === 'all') out.audits = await auditAll(cfg);
-    if (kind === 'crew' || kind === 'all') out.crew = await crewAll(cfg);
-    if (kind === 'traction') out.traction = await tractionAll(cfg);
+    const out = await jobs(cfg, kind);
     return new Response(JSON.stringify(out), { status: 200, headers: { 'content-type': 'application/json' } });
   };
 }
 
 /* ---------------------------------------------------------------- cron */
 
-function makeCron(deps) {
+/* one tick of the 5-minute timer, shared with the Vercel adapter;
+   cfg.kick hands the slow parts on */
+function makeTick(deps) {
   const admin = envMod.initAdmin(deps.admin, deps.env);
   const db = seal.database(admin.database());
   const now = deps.now || Date.now;
@@ -250,9 +263,8 @@ function makeCron(deps) {
   const crewDue = deps.crewDue || require('./crew').due;
   const makePush = deps.makePush || require('./push').makePush;
 
-  return async function () {
+  return async function (cfg) {
     const t = now();
-    const cfg = config(deps, '');
     const out = {};
     /* scheduled posts whose time has come */
     try { out.moved = await moveDue(db, t); } catch (e) { console.error('moveDue', e.message); }
@@ -283,4 +295,9 @@ function makeCron(deps) {
   };
 }
 
-module.exports = { makeApi, makeWorker, makeCron, toReq, run, routePath, claim, internalKey, config };
+function makeCron(deps) {
+  const tick = makeTick(deps);
+  return async function () { return tick(config(deps, '')); };
+}
+
+module.exports = { makeApi, makeWorker, makeCron, makeJobs, makeTick, toReq, run, routePath, claim, internalKey, config };
