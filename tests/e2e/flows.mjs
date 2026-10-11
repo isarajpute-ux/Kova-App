@@ -76,7 +76,7 @@ try {
   await page.evaluate(() => go('plan'));
   await page.waitForSelector('#planGo');
   const plan = await page.textContent('#s-plan');
-  ck('the plan screen shows the price and the trial terms before any purchase', /\$\d+\.\d\d/.test(plan) && /days free/i.test(plan) && /No seats/.test(plan));
+  ck('the plan screen shows the price and the trial terms before any purchase', /\$\d+\.\d\d/.test(plan) && /days free/i.test(plan) && /remind you 2 days before/.test(plan) && /pay nothing/.test(plan));
 } catch (e) {
   ck('journeys ran to the end (' + e.message.split('\n')[0] + ')', false);
   if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT });

@@ -60,7 +60,7 @@ function boot(opts) {
   const A = boot({});
   await wait(500);
   A.w.go('plan'); await wait(80);
-  ck('the price and trial terms show before any checkout', /\$59\.99 a year/.test(A.doc.getElementById('planFine').textContent) && /Cancel any time/.test(A.doc.getElementById('planFine').textContent));
+  ck('the price and trial terms show before any checkout (Everything, yearly, 30 days free)', /Free for 30 days, then \$119\.99 a year/.test(A.doc.getElementById('planFine').textContent) && /Cancel any time/.test(A.doc.getElementById('planFine').textContent) && /remind you 2 days before/.test(A.doc.getElementById('planFine').textContent));
   A.doc.getElementById('planGo').click(); await wait(60);
   ck('without keys the button says payments are off and nothing was charged', /not switched on yet\. Nothing was charged/.test(A.doc.getElementById('kbiMsg').textContent));
   ck('and no checkout script is loaded', !A.doc.querySelector('script[src*="purchases-js"]'));
@@ -78,7 +78,7 @@ function boot(opts) {
   ck('the yearly plan (the default) is bought', B.rc.purchases[0] === '$rc_annual');
   ck('the trial has started and is cached for offline', B.w.KovaBilling.isPro() && JSON.parse(B.w.localStorage.getItem('kova.pro.v1')).period === 'trial');
   ck('the screen says so plainly', /free trial has started/i.test(B.doc.getElementById('kbiMsg').textContent));
-  ck('trial_start reaches analytics, with no price or health data', B.events.some((e) => e[0] === 'trial_start' && e[1].plan === 'year' && !('price' in e[1])));
+  ck('trial_start reaches analytics, with no price or health data', B.events.some((e) => e[0] === 'trial_start' && e[1].plan === 'all_year' && !('price' in e[1])));
   B.doc.querySelector('#planBody [data-kbi="manage"]').click(); await wait(30);
   ck('Manage opens the billing page in one tap', B.opened[0] === 'https://pay.rev.cat/manage/u1');
   B.w.KovaBilling._take({ managementURL: 'x', entitlements: { active: { kova_pro: { periodType: 'TRIAL', willRenew: false, expirationDate: new Date(Date.now() + 864e5) } } } });
@@ -107,7 +107,7 @@ function boot(opts) {
   /* wait for the answer and the plan screen, not a fixed time: jsdom is slow on a page this size */
   for (let i = 0; i < 50 && !E.doc.getElementById('kbiMsg'); i++) await wait(100);
   ck('a 402 from /chat still answers from the on-device guide', /Kova Pro/.test(E.doc.getElementById('kcFoot').textContent) && !!E.doc.querySelector('.kc-a'));
-  ck('and opens the plan screen with the reason', E.doc.getElementById('s-plan').classList.contains('on') && /assistant are part of Kova Pro/.test((E.doc.getElementById('kbiMsg') || {}).textContent || ''));
+  ck('and opens the plan screen with the reason', E.doc.getElementById('s-plan').classList.contains('on') && /assistant come with any plan/.test((E.doc.getElementById('kbiMsg') || {}).textContent || ''));
 
   const failed = R.filter((r) => !r[1]);
   R.forEach((r) => console.log((r[1] ? 'PASS ' : 'FAIL ') + r[0]));

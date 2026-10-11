@@ -102,7 +102,8 @@ function fakeDb() {
   const sheetText = w.document.querySelector('#sheetIn .kbk').textContent;
   ck('the plan opens as one sheet with times and reasons (or what moved)', w.document.querySelectorAll('#sheetIn .kbk-b').length === B._S().blocks.length && /Your day, blocked/.test(sheetText) && (B._S().blocks.length === 0 || /window|dip|peak|moved/i.test(sheetText)));
   const css = fs.readFileSync(__dirname + '/../src/p08_billing.js', 'utf8');
-  ck('the plan screen says one person, one price, no seats', /One person, one price\. No seats, no team minimum\./.test(css));
+  const plans = fs.readFileSync(__dirname + '/../src/p08_plans.js', 'utf8');
+  ck('the plan screen sells where you end up, not features or price', /has it handled/.test(plans) && /Where you will be/.test(plans) && !/One person, one price/.test(css + plans));
 
   const failed = R.filter((x) => !x[1]);
   R.forEach((x) => console.log((x[1] ? 'PASS ' : 'FAIL ') + x[0]));

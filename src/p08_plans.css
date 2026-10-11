@@ -1,0 +1,118 @@
+/* p19: build your plan. Glass: a frosted sheet with a glossy highlight,
+   rows like lit glass pills, the selected part glowing in the accent.
+   Dark, soft light and light glass. */
+.glassy{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14)!important;
+  background:linear-gradient(150deg,rgba(255,255,255,.11) 0%,rgba(255,255,255,.04) 42%,rgba(255,255,255,.02) 100%)!important;
+  backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.04),0 24px 60px rgba(0,0,0,.38)!important}
+.glassy::before{content:"";position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.20),rgba(255,255,255,0) 60%);transform:rotate(-6deg)}
+.glassy>*{position:relative}
+.pln-k{color:var(--acc);letter-spacing:.16em}
+.pln-h{font-family:Outfit,sans-serif;font-size:28px;font-weight:200;letter-spacing:-.035em;line-height:1.15;margin:10px 0 8px}
+.pln-lead{line-height:1.55;margin-bottom:16px}
+.pln-row{display:grid;grid-template-columns:1fr auto;align-items:center;margin:0 0 9px;border-radius:18px;border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.16);transition:border-color .2s,box-shadow .2s}
+.pln-row.on{border-color:color-mix(in srgb,var(--acc) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 28px color-mix(in srgb,var(--acc) 22%,transparent)}
+.pln-tg{display:flex;align-items:center;gap:12px;min-width:0;padding:13px 6px 13px 13px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pln-row.fixed .pln-tg{cursor:default}
+.pln-check{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:grid;place-items:center;
+  background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,0))}
+.pln-row.on .pln-check{border-color:transparent;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--acc) 55%);box-shadow:0 0 12px color-mix(in srgb,var(--acc) 55%,transparent)}
+.pln-row.on .pln-check::after{content:"";width:9px;height:5px;border-left:2px solid #0A0A0A;border-bottom:2px solid #0A0A0A;transform:rotate(-45deg) translate(1px,-1px)}
+.pln-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.pln-t i{font-style:normal;font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.pln-t b{font-size:13.5px;font-weight:500;line-height:1.3}
+.pln-pr{font-style:normal;font-weight:400;letter-spacing:.04em;text-transform:none;margin-left:8px;opacity:.85;font-variant-numeric:tabular-nums}
+.pln-pr::before{content:"\00b7";margin-right:8px}
+.pln-more{width:34px;height:34px;margin-right:9px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:inherit;display:grid;place-items:center;cursor:pointer}
+.pln-more .ic{font-size:15px;transition:transform .25s}
+.pln-more.open .ic{transform:rotate(180deg)}
+.pln-drop{grid-column:1/-1;margin:0;padding:0 16px 13px 47px;list-style:none;display:flex;flex-direction:column;gap:7px;animation:plnDrop .22s ease-out}
+.pln-drop[hidden]{display:none}
+.pln-drop li{position:relative;font-size:12.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.78))}
+.pln-drop li::before{content:"";position:absolute;left:-14px;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 6px var(--acc)}
+@keyframes plnDrop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.pln-tog .plan-opt{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.pln-free{display:block;font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.7));margin:2px 0 4px}
+.pln-tog .plan-opt-p{font-size:13px!important;opacity:.75}
+.pln-go{margin-top:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 12px 30px color-mix(in srgb,var(--acc) 30%,transparent)}
+.pln-sum{display:flex;justify-content:center;gap:6px;align-items:baseline;margin:10px 0 0;font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.pln-sum b{font-weight:400;font-size:10.5px;color:inherit}
+.pln-sum b i{font-style:normal}
+.pln-arc-h{font-size:12px;font-weight:600;letter-spacing:.02em;margin-bottom:10px}
+.pln-step{display:flex;gap:12px;padding:9px 0;border-top:.5px solid rgba(255,255,255,.08)}
+.pln-step>div{display:flex;flex-direction:column;gap:2px}
+.pln-step b{font-size:12.5px;font-weight:500}
+.pln-step span:not(.pln-dot){font-size:12px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:600;color:#0A0A0A;
+  background:radial-gradient(circle at 35% 30%,#fff 0%,var(--acc) 60%)}
+.pln-row:focus-within{outline:none}
+.pln-tg:focus-visible,.pln-more:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:12px}
+@media (prefers-reduced-motion:reduce){ .pln-drop{animation:none} .pln-more .ic{transition:none} }
+body.light-mode .glassy{border-color:rgba(28,26,23,.08)!important;background:linear-gradient(150deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.4) 100%)!important;
+  box-shadow:inset 0 1px 0 #fff,0 22px 50px rgba(28,26,23,.12)!important}
+body.light-mode .glassy::before{background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.9),rgba(255,255,255,0) 60%)}
+body.light-mode .pln-row{border-color:rgba(28,26,23,.10);background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.5));box-shadow:inset 0 1px 0 #fff}
+body.light-mode .pln-check{border-color:rgba(28,26,23,.3)}
+body.light-mode .pln-row.on .pln-check::after{border-color:#fff}
+body.light-mode .pln-row.on .pln-check{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.6) 0%,var(--acc) 55%)}
+body.light-mode .pln-more,body.light-mode .pln-tog .plan-opt{border-color:rgba(28,26,23,.12);background:rgba(255,255,255,.7)}
+body.light-mode .pln-step{border-top-color:rgba(28,26,23,.08)}
+body.light-mode .pln-dot{color:#fff;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5) 0%,var(--acc) 60%)}
+body.soft-light .glassy{background:linear-gradient(150deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.06) 45%,rgba(255,255,255,.03) 100%)!important}
+body.soft-light .pln-row{background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.04))}
+
+/* p19c, after the reference image: an airy sheet with a soft blurred glow in
+   the app's own accent, thin hairline outlines, a thin pill for yearly or
+   monthly with tick marks, no heavy check marks. Overrides the block above. */
+.pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 55%,rgba(255,255,255,.015))!important;
+  border:1px solid rgba(255,255,255,.16)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)!important}
+.pln-glow{position:absolute;left:-15%;right:-15%;bottom:-55%;height:75%;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse at 60% 40%,color-mix(in srgb,var(--acc) 70%,transparent) 0%,color-mix(in srgb,var(--acc) 25%,transparent) 38%,transparent 70%);filter:blur(28px);opacity:.75}
+.pln.glassy>.pln-glow{position:absolute}
+.pln-h{font-size:32px;font-weight:200;letter-spacing:-.04em}
+.pln-k{color:var(--ron-txt-2,rgba(255,255,255,.75))!important;font-weight:400}
+.pln-row{background:transparent;border:1px solid rgba(255,255,255,.18);box-shadow:none;border-radius:22px}
+.pln-row.on{border-color:color-mix(in srgb,var(--acc) 80%,transparent);box-shadow:0 0 0 .5px color-mix(in srgb,var(--acc) 50%,transparent),0 8px 30px color-mix(in srgb,var(--acc) 14%,transparent)}
+.pln-check{width:18px;height:18px;border:1px solid rgba(255,255,255,.45);background:none!important;box-shadow:none!important}
+.pln-row.on .pln-check{border-color:var(--acc)}
+.pln-row.on .pln-check::after{width:8px;height:8px;border:0;border-radius:50%;transform:none;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.pln-t i,.pln-pr{color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-more{background:transparent;border:1px solid rgba(255,255,255,.2);width:32px;height:32px}
+.pln-tog{position:relative;display:flex!important;gap:0!important;padding:4px!important;border-radius:999px!important;border:1px solid rgba(255,255,255,.22)!important;background:transparent!important}
+.pln-tog .plan-opt{flex:1;display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center;text-align:left;padding:9px 14px!important;border-radius:999px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important}
+.pln-tog .plan-opt.on{background:color-mix(in srgb,var(--acc) 16%,transparent)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 55%,transparent)!important}
+.pln-chev{grid-row:1/4;font-size:22px;font-weight:200;line-height:1;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-tog .plan-opt-l,.pln-tog .pln-free,.pln-tog .plan-opt-p{grid-column:2}
+.pln-tog .plan-save{position:absolute;top:-9px;right:14px;font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid color-mix(in srgb,var(--acc) 60%,transparent);
+  background:var(--bg,#0B0B0C)!important;color:var(--ron-txt,#fff)!important}
+.pln-ticks{position:absolute;left:50%;top:50%;width:46px;height:14px;transform:translate(-50%,-50%);pointer-events:none;opacity:.45;
+  background:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 6px);-webkit-mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+.pln-go{border-radius:999px!important;box-shadow:0 10px 34px color-mix(in srgb,var(--acc) 30%,transparent)!important}
+.pln-go::after{content:"\2197";margin-left:8px;font-weight:300}
+.pln-sum,.pln-sum b{color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-arc.glassy{border:1px solid rgba(255,255,255,.16)!important;box-shadow:none!important}
+.pln-step{border-top:1px solid rgba(255,255,255,.10)}
+.pln-dot{width:20px;height:20px;background:none!important;border:1px solid var(--acc);color:var(--ron-txt,#fff)!important;font-weight:400}
+body.light-mode .pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.92),rgba(255,255,255,.6) 60%,rgba(255,255,255,.45))!important;border-color:rgba(28,26,23,.10)!important;box-shadow:inset 0 1px 0 #fff!important}
+body.light-mode .pln-row,body.light-mode .pln-more,body.light-mode .pln-tog{border-color:rgba(28,26,23,.16)!important;background:transparent}
+body.light-mode .pln-check{border-color:rgba(28,26,23,.4)}
+body.light-mode .pln-tog .plan-save{background:#fff!important;color:#1C1A17!important}
+body.light-mode .pln-dot{color:#1C1A17!important}
+body.light-mode .pln-step{border-top-color:rgba(28,26,23,.10)}
+body.light-mode .pln-arc.glassy{border-color:rgba(28,26,23,.10)!important}
+body.soft-light .pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.13),rgba(255,255,255,.05) 60%)!important}
+.pln-tog{border-radius:26px!important}
+.pln-tog .plan-opt{border-radius:22px!important}
+.pln-ticks{width:30px}
+/* contrast: quiet, not faint */
+.pln-pr{opacity:1!important}
+.pln-t i,.pln-pr,.pln-tog .plan-opt-l,.pln-tog .pln-free,.pln-sum,.pln-sum b{color:var(--ron-txt-2,rgba(255,255,255,.82))!important}
+.pln-tog .plan-opt-p{opacity:1!important;color:var(--ron-txt,#fff)!important}
+.pln-t b{color:var(--ron-txt,#fff)}
+body.soft-light .pln-t i,body.soft-light .pln-pr,body.soft-light .pln-tog .plan-opt-l,body.soft-light .pln-tog .pln-free,body.soft-light .pln-sum{color:rgba(255,255,255,.86)!important}
+body.soft-light .pln-t b{color:#fff}
+body.light-mode .pln-t i,body.light-mode .pln-pr,body.light-mode .pln-tog .plan-opt-l,body.light-mode .pln-tog .pln-free,body.light-mode .pln-sum,body.light-mode .pln-sum b{color:rgba(28,26,23,.72)!important}
+body.light-mode .pln-tog .plan-opt-p,body.light-mode .pln-t b{color:#1C1A17!important}

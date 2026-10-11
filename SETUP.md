@@ -91,18 +91,31 @@ Vercel's Hobby plan is for personal, non-commercial projects. It is fine while y
 
 ## 4. Payments (RevenueCat, with Stripe on the web and the App Store / Google Play in the app)
 
-One entitlement, `kova_pro`, covers the web and both apps. Until `REVENUECAT_SECRET_KEY` is set, every feature stays open and nothing is charged.
+**The plans.** Health is the base; Training and Work OS + AI team are add-ons. In the stores they are three plans in **one subscription group**, so moving between them is an upgrade or downgrade, never two bills:
+
+| Plan (RevenueCat package id) | Gives entitlements | Yearly | Monthly |
+|---|---|---|---|
+| `health_year` / `health_month` | `health` | $59.99, 30 days free | $9.99, 14 days free |
+| `health_train_year` / `health_train_month` | `health`, `train` | $84.99, 30 days free | $13.99, 14 days free |
+| `all_year` / `all_month` | `health`, `train`, `work` | $119.99, 30 days free | $19.99, 14 days free |
+
+Work OS includes Training, so "Health + Work" is the `all` plan. The app shows the store's own prices once they load; the numbers above are its defaults. Trial lengths come from RevenueCat's September 2026 data on 17,000 apps: yearly plans convert best with 17–32 day trials, monthly ones peak at 10–16 days. The card goes in at the start; the server sends "your free trial ends in 2 days" once per trial.
+
+Until `REVENUECAT_SECRET_KEY` is set, every part stays open and nothing is charged. The old single entitlement `kova_pro` still unlocks everything, so early subscribers keep what they have.
 
 | What | Where to get it | Where it goes |
 |---|---|---|
-| Entitlement and products | RevenueCat › Product catalog: entitlement `kova_pro`, an annual and a monthly product, one Offering | – |
+| Entitlements | RevenueCat › Product catalog › Entitlements: `health`, `train`, `work` | – |
+| Products | App Store Connect › Subscriptions: one group, six products (above), each with an introductory offer: free, 1 month on yearly, 2 weeks on monthly. Google Play: the same six with a free-trial offer | Attach each to its entitlements in RevenueCat |
+| Offering | RevenueCat › Offerings › default: six packages with the ids in the table | – |
 | Web public key (Web Billing) | RevenueCat › Project settings › API keys | `KOVA_RC.web` in `index.html` |
 | Apple public key | same page | `KOVA_RC.ios` in `index.html` |
 | Google public key | same page | `KOVA_RC.android` in `index.html` |
-| Stripe | RevenueCat › Web Billing › connect your Stripe account | Nowhere in Kova: RevenueCat holds it |
-| Secret key | RevenueCat › API keys › Secret key | Netlify: `REVENUECAT_SECRET_KEY` |
-| Webhook | Pick any long random value (`openssl rand -hex 32`) | Netlify: `REVENUECAT_WEBHOOK_AUTH`; and RevenueCat › Integrations › Webhooks: URL `https://<site>/api/billing/webhook`, Authorization header = the same value |
-| Store products | App Store Connect › Subscriptions; Google Play Console › Subscriptions | Linked to the same products in RevenueCat |
+| Stripe | RevenueCat › Web Billing › connect your Stripe account (web products get the same trials) | Nowhere in Kova: RevenueCat holds it |
+| Secret key | RevenueCat › API keys › Secret key | Vercel or Netlify: `REVENUECAT_SECRET_KEY` |
+| Webhook | Pick any long random value (`openssl rand -hex 32`) | `REVENUECAT_WEBHOOK_AUTH` on the server; and RevenueCat › Integrations › Webhooks: URL `https://<site>/api/billing/webhook`, Authorization header = the same value |
+
+What each part unlocks on the server: Health = meal photos, labs, progress-photo estimates and the wellness check; Work = the AI team, Studio writing, publishing, hashtags and traction advice; chat comes with any plan.
 
 ## 5. Food search, email and encryption
 

@@ -262,6 +262,7 @@ function makeTick(deps) {
   const due = deps.due || require('./agent').due;
   const crewDue = deps.crewDue || require('./crew').due;
   const makePush = deps.makePush || require('./push').makePush;
+  const makeBilling = deps.makeBilling || require('./billing').makeBilling;
 
   return async function (cfg) {
     const t = now();
@@ -269,8 +270,12 @@ function makeTick(deps) {
     /* scheduled posts whose time has come */
     try { out.moved = await moveDue(db, t); } catch (e) { console.error('moveDue', e.message); }
     /* reminders */
-    try { out.push = await makePush({ db, messaging: admin.messaging ? admin.messaging() : null, cfg }).tick(); }
+    const pusher = makePush({ db, messaging: admin.messaging ? admin.messaging() : null, cfg });
+    try { out.push = await pusher.tick(); }
     catch (e) { console.error('push', e.message); }
+    /* "your free trial ends in 2 days", once per trial */
+    try { out.trialReminders = await makeBilling({ db, cfg }).trialReminders(pusher); }
+    catch (e) { console.error('trial reminders', e.message); }
     /* wellness audits due in each person's time zone */
     try {
       const jobs = await due(db, t);

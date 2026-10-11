@@ -6028,6 +6028,12 @@ body.ks-on .kl2-pill{top:calc(env(safe-area-inset-top,0px) + 134px);bottom:auto;
 .kbi-msg.bad{color:var(--bad,#E5484D)}
 .kbi-links{display:flex;justify-content:center;gap:6px 14px;flex-wrap:wrap;margin-top:12px}
 .kbi-l{background:none;border:0;padding:8px 4px;min-height:36px;font:500 11.5px 'Outfit',sans-serif;color:var(--txt-2,rgba(255,255,255,.9));text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+/* p19: the card on Workout / Work OS when that part is not in the plan */
+.kbl{display:flex;align-items:center;gap:12px;border:.5px solid var(--acc-brd,rgba(255,255,255,.2))}
+.kbl-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.kbl-t b{font-size:13px;font-weight:500}
+.kbl-t span{font-size:11.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kbl .chip{flex-shrink:0;cursor:pointer}
 
 </style>
 <style id="p08-quick">
@@ -7528,6 +7534,127 @@ body.soft-light .ksi-card{background:rgba(255,255,255,.08)}
 @media (prefers-reduced-motion:no-preference){ .ksi-card{animation:ksiIn .28s ease-out} @keyframes ksiIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} }
 
 </style>
+<style id="p08-plans">
+/* p19: build your plan. Glass: a frosted sheet with a glossy highlight,
+   rows like lit glass pills, the selected part glowing in the accent.
+   Dark, soft light and light glass. */
+.glassy{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14)!important;
+  background:linear-gradient(150deg,rgba(255,255,255,.11) 0%,rgba(255,255,255,.04) 42%,rgba(255,255,255,.02) 100%)!important;
+  backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.04),0 24px 60px rgba(0,0,0,.38)!important}
+.glassy::before{content:"";position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.20),rgba(255,255,255,0) 60%);transform:rotate(-6deg)}
+.glassy>*{position:relative}
+.pln-k{color:var(--acc);letter-spacing:.16em}
+.pln-h{font-family:Outfit,sans-serif;font-size:28px;font-weight:200;letter-spacing:-.035em;line-height:1.15;margin:10px 0 8px}
+.pln-lead{line-height:1.55;margin-bottom:16px}
+.pln-row{display:grid;grid-template-columns:1fr auto;align-items:center;margin:0 0 9px;border-radius:18px;border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.16);transition:border-color .2s,box-shadow .2s}
+.pln-row.on{border-color:color-mix(in srgb,var(--acc) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 28px color-mix(in srgb,var(--acc) 22%,transparent)}
+.pln-tg{display:flex;align-items:center;gap:12px;min-width:0;padding:13px 6px 13px 13px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pln-row.fixed .pln-tg{cursor:default}
+.pln-check{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:grid;place-items:center;
+  background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,0))}
+.pln-row.on .pln-check{border-color:transparent;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--acc) 55%);box-shadow:0 0 12px color-mix(in srgb,var(--acc) 55%,transparent)}
+.pln-row.on .pln-check::after{content:"";width:9px;height:5px;border-left:2px solid #0A0A0A;border-bottom:2px solid #0A0A0A;transform:rotate(-45deg) translate(1px,-1px)}
+.pln-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.pln-t i{font-style:normal;font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.pln-t b{font-size:13.5px;font-weight:500;line-height:1.3}
+.pln-pr{font-style:normal;font-weight:400;letter-spacing:.04em;text-transform:none;margin-left:8px;opacity:.85;font-variant-numeric:tabular-nums}
+.pln-pr::before{content:"\00b7";margin-right:8px}
+.pln-more{width:34px;height:34px;margin-right:9px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:inherit;display:grid;place-items:center;cursor:pointer}
+.pln-more .ic{font-size:15px;transition:transform .25s}
+.pln-more.open .ic{transform:rotate(180deg)}
+.pln-drop{grid-column:1/-1;margin:0;padding:0 16px 13px 47px;list-style:none;display:flex;flex-direction:column;gap:7px;animation:plnDrop .22s ease-out}
+.pln-drop[hidden]{display:none}
+.pln-drop li{position:relative;font-size:12.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.78))}
+.pln-drop li::before{content:"";position:absolute;left:-14px;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 6px var(--acc)}
+@keyframes plnDrop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.pln-tog .plan-opt{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.pln-free{display:block;font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.7));margin:2px 0 4px}
+.pln-tog .plan-opt-p{font-size:13px!important;opacity:.75}
+.pln-go{margin-top:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 12px 30px color-mix(in srgb,var(--acc) 30%,transparent)}
+.pln-sum{display:flex;justify-content:center;gap:6px;align-items:baseline;margin:10px 0 0;font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.pln-sum b{font-weight:400;font-size:10.5px;color:inherit}
+.pln-sum b i{font-style:normal}
+.pln-arc-h{font-size:12px;font-weight:600;letter-spacing:.02em;margin-bottom:10px}
+.pln-step{display:flex;gap:12px;padding:9px 0;border-top:.5px solid rgba(255,255,255,.08)}
+.pln-step>div{display:flex;flex-direction:column;gap:2px}
+.pln-step b{font-size:12.5px;font-weight:500}
+.pln-step span:not(.pln-dot){font-size:12px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-dot{width:22px;height:22px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:600;color:#0A0A0A;
+  background:radial-gradient(circle at 35% 30%,#fff 0%,var(--acc) 60%)}
+.pln-row:focus-within{outline:none}
+.pln-tg:focus-visible,.pln-more:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:12px}
+@media (prefers-reduced-motion:reduce){ .pln-drop{animation:none} .pln-more .ic{transition:none} }
+body.light-mode .glassy{border-color:rgba(28,26,23,.08)!important;background:linear-gradient(150deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.4) 100%)!important;
+  box-shadow:inset 0 1px 0 #fff,0 22px 50px rgba(28,26,23,.12)!important}
+body.light-mode .glassy::before{background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.9),rgba(255,255,255,0) 60%)}
+body.light-mode .pln-row{border-color:rgba(28,26,23,.10);background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.5));box-shadow:inset 0 1px 0 #fff}
+body.light-mode .pln-check{border-color:rgba(28,26,23,.3)}
+body.light-mode .pln-row.on .pln-check::after{border-color:#fff}
+body.light-mode .pln-row.on .pln-check{background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.6) 0%,var(--acc) 55%)}
+body.light-mode .pln-more,body.light-mode .pln-tog .plan-opt{border-color:rgba(28,26,23,.12);background:rgba(255,255,255,.7)}
+body.light-mode .pln-step{border-top-color:rgba(28,26,23,.08)}
+body.light-mode .pln-dot{color:#fff;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5) 0%,var(--acc) 60%)}
+body.soft-light .glassy{background:linear-gradient(150deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.06) 45%,rgba(255,255,255,.03) 100%)!important}
+body.soft-light .pln-row{background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.04))}
+
+/* p19c, after the reference image: an airy sheet with a soft blurred glow in
+   the app's own accent, thin hairline outlines, a thin pill for yearly or
+   monthly with tick marks, no heavy check marks. Overrides the block above. */
+.pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 55%,rgba(255,255,255,.015))!important;
+  border:1px solid rgba(255,255,255,.16)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)!important}
+.pln-glow{position:absolute;left:-15%;right:-15%;bottom:-55%;height:75%;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse at 60% 40%,color-mix(in srgb,var(--acc) 70%,transparent) 0%,color-mix(in srgb,var(--acc) 25%,transparent) 38%,transparent 70%);filter:blur(28px);opacity:.75}
+.pln.glassy>.pln-glow{position:absolute}
+.pln-h{font-size:32px;font-weight:200;letter-spacing:-.04em}
+.pln-k{color:var(--ron-txt-2,rgba(255,255,255,.75))!important;font-weight:400}
+.pln-row{background:transparent;border:1px solid rgba(255,255,255,.18);box-shadow:none;border-radius:22px}
+.pln-row.on{border-color:color-mix(in srgb,var(--acc) 80%,transparent);box-shadow:0 0 0 .5px color-mix(in srgb,var(--acc) 50%,transparent),0 8px 30px color-mix(in srgb,var(--acc) 14%,transparent)}
+.pln-check{width:18px;height:18px;border:1px solid rgba(255,255,255,.45);background:none!important;box-shadow:none!important}
+.pln-row.on .pln-check{border-color:var(--acc)}
+.pln-row.on .pln-check::after{width:8px;height:8px;border:0;border-radius:50%;transform:none;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.pln-t i,.pln-pr{color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-more{background:transparent;border:1px solid rgba(255,255,255,.2);width:32px;height:32px}
+.pln-tog{position:relative;display:flex!important;gap:0!important;padding:4px!important;border-radius:999px!important;border:1px solid rgba(255,255,255,.22)!important;background:transparent!important}
+.pln-tog .plan-opt{flex:1;display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center;text-align:left;padding:9px 14px!important;border-radius:999px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important}
+.pln-tog .plan-opt.on{background:color-mix(in srgb,var(--acc) 16%,transparent)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 55%,transparent)!important}
+.pln-chev{grid-row:1/4;font-size:22px;font-weight:200;line-height:1;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-tog .plan-opt-l,.pln-tog .pln-free,.pln-tog .plan-opt-p{grid-column:2}
+.pln-tog .plan-save{position:absolute;top:-9px;right:14px;font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid color-mix(in srgb,var(--acc) 60%,transparent);
+  background:var(--bg,#0B0B0C)!important;color:var(--ron-txt,#fff)!important}
+.pln-ticks{position:absolute;left:50%;top:50%;width:46px;height:14px;transform:translate(-50%,-50%);pointer-events:none;opacity:.45;
+  background:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 6px);-webkit-mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+.pln-go{border-radius:999px!important;box-shadow:0 10px 34px color-mix(in srgb,var(--acc) 30%,transparent)!important}
+.pln-go::after{content:"\2197";margin-left:8px;font-weight:300}
+.pln-sum,.pln-sum b{color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.pln-arc.glassy{border:1px solid rgba(255,255,255,.16)!important;box-shadow:none!important}
+.pln-step{border-top:1px solid rgba(255,255,255,.10)}
+.pln-dot{width:20px;height:20px;background:none!important;border:1px solid var(--acc);color:var(--ron-txt,#fff)!important;font-weight:400}
+body.light-mode .pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.92),rgba(255,255,255,.6) 60%,rgba(255,255,255,.45))!important;border-color:rgba(28,26,23,.10)!important;box-shadow:inset 0 1px 0 #fff!important}
+body.light-mode .pln-row,body.light-mode .pln-more,body.light-mode .pln-tog{border-color:rgba(28,26,23,.16)!important;background:transparent}
+body.light-mode .pln-check{border-color:rgba(28,26,23,.4)}
+body.light-mode .pln-tog .plan-save{background:#fff!important;color:#1C1A17!important}
+body.light-mode .pln-dot{color:#1C1A17!important}
+body.light-mode .pln-step{border-top-color:rgba(28,26,23,.10)}
+body.light-mode .pln-arc.glassy{border-color:rgba(28,26,23,.10)!important}
+body.soft-light .pln.glassy{background:linear-gradient(165deg,rgba(255,255,255,.13),rgba(255,255,255,.05) 60%)!important}
+.pln-tog{border-radius:26px!important}
+.pln-tog .plan-opt{border-radius:22px!important}
+.pln-ticks{width:30px}
+/* contrast: quiet, not faint */
+.pln-pr{opacity:1!important}
+.pln-t i,.pln-pr,.pln-tog .plan-opt-l,.pln-tog .pln-free,.pln-sum,.pln-sum b{color:var(--ron-txt-2,rgba(255,255,255,.82))!important}
+.pln-tog .plan-opt-p{opacity:1!important;color:var(--ron-txt,#fff)!important}
+.pln-t b{color:var(--ron-txt,#fff)}
+body.soft-light .pln-t i,body.soft-light .pln-pr,body.soft-light .pln-tog .plan-opt-l,body.soft-light .pln-tog .pln-free,body.soft-light .pln-sum{color:rgba(255,255,255,.86)!important}
+body.soft-light .pln-t b{color:#fff}
+body.light-mode .pln-t i,body.light-mode .pln-pr,body.light-mode .pln-tog .plan-opt-l,body.light-mode .pln-tog .pln-free,body.light-mode .pln-sum,body.light-mode .pln-sum b{color:rgba(28,26,23,.72)!important}
+body.light-mode .pln-tog .plan-opt-p,body.light-mode .pln-t b{color:#1C1A17!important}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -8452,87 +8579,7 @@ window.KovaMenu=(function(){
 
 <script>
 /* ===== SUBSCRIPTION =====
-   One container, one button. The toggle changes what the button charges
-   after the trial, never whether there is a trial - a paywall that moves
-   two variables at once is one people read twice and trust less.        */
-(function(){
-  'use strict';
-  var TRIAL=10;
-  var PLANS={
-    year : {id:'year', lbl:'Yearly',  price:59.99, per:'yr', cadence:'a year'},
-    month: {id:'month',lbl:'Monthly', price:13.99, per:'mo', cadence:'a month'}
-  };
-  var pick='year';                                   /* annual is the default */
-
-  function money(n){ return '$'+n.toFixed(2); }
-  function saving(){
-    var y=PLANS.year.price, m=PLANS.month.price*12;
-    return {amt:m-y, pct:Math.round((1-y/m)*100)};
-  }
-
-  function paint(){
-    var el=document.getElementById('planBody'); if(!el) return;
-    var P=PLANS[pick], sv=saving();
-
-    el.innerHTML=
-      '<div class="card card-lg" style="padding:20px 18px 18px">'
-      + '<div class="lbl" style="color:var(--acc)">'+TRIAL+' DAYS FREE</div>'
-      + '<div style="font-family:Outfit,sans-serif;font-size:27px;font-weight:200;letter-spacing:-.035em;'
-      + 'line-height:1.2;margin:9px 0 6px">Everything, for ten days.<br/>Then decide.</div>'
-      + '<div class="sub" style="line-height:1.5">Sleep, training, food and Studio. No feature is held '
-      + 'back during the trial, and nothing charges until it ends.</div>'
-
-      /* the toggle. Both options always show their real price, so the
-         choice is visible before it is made rather than after. */
-      + '<div class="plan-tog" id="planTog">'
-      +   Object.keys(PLANS).map(function(k){
-            var p=PLANS[k], on=(k===pick);
-            return '<button class="plan-opt'+(on?' on':'')+'" data-p="'+k+'">'
-              + '<span class="plan-opt-l">'+p.lbl+'</span>'
-              + '<span class="plan-opt-p">'+money(p.price)+'<span>/'+p.per+'</span></span>'
-              + (k==='year'?'<span class="plan-save">Save '+sv.pct+'%</span>':'')
-              + '</button>';
-          }).join('')
-      + '</div>'
-
-      + '<button class="btn" id="planGo" style="margin-top:16px">'
-      +   'Start '+TRIAL+'-day free trial'
-      + '</button>'
-      + '<div class="sub" id="planFine" style="text-align:center;margin-top:9px;font-size:10px;line-height:1.5">'
-      +   'Free for '+TRIAL+' days, then '+money(P.price)+' '+P.cadence+'. Cancel any time before it ends '
-      +   'and you are not charged.</div>'
-      + '</div>'
-
-      + '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:8px">What you get</div>'
-      +  [['Health','Sleep stages, recovery, and what actually moves them'],
-          ['Training','Guided sessions, volume tracking, PR history'],
-          ['Fuel','Scan, log, and targets that move with your sleep and training'],
-          ['Studio','Compose per platform, queue, and inbound triage']]
-         .map(function(r){
-           return '<div style="display:flex;gap:10px;padding:7px 0;border-top:.5px solid var(--ron-line-2)">'
-             +'<div style="font-size:12px;font-weight:600;min-width:62px;flex-shrink:0">'+r[0]+'</div>'
-             +'<div class="sub" style="line-height:1.45">'+r[1]+'</div></div>';
-         }).join('')
-      + '</div>'
-
-      + '<div class="sub" style="text-align:center;margin-bottom:14px;font-size:10px;opacity:.7">'
-      + 'Billing runs through Stripe. Kova never sees your card.</div>';
-
-    document.querySelectorAll('#planTog [data-p]').forEach(function(b){
-      b.onclick=function(){ pick=b.dataset.p; paint(); };
-    });
-
-    document.getElementById('planGo').onclick=function(){
-      /* checkout is a server round trip and there is no server here. Saying
-         so beats a button that appears to work and quietly does nothing. */
-      if(typeof toast==='function')
-        toast('Checkout needs the billing server. Plan chosen: '+PLANS[pick].lbl+'.');
-      try{ if(window.KP) KP.set('planIntent',{plan:pick,at:Date.now()}); }catch(e){}
-    };
-  }
-
-  window.__paintPlan=paint;
-})();
+   The plan screen is src/p08_plans.js (loaded after the first screen). */
 </script>
 
 <!-- ===== MODALS ===== -->
@@ -13268,7 +13315,7 @@ function go(id,opts){
   if(id==='scanner'&&window.KovaScanner) KovaScanner.mount();
   if(window.KovaMaint) try{ KovaMaint.onScreen(id); }catch(e){ console.warn('maint',e); }
   if(window.KovaLive) try{ KovaLive.onScreen(id); }catch(e){ console.warn('live',e); }
-  if(id==='plan'&&window.__paintPlan) __paintPlan();
+  if(id==='plan'){ if(window.__paintPlan) __paintPlan(); else if(window.__kovaLoadWork) __kovaLoadWork(); }
   if(id==='move'&&window.__paintUsual) __paintUsual();
   if(id==='settings'&&window.__paintStrengthTile) __paintStrengthTile();
   if(id==='bedtime'&&window.__paintRhythm) __paintRhythm();
@@ -53384,11 +53431,21 @@ window.KovaPush=(function(){
    the store sheet opens; "Manage or cancel" is one tap from Settings and
    from the plan screen; "Restore purchases" is there for a new phone.
    The answer is cached, so a Pro phone stays Pro offline.
+
+   Plans (p19): Health is the base, Training and Work OS are add-ons, sold
+   as three plans in one subscription group: health, health_train, all,
+   each yearly (30 days free) and monthly (14 days free). RevenueCat
+   packages are named <plan>_<year|month>; entitlements are health, train
+   and work (the old kova_pro still means all three). An offering that
+   only has the old $rc_annual / $rc_monthly packages sells them as "all".
+   Once payments are on, Workout and Work OS say when they are not in your
+   plan, with the price of adding them; nothing is hidden.
    ===================================================================== */
 window.KovaBilling=(function(){
   'use strict';
   var KEY='kova.pro.v1', SDK='https://cdn.jsdelivr.net/npm/@revenuecat/purchases-js@1.66.0/dist/Purchases.umd.js';
-  var C=lsJ(KEY,{pro:false,until:0,period:'',will:true,at:0,cancelSeen:false});
+  var C=lsJ(KEY,{pro:false,until:0,period:'',will:true,at:0,cancelSeen:false,parts:null});
+  var PARTS=['health','train','work'];
   var P=null, loading=null, pkgs=null;
   function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
   function save(){ try{ localStorage.setItem(KEY,JSON.stringify(C)); }catch(e){} }
@@ -53402,6 +53459,13 @@ window.KovaBilling=(function(){
   function ent(){ return cfg().entitlement||'kova_pro'; }
   function configured(){ return !!apiKey(); }
   function isPro(){ return !!C.pro&&(!C.until||C.until>Date.now()); }
+  /* is this part of the app in the plan? Everything is open until payments are switched on */
+  function has(part){
+    if(!configured()) return true;
+    if(!isPro()) return false;
+    if(!C.parts) return true;                       /* an old cached answer: Pro meant everything */
+    return part==='any'?true:!!C.parts[part];
+  }
 
   /* ---------------- the SDK ---------------- */
   function uid(){
@@ -53440,8 +53504,13 @@ window.KovaBilling=(function(){
   /* the customer info -> the cached answer (+ trial/subscribe/cancel events) */
   function take(ci){
     if(!ci) return C;
-    var e=ci.entitlements&&ci.entitlements.active&&ci.entitlements.active[ent()];
+    var act=(ci.entitlements&&ci.entitlements.active)||{};
+    /* the old single entitlement grants all three parts */
+    var all=act[ent()]||act.kova_pro;
+    var parts={}; PARTS.forEach(function(k){ parts[k]=!!(all||act[k]); });
+    var e=all||act.work||act.train||act.health;
     var was=C.pro, prevPeriod=C.period;
+    C.parts=parts;
     if(e){
       var exp=e.expirationDate||e.expirationDateMillis||null;
       C.until=exp?(typeof exp==='number'?exp:new Date(exp).getTime()):0;
@@ -53452,6 +53521,7 @@ window.KovaBilling=(function(){
     C.manage=ci.managementURL||C.manage||''; C.at=Date.now(); save();
     if(!was&&C.pro) track(C.period==='trial'?'trial_start':'subscribe',{plan:C.plan||'',platform:plat()});
     else if(was&&C.pro&&prevPeriod==='trial'&&C.period==='normal') track('subscribe',{plan:C.plan||'',platform:plat()});
+    try{ gates(); }catch(x){}
     try{ window.dispatchEvent(new CustomEvent('kova:pro',{detail:{pro:C.pro}})); }catch(x){}
     try{ paintRows(); }catch(x){}
     return C;
@@ -53462,16 +53532,31 @@ window.KovaBilling=(function(){
     }).then(take);
   }
 
-  /* the two packages, with the store's own price strings */
+  /* the packages by plan: health_year, health_train_month, all_year...;
+     the old two-package offering is the "all" plan */
+  var TIERS=['health','health_train','all'];
   function packages(){
     if(pkgs) return Promise.resolve(pkgs);
     return sdk().then(function(p){ return p.kind==='native'?p.n.getOfferings():p.w.getOfferings(); }).then(function(o){
       var cur=o&&o.current; if(!cur) throw new Error('No plans are set up in RevenueCat yet.');
       var all=cur.availablePackages||[];
-      function find(id){ return cur[id==='$rc_annual'?'annual':'monthly']||all.filter(function(x){ return x.identifier===id||x.packageType===id; })[0]||null; }
-      pkgs={year:find('$rc_annual'),month:find('$rc_monthly')};
+      function find(id){ return all.filter(function(x){ return x.identifier===id; })[0]||null; }
+      pkgs={};
+      TIERS.forEach(function(t){ ['year','month'].forEach(function(per){ var x=find(t+'_'+per); if(x) pkgs[t+'_'+per]=x; }); });
+      var ann=cur.annual||all.filter(function(x){ return x.identifier==='$rc_annual'||x.packageType==='$rc_annual'||x.packageType==='ANNUAL'; })[0]||null;
+      var mon=cur.monthly||all.filter(function(x){ return x.identifier==='$rc_monthly'||x.packageType==='$rc_monthly'||x.packageType==='MONTHLY'; })[0]||null;
+      if(!pkgs.all_year&&ann) pkgs.all_year=ann;
+      if(!pkgs.all_month&&mon) pkgs.all_month=mon;
+      pkgs.year=pkgs.all_year||null; pkgs.month=pkgs.all_month||null;
       return pkgs;
     });
+  }
+  /* the plan a tier asks for, or the nearest one the offering has */
+  function pkgFor(pk,t,per){
+    if(pk[t+'_'+per]) return pk[t+'_'+per];
+    var up=TIERS.slice(TIERS.indexOf(t));
+    for(var i=0;i<up.length;i++) if(pk[up[i]+'_'+per]) return pk[up[i]+'_'+per];
+    return null;
   }
   function priceOf(pkg){
     if(!pkg) return '';
@@ -53480,10 +53565,12 @@ window.KovaBilling=(function(){
   }
 
   /* ---------------- buy / restore / manage ---------------- */
+  /* plan: 'year' | 'month' (the whole app), or {tier, period} */
   function buy(plan){
-    C.plan=plan; save();
+    var t=(plan&&plan.tier)||'all', per=(plan&&plan.period)||plan||'year';
+    C.plan=plan&&plan.tier?t+'_'+per:per; save();
     return packages().then(function(pk){
-      var pkg=pk[plan]; if(!pkg) throw new Error('That plan is not set up in RevenueCat yet.');
+      var pkg=pkgFor(pk,t,per); if(!pkg) throw new Error('That plan is not set up in RevenueCat yet.');
       return sdk().then(function(p){
         return p.kind==='native'
           ? p.n.purchasePackage({aPackage:pkg}).then(function(r){ return r.customerInfo; })
@@ -53516,6 +53603,7 @@ window.KovaBilling=(function(){
 
   /* ---------------- the plan screen ---------------- */
   function picked(){ var b=document.querySelector('#planTog .plan-opt.on'); return (b&&b.getAttribute('data-p'))||'year'; }
+  function pickedPlan(){ return window.__planPick?__planPick():{tier:'all',period:picked()}; }
   function note(msg,bad){
     var f=document.getElementById('kbiMsg');
     if(!f){ var go=document.getElementById('planGo'); if(!go) return; f=document.createElement('div'); f.id='kbiMsg'; f.className='kbi-msg'; f.setAttribute('role','status'); go.parentNode.insertBefore(f,go.nextSibling); }
@@ -53526,11 +53614,12 @@ window.KovaBilling=(function(){
     go.__kbi=1;
     var trial=go.textContent;
     go.onclick=function(){
-      var plan=picked();
-      if(isPro()){ note('You already have Kova Pro'+(C.period==='trial'?' (free trial)':'')+'.'); return; }
+      var plan=pickedPlan();
+      var wanted=plan.tier==='all'?PARTS:plan.tier==='health_train'?['health','train']:['health'];
+      if(isPro()&&wanted.every(function(k){ return has(k); })){ note('That is already in your plan'+(C.period==='trial'?' (free trial)':'')+'.'); return; }
       go.disabled=true; go.textContent='Opening checkout…'; note('');
       buy(plan).then(function(){
-        go.textContent='You are in'; note(C.period==='trial'?'Your free trial has started. Cancel any time before it ends and you are not charged.':'Kova Pro is on.');
+        go.textContent='You are in'; note(C.period==='trial'?'Your free trial has started. We remind you 2 days before it ends; cancel before then and you are not charged.':'Your plan is on.');
         setTimeout(function(){ paintRows(); },50);
       },function(e){
         go.disabled=false; go.textContent=trial;
@@ -53540,23 +53629,21 @@ window.KovaBilling=(function(){
     /* billing details that match where you are */
     var fine=[].slice.call(document.querySelectorAll('#planBody .sub')).filter(function(x){ return /Billing runs through Stripe/.test(x.textContent); })[0];
     var planFine=document.getElementById('planFine');
-    if(planFine&&!document.getElementById('kbiSolo')){ var so=document.createElement('div'); so.id='kbiSolo'; so.className='kbi-msg'; so.textContent='One person, one price. No seats, no team minimum.'; planFine.parentNode.insertBefore(so,planFine.nextSibling); }
     if(fine) fine.textContent=native()?(plat()==='android'?'Billed by Google Play. Kova never sees your card.':'Billed by the App Store. Kova never sees your card.'):'Checkout by Stripe through RevenueCat. Kova never sees your card.';
     /* manage + restore, one tap each */
     var box=document.createElement('div'); box.className='kbi-links';
     box.innerHTML='<button class="kbi-l" data-kbi="manage">Manage or cancel subscription</button><button class="kbi-l" data-kbi="restore">Restore purchases</button>';
     var card=go.closest('.card'); if(card) card.appendChild(box);
     box.addEventListener('click',onLink);
-    /* the store's own prices when they are known */
-    if(configured()) packages().then(function(pk){
-      ['year','month'].forEach(function(k){
-        var s=priceOf(pk[k]), el=document.querySelector('#planTog [data-p="'+k+'"] .plan-opt-p');
-        if(s&&el) el.innerHTML=esc(s)+'<span>/'+(k==='year'?'yr':'mo')+'</span>';
-      });
-      var s2=priceOf(pk[picked()]), f=document.getElementById('planFine');
-      if(s2&&f) f.textContent=f.textContent.replace(/\$[0-9.]+/,s2);
+    /* the store's own prices when they are known: the plan screen draws
+       them for every plan and period, then this button is set up again */
+    if(configured()&&!window.__planStore) packages().then(function(pk){
+      var m={};
+      TIERS.forEach(function(t){ ['year','month'].forEach(function(per){ var x=pk[t+'_'+per]; if(x&&priceOf(x)) m[t+'_'+per]=priceOf(x); }); });
+      window.__planStore=m;
+      if(Object.keys(m).length&&window.__paintPlan&&document.getElementById('planBody')) window.__paintPlan();
     }).catch(function(){});
-    if(isPro()) note('You have Kova Pro'+(C.period==='trial'?' (free trial'+(C.until?', until '+new Date(C.until).toLocaleDateString():'')+')':'')+'.');
+    if(isPro()) note('Your plan: '+planName()+(C.period==='trial'?' (free trial'+(C.until?', until '+new Date(C.until).toLocaleDateString():'')+')':'')+'.');
   }
   function onLink(ev){
     var b=ev.target.closest('[data-kbi]'); if(!b) return;
@@ -53568,11 +53655,15 @@ window.KovaBilling=(function(){
       restore().then(function(){ say(isPro()?'Kova Pro restored.':'No purchase found for this account.'); paintRows(); },function(e){ say(e.message||'Could not restore right now.'); });
     }
   }
+  function planName(){
+    var p=C.parts||{health:1,train:1,work:1};
+    return p.work?'Everything':p.train?'Health + Training':'Health';
+  }
   /* Settings > Subscription */
   function paintRows(){
     var plan=document.querySelector('#s-settings [data-go="plan"]'); if(!plan) return;
     var sub=plan.querySelector('.li-sub');
-    if(sub) sub.textContent=isPro()?(C.period==='trial'?'Free trial'+(C.until?' until '+new Date(C.until).toLocaleDateString():''):'Kova Pro')+(C.will===false?' · cancelled, ends then':''):'10 days free, then yearly or monthly';
+    if(sub) sub.textContent=isPro()?(C.period==='trial'?planName()+' \u00b7 free trial'+(C.until?' until '+new Date(C.until).toLocaleDateString():''):planName())+(C.will===false?' · cancelled, ends then':''):'30 days free on yearly, 14 on monthly';
     if(document.getElementById('kbiManage')) return;
     var wrap=document.createElement('div');
     wrap.innerHTML='<div class="list-item tap" id="kbiManage" data-kbi="manage"><div class="li-ico"><svg class="ic"><use href="#i-refresh"/></svg></div><div style="flex:1"><div class="li-name">Manage or cancel subscription</div><div class="li-sub">Opens '+(plat()==='ios'?'the App Store':plat()==='android'?'Google Play':'your billing page')+' in one tap</div></div><svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg></div>'
@@ -53583,26 +53674,83 @@ window.KovaBilling=(function(){
     ['kbiManage','kbiRestore'].forEach(function(id){ var e=document.getElementById(id); if(e) e.addEventListener('click',onLink); });
   }
 
-  /* the server says 402: show what it needs */
+  /* the server says 402: show what it needs, with that part already ticked */
+  var NEEDS={train:'train',work:'work',crew:'work',studio:'work',publish:'work',assist:'work'};
   function paywall(feature){
     track('paywall_shown',{feature:feature||''});
     try{ if(window.go) go('plan'); }catch(e){}
-    setTimeout(function(){ decorate(); note(feature==='chat'?'Real answers from the assistant are part of Kova Pro. The on-device guide stays free.':'This is part of Kova Pro.'); },120);
+    var need=NEEDS[feature]||'';
+    var pickIt=function(){ try{ if(window.__planSet) __planSet(need==='work'?{work:true}:need==='train'?{train:true,work:false}:{}); }catch(e){} };
+    if(!window.__planSet&&window.__kovaLoadWork){ addEventListener('kova:lazy',function once(){ removeEventListener('kova:lazy',once); pickIt(); paywall2(feature,need); }); return; }
+    pickIt(); paywall2(feature,need);
+  }
+  function paywall2(feature,need){
+    setTimeout(function(){ decorate(); note(feature==='chat'?'Real answers from the assistant come with any plan. The on-device guide stays free.'
+      :need==='work'?'Get your hours back: Work OS and your AI team are ticked below.'
+      :need==='train'?'Get stronger every week: Training is ticked below.':'This comes with a Kova plan.'); },120);
   }
 
-  function start(){
+  /* ---------------- when a part is not in the plan ----------------
+     Payments on, and Workout or Work OS opened without it: the screen
+     still shows, with one card at the top saying what adding it costs. */
+  var LOCKS={
+    train:{screens:['s-move','s-session','s-customize'],t:'Get stronger every week',d:'Add Training and walk in knowing exactly what to do, then watch the numbers climb.'},
+    work:{screens:['s-work','s-workspace','s-worktoday','s-worktasks','s-workprojects','s-workgoals','s-workauto','s-workteam','s-workstudio','s-workcompose'],t:'Get your hours back',d:'Add Work OS and an AI team that researches, posts and reports back while you live your life.'}
+  };
+  function addPrice(part){
+    var T=window.__planTiers||{health:{month:9.99},health_train:{month:13.99},all:{month:19.99}};
+    var d=part==='train'?T.health_train.month-T.health.month:T.all.month-T.health_train.month;
+    return '$'+d.toFixed(2)+' a month';
+  }
+  function gates(){
+    Object.keys(LOCKS).forEach(function(part){
+      var L=LOCKS[part], locked=configured()&&!has(part);
+      L.screens.forEach(function(id){
+        var sc=document.getElementById(id); if(!sc) return;
+        var card=sc.querySelector('.kbl[data-part="'+part+'"]');
+        if(!locked){ if(card) card.remove(); return; }
+        if(card||!sc.classList.contains('on')) return;
+        card=document.createElement('div'); card.className='card kbl'; card.setAttribute('data-part',part); card.setAttribute('role','note');
+        card.innerHTML='<div class="kbl-t"><b>'+esc(L.t)+'</b><span>'+esc(L.d)+(addPrice(part)?' From '+esc(addPrice(part))+'.':'')+'</span></div>'
+          +'<button class="chip on" type="button">Add it</button>';
+        card.querySelector('button').onclick=function(){ paywall(part); };
+        var hdr=sc.querySelector('.hdr'); if(hdr&&hdr.parentNode===sc) sc.insertBefore(card,hdr.nextSibling); else sc.insertBefore(card,sc.firstChild);
+      });
+    });
+  }
+  function watchGates(){
+    if(!configured()||!window.MutationObserver) return;
+    Object.keys(LOCKS).forEach(function(part){
+      LOCKS[part].screens.forEach(function(id){
+        var sc=document.getElementById(id); if(!sc) return;
+        new MutationObserver(function(){ if(sc.classList.contains('on')) gates(); }).observe(sc,{attributes:true,attributeFilter:['class']});
+      });
+    });
+    /* starting a workout needs Training */
+    document.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('#startBtn,[data-go="session"]');
+      if(b&&configured()&&!has('train')){ e.preventDefault(); e.stopPropagation(); paywall('train'); }
+    },true);
+    gates();
+  }
+
+  /* the plan screen (src/p08_plans.js) may arrive after this file */
+  function wrapPlan(){
     if(typeof window.__paintPlan==='function'&&!window.__paintPlan.__kbi){
       var orig=window.__paintPlan;
       window.__paintPlan=function(){ var r=orig.apply(this,arguments); try{ decorate(); }catch(e){} return r; };
       window.__paintPlan.__kbi=1;
     }
-    decorate(); paintRows();
+  }
+  function start(){
+    wrapPlan();
+    decorate(); paintRows(); watchGates();
     /* refresh the cached answer now and then, quietly */
     if(configured()&&Date.now()-(C.at||0)>6*3600e3&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser) setTimeout(function(){ info().catch(function(){}); },5000);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else setTimeout(start,0);
 
-  return {configured:configured,isPro:isPro,buy:buy,restore:restore,manage:manage,info:info,packages:packages,paywall:paywall,
+  return {_wrapPlan:wrapPlan,configured:configured,isPro:isPro,has:has,buy:buy,restore:restore,manage:manage,info:info,packages:packages,paywall:paywall,gates:gates,planName:planName,
     _take:take,_C:C,_decorate:decorate};
 })();
 
@@ -58678,6 +58826,151 @@ window.KovaSignIn=(function(){
     b.disabled=!!on; b.classList.toggle('busy',!!on); b.textContent=on?(label||'Working…'):GO[M];
   }
   return {render:render,mode:function(){ return M; },error:error,busy:busy,suggest:suggest,clean:clean,rules:rules};
+})();
+
+</script>
+<script id="p08-plans">
+/* ===== SUBSCRIPTION =====
+   Build your plan. Health is the base (Fuel, Sleep, Vitals); Training and
+   Work OS with the AI team are add-ons. Under the hood they are three
+   plans in one App Store subscription group, so changing your mind is an
+   upgrade or a downgrade, never two bills:
+     health        Fuel, Sleep, Vitals and the AI that reads them
+     health_train  + Training
+     all           + Training + Work OS and the AI team (Work includes
+                   Training, so "Health + Work" is this plan)
+   Yearly comes with 30 days free and monthly with 14, from RevenueCat's
+   data on 17,000 apps (Sept 2026): annual plans convert best with trials
+   of 17-32 days, monthly ones peak at 10-16. The card goes in at the
+   start, the reminder comes 2 days before the first charge.
+   KovaBilling (src/p08_billing.js) puts the store's own prices in and
+   takes the money; the numbers here are the defaults before it does.  */
+(function(){
+  'use strict';
+  var TIERS={
+    health:      {n:'Health',            year:59.99,  month:9.99},
+    health_train:{n:'Health + Training', year:84.99,  month:13.99},
+    all:         {n:'Everything',        year:119.99, month:19.99}
+  };
+  var TRIAL={year:30, month:14};
+  /* train is your own choice; Work brings Training with it either way */
+  var S={period:'year', train:false, work:true};
+
+  function tier(){ return S.work?'all':S.train?'health_train':'health'; }
+  function money(n){ return '$'+n.toFixed(2); }
+  /* through window.__paintPlan, so KovaBilling sets the button up again */
+  function repaint(){ (window.__paintPlan||paint)(); }
+  function store(t,p){ var m=window.__planStore||{}; return m[t+'_'+p]||''; }
+  function priceOf(t,p){ return store(t,p)||money(TIERS[t][p]); }
+  function add(a,b,p){ var d=TIERS[a][p]-TIERS[b][p]; return '+'+money(d)+(p==='year'?'/yr':'/mo'); }
+  function esc(x){ return String(x).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* Sell where you end up, not the features (p19b). Each part is the
+     person you become, with a small arrow that opens what changes; the
+     price is there, quietly, never the headline. */
+  var PARTS={
+    health:{t:'Wake up rested and in control of your energy', tag:'Health',
+      out:['Mornings you do not have to fight through','Meals that fuel you, known in one photo','See what drains your energy before it hits','Stop guessing about your body. Know.']},
+    train:{t:'Get stronger every week, and proud of the mirror', tag:'Training',
+      out:['Walk in knowing exactly what to do today','Watch your strength climb, week after week','A physique built on purpose, not by accident','Peak for the moments that matter']},
+    work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team',
+      out:['An AI team that researches, posts and reports back while you live','Walk into every meeting prepared','Content out the door without the grind','A clear head: everything handled, nothing forgotten']}
+  };
+  S.open=S.open||{};
+  function row(key,part,price,on,locked){
+    var P=PARTS[part], open=!!S.open[part], id='plnDrop-'+part;
+    return '<div class="pln-row'+(on?' on':'')+(locked?' fixed':'')+'">'
+      + '<button type="button" class="pln-tg"'+(key?' data-add="'+key+'" role="switch" aria-checked="'+on+'"':' aria-disabled="true"')+'>'
+      +   '<span class="pln-check" aria-hidden="true"></span>'
+      +   '<span class="pln-t"><i>'+P.tag+'<em class="pln-pr">'+price+'</em></i><b>'+P.t+'</b></span></button>'
+      + '<button type="button" class="pln-more'+(open?' open':'')+'" data-more="'+part+'" aria-expanded="'+open+'" aria-controls="'+id+'" aria-label="What changes for you">'
+      +   '<svg class="ic"><use href="#i-chevron-down"/></svg></button>'
+      + '<ul class="pln-drop" id="'+id+'"'+(open?'':' hidden')+'>'+P.out.map(function(o){ return '<li>'+o+'</li>'; }).join('')+'</ul>'
+      + '</div>';
+  }
+
+  function paint(){
+    var el=document.getElementById('planBody'); if(!el) return;
+    var t=tier(), P=S.period, days=TRIAL[P];
+    var yearly=TIERS[t].year, monthly12=TIERS[t].month*12, save=Math.round((1-yearly/monthly12)*100);
+
+    el.innerHTML=
+      '<div class="card card-lg pln glassy" style="padding:22px 18px 18px">'
+      + '<div class="lbl pln-k">'+days+' DAYS FREE</div>'
+      + '<div class="pln-h">The version of you<br/>that has it handled.</div>'
+      + '<div class="sub pln-lead">Rested mornings, a body you are proud of, and a day that runs itself. Choose what you want to change.</div>'
+
+      + row('', 'health', 'Included', true, true)
+      + row('train', 'train', S.work?'Included with Work OS':add('health_train','health',P), S.train||S.work, S.work)
+      + row('work', 'work', add('all',S.train?'health_train':'health',P), S.work, false)
+
+      /* yearly or monthly: both always show their real price */
+      + '<div class="plan-tog pln-tog" id="planTog" role="radiogroup" aria-label="Billing">'
+      +   '<i class="pln-ticks" aria-hidden="true"></i>'
+      +   ['year','month'].map(function(k){
+            return '<button class="plan-opt'+(k===P?' on':'')+'" data-p="'+k+'" role="radio" aria-checked="'+(k===P)+'">'
+              + '<span class="pln-chev" aria-hidden="true">'+(k==='year'?'\u2039':'\u203a')+'</span>'
+              + '<span class="plan-opt-l">'+(k==='year'?'Yearly':'Monthly')+'</span>'
+              + '<span class="pln-free">'+TRIAL[k]+' days free</span>'
+              + '<span class="plan-opt-p">'+esc(priceOf(t,k))+'<span>/'+(k==='year'?'yr':'mo')+'</span></span>'
+              + (k==='year'&&save>0?'<span class="plan-save">Best value</span>':'')
+              + '</button>';
+          }).join('')
+      + '</div>'
+
+      + '<button class="btn pln-go" id="planGo">Start '+days+' days free</button>'
+      + '<div class="pln-glow" aria-hidden="true"></div>'
+      + '<div class="pln-sum"><span>'+esc(TIERS[t].n)+'</span><b id="planTotal">'+esc(priceOf(t,P))+'<i>/'+(P==='year'?'yr':'mo')+'</i></b></div>'
+      + '<div class="sub" id="planFine" style="text-align:center;margin-top:4px;font-size:10px;line-height:1.5">'
+      +   'Free for '+days+' days, then '+esc(priceOf(t,P))+' '+(P==='year'?'a year':'a month')+'. We remind you 2 days before it ends. '
+      +   'Cancel any time before then and you pay nothing.</div>'
+      + '</div>'
+
+      + '<div class="card glassy pln-arc"><div class="pln-arc-h">Where you will be</div>'
+      +  [['In a week','You know what to eat, when to train and when to sleep. The guessing stops.'],
+          ['In a month','Steadier energy through the afternoon, sharper focus, a calmer inbox.'],
+          ['In 90 days','Stronger, leaner, rested, and running your work instead of chasing it.']]
+         .map(function(r,i){
+           return '<div class="pln-step"><span class="pln-dot">'+(i+1)+'</span><div><b>'+r[0]+'</b><span>'+r[1]+'</span></div></div>';
+         }).join('')
+      + '</div>'
+
+      + '<div class="sub" style="text-align:center;margin-bottom:14px;font-size:10px;opacity:.7">'
+      + 'Billing runs through Stripe. Kova never sees your card.</div>';
+
+    el.querySelectorAll('[data-more]').forEach(function(b){
+      b.onclick=function(){ var k=b.getAttribute('data-more'); S.open[k]=!S.open[k];
+        var d=document.getElementById('plnDrop-'+k); if(d) d.hidden=!S.open[k];
+        b.classList.toggle('open',S.open[k]); b.setAttribute('aria-expanded',String(S.open[k])); };
+    });
+    el.querySelectorAll('[data-add]').forEach(function(b){
+      b.onclick=function(){
+        var k=b.getAttribute('data-add');
+        if(k==='train'&&S.work) return;
+        S[k]=!S[k];
+        repaint();
+      };
+    });
+    document.querySelectorAll('#planTog [data-p]').forEach(function(b){
+      b.onclick=function(){ S.period=b.dataset.p; repaint(); };
+    });
+    /* KovaBilling takes this button over; until it loads, say so */
+    document.getElementById('planGo').onclick=function(){
+      if(typeof toast==='function') toast('Checkout needs the billing server. Plan chosen: '+TIERS[t].n+', '+(P==='year'?'yearly':'monthly')+'.');
+      try{ if(window.KP) KP.set('planIntent',{tier:t,period:P,at:Date.now()}); }catch(e){}
+    };
+  }
+
+  /* for KovaBilling: what is picked, and a way to pick (the paywall opens
+     on the part you asked for) */
+  window.__planPick=function(){ return {tier:tier(), period:S.period}; };
+  window.__planSet=function(o){ o=o||{}; if(o.period) S.period=o.period; if('train' in o) S.train=!!o.train; if('work' in o) S.work=!!o.work; repaint(); };
+  window.__planTiers=TIERS; window.__planTrial=TRIAL;
+  window.__paintPlan=paint;
+  /* KovaBilling takes the button over each time the screen is drawn */
+  try{ if(window.KovaBilling&&KovaBilling._wrapPlan) KovaBilling._wrapPlan(); }catch(e){}
+  /* opened before this file arrived: draw it now */
+  var sc=document.getElementById('s-plan'); if(sc&&sc.classList.contains('on')) (window.__paintPlan||paint)();
 })();
 
 </script>

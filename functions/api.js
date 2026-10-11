@@ -140,10 +140,18 @@ async function rateLimit(key, limit, windowMs) {
    REVENUECAT_SECRET_KEY is set (see billing.js). 402 tells the page to
    show the paywall. */
 const billing = (cfg) => makeBilling({ db: db(), cfg });
-async function requirePro(u, cfg) {
+/* need: 'health' (Fuel, Sleep, Vitals), 'work' (Work OS and the AI team),
+   'train', or 'any' plan at all (chat) */
+const NEED_TEXT = {
+  health: 'This is part of the Kova Health plan. Start the free trial to use it.',
+  work: 'This is part of Work OS and the AI team, an add-on to your plan. Start the free trial to use it.',
+  train: 'This is part of Training, an add-on to your plan. Start the free trial to use it.',
+  any: 'This needs a Kova plan. Start the free trial to use it.'
+};
+async function requirePro(u, cfg, need) {
   if (!cfg || !cfg.rcSecret) return;
-  const st = await billing(cfg).status(u.uid);
-  if (!st.pro) throw new HttpError(402, 'This needs Kova Pro. Start the free trial to use it.');
+  need = need || 'any';
+  if (!(await billing(cfg).allows(u.uid, need))) throw new HttpError(402, NEED_TEXT[need] || NEED_TEXT.any);
 }
 
 /* ---------- email code sign-in ---------------------------------------- */
@@ -452,7 +460,7 @@ Rules:
 
 async function script(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'The engine is not configured on the server yet.');
   await rateLimit(`script_${u.uid}`, 40, 24 * 3600e3);
   const b = req.body || {};
@@ -574,7 +582,7 @@ function summary(id, r) {
 
 async function publishRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   const post = cleanPost(u.uid, req.body);
   const st = await oauth(cfg).status(u.uid);
   const missing = post.targets.filter((k) => !(k === 'youtube' ? st.youtube.canUpload : (st[k] && st[k].linked)));
@@ -652,7 +660,7 @@ Rules:
 
 async function writeRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'The writer is not configured on the server yet.');
   await rateLimit(`write_${u.uid}`, 120, 24 * 3600e3);
   const b = req.body || {};
@@ -774,7 +782,7 @@ function cleanCrew(b) {
 const CREW_MODELS = { haiku: 'claude-haiku-4-5-20251001', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
 async function crewStep(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'AI employees need the Kova server\'s Claude key.');
   await rateLimit(`crew_${u.uid}`, 400, 24 * 3600e3);
   const c = cleanCrew(req.body || {});
@@ -800,7 +808,7 @@ async function crewStep(req, res, cfg) {
    did (a report and proposed changes) the next time it opens. */
 async function crewCloud(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   const c = require('./crew').cleanCloud(req.body || {});
   const ref = db().ref(`srv/crewCloud/${u.uid}`);
   if (!Object.keys(c.emps).length) { await ref.remove(); return res.json({ ok: true, routines: 0 }); }
@@ -822,7 +830,7 @@ async function crewInboxAck(req, res) {
 
 async function hashtagsRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'Hashtag sizes need the Kova server\'s Claude key.');
   await rateLimit(`tags_${u.uid}`, 40, 24 * 3600e3);
   const b = req.body || {};
@@ -869,7 +877,7 @@ Return ONE JSON object, nothing else. One of:
 - answer: when it is a question, not a job. Under 120 words.`;
 async function assistRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'The agent needs the Kova server\'s Claude key.');
   await rateLimit(`assist_${u.uid}`, 60, 24 * 3600e3);
   const b = req.body || {};
@@ -929,7 +937,7 @@ async function tractionRefresh(req, res, cfg) {
 }
 async function tractionAdvice(req, res, cfg, pid) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'work');
   await rateLimit(`advice_${u.uid}`, 20, 24 * 3600e3);
   const id = String(pid).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
   try {
@@ -978,7 +986,7 @@ async function agentSettings(req, res) {
 }
 async function agentRun(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'health');
   await rateLimit(`agent_${u.uid}`, 8, 24 * 3600e3);
   const q = db().ref(`srv/agentQueue/${u.uid}`);
   if ((await q.once('value')).val()) throw new HttpError(409, 'An audit is already running.');
@@ -1003,7 +1011,7 @@ async function agentAlert(req, res, id) {
 
 async function chatRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'any');
   try {
     res.json(await chat.answer({ db: db(), cfg, uid: u.uid, body: req.body }));
   } catch (e) {
@@ -1068,7 +1076,7 @@ async function mediaLink(req, res, cfg) {
 
 async function bodyEstimate(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'health');
   await rateLimit(`body_${u.uid}`, 20, 24 * 3600e3);
   try { res.json(await bodyEst.estimate({ cfg, body: req.body })); }
   catch (e) { if (e instanceof bodyEst.BodyError) throw new HttpError(e.status, e.message); throw e; }
@@ -1078,7 +1086,7 @@ async function bodyEstimate(req, res, cfg) {
 
 async function mealRead(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'health');
   await rateLimit(`meal_${u.uid}`, 60, 24 * 3600e3);
   try { res.json(await meal.readMeal({ cfg, body: req.body })); }
   catch (e) { if (e instanceof meal.MealError) throw new HttpError(e.status, e.message); throw e; }
@@ -1086,7 +1094,7 @@ async function mealRead(req, res, cfg) {
 
 async function labsExtract(req, res, cfg) {
   const u = await requireUser(req);
-  await requirePro(u, cfg);
+  await requirePro(u, cfg, 'health');
   await rateLimit(`labs_${u.uid}`, 30, 24 * 3600e3);
   try { res.json(await labs.extract({ cfg, body: req.body })); }
   catch (e) { if (e instanceof labs.LabError) throw new HttpError(e.status, e.message); throw e; }
