@@ -7833,6 +7833,167 @@ body.light-mode .kap-q{background:#fff;color:#1C1A17;border-color:rgba(28,26,23,
 body.light-mode .kap-sub,body.light-mode .kap-hd small,body.light-mode .kap-ev,body.light-mode .kap-gh em{color:rgba(28,26,23,.7)}
 
 </style>
+<style id="p08-vdock">
+/* KovaVDock (p22): Vitals as one section at a time behind a dock of icon
+   tiles, styled after the three reference images in Kova's accent.
+   Dark, soft light and light glass. */
+
+/* image 1: a faint dot grid behind the whole screen */
+#s-vitals.kvd-on{background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.3px);background-size:15px 15px;background-position:8px 6px}
+
+/* one section at a time: the dock replaces the drop-down headers */
+#s-vitals.kvd-on>.vall{display:none}
+#s-vitals.kvd-on .kvd-gone{display:none}
+#s-vitals.kvd-on>.vsec:not(.kvd-cur){display:none}
+#s-vitals.kvd-on>.vsec>.vsec-h{display:none}
+#s-vitals.kvd-on>.vsec.kvd-cur>.vsec-b{max-height:none;opacity:1;padding-top:0;overflow:visible;animation:kvdIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes kvdIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* image 1: "Label: Value" title */
+.kvd-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:2px 10px;margin:2px 2px 14px}
+.kvd-ht{font-size:21px;font-weight:300;letter-spacing:-.02em;line-height:1.2;color:var(--ron-txt,#fff)}
+.kvd-hl{color:rgba(255,255,255,.58);font-weight:300}
+.kvd-ht b{font-weight:400}
+.kvd-hs{grid-column:1;font-size:12px;font-weight:300;color:rgba(255,255,255,.66)}
+.kvd-hn{grid-row:1/span 2;grid-column:2;display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.62);font-variant-numeric:tabular-nums}
+.kvd-sq{width:36px;height:36px;border-radius:13px;border:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.25)}
+.kvd-sq svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kvd-sq:focus-visible,.kvd-t:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+/* image 3 and 1: graphite cards, big radius, a soft line of light on top */
+#s-vitals.kvd-on .vsec-b>.card,.kvd-card{border-radius:28px;border:1px solid rgba(255,255,255,.07);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.22)}
+#s-vitals.kvd-on .vsec-b .big{font-weight:200;letter-spacing:-.03em}
+.kvd-card{position:relative;overflow:hidden;padding:18px 18px 16px;margin-bottom:12px;color:var(--ron-txt,#fff)}
+.kvd-ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.kvd-ct{font-size:16px;font-weight:400;letter-spacing:-.01em}
+.kvd-cs{font-size:12px;font-weight:300;color:rgba(255,255,255,.62);margin-top:2px;line-height:1.45}
+
+/* image 1: the glow of colour behind the glass */
+.kvd-power::before{content:"";position:absolute;left:-30%;top:-45%;width:95%;height:120%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 55%,transparent),transparent);filter:blur(28px);opacity:.55}
+.kvd-power>*{position:relative}
+
+/* image 3: the big thin number with a small unit */
+.kvd-big{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:14px 0 10px}
+.kvd-num{font-size:68px;font-weight:200;line-height:.9;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.kvd-num.sm{font-size:40px}
+.kvd-unit{font-size:16px;font-weight:300;letter-spacing:.02em;color:rgba(255,255,255,.7);margin-left:-6px}
+.kvd-word{font-size:12px;font-weight:400;margin-left:auto;align-self:center;padding:5px 11px;border-radius:99px;border:1px solid rgba(255,255,255,.14)}
+.kvd-word.good{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 50%,transparent)}
+.kvd-word.bad{color:#FF8A96;border-color:rgba(255,120,135,.45)}
+.kvd-word.none{margin-left:0;color:rgba(255,255,255,.7)}
+
+/* image 3: the track, the band, the white pills and the glowing ring */
+.kvd-track{position:relative;height:22px;margin:6px 4px 0}
+.kvd-track::before{content:"";position:absolute;left:0;right:0;top:50%;height:1.5px;margin-top:-.75px;border-radius:2px;background:rgba(255,255,255,.2)}
+.kvd-band{position:absolute;left:50%;width:25%;top:50%;height:6px;margin-top:-3px;border-radius:4px;background:rgba(255,255,255,.18)}
+.kvd-pill{position:absolute;top:50%;width:12px;height:5px;margin:-2.5px 0 0 -6px;border-radius:3px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.35)}
+.kvd-knob{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:#0B0B0D;border:4px solid var(--acc);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent),0 0 16px color-mix(in srgb,var(--acc) 75%,transparent)}
+.kvd-tl3{display:flex;justify-content:space-between;font-size:10px;font-weight:300;color:rgba(255,255,255,.58);margin:4px 2px 14px;letter-spacing:.02em}
+
+/* image 3: three readings, split by slanted lines */
+.kvd-sms{display:grid;grid-template-columns:repeat(3,1fr)}
+.kvd-sm{position:relative;padding:2px 10px 0 14px;min-width:0}
+.kvd-sm:first-child{padding-left:2px}
+.kvd-sm+.kvd-sm::before{content:"";position:absolute;left:2px;top:6px;bottom:4px;width:1px;background:rgba(255,255,255,.16);transform:skewX(-12deg)}
+.kvd-sm b{display:block;font-size:22px;font-weight:300;letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kvd-sm b small{font-size:11px;font-weight:300;margin-left:2px;opacity:.75}
+.kvd-sm span{display:block;font-size:11.5px;font-weight:300;color:rgba(255,255,255,.66);margin-top:1px}
+.kvd-sm em{display:block;font-style:normal;font-size:10.5px;font-weight:300;color:rgba(255,255,255,.62);min-height:14px;margin-top:2px}
+.kvd-sm.good b{color:var(--acc)}
+.kvd-sm.bad b{color:#FF8A96}
+.kvd-mt{position:relative;height:10px;margin-top:6px}
+.kvd-mt::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.2)}
+.kvd-mt::after{content:"";position:absolute;left:50%;top:2px;bottom:2px;width:1px;background:rgba(255,255,255,.3)}
+.kvd-mt i{position:absolute;top:50%;width:18px;height:3.5px;margin:-1.75px 0 0 -9px;border-radius:3px;background:#fff}
+.kvd-sm.good .kvd-mt i{background:var(--acc);box-shadow:0 0 8px color-mix(in srgb,var(--acc) 70%,transparent)}
+.kvd-sm.bad .kvd-mt i{background:#FF6B7A;box-shadow:0 0 8px rgba(255,107,122,.6)}
+
+/* image 1: the trend drawn in dashes */
+.kvd-trend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.kvd-trh{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:300;margin-bottom:10px}
+.kvd-trh b{font-weight:400}
+.kvd-dash{display:flex;align-items:center;gap:4px;height:6px;overflow:hidden}
+.kvd-dash i{display:block;height:3px;border-radius:2px;background:#fff;flex-shrink:0}
+.kvd-dash i.kvd-dot{width:3px;height:3px;border-radius:50%}
+
+/* image 3: the vivid tile beside the dark one */
+.kvd-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kvd-tile{position:relative;overflow:hidden;border-radius:30px;padding:16px 14px 6px;min-height:212px;display:flex;flex-direction:column;color:#fff;
+  border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.kvd-tile.vivid{border-color:transparent;background:radial-gradient(120% 90% at 20% 0%,color-mix(in srgb,var(--acc) 72%,#fff) 0%,var(--acc) 48%,color-mix(in srgb,var(--acc) 72%,#000) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 34px color-mix(in srgb,var(--acc) 35%,transparent)}
+.kvd-tt{font-size:15px;font-weight:400;letter-spacing:-.01em}
+.kvd-ts{font-size:12px;font-weight:300;opacity:.72;margin-top:2px}
+.kvd-tv{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin:12px 0 4px}
+.kvd-tv em{font-style:normal;font-size:11px;font-weight:300;opacity:.85}
+.kvd-tv em.bad{color:#FF8A96;opacity:1}
+.kvd-dots{width:100%;max-width:150px;margin:auto auto 0;display:block}
+.kvd-dg{fill:rgba(255,255,255,.22)}
+.kvd-ring{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.2;stroke-dasharray:5 4}
+.kvd-mk{fill:#0B0B0D;stroke:#fff;stroke-width:2.6}
+.kvd-mk.now{stroke:var(--acc)}
+.kvd-mk.off{stroke:#FF6B7A}
+.kvd-tile.vivid.ink-dark{color:#0D0D10}
+.kvd-tile.vivid.ink-dark .kvd-dg{fill:rgba(13,13,16,.22)}
+.kvd-tile.vivid.ink-dark .kvd-ring{stroke:rgba(13,13,16,.7)}
+.kvd-tile.vivid .kvd-mk.base{fill:transparent}
+.kvd-tile.vivid.ink-dark .kvd-mk{stroke:#0D0D10;fill:transparent}
+.kvd-tile.vivid.ink-light .kvd-mk{stroke:#fff;fill:transparent}
+.kvd-empty .kvd-cs{margin-top:6px}
+
+/* image 2: the dock - a bar of squircle tiles you swipe like a wheel */
+.kvd-dock{position:sticky;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;margin:16px 74px 0 0;padding:8px;border-radius:30px;
+  background:rgba(24,24,27,.74);-webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07)}
+.kvd-row{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;padding:4px 14px;margin:-4px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 88%,transparent);cursor:grab;perspective:600px}
+.kvd-row::-webkit-scrollbar{display:none}
+.kvd-row.drag{cursor:grabbing;scroll-snap-type:none}
+.kvd-t{flex:0 0 58px;height:58px;border-radius:21px;border:0;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;scroll-snap-align:center;
+  background:linear-gradient(150deg,#38383E 0%,#26262A 60%,#202023 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.35),0 6px 14px rgba(0,0,0,.35);
+  transform:rotateY(calc(var(--kvd-d,0) * -26deg)) scale(calc(1 - var(--kvd-a,0) * .14));opacity:calc(1 - var(--kvd-a,0) * .35);
+  transition:background .25s,box-shadow .25s,transform .18s}
+.kvd-g{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
+.kvd-t.on{background:radial-gradient(130% 120% at 28% 18%,#fff 0%,color-mix(in srgb,var(--acc) 18%,#fff) 45%,color-mix(in srgb,var(--acc) 42%,#fff) 100%);
+  color:color-mix(in srgb,var(--acc) 30%,#0B0B0D);box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 40%,transparent),0 0 26px color-mix(in srgb,var(--acc) 55%,transparent),0 8px 18px rgba(0,0,0,.35);opacity:1}
+.kvd-t.on .kvd-g{stroke-width:1.8}
+.kvd-g .kvd-fill{fill:currentColor;stroke:none}
+.kvd-tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){ .kvd-t{transform:none;transition:none} #s-vitals.kvd-on>.vsec.kvd-cur>.vsec-b{animation:none} }
+
+/* light glass */
+body.light-mode #s-vitals.kvd-on{background-image:radial-gradient(rgba(28,26,23,.07) 1px,transparent 1.3px)}
+body.light-mode .kvd-ht,body.light-mode .kvd-card,body.light-mode .kvd-tile:not(.vivid){color:#1C1A17}
+body.light-mode .kvd-hl,body.light-mode .kvd-hs,body.light-mode .kvd-hn,body.light-mode .kvd-cs,body.light-mode .kvd-unit,body.light-mode .kvd-tl3,body.light-mode .kvd-sm span,body.light-mode .kvd-sm em,body.light-mode .kvd-word.none{color:rgba(28,26,23,.66)}
+body.light-mode .kvd-sq{color:#1C1A17;background:linear-gradient(150deg,#fff,rgba(255,255,255,.7));box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(28,26,23,.1)}
+body.light-mode #s-vitals.kvd-on .vsec-b>.card,body.light-mode .kvd-card,body.light-mode .kvd-tile:not(.vivid){background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.6));border-color:rgba(28,26,23,.08);box-shadow:inset 0 1px 0 #fff,0 10px 30px rgba(28,26,23,.08)}
+body.light-mode .kvd-power::before{opacity:.35}
+body.light-mode .kvd-track::before,body.light-mode .kvd-mt::before{background:rgba(28,26,23,.2)}
+body.light-mode .kvd-band{background:rgba(28,26,23,.14)}
+body.light-mode .kvd-pill,body.light-mode .kvd-dash i,body.light-mode .kvd-mt i{background:#1C1A17;box-shadow:none}
+body.light-mode .kvd-mt::after,body.light-mode .kvd-sm+.kvd-sm::before{background:rgba(28,26,23,.2)}
+body.light-mode .kvd-knob{background:#fff}
+body.light-mode .kvd-word{border-color:rgba(28,26,23,.16)}
+body.light-mode .kvd-word.bad,body.light-mode .kvd-sm.bad b,body.light-mode .kvd-tv em.bad{color:#B3263A}
+body.light-mode .kvd-sm.good b,body.light-mode .kvd-word.good{color:color-mix(in srgb,var(--acc) 70%,#000)}
+body.light-mode .kvd-trend{border-top-color:rgba(28,26,23,.08)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-dg{fill:rgba(28,26,23,.2)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-ring{stroke:rgba(28,26,23,.6)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-mk{fill:#fff;stroke:#1C1A17}
+body.light-mode .kvd-tile:not(.vivid) .kvd-mk.off{stroke:#B3263A}
+body.light-mode .kvd-dock{background:rgba(255,255,255,.72);border-color:rgba(28,26,23,.08);box-shadow:0 18px 40px rgba(28,26,23,.14),inset 0 1px 0 #fff}
+body.light-mode .kvd-t:not(.on){color:#1C1A17;background:linear-gradient(150deg,#fff 0%,#F1EEE9 100%);box-shadow:inset 0 1px 0 #fff,0 6px 14px rgba(28,26,23,.1)}
+body.light-mode .kvd-t.on{background:radial-gradient(130% 120% at 28% 18%,color-mix(in srgb,var(--acc) 22%,#fff) 0%,color-mix(in srgb,var(--acc) 62%,#fff) 100%);color:color-mix(in srgb,var(--acc) 30%,#0B0B0D)}
+
+/* soft light */
+body.soft-light .kvd-dock{background:rgba(48,44,52,.72)}
+body.soft-light .kvd-t:not(.on){background:linear-gradient(150deg,#4A4650 0%,#38353D 100%)}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -60996,6 +61157,378 @@ window.KovaFlow=(function(){
   return {parse:parse,make:make,check:check,test:test,sweep:sweep,resume:resume,waits:waits,runSteps:runSteps,
     actions:actions,addActions:addActions,dueIn:dueIn,builder:builder,fromWords:fromWords,pull:pullSheet,
     STEPS:S,FILTERS:F,MORE:MORE,describe:function(a){ return U.describe(a); },_setNow:function(f){ NOW=f||null; }};
+})();
+
+</script>
+<script id="p08-vdock">
+/* =====================================================================
+   KovaVDock (p22) - Vitals, one section at a time, from a dock of icons.
+
+   Before: seven drop-downs stacked down the screen (Today, Cycle &
+   fertility, Hearing & noise, How you're feeling, Readings & signals,
+   Heart & stress, Health & actions); open a few and it is a long scroll.
+   Now: a dock of squircle tiles sits at the bottom of Vitals. Swipe it
+   (finger, mouse drag or wheel) and the tiles turn like a wheel; tap one
+   and its title shows at the top ("Vitals: Readings & signals") with
+   that section under it. Every section is still one tap away; nothing
+   is hidden behind a More button.
+
+   The look comes from the three reference images, in Kova's accent
+   colour instead of theirs:
+     1  (Patient Profile)  "Label: Value" title, graphite cards with a
+        soft glow of colour behind the glass, a faint dot grid, a trend
+        line drawn in dashes, small status dots
+     2  (the dock)         squircle tiles with thin line icons; the one
+        you are on turns bright with a filled glyph and a glow
+     3  (Strike Power)     huge thin numbers with a small unit, coloured
+        changes, a track with a glowing ring, three readings split by
+        slanted lines, a vivid tile beside a dark one, dot drawings
+   The cards added here (Recovery, the sleep trend, Steadiest and Most
+   off) are drawn from your own readings: today's readiness, and the
+   seven checks Kova already runs (resting heart rate, HRV, sleep...).
+   With no reading they say so instead of showing a made-up number.
+
+   The sections themselves are the existing ones, moved, not rebuilt:
+   their cards keep every listener bound elsewhere.
+   ===================================================================== */
+window.KovaVDock=(function(){
+  'use strict';
+  var KEY='kova.vitals.sec', cur='', built=false, seen=false, mine={};
+  function $(id){ return document.getElementById(id); }
+  function scr(){ return $('s-vitals'); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function lsGet(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return ''; } }
+  function lsSet(v){ try{ localStorage.setItem(KEY,v); }catch(e){} }
+
+  /* the glyphs: a thin outline on graphite, a filled shape when it is the
+     one you are on (image 2: the page, the pie, the rings, the three dots) */
+  var G={
+    today:{o:'<circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="8" stroke-dasharray="11 2.6"/>',
+           f:'<circle cx="12" cy="12" r="4.2" class="kvd-fill"/><circle cx="12" cy="12" r="8" stroke-dasharray="9 3.6"/>'},
+    cycle:{o:'<circle cx="12" cy="12" r="8"/><path d="M12 4v8l6.6 4.4"/>',
+           f:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 6.9 12L12 12Z" class="kvd-fill"/>'},
+    noise:{o:'<path d="M6 10v4M9.5 7v10M13 9v6M16.5 5.5v13M20 10.5v3"/>',
+           f:'<rect x="5" y="9.5" width="2.2" height="5" rx="1.1" class="kvd-fill"/><rect x="8.4" y="6.5" width="2.2" height="11" rx="1.1" class="kvd-fill"/><rect x="11.9" y="8.5" width="2.2" height="7" rx="1.1" class="kvd-fill"/><rect x="15.4" y="5" width="2.2" height="14" rx="1.1" class="kvd-fill"/><rect x="18.9" y="10" width="2.2" height="4" rx="1.1" class="kvd-fill"/>'},
+    feeling:{o:'<circle cx="13.5" cy="9" r="3.6"/><circle cx="8" cy="15" r="2.3"/><circle cx="14" cy="16.6" r="1.7"/>',
+           f:'<circle cx="13.5" cy="9" r="3.8" class="kvd-fill"/><circle cx="8" cy="15" r="2.5" class="kvd-fill"/><circle cx="14" cy="16.6" r="1.9" class="kvd-fill"/>'},
+    signals:{o:'<path d="M3 12.5h4l2-5 3.5 10 2.5-6.5 1.5 1.5H21"/>',
+           f:'<path d="M3 12.5h4l2-5 3.5 10 2.5-6.5 1.5 1.5H21" stroke-width="2.4"/><circle cx="9" cy="7.5" r="1.6" class="kvd-fill"/>'},
+    heart:{o:'<path d="M12 19s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 7.4a3.9 3.9 0 0 1 7 2.2C19 14.7 12 19 12 19Z"/>',
+           f:'<path d="M12 19s-7-4.3-7-9.4A3.9 3.9 0 0 1 12 7.4a3.9 3.9 0 0 1 7 2.2C19 14.7 12 19 12 19Z" class="kvd-fill"/>'},
+    care:{o:'<path d="M7 4.5h7l4 4V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V6a1.5 1.5 0 0 1 1-1.5Z"/><path d="M14 4.5V8a.6.6 0 0 0 .6.6H18"/>',
+           f:'<path d="M7.5 4.5H14V8a.6.6 0 0 0 .6.6H18V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V6a1.5 1.5 0 0 1 1.5-1.5Z" class="kvd-fill"/>'}
+  };
+  function glyph(id,on){ var g=G[id]||G.signals; return '<svg viewBox="0 0 24 24" aria-hidden="true" class="kvd-g">'+(on?g.f:g.o)+'</svg>'; }
+
+  /* ---------------- the sections that exist right now ---------------- */
+  function sections(){
+    var s=scr(); if(!s) return [];
+    return Array.prototype.filter.call(s.children,function(c){ return c.classList&&c.classList.contains('vsec')&&c.querySelector('.vsec-h'); })
+      .map(function(w){ var h=w.querySelector('.vsec-h'); return {id:h.dataset.s,n:(h.querySelector('.vsec-n')||{}).textContent||h.dataset.s,w:w,h:h,b:w.querySelector('.vsec-b')}; });
+  }
+  function find(id){ return sections().filter(function(x){ return x.id===id; })[0]||null; }
+
+  /* ---------------- build ---------------- */
+  function build(){
+    var s=scr(), L=sections();
+    if(!s||L.length<2) return false;
+    s.classList.add('kvd-on');
+    var hdr=s.querySelector('.hdr');
+    if(!$('kvdHead')){
+      var head=document.createElement('div');
+      head.className='kvd-head'; head.id='kvdHead';
+      head.innerHTML='<div class="kvd-ht"><span class="kvd-hl">Vitals:</span> <b id="kvdName"></b></div>'
+        +'<div class="kvd-hs" id="kvdSub"></div>'
+        +'<div class="kvd-hn"><button class="kvd-sq" data-kv="prev" aria-label="Previous section"><svg viewBox="0 0 24 24"><path d="M14.5 6.5 9 12l5.5 5.5"/></svg></button>'
+        +'<span id="kvdPos"></span><button class="kvd-sq" data-kv="next" aria-label="Next section"><svg viewBox="0 0 24 24"><path d="m9.5 6.5 5.5 5.5-5.5 5.5"/></svg></button></div>';
+      var anchor=s.querySelector('.vall')||(hdr&&hdr.nextSibling);
+      s.insertBefore(head,anchor);
+      head.addEventListener('click',function(e){ var b=e.target.closest('[data-kv]'); if(b) step(b.dataset.kv==='next'?1:-1,true); });
+    }
+    if(!$('kvdDock')){
+      var d=document.createElement('div');
+      d.className='kvd-dock'; d.id='kvdDock';
+      d.innerHTML='<div class="kvd-row" id="kvdRow" role="tablist" aria-label="Vitals sections"></div>';
+      s.appendChild(d);
+      wireDock(d.querySelector('.kvd-row'));
+    }
+    tiles();
+    var want=cur&&find(cur)?cur:(find(lsGet())?lsGet():L[0].id);
+    show(want,false);
+    built=true;
+    return true;
+  }
+  function tiles(){
+    var row=$('kvdRow'); if(!row) return;
+    var L=sections();
+    row.innerHTML=L.map(function(x,i){
+      return '<button class="kvd-t" role="tab" id="kvdT-'+esc(x.id)+'" data-kt="'+esc(x.id)+'" aria-selected="false" aria-controls="kvdP-'+esc(x.id)+'" tabindex="-1" title="'+esc(x.n)+'">'
+        +glyph(x.id,false)+'<span class="kvd-tl">'+esc(x.n)+'</span></button>';
+    }).join('');
+    L.forEach(function(x){ x.b&&(x.b.id='kvdP-'+x.id); x.b&&x.b.setAttribute('role','tabpanel'); x.b&&x.b.setAttribute('aria-labelledby','kvdT-'+x.id); });
+    mark();
+  }
+  function mark(){
+    var row=$('kvdRow'); if(!row) return;
+    row.querySelectorAll('.kvd-t').forEach(function(t){
+      var on=t.dataset.kt===cur;
+      t.classList.toggle('on',on); t.setAttribute('aria-selected',on?'true':'false'); t.tabIndex=on?0:-1;
+      var g=t.querySelector('.kvd-g'); if(g) g.outerHTML=glyph(t.dataset.kt,on);
+    });
+  }
+
+  /* ---------------- show one ---------------- */
+  function show(id,user){
+    var x=find(id); if(!x) return false;
+    sections().forEach(function(y){
+      var on=y.id===id;
+      y.w.classList.toggle('kvd-cur',on);
+      if(on){ if(!y.h.classList.contains('open')) mine[y.id]=1; y.h.classList.add('open'); if(y.b) y.b.classList.add('open'); y.h.setAttribute('aria-expanded','true'); }
+    });
+    cur=id; lsSet(id);
+    var L=sections(), i=L.indexOf(L.filter(function(y){ return y.id===id; })[0]);
+    var nm=$('kvdName'); if(nm) nm.textContent=x.n;
+    var ps=$('kvdPos'); if(ps) ps.textContent=(i+1)+' / '+L.length;
+    var sb=$('kvdSub'); if(sb) sb.textContent=summary(id);
+    mark();
+    center(user);
+    paintCards(id);
+    if(user){
+      var m=$('main'); if(m&&m.scrollTo) try{ m.scrollTo({top:0,behavior:'smooth'}); }catch(e){ m.scrollTop=0; }
+      try{ if(window.KovaAnalytics) KovaAnalytics.track('vitals_section',{id:id}); }catch(e){}
+    }
+    return true;
+  }
+  function step(n,user){
+    var L=sections(); if(!L.length) return;
+    var i=L.map(function(x){ return x.id; }).indexOf(cur);
+    show(L[(i+n+L.length)%L.length].id,user);
+    if(user){ var t=$('kvdT-'+cur); if(t&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.kvd-row')) t.focus(); }
+  }
+  /* one line under the title, from what that section is about */
+  function summary(id){
+    var a=audit(), m=function(k){ return a&&a[k]; };
+    if(id==='today'){ var r=ready(); return r.score==null?'Recovery needs a night with your watch':'Recovery '+r.score+' · '+word(r.score).toLowerCase(); }
+    if(id==='signals'){ if(!a) return 'Your readings against your own normal'; var off=Object.keys(a).filter(function(k){ return a[k].status==='fix'||a[k].status==='watch'; }).length; return off?off+' outside your normal range':'All within your normal range'; }
+    if(id==='heart'){ var h=m('rhr'); return h&&h.value!=null?'Resting '+Math.round(h.value)+' bpm'+(h.change!=null?' · '+(h.change>0?'+':'')+Math.round(h.change)+' vs normal':''):'Heart rate and stress through the day'; }
+    if(id==='feeling') return 'Estimated from sleep, HRV and resting heart rate';
+    if(id==='care') return 'Your health profile and what to start or stop';
+    if(id==='cycle'){ try{ var p=window.KovaCycle&&KovaCycle.phase&&KovaCycle.phase(); if(p) return (KovaCycle.PHASE&&KovaCycle.PHASE[p]&&KovaCycle.PHASE[p].n)||(p.charAt(0).toUpperCase()+p.slice(1))+' phase'; }catch(e){} return 'Your cycle, phase and fertile window'; }
+    if(id==='noise') return 'How loud your days are, and your hearing';
+    return '';
+  }
+
+  /* ---------------- the dock: swipe, drag, wheel, keys ---------------- */
+  function wireDock(row){
+    row.addEventListener('click',function(e){
+      if(row.__drag) return;
+      var t=e.target.closest('.kvd-t'); if(t) show(t.dataset.kt,true);
+    });
+    row.addEventListener('keydown',function(e){
+      if(e.key==='ArrowRight'||e.key==='ArrowDown'){ e.preventDefault(); step(1,true); }
+      else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ e.preventDefault(); step(-1,true); }
+      else if(e.key==='Home'){ e.preventDefault(); var L=sections(); if(L.length) show(L[0].id,true); var t0=$('kvdT-'+cur); if(t0) t0.focus(); }
+      else if(e.key==='End'){ e.preventDefault(); var L2=sections(); if(L2.length) show(L2[L2.length-1].id,true); var t1=$('kvdT-'+cur); if(t1) t1.focus(); }
+    });
+    /* a mouse drags it like a finger does */
+    var sx=0, sl=0, down=false, moved=0;
+    row.addEventListener('pointerdown',function(e){ if(e.pointerType!=='mouse') return; down=true; moved=0; sx=e.clientX; sl=row.scrollLeft; row.__drag=false; });
+    window.addEventListener('pointermove',function(e){ if(!down) return; var dx=e.clientX-sx; moved=Math.max(moved,Math.abs(dx)); if(moved>4){ row.__drag=true; row.classList.add('drag'); row.scrollLeft=sl-dx; } });
+    window.addEventListener('pointerup',function(){ if(!down) return; down=false; row.classList.remove('drag'); setTimeout(function(){ row.__drag=false; },0); });
+    /* a wheel turns it sideways */
+    row.addEventListener('wheel',function(e){ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&row.scrollWidth>row.clientWidth){ row.scrollLeft+=e.deltaY; e.preventDefault(); } },{passive:false});
+    /* the wheel look: tiles away from the middle turn and fade a little */
+    var raf=0;
+    row.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(function(){ raf=0; spin(row); }); },{passive:true});
+    window.addEventListener('resize',function(){ spin(row); });
+  }
+  function spin(row){
+    row=row||$('kvdRow'); if(!row||!row.clientWidth) return;
+    var mid=row.scrollLeft+row.clientWidth/2;
+    row.querySelectorAll('.kvd-t').forEach(function(t){
+      var c=t.offsetLeft+t.offsetWidth/2, d=Math.max(-1,Math.min(1,(c-mid)/(row.clientWidth/1.4)));
+      t.style.setProperty('--kvd-d',d.toFixed(3)); t.style.setProperty('--kvd-a',Math.abs(d).toFixed(3));
+    });
+  }
+  function center(smooth){
+    var row=$('kvdRow'), t=$('kvdT-'+cur); if(!row||!t||!row.clientWidth){ spin(row); return; }
+    var to=t.offsetLeft+t.offsetWidth/2-row.clientWidth/2;
+    try{ row.scrollTo({left:to,behavior:smooth?'smooth':'auto'}); }catch(e){ row.scrollLeft=to; }
+    spin(row);
+  }
+
+  /* ---------------- data ---------------- */
+  function audit(){
+    try{
+      var a=window.KovaAgent&&KovaAgent.audit?KovaAgent.audit():null; if(!a||!a.metrics) return null;
+      var o={}; a.metrics.forEach(function(m){ o[m.id]=m; }); return o;
+    }catch(e){ return null; }
+  }
+  function ready(){ try{ return window.KovaToday&&KovaToday.readiness?KovaToday.readiness():{score:null}; }catch(e){ return {score:null}; } }
+  function word(s){ return s==null?'':s>=75?'High':s>=50?'Moderate':'Low'; }
+  function tone(st){ return st==='fix'?'bad':st==='watch'?'mid':st==='neglect'?'none':'good'; }
+  /* how far from your own normal, in %, for the readings that have one */
+  function dev(m){
+    if(!m||m.status==='neglect'||m.value==null) return null;
+    if(m.id==='hrv') return m.change_pct!=null?m.change_pct:null;
+    if(m.id==='rhr') return m.baseline?Math.round((m.value-m.baseline)/m.baseline*100):null;
+    if(m.id==='sleep') return m.target?Math.round((m.value-m.target)/m.target*100):null;
+    if(m.id==='food') return m.target?Math.round((m.value-m.target)/m.target*100):null;
+    if(m.id==='hydration') return m.target?Math.round((m.value-m.target)/m.target*100):null;
+    return null;
+  }
+  /* text on the vivid tile: dark on a light accent, light on a deep one */
+  function ink(){
+    try{
+      var v=getComputedStyle(document.body).getPropertyValue('--acc').trim(), r,g,b2,m;
+      if((m=v.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i))){ var h=m[1].length===3?m[1].replace(/./g,'$&$&'):m[1]; r=parseInt(h.slice(0,2),16); g=parseInt(h.slice(2,4),16); b2=parseInt(h.slice(4,6),16); }
+      else if((m=v.match(/rgba?\(\s*(\d+)[ ,]+(\d+)[ ,]+(\d+)/))){ r=+m[1]; g=+m[2]; b2=+m[3]; }
+      else return 'dark';
+      var f=function(c){ c/=255; return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4); };
+      var L=0.2126*f(r)+0.7152*f(g)+0.0722*f(b2);
+      /* white wins when it out-contrasts near-black on this colour */
+      return (1.05/(L+0.05))>((L+0.05)/0.0605)?'light':'dark';
+    }catch(e){ return 'dark'; }
+  }
+  function hm(mins){ mins=Math.round(mins); return Math.floor(mins/60)+'h '+(mins%60)+'m'; }
+  function nights(n){
+    var L=[]; try{ L=window.KovaSleepLog?KovaSleepLog.nights():[]; }catch(e){}
+    var by={}; L.forEach(function(x){ if(x&&x.k&&x.mins>0) by[x.k]=x.mins; });
+    var out=[], d=new Date(); d.setHours(12,0,0,0);
+    for(var i=n-1;i>=0;i--){ var t=new Date(d.getTime()-i*864e5), k=t.getFullYear()+'-'+('0'+(t.getMonth()+1)).slice(-2)+'-'+('0'+t.getDate()).slice(-2); out.push(by[k]||null); }
+    return out;
+  }
+
+  /* ---------------- the cards ---------------- */
+  /* image 3, "Strike Power": Recovery as a big thin number, a track with a
+     glowing ring, and three readings split by slanted lines */
+  function powerHtml(){
+    var r=ready(), a=audit()||{}, s=r.score;
+    var pos=s==null?null:Math.max(0,Math.min(100,s));
+    var sub=function(id,label,val,unit,dlt,du){
+      var m=a[id], st=m?m.status:'neglect', t=tone(st), d=dev(m);
+      var bar=d==null?'':'<i style="left:'+(50+Math.max(-45,Math.min(45,d*1.5)))+'%"></i>';
+      return '<div class="kvd-sm '+t+'"><b>'+(val==null?'—':esc(val))+'<small>'+esc(unit)+'</small></b><span>'+esc(label)+'</span>'
+        +'<em>'+(dlt==null?(st==='neglect'?'no reading':''):esc((dlt>0?'+':'')+dlt+du))+'</em><div class="kvd-mt">'+bar+'</div></div>';
+    };
+    var hrv=a.hrv, rhr=a.rhr, sl=a.sleep;
+    return '<div class="kvd-card kvd-power">'
+      +'<div class="kvd-ch"><div><div class="kvd-ct">Recovery</div><div class="kvd-cs">Today, from sleep, HRV and resting heart rate</div></div>'
+      +'<button class="kvd-sq" data-go="recovery" aria-label="Open recovery"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>'
+      +'<div class="kvd-big"><span class="kvd-num">'+(s==null?'—':s)+'</span><span class="kvd-unit">'+(s==null?'':'/100')+'</span>'
+      +'<span class="kvd-word '+(s==null?'none':s>=75?'good':s>=50?'mid':'bad')+'">'+(s==null?'Wear your watch to bed for a score':esc(word(s)))+'</span></div>'
+      +'<div class="kvd-track" role="img" aria-label="'+(s==null?'No score yet':'Recovery '+s+' of 100, '+word(s).toLowerCase())+'"><span class="kvd-band"></span><span class="kvd-pill" style="left:50%"></span><span class="kvd-pill" style="left:75%"></span>'
+      +(pos==null?'':'<span class="kvd-knob" style="left:'+pos+'%"></span>')+'</div>'
+      +'<div class="kvd-tl3"><span>Low</span><span>Moderate</span><span>High</span></div>'
+      +'<div class="kvd-sms">'
+      +sub('hrv','HRV',hrv&&hrv.value!=null?Math.round(hrv.value):null,'ms',hrv&&hrv.change_pct!=null?hrv.change_pct:null,'% vs normal')
+      +sub('rhr','Resting HR',rhr&&rhr.value!=null?Math.round(rhr.value):null,'bpm',rhr&&rhr.change!=null?Math.round(rhr.change):null,' vs normal')
+      +sub('sleep','Sleep',sl&&sl.value!=null?hm(sl.value):null,'',sl&&sl.value!=null&&sl.target?Math.round(sl.value-sl.target):null,'m vs goal')
+      +'</div>'+trendHtml()+'</div>';
+  }
+  /* image 1, "Weight and Trend": sleep over two weeks as dashes, long for
+     a full night, short for a short one, a dot for a night with no data */
+  function trendHtml(){
+    var n=nights(14), have=n.filter(function(x){ return x; });
+    var avg=have.length?have.reduce(function(s,x){ return s+x; },0)/have.length:null;
+    var segs=n.map(function(v,i){
+      var o=(0.35+0.65*(i+1)/n.length).toFixed(2);
+      if(!v) return '<i class="kvd-dot" style="opacity:'+o+'"></i>';
+      var w=Math.max(6,Math.min(46,Math.round(v/480*34)));
+      return '<i style="width:'+w+'px;opacity:'+o+'" title="'+hm(v)+'"></i>';
+    }).join('');
+    return '<div class="kvd-trend"><div class="kvd-trh"><span>Sleep and trend</span><b>'+(avg==null?'no nights yet':hm(avg)+' avg')+'</b></div>'
+      +'<div class="kvd-dash" aria-label="Sleep over the last 14 nights">'+segs+'</div></div>';
+  }
+  /* image 3, "Most / Least consistent": the reading closest to your normal
+     on a vivid tile, the one furthest from it on a dark one */
+  function pairHtml(){
+    var a=audit(); if(!a) return '';
+    var NAME={hrv:'HRV',rhr:'Resting heart rate',sleep:'Sleep',food:'Protein',hydration:'Water'};
+    var L=Object.keys(NAME).map(function(k){ var m=a[k], d=dev(m); return d==null?null:{k:k,m:m,d:d}; }).filter(Boolean);
+    if(!L.length) return '<div class="kvd-card kvd-empty"><div class="kvd-ct">Steadiest and most off</div><div class="kvd-cs">Once Kova has a few readings from your watch, sleep log and meals, the one closest to your normal and the one furthest from it show here.</div></div>';
+    L.sort(function(x,y){ return Math.abs(x.d)-Math.abs(y.d); });
+    var best=L[0], worst=L.length>1?L[L.length-1]:null;
+    var val=function(x){ var m=x.m; return x.k==='sleep'?hm(m.value):(Math.round(m.value)+(m.unit&&m.unit.length<5?' '+m.unit:x.k==='food'?' g':'')); };
+    var tile=function(x,vivid,title){
+      return '<div class="kvd-tile'+(vivid?' vivid ink-'+ink():'')+'"><div class="kvd-tt">'+esc(title)+'</div><div class="kvd-ts">'+esc(NAME[x.k])+'</div>'
+        +'<div class="kvd-tv"><span class="kvd-num sm">'+esc(val(x))+'</span><em class="'+(vivid?'':Math.abs(x.d)>=10?'bad':'mid')+'">'+(x.d>0?'+':'')+x.d+' %</em></div>'
+        +dots(x.d,vivid)+'</div>';
+    };
+    return '<div class="kvd-pair">'+tile(best,true,'Steadiest')+(worst&&worst.k!==best.k?tile(worst,false,'Most off today'):'')+'</div>';
+  }
+  /* the dot drawing: a field of dots, a dashed ring for your normal, and
+     today as a ring marker - further out the further from normal */
+  function dots(d,vivid){
+    /* the whole field is one shape, so it costs one element, not a hundred */
+    var h='', cx=60, cy=46, R=40, n=0;
+    for(var y=8;y<=86;y+=8) for(var x=12;x<=108;x+=8){ var dx=(x-cx)/R, dy=(y-cy)/(R*0.92); if(dx*dx+dy*dy<=1){ h+='M'+(x-1.15)+' '+y+'a1.15 1.15 0 1 0 2.3 0a1.15 1.15 0 1 0-2.3 0'; n++; } }
+    var rr=22, k=Math.max(-1,Math.min(1,d/40)), mr=rr*(1+k*0.75), ang=-0.75;
+    var mx=(cx+Math.cos(ang)*mr).toFixed(1), my=(cy+Math.sin(ang)*mr).toFixed(1);
+    return '<svg class="kvd-dots" viewBox="0 0 120 92" aria-hidden="true" data-dots="'+n+'"><path class="kvd-dg" d="'+h+'"/>'
+      +'<circle cx="'+cx+'" cy="'+cy+'" r="'+rr+'" class="kvd-ring"/>'
+      +'<circle cx="'+cx+'" cy="'+cy+'" r="4" class="kvd-mk base"/>'
+      +'<circle cx="'+mx+'" cy="'+my+'" r="4.6" class="kvd-mk '+(vivid?'now':Math.abs(d)>=10?'off':'now')+'"/></svg>';
+  }
+  function paintCards(id){
+    var t=find('today');
+    if(t&&t.b){
+      var p=t.b.querySelector('.kvd-power');
+      var html=powerHtml();
+      if(!p){ var w=document.createElement('div'); w.innerHTML=html; p=w.firstChild; var anchor=t.b.querySelector('.card.card-lg')||t.b.firstChild; t.b.insertBefore(p,anchor); }
+      else if(id==='today') p.outerHTML=html;
+      /* the old Recovery card was a fixed 70; this one is your real score */
+      Array.prototype.forEach.call(t.b.querySelectorAll('.card'),function(c){ if(!c.classList.contains('kvd-power')&&/RECOVERY SCORE/.test(c.textContent)&&!c.querySelector('#recoveryGrid')) c.classList.add('kvd-gone'); });
+    }
+    var s=find('signals');
+    if(s&&s.b&&(id==='signals'||s.b.querySelector('.kvd-pair,.kvd-empty'))){
+      var q=s.b.querySelector('.kvd-pair,.kvd-empty');
+      var ph=pairHtml();
+      if(!q&&ph){ var w2=document.createElement('div'); w2.innerHTML=ph; s.b.insertBefore(w2.firstChild,s.b.firstChild); }
+      else if(q&&id==='signals'){ if(ph) q.outerHTML=ph; }
+    }
+  }
+
+  /* ---------------- keep in step ---------------- */
+  function watch(){
+    var s=scr(); if(!s||!window.MutationObserver) return;
+    /* sections added later (Cycle, Hearing) join the dock */
+    new MutationObserver(function(){
+      var n=sections().length, have=$('kvdRow')?$('kvdRow').children.length:0;
+      if(!built){ if(seen) build(); } else if(n!==have){ tiles(); if(!find(cur)&&n) show(sections()[0].id,false); else { mark(); var ps=$('kvdPos'); if(ps){ var L=sections(); ps.textContent=(L.map(function(x){ return x.id; }).indexOf(cur)+1)+' / '+L.length; } } }
+    }).observe(s,{childList:true});
+    /* something else opening a section ("Cycle and fertility" from search,
+       a notification, Help) brings it up in the dock */
+    /* only a header that goes from closed to open counts: the dock itself
+       re-marks the one it shows as open, and that must not echo back */
+    new MutationObserver(function(ms){
+      if(!built) return;
+      var want='';
+      ms.forEach(function(m){
+        var h=m.target; if(!h.classList||!h.classList.contains('vsec-h')||!h.classList.contains('open')) return;
+        if(/(^|\s)open(\s|$)/.test(m.oldValue||'')) return;
+        if(mine[h.dataset.s]){ delete mine[h.dataset.s]; return; }
+        if(h.dataset.s&&h.dataset.s!==cur) want=h.dataset.s;
+      });
+      if(want) show(want,false);
+    }).observe(s,{subtree:true,attributes:true,attributeOldValue:true,attributeFilter:['class']});
+    /* fresh numbers each time Vitals is opened */
+    new MutationObserver(function(){ if(s.classList.contains('on')&&built){ var sb=$('kvdSub'); if(sb) sb.textContent=summary(cur); paintCards(cur); center(false); } })
+      .observe(s,{attributes:true,attributeFilter:['class']});
+  }
+
+  /* nothing is moved until Vitals is first opened, so loading Kova stays light */
+  function start(){
+    var s=scr(); if(!s) return;
+    watch();
+    if(s.classList.contains('on')){ seen=true; if(!build()) setTimeout(build,400); return; }
+    var mo=new MutationObserver(function(){ if(s.classList.contains('on')){ mo.disconnect(); seen=true; if(!build()) setTimeout(build,400); } });
+    mo.observe(s,{attributes:true,attributeFilter:['class']});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+
+  return {show:show,step:step,build:build,current:function(){ return cur; },sections:function(){ return sections().map(function(x){ return {id:x.id,n:x.n}; }); },
+    summary:summary,dev:dev,_power:powerHtml,_pair:pairHtml,_nights:nights};
 })();
 
 </script>

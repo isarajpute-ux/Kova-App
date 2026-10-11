@@ -23,11 +23,18 @@ ck('the focused item shows a visible ring', ring);
 for (let i = 0; i < 12; i++) { const g = await page.evaluate(() => document.activeElement && document.activeElement.getAttribute('data-go')); if (g === 'vitals') break; await page.keyboard.press('Tab'); }
 await page.keyboard.press('Enter'); await page.waitForTimeout(500);
 ck('Enter on a sidebar item opens that area', await page.evaluate(() => document.getElementById('s-vitals').classList.contains('on')));
-/* the Cycle & fertility section header opens with the keyboard */
-await page.evaluate(() => { localStorage.setItem('kova.sex', JSON.stringify('female')); });
-const hd = await page.$('.kcx-vsec .vsec-h, .kn-vsec .vsec-h');
-if (hd) { await hd.focus(); const before = await hd.getAttribute('aria-expanded'); await page.keyboard.press('Enter'); await page.waitForTimeout(150); ck('a Vitals section opens and closes with Enter', (await hd.getAttribute('aria-expanded')) !== before); }
-else ck('a Vitals section opens and closes with Enter', false);
+/* Vitals sections, from the dock, with the keyboard: focus the tile you
+   are on, arrow keys move between sections (p22) */
+await page.evaluate(() => { if (window.__kovaLoadWork) __kovaLoadWork(); });
+await page.waitForFunction(() => window.KovaVDock && document.querySelector('#kvdRow .kvd-t.on'), null, { timeout: 30000 }).catch(() => {});
+const tile = await page.$('#kvdRow .kvd-t.on');
+if (tile) {
+  await tile.focus();
+  const before = await page.evaluate(() => KovaVDock.current());
+  await page.keyboard.press('ArrowRight'); await page.waitForTimeout(150);
+  const after = await page.evaluate(() => ({ cur: KovaVDock.current(), name: document.getElementById('kvdName').textContent, focus: document.activeElement && document.activeElement.dataset.kt }));
+  ck('a Vitals section is picked from the dock with the arrow keys, and focus follows', after.cur !== before && after.focus === after.cur && !!after.name);
+} else ck('a Vitals section is picked from the dock with the arrow keys, and focus follows', false);
 /* a sheet closes with Escape */
 await page.evaluate(() => { if (window.openSheet) openSheet('<div class="grab"></div><p>test</p>'); });
 await page.waitForTimeout(200);
