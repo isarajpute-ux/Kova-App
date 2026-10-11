@@ -131,7 +131,7 @@ function boot() {
   doc.querySelector('#ksTop [data-a="next"]').click(); await wait(30);
   const nx = doc.querySelector('.ks-next');
   ck('"+" opens What happens next? and closes the progress card', !!nx && /What happens next\?/.test(nx.textContent) && !doc.querySelector('.ks-flowp'));
-  ck('...eight actions, the right next one first and marked', nx.querySelectorAll('.ks-nxr').length === 8 && nx.querySelector('.ks-nxr').classList.contains('rec') && /Next/.test(nx.querySelector('.ks-nxr.rec').textContent));
+  ck('...nine actions (Send to Maya too), the right next one first and marked', nx.querySelectorAll('.ks-nxr').length === 9 && nx.querySelector('.ks-nxr').classList.contains('rec') && /Next/.test(nx.querySelector('.ks-nxr.rec').textContent));
   const nq = nx.querySelector('#ksNextQ'); nq.value = 'draft'; nq.dispatchEvent(new w.Event('input', { bubbles: true })); await wait(20);
   ck('...and a search that narrows them', doc.querySelectorAll('.ks-next .ks-nxr').length === 1 && /Human in the loop/.test(doc.querySelector('.ks-next .ks-nxr').textContent));
   doc.body.dispatchEvent(new w.MouseEvent('click', { bubbles: true })); doc.getElementById('s-workstudio').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);

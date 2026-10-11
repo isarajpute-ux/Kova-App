@@ -54,6 +54,13 @@
      GET  /media/file?p&e&s             a signed link to a file (streamed)
      POST /media/remove {path}          delete one of your files         [auth]
      POST /media/link   {path}  -> {url}  a fresh 15-minute link to one of your files (progress photos)   [auth]
+     POST /crew/ask     {emp,text,url?,deliverAt?,kind?,ref?}  -> {id,runAt}  a request to your AI team, done while Kova is closed (Work)   [auth]
+     GET  /crew/asks    -> {items}  your requests and where they are   [auth]
+     POST /crew/ask/cancel {id}  take back a request that has not started   [auth]
+     GET  /crew/plan    -> {prep,checkin}  meeting prep and check-in times   [auth]
+     POST /crew/plan    {tz,prep:{on,time,emp},checkin:{on,time,emp}}  set them (Work)   [auth]
+     POST /crew/fetch   {url}  -> {title,text,links}  read one public web page for a teammate (Work)   [auth]
+     POST /crew/caption {title,notes,dur,shape,platforms}  -> {heading,caption,tags}  a post in your voice (Work)   [auth]
      POST /meal/read    {image,mime,note}  -> {items}  read a plate from a photo (Pro)   [auth]
      POST /body/estimate {image,mime,prev?,days?,sex,age,cm,kg}  -> {lo,hi,conf,notes,change}  body-fat range from a progress photo (Pro)   [auth]
      POST /labs/extract {text | image,mime}  -> {rows}  lab results, extraction only (Pro) [auth]
@@ -101,6 +108,8 @@ const { makePush } = require('./push');
 const { makeBilling } = require('./billing');
 const meal = require('./meal');
 const bodyEst = require('./body');
+const asksMod = require('./asks');
+const { fetchPage } = require('./webpage');
 const labs = require('./labs');
 const { makeCalendar, CalError } = require('./calendar');
 const { makeSocial, SocialError } = require('./social');
@@ -1072,6 +1081,51 @@ async function mediaLink(req, res, cfg) {
   res.json({ url: cfg.media.link(p, 15 * 60e3) });
 }
 
+/* ---------- requests to your AI team (asks.js) --------------------------- */
+
+const asks = (cfg) => asksMod.makeAsks({ db: db(), cfg });
+async function askTry(fn) {
+  try { return await fn(); }
+  catch (e) { if (e && e.status && !(e instanceof HttpError)) throw new HttpError(e.status, e.message); throw e; }
+}
+async function crewAsk(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`ask_${u.uid}`, 60, 24 * 3600e3);
+  const r = await askTry(() => asks(cfg).create(u.uid, req.body));
+  /* due now: start it instead of waiting for the next tick */
+  if (r.now && cfg.kick) { try { await cfg.kick('crew'); } catch (e) { /* the timer picks it up */ } }
+  res.json(r);
+}
+async function crewAsks(req, res, cfg) {
+  const u = await requireUser(req);
+  res.set('cache-control', 'no-store');
+  res.json({ items: await asks(cfg).list(u.uid) });
+}
+async function crewAskCancel(req, res, cfg) {
+  const u = await requireUser(req);
+  res.json(await askTry(() => asks(cfg).cancel(u.uid, (req.body || {}).id)));
+}
+async function crewPlanRoute(req, res, cfg, set) {
+  const u = await requireUser(req);
+  if (!set) return res.json(await asks(cfg).getPlan(u.uid));
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`plan_${u.uid}`, 60, 3600e3);
+  res.json(await asks(cfg).setPlan(u.uid, req.body));
+}
+async function crewFetch(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`fetch_${u.uid}`, 120, 3600e3);
+  res.json(await askTry(() => fetchPage((req.body || {}).url)));
+}
+async function crewCaption(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`caption_${u.uid}`, 60, 24 * 3600e3);
+  res.json(await askTry(() => asksMod.caption({ cfg }, req.body)));
+}
+
 /* ---------- progress photo: body-fat range ------------------------------ */
 
 async function bodyEstimate(req, res, cfg) {
@@ -1215,6 +1269,13 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/media/upload') return await mediaUpload(req, res, cfg);
     if (M === 'POST' && path === '/media/remove') return await mediaRemove(req, res, cfg);
     if (M === 'POST' && path === '/media/link') return await mediaLink(req, res, cfg);
+    if (M === 'POST' && path === '/crew/ask') return await crewAsk(req, res, cfg);
+    if (M === 'GET' && path === '/crew/asks') return await crewAsks(req, res, cfg);
+    if (M === 'POST' && path === '/crew/ask/cancel') return await crewAskCancel(req, res, cfg);
+    if (M === 'GET' && path === '/crew/plan') return await crewPlanRoute(req, res, cfg, false);
+    if (M === 'POST' && path === '/crew/plan') return await crewPlanRoute(req, res, cfg, true);
+    if (M === 'POST' && path === '/crew/fetch') return await crewFetch(req, res, cfg);
+    if (M === 'POST' && path === '/crew/caption') return await crewCaption(req, res, cfg);
     if (M === 'POST' && path === '/body/estimate') return await bodyEstimate(req, res, cfg);
     if (M === 'POST' && path === '/meal/read') return await mealRead(req, res, cfg);
     if (M === 'POST' && path === '/labs/extract') return await labsExtract(req, res, cfg);

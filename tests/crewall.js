@@ -1,5 +1,5 @@
 /* Every AI employee, every way they work (Work OS > Your team):
-     - all nine roles can be hired and each has a working tab;
+     - all ten roles can be hired and each has a working tab;
      - on the Kova server, every role uses every one of its tools (the model
        is scripted to call them all), approvals pause and resume the job,
        hand-offs reach the teammate, and no tool ever throws;
@@ -96,11 +96,11 @@ async function settle(C, job, ms) {
   const threw = [];
   Object.keys(C.TOOLS).forEach((k) => { const T0 = C.TOOLS[k], run = T0.run; T0.run = function () { try { return run.apply(this, arguments); } catch (e) { threw.push(k + ': ' + e.message); throw e; } }; });
 
-  // ---------- all nine roles ----------
+  // ---------- all ten roles ----------
   const have = C.emps().map((e) => e.tpl);
   C.TPL.forEach((t) => { if (have.indexOf(t.id) < 0) C.hire(t, null, true); });
   const team = C.emps();
-  ck('all nine roles are on the team (' + team.map((e) => e.n).join(', ') + ')', team.length === 9 && C.TPL.every((t) => team.some((e) => e.tpl === t.id)));
+  ck('all ten roles are on the team (' + team.map((e) => e.n).join(', ') + ')', team.length === 10 && C.TPL.every((t) => team.some((e) => e.tpl === t.id)));
 
   // ---------- on the server: every role, every tool ----------
   const FB = w.KOVA_FB; FB.ok = true; FB.auth = FB.auth || {}; FB.auth.currentUser = user;
@@ -157,7 +157,8 @@ async function settle(C, job, ms) {
   // ---------- by name, and undo ----------
   const L = w.KovaListen;
   ck('calling an employee by name finds them ("Noah, chase my late invoices")', L && L.find && (L.find('Noah, chase my late invoices') || {}).e && L.find('Noah, chase my late invoices').e.n === 'Noah');
-  const made = Object.values(C.jobs()).filter((j) => (j.changes || []).some((c) => c.created));
+  /* a job that created tasks (some only make Studio drafts, which are not tasks) */
+  const made = Object.values(C.jobs()).filter((j) => (j.changes || []).some((c) => c.created && c.coll === 'items'));
   const j0 = made[0];
   const count0 = W.list('items').length, n = j0 ? C.undo(j0.id) : 0;
   ck('undo removes what a job created', j0 && n > 0 && W.list('items').length < count0);

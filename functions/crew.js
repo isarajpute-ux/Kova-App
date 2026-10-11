@@ -23,7 +23,7 @@ const W = require('./wellness');
 const DAY = 864e5;
 const MAX_TURNS = 6;
 const MODELS = { haiku: 'claude-haiku-4-5-20251001', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
-const AUTO = { chief: 'sonnet', pm: 'haiku', analyst: 'sonnet', inbox: 'haiku', content: 'sonnet', research: 'sonnet', finance: 'haiku', sched: 'haiku', coach: 'haiku' };
+const AUTO = { chief: 'sonnet', pm: 'haiku', analyst: 'sonnet', inbox: 'haiku', content: 'sonnet', research: 'sonnet', finance: 'haiku', sched: 'haiku', coach: 'haiku', social: 'sonnet' };
 const DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 /* the open app gets the first few minutes to run it itself */
 const GRACE = 6, WINDOW = 40;
@@ -200,4 +200,4 @@ function makeCrew(deps) {
   return { run };
 }
 
-module.exports = { makeCrew, due, cleanCloud, slotDue, readWork, listTasks, toolsFor, TOOLS, MODELS, AUTO, GRACE, WINDOW };
+module.exports = { makeCrew, due, cleanCloud, slotDue, readWork, listTasks, toolsFor, workOf, parse, TOOLS, MODELS, AUTO, GRACE, WINDOW };

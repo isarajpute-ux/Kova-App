@@ -7655,6 +7655,59 @@ body.light-mode .pln-t i,body.light-mode .pln-pr,body.light-mode .pln-tog .plan-
 body.light-mode .pln-tog .plan-opt-p,body.light-mode .pln-t b{color:#1C1A17!important}
 
 </style>
+<style id="p08-asks">
+/* KovaAsk (p20): "Tell me" times under the team box, what the team is on,
+   the check-in and meeting-prep switches, and the Send to Maya sheet.
+   Thin outlines, the app's accent. Dark, soft light and light glass. */
+.kas-when{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 2px}
+.kas-when>span{font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.75));margin-right:2px}
+.kas-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.18));
+  background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.8));font:inherit;font-size:11.5px;cursor:pointer}
+.kas-chip.on{border-color:var(--acc);color:var(--ron-txt,#fff);background:color-mix(in srgb,var(--acc) 14%,transparent)}
+.kas-chip:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kas-pick input{border:0;background:none;color:inherit;font:inherit;font-size:11.5px;padding:0;width:74px}
+.kas-card{margin-top:12px}
+.kas-sub{font-size:12px;font-weight:300;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin:6px 0}
+.kas-list{display:flex;flex-direction:column;gap:6px}
+.kas-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14))}
+.kas-dot{width:8px;height:8px;flex-shrink:0;border-radius:50%;border:1px solid var(--acc);display:inline-block}
+.kas-dot.run{background:var(--acc);box-shadow:0 0 8px var(--acc);animation:kasPulse 1.4s ease-in-out infinite}
+@keyframes kasPulse{50%{opacity:.35}}
+.kas-t{flex:1;min-width:0;font-size:12.5px;line-height:1.4;color:var(--ron-txt,#fff)}
+.kas-t b{font-weight:500}
+.kas-t small{display:block;font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72));margin-top:2px}
+.kas-plan{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--ron-line-2,rgba(255,255,255,.08))}
+.kas-plan:first-of-type{border-top:0}
+.kas-pt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kas-pt b{font-size:13px;font-weight:500}
+.kas-pt small{font-size:11.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kas-time{width:112px;padding:6px 8px;border-radius:10px;border:1px solid var(--ron-line,rgba(255,255,255,.18));background:transparent;color:inherit;font:inherit;font-size:12px}
+.kas-send{padding-bottom:8px}
+.kas-what{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14));margin-bottom:6px}
+.kas-what b{font-size:13.5px;font-weight:500}
+.kas-what span{font-size:11.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kas-plats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-bottom:6px}
+.kas-plat{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.16));
+  background:transparent;color:var(--ron-txt,#fff);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.kas-plat small{font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72))}
+.kas-plat.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent)}
+.kas-plat:disabled{opacity:.5;cursor:default}
+.kas-in{width:100%;box-sizing:border-box;margin:0 0 6px;padding:10px 12px;border-radius:12px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:rgba(255,255,255,.04);
+  color:var(--ron-txt,#fff);font:inherit;font-size:13px;line-height:1.45;resize:vertical}
+.kas-in:focus{outline:none;border-color:var(--acc)}
+.kas-check{display:flex;align-items:center;gap:8px;margin:10px 0 4px;font-size:12.5px;color:var(--ron-txt-2,rgba(255,255,255,.8))}
+.kas-msg{min-height:16px;font-size:12px;color:var(--ron-txt-2,rgba(255,255,255,.8));margin:6px 0}
+.kas-msg.bad{color:#F7A3B0}
+.kas-send .btn{margin-top:6px}
+body.light-mode .kas-chip,body.light-mode .kas-row,body.light-mode .kas-time,body.light-mode .kas-what,body.light-mode .kas-plat,body.light-mode .kas-in{border-color:rgba(28,26,23,.16)}
+body.light-mode .kas-in{background:#fff;color:#1C1A17}
+body.light-mode .kas-chip,body.light-mode .kas-plat small,body.light-mode .kas-t small,body.light-mode .kas-pt small,body.light-mode .kas-sub,body.light-mode .kas-what span{color:rgba(28,26,23,.7)}
+body.light-mode .kas-t,body.light-mode .kas-plat{color:#1C1A17}
+body.light-mode .kas-msg.bad{color:#A3283D}
+body.soft-light .kas-in{background:rgba(255,255,255,.07)}
+@media (prefers-reduced-motion:reduce){ .kas-dot.run{animation:none} }
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -46654,7 +46707,8 @@ window.KovaCanvas=(function(){
     {id:'checks',g:'Check',ic:'eye',t:'Run every app\u2019s checks',s:'See what an app would reject, before you post',a:'n-checks'},
     {id:'sched',g:'Flow',ic:'cal',t:'Schedule it',s:'Pick a time, or the next good slot',a:'n-sched'},
     {id:'human',g:'Human in the loop',ic:'inbox',t:'Send as drafts',s:'It lands in each app for you to approve',a:'n-drafts'},
-    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'}
+    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'},
+    {id:'maya',g:'Publish',ic:'send',t:'Send to Maya',s:'Your Social Media Manager posts it and tells you what people say',a:'n-maya'}
   ];
   function nextList(p){
     var r=readiness(p), want={media:'media',words:'words',where:'where',checks:'checks',send:'send'}[r.cur?r.cur.k:'send']||'send', q=String(S.nextQ||'').toLowerCase().trim();
@@ -46687,6 +46741,7 @@ window.KovaCanvas=(function(){
     else if(a==='n-sched') publish('schedule');
     else if(a==='n-drafts') publish('draft');
     else if(a==='n-send') publish('now');
+    else if(a==='n-maya'){ if(window.KovaAsk) KovaAsk.offerSend(P()); else toast('Your AI team is still loading. Try again in a moment.'); }
   }
 
   /* =============================== menus ============================= */
@@ -47463,7 +47518,7 @@ window.KovaCanvas=(function(){
       case 'write': write(); break;
       case 'flow': S.flow=!S.flow; S.next=false; paintNext(); paintFlowPanel(); paintTop(); break;
       case 'next': S.next=!S.next; S.flow=false; S.nextQ=''; paintFlowPanel(); paintNext(); paintTop(); if(S.next){ var nq=$('#ksNextQ'); if(nq&&S.desk) nq.focus(); } break;
-      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': doNext(a); break;
+      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': case 'n-maya': doNext(a); break;
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;
@@ -50313,7 +50368,7 @@ window.KovaCrew=(function(){
      routine:{freq:'weekdays',time:'17:30',job:'Triage today\u2019s overdue and stuck tasks and set realistic new dates.'},
      chips:['Triage my overdue tasks','Break a project into tasks','What is stuck?'],
      hints:['task','project','overdue','late','stuck','deadline','organi','board','process','triage','milestone','plan']},
-    {id:'analyst', n:'Maya', title:'Growth Analyst',
+    {id:'analyst', n:'Theo', title:'Growth Analyst',
      job:'I measure how the work is going. I track completion, the overdue trend, goals and content, and tell you in numbers what is working and what is not. I never guess a figure.',
      playbook:'1. analyze_work for 7 days and for 28 days.\n2. read_content for the posts.\n3. Compare this period with the last one.\n4. write_report with at most 5 metrics and 3 recommendations.',
      tools:['projects'],
@@ -50334,6 +50389,13 @@ window.KovaCrew=(function(){
      routine:{freq:'off',time:'09:30',job:'Draft three posts for this week that fit my goals and brand voice.'},
      chips:['Draft 3 posts for this week','Turn my latest idea into a post','What content is planned?'],
      hints:['post','content','caption','reel','tiktok','instagram','youtube','video','idea','hashtag','campaign','social']},
+    {id:'social', n:'Maya', title:'Social Media Manager',
+     job:'I run your social accounts. Send me a finished video or post and I write the caption in your voice, post it to the right accounts (a Short or a full video on YouTube, a Reel on Instagram), and an hour later tell you what people are saying: the top five things, what is working, and what to change for the following one.',
+     playbook:'1. read_content to see what is ready and what already went out.\n2. To post: write the caption and hashtags, then publish_post to the connected accounts (it waits for your OK, unless you sent it to me yourself).\n3. An hour after it goes out, post_feedback to read the comments and group them into the top themes.\n4. Report what people say, what is working and the following video to make.',
+     tools:['content','publish'],
+     routine:{freq:'off',time:'19:00',job:'Tell me what people are saying on my latest post.'},
+     chips:['What are people saying on my latest video?','Post my latest video to Instagram and YouTube','What should my next video be?'],
+     hints:['publish','upload','post it','post my','comments','what are people saying','followers','reel','short','social media','my account']},
     {id:'research', n:'Ravi', title:'Research Analyst',
      job:'I find things out. I research competitors, prices, trends and answers on the web, check them against your own numbers, and give you sources, not opinions.',
      playbook:'1. Search the web for the question (web_search).\n2. Read your own data where it matters.\n3. write_report with findings and the sources.\n4. Create tasks for anything worth acting on.',
@@ -50363,7 +50425,7 @@ window.KovaCrew=(function(){
      chips:['Plan today around my energy','Am I overloaded?','When should I do deep work?'],
      hints:['focus','energy','tired','burnout','deep work','stress','balance','overload','rest']}
   ];
-  var SEED=['chief','pm','analyst','inbox'];
+  var SEED=['chief','pm','social','research','inbox','analyst'];
   function tpl(id){ return TPL.filter(function(t){ return t.id===id; })[0]||null; }
 
   /* ---------------- tool groups (what you switch on per employee) ---------------- */
@@ -50374,7 +50436,8 @@ window.KovaCrew=(function(){
     {id:'content',  n:'Content and Studio drafts',   d:'Drafts in the Studio. Posting is always yours.'},
     {id:'meetings', n:'Meetings',                    d:'Put calls on the calendar with a prep note.'},
     {id:'email',    n:'Email (Gmail)',               d:'Writes the email. It waits for you to approve every send.', external:true},
-    {id:'research', n:'Web research',                d:'Searches the web. Needs the Kova server or your Claude key.'},
+    {id:'research', n:'Web research',                d:'Searches the web and reads the pages you give it. Needs the Kova server or your Claude key.'},
+    {id:'publish',  n:'Post to your accounts',       d:'Posts what you send it and reads the comments. A post waits for your OK unless you sent it yourself.', external:true},
     {id:'wellness', n:'Your readiness',              d:'The seven health checks, to plan work around your energy.'}
   ];
 
@@ -50400,9 +50463,25 @@ window.KovaCrew=(function(){
     return ((typeof FILL!=='undefined'&&FILL.names)||['Sam','Noor','Iris','Theo','Lena','Omar']).filter(function(n){ return used.indexOf(n)<0; })[0]||t.n;
   }
   function seed(){
-    if(emps().length||(window.KP&&KP.get('crewSeeded'))) return;
-    SEED.forEach(function(id){ hire(tpl(id),null,true); });
-    if(window.KP) KP.set('crewSeeded',true);
+    if(!(emps().length||(window.KP&&KP.get('crewSeeded')))){
+      SEED.forEach(function(id){ hire(tpl(id),null,true); });
+      if(window.KP) KP.set('crewSeeded',true);
+      if(window.KP) KP.set('crewV20',true);
+      return;
+    }
+    migrate();
+  }
+  /* p20: Maya became the Social Media Manager (she posts and reads the
+     comments) and Ravi researches by default. A team that still has the
+     original Growth Analyst called Maya keeps that teammate, renamed Theo. */
+  function migrate(){
+    if(!window.KP||KP.get('crewV20')) return;
+    var L=emps(), used=L.map(function(e){ return e.n; });
+    var an=L.filter(function(e){ return e.tpl==='analyst'&&e.n==='Maya'; })[0];
+    if(an&&!L.some(function(e){ return e.tpl==='social'; })&&used.indexOf('Theo')<0) touch(an,{n:'Theo'});
+    if(!L.some(function(e){ return e.tpl==='social'; })) hire(tpl('social'),{n:freeName(tpl('social'))},true);
+    if(!L.some(function(e){ return e.tpl==='research'; })) hire(tpl('research'),{n:freeName(tpl('research'))},true);
+    KP.set('crewV20',true);
   }
   function saveEmp(e,patch){ return W.update('agents',e.id,patch,'user'); }
   function touch(e,patch){ var row=W.find('agents',e.id); if(!row) return; Object.keys(patch).forEach(function(k){ row[k]=patch[k]; e[k]=patch[k]; }); try{ W.save(); }catch(x){} }
@@ -50576,6 +50655,19 @@ window.KovaCrew=(function(){
         });
       },
       label:function(r){ return r.ok?'Ran '+r.results.length+' jobs in parallel: '+r.results.map(function(x){ return x.from+' ('+x.state+')'; }).join(', '):'Could not delegate: '+String(r.error||''); }},
+    fetch_page:{g:'research',kind:'read',d:'Read one web page in full: its title, description, readable text and links. Use it for any address the user gives you.',
+      s:obj({url:S_STR},['url']),
+      run:function(a){ return window.KovaAsk?KovaAsk.fetchPage(a.url):{error:'Reading pages is not available here.'}; },
+      label:function(r,a){ return r.error?'Could not read '+String(a.url||'').slice(0,60)+': '+r.error:'Read '+(r.title||String(a.url||'').slice(0,60)); }},
+    post_feedback:{g:'publish',kind:'read',d:'What people are saying about a published post: the top comment themes with their share and a quote, what is working, what to fix and the next video. post = its title, or "latest".',
+      s:obj({post:S_STR}),
+      run:function(a){ return window.KovaAsk?KovaAsk.feedback(a.post||'latest'):{error:'Not available here.'}; },
+      label:function(r){ return r.error?'Could not read the comments: '+r.error:'Read the comments on \u201c'+r.post+'\u201d: '+(r.themes||[]).length+' themes'; }},
+    publish_post:{g:'publish',kind:'external',d:'Post a Studio post or video to the user\u2019s connected accounts. It waits for their OK. post = its title or "latest"; platforms = instagram, youtube, tiktok, facebook, linkedin, x, threads or pinterest; heading and caption optional.',
+      s:obj({post:S_STR,platforms:{type:'array',items:S_STR},heading:S_STR,caption:S_STR},['post','platforms']),
+      run:function(a){ return window.KovaAsk?KovaAsk.publishFromTool(a):{error:'Posting is not available here.'}; },
+      describe:function(a){ return {t:'Post',n:a.post,s:'to '+(a.platforms||[]).join(', ')}; },
+      label:function(r){ return r.error?'Not posted: '+r.error:'Posted \u201c'+r.post+'\u201d to '+r.platforms.join(', '); }},
     draft_email:{g:'email',kind:'external',d:'Write an email for the user to approve. It is only sent (or saved to Gmail drafts) after they approve. to = email address.',
       s:obj({to:S_STR,subject:S_STR,body:S_STR},['to','subject','body']),
       run:function(a){
@@ -50662,8 +50754,9 @@ window.KovaCrew=(function(){
   function importCloud(it){
     var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
     var props=(it.proposals||[]).filter(function(p){ return p&&TOOLS[p.name]; });
-    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
-      steps:[{t:'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
+    var ak=it.ask||null, AKN={prep:'Prepped tomorrow\u2019s meetings',checkin:'Checked in on you',comments:'Read the comments on your post'};
+    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
+      steps:[{t:ak?(ak.deliverAt&&ak.deliverAt>(it.at||0)-5*60e3&&ak.kind==='ask'?'Worked on it on the Kova server, ready for '+clock(ak.deliverAt)+' as you asked':(AKN[ak.kind]||'Worked on it on the Kova server')+' while Kova was closed'):'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
       changes:[],queue:props.map(function(p,i){ return {id:'p'+i,name:p.name,input:p.input||{}}; }),results:[],turns:0,convo:null,brain:'cloud',
       model:it.model||'',say:String(it.say||''),report:it.report||null};
     S.jobs[job.id]=job;
@@ -50815,7 +50908,7 @@ window.KovaCrew=(function(){
      up to Sonnet when a job runs long. You can pin one per employee. */
   var MODELS={haiku:'Haiku',sonnet:'Sonnet',opus:'Opus'};
   var MODEL_ID={haiku:'claude-haiku-4-5-20251001',sonnet:'claude-sonnet-5-5',opus:'claude-opus-5-5'};
-  var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku'};
+  var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku',social:'sonnet'};
   function pickModel(e,job){
     if(e.model&&MODELS[e.model]) return e.model;
     var m=AUTO[e.tpl]||'sonnet';
@@ -51402,7 +51495,9 @@ window.KovaCrew=(function(){
     }};
 
   /* which skills each role has, and which words call each one */
-  var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief']};
+  var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief'],
+    /* Maya posts and reads comments (server tools); drafting stays Zoe's lane */
+    social:['analyze','content']};
   var SK_WORDS={triage:/overdue|triage|\blate\b|behind|re-?plan|re-?date|clean ?up|stuck/i,
     breakdown:/break\b.*\b(down|into)|new project|plan (a|the|my|this) project|project (for|called|named)|steps (for|to)/i,
     projects:/project|progress|milestone/i,
@@ -52028,7 +52123,7 @@ window.KovaCrew=(function(){
         +tileSm({tone:'g4',title:'Needs you',k:'needs',value:wt,suf:wt===1?'/approval':'/approvals',chart:halftone(wt),
           cap:wt?'Oldest waiting '+ago(wl.slice().sort(function(x,y){ return x.at-y.at; })[0].at).replace(' ago',''):'All clear'})
       +'</div>'
-      +'<div class="crd-below">'+composer(null)+needsYou()+recent()+'</div>';
+      +'<div class="crd-below">'+composer(null)+(window.KovaAsk?KovaAsk.panel():'')+needsYou()+recent()+'</div>';
   }
   /* ---- one employee: their skill, live from your data ---- */
   function empPage(e){
@@ -52099,6 +52194,7 @@ window.KovaCrew=(function(){
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
     return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Give '+esc(e.n)+' a job':'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
       +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
       +(e?'':listenRow())+'</div>';
   }
@@ -52401,6 +52497,8 @@ window.KovaCrew=(function(){
       if(!q||!q.trim()) return;
       var r=route(q); if(!r){ say('Hire someone first.'); return; }
       S.clear={crwAsk:1}; var ta=document.getElementById('crwAsk'); if(ta) ta.value='';
+      /* a time ("at 11"), a link, or a time chip: it runs on the server and comes back to you */
+      if(c==='ask'&&window.KovaAsk&&KovaAsk.wants(q)){ KovaAsk.send(r.emp,q).catch(function(){}); paint(); return; }
       var j=start(r.emp,q,'team'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return;
     }
@@ -52409,6 +52507,7 @@ window.KovaCrew=(function(){
       if(!e||!t||!t.trim()) return;
       if(!e.enabled){ say(e.n+' is switched off.'); return; }
       var ta2=document.getElementById('crwEmpAsk'); if(ta2) ta2.value=''; S.clear={crwEmpAsk:1};
+      if(c==='empask'&&window.KovaAsk&&KovaAsk.wants(t)){ KovaAsk.send(e,t).catch(function(){}); paint(); return; }
       start(e,t,'you'); S.scroll=true; S.focus=true; paint(); return;
     }
     if(c==='listen'){ if(window.KovaListen) KovaListen.set(!KovaListen.on()); return; }
@@ -52510,7 +52609,14 @@ window.KovaCrew=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,300); }); else setTimeout(mount,300);
 
-  return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
+  /* a finished job a teammate did outside a job run (Send to Maya) */
+  function note(empId,text,line){
+    var e=emp(empId); if(!e) return null;
+    var job={id:uid('j'),emp:e.id,text:String(text||'').slice(0,4000),source:'you',meta:null,at:Date.now(),state:'running',steps:[{t:line,k:'send',at:Date.now()}],
+      changes:[],queue:[],results:[],turns:0,convo:null,brain:'local',say:line};
+    S.jobs[job.id]=job; touch(e,{runs:(e.runs||0)+1,lastRun:Date.now()}); finish(job,line); saveJobs(); paintSoon(); return job;
+  }
+  return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
     slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
@@ -58104,8 +58210,11 @@ window.KovaCut=(function(){
         C.post.format=KPo.naturalFormat(C.post); if(C.post.aspect==='4:5') C.post.aspect='orig';
         save();
         toast('Saved: a '+mmss(total())+' '+ext.toUpperCase()+' video is now the post'+(ext==='webm'?' (YouTube and X take WebM; for Instagram and TikTok, save it from Safari or the Kova app for MP4)':'')+'. The clips it came from stay in Media, switched off.');
+        var done=C.post;
         close();
         try{ if(window.KovaCanvas&&KovaCanvas._render) KovaCanvas._render(); }catch(e){}
+        /* ready to go out: hand it to the Social Media Manager */
+        try{ if(window.KovaAsk&&done) setTimeout(function(){ KovaAsk.offerSend(done); },400); }catch(e){}
       });
     }).catch(function(){ if(C){ busy.hidden=true; if(C.mon) C.mon.gain.value=1; } toast('Saving the video failed.'); });
   }
@@ -58971,6 +59080,314 @@ window.KovaSignIn=(function(){
   try{ if(window.KovaBilling&&KovaBilling._wrapPlan) KovaBilling._wrapPlan(); }catch(e){}
   /* opened before this file arrived: draw it now */
   var sc=document.getElementById('s-plan'); if(sc&&sc.classList.contains('on')) (window.__paintPlan||paint)();
+})();
+
+</script>
+<script id="p08-asks">
+/* =====================================================================
+   KovaAsk - talk to your AI team the way you would to people (p20).
+
+   You should not have to check on the team; it comes back to you.
+     - Say when you want the answer: "at 11", "by 5pm", "tonight",
+       "tomorrow at 9", "in 2 hours", or tap a time under the box. Give a
+       link and they read that page. Either way the job goes to the Kova
+       server (functions/asks.js), runs while Kova is closed, and the
+       answer arrives at that time as a notification and in the team.
+     - The team checks on you: a check-in at the time you pick, and every
+       evening tomorrow's Google Calendar meetings prepped (what each is
+       about, who is coming, what to bring, what to ask).
+     - "Send to Maya": a finished video or post goes to your Social Media
+       Manager. She writes the caption in your voice, posts it to the
+       accounts you tick (a Short or a video on YouTube, a Reel on
+       Instagram), and an hour later tells you what people are saying:
+       the top five things, what is working, what to change.
+   Without a sign-in or a server, a job with no time still runs right
+   away in the app, the way it always has.
+   ===================================================================== */
+window.KovaAsk=(function(){
+  'use strict';
+  var DAY=864e5;
+  var S={when:null, list:[], plan:null, loading:false, at:0};
+  function $(id){ return document.getElementById(id); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } }
+  function clock(t){ return new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); }
+  function when2(t){ var d=new Date(t), today=new Date().toDateString(), tm=new Date(Date.now()+DAY).toDateString();
+    return (d.toDateString()===today?'':d.toDateString()===tm?'tomorrow ':d.toLocaleDateString([],{weekday:'short'})+' ')+clock(t); }
+  function crew(){ return window.KovaCrew||null; }
+  function serverOk(){
+    try{ return !!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; }
+  }
+  function api(path,o){ return KovaLink.authFetch(path,o).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok){ var e=new Error(j.error||('HTTP '+r.status)); e.status=r.status; throw e; } return j; }); }); }
+
+  /* ---------------- "at 11", "by 5pm", "tomorrow at 9", "in 2 hours" ---------------- */
+  var URL_RE=/https?:\/\/[^\s<>"')\]]+/i;
+  function urlIn(t){ var m=String(t||'').match(URL_RE); return m?m[0].replace(/[.,;:!?]+$/,''):''; }
+  function at(base,h,m,day){ var d=new Date(base); d.setDate(d.getDate()+(day||0)); d.setHours(h,m||0,0,0); return d.getTime(); }
+  function parseWhen(text,now){
+    now=now||Date.now();
+    var t=' '+String(text||'').toLowerCase().replace(/\s+/g,' ')+' ', m;
+    if((m=t.match(/\bin (an?|\d+(?:\.\d+)?) (hour|hr|minute|min)s?\b/))){
+      var n=/an?/.test(m[1])?1:+m[1], ms=/^h/.test(m[2])?n*3600e3:n*60e3;
+      if(ms>=5*60e3&&ms<=7*DAY) return {at:now+ms,label:'in '+(m[1]==='a'||m[1]==='an'?'an':m[1])+' '+(/^h/.test(m[2])?'hour':'minute')+(n!==1?'s':'')};
+    }
+    var day=/\btomorrow\b/.test(t)?1:0;
+    if((m=t.match(/\b(?:at|by|around|before)\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.|o'?clock)?\b/))||(m=t.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm|a\.m\.|p\.m\.|o'?clock)\b/))){
+      var h=+m[1], mi=+(m[2]||0), ap=(m[3]||'').replace(/\./g,'');
+      if(h>23||mi>59) return null;
+      if(ap==='pm'&&h<12) h+=12; if(ap==='am'&&h===12) h=0;
+      /* "at 5" with no am/pm: the next 5 o'clock that has not passed, working hours first */
+      if(!ap||/clock/.test(ap)){ if(h<7&&!day) h+=12; }
+      var x=at(now,h,mi,day);
+      if(!day&&x<=now+60e3) x=h<12&&!ap?at(now,h+12,mi,0):at(now,h,mi,1);
+      if(x<=now+60e3) x=at(now,h,mi,1);
+      return {at:x,label:when2(x)};
+    }
+    if(/\btonight\b/.test(t)) return {at:at(now,20,0,0)>now+60e3?at(now,20,0,0):at(now,20,0,1),label:'tonight'};
+    if(/\bthis evening\b/.test(t)) return {at:at(now,19,0,0)>now+60e3?at(now,19,0,0):at(now,19,0,1),label:'this evening'};
+    if(/\btomorrow morning\b/.test(t)||(day&&!/\bat\b/.test(t))) return {at:at(now,9,0,1),label:'tomorrow 9:00'};
+    return null;
+  }
+  /* the time chips under the box, or what the words say */
+  function deliveryFor(text){
+    if(S.when&&S.when.at>Date.now()) return S.when;
+    if(S.when&&S.when.now) return {at:Date.now(),label:'now'};
+    return parseWhen(text);
+  }
+  /* goes to the server (and works while Kova is closed) when there is a
+     time, a link, or a time chip picked, and you are signed in */
+  function wants(text){ return serverOk()&&!!(S.when||parseWhen(text)||urlIn(text)); }
+
+  function send(emp,text){
+    var w=deliveryFor(text), url=urlIn(text);
+    var body={emp:emp?emp.id:'',text:String(text).trim(),deliverAt:w?w.at:0};
+    if(url) body.url=url;
+    S.when=null;
+    return api('/crew/ask',{json:body}).then(function(r){
+      var name=emp?emp.n:'Your team';
+      S.list.unshift({id:r.id,emp:body.emp,kind:'ask',text:body.text,url:url,deliverAt:r.deliverAt,state:'queued',created:Date.now()});
+      say(r.now||!w?name+' is on it. The answer comes back here'+(pushOn()?' and as a notification.':'.'):name+' will tell you '+(w.label||when2(r.deliverAt))+'.');
+      track('crew_ask',{timed:!!w,link:!!url});
+      offerPush(); repaint();
+      return r;
+    },function(e){
+      say(e.status===402?'Your AI team comes with Work OS. See plans.':(e.message||'Could not reach the server. Try again.'));
+      if(e.status===402&&window.KovaBilling) KovaBilling.paywall('crew');
+      throw e;
+    });
+  }
+  function pushOn(){ try{ return !!(window.KovaPush&&KovaPush.active()); }catch(e){ return false; } }
+  function offerPush(){ try{ if(window.KovaPush&&!KovaPush.active()&&!S.offered){ S.offered=true; setTimeout(function(){ KovaPush.offer('Answers from your AI team'); },600); } }catch(e){} }
+
+  function refresh(force){
+    if(!serverOk()||(S.loading&&!force)) return Promise.resolve(S.list);
+    if(!force&&Date.now()-S.at<20e3) return Promise.resolve(S.list);
+    S.loading=true;
+    return Promise.all([api('/crew/asks'),S.plan?null:api('/crew/plan').catch(function(){ return null; })]).then(function(r){
+      S.list=(r[0].items||[]); if(r[1]) S.plan=r[1]; S.at=Date.now(); S.loading=false; repaint(); return S.list;
+    },function(){ S.loading=false; return S.list; });
+  }
+  function cancel(id){
+    return api('/crew/ask/cancel',{json:{id:id}}).then(function(){ S.list=S.list.filter(function(x){ return x.id!==id; }); say('Taken back.'); repaint(); },function(e){ say(e.message); });
+  }
+  function savePlan(p){
+    S.plan=p;
+    if(!serverOk()){ say('Sign in so your team can reach you while Kova is closed.'); repaint(); return Promise.resolve(); }
+    return api('/crew/plan',{json:{tz:tz(),prep:p.prep,checkin:p.checkin}}).then(function(r){ S.plan={prep:r.prep,checkin:r.checkin}; offerPush(); repaint(); },function(e){ say(e.status===402?'Your AI team comes with Work OS.':(e.message||'Could not save that.')); });
+  }
+  function repaint(){ try{ var c=crew(); if(c&&c.paint) c.paint(); }catch(e){} }
+
+  /* ---------------- what the crew screen draws from here ---------------- */
+  var CHIPS=[['now','Now'],['1h','In 1 hour'],['eve','Tonight 8 pm'],['am','Tomorrow 9 am']];
+  function chipAt(k){ var n=Date.now(); return k==='now'?{now:true,label:'now'}:k==='1h'?{at:n+3600e3,label:'in an hour'}:k==='eve'?{at:at(n,20,0,at(n,20,0,0)>n+60e3?0:1),label:'tonight'}:{at:at(n,9,0,1),label:'tomorrow 9:00'}; }
+  function chips(){
+    if(!serverOk()) return '';
+    var on=S.when&&S.when.k;
+    return '<div class="kas-when" role="group" aria-label="When should they tell you?"><span>Tell me</span>'
+      +CHIPS.map(function(c){ return '<button type="button" class="kas-chip'+(on===c[0]?' on':'')+'" data-ka="when" data-v="'+c[0]+'" aria-pressed="'+(on===c[0])+'">'+c[1]+'</button>'; }).join('')
+      +'<label class="kas-chip kas-pick'+(on==='pick'?' on':'')+'">At <input type="time" data-ka="pick" aria-label="Pick a time" value="'+(on==='pick'&&S.when?new Date(S.when.at).toTimeString().slice(0,5):'')+'"></label></div>';
+  }
+  function empName(id){ var c=crew(), e=c&&c.emp?c.emp(id):null; return e?e.n:'Your team'; }
+  function panel(){
+    if(!serverOk()) return '<div class="crd-card kas-card"><div class="crd-chd"><span>Your team checks on you</span></div><div class="kas-sub">Sign in and your team keeps working while Kova is closed: answers at the time you ask, a daily check-in, and tomorrow’s meetings prepped each evening.</div></div>';
+    if(!S.at) refresh();
+    var p=S.plan||{prep:{on:false,time:'18:00'},checkin:{on:false,time:'11:00'}};
+    var open=S.list.filter(function(x){ return x.state==='queued'||x.state==='running'; });
+    var h='';
+    if(open.length) h+='<div class="crd-sh2">On it ('+open.length+')</div><div class="kas-list">'+open.map(function(x){
+      return '<div class="kas-row"><span class="kas-dot'+(x.state==='running'?' run':'')+'" aria-hidden="true"></span><span class="kas-t"><b>'+esc(empName(x.emp))+'</b> '+esc(String(x.text||({prep:'Prepping tomorrow’s meetings',checkin:'Checking in',comments:'Reading the comments'})[x.kind]||'').slice(0,90))
+        +'<small>'+(x.state==='running'?'Working on it now':'Tells you '+esc(when2(x.deliverAt)))+'</small></span>'
+        +(x.state==='queued'?'<button type="button" class="crd-link" data-ka="cancel" data-v="'+esc(x.id)+'">Take back</button>':'')+'</div>';
+    }).join('')+'</div>';
+    h+='<div class="crd-card kas-card"><div class="crd-chd"><span>Your team checks on you</span><small>While Kova is closed. You get a notification.</small></div>'
+      +row('checkin','A check-in from '+esc(empName(teamOf('chief'))),'Where your day stands, one thing they can take off your plate, one question.',p.checkin)
+      +row('prep','Tomorrow’s meetings, prepped','Each evening: what every meeting is about, who is coming, what to bring and what to ask. Needs Google Calendar.',p.prep)
+      +'</div>';
+    return h;
+  }
+  function teamOf(tpl){ var c=crew(); if(!c||!c.emps) return ''; var e=c.emps().filter(function(x){ return x.tpl===tpl&&x.enabled; })[0]; return e?e.id:''; }
+  function row(k,t,d,c){
+    c=c||{};
+    return '<div class="kas-plan"><div class="kas-pt"><b>'+t+'</b><small>'+d+'</small></div>'
+      +'<input type="time" class="kas-time" data-ka="time" data-v="'+k+'" value="'+esc(c.time||(k==='prep'?'18:00':'11:00'))+'" aria-label="Time for '+(k==='prep'?'meeting prep':'the check-in')+'">'
+      +'<button type="button" class="crw-tog'+(c.on?' on':'')+'" data-ka="plan" data-v="'+k+'" role="switch" aria-checked="'+!!c.on+'" aria-label="'+(k==='prep'?'Meeting prep':'Check-in')+' on or off"><span></span></button></div>';
+  }
+  function planOf(){ return JSON.parse(JSON.stringify(S.plan||{prep:{on:false,time:'18:00'},checkin:{on:false,time:'11:00'}})); }
+
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-ka]'); if(!b) return;
+    var k=b.getAttribute('data-ka'), v=b.getAttribute('data-v');
+    if(k==='when'){ ev.stopPropagation(); S.when=S.when&&S.when.k===v?null:Object.assign(chipAt(v),{k:v}); repaint(); }
+    else if(k==='cancel'){ ev.stopPropagation(); cancel(v); }
+    else if(k==='plan'){ ev.stopPropagation(); var p=planOf(); p[v].on=!p[v].on; p[v].emp=teamOf(v==='prep'?'sched':'chief')||teamOf('chief'); savePlan(p); }
+  },true);
+  document.addEventListener('change',function(ev){
+    var b=ev.target; if(!b||!b.getAttribute) return;
+    var k=b.getAttribute('data-ka');
+    if(k==='pick'&&b.value){ var hm=b.value.split(':'), x=at(Date.now(),+hm[0],+hm[1],0); if(x<=Date.now()+60e3) x=at(Date.now(),+hm[0],+hm[1],1); S.when={at:x,label:when2(x),k:'pick'}; repaint(); }
+    if(k==='time'&&b.value){ var p=planOf(), v=b.getAttribute('data-v'); p[v].time=b.value; if(p[v].on) savePlan(p); else { S.plan=p; } }
+  },true);
+
+  /* ---------------- tools the teammates use in the app ---------------- */
+  function fetchPage(url){
+    if(!serverOk()) return Promise.resolve({error:'Reading web pages needs you signed in to Kova.'});
+    return api('/crew/fetch',{json:{url:url}}).catch(function(e){ return {error:e.message}; });
+  }
+  function postsSent(){ return (window.KovaPost&&KovaPost.all?KovaPost.all():[]).filter(function(p){ return p.status==='sent'||p.status==='partial'||Object.keys(p.results||{}).some(function(k){ return p.results[k]&&p.results[k].state==='ok'; }); }); }
+  function findPost(q,list){
+    list=list||(window.KovaPost&&KovaPost.all?KovaPost.all():[]); q=String(q||'').toLowerCase().trim();
+    if(!q||q==='latest'||q==='last') return list.slice().sort(function(a,b){ return (b.updated||0)-(a.updated||0); })[0]||null;
+    return list.filter(function(p){ return String(p.title||'').toLowerCase()===q; })[0]||list.filter(function(p){ return String(p.title||'').toLowerCase().indexOf(q)>=0; })[0]||null;
+  }
+  function feedback(q){
+    var p=findPost(q,postsSent());
+    if(!p) return Promise.resolve({error:'No published post found'+(q&&q!=='latest'?' called '+q:'')+'.'});
+    if(!serverOk()) return Promise.resolve({error:'Reading comments needs you signed in.'});
+    return api('/traction/refresh',{json:{only:p.id}}).catch(function(){ return null; }).then(function(){
+      return api('/traction/'+encodeURIComponent(p.id)+'/advice',{json:{mode:'creator'}});
+    }).then(function(a){
+      return {post:p.title,headline:a.headline,themes:(a.themes||[]).slice(0,5),working:a.working||[],fix:a.fix||[],next:a.next||{}};
+    }).catch(function(e){ return {error:e.message}; });
+  }
+
+  /* ---------------- Send to Maya ---------------- */
+  var SOCIAL=['instagram','youtube','tiktok','facebook'];
+  function social(){ var c=crew(); if(!c||!c.emps) return null; var L=c.emps(); return L.filter(function(e){ return e.tpl==='social'&&e.enabled; })[0]||L.filter(function(e){ return /social/i.test(e.title)&&e.enabled; })[0]||null; }
+  function linked(k){ try{ return window.KovaPost&&KovaPost.linkState(k)==='on'; }catch(e){ return false; } }
+  function mediaOf(p){ var m=(window.KovaPost&&KovaPost.postMedia)?KovaPost.postMedia(p):(p.media||[]); return m[0]||null; }
+  function shape(m){ if(!m||!m.w||!m.h) return ''; return m.h>m.w*1.15?'vertical':(m.w>m.h*1.15?'wide':'square'); }
+  var SEND={};
+  function offerSend(post){
+    if(!post||!window.openSheet) return;
+    var e=social();
+    var m=mediaOf(post), sh=shape(m), dur=Math.round((m&&m.dur)||0), video=!!(m&&m.kind==='video');
+    var avail=SOCIAL.filter(linked);
+    SEND={post:post,emp:e,targets:avail.filter(function(k){ return k==='instagram'||k==='youtube'; }),when:'now',comments:true,cap:null,busy:false,video:video,sh:sh,dur:dur};
+    if(!SEND.targets.length) SEND.targets=avail.slice(0,2);
+    openSheet('<div class="grab"></div><div class="kas-send" id="kasSend"></div>');
+    paintSend();
+    var root=$('kasSend'); if(root) root.addEventListener('click',onSend);
+    if(serverOk()) writeCaption();
+    track('send_to_social',{video:video});
+  }
+  function writeCaption(){
+    var p=SEND.post;
+    SEND.cap={busy:true};
+    paintSend();
+    api('/crew/caption',{json:{title:p.title,notes:[p.heading,p.body,p.caption].filter(Boolean).join('\n'),dur:SEND.dur,shape:SEND.sh,platforms:SEND.targets}}).then(function(c){
+      SEND.cap=c; paintSend();
+    },function(err){ SEND.cap={heading:p.heading||p.title||'',caption:p.caption||'',tags:p.tags||'',note:err.message}; paintSend(); });
+  }
+  function paintSend(){
+    var root=$('kasSend'); if(!root) return;
+    var p=SEND.post, e=SEND.emp, name=e?e.n:'your Social Media Manager';
+    var c=SEND.cap||{heading:p.heading||p.title||'',caption:p.caption||'',tags:p.tags||''};
+    var place=function(k){ return k==='youtube'?(SEND.video&&SEND.sh==='vertical'&&SEND.dur&&SEND.dur<=180?'Short':'Video'):k==='instagram'?(SEND.video?'Reel':'Post'):k==='tiktok'?'Video':'Post'; };
+    root.innerHTML='<div class="title-s" style="font-size:19px;margin-bottom:4px">Send to '+esc(e?e.n:'Maya')+'</div>'
+      +'<div class="sub" style="line-height:1.5;margin-bottom:12px">'+(e?esc(e.n)+' writes the caption in your voice, posts it, and an hour later tells you what people are saying.':'Hire a Social Media Manager on your AI team and she posts for you.')+'</div>'
+      +'<div class="kas-what"><b>'+esc(p.title||'Your post')+'</b><span>'+(SEND.video?'Video'+(SEND.dur?' · '+Math.floor(SEND.dur/60)+':'+('0'+SEND.dur%60).slice(-2):'')+(SEND.sh?' · '+SEND.sh:''):'Post')+'</span></div>'
+      +'<div class="crd-sh2">Where</div><div class="kas-plats">'+SOCIAL.map(function(k){
+          var ok=linked(k), on=SEND.targets.indexOf(k)>=0, nm=(window.KovaPost&&KovaPost.PLAT&&KovaPost.PLAT[k]&&KovaPost.PLAT[k].n)||k;
+          return '<button type="button" class="kas-plat'+(on?' on':'')+'" data-s="plat" data-v="'+k+'"'+(ok?'':' disabled')+' aria-pressed="'+on+'">'+esc(nm)+'<small>'+(ok?esc(place(k)):'Not connected')+'</small></button>';
+        }).join('')+'</div>'
+      +(SOCIAL.some(linked)?'':'<div class="kas-sub">Connect Instagram or YouTube in Settings › Connections first.</div>')
+      +'<div class="crd-sh2">Caption</div>'
+      +(c.busy?'<div class="kas-sub"><span class="kas-dot run"></span> '+esc(name)+' is writing it…</div>'
+        :'<input class="kas-in" data-s="heading" value="'+esc(c.heading)+'" aria-label="Title (YouTube)" placeholder="Title for YouTube">'
+         +'<textarea class="kas-in" data-s="caption" rows="4" aria-label="Caption" placeholder="Caption">'+esc(c.caption)+'</textarea>'
+         +'<input class="kas-in" data-s="tags" value="'+esc(c.tags)+'" aria-label="Hashtags" placeholder="#hashtags">'
+         +(c.note?'<div class="kas-sub">'+esc(c.note)+' You can write it yourself here.</div>':''))
+      +'<div class="crd-sh2">When</div><div class="kas-plats">'+[['now','Now'],['eve','Tonight 7 pm'],['best','Tomorrow 12 pm']].map(function(x){ return '<button type="button" class="kas-plat'+(SEND.when===x[0]?' on':'')+'" data-s="when" data-v="'+x[0]+'" aria-pressed="'+(SEND.when===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
+      +'<label class="kas-check"><input type="checkbox" data-s="comments"'+(SEND.comments?' checked':'')+'> Tell me what people are saying an hour after it goes out</label>'
+      +'<div class="kas-msg" id="kasMsg" role="status"></div>'
+      +'<button type="button" class="btn" data-s="go"'+(SEND.busy||!SEND.targets.length||(SEND.cap&&SEND.cap.busy)?' disabled':'')+'>'+(SEND.busy?'Posting…':'Post with '+esc(e?e.n:'Maya'))+'</button>';
+  }
+  function readSend(){
+    var root=$('kasSend'); if(!root) return;
+    var g=function(k){ var x=root.querySelector('[data-s="'+k+'"]'); return x?x.value:''; };
+    if(SEND.cap&&!SEND.cap.busy){ SEND.cap.heading=g('heading'); SEND.cap.caption=g('caption'); SEND.cap.tags=g('tags'); }
+    var cb=root.querySelector('[data-s="comments"]'); if(cb) SEND.comments=cb.checked;
+  }
+  function whenAt(k){ var n=Date.now(); return k==='eve'?at(n,19,0,at(n,19,0,0)>n+5*60e3?0:1):k==='best'?at(n,12,0,1):0; }
+  function onSend(ev){
+    var b=ev.target.closest('[data-s]'); if(!b||b.tagName==='INPUT'&&b.type!=='checkbox'||b.tagName==='TEXTAREA') return;
+    var k=b.getAttribute('data-s'), v=b.getAttribute('data-v');
+    readSend();
+    if(k==='plat'){ var i=SEND.targets.indexOf(v); if(i>=0) SEND.targets.splice(i,1); else SEND.targets.push(v); paintSend(); }
+    else if(k==='when'){ SEND.when=v; paintSend(); }
+    else if(k==='go') postIt();
+  }
+  function msg(t,bad){ var m=$('kasMsg'); if(m){ m.textContent=t||''; m.classList.toggle('bad',!!bad); } }
+  function postIt(){
+    var p=SEND.post, e=SEND.emp, c=SEND.cap||{};
+    if(!window.KovaPost) return msg('The Studio is not available here.',true);
+    if(!SEND.targets.length) return msg('Tick at least one account.',true);
+    p.targets=SEND.targets.slice();
+    if(c.heading) p.heading=c.heading; if(c.caption!=null) p.caption=c.caption; if(c.tags!=null) p.tags=c.tags;
+    if(!p.title||p.title==='Untitled post') p.title=(c.heading||p.title||'Post').slice(0,80);
+    p.opts=p.opts||{}; p.opts.youtube=Object.assign({privacy:'public'},p.opts.youtube||{},{short:SEND.video&&SEND.sh==='vertical'&&SEND.dur>0&&SEND.dur<=180});
+    try{ if(SEND.video){ KovaPost.setPlace(p,'instagram','reel'); KovaPost.setPlace(p,'facebook','reel'); } }catch(x){}
+    var t=whenAt(SEND.when); p.mode=t?'schedule':'now'; p.when=t||0; p.by=e?e.n:'Kova';
+    KovaPost.save(p);
+    SEND.busy=true; paintSend(); msg('');
+    return KovaPost.publish(p,p.mode,function(f){ msg('Uploading '+Math.round((f||0)*100)+'%'); }).then(function(){
+      SEND.busy=false;
+      var goesOut=p.when||Date.now();
+      var plats=p.targets.map(function(k){ return (KovaPost.PLAT[k]&&KovaPost.PLAT[k].n)||k; }).join(' and ');
+      var tellAt=goesOut+3600e3;
+      var after=SEND.comments&&serverOk()?api('/crew/ask',{json:{kind:'comments',ref:p.id,emp:e?e.id:'',text:'What are people saying about “'+p.title+'”?',deliverAt:tellAt}}).catch(function(){ return null; }):Promise.resolve(null);
+      return after.then(function(r){
+        var line=(p.when?'Scheduled for '+when2(p.when)+' on ':'Posted to ')+plats+'.'+(r?' I will tell you what people are saying '+when2(tellAt)+'.':'');
+        try{ var cr=crew(); if(cr&&cr.note&&e) cr.note(e.id,'Post “'+p.title+'” to '+plats,line); }catch(x){}
+        if(window.closeSheet) closeSheet();
+        say((e?e.n+': ':'')+line); offerPush();
+        track('social_posted',{count:p.targets.length,scheduled:!!p.when,comments:!!r});
+        return p;
+      });
+    },function(err){
+      SEND.busy=false; paintSend(); msg(err.message||'Posting did not go through.',true);
+      if(err.status===402&&window.KovaBilling) KovaBilling.paywall('publish');
+    });
+  }
+  /* a teammate posting from a job (after you approve it) */
+  function publishFromTool(a){
+    var p=findPost(a.post);
+    if(!p) return Promise.resolve({error:'No post called '+(a.post||'that')+' in the Studio.'});
+    var plats=(a.platforms||[]).filter(function(k){ return SOCIAL.concat(['linkedin','x','threads','pinterest']).indexOf(k)>=0&&linked(k); });
+    if(!plats.length) return Promise.resolve({error:'None of those accounts are connected. Connected: '+SOCIAL.filter(linked).join(', ')+'.'});
+    p.targets=plats; if(a.caption) p.caption=String(a.caption).slice(0,2200); if(a.heading) p.heading=String(a.heading).slice(0,100);
+    KovaPost.save(p);
+    return KovaPost.publish(p,'now').then(function(){ return {ok:true,post:p.title,platforms:plats}; },function(e){ return {error:e.message}; });
+  }
+
+  /* the crew loads first; draw again once this is here */
+  setTimeout(function(){ repaint(); if(serverOk()) refresh(true); },0);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) refresh(); });
+
+  return {parseWhen:parseWhen,urlIn:urlIn,wants:wants,send:send,refresh:refresh,cancel:cancel,chips:chips,panel:panel,savePlan:savePlan,
+    fetchPage:fetchPage,feedback:feedback,offerSend:offerSend,publishFromTool:publishFromTool,findPost:findPost,_S:S,_send:function(){ return SEND; }};
 })();
 
 </script>

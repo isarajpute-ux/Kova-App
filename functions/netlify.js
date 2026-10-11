@@ -166,7 +166,9 @@ function makeJobs(deps) {
     agent: deps.makeAgent || require('./agent').makeAgent,
     traction: deps.makeTraction || require('./traction').makeTraction,
     crew: deps.makeCrew || require('./crew').makeCrew,
-    push: deps.makePush || require('./push').makePush
+    push: deps.makePush || require('./push').makePush,
+    asks: deps.makeAsks || require('./asks').makeAsks,
+    calendar: deps.makeCalendar || require('./calendar').makeCalendar
   };
 
   async function publishAll(cfg) {
@@ -203,13 +205,22 @@ function makeJobs(deps) {
     const q = (await db.ref('srv/crewQueue').once('value')).val() || {};
     const push = mods.push({ db, messaging: admin.messaging ? admin.messaging() : null, cfg });
     const crew = mods.crew({ db, cfg, push });
+    let asks = null;
+    /* requests you sent the team (asks.js), with the calendar and the post numbers they may need */
+    const askMod = () => asks || (asks = mods.asks({ db, cfg, push,
+      calendar: mods.calendar({ db, tokens: mods.oauth({ db, cfg }) }),
+      traction: mods.traction({ db, cfg, tokens: mods.oauth({ db, cfg }) }) }));
     let n = 0;
     for (const uid of Object.keys(q)) {
       for (const emp of Object.keys(q[uid] || {})) {
         const p = `srv/crewQueue/${uid}/${emp}`;
         const job = await claim(db, p, now());
         if (!job) continue;
-        try { await crew.run(uid, emp, { slotAgo: job.slotAgo }); n++; }
+        try {
+          if (job.ask) await askMod().run(uid, job.ask);
+          else await crew.run(uid, emp, { slotAgo: job.slotAgo });
+          n++;
+        }
         catch (e) { console.error('crew', uid, emp, e.message); }
         finally { await db.ref(p).remove(); }
       }
@@ -263,6 +274,7 @@ function makeTick(deps) {
   const crewDue = deps.crewDue || require('./crew').due;
   const makePush = deps.makePush || require('./push').makePush;
   const makeBilling = deps.makeBilling || require('./billing').makeBilling;
+  const makeAsks = deps.makeAsks || require('./asks').makeAsks;
 
   return async function (cfg) {
     const t = now();
@@ -289,6 +301,13 @@ function makeTick(deps) {
       for (const r of runs) await db.ref(`srv/crewQueue/${r.uid}/${r.emp}`).set({ at: t, slotAgo: r.slotAgo, date: r.date });
       out.crew = runs.length;
     } catch (e) { console.error('crewDue', e.message); }
+    /* requests you sent the team, and tonight's meeting prep and today's
+       check-in, whose time has come */
+    try {
+      const list = await makeAsks({ db, cfg }).due(t);
+      for (const x of list) await db.ref(`srv/crewQueue/${x.uid}/ask_${x.id}`).set({ ask: x.id, at: t });
+      out.asks = list.length;
+    } catch (e) { console.error('asks', e.message); }
     /* anything waiting goes to the background worker */
     const waiting = (await db.ref('srv/queue').once('value')).val();
     const auditing = (await db.ref('srv/agentQueue').once('value')).val();

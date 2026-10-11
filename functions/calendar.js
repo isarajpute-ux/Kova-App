@@ -90,7 +90,26 @@ function makeCalendar(deps) {
     return { ok: true, created, updated, removed, moved, busy };
   }
 
-  return { sync, cleanBlocks };
+  /* your own meetings in a window, for meeting prep (asks.js): not the
+     blocks Kova planned, not cancelled, not all-day */
+  async function events(uid, from, to) {
+    const t = await tokens.get(uid, 'google');
+    if (!/calendar/.test(t.scope || '')) throw new CalError(403, 'Connect Google Calendar so your team can see your meetings.');
+    const q = new URLSearchParams({ timeMin: iso(from), timeMax: iso(to), singleEvents: 'true', orderBy: 'startTime', maxResults: '50' });
+    const list = await call(t, `${CAL}?${q}`, { method: 'GET' });
+    return (list.items || []).filter((e) => e.status !== 'cancelled' && e.start && e.start.dateTime
+      && !(e.extendedProperties && e.extendedProperties.private && e.extendedProperties.private.kovaId)).slice(0, 12).map((e) => ({
+      id: String(e.id || '').slice(0, 120), title: String(e.summary || 'Meeting').slice(0, 160),
+      start: Date.parse(e.start.dateTime), end: Date.parse((e.end && e.end.dateTime) || e.start.dateTime),
+      description: String(e.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 1200),
+      location: String(e.location || '').slice(0, 200),
+      link: String(e.hangoutLink || ((((e.conferenceData || {}).entryPoints || [])[0]) || {}).uri || '').slice(0, 300),
+      organizer: String((e.organizer && (e.organizer.displayName || e.organizer.email)) || '').slice(0, 120),
+      attendees: (e.attendees || []).filter((a) => !a.resource).slice(0, 20).map((a) => ({ email: String(a.email || '').slice(0, 120), name: String(a.displayName || '').slice(0, 80), you: !!a.self, response: a.responseStatus || '' }))
+    }));
+  }
+
+  return { sync, events, cleanBlocks };
 }
 
 module.exports = { makeCalendar, CalError, cleanBlocks };

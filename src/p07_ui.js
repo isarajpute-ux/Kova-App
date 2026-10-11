@@ -1332,7 +1332,8 @@ window.KovaCanvas=(function(){
     {id:'checks',g:'Check',ic:'eye',t:'Run every app\u2019s checks',s:'See what an app would reject, before you post',a:'n-checks'},
     {id:'sched',g:'Flow',ic:'cal',t:'Schedule it',s:'Pick a time, or the next good slot',a:'n-sched'},
     {id:'human',g:'Human in the loop',ic:'inbox',t:'Send as drafts',s:'It lands in each app for you to approve',a:'n-drafts'},
-    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'}
+    {id:'send',g:'Publish',ic:'send',t:'Publish now',s:'Posts to every app you picked',a:'n-send'},
+    {id:'maya',g:'Publish',ic:'send',t:'Send to Maya',s:'Your Social Media Manager posts it and tells you what people say',a:'n-maya'}
   ];
   function nextList(p){
     var r=readiness(p), want={media:'media',words:'words',where:'where',checks:'checks',send:'send'}[r.cur?r.cur.k:'send']||'send', q=String(S.nextQ||'').toLowerCase().trim();
@@ -1365,6 +1366,7 @@ window.KovaCanvas=(function(){
     else if(a==='n-sched') publish('schedule');
     else if(a==='n-drafts') publish('draft');
     else if(a==='n-send') publish('now');
+    else if(a==='n-maya'){ if(window.KovaAsk) KovaAsk.offerSend(P()); else toast('Your AI team is still loading. Try again in a moment.'); }
   }
 
   /* =============================== menus ============================= */
@@ -2141,7 +2143,7 @@ window.KovaCanvas=(function(){
       case 'write': write(); break;
       case 'flow': S.flow=!S.flow; S.next=false; paintNext(); paintFlowPanel(); paintTop(); break;
       case 'next': S.next=!S.next; S.flow=false; S.nextQ=''; paintFlowPanel(); paintNext(); paintTop(); if(S.next){ var nq=$('#ksNextQ'); if(nq&&S.desk) nq.focus(); } break;
-      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': doNext(a); break;
+      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': case 'n-maya': doNext(a); break;
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;

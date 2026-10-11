@@ -447,8 +447,11 @@ window.KovaCut=(function(){
         C.post.format=KPo.naturalFormat(C.post); if(C.post.aspect==='4:5') C.post.aspect='orig';
         save();
         toast('Saved: a '+mmss(total())+' '+ext.toUpperCase()+' video is now the post'+(ext==='webm'?' (YouTube and X take WebM; for Instagram and TikTok, save it from Safari or the Kova app for MP4)':'')+'. The clips it came from stay in Media, switched off.');
+        var done=C.post;
         close();
         try{ if(window.KovaCanvas&&KovaCanvas._render) KovaCanvas._render(); }catch(e){}
+        /* ready to go out: hand it to the Social Media Manager */
+        try{ if(window.KovaAsk&&done) setTimeout(function(){ KovaAsk.offerSend(done); },400); }catch(e){}
       });
     }).catch(function(){ if(C){ busy.hidden=true; if(C.mon) C.mon.gain.value=1; } toast('Saving the video failed.'); });
   }

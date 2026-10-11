@@ -71,7 +71,7 @@ window.KovaCrew=(function(){
      routine:{freq:'weekdays',time:'17:30',job:'Triage today\u2019s overdue and stuck tasks and set realistic new dates.'},
      chips:['Triage my overdue tasks','Break a project into tasks','What is stuck?'],
      hints:['task','project','overdue','late','stuck','deadline','organi','board','process','triage','milestone','plan']},
-    {id:'analyst', n:'Maya', title:'Growth Analyst',
+    {id:'analyst', n:'Theo', title:'Growth Analyst',
      job:'I measure how the work is going. I track completion, the overdue trend, goals and content, and tell you in numbers what is working and what is not. I never guess a figure.',
      playbook:'1. analyze_work for 7 days and for 28 days.\n2. read_content for the posts.\n3. Compare this period with the last one.\n4. write_report with at most 5 metrics and 3 recommendations.',
      tools:['projects'],
@@ -92,6 +92,13 @@ window.KovaCrew=(function(){
      routine:{freq:'off',time:'09:30',job:'Draft three posts for this week that fit my goals and brand voice.'},
      chips:['Draft 3 posts for this week','Turn my latest idea into a post','What content is planned?'],
      hints:['post','content','caption','reel','tiktok','instagram','youtube','video','idea','hashtag','campaign','social']},
+    {id:'social', n:'Maya', title:'Social Media Manager',
+     job:'I run your social accounts. Send me a finished video or post and I write the caption in your voice, post it to the right accounts (a Short or a full video on YouTube, a Reel on Instagram), and an hour later tell you what people are saying: the top five things, what is working, and what to change for the following one.',
+     playbook:'1. read_content to see what is ready and what already went out.\n2. To post: write the caption and hashtags, then publish_post to the connected accounts (it waits for your OK, unless you sent it to me yourself).\n3. An hour after it goes out, post_feedback to read the comments and group them into the top themes.\n4. Report what people say, what is working and the following video to make.',
+     tools:['content','publish'],
+     routine:{freq:'off',time:'19:00',job:'Tell me what people are saying on my latest post.'},
+     chips:['What are people saying on my latest video?','Post my latest video to Instagram and YouTube','What should my next video be?'],
+     hints:['publish','upload','post it','post my','comments','what are people saying','followers','reel','short','social media','my account']},
     {id:'research', n:'Ravi', title:'Research Analyst',
      job:'I find things out. I research competitors, prices, trends and answers on the web, check them against your own numbers, and give you sources, not opinions.',
      playbook:'1. Search the web for the question (web_search).\n2. Read your own data where it matters.\n3. write_report with findings and the sources.\n4. Create tasks for anything worth acting on.',
@@ -121,7 +128,7 @@ window.KovaCrew=(function(){
      chips:['Plan today around my energy','Am I overloaded?','When should I do deep work?'],
      hints:['focus','energy','tired','burnout','deep work','stress','balance','overload','rest']}
   ];
-  var SEED=['chief','pm','analyst','inbox'];
+  var SEED=['chief','pm','social','research','inbox','analyst'];
   function tpl(id){ return TPL.filter(function(t){ return t.id===id; })[0]||null; }
 
   /* ---------------- tool groups (what you switch on per employee) ---------------- */
@@ -132,7 +139,8 @@ window.KovaCrew=(function(){
     {id:'content',  n:'Content and Studio drafts',   d:'Drafts in the Studio. Posting is always yours.'},
     {id:'meetings', n:'Meetings',                    d:'Put calls on the calendar with a prep note.'},
     {id:'email',    n:'Email (Gmail)',               d:'Writes the email. It waits for you to approve every send.', external:true},
-    {id:'research', n:'Web research',                d:'Searches the web. Needs the Kova server or your Claude key.'},
+    {id:'research', n:'Web research',                d:'Searches the web and reads the pages you give it. Needs the Kova server or your Claude key.'},
+    {id:'publish',  n:'Post to your accounts',       d:'Posts what you send it and reads the comments. A post waits for your OK unless you sent it yourself.', external:true},
     {id:'wellness', n:'Your readiness',              d:'The seven health checks, to plan work around your energy.'}
   ];
 
@@ -158,9 +166,25 @@ window.KovaCrew=(function(){
     return ((typeof FILL!=='undefined'&&FILL.names)||['Sam','Noor','Iris','Theo','Lena','Omar']).filter(function(n){ return used.indexOf(n)<0; })[0]||t.n;
   }
   function seed(){
-    if(emps().length||(window.KP&&KP.get('crewSeeded'))) return;
-    SEED.forEach(function(id){ hire(tpl(id),null,true); });
-    if(window.KP) KP.set('crewSeeded',true);
+    if(!(emps().length||(window.KP&&KP.get('crewSeeded')))){
+      SEED.forEach(function(id){ hire(tpl(id),null,true); });
+      if(window.KP) KP.set('crewSeeded',true);
+      if(window.KP) KP.set('crewV20',true);
+      return;
+    }
+    migrate();
+  }
+  /* p20: Maya became the Social Media Manager (she posts and reads the
+     comments) and Ravi researches by default. A team that still has the
+     original Growth Analyst called Maya keeps that teammate, renamed Theo. */
+  function migrate(){
+    if(!window.KP||KP.get('crewV20')) return;
+    var L=emps(), used=L.map(function(e){ return e.n; });
+    var an=L.filter(function(e){ return e.tpl==='analyst'&&e.n==='Maya'; })[0];
+    if(an&&!L.some(function(e){ return e.tpl==='social'; })&&used.indexOf('Theo')<0) touch(an,{n:'Theo'});
+    if(!L.some(function(e){ return e.tpl==='social'; })) hire(tpl('social'),{n:freeName(tpl('social'))},true);
+    if(!L.some(function(e){ return e.tpl==='research'; })) hire(tpl('research'),{n:freeName(tpl('research'))},true);
+    KP.set('crewV20',true);
   }
   function saveEmp(e,patch){ return W.update('agents',e.id,patch,'user'); }
   function touch(e,patch){ var row=W.find('agents',e.id); if(!row) return; Object.keys(patch).forEach(function(k){ row[k]=patch[k]; e[k]=patch[k]; }); try{ W.save(); }catch(x){} }
@@ -334,6 +358,19 @@ window.KovaCrew=(function(){
         });
       },
       label:function(r){ return r.ok?'Ran '+r.results.length+' jobs in parallel: '+r.results.map(function(x){ return x.from+' ('+x.state+')'; }).join(', '):'Could not delegate: '+String(r.error||''); }},
+    fetch_page:{g:'research',kind:'read',d:'Read one web page in full: its title, description, readable text and links. Use it for any address the user gives you.',
+      s:obj({url:S_STR},['url']),
+      run:function(a){ return window.KovaAsk?KovaAsk.fetchPage(a.url):{error:'Reading pages is not available here.'}; },
+      label:function(r,a){ return r.error?'Could not read '+String(a.url||'').slice(0,60)+': '+r.error:'Read '+(r.title||String(a.url||'').slice(0,60)); }},
+    post_feedback:{g:'publish',kind:'read',d:'What people are saying about a published post: the top comment themes with their share and a quote, what is working, what to fix and the next video. post = its title, or "latest".',
+      s:obj({post:S_STR}),
+      run:function(a){ return window.KovaAsk?KovaAsk.feedback(a.post||'latest'):{error:'Not available here.'}; },
+      label:function(r){ return r.error?'Could not read the comments: '+r.error:'Read the comments on \u201c'+r.post+'\u201d: '+(r.themes||[]).length+' themes'; }},
+    publish_post:{g:'publish',kind:'external',d:'Post a Studio post or video to the user\u2019s connected accounts. It waits for their OK. post = its title or "latest"; platforms = instagram, youtube, tiktok, facebook, linkedin, x, threads or pinterest; heading and caption optional.',
+      s:obj({post:S_STR,platforms:{type:'array',items:S_STR},heading:S_STR,caption:S_STR},['post','platforms']),
+      run:function(a){ return window.KovaAsk?KovaAsk.publishFromTool(a):{error:'Posting is not available here.'}; },
+      describe:function(a){ return {t:'Post',n:a.post,s:'to '+(a.platforms||[]).join(', ')}; },
+      label:function(r){ return r.error?'Not posted: '+r.error:'Posted \u201c'+r.post+'\u201d to '+r.platforms.join(', '); }},
     draft_email:{g:'email',kind:'external',d:'Write an email for the user to approve. It is only sent (or saved to Gmail drafts) after they approve. to = email address.',
       s:obj({to:S_STR,subject:S_STR,body:S_STR},['to','subject','body']),
       run:function(a){
@@ -420,8 +457,9 @@ window.KovaCrew=(function(){
   function importCloud(it){
     var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
     var props=(it.proposals||[]).filter(function(p){ return p&&TOOLS[p.name]; });
-    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
-      steps:[{t:'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
+    var ak=it.ask||null, AKN={prep:'Prepped tomorrow\u2019s meetings',checkin:'Checked in on you',comments:'Read the comments on your post'};
+    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
+      steps:[{t:ak?(ak.deliverAt&&ak.deliverAt>(it.at||0)-5*60e3&&ak.kind==='ask'?'Worked on it on the Kova server, ready for '+clock(ak.deliverAt)+' as you asked':(AKN[ak.kind]||'Worked on it on the Kova server')+' while Kova was closed'):'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
       changes:[],queue:props.map(function(p,i){ return {id:'p'+i,name:p.name,input:p.input||{}}; }),results:[],turns:0,convo:null,brain:'cloud',
       model:it.model||'',say:String(it.say||''),report:it.report||null};
     S.jobs[job.id]=job;
@@ -573,7 +611,7 @@ window.KovaCrew=(function(){
      up to Sonnet when a job runs long. You can pin one per employee. */
   var MODELS={haiku:'Haiku',sonnet:'Sonnet',opus:'Opus'};
   var MODEL_ID={haiku:'claude-haiku-4-5-20251001',sonnet:'claude-sonnet-5-5',opus:'claude-opus-5-5'};
-  var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku'};
+  var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku',social:'sonnet'};
   function pickModel(e,job){
     if(e.model&&MODELS[e.model]) return e.model;
     var m=AUTO[e.tpl]||'sonnet';
@@ -1160,7 +1198,9 @@ window.KovaCrew=(function(){
     }};
 
   /* which skills each role has, and which words call each one */
-  var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief']};
+  var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief'],
+    /* Maya posts and reads comments (server tools); drafting stays Zoe's lane */
+    social:['analyze','content']};
   var SK_WORDS={triage:/overdue|triage|\blate\b|behind|re-?plan|re-?date|clean ?up|stuck/i,
     breakdown:/break\b.*\b(down|into)|new project|plan (a|the|my|this) project|project (for|called|named)|steps (for|to)/i,
     projects:/project|progress|milestone/i,
@@ -1786,7 +1826,7 @@ window.KovaCrew=(function(){
         +tileSm({tone:'g4',title:'Needs you',k:'needs',value:wt,suf:wt===1?'/approval':'/approvals',chart:halftone(wt),
           cap:wt?'Oldest waiting '+ago(wl.slice().sort(function(x,y){ return x.at-y.at; })[0].at).replace(' ago',''):'All clear'})
       +'</div>'
-      +'<div class="crd-below">'+composer(null)+needsYou()+recent()+'</div>';
+      +'<div class="crd-below">'+composer(null)+(window.KovaAsk?KovaAsk.panel():'')+needsYou()+recent()+'</div>';
   }
   /* ---- one employee: their skill, live from your data ---- */
   function empPage(e){
@@ -1857,6 +1897,7 @@ window.KovaCrew=(function(){
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
     return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Give '+esc(e.n)+' a job':'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
       +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
       +(e?'':listenRow())+'</div>';
   }
@@ -2159,6 +2200,8 @@ window.KovaCrew=(function(){
       if(!q||!q.trim()) return;
       var r=route(q); if(!r){ say('Hire someone first.'); return; }
       S.clear={crwAsk:1}; var ta=document.getElementById('crwAsk'); if(ta) ta.value='';
+      /* a time ("at 11"), a link, or a time chip: it runs on the server and comes back to you */
+      if(c==='ask'&&window.KovaAsk&&KovaAsk.wants(q)){ KovaAsk.send(r.emp,q).catch(function(){}); paint(); return; }
       var j=start(r.emp,q,'team'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return;
     }
@@ -2167,6 +2210,7 @@ window.KovaCrew=(function(){
       if(!e||!t||!t.trim()) return;
       if(!e.enabled){ say(e.n+' is switched off.'); return; }
       var ta2=document.getElementById('crwEmpAsk'); if(ta2) ta2.value=''; S.clear={crwEmpAsk:1};
+      if(c==='empask'&&window.KovaAsk&&KovaAsk.wants(t)){ KovaAsk.send(e,t).catch(function(){}); paint(); return; }
       start(e,t,'you'); S.scroll=true; S.focus=true; paint(); return;
     }
     if(c==='listen'){ if(window.KovaListen) KovaListen.set(!KovaListen.on()); return; }
@@ -2268,7 +2312,14 @@ window.KovaCrew=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,300); }); else setTimeout(mount,300);
 
-  return {TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
+  /* a finished job a teammate did outside a job run (Send to Maya) */
+  function note(empId,text,line){
+    var e=emp(empId); if(!e) return null;
+    var job={id:uid('j'),emp:e.id,text:String(text||'').slice(0,4000),source:'you',meta:null,at:Date.now(),state:'running',steps:[{t:line,k:'send',at:Date.now()}],
+      changes:[],queue:[],results:[],turns:0,convo:null,brain:'local',say:line};
+    S.jobs[job.id]=job; touch(e,{runs:(e.runs||0)+1,lastRun:Date.now()}); finish(job,line); saveJobs(); paintSoon(); return job;
+  }
+  return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
     slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};

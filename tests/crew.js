@@ -42,10 +42,10 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const doc = w.document, C = w.KovaCrew, W = w.WorkOS, DAY = 864e5, now = Date.now(), sod = W.startOfDay();
   ck('KovaCrew is on the page', !!C && typeof C.start === 'function');
   const E = () => C.emps(); const by = (t) => E().filter((e) => e.title === t)[0];
-  ck('the starter team is hired: Chief of Staff, Project Manager, Growth Analyst, Client Success',
-    E().map((e) => e.title).join('|') === 'Chief of Staff|Project Manager|Growth Analyst|Client Success');
+  ck('the starter team is hired: Chief of Staff, Project Manager, Social Media Manager (Maya), Research Analyst, Client Success, Growth Analyst',
+    E().map((e) => e.title).join('|') === 'Chief of Staff|Project Manager|Social Media Manager|Research Analyst|Client Success|Growth Analyst' && by('Social Media Manager').n === 'Maya' && by('Growth Analyst').n === 'Theo');
   ck('starter routines are off until you turn them on', E().every((e) => e.routine.freq === 'off'));
-  ck('nine roles to hire from, each with a job and a playbook', C.TPL.length === 9 && C.TPL.every((t) => t.job.length > 60 && t.playbook.length > 40));
+  ck('ten roles to hire from, each with a job and a playbook', C.TPL.length === 10 && C.TPL.every((t) => t.job.length > 60 && t.playbook.length > 40));
 
   // ---- data to work on
   W.list('items').forEach((i) => W.remove('items', i.id, 'system'));
@@ -135,8 +135,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
 
   // ---- hand-off to a teammate
   const ava = by('Chief of Staff'), maya = by('Growth Analyst');
-  script = [{ content: [{ type: 'tool_use', id: 'h1', name: 'hand_off', input: { to: 'Maya', job: 'Write the weekly numbers report.' } }], stop_reason: 'tool_use' },
-            { content: [{ type: 'text', text: 'Maya has it.' }], stop_reason: 'end_turn' },
+  script = [{ content: [{ type: 'tool_use', id: 'h1', name: 'hand_off', input: { to: 'Theo', job: 'Write the weekly numbers report.' } }], stop_reason: 'tool_use' },
+            { content: [{ type: 'text', text: 'Theo has it.' }], stop_reason: 'end_turn' },
             { content: [{ type: 'text', text: 'Report coming.' }], stop_reason: 'end_turn' }];
   C.start(C.emp(ava.id), 'I need the weekly numbers', 'team'); await wait(400);
   const mj = C.jobsOf(maya.id).slice(-1)[0];
@@ -173,7 +173,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('an "Updated" line over a large title', /Updated/.test(body.querySelector('.crd-upd').textContent) && /team$/.test(body.querySelector('.crd-title').textContent));
   ck('four labelled stats with the real numbers', body.querySelectorAll('.crd-stat').length === 4 && /Finished3/.test(body.querySelector('.crd-stats').textContent.replace(/\s+/g, '')));
   ck('a stage timeline and a focus card with the wireframe globe', !!body.querySelector('.crd-flow .crd-step') && !!body.querySelector('.crd-focus .crd-globe'));
-  ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 5 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
+  ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 7 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
   ck('five tiles, the big one with 7d / 30d / 90d, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && body.querySelectorAll('.crd-t.t-big [data-c="jrange"]').length === 3 && [...body.querySelectorAll('.crd-tiles .crd-t')].every((t) => t.querySelector('svg.crd-ch, svg.crd-jc, .crd-srows')));
   body.querySelector('.crd-t.t-big [data-c="jrange"][data-r="90"]').click(); await wait(10);
   ck('the date range changes', C._S.range === 90 && body.querySelector('.crd-t.t-big [data-r="90"]').classList.contains('on'));
