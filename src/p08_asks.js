@@ -74,12 +74,17 @@ window.KovaAsk=(function(){
      time, a link, or a time chip picked, and you are signed in */
   function wants(text){ return serverOk()&&!!(S.when||parseWhen(text)||urlIn(text)); }
 
-  function send(emp,text){
-    var w=deliveryFor(text), url=urlIn(text);
+  /* opt.now: deliver as soon as it is done, whatever times the words mention
+     (an automation's "prep me for the 3pm call"); opt.quiet: no toast or
+     plans sheet (the automation's history shows what happened) */
+  function send(emp,text,opt){
+    opt=opt||{};
+    var w=opt.now?null:deliveryFor(text), url=urlIn(text);
     var body={emp:emp?emp.id:'',text:String(text).trim(),deliverAt:w?w.at:0};
     if(url) body.url=url;
-    S.when=null;
+    if(!opt.now) S.when=null;
     return api('/crew/ask',{json:body}).then(function(r){
+      if(opt.quiet){ S.list.unshift({id:r.id,emp:body.emp,kind:'ask',text:body.text,url:url,deliverAt:r.deliverAt,state:'queued',created:Date.now()}); repaint(); track('crew_ask',{auto:true}); return r; }
       var name=emp?emp.n:'Your team';
       S.list.unshift({id:r.id,emp:body.emp,kind:'ask',text:body.text,url:url,deliverAt:r.deliverAt,state:'queued',created:Date.now()});
       say(r.now||!w?name+' is on it. The answer comes back here'+(pushOn()?' and as a notification.':'.'):name+' will tell you '+(w.label||when2(r.deliverAt))+'.');
@@ -87,6 +92,7 @@ window.KovaAsk=(function(){
       offerPush(); repaint();
       return r;
     },function(e){
+      if(opt.quiet) throw e;
       say(e.status===402?'Your AI team comes with Work OS. See plans.':(e.message||'Could not reach the server. Try again.'));
       if(e.status===402&&window.KovaBilling) KovaBilling.paywall('crew');
       throw e;

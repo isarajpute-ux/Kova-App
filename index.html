@@ -7708,6 +7708,131 @@ body.soft-light .kas-in{background:rgba(255,255,255,.07)}
 @media (prefers-reduced-motion:reduce){ .kas-dot.run{animation:none} }
 
 </style>
+<style id="p08-flow">
+/* KovaFlow (p21): say the rule, the rule builder, Test it, and the action
+   items pulled from a call's notes. Thin outlines and the app's accent;
+   dark, soft light and light glass. */
+.kfl-h{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.kfl-sub{font-size:11.5px;font-weight:300;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin:4px 0 10px}
+.kfl-in{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.16));
+  background:rgba(255,255,255,.04);color:var(--ron-txt,#fff);font:inherit;font-size:13.5px;line-height:1.45;resize:vertical}
+.kfl-in:focus,.kfl-f input:focus,.kfl-f select:focus,.kfl-box>select:focus{outline:none;border-color:var(--acc)}
+.kfl-ex{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.kfl-chip{padding:6px 10px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:transparent;
+  color:var(--ron-txt-2,rgba(255,255,255,.8));font:inherit;font-size:11px;text-align:left;cursor:pointer}
+.kfl-chip:hover{border-color:var(--acc)}
+.kfl-row{display:flex;gap:8px;margin-top:12px}
+.kfl-row .btn{flex:1;margin:0}
+.kfl-link{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;width:100%;margin-top:12px;padding:11px 12px;
+  border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14));background:transparent;color:var(--ron-txt,#fff);font:inherit;text-align:left;cursor:pointer}
+.kfl-link span{font-size:12.5px;font-weight:500}
+.kfl-link small{grid-column:1;font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72))}
+.kfl-link i{grid-row:1/span 2;grid-column:2;font-style:normal;font-size:18px;color:var(--acc)}
+.kfl-chip:focus-visible,.kfl-link:focus-visible,.kfl-add:focus-visible,.kfl-x:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.kfl-sheet{padding-bottom:6px}
+.kfl-title{font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px}
+.kfl-warn{font-size:12px;line-height:1.5;padding:9px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--warn,#E6B84C) 55%,transparent);
+  color:var(--ron-txt,#fff);margin:0 0 10px}
+.kfl-sec{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ron-txt-2,rgba(255,255,255,.72));margin:14px 0 6px}
+.kfl-sec small{font-weight:300;letter-spacing:0;text-transform:none;margin-left:4px}
+.kfl-box{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:9px 10px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14));margin-bottom:6px}
+.kfl-box>select,.kfl-f select,.kfl-f input{padding:7px 9px;border-radius:10px;border:1px solid var(--ron-line,rgba(255,255,255,.16));
+  background:rgba(255,255,255,.04);color:var(--ron-txt,#fff);font:inherit;font-size:12.5px;max-width:100%}
+.kfl-box>select{flex:1;min-width:150px}
+.kfl-box option{color:#111}
+.kfl-fs{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%}
+.kfl-fs:empty{display:none}
+.kfl-f{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kfl-f.wide{flex:1 1 100%}
+.kfl-f.wide input{flex:1;min-width:0}
+.kfl-sheet>.kfl-f.wide{margin-bottom:4px}
+.kfl-n{width:20px;height:20px;border-radius:50%;border:1px solid var(--acc);display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:var(--acc);flex-shrink:0}
+.kfl-mv{display:flex;gap:4px;margin-left:auto}
+.kfl-x{width:28px;height:28px;border-radius:50%;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.8));font:inherit;font-size:14px;line-height:1;cursor:pointer}
+.kfl-add{display:block;width:100%;padding:9px;border-radius:14px;border:1px dashed var(--ron-line,rgba(255,255,255,.2));background:transparent;color:var(--acc);font:inherit;font-size:12px;cursor:pointer}
+.kfl-hint{font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.7));margin-top:10px;line-height:1.45}
+.kfl-test{margin-top:12px;padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--acc) 45%,transparent);background:color-mix(in srgb,var(--acc) 7%,transparent)}
+.kfl-test>div{display:flex;gap:10px;font-size:12px;line-height:1.45;padding:3px 0}
+.kfl-test b{flex:0 0 52px;font-weight:600;color:var(--acc)}
+.kfl-pull{margin-top:8px}
+.kfl-ai{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14));margin-bottom:6px;cursor:pointer}
+.kfl-ai input{margin-top:2px;accent-color:var(--acc);width:16px;height:16px;flex-shrink:0}
+.kfl-ai span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kfl-ai b{font-size:13px;font-weight:500;line-height:1.4}
+.kfl-ai small{font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72))}
+.kfl-dec{font-size:12.5px;line-height:1.45;padding:7px 0 7px 12px;border-left:2px solid var(--acc);margin-bottom:6px}
+
+body.light-mode .kfl-in,body.light-mode .kfl-box>select,body.light-mode .kfl-f select,body.light-mode .kfl-f input{background:#fff;color:#1C1A17;border-color:rgba(28,26,23,.16)}
+body.light-mode .kfl-chip,body.light-mode .kfl-link,body.light-mode .kfl-box,body.light-mode .kfl-x,body.light-mode .kfl-ai{border-color:rgba(28,26,23,.16)}
+body.light-mode .kfl-add{border-color:rgba(28,26,23,.22)}
+body.light-mode .kfl-link,body.light-mode .kfl-warn{color:#1C1A17}
+body.light-mode .kfl-sub,body.light-mode .kfl-chip,body.light-mode .kfl-link small,body.light-mode .kfl-sec,body.light-mode .kfl-f,body.light-mode .kfl-hint,body.light-mode .kfl-ai small,body.light-mode .kfl-x{color:rgba(28,26,23,.7)}
+body.soft-light .kfl-in,body.soft-light .kfl-box>select,body.soft-light .kfl-f select,body.soft-light .kfl-f input{background:rgba(255,255,255,.07)}
+
+/* KovaCmd: the search bar (\2318K, and the header search icons) */
+.kcmd{position:fixed;inset:0;z-index:10050;display:flex;justify-content:center;align-items:flex-start;padding:max(10vh,env(safe-area-inset-top)) 16px 16px}
+.kcmd[hidden]{display:none}
+.kcmd-bg{position:absolute;inset:0;background:rgba(5,5,8,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.kcmd-p{position:relative;width:100%;max-width:620px;max-height:min(70vh,560px);display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);background:rgba(22,22,26,.82);-webkit-backdrop-filter:blur(28px) saturate(1.4);backdrop-filter:blur(28px) saturate(1.4);
+  box-shadow:0 24px 70px rgba(0,0,0,.45),0 0 0 .5px color-mix(in srgb,var(--acc) 30%,transparent);color:#fff}
+.kcmd-in{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.09)}
+.kcmd-in .ic{font-size:17px;opacity:.6;flex-shrink:0}
+.kcmd-in input{flex:1;min-width:0;border:0;background:none;color:inherit;font:inherit;font-size:16px;outline:none}
+.kcmd-in kbd{font:inherit;font-size:10px;padding:2px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.7)}
+.kcmd-l{overflow-y:auto;padding:6px;-webkit-overflow-scrolling:touch}
+.kcmd-g{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62);padding:10px 10px 4px}
+.kcmd-r{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:12px;cursor:pointer;border:1px solid transparent}
+.kcmd-r .ic{font-size:15px;flex-shrink:0;opacity:.7}
+.kcmd-r span{display:flex;flex-direction:column;min-width:0}
+.kcmd-r b{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcmd-r small{font-size:11px;font-weight:300;color:rgba(255,255,255,.68);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcmd-r.on{border-color:color-mix(in srgb,var(--acc) 55%,transparent);background:color-mix(in srgb,var(--acc) 12%,transparent)}
+.kcmd-r.on .ic{color:var(--acc);opacity:1}
+.kcmd-none{padding:18px 12px;font-size:12.5px;color:rgba(255,255,255,.7)}
+.kcmd-f{display:flex;gap:14px;padding:9px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:10.5px;color:rgba(255,255,255,.6)}
+@media (hover:none){ .kcmd-f{display:none} .kcmd-in kbd{display:none} }
+body.light-mode .kcmd-bg{background:rgba(240,236,228,.45)}
+body.light-mode .kcmd-p{background:rgba(255,255,255,.86);border-color:rgba(28,26,23,.12);color:#1C1A17;box-shadow:0 24px 70px rgba(28,26,23,.18),0 0 0 .5px color-mix(in srgb,var(--acc) 30%,transparent)}
+body.light-mode .kcmd-in{border-bottom-color:rgba(28,26,23,.08)}
+body.light-mode .kcmd-in kbd{border-color:rgba(28,26,23,.18);color:rgba(28,26,23,.65)}
+body.light-mode .kcmd-g,body.light-mode .kcmd-r small,body.light-mode .kcmd-none,body.light-mode .kcmd-f{color:rgba(28,26,23,.66)}
+body.light-mode .kcmd-f{border-top-color:rgba(28,26,23,.08)}
+body.soft-light .kcmd-p{background:rgba(44,40,48,.8)}
+
+/* KovaApps: "How the best tools do it" */
+.kap-title{font-size:18px;font-weight:600;letter-spacing:-.02em}
+.kap-sub{font-size:11.5px;font-weight:300;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin:4px 0 10px}
+.kap-q{width:100%;box-sizing:border-box;margin-bottom:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:rgba(255,255,255,.04);color:var(--ron-txt,#fff);font:inherit;font-size:13.5px}
+.kap-q:focus{outline:none;border-color:var(--acc)}
+.kap-grp{border:1px solid var(--ron-line,rgba(255,255,255,.14));border-radius:16px;margin-bottom:8px;overflow:hidden}
+.kap-gh,.kap-hd{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border:0;background:transparent;color:var(--ron-txt,#fff);font:inherit;text-align:left;cursor:pointer}
+.kap-gh span{flex:1;font-size:13.5px;font-weight:600}
+.kap-gh em{font-style:normal;font-size:10.5px;padding:1px 7px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.18));color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kap-gh i,.kap-hd i{font-style:normal;color:var(--acc);transition:transform .2s;line-height:1}
+.kap-grp.on>.kap-gh i,.kap-app.on>.kap-hd i{transform:rotate(180deg)}
+.kap-gb{padding:0 8px 8px}
+.kap-app{border-top:1px solid var(--ron-line-2,rgba(255,255,255,.08))}
+.kap-gb .kap-app:first-child{border-top:0}
+.kap-hd{padding:10px 8px}
+.kap-hd span{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kap-hd b{font-size:13px;font-weight:500}
+.kap-hd small{font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72))}
+.kap-bd{padding:0 8px 12px}
+.kap-bd ol{margin:0 0 10px;padding-left:18px;font-size:12.5px;line-height:1.55}
+.kap-bd li::marker{color:var(--acc)}
+.kap-take{font-size:12.5px;line-height:1.5;padding:9px 11px;border-radius:12px;border:1px solid color-mix(in srgb,var(--acc) 45%,transparent);background:color-mix(in srgb,var(--acc) 7%,transparent)}
+.kap-take span{display:block;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:3px}
+.kap-ev{font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.68));margin:8px 0 0}
+.kap-go{margin-top:10px;padding:8px 12px;border-radius:99px;border:1px solid var(--acc);background:transparent;color:var(--ron-txt,#fff);font:inherit;font-size:12px;cursor:pointer}
+.kap-gh:focus-visible,.kap-hd:focus-visible,.kap-go:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+body.light-mode .kap-grp,body.light-mode .kap-gh em{border-color:rgba(28,26,23,.14)}
+body.light-mode .kap-gh,body.light-mode .kap-hd,body.light-mode .kap-go{color:#1C1A17}
+body.light-mode .kap-q{background:#fff;color:#1C1A17;border-color:rgba(28,26,23,.16)}
+body.light-mode .kap-sub,body.light-mode .kap-hd small,body.light-mode .kap-ev,body.light-mode .kap-gh em{color:rgba(28,26,23,.7)}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -36930,7 +37055,7 @@ window.WorkAI=(function(){
     };
   });
 
-  window.__workDraw={today:drawToday,tasks:drawTasks,item:drawItem,projects:drawProjects,
+  window.__workDraw={today:drawToday,tasks:drawTasks,item:drawItem,open:openItem,projects:drawProjects,
                      goals:drawGoals,profile:drawProfile,activity:drawActivity,
                      integrations:drawIntegrations,plan:planSheet,refresh:refreshAll};
   refreshAll();
@@ -37608,7 +37733,7 @@ body.light-mode .fsheet{background:linear-gradient(160deg,rgba(255,255,255,.92),
   var nb=document.getElementById('wmNew');
   if(nb) nb.onclick=newMeetingSheet;
 
-  window.__workMeet={list:drawMeetings,detail:drawMeeting};
+  window.__workMeet={list:drawMeetings,detail:drawMeeting,cur:function(){ return curMeet; },open:function(id){ curMeet=id; go('workmeeting'); drawMeeting(); }};
   drawMeetings();
 })();
 </script>
@@ -37874,8 +37999,8 @@ if(window.WorkAuto) try{ WorkAuto.sweep(); }catch(e){ console.warn('sweep',e); }
       +'<div class="big" style="font-size:30px;margin:6px 0 2px">'+live+'</div>'
       +'<div class="sub">running'+(fails?' \u00b7 '+fails+' failing':'')+'</div>'
       +'<div class="sub" style="margin-top:10px;font-size:10.5px;line-height:1.5">'
-      +'Rules run while the app is open. There is no server here to run them overnight, '
-      +'so a rule that depends on a date fires when you next open Kova.</div>'
+      +'Rules run while Kova is open and catch up when you next open it. A step that asks '
+      +'your AI team runs on the server, so that part happens even with Kova closed.</div>'
       +'</div>';
 
     if(notes.length){
@@ -50659,6 +50784,28 @@ window.KovaCrew=(function(){
       s:obj({url:S_STR},['url']),
       run:function(a){ return window.KovaAsk?KovaAsk.fetchPage(a.url):{error:'Reading pages is not available here.'}; },
       label:function(r,a){ return r.error?'Could not read '+String(a.url||'').slice(0,60)+': '+r.error:'Read '+(r.title||String(a.url||'').slice(0,60)); }},
+    best_tools:{g:'read',kind:'read',d:'Which of the 86 leading work, automation, CRM, marketing, data and developer apps is best for a need, with the five reasons it leads and what Kova already does the same way. need = what the user wants to do.',
+      s:obj({need:S_STR},['need']),
+      run:function(a){
+        if(!window.KovaApps) return {error:'The app guide is still loading.'};
+        var L=KovaApps.recommend(a.need,3);
+        return {need:a.need,apps:L.map(function(x){ return {name:x.n,group:x.grp,best_at:x.best,reasons:x.why,in_kova:x.take,evidence:KovaApps.EV[x.ev]}; })};
+      },
+      label:function(r){ return r.error?'Could not check the app guide':'Checked the app guide: '+(r.apps.length?r.apps.map(function(x){ return x.name; }).join(', '):'nothing close'); }},
+    create_automation:{g:'tasks',kind:'write',d:'Create a Work OS automation from one plain sentence, e.g. "When a call ends, make a write-up task, wait 2 days, then remind me" or "30 minutes before every call, prep me". Triggers: a task moves to a status, a task is created, goes overdue, sits quiet N days, a meeting is N minutes away, a meeting ends, every day/weekday at a time, a goal is updated. Steps: create a task, notify me, wait N minutes/hours/days, set priority, move it to a status, put it on today, ask the AI team, mark it complete.',
+      s:obj({rule:S_STR,name:S_STR},['rule']),
+      run:function(a,ctx){
+        if(!window.KovaFlow) return {error:'Automations are still loading.'};
+        var r=KovaFlow.parse(a.rule);
+        if(r.error) return {error:r.error};
+        if(a.name) r.spec.name=String(a.name).slice(0,80);
+        r.spec.by='ai';
+        var made=KovaFlow.make(r.spec);
+        if(made&&made.id&&ctx&&ctx.undo) ctx.undo({coll:'automations',id:made.id,created:true});
+        return made&&made.id?{ok:true,id:made.id,name:made.name,rule:KovaFlow.describe(made)}:{error:'The rule could not be saved.'};
+      },
+      describe:function(a){ return {t:'Automation',n:a.name||String(a.rule||'').slice(0,60),s:'a new rule, switched on'}; },
+      label:function(r){ return r.error?'Could not make the rule: '+r.error:'Made the rule \u201c'+r.name+'\u201d'; }},
     post_feedback:{g:'publish',kind:'read',d:'What people are saying about a published post: the top comment themes with their share and a quote, what is working, what to fix and the next video. post = its title, or "latest".',
       s:obj({post:S_STR}),
       run:function(a){ return window.KovaAsk?KovaAsk.feedback(a.post||'latest'):{error:'Not available here.'}; },
@@ -59160,12 +59307,17 @@ window.KovaAsk=(function(){
      time, a link, or a time chip picked, and you are signed in */
   function wants(text){ return serverOk()&&!!(S.when||parseWhen(text)||urlIn(text)); }
 
-  function send(emp,text){
-    var w=deliveryFor(text), url=urlIn(text);
+  /* opt.now: deliver as soon as it is done, whatever times the words mention
+     (an automation's "prep me for the 3pm call"); opt.quiet: no toast or
+     plans sheet (the automation's history shows what happened) */
+  function send(emp,text,opt){
+    opt=opt||{};
+    var w=opt.now?null:deliveryFor(text), url=urlIn(text);
     var body={emp:emp?emp.id:'',text:String(text).trim(),deliverAt:w?w.at:0};
     if(url) body.url=url;
-    S.when=null;
+    if(!opt.now) S.when=null;
     return api('/crew/ask',{json:body}).then(function(r){
+      if(opt.quiet){ S.list.unshift({id:r.id,emp:body.emp,kind:'ask',text:body.text,url:url,deliverAt:r.deliverAt,state:'queued',created:Date.now()}); repaint(); track('crew_ask',{auto:true}); return r; }
       var name=emp?emp.n:'Your team';
       S.list.unshift({id:r.id,emp:body.emp,kind:'ask',text:body.text,url:url,deliverAt:r.deliverAt,state:'queued',created:Date.now()});
       say(r.now||!w?name+' is on it. The answer comes back here'+(pushOn()?' and as a notification.':'.'):name+' will tell you '+(w.label||when2(r.deliverAt))+'.');
@@ -59173,6 +59325,7 @@ window.KovaAsk=(function(){
       offerPush(); repaint();
       return r;
     },function(e){
+      if(opt.quiet) throw e;
       say(e.status===402?'Your AI team comes with Work OS. See plans.':(e.message||'Could not reach the server. Try again.'));
       if(e.status===402&&window.KovaBilling) KovaBilling.paywall('crew');
       throw e;
@@ -59388,6 +59541,1461 @@ window.KovaAsk=(function(){
 
   return {parseWhen:parseWhen,urlIn:urlIn,wants:wants,send:send,refresh:refresh,cancel:cancel,chips:chips,panel:panel,savePlan:savePlan,
     fetchPage:fetchPage,feedback:feedback,offerSend:offerSend,publishFromTool:publishFromTool,findPost:findPost,_S:S,_send:function(){ return SEND; }};
+})();
+
+</script>
+<script id="p08-apps">
+/* =====================================================================
+   KovaApps (p21) - the 86 apps in Claude's connector directory under
+   automation and workflow (and the neighbouring shelves you named), what
+   makes each the best in its market, and what Kova took from it.
+
+   Honest about evidence: each app says what its reasons rest on
+     r  user reviews (G2, Capterra, Reddit summaries, independent write-ups)
+     v  mostly the company's own claims
+     t  little public information yet
+   "take" is what Kova does because of it, and "go" opens that part of
+   Kova (flow, cmd, actions, team, maya, prep, plans, inbox), so the
+   reasons are not just a list: each one points at something that works.
+
+   Lives behind "How the best tools do it" on Automations and in the
+   search bar; the AI team reads it through the best_tools tool.
+   ===================================================================== */
+window.KovaApps=(function(){
+  'use strict';
+  var G={auto:'Automation',work:'Work and projects',docs:'Docs and decks',build:'Build and host',ops:'Logs and errors',
+    crm:'Customers and CRM',mkt:'Marketing',data:'Data and documents',talk:'Talk and meet'};
+  var GO={flow:'Build a rule',cmd:'Open the search bar',actions:'Pull action items from a call',team:'Ask your AI team',
+    maya:'Send a video to Maya',prep:'Meeting prep',inbox:'Notifications',plans:'Plans'};
+  /* [id, name, group, best at, five reasons, what Kova took, evidence, go] */
+  var D=[
+    ['zapier','Zapier','auto','Connecting the most apps with the least setup',
+      ['8,000+ app connections, the widest catalogue','Plain trigger and action steps anyone can follow','Multi-step Zaps with filters and paths','Test each step before it goes live','Huge library of ready-made templates'],
+      'Rules are a chain of steps with filters, and Test it shows what each step would do before you save.','r','flow'],
+    ['make','Make','auto','Visual automation at a lower price than Zapier',
+      ['A visual canvas that shows the whole flow','Routers and branches for complex logic','Cheaper per operation at volume','Fine control over data mapping','Run history you can replay step by step'],
+      'Every run is kept with why it ran, skipped or failed, and the steps read top to bottom like a canvas.','r','flow'],
+    ['n8n','n8n','auto','Automation developers can self-host and own',
+      ['Self-host for free, keep data in house','Code nodes when no-code runs out','Strong AI agent building blocks','Fair-code licence, active community','Priced per workflow run, not per step'],
+      'Rules are plain data you can read, and the AI team can build one for you from a sentence.','r','flow'],
+    ['workato','Workato','auto','Enterprise automation with governance',
+      ['"Recipes" business teams can build','Deep enterprise connectors (SAP, NetSuite)','Audit trails and role-based control','Handles high volume reliably','Strong support for IT and business together'],
+      'Ready-made recipes on Automations, and every run is logged with who or what made the change.','r','flow'],
+    ['celigo','Celigo','auto','Ecommerce and ERP integration',
+      ['Prebuilt flows for NetSuite and Shopify','Clear field mapping screens','Error queues you can fix and retry','EDI support for suppliers','Support that knows the systems'],
+      'A failed step says exactly which step and why, with what to do next.','r','flow'],
+    ['windmill','Windmill','auto','Turning scripts into workflows and small apps',
+      ['Open source and very fast','Scripts in Python, TypeScript, Go or SQL','Auto-generated UIs for each script','Schedules and webhooks built in','Self-host or use their cloud'],
+      'Schedules are a trigger: every day or weekday at a time.','v','flow'],
+    ['retool','Retool','auto','Internal tools on top of your data',
+      ['Drag-and-drop UI over databases and APIs','Ship internal tools far faster','Permissions and approval steps for safe edits','Non-engineers can build end to end','Connects Postgres, Snowflake, Slack, Zendesk'],
+      'Anything that sends or posts waits for your approval; reading never does.','r','team'],
+    ['processstreet','Process Street','auto','Checklists and SOPs that run themselves',
+      ['Checklists with conditional steps','Approvals built into the flow','Audit trail for compliance','Recurring runs on a schedule','Easy for frontline teams'],
+      'Processes and checklists in the Work OS; a rule can create the next task when one finishes.','r','flow'],
+    ['fibery','Fibery','auto','A connected workspace from feedback to roadmap',
+      ['Relations between any kinds of records','Feedback linked to the features it asks for','Many views of the same data','Built-in automations and formulas','One tool instead of five'],
+      'Tasks know their project, their meeting and their goal, so a rule can act on any of them.','r','flow'],
+    ['codewords','CodeWords','auto','Building automations by chatting',
+      ['Describe the workflow in words','AI writes and runs the steps','Fast to a first working version','Hosted for you','Good for non-technical builders'],
+      'Say the rule: "When a call ends, make a write-up task, wait 2 days, then remind me".','t','flow'],
+    ['duvo','Duvo','auto','AI workers for retail and consumer goods operations',
+      ['Agents that do back-office tasks end to end','Built for retail and CPG workflows','Works across the tools a team already has','Hands off to people when unsure','Measured on time saved'],
+      'Your AI team does the work and stops to ask you when a step leaves Kova.','t','team'],
+    ['lorikeet','Lorikeet','auto','AI support for complex, regulated customers',
+      ['Handles multi-step support, not just FAQs','Follows the company’s own procedures','Made for fintech and health','Escalates with full context','Measured on resolved tickets'],
+      'Teammates follow a playbook you write, and hand the job back to you with context when they cannot finish.','v','team'],
+
+    ['monday','monday.com','work','Visual work management with easy automations',
+      ['Colourful boards anyone understands','"When this, do that" automations in plain words','Many views: table, kanban, timeline, calendar','Dashboards across boards','Templates for almost any team'],
+      'Recipes written in monday’s plain language, and tasks in table and kanban.','r','flow'],
+    ['asana','Asana','work','Clarity on who does what, by when',
+      ['Every task has one owner and a date','Goals linked to the work under them','Clean, calm interface','Rules for routine hand-offs','Portfolio view for leaders'],
+      'Action items from a call keep their owner and due date; goals track their progress.','r','actions'],
+    ['clickup','ClickUp','work','One app for everything, with a generous free plan',
+      ['Tasks, docs, goals, chat and whiteboards in one','Very customisable statuses and fields','Free plan covers a lot','Built-in AI across the workspace','Many views of the same tasks'],
+      'Work, health and the AI team in one app, without a More button hiding half of it.','r','cmd'],
+    ['linear','Linear','work','Speed: the fastest issue tracker',
+      ['Keyboard first, with ⌘K for everything','Instant, no loading spinners','Opinionated workflows that keep teams fast','Cycles and triage built in','Deep GitHub integration'],
+      '⌘K opens a search bar for everything in Kova, and creates a task from one line.','r','cmd'],
+    ['notion','Notion','work','Docs and databases in one flexible space',
+      ['Pages and databases that link together','Many views of one database','Huge template gallery','Writing feels good','AI that knows your workspace'],
+      'Search finds tasks, projects, meetings, files, teammates and screens together.','r','cmd'],
+    ['trello','Trello','work','The simplest visual board',
+      ['Cards and lists anyone gets in seconds','Drag and drop','Butler automations','Power-ups for extras','Free for small teams'],
+      'Kanban for tasks, and rules that move a card when something happens.','r','flow'],
+    ['smartsheet','Smartsheet','work','Spreadsheet-style project management for big organisations',
+      ['Feels like a spreadsheet, works like a PM tool','Gantt charts and dependencies','Strong governance and admin','Reports across many sheets','Approvals and forms'],
+      'Rules with filters ("only if it is critical") so automations do not fire on everything.','r','flow'],
+    ['wrike','Wrike','work','Enterprise projects with proofing',
+      ['Proofing and approval of creative work','Custom workflows per team','Resource and workload views','Strong security','Request forms that become tasks'],
+      'A post waits for your OK before it goes out; Maya never posts on her own unless you sent it.','r','maya'],
+    ['airtable','Airtable','work','A database that feels like a spreadsheet',
+      ['Linked records between tables','Interfaces you can build on top','Automations on record changes','Many field types','Easy for non-developers'],
+      'A rule can fire on a status change, a new task, a goal update or a call ending.','r','flow'],
+    ['atlassian','Atlassian (Jira, Confluence)','work','Software teams at scale',
+      ['Jira workflows for any process','Confluence docs linked to issues','Huge marketplace of add-ons','Scales to very large companies','Agile boards, sprints and reports'],
+      'Statuses, owners and a full activity log of every change.','r','flow'],
+    ['superhuman','Superhuman','work','The fastest email experience',
+      ['Keyboard shortcuts for everything','Split inbox by what matters','Snooze and follow-up reminders','AI writes replies in your voice','Clean, fast design'],
+      'Keyboard-first search, and follow-up reminders that happen on their own after a wait.','r','cmd'],
+    ['padlet','Padlet','work','Visual boards for classes and groups',
+      ['A wall anyone can post to','Images, links and video on one board','No account needed to contribute','Templates for teaching','Simple moderation'],
+      'Learn and study tools sit next to work, in the same app.','r','cmd'],
+    ['miro','Miro','work','The online whiteboard for teams',
+      ['Infinite canvas for workshops','Thousands of templates','Real-time collaboration','Integrates with Jira, Asana and more','AI that clusters sticky notes'],
+      'Meeting notes become grouped action items and decisions, like sorting stickies after a workshop.','r','actions'],
+    ['lucid','Lucid','work','Diagrams and process maps',
+      ['Flowcharts and org charts done fast','Data-linked diagrams','Shapes for every kind of diagram','Collaboration in real time','Works with Confluence and Google'],
+      'Each rule reads as a clear flow: when, only if, then.','r','flow'],
+
+    ['gamma','Gamma','docs','Decks and documents made by AI in minutes',
+      ['A first deck in about a minute from a prompt','Looks designed without design work','Cards instead of fixed slides, good on phones','Easy to edit after the AI draft','Share as a link with analytics'],
+      'Maya writes the caption and headline for each platform from one video.','r','maya'],
+    ['googledocs','Google Docs','docs','Writing together in real time',
+      ['Many people edit at once','Comments and suggestions','Free with a Google account','Version history','Works everywhere'],
+      'The AI team writes drafts you approve; nothing is sent without you.','r','team'],
+    ['zohoshow','Zoho Show','docs','Presentations inside the Zoho suite',
+      ['Part of the Zoho apps you already pay for','Clean slide editor','Present to remote audiences','Works with Zoho CRM data','Low cost'],
+      'Everything in one place, so you are not paying for five tools.','v','plans'],
+
+    ['vercel','Vercel','build','Shipping web apps with the best developer experience',
+      ['Push to Git, get a live site','Preview link for every change','Fast global edge network','Made by the Next.js team','Generous free tier for small projects'],
+      'Kova runs on Vercel: every push to the branch gets its own preview.','r','plans'],
+    ['netlify','Netlify','build','Simple hosting for sites and functions',
+      ['Drag-and-drop deploys','Forms and functions built in','Clear, simple pricing','Branch previews','Good for static and Jamstack sites'],
+      'Kept as Kova’s backup host.','r','plans'],
+    ['supabase','Supabase','build','Open-source Postgres backend',
+      ['A full Postgres database, not a toy','Auth, storage and realtime included','Open source, no lock-in','Generous free tier','Great docs and dashboard'],
+      'Your progress photos and media are stored in Supabase.','r','plans'],
+    ['railway','Railway','build','Deploying apps and databases with no config',
+      ['Deploy from GitHub in minutes','Databases one click away','Pay per second of use','Clean dashboard and logs','Good for side projects that grow'],
+      'Kova’s server runs as small functions that only cost when used.','r','plans'],
+    ['render','Render','build','Long-running servers and background jobs',
+      ['Stateful services and workers','Managed Postgres and Redis','Predictable pricing','Auto deploys from Git','Easier than raw cloud'],
+      'Background work (your team’s requests, post comments) runs on a timer on the server.','r','team'],
+    ['harness','Harness','build','CI/CD with built-in safety checks',
+      ['Pipelines from build to deploy','Automatic rollback when metrics drop','Cost management for cloud','Feature flags','Strong for big engineering teams'],
+      'Every change Kova’s team makes can be undone from the job’s history.','r','team'],
+    ['controlplane','Control Plane','build','Running containers across clouds from one place',
+      ['One interface for AWS, GCP and Azure','Move or add a cloud in a few clicks','Reach cloud services without storing keys','PCI, SOC 2 and HIPAA eligible','CLI, API and Terraform'],
+      'Keys never sit in the app; the server holds them, and you type your own.','v','plans'],
+    ['mittwald','mittwald','build','Hosting for agencies in Germany',
+      ['Fast, personal support with no chatbot','Agency-friendly dashboard','Strong CMS performance (TYPO3, WordPress)','GDPR, data stays in Germany','CLI and API'],
+      'Plain, specific error messages instead of "something went wrong".','r','flow'],
+    ['alpic','Alpic','build','One-click hosting for MCP servers',
+      ['Deploy an MCP server in one step','Made for AI tools and agents','Handles auth and scaling','Logs for every tool call','Free to start'],
+      'Every tool your AI team uses is logged in the job, step by step.','t','team'],
+    ['manufact','Manufact','build','Building and running MCP servers',
+      ['Open-source framework for MCP','Cloud to host the servers','Works with many AI clients','Inspector to test tools','Quick start templates'],
+      'Your AI team’s tools are listed per teammate, and you switch them on or off.','t','team'],
+    ['circleci','CircleCI','build','Fast, reliable continuous integration',
+      ['Fast builds with caching and parallel runs','Config as code','Big library of orbs','Insights into flaky tests','Works with GitHub and Bitbucket'],
+      'Kova’s own tests run on every push; nothing ships with a failing test.','r','plans'],
+    ['bitrise','Bitrise','build','CI/CD for mobile apps',
+      ['Made for iOS and Android','Ready steps for signing and stores','Mac machines in the cloud','Release management','Fast mobile caches'],
+      'Kova’s iPhone app is packaged from the same code as the website.','r','plans'],
+    ['cloudbees','CloudBees','build','Enterprise CI on Jenkins',
+      ['Jenkins at enterprise scale','Governance and compliance','Feature management','Supports many teams on one platform','Long track record'],
+      'One activity log for every change, by you, a rule or a teammate.','r','flow'],
+    ['runway','Runway','build','Mobile release management',
+      ['One place to coordinate a release','Checklists for each step to the store','Integrates Jira, GitHub, Slack and CI','Staged rollouts with health checks','Release calendar'],
+      'Checklists inside tasks, and rules that create the next step automatically.','v','flow'],
+    ['cloudflare','Cloudflare','build','A fast, cheap global edge',
+      ['300+ locations near every user','Free tier that covers a lot','DDoS protection built in','Workers for code at the edge','Great DNS'],
+      'Pages load the first screen fast and fetch the rest after, so Kova opens in under 3 seconds.','r','cmd'],
+    ['lovable','Lovable','build','From a prompt to a working app',
+      ['Prompt to full-stack app, fast','Keeps context over many edits','Push the code to your own GitHub','Great for prototypes and MVPs','Non-technical friendly'],
+      'Say what you want and see it before it is saved; nothing is a black box.','r','flow'],
+    ['macaly','Macaly','build','Building websites and apps by chatting',
+      ['Describe the site, get a working one','Hosting included','Edits by conversation','Quick for small businesses','No code to manage'],
+      'Rules are built from a sentence, then shown as steps you can edit.','t','flow'],
+
+    ['sentry','Sentry','ops','Finding and fixing errors fast',
+      ['Set up in minutes','The exact line and context of each error','Groups the same error together','Release tracking','Performance tracing'],
+      '"Why it failed" on every rule: which step, what stopped it, and what to do.','r','flow'],
+    ['datadog','Datadog','ops','Monitoring everything in one place',
+      ['Metrics, logs and traces together','Beautiful dashboards','Hundreds of integrations','Alerts on anomalies','Scales to huge systems'],
+      'Run counts for each rule (ran, skipped, failed) at a glance.','r','flow'],
+    ['posthog','PostHog','ops','All-in-one product analytics',
+      ['Analytics, replays, flags and tests in one','Open source, can self-host','Generous free tier','SQL access to your data','Made for engineers'],
+      'Kova measures itself: taps to log a meal, time to first screen.','r','cmd'],
+    ['grafana','Grafana','ops','Open dashboards on any data',
+      ['Connects to almost any data source','Free and open source','Beautiful, flexible panels','Alerting built in','Huge community'],
+      'Traction shows each post’s numbers next to what people are saying.','r','maya'],
+    ['pagerduty','PagerDuty','ops','Waking the right person when it breaks',
+      ['On-call schedules and escalation','Alerts grouped so you are not spammed','Runbooks attached to incidents','Status pages','Post-incident reviews'],
+      'Notifications only for what you asked for, each rule with its own switch.','r','inbox'],
+    ['montecarlo','Monte Carlo','ops','Catching broken data before people do',
+      ['Finds data problems automatically','Shows where bad data came from','Alerts the owner of the table','Works with Snowflake, BigQuery, dbt','Tracks data reliability over time'],
+      'A rule that points at something deleted says so instead of failing silently.','r','flow'],
+
+    ['intercom','Intercom','crm','AI customer service that resolves on its own',
+      ['Fin AI agent resolves about half of questions','Priced per resolution, not per seat','Inbox, help centre and bots together','Proactive messages to users','Hands off to a person with context'],
+      'Your AI team answers and acts, and hands back to you with context when it should.','r','team'],
+    ['customerio','Customer.io','crm','Messages triggered by what people do',
+      ['Journeys driven by behaviour and events','Waits and branches in the journey','Email, SMS, push and in-app','Uses your own data model','Strong for product-led companies'],
+      'A step can wait ("2 days later, remind me"), so follow-ups happen on their own.','r','flow'],
+    ['hubspot','HubSpot','crm','CRM and marketing in one place',
+      ['Free CRM to start','Marketing, sales and service together','Easy for small teams','Huge app marketplace','Great learning content'],
+      'One place for work, people and follow-ups.','r','actions'],
+    ['salesforce','Salesforce','crm','The most customisable enterprise CRM',
+      ['Customise anything','Biggest ecosystem of apps and partners','Scales to the largest companies','Strong reporting','Flows for complex automation'],
+      'Automations with filters and multiple steps, for the processes you actually have.','r','flow'],
+    ['zohocrm','Zoho CRM','crm','A full CRM at a lower price',
+      ['Good value for the features','Works with 40+ Zoho apps','Blueprints for sales processes','AI assistant Zia','Flexible customisation'],
+      'Everything in one subscription with add-ons, not five bills.','r','plans'],
+    ['pipedrive','Pipedrive','crm','A visual sales pipeline',
+      ['See every deal as a card in its stage','Activity-based selling: always a next step','Simple to adopt','Automations for routine steps','Good mobile app'],
+      'Every finished call gets a next step: a write-up today and a check-in later.','r','actions'],
+    ['close','Close','crm','Calling and emailing from the CRM',
+      ['Built-in calling and SMS','Email sequences','Fast for inside sales','Reports on activity','No add-ons needed for calling'],
+      'Follow-ups are created for you after each call.','r','actions'],
+    ['dayai','Day AI','crm','A CRM that fills itself in from calls and email',
+      ['Builds records from your conversations','No manual data entry','Answers questions about your customers','Summaries of every relationship','Made AI-first'],
+      'Notes from a call become tasks with owners and dates, without typing them twice.','t','actions'],
+    ['clarify','Clarify','crm','An autonomous AI CRM',
+      ['Captures meetings and email on its own','Keeps records updated','Suggests next steps','Modern, fast interface','For startups'],
+      'Next steps come out of your notes; you tick the ones that are real.','t','actions'],
+    ['nutshell','Nutshell','crm','Simple CRM with email marketing for small teams',
+      ['Easy to learn','Email marketing included','Unlimited contacts on plans','Good support','Pipelines and reporting'],
+      'Simple by default, with depth behind a tap.','r','cmd'],
+    ['bigin','Bigin by Zoho','crm','A CRM for very small businesses',
+      ['Pipelines without CRM complexity','Very low price','Mobile app that works well','Built-in telephony','Upgrade path to Zoho CRM'],
+      'A health-only plan to start, with add-ons when you need them.','r','plans'],
+
+    ['klaviyo','Klaviyo','mkt','Email and SMS for online stores',
+      ['Deep store data for segments','Revenue shown per email','Flows for abandoned carts and win-backs','Strong Shopify integration','Predictive analytics'],
+      'Rules with waits act like flows: something happens, wait, then follow up.','r','flow'],
+    ['mailchimp','Mailchimp','mkt','Email marketing everyone has heard of',
+      ['Easy drag-and-drop emails','Big template library','Free plan for small lists','Basic automations','Familiar to most teams'],
+      'Templates you add in one tap, then edit.','r','flow'],
+    ['brevo','Brevo','mkt','Email, SMS and WhatsApp priced by sends',
+      ['Pay for messages, not contacts','Email, SMS, WhatsApp in one','Transactional email too','Good for growing lists','Marketing automation built in'],
+      'Pay for what you use: health first, add Training or Work OS when you want them.','r','plans'],
+    ['beehiiv','beehiiv','mkt','Newsletters that make money',
+      ['Built for newsletter growth','Ad network and paid subscriptions','Referral programme built in','Clean writing experience','Strong analytics'],
+      'Maya reads the comments and tells you what people want next.','r','maya'],
+    ['kajabi','Kajabi','mkt','All-in-one for creators selling courses',
+      ['Courses, community and payments together','Email marketing included','Funnels and landing pages','No tech stitching','Good for coaches'],
+      'Content, posting and comment insights all in one place.','r','maya'],
+    ['typefully','Typefully','mkt','Writing and scheduling posts for X and LinkedIn',
+      ['Distraction-free writing','Schedule threads and posts','Analytics on what worked','AI help with hooks','Team review before posting'],
+      'Send to Maya: she writes the caption, you approve, she posts at the time you pick.','r','maya'],
+    ['orshot','Orshot','mkt','Generating marketing images from templates',
+      ['Templates filled by API','Consistent branded visuals at scale','Works with automation tools','Fast rendering','No designer needed for variants'],
+      'One video, cut for each platform’s shape in the Studio.','t','maya'],
+    ['supermetrics','Supermetrics','mkt','Pulling marketing data into reports',
+      ['100+ marketing sources','Into Sheets, Looker Studio or a warehouse','Scheduled refreshes','Saves hours of copy-paste','Trusted by agencies'],
+      'Post numbers are pulled back onto each post on a timer.','r','maya'],
+    ['pushwoosh','Pushwoosh','mkt','Push notifications and journeys',
+      ['Push, in-app and email together','Customer journey builder','Segments from app events','A/B testing','Good for mobile apps'],
+      'Notifications from your AI team and rules, with your permission.','r','inbox'],
+    ['bird','Bird','mkt','Messaging on every channel at low cost',
+      ['SMS, WhatsApp, email in one API','Lower prices than many rivals','Global reach','Inbox for conversations','Flows for automated replies'],
+      'Your team reports back where you are: in Kova, and as a notification.','r','inbox'],
+
+    ['extend','Extend','data','Turning messy documents into clean data',
+      ['High accuracy on complex documents','Handles formats OCR tools miss','Human review only where it is needed','Low-code setup for non-developers','Live in weeks, not months'],
+      'Lab reports read into numbers in Labs; you check before they are saved.','v','team'],
+    ['weld','Weld','data','Data pipelines and syncing in one place',
+      ['ELT, modelling and reverse ETL together','Easy for people light on SQL','Many sources, including Sheets and APIs','Flat, predictable price','Sends data back into business tools'],
+      'Readings from your watch and phone land in one place and feed the plan.','r','cmd'],
+    ['amperity','Amperity','data','Knowing that many records are one customer',
+      ['Identity resolution across messy records','Used by 400+ brands','Customer data ready for marketing','AI agent turns questions into segments','Usage-based pricing'],
+      'The AI team answers questions about your own data in plain words.','v','team'],
+    ['dbt','dbt','data','Data transformation as code',
+      ['SQL models with version control','Tests on your data','Docs and lineage generated','Huge community','Works with every warehouse'],
+      'Every feature in Kova ships with a test that proves it works.','r','flow'],
+    ['paperoffice','PaperOffice','data','Filing and finding documents with AI',
+      ['Scans and sorts documents','Search inside every file','Archive that meets German rules','Works offline','One-time licence option'],
+      'Files and folders in the Work OS, searchable from the search bar.','t','cmd'],
+    ['cognito','Cognito Forms','data','Powerful forms at a low price',
+      ['Calculations and conditional logic','Take payments in forms','Repeating sections','Workflows after submit','Cheap compared with rivals'],
+      'Rules with conditions: only continue if it is what you care about.','r','flow'],
+    ['docusign','Docusign','data','The standard for e-signatures',
+      ['Legally accepted almost everywhere','Templates for repeat agreements','Signing order and reminders','Audit trail on every envelope','Integrates with CRMs'],
+      'Anything that leaves Kova waits for your OK, and the log shows who approved it.','r','team'],
+    ['firecrawl','Firecrawl','data','Turning websites into clean text for AI',
+      ['Clean markdown from any page','Crawls whole sites','Handles JavaScript pages','Simple API','Made for AI apps'],
+      'Ravi reads any link you send and comes back with what it says.','r','team'],
+    ['tinyfish','TinyFish','data','AI web agents at scale',
+      ['Agents that browse and act on sites','Built for many sites at once','Handles logins and forms','Structured results','Enterprise grade'],
+      'Your team researches the web on a timer and tells you at the time you ask.','t','team'],
+    ['latchbio','LatchBio','data','Bioinformatics without the infrastructure',
+      ['No-code interfaces over scientific pipelines','Runs AlphaFold, RNA-seq and more in a browser','Serverless storage and compute','Versioned, reproducible workflows','Scientists and engineers in one place'],
+      'Health numbers are explained in plain words, next to the science.','v','team'],
+
+    ['slack','Slack','talk','Team chat with searchable history',
+      ['Channels by topic','Search all past messages','Thousands of integrations','Huddles for quick calls','Workflow builder'],
+      'Talk to your AI team in one box; @name sends it to that teammate.','r','team'],
+    ['calendly','Calendly','talk','Booking meetings without the back-and-forth',
+      ['Share a link, they pick a time','Checks your calendars for clashes','Reminders cut no-shows','Routing to the right person','Buffers between meetings'],
+      'Before every call your team preps you: who, what to raise, what to bring.','r','prep'],
+    ['fireflies','Fireflies','talk','Notes and action items from every call',
+      ['Records and transcribes calls','Pulls out action items','Search across all your calls','Pushes notes to the CRM','Topic and sentiment tracking'],
+      'Pull action items from a call’s notes: owner, due date, and the decisions kept apart.','r','actions']
+  ];
+  var L=D.map(function(x){ return {id:x[0],n:x[1],g:x[2],grp:G[x[2]],best:x[3],why:x[4],take:x[5],ev:x[6],go:x[7]}; });
+  var EV={r:'From user reviews and independent write-ups',v:'Mostly the company’s own claims',t:'Little public information yet'};
+
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function all(){ return L.slice(); }
+  function get(id){ return L.filter(function(a){ return a.id===id; })[0]||null; }
+  /* the best few apps for something, by the words in it */
+  var STOP={the:1,a:1,an:1,and:1,or:1,for:1,to:1,of:1,in:1,on:1,my:1,me:1,i:1,is:1,best:1,tool:1,tools:1,app:1,apps:1,what:1,which:1,with:1,do:1,should:1,use:1};
+  function words(t){ return String(t||'').toLowerCase().replace(/[^a-z0-9 ]+/g,' ').split(/\s+/).filter(function(w){ return w.length>1&&!STOP[w]; }); }
+  function recommend(q,n){
+    var qw=words(q); if(!qw.length) return [];
+    var sc=L.map(function(a){
+      var name=a.n.toLowerCase(), hay=(a.grp+' '+a.best+' '+a.why.join(' ')+' '+a.take).toLowerCase(), s=0;
+      qw.forEach(function(w){
+        if(name===w||name.split(/[ .()]/).indexOf(w)>=0) s+=10;
+        if(a.best.toLowerCase().indexOf(w)>=0) s+=3;
+        if(a.grp.toLowerCase().indexOf(w)>=0) s+=2;
+        if(hay.indexOf(w)>=0) s+=1;
+      });
+      if(a.ev==='r') s+=.2;
+      return {a:a,s:s};
+    }).filter(function(x){ return x.s>=2; }).sort(function(x,y){ return y.s-x.s; });
+    return sc.slice(0,n||3).map(function(x){ return x.a; });
+  }
+
+  /* the pop-up: groups with a count, each app a row with a little arrow;
+     open it for the five reasons, what Kova took, and a button to try it */
+  var S={open:{},q:''};
+  function open(id){
+    if(!window.openSheet) return;
+    S.q=''; S.open={};
+    if(id){ var a=get(id); if(a){ S.open[a.id]=1; S.g=a.g; } }
+    openSheet('<div class="grab"></div><div class="kap" id="kapRoot"></div>');
+    draw();
+    if(id) setTimeout(function(){ var r=document.querySelector('[data-app="'+id+'"]'); if(r&&r.scrollIntoView) r.scrollIntoView({block:'center'}); },60);
+  }
+  function row(a){
+    var on=!!S.open[a.id];
+    return '<div class="kap-app'+(on?' on':'')+'" data-app="'+a.id+'">'
+      +'<button class="kap-hd" data-ap="tog" data-v="'+a.id+'" aria-expanded="'+on+'"><span><b>'+esc(a.n)+'</b><small>'+esc(a.best)+'</small></span><i aria-hidden="true">⌄</i></button>'
+      +(on?'<div class="kap-bd"><ol>'+a.why.map(function(w){ return '<li>'+esc(w)+'</li>'; }).join('')+'</ol>'
+        +'<div class="kap-take"><span>What Kova took</span>'+esc(a.take)+'</div>'
+        +'<div class="kap-ev">'+esc(EV[a.ev])+'</div>'
+        +(a.go&&GO[a.go]?'<button class="kap-go" data-ap="go" data-v="'+a.go+'">'+esc(GO[a.go])+' ↗</button>':'')+'</div>':'')
+      +'</div>';
+  }
+  function draw(){
+    var el=document.getElementById('kapRoot'); if(!el) return;
+    var q=S.q.trim().toLowerCase();
+    var list=q?L.filter(function(a){ return (a.n+' '+a.grp+' '+a.best+' '+a.why.join(' ')+' '+a.take).toLowerCase().indexOf(q)>=0; }):L;
+    var h='<div class="kap-title">How the best tools do it</div>'
+      +'<div class="kap-sub">'+L.length+' apps from the automation and workflow shelves, what each is best at, and what Kova does because of it.</div>'
+      +'<input class="kap-q" id="kapQ" type="search" placeholder="Search apps or a need, like “follow-ups”" value="'+esc(S.q)+'" autocomplete="off">';
+    if(q){
+      h+=list.length?list.map(row).join(''):'<div class="kap-sub">Nothing matches “'+esc(S.q)+'”.</div>';
+    }else Object.keys(G).forEach(function(k){
+      var g=L.filter(function(a){ return a.g===k; }), on=S.g===k;
+      h+='<div class="kap-grp'+(on?' on':'')+'"><button class="kap-gh" data-ap="grp" data-v="'+k+'" aria-expanded="'+on+'"><span>'+esc(G[k])+'</span><em>'+g.length+'</em><i aria-hidden="true">⌄</i></button>'
+        +(on?'<div class="kap-gb">'+g.map(row).join('')+'</div>':'')+'</div>';
+    });
+    el.innerHTML=h;
+    var qi=document.getElementById('kapQ');
+    qi.oninput=function(){ S.q=qi.value; var p=qi.selectionStart; draw(); var n=document.getElementById('kapQ'); n.focus(); try{ n.setSelectionRange(p,p); }catch(e){} };
+    el.onclick=function(e){
+      var b=e.target.closest('[data-ap]'); if(!b) return;
+      var v=b.dataset.v;
+      if(b.dataset.ap==='grp'){ S.g=S.g===v?'':v; draw(); }
+      else if(b.dataset.ap==='tog'){ S.open[v]=!S.open[v]; draw(); }
+      else if(b.dataset.ap==='go') go2(v);
+    };
+  }
+  function go2(k){
+    if(window.closeSheet) closeSheet();
+    var nav=function(id){ if(window.go) try{ go(id); }catch(e){} };
+    setTimeout(function(){
+      if(k==='flow'){ nav('workauto'); if(window.KovaFlow) KovaFlow.builder({trigger:'meeting_ended',tcfg:{},filters:[],steps:[{a:'create_task',cfg:{name:'Write up {name}',due:'today'}}]}); }
+      else if(k==='cmd'){ if(window.KovaCmd) KovaCmd.open(); }
+      else if(k==='actions'||k==='prep') nav('workmeetings');
+      else if(k==='team'||k==='maya') nav('workteam');
+      else if(k==='inbox') nav('workauto');
+      else if(k==='plans'){ if(window.KovaBilling&&KovaBilling.paywall) KovaBilling.paywall(); }
+    },220);
+  }
+
+  return {all:all,get:get,recommend:recommend,open:open,GROUPS:G,EV:EV,GO:GO,_S:S};
+})();
+
+</script>
+<script id="p08-cmdk">
+/* =====================================================================
+   KovaCmd (p21) - one search bar for all of Kova, the way Linear,
+   Superhuman and Raycast do it.
+
+   Open it with ⌘K / Ctrl+K anywhere, or the search icon in a screen's
+   header (those icons did nothing before). Type and it finds:
+     tasks, projects, goals, meetings, files, your AI teammates,
+     every screen, and the 86 apps in "How the best tools do it".
+   And it acts on the line you typed:
+     "Call Sam tomorrow !high #Launch"   -> a task, due tomorrow, High, in Launch
+     "Ravi, find three venues by 5pm"   -> asks your team (back at 5pm)
+     "When a call ends, remind me ..."   -> a rule, shown before it is saved
+   Arrow keys, Enter and Esc; the last things you opened come first.
+   ===================================================================== */
+window.KovaCmd=(function(){
+  'use strict';
+  var DAY=864e5;
+  var S={on:false,q:'',sel:0,rows:[],el:null,last:null};
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function W(){ return window.WorkOS||null; }
+  function nav(id){ if(window.go) try{ go(id); }catch(e){} }
+  function recent(){ var r=window.KP&&KP.get('cmd_recent'); return Array.isArray(r)?r:[]; }
+  function remember(row){
+    if(!window.KP||!row||!row.key||row.kind==='do') return;
+    var r=recent().filter(function(x){ return x.key!==row.key; });
+    r.unshift({key:row.key,t:row.t,s:row.s||'',kind:row.kind,ref:row.ref||''});
+    KP.set('cmd_recent',r.slice(0,8));
+  }
+
+  /* every screen worth going to, and the words people use for it */
+  var SCREENS=[
+    ['home','Today','home start dashboard'],['move','Workout','train gym exercise lift'],['fuel','Fuel','food meals nutrition calories protein log'],
+    ['recipes','Recipes','cook meal ideas'],['sleep','Sleep','bed night rest'],['naps','Naps','nap'],['sounds','Sleep sounds','noise rain music'],
+    ['vitals','Vitals','heart hrv health readiness'],['stress','Stress','calm breathe'],['hrv','HRV','heart rate variability'],['watch','Your watch','apple watch wearable connect'],
+    ['healthspan','Health Span','longevity age'],['scanner','Health check','scan body'],['maint','Your numbers','weight body fat progress photos'],
+    ['prs','Personal records','pr best lifts'],['recovery','Recovery','rest sore'],['zone2','Easy cardio','zone 2 run walk'],['bedtime','Bedtime','wind down'],
+    ['learn','Learn','study school'],['cards','Flashcards','study memorise'],['notebooks','Notebooks','notes study'],['focus','Focus session','pomodoro deep work timer'],
+    ['chat','Ask Kova','chat assistant ai question'],['work','Work OS','studio business work'],['worktoday','Work today','agenda due today'],
+    ['worktasks','Tasks','to do todo board kanban'],['workprojects','Projects','project'],['workgoals','Goals and metrics','goal kpi metric'],
+    ['workmeetings','Meetings','calls calendar zoom meet'],['workteam','Your AI team','agents crew employees assistant maya ravi theo'],
+    ['workauto','Automations','rules workflows zapier recipes when then'],['workfiles','Files','documents folders uploads'],
+    ['workintegrations','Integrations','connect apps connections'],['workactivity','Activity','log history audit'],['workprofile','Business profile','brand company'],
+    ['workinbound','Inbound','leads inbox'],['profile','Profile','account me'],['settings','Settings','preferences appearance theme dark light notifications'],
+    ['plan','Plans','subscription pricing upgrade trial billing']
+  ];
+
+  /* ---------------- matching ---------------- */
+  function score(q,text,words){
+    if(!q) return 1;
+    var t=String(text||'').toLowerCase(), w=String(words||'').toLowerCase();
+    if(t===q) return 120;
+    if(t.indexOf(q)===0) return 100;
+    if((' '+t).indexOf(' '+q)>=0) return 80;
+    if(t.indexOf(q)>=0) return 55;
+    if((' '+w).indexOf(' '+q)>=0) return 45;
+    var parts=q.split(/\s+/).filter(Boolean);
+    if(parts.length>1&&parts.every(function(p){ return (t+' '+w).indexOf(p)>=0; })) return 40;
+    /* letters in order: "wkmt" finds "Work meetings" */
+    var i=0; for(var k=0;k<t.length&&i<q.length;k++) if(t[k]===q[i]) i++;
+    return i===q.length&&q.length>=3?15:0;
+  }
+
+  /* ---------------- reading a line as a task ---------------- */
+  var DOW=['sun','mon','tue','wed','thu','fri','sat'];
+  function quick(line,now){
+    var t=String(line||'').trim(), due=null, pri='', proj=null, m, base=new Date(now||Date.now()); base.setHours(0,0,0,0);
+    var d0=base.getTime();
+    if((m=t.match(/\s!(critical|urgent|high|medium|low|!{1,3})\b|\s!(!{0,2})$/i))){
+      var v=(m[1]||m[2]||'').toLowerCase();
+      pri=v==='critical'||v==='urgent'||v==='!!!'||v==='!!'?'Critical':v==='high'||v==='!'||v===''?'High':v==='low'?'Low':'Medium';
+      t=t.replace(m[0],' ');
+    }
+    if((m=t.match(/\s#([\w-]+)/))){
+      var name=m[1].toLowerCase().replace(/-/g,' ');
+      proj=W()?W().list('projects').filter(function(p){ return String(p.name||'').toLowerCase().indexOf(name)===0; })[0]||null:null;
+      if(proj) t=t.replace(m[0],' ');
+    }
+    if((m=t.match(/\s(?:due\s+|by\s+|on\s+)?(today|tonight|tomorrow|tmrw)\b/i))){ due=/^tom|tmrw/i.test(m[1])?d0+DAY:d0; t=t.replace(m[0],' '); }
+    else if((m=t.match(/\s(?:due\s+|by\s+|on\s+)?(?:next\s+)?(mon|tue|wed|thu|fri|sat|sun)[a-z]*\b/i))){
+      var want=DOW.indexOf(m[1].toLowerCase().slice(0,3)), add=(want-base.getDay()+7)%7||7;
+      if(/next\s/i.test(m[0])&&add<7) add+=7;
+      due=d0+add*DAY; t=t.replace(m[0],' ');
+    }
+    else if((m=t.match(/\s(?:due\s+)?in\s+(\d+)\s*(d|days?|w|weeks?)\b/i))){ due=d0+(+m[1])*(/^w/i.test(m[2])?7:1)*DAY; t=t.replace(m[0],' '); }
+    else if((m=t.match(/\s(?:due\s+)?next week\b/i))){ due=d0+7*DAY; t=t.replace(m[0],' '); }
+    t=t.replace(/^(?:new\s+)?(?:task|todo|to-do|add)\s*:?\s+/i,'').replace(/\s+/g,' ').trim();
+    return {name:t?t.charAt(0).toUpperCase()+t.slice(1):'',due:due,priority:pri||'Medium',project:proj};
+  }
+  function dueText(t){
+    if(!t) return 'no date';
+    var b=new Date(); b.setHours(0,0,0,0);
+    if(t===b.getTime()) return 'today';
+    if(t===b.getTime()+DAY) return 'tomorrow';
+    return new Date(t).toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});
+  }
+  function looksLikeRule(q){ return /^(when|whenever|every|each|after|before|if|on weekdays|\d+\s*(?:min|minutes|hours?)\s+before)\b/i.test(q)&&/,|then|remind|notify|ask|create|make|wait/i.test(q); }
+  function teammateIn(q){
+    var C=window.KovaCrew; if(!C||!C.emps) return null;
+    var m=q.match(/^@?([A-Za-z]+)\s*[,:]/)||q.match(/^@([A-Za-z]+)\s/);
+    if(!m) return null;
+    var n=m[1].toLowerCase();
+    return C.emps().filter(function(e){ return e.n.toLowerCase()===n; })[0]||null;
+  }
+
+  /* ---------------- the rows ---------------- */
+  function build(q0){
+    var q=String(q0||'').trim(), ql=q.toLowerCase(), rows=[], w=W();
+    function add(kind,group,t,s,key,run,sc,ref){ rows.push({kind:kind,group:group,t:t,s:s||'',key:key,run:run,sc:sc,ref:ref||''}); }
+
+    /* acting on the line */
+    if(q){
+      var mate=teammateIn(q);
+      if(looksLikeRule(q)&&window.KovaFlow){
+        add('do','Do','Make a rule: “'+q+'”','see it before it is saved','do:rule',function(){ nav('workauto'); setTimeout(function(){ KovaFlow.fromWords(q); },120); },1000);
+      }
+      if(mate||/^(ask|have|get)\s+/i.test(q)||/\b(research|find out|look into|summari[sz]e|brief me|tell me)\b/i.test(q)){
+        var text=mate?q.replace(/^@?[A-Za-z]+\s*[,:]?\s*/,''):q;
+        add('do','Do','Ask '+(mate?mate.n:'your team')+': “'+text+'”',mate?mate.title:'the right teammate takes it','do:ask',function(){ ask(mate,text); },mate?990:900);
+      }
+      if(w){
+        var tk=quick(q);
+        if(tk.name&&!looksLikeRule(q)) add('do','Do','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },mate?500:950);
+      }
+      if(window.KovaApps){
+        var rec=KovaApps.recommend(q,1)[0];
+        if(rec&&/\b(best|tool|app|like|alternative|vs|compare)\b/i.test(q)) add('do','Do','How '+rec.n+' does it','what it does best, and what Kova took','do:app',function(){ KovaApps.open(rec.id); },700);
+      }
+    }else{
+      recent().forEach(function(r,i){ add(r.kind,'Recent',r.t,r.s,r.key,function(){ reopen(r); },200-i,r.ref); });
+      add('do','Do','New task','type it, with a day or !high','do:newtask',function(){ setQ('task '); },150);
+      add('do','Do','Ask your AI team','type a name and what you need, like “Ravi, research…”','do:newask',function(){ setQ('Ravi, '); },149);
+      add('do','Do','New rule','“When a call ends, remind me to write it up”','do:newrule',function(){ nav('workauto'); if(window.KovaFlow) setTimeout(function(){ KovaFlow.builder({trigger:'meeting_ended',tcfg:{},filters:[],steps:[{a:'create_task',cfg:{name:'Write up {name}',due:'today'}}]}); },120); },148);
+    }
+
+    /* screens */
+    SCREENS.forEach(function(s){ var sc=score(ql,s[1],s[2]); if(sc) add('screen','Go to',s[1],'','s:'+s[0],function(){ nav(s[0]); },sc*(q?1:0.5),s[0]); });
+    if(w){
+      w.list('items').forEach(function(i){
+        var sc=score(ql,i.name,(i.notes||'')+' '+(i.status||'')); if(!sc||!q) return;
+        add('task','Tasks',i.name,[i.status,i.due?'due '+dueText(i.due):''].filter(Boolean).join(' · '),'i:'+i.id,function(){ openTask(i.id); },sc+(i.status==='Completed'?-20:5),i.id);
+      });
+      w.list('projects').forEach(function(p){ var sc=score(ql,p.name); if(sc&&q) add('project','Projects',p.name,'project','p:'+p.id,function(){ nav('workprojects'); },sc,p.id); });
+      w.list('goals').forEach(function(g){ var sc=score(ql,g.name||g.title); if(sc&&q) add('goal','Goals',g.name||g.title,'goal','g:'+g.id,function(){ nav('workgoals'); },sc,g.id); });
+      w.list('meetings').forEach(function(m){
+        var sc=score(ql,m.title,(m.attendees||'')+' '+(m.notes||'')); if(!sc||!q) return;
+        add('meeting','Meetings',m.title,[m.attendees,m.at?new Date(m.at).toLocaleString([],{weekday:'short',hour:'numeric',minute:'2-digit'}):''].filter(Boolean).join(' · '),'m:'+m.id,function(){ openMeeting(m.id); },sc,m.id);
+      });
+      w.list('files').concat(w.list('folders')).forEach(function(f){ var sc=score(ql,f.name||f.title); if(sc&&q) add('file','Files',f.name||f.title,'file','f:'+f.id,function(){ nav('workfiles'); },sc,f.id); });
+    }
+    if(window.KovaCrew&&KovaCrew.emps) KovaCrew.emps().forEach(function(e){
+      var sc=score(ql,e.n,e.title+' '+(e.job||'')); if(!sc||!q) return;
+      add('mate','Your AI team',e.n,e.title,'e:'+e.id,function(){ nav('workteam'); if(KovaCrew.detail) setTimeout(function(){ try{ KovaCrew.detail(e.id); }catch(x){} },120); },sc,e.id);
+    });
+    if(window.KovaApps&&q.length>=2) KovaApps.all().forEach(function(a){
+      var sc=score(ql,a.n,a.grp+' '+a.best); if(sc>=45) add('app','How the best tools do it',a.n,a.best,'a:'+a.id,function(){ KovaApps.open(a.id); },sc-10,a.id);
+    });
+
+    /* best first, a few of each kind, actions on top, then the groups in
+       the order of their best match (or a fixed order before you type) */
+    rows.sort(function(a,b){ return b.sc-a.sc; });
+    var per={}, kept=[], seen=[];
+    rows.forEach(function(r){
+      per[r.group]=(per[r.group]||0)+1;
+      if(per[r.group]<=(r.group==='Do'?4:(r.group==='Go to'&&!q?6:5))){ kept.push(r); if(seen.indexOf(r.group)<0) seen.push(r.group); }
+    });
+    var FIXED=['Do','Recent','Go to'];
+    function rank(g){ if(g==='Do') return 0; if(g==='Recent') return 1; return 2+(q?seen.indexOf(g):FIXED.indexOf(g)); }
+    var out=[];
+    seen.slice().sort(function(a,b){ return rank(a)-rank(b); }).forEach(function(g){ kept.forEach(function(r){ if(r.group===g) out.push(r); }); });
+    return out.slice(0,30);
+  }
+
+  /* ---------------- doing things ---------------- */
+  function makeTask(tk){
+    var w=W(); if(!w||!tk.name) return null;
+    var it=w.create('items',{name:tk.name,status:'Not Started',priority:tk.priority||'Medium',due:tk.due,projectId:tk.project?tk.project.id:undefined,notes:'',checklist:[]},'user');
+    if(it&&it.id){
+      say('Task added'+(tk.due?', due '+dueText(tk.due):'')+'.');
+      remember({key:'i:'+it.id,t:it.name,s:'task',kind:'task',ref:it.id});
+      if(window.__workDraw) try{ __workDraw.refresh(); }catch(e){}
+    }
+    return it;
+  }
+  function ask(mate,text){
+    var C=window.KovaCrew, A=window.KovaAsk;
+    var e=mate||(C&&C.route?(C.route(text)||{}).emp:null);
+    if(A&&A.wants&&A.wants(text)) return A.send(e,text).catch(function(){});
+    if(C&&e&&C.start){ C.start(e,text,'you'); say(e.n+' is on it.'); nav('workteam'); return; }
+    nav('workteam'); say('Set up your AI team first.');
+  }
+  function openTask(id){ if(window.__workDraw&&__workDraw.open){ __workDraw.open(id); } else nav('worktasks'); }
+  function openMeeting(id){ if(window.__workMeet&&__workMeet.open) __workMeet.open(id); else nav('workmeetings'); }
+  function reopen(r){
+    if(r.kind==='task') return openTask(r.ref);
+    if(r.kind==='meeting') return openMeeting(r.ref);
+    if(r.kind==='screen') return nav(r.ref);
+    if(r.kind==='app'&&window.KovaApps) return KovaApps.open(r.ref);
+    if(r.kind==='mate') return nav('workteam');
+    if(r.kind==='project') return nav('workprojects');
+    if(r.kind==='goal') return nav('workgoals');
+    if(r.kind==='file') return nav('workfiles');
+  }
+
+  /* ---------------- the bar ---------------- */
+  function mount(){
+    if(S.el) return S.el;
+    var el=document.createElement('div');
+    el.className='kcmd'; el.id='kcmd'; el.hidden=true;
+    el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Search Kova');
+    el.innerHTML='<div class="kcmd-bg" data-kc="close"></div><div class="kcmd-p">'
+      +'<div class="kcmd-in"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>'
+      +'<input id="kcmdQ" type="text" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="Search, or type a task, a question for your team, or a rule" aria-controls="kcmdL" role="combobox" aria-expanded="true">'
+      +'<kbd>esc</kbd></div><div class="kcmd-l" id="kcmdL" role="listbox"></div>'
+      +'<div class="kcmd-f"><span>↑↓ move</span><span>↵ open</span><span>⌘K anywhere</span></div></div>';
+    document.body.appendChild(el);
+    S.el=el;
+    var inp=el.querySelector('#kcmdQ');
+    inp.addEventListener('input',function(){ S.q=inp.value; S.sel=0; paint(); });
+    inp.addEventListener('keydown',function(e){
+      if(e.key==='ArrowDown'){ e.preventDefault(); S.sel=Math.min(S.rows.length-1,S.sel+1); paint(true); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); S.sel=Math.max(0,S.sel-1); paint(true); }
+      else if(e.key==='Enter'){ e.preventDefault(); pick(S.sel); }
+      else if(e.key==='Escape'){ e.preventDefault(); close(); }
+    });
+    el.addEventListener('click',function(e){
+      if(e.target.closest('[data-kc="close"]')) return close();
+      var r=e.target.closest('[data-ki]'); if(r) pick(+r.dataset.ki);
+    });
+    el.addEventListener('mousemove',function(e){ var r=e.target.closest('[data-ki]'); if(r&&+r.dataset.ki!==S.sel){ S.sel=+r.dataset.ki; paint(true); } });
+    return el;
+  }
+  var ICON={task:'i-check',meeting:'i-video',mate:'i-sparkles',project:'i-layout-grid',goal:'i-target',file:'i-clipboard-text',screen:'i-arrow-right',app:'i-workflow',do:'i-plus'};
+  function paint(keepList){
+    var L=S.el&&S.el.querySelector('#kcmdL'); if(!L) return;
+    if(!keepList) S.rows=build(S.q);
+    var g='', h='';
+    S.rows.forEach(function(r,i){
+      if(r.group!==g){ g=r.group; h+='<div class="kcmd-g" role="presentation">'+esc(g)+'</div>'; }
+      h+='<div class="kcmd-r'+(i===S.sel?' on':'')+'" role="option" id="kcmdR'+i+'" aria-selected="'+(i===S.sel)+'" data-ki="'+i+'">'
+        +'<svg class="ic" aria-hidden="true"><use href="#'+(ICON[r.kind]||'i-arrow-right')+'"/></svg>'
+        +'<span><b>'+esc(r.t)+'</b>'+(r.s?'<small>'+esc(r.s)+'</small>':'')+'</span></div>';
+    });
+    if(!S.rows.length) h='<div class="kcmd-none">Nothing found. Press ↵ to make it a task.</div>';
+    L.innerHTML=h;
+    var inp=S.el.querySelector('#kcmdQ'); if(inp) inp.setAttribute('aria-activedescendant','kcmdR'+S.sel);
+    var on=L.querySelector('.kcmd-r.on'); if(on&&on.scrollIntoView&&keepList) on.scrollIntoView({block:'nearest'});
+  }
+  function pick(i){
+    var r=S.rows[i];
+    if(!r){ var tk=quick(S.q); if(tk.name){ close(); makeTask(tk); } return; }
+    if(r.kind!=='do') remember(r);
+    var keep=r.key==='do:newtask'||r.key==='do:newask';
+    if(!keep) close();
+    try{ r.run(); }catch(e){ console.warn('cmd',e); }
+  }
+  function setQ(v){ var inp=S.el&&S.el.querySelector('#kcmdQ'); if(!inp) return; inp.value=v; S.q=v; S.sel=0; paint(); inp.focus(); }
+  function open(q){
+    mount();
+    S.last=document.activeElement;
+    S.el.hidden=false; S.on=true; document.body.classList.add('kcmd-open');
+    setQ(q||'');
+    track('cmd_open');
+  }
+  function close(){
+    if(!S.el||!S.on) return;
+    S.el.hidden=true; S.on=false; document.body.classList.remove('kcmd-open');
+    try{ if(S.last&&S.last.focus) S.last.focus(); }catch(e){}
+  }
+  function toggle(){ S.on?close():open(); }
+  function track(n){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,{}); }catch(e){} }
+
+  /* ⌘K / Ctrl+K anywhere */
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&String(e.key).toLowerCase()==='k'){ e.preventDefault(); toggle(); }
+  });
+  /* the header search icons that did nothing now open it; Work gets one too */
+  function wire(){
+    document.querySelectorAll('.hdr-r .iconbtn').forEach(function(b){
+      if(b.id||b.dataset.kcmd||b.getAttribute('onclick')||b.dataset.go) return;
+      var u=b.querySelector('use'); if(!u||(u.getAttribute('href')||'')!=='#i-search') return;
+      b.dataset.kcmd='1'; b.setAttribute('aria-label','Search Kova'); b.setAttribute('role','button'); if(!b.hasAttribute('tabindex')) b.tabIndex=0;
+      b.addEventListener('click',function(){ open(); });
+      b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
+    });
+    var wk=document.querySelector('#s-work .hdr-r');
+    if(wk&&!wk.querySelector('[data-kcmd]')){
+      var b=document.createElement('div');
+      b.className='iconbtn'; b.dataset.kcmd='1'; b.setAttribute('role','button'); b.tabIndex=0; b.setAttribute('aria-label','Search Kova');
+      b.innerHTML='<svg class="ic"><use href="#i-search"/></svg>';
+      b.addEventListener('click',function(){ open(); });
+      b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
+      wk.insertBefore(b,wk.firstChild);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
+
+  return {open:open,close:close,toggle:toggle,build:build,quick:quick,score:score,pick:pick,isOpen:function(){ return S.on; },_S:S,SCREENS:SCREENS};
+})();
+
+</script>
+<script id="p08-flow">
+/* =====================================================================
+   KovaFlow (p21) - Work OS automations that do what the best tools do,
+   built on the engine that is already there (WorkAuto).
+
+   From Zapier and Make: a rule is a chain of steps, not one action, and
+   you can test it before it is live ("Test it" shows exactly what each
+   step would do, without writing anything).
+   From Customer.io and Intercom: a step can WAIT ("2 days later, remind
+   me"), so follow-ups happen on their own.
+   From n8n and Workato: rules are data you can read, and every run is in
+   the history with the reason it ran, skipped or failed.
+   From Linear and Superhuman: say it in words. "When a call ends, make a
+   write-up task, wait 2 days, then remind me" becomes the rule.
+   From Fireflies and Otter: the notes from a call become action items
+   with an owner and a date, and the decisions are kept apart.
+   From Calendly and Granola: before every call, your AI team preps you.
+
+   Everything is stored in the existing WorkOS 'automations' collection,
+   in its existing shape (trigger, condition, action), so the engine,
+   the run history and "Why it failed" all keep working:
+     condition 'all'  ccfg {list:[{c,cfg}...]}   every filter must pass
+     action    'flow' acfg {steps:[{a,cfg}...]}   the steps, in order
+   ===================================================================== */
+window.KovaFlow=(function(){
+  'use strict';
+  if(!window.WorkOS||!window.WorkAuto) return null;
+  var W=WorkOS, U=WorkAuto, MIN=6e4, HOUR=36e5, DAY=864e5;
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function $(id){ return document.getElementById(id); }
+  function clone(o){ return JSON.parse(JSON.stringify(o==null?{}:o)); }
+  var NOW=null;
+  function now(){ return NOW?NOW():Date.now(); }
+  function A(){ return window.WorkAI||null; }
+  function C(){ return window.KovaCrew||null; }
+  function cap(s){ s=String(s||'').trim(); return s.charAt(0).toUpperCase()+s.slice(1); }
+  function dayKey(t){ var d=new Date(t); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  function clock(t){ return new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); }
+  function whenLabel(t){
+    if(!t) return '';
+    var d=new Date(t), today=new Date(now()).toDateString(), tm=new Date(now()+DAY).toDateString();
+    return (d.toDateString()===today?'today ':d.toDateString()===tm?'tomorrow ':d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'})+' ')+clock(t);
+  }
+  function dueOf(v){ var a=A(); return a&&a.when?a.when(v||'+3d'):W.startOfDay()+3*DAY; }
+
+  /* the words a step can put in its text */
+  function fill(t,ev){
+    var x=(ev&&ev.after)||{};
+    return String(t||'').replace(/\{name\}/g,x.name||x.title||'')
+      .replace(/\{who\}/g,x.attendees||'')
+      .replace(/\{when\}/g,x.at?whenLabel(x.at):(x.due?whenLabel(x.due):''))
+      .replace(/\{notes\}/g,String(x.notes||'').slice(0,600))
+      .replace(/\{prep\}/g,String(x.prep||'').slice(0,600)).replace(/\s+/g,' ').trim();
+  }
+  function isItem(ev){ return !!(ev&&ev.after&&ev.after.id&&W.find('items',ev.after.id)); }
+
+  /* ---------------- more triggers ---------------- */
+  var T=U.TRIGGERS;
+  T.meeting_soon={n:'A meeting is about to start',
+    fields:[{k:'min',n:'minutes before',opts:['10','30','60','120']}],
+    match:function(ev,cfg){
+      if(ev.type!=='sweep.meeting_soon'||!ev.after) return false;
+      var lead=+(cfg.min||30);
+      if(ev.mins>lead) return false;
+      return once(cfg,ev.after.id+':'+ev.after.at);
+    }};
+  T.schedule={n:'Every day at a time',
+    fields:[{k:'time',n:'at',type:'time',ph:'08:00'},{k:'days',n:'on',opts:['every day','weekdays','mondays','fridays']}],
+    match:function(ev,cfg){
+      if(ev.type!=='sweep.tick') return false;
+      var t=ev.at, d=new Date(t), hm=String(cfg.time||'08:00').split(':');
+      var due=new Date(t); due.setHours(+hm[0]||0,+hm[1]||0,0,0);
+      var dow=d.getDay(), days=cfg.days||'every day';
+      if(days==='weekdays'&&(dow===0||dow===6)) return false;
+      if(days==='mondays'&&dow!==1) return false;
+      if(days==='fridays'&&dow!==5) return false;
+      if(t<due.getTime()) return false;
+      /* opened late? It catches up within four hours; after that the day is skipped */
+      if(t-due.getTime()>4*HOUR){ cfg.done=cfg.done||{}; if(!cfg.done[dayKey(t)]) cfg.done[dayKey(t)]=t; return false; }
+      return once(cfg,dayKey(t));
+    }};
+  T.item_stale={n:'A task goes quiet',
+    fields:[{k:'days',n:'for',opts:['2','3','5','7','14']},{k:'st',n:'while',opts:['Waiting','In Progress','any open']}],
+    match:function(ev,cfg){
+      if(ev.type!=='sweep.stale'||!ev.after) return false;
+      var st=cfg.st||'Waiting', i=ev.after;
+      if(st==='any open'){ if(i.status==='Completed') return false; }
+      else if(i.status!==st) return false;
+      if(ev.quiet<(+(cfg.days||3))*DAY) return false;
+      return once(cfg,i.id+':'+(i.statusAt||i.created||0));
+    }};
+  /* "once": a time trigger fires one time for each thing it is about. The
+     stamp lives in the rule itself, so it is saved with it. */
+  function once(cfg,key){
+    cfg.done=cfg.done||{};
+    if(cfg.done[key]) return false;
+    cfg.done[key]=now();
+    var ks=Object.keys(cfg.done);
+    if(ks.length>60) ks.sort(function(a,b){ return cfg.done[a]-cfg.done[b]; }).slice(0,ks.length-60).forEach(function(k){ delete cfg.done[k]; });
+    return true;
+  }
+
+  /* ---------------- filters (Zapier's "Only continue if") ---------------- */
+  var F={
+    priority_is:{n:'priority is',fields:[{k:'p',opts:['Critical','High','Medium','Low']}],
+      test:function(ev,c){ return !!(ev.after&&ev.after.priority===c.p); },say:function(c){ return 'priority is '+c.p; }},
+    status_is:{n:'status is',fields:[{k:'s',opts:['Not Started','In Progress','Waiting','Completed']}],
+      test:function(ev,c){ return !!(ev.after&&ev.after.status===c.s); },say:function(c){ return 'status is '+c.s; }},
+    name_has:{n:'the name contains',fields:[{k:'t',type:'text',ph:'invoice'}],
+      test:function(ev,c){ var n=String((ev.after&&(ev.after.name||ev.after.title))||'').toLowerCase(); return !!c.t&&n.indexOf(String(c.t).toLowerCase())>=0; },
+      say:function(c){ return 'the name contains \u201c'+c.t+'\u201d'; }},
+    due_within:{n:'it is due within',fields:[{k:'d',opts:['1','3','7']}],
+      test:function(ev,c){ var d=ev.after&&ev.after.due; return !!d&&d-now()<=(+c.d||1)*DAY; },say:function(c){ return 'it is due within '+c.d+' day'+(+c.d===1?'':'s'); }},
+    has_project:{n:'it belongs to a project',fields:[],
+      test:function(ev){ return !!(ev.after&&ev.after.projectId); },say:function(){ return 'it belongs to a project'; }},
+    goal_behind:{n:'the goal is under half way',fields:[],
+      test:function(ev){ return !!(ev.after&&W.goalProgress&&W.goalProgress(ev.after).pct<50); },say:function(){ return 'the goal is under half way'; }},
+    with_people:{n:'the call has other people',fields:[],
+      test:function(ev){ return !!(ev.after&&String(ev.after.attendees||'').trim()); },say:function(){ return 'the call has other people'; }}
+  };
+  U.CONDITIONS.all={n:'all of these are true',fields:[],
+    test:function(ev,cfg){ return (cfg.list||[]).every(function(x){ var f=F[x.c]; return !f||f.test(ev,x.cfg||{}); }); }};
+
+  /* ---------------- steps ----------------
+     run(ev,cfg)  does it, and says what it did
+     plan(ev,cfg) says what it WOULD do, writing nothing (for "Test it") */
+  var S={
+    create_task:{n:'create a task',fields:[{k:'name',n:'called',type:'text',ph:'Follow up on {name}'},{k:'due',n:'due',opts:['today','tomorrow','+3d','+7d']},{k:'p',n:'priority',opts:['Medium','High','Critical','Low']}],
+      plan:function(ev,c){ return 'create the task \u201c'+(fill(c.name||'Follow up on {name}',ev)||'Follow up')+'\u201d, due '+(c.due||'+3d'); },
+      run:function(ev,c){
+        var nm=fill(c.name||'Follow up on {name}',ev)||'Follow up', x=ev.after||{};
+        var it=W.create('items',{name:nm,status:'Not Started',priority:c.p||'Medium',due:dueOf(c.due||'+3d'),
+          notes:'Made by the rule \u201c'+(ev.__rule||'automation')+'\u201d.',boardId:x.boardId,projectId:x.projectId,
+          meetingId:ev.type==='sweep.meeting_ended'||ev.type==='sweep.meeting_soon'?x.id:x.meetingId,checklist:[]},'automation');
+        return it&&it.id?{ok:true,detail:'created \u201c'+nm+'\u201d'}:{ok:false,detail:'the store refused the write'};
+      }},
+    notify:{n:'notify me',fields:[{k:'msg',n:'saying',type:'text',ph:'Check {name}'}],
+      plan:function(ev,c){ return 'notify you: \u201c'+fill(c.msg||'Check {name}',ev)+'\u201d'; },
+      run:function(ev,c){
+        var msg=fill(c.msg||'Check {name}',ev)||'A rule ran';
+        var r=U.ACTIONS.notify.run(ev,{msg:msg});
+        ping(msg);
+        return r;
+      }},
+    wait:{n:'wait',fields:[{k:'n',n:'',opts:['15','30','1','2','3','7']},{k:'u',n:'',opts:['minutes','hours','days']}],
+      plan:function(ev,c){ return 'wait '+waitLabel(c)+', then carry on'; },
+      run:function(){ return {ok:true,detail:'waiting'}; }},
+    set_priority:{n:'set its priority',fields:[{k:'p',n:'to',opts:['Critical','High','Medium','Low']}],
+      plan:function(ev,c){ return isItem(ev)?'set \u201c'+ev.after.name+'\u201d to '+c.p:'set a task\u2019s priority (this trigger has no task, so it would fail)'; },
+      run:function(ev,c){ if(!isItem(ev)) return {ok:false,detail:'no task attached to this event'}; W.update('items',ev.after.id,{priority:c.p||'High'},'automation'); return {ok:true,detail:'priority set to '+(c.p||'High')}; }},
+    set_status:{n:'move it to',fields:[{k:'s',n:'',opts:['In Progress','Waiting','Completed','Not Started']}],
+      plan:function(ev,c){ return isItem(ev)?'move \u201c'+ev.after.name+'\u201d to '+c.s:'move a task (this trigger has no task, so it would fail)'; },
+      run:function(ev,c){ if(!isItem(ev)) return {ok:false,detail:'no task attached to this event'}; W.update('items',ev.after.id,{status:c.s||'In Progress'},'automation'); return {ok:true,detail:'moved to '+(c.s||'In Progress')}; }},
+    due_today:{n:'put it on today',fields:[],
+      plan:function(ev){ return isItem(ev)?'make \u201c'+ev.after.name+'\u201d due today':'put a task on today (this trigger has no task, so it would fail)'; },
+      run:function(ev){ if(!isItem(ev)) return {ok:false,detail:'no task attached to this event'}; W.update('items',ev.after.id,{due:W.startOfDay()},'automation'); return {ok:true,detail:'due today'}; }},
+    ask_team:{n:'ask your AI team',fields:[{k:'who',n:'who',type:'text',ph:'anyone'},{k:'text',n:'to',type:'text',ph:'Prep me for {name} with {who}'}],
+      plan:function(ev,c){ var e=teammate(c,ev); return 'ask '+(e?e.n:'your team')+': \u201c'+fill(c.text||'Look into {name}',ev)+'\u201d'+(serverOk()?' (it runs on the server, so it works with Kova closed)':''); },
+      run:function(ev,c){
+        var text=fill(c.text||'Look into {name}',ev), e=teammate(c,ev);
+        if(!text) return {ok:false,detail:'nothing to ask'};
+        if(serverOk()&&window.KovaAsk){
+          KovaAsk.send(e,text,{now:true,quiet:true}).catch(function(err){ late(ev,'fail','the team could not take it: '+(err&&err.message||'server error')); });
+          return {ok:true,detail:'asked '+(e?e.n:'your team')+': '+text.slice(0,80)};
+        }
+        var c2=C();
+        if(c2&&e&&c2.start){ var j=c2.start(e,text,'automation',{rule:ev.__rule||''}); return j?{ok:true,detail:(e.n)+' started: '+text.slice(0,80)}:{ok:false,detail:e.n+' could not start it'}; }
+        return {ok:false,detail:'your AI team is not set up yet'};
+      }},
+    archive:{n:'mark it complete',fields:[],
+      plan:function(ev){ return isItem(ev)?'mark \u201c'+ev.after.name+'\u201d complete':'complete a task (this trigger has no task, so it would fail)'; },
+      run:function(ev){ return U.ACTIONS.archive.run(ev,{}); }}
+  };
+  function waitMs(c){ var n=+(c.n||1); return n*({minutes:MIN,hours:HOUR,days:DAY}[c.u||'days']||DAY); }
+  function waitLabel(c){ var n=+(c.n||1), u=c.u||'days'; return n+' '+(n===1?u.replace(/s$/,''):u); }
+  function teammate(c,ev){
+    var cr=C(); if(!cr) return null;
+    var who=String(c.who||'').trim();
+    if(who&&!/^(anyone|the team|team|my team|your team)$/i.test(who)){
+      var L=cr.emps(), q=who.toLowerCase();
+      var e=L.filter(function(x){ return x.n.toLowerCase()===q||x.title.toLowerCase()===q; })[0]
+        ||L.filter(function(x){ return x.title.toLowerCase().indexOf(q)>=0; })[0];
+      if(e) return e;
+    }
+    var r=cr.route?cr.route(fill(c.text||'',ev)):null;
+    return r?r.emp:null;
+  }
+  function serverOk(){ try{ return !!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
+  /* a real notification when the page has the permission, on top of the inbox */
+  function ping(msg){
+    try{
+      if(document.hidden&&window.Notification&&Notification.permission==='granted') new Notification('Kova',{body:msg,tag:'kova-flow'});
+    }catch(e){}
+  }
+
+  /* the 'flow' action runs the steps in order. A wait parks the rest. */
+  U.ACTIONS.flow={n:'run the steps',fields:[],run:function(ev,cfg){
+    var r=cfg.rule&&W.find('automations',cfg.rule);
+    ev.__rule=r?r.name:(ev.__rule||'');
+    return runSteps(cfg.steps||[],0,ev,cfg.rule);
+  }};
+  function runSteps(steps,from,ev,ruleId){
+    var did=[];
+    for(var i=from;i<steps.length;i++){
+      var st=steps[i], D=S[st.a];
+      if(!D) return {ok:false,detail:(did.length?did.join('; ')+'; then ':'')+'step '+(i+1)+' is an action that no longer exists'};
+      if(st.a==='wait'){
+        if(i<steps.length-1) park(ruleId,steps,i+1,ev,waitMs(st.cfg||{}));
+        did.push('waiting '+waitLabel(st.cfg||{})+' for step '+(i+2));
+        return {ok:true,detail:did.join('; ')};
+      }
+      var out;
+      try{ out=D.run(ev,st.cfg||{}); }catch(e){ out={ok:false,detail:String(e.message||e)}; }
+      if(!out||!out.ok) return {ok:false,detail:(did.length?did.join('; ')+'; then ':'')+'step '+(i+1)+' failed: '+((out&&out.detail)||'unknown')};
+      did.push(out.detail);
+    }
+    return {ok:true,detail:did.join('; ')||'nothing to do'};
+  }
+
+  /* ---------------- waits ----------------
+     Parked steps are saved, so they survive closing Kova; they carry on
+     the first time Kova is open after their time. */
+  var WK='flow_waits';
+  function waits(){ var w=window.KP&&KP.get(WK); return Array.isArray(w)?w:[]; }
+  function saveWaits(w){ if(window.KP) KP.set(WK,w); }
+  function park(ruleId,steps,from,ev,ms){
+    var w=waits();
+    var a=ev.after||{};
+    w.push({id:W.uid('fw'),rule:ruleId||'',at:now()+ms,steps:clone(steps),from:from,type:ev.type,
+      coll:a.at&&!a.status?'meetings':'items',ref:a.id||'',snap:{id:a.id,name:a.name,title:a.title,attendees:a.attendees,at:a.at,due:a.due}});
+    saveWaits(w);
+  }
+  function resume(){
+    var w=waits(), t=now(), keep=[], ran=0;
+    w.forEach(function(x){
+      if(x.at>t){ keep.push(x); return; }
+      var rule=W.find('automations',x.rule);
+      if(x.rule&&(!rule||!rule.enabled)) return;              /* the rule was removed or switched off: drop it */
+      var live=x.ref?W.find(x.coll,x.ref):null;
+      var ev={type:x.type,after:live||x.snap,changed:{},__rule:rule?rule.name:''};
+      var out=runSteps(x.steps,x.from,ev,x.rule);
+      ran++;
+      if(rule) note(rule,out.ok?'ok':'fail','after the wait: '+out.detail);
+    });
+    /* runSteps may have parked new waits while we ran */
+    var added=waits().filter(function(x){ return w.indexOf(x)<0&&!w.some(function(y){ return y.id===x.id; }); });
+    saveWaits(keep.concat(added));
+    return ran;
+  }
+  function note(rule,result,detail){
+    rule.runs=rule.runs||[];
+    rule.runs.unshift({at:now(),result:result,detail:detail||''});
+    if(rule.runs.length>25) rule.runs.length=25;
+    rule.lastRun=now(); rule.lastResult=result;
+    W.save();
+    W.log('automation',rule.name||'rule',result==='ok'?'ran':'failed',result==='ok'?'ok':'fail',detail||'');
+  }
+  /* something that answers later (the server) can still mark the run */
+  function late(ev,result,detail){
+    var r=W.list('automations',function(a){ return a.name===ev.__rule; })[0];
+    if(r) note(r,result,detail);
+  }
+
+  /* when a task's status changes, remember when (for "goes quiet") */
+  var up=W.update;
+  W.update=function(coll,id,patch,actor){
+    if(coll==='items'&&patch&&'status' in patch){
+      var b=W.find('items',id);
+      if(b&&b.status!==patch.status) patch.statusAt=now();
+    }
+    return up.call(W,coll,id,patch,actor);
+  };
+
+  /* ---------------- the sweep: time-based triggers ---------------- */
+  function sweep(){
+    var t=now();
+    try{ resume(); }catch(e){ console.warn('flow resume',e); }
+    var rules=W.list('automations',function(a){ return a.enabled; });
+    var want={}; rules.forEach(function(a){ want[a.trigger]=true; });
+    if(want.meeting_soon) W.list('meetings').forEach(function(m){
+      if(!m.at||m.at<=t||m.at-t>3*HOUR) return;
+      U.fire({type:'sweep.meeting_soon',after:m,mins:Math.round((m.at-t)/MIN),changed:{}});
+    });
+    if(want.item_stale) W.list('items',function(i){ return i.status!=='Completed'; }).forEach(function(i){
+      var since=i.statusAt||i.created||t;
+      U.fire({type:'sweep.stale',after:i,quiet:t-since,changed:{}});
+    });
+    if(want.schedule) U.fire({type:'sweep.tick',at:t,after:null,changed:{}});
+  }
+
+  /* ---------------- describe ---------------- */
+  var baseDescribe=U.describe;
+  function trigText(a){
+    var tr=T[a.trigger], c=a.tcfg||{};
+    if(!tr) return 'when ?';
+    if(a.trigger==='meeting_soon') return 'When a meeting is '+(c.min||30)+' minutes away';
+    if(a.trigger==='schedule') return (c.days&&c.days!=='every day'?'On '+c.days:'Every day')+' at '+(c.time||'08:00');
+    if(a.trigger==='item_stale') return 'When a task sits in '+(c.st||'Waiting')+' for '+(c.days||3)+' days';
+    if(a.trigger==='status_changes') return 'When a task moves to '+(c.to==='any'||!c.to?'any status':c.to);
+    return 'When '+tr.n.charAt(0).toLowerCase()+tr.n.slice(1);
+  }
+  function stepText(st){
+    var c=st.cfg||{};
+    switch(st.a){
+      case 'create_task': return 'create \u201c'+(c.name||'Follow up on {name}')+'\u201d due '+(c.due||'+3d');
+      case 'notify': return 'notify me \u201c'+(c.msg||'Check {name}')+'\u201d';
+      case 'wait': return 'wait '+waitLabel(c);
+      case 'set_priority': return 'set priority to '+(c.p||'High');
+      case 'set_status': return 'move it to '+(c.s||'In Progress');
+      case 'due_today': return 'put it on today';
+      case 'ask_team': return 'ask '+(c.who&&!/^(anyone|the team|team)$/i.test(c.who)?c.who:'the team')+' to \u201c'+(c.text||'')+'\u201d';
+      case 'archive': return 'mark it complete';
+    }
+    return st.a;
+  }
+  U.describe=function(a){
+    if(a.action!=='flow'&&a.condition!=='all'&&['meeting_soon','schedule','item_stale'].indexOf(a.trigger)<0) return baseDescribe(a);
+    var out=trigText(a);
+    var fl=a.condition==='all'?(a.ccfg&&a.ccfg.list||[]):[];
+    if(fl.length) out+=', if '+fl.map(function(x){ var f=F[x.c]; return f?f.say(x.cfg||{}):x.c; }).join(' and ');
+    var steps=a.action==='flow'?(a.acfg&&a.acfg.steps||[]):[{a:a.action==='create_followup'?'create_task':a.action,cfg:a.acfg}];
+    return out+': '+steps.map(stepText).join(', then ');
+  };
+
+  /* ---------------- making a rule ---------------- */
+  function make(spec){
+    var r=W.create('automations',{
+      name:String(spec.name||'').trim()||autoName(spec),
+      trigger:spec.trigger,tcfg:clone(spec.tcfg),
+      condition:(spec.filters&&spec.filters.length)?'all':'none',ccfg:{list:clone(spec.filters||[])},
+      action:'flow',acfg:{steps:clone(spec.steps||[])},
+      enabled:spec.enabled!==false,runs:[],madeBy:spec.by||'you'
+    },spec.by==='ai'?'ai':'user');
+    if(r&&r.id){ r.acfg.rule=r.id; W.save(); }
+    return r;
+  }
+  function autoName(spec){
+    var a={trigger:spec.trigger,tcfg:spec.tcfg||{},condition:'none',action:'flow',acfg:{steps:spec.steps||[]}};
+    var s=U.describe(a);
+    return s.length>60?s.slice(0,58)+'\u2026':s;
+  }
+  function check(spec){
+    if(!spec||!T[spec.trigger]) return 'Say when it should run: when a task is done, when a call ends, 30 minutes before a meeting, every day at 8\u2026';
+    if(!spec.steps||!spec.steps.length) return 'Say what it should do: remind me, create a task, ask Ravi to\u2026, wait 2 days\u2026';
+    for(var i=0;i<spec.steps.length;i++) if(!S[spec.steps[i].a]) return 'Step '+(i+1)+' is not something Kova can do yet.';
+    if(spec.steps[spec.steps.length-1].a==='wait') return 'A rule cannot end on a wait. Add what happens after it.';
+    return '';
+  }
+
+  /* ---------------- "Test it": what would happen, writing nothing ---------------- */
+  function sample(trigger){
+    var t=now(), items=W.list('items'), meets=W.list('meetings');
+    var it=items.slice().sort(function(a,b){ return (b.updated||b.created||0)-(a.updated||a.created||0); })[0];
+    var mt=meets.slice().sort(function(a,b){ return Math.abs(a.at-t)-Math.abs(b.at-t); })[0];
+    var fakeItem={id:'',name:'Send the proposal',status:'Completed',priority:'High',due:t};
+    var fakeMeet={id:'',title:'Call with Sam',attendees:'Sam',at:t+30*MIN};
+    switch(trigger){
+      case 'meeting_soon': case 'meeting_ended': return {type:trigger==='meeting_soon'?'sweep.meeting_soon':'sweep.meeting_ended',after:mt||fakeMeet,mins:30,changed:{},real:!!mt};
+      case 'schedule': return {type:'sweep.tick',at:t,after:null,changed:{},real:true};
+      case 'goal_updated': var g=W.list('goals')[0]; return {type:'goal.update',after:g||{name:'Revenue goal'},changed:{},real:!!g};
+      default: return {type:'item.update',after:it||fakeItem,changed:{status:(it||fakeItem).status},real:!!it};
+    }
+  }
+  function test(spec){
+    var err=check(spec); if(err) return {ok:false,error:err,lines:[]};
+    var ev=sample(spec.trigger), lines=[];
+    var x=ev.after||{};
+    lines.push({k:'Using',v:ev.real?(x.name||x.title?'\u201c'+(x.name||x.title)+'\u201d':'now'):'an example (you have no '+(spec.trigger.indexOf('meeting')===0?'meetings':'tasks')+' yet)'});
+    var pass=(spec.filters||[]).every(function(f){ var d=F[f.c]; return !d||d.test(ev,f.cfg||{}); });
+    if((spec.filters||[]).length) lines.push({k:'Filter',v:pass?'passes':'would stop here, so nothing runs for this one'});
+    if(pass) spec.steps.forEach(function(st,i){ var D=S[st.a]; lines.push({k:'Step '+(i+1),v:D.plan(ev,st.cfg||{})}); });
+    return {ok:true,lines:lines,pass:pass};
+  }
+
+  /* ---------------- plain English -> a rule ----------------
+     Deterministic on purpose: the same words always make the same rule,
+     and you see it before it is saved. */
+  var NUMW={a:1,an:1,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,ten:10,fifteen:15,thirty:30};
+  function num(v){ v=String(v||'').toLowerCase(); return NUMW[v]!=null?NUMW[v]:+v; }
+  function hhmm(h,m,ap){
+    h=+h; m=+(m||0); ap=String(ap||'').toLowerCase();
+    if(ap==='pm'&&h<12) h+=12; if(ap==='am'&&h===12) h=0;
+    if(!ap&&h>=1&&h<=6) h+=12;              /* "at 5" means the afternoon */
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  }
+  function parse(text){
+    var t=String(text||'').trim().replace(/[’]/g,"'").replace(/\s+/g,' ');
+    if(!t) return {error:'Describe the rule in a sentence.'};
+    var spec={trigger:'',tcfg:{},filters:[],steps:[],name:''}, cut='', m;
+    /* "a task called invoice is done": the name is a filter, taken out first
+       so the rest reads as a plain trigger */
+    var head0=t.split(/,|\bthen\b/i)[0];
+    if((m=head0.match(/\s(?:called|named)\s+["\u201c]?([A-Za-z0-9][\w -]{0,30}?)["\u201d]?(?=\s+(?:is|gets|goes|moves|has|becomes|sits|ends|finishes|starts)\b)/i))){
+      spec.filters.push({c:'name_has',cfg:{t:m[1].trim()}}); t=t.replace(m[0],'');
+    }
+
+    /* WHEN */
+    if((m=t.match(/(\d+|an?|one|two|thirty|fifteen)\s*(min(?:ute)?s?|hours?|hrs?)\s*before\s+(?:a|any|every|each|my|the)?\s*(?:meeting|call)s?/i))){
+      var mins=num(m[1])*(/^h/i.test(m[2])?60:1);
+      spec.trigger='meeting_soon'; spec.tcfg={min:String(mins<=10?10:mins<=30?30:mins<=60?60:120)}; cut=m[0];
+    }else if((m=t.match(/before\s+(?:a|any|every|each|my|the)?\s*(?:meeting|call)s?/i))){
+      spec.trigger='meeting_soon'; spec.tcfg={min:'30'}; cut=m[0];
+    }else if((m=t.match(/(?:after|when(?:ever)?|once)\s+(?:a|any|every|each|my|the)?\s*(?:meeting|call)s?(?:\s+(?:ends|finishes|is over|is done|wraps up))?/i))&&(/^after/i.test(m[0])||/(ends|finishes|over|done|wraps)/i.test(m[0]))){
+      spec.trigger='meeting_ended'; cut=m[0];
+    }else if((m=t.match(/(every\s*(?:day|morning|weekday|monday|friday)|each\s*(?:day|morning)|daily|on weekdays|weekdays)(?:[^0-9,]*?\bat\s*(\d{1,2})(?::(\d\d))?\s*(am|pm)?)?/i))){
+      var w1=m[1].toLowerCase();
+      var days=/weekday/.test(w1)?'weekdays':/monday/.test(w1)?'mondays':/friday/.test(w1)?'fridays':'every day';
+      var tm=m[2]?hhmm(m[2],m[3],m[4]||(/morning/.test(w1)?'am':'')):(/morning/.test(w1)?'08:00':'09:00');
+      spec.trigger='schedule'; spec.tcfg={time:tm,days:days}; cut=m[0];
+    }else if((m=t.match(/(?:sits?|stuck|quiet|idle|untouched|hasn't moved|has not moved|waits?|waiting)\b[^.,]*?\bfor\s*(\d+|two|three|five|seven)\s*days?/i))){
+      var dd=num(m[1]);
+      spec.trigger='item_stale'; spec.tcfg={days:String(dd<=2?2:dd<=3?3:dd<=5?5:dd<=7?7:14),st:/in progress/i.test(t)?'In Progress':(/waiting/i.test(t)?'Waiting':'any open')}; cut=m[0];
+    }else if((m=t.match(/(?:goes|becomes|is|gets)?\s*(?:overdue|late|past due)\b|misses its (?:due )?date/i))&&/task|overdue|due/i.test(t)){
+      spec.trigger='due_passed'; cut=m[0];
+    }else if((m=t.match(/(?:when(?:ever)?|after|once|if)\s+(?:a|an|any|every|my)?\s*(?:[a-z-]+\s+){0,2}?(?:task|item|to-?do)\s*(?:is|gets|has been)?\s*(?:marked\s+)?(done|completed|complete|finished|closed|started|in progress|waiting|blocked)/i))){
+      var w2=m[1].toLowerCase(), to=/start|progress/.test(w2)?'In Progress':(/wait|block/.test(w2)?'Waiting':'Completed');
+      spec.trigger='status_changes'; spec.tcfg={to:to}; cut=m[0];
+    }else if((m=t.match(/(?:when(?:ever)?|if)?\s*(?:i add a task|a new task is (?:created|added)|a task is (?:created|added|made)|new task(?:s)?(?: (?:is|are) (?:created|added))?)/i))&&m[0].trim()){
+      spec.trigger='item_created'; cut=m[0];
+    }else if((m=t.match(/(?:when(?:ever)?|if)?\s*(?:a|my)?\s*goal\b[^,]*?(?:is updated|updates|falls behind|slips|is behind)/i))){
+      spec.trigger='goal_updated'; cut=m[0];
+      if(/behind|slips|falls/i.test(m[0])) spec.filters.push({c:'goal_behind',cfg:{}});
+    }
+
+    /* ONLY IF */
+    var rest=cut?t.replace(cut,' '):t;
+    if((m=t.match(/\b(critical|high|medium|low)[- ]priority\b|\bmarked (critical|high)\b|\bis (critical|urgent)\b|\b(critical|urgent)\b(?=\s+(?:task|item|work))/i))){
+      var p=(m[1]||m[2]||m[3]||m[4]).toLowerCase(); p=p==='urgent'?'Critical':cap(p);
+      spec.filters.push({c:'priority_is',cfg:{p:p}});
+      rest=rest.replace(m[0],' ');
+    }
+    /* "a task called X" only filters in the when part, before the steps */
+    var head=rest.split(/,|\bthen\b/i)[0];
+    if(spec.trigger!=='schedule'&&(m=head.match(/\b(?:called|named|about|mentioning|with the word|containing|that contains)\s+["“]?([A-Za-z0-9][\w -]{1,30}?)["”]?(?=\s*(?:[,.;]|$|\s+(?:then|and)\b))/i))){
+      spec.filters.push({c:'name_has',cfg:{t:m[1].trim()}}); rest=rest.replace(m[0],' ');
+    }
+    if((m=rest.match(/(?:that is |that's |which is )?(?:in a project|belongs to a project)/i))){ spec.filters.push({c:'has_project',cfg:{}}); rest=rest.replace(m[0],' '); }
+
+    /* what is left of the "when" clause is the words before the first comma */
+    rest=rest.replace(/\s+/g,' ').trim();
+    if(spec.trigger&&/^(?:when(?:ever)?|if|after|once|on|every|each|a|an|any|my|the)\b[^,]*,/i.test(rest)) rest=rest.replace(/^[^,]*,/,'');
+    else if(spec.trigger&&/^(?:when(?:ever)?|if)\b[^,]*$/i.test(rest)) rest='';
+    rest=rest.replace(/^[\s,:;-]*(?:(?:then|do|please)\s+)?/i,'');
+
+    /* THEN: the steps */
+    var parts=rest.split(/\s*,\s*(?:and\s+)?then\s+|\s+and then\s+|\s*;\s*|\.\s+|\s+then\s+|\s+and\s+(?=(?:wait|remind|notify|tell|ping|create|make|add|ask|have|set|move|mark|put|send|prep|brief)\b)|\s*,\s*(?=(?:and\s+)?(?:wait|remind|notify|tell|ping|create|make|add|ask|have|get|set|move|mark|put|prep|brief|send|\d+\s*(?:min|hour|day|week)|an?\s+(?:hour|day|week)|the next day)\b)/i)
+      .map(function(s){ return String(s||'').trim().replace(/^(?:and|then)\s+/i,'').replace(/[.\s]+$/,''); }).filter(Boolean);
+    parts.forEach(function(s){ var st=step(s,spec); if(st) [].concat(st).forEach(function(x){ spec.steps.push(x); }); });
+    var err=check(spec);
+    if(err) return {error:err,spec:spec};
+    spec.name=autoName(spec);
+    return {spec:spec};
+  }
+  var TEAM_WORDS=/^(?:the|my|your)\s+(?:ai\s+)?team$|^(?:the\s+)?team$|^everyone$/i;
+  function step(s,spec){
+    var m, item=['status_changes','item_created','due_passed','item_stale'].indexOf(spec.trigger)>=0, call=/^meeting/.test(spec.trigger);
+    /* "2 days later", "wait 3 hours", "a week later" */
+    if((m=s.match(/^(?:wait\s*(?:for\s*)?)?(\d+|an?|one|two|three|five|seven|fifteen|thirty)\s*(min(?:ute)?s?|hours?|hrs?|days?|weeks?)\s*(?:later|after(?:wards)?)?\s*,?\s*(.*)$/i))&&(/^wait/i.test(s)||/\b(later|after)/i.test(s)||!m[3])){
+      var n=num(m[1]), u=/^min/i.test(m[2])?'minutes':/^h/i.test(m[2])?'hours':'days';
+      if(/^week/i.test(m[2])){ n*=7; u='days'; }
+      var w={a:'wait',cfg:{n:String(n),u:u}};
+      return m[3]?[w].concat(step(m[3],spec)||[]):w;
+    }
+    if((m=s.match(/^(?:wait\s+(?:until|till)\s+)?(?:the\s+)?next\s+day,?\s*(.*)$/i))) return [{a:'wait',cfg:{n:'1',u:'days'}}].concat(m[1]?(step(m[1],spec)||[]):[]);
+    if((m=s.match(/^(?:remind|notify|tell|ping|alert|nudge)\s+me\b(?:\s+(?:to|that|about))?\s*:?\s*(.*)$/i))){
+      var msg=cap(m[1]||'Check {name}');
+      if(!/\{name\}/.test(msg)&&(item||call)&&m[1]) msg+=': {name}';
+      return {a:'notify',cfg:{msg:msg}};
+    }
+    if((m=s.match(/^(?:send me|give me)\s+(?:a\s+)?(?:notification|push|alert)(?:\s+(?:saying|that))?\s*:?\s*(.*)$/i))) return {a:'notify',cfg:{msg:cap(m[1]||'Check {name}')}};
+    if((m=s.match(/^(?:ask|have|get|tell)\s+((?:the|my|your)\s+(?:ai\s+)?team|team|everyone|[A-Za-z]+)\s+(?:to\s+)?(.+)$/i))){
+      var who=m[1];
+      if(TEAM_WORDS.test(who)) return {a:'ask_team',cfg:{who:'',text:cap(m[2])}};
+      if(isTeammate(who)) return {a:'ask_team',cfg:{who:cap(who),text:cap(m[2])}};
+    }
+    if(/^(?:prep|prepare|brief)\s+me\b/i.test(s)) return {a:'ask_team',cfg:{who:'',text:cap(s)+(call&&!/\{name\}|\bfor\b/i.test(s)?' for {name} with {who} at {when}':'')}};
+    if((m=s.match(/^(?:create|make|add|open|log)\s+(?:a\s+|an\s+)?(?:new\s+)?(follow[- ]?up|write[- ]?up|task|to-?do|reminder)(?:\s+(?:task|item))?(?:\s+(?:called|named|to|for)\b|\s*:)?\s*(.*)$/i))){
+      var body=m[2]||'', due='+3d';
+      var dm=body.match(/\s*(?:due\s+)?(today|tomorrow|in\s+(\d+|a|one|two|three|seven)\s+days?|next week|in a week)\s*$/i);
+      if(dm){ body=body.slice(0,dm.index); var dw=dm[1].toLowerCase(); due=dw==='today'?'today':dw==='tomorrow'?'tomorrow':/week/.test(dw)?'+7d':('+'+num(dm[2])+'d'); }
+      var kind=/write/i.test(m[1])?'Write up {name}':(/follow/i.test(m[1])?'Follow up on {name}':'');
+      if(!dm&&kind==='Write up {name}') due='today';
+      var nm=body.trim()?cap(body.trim()):(kind||'Follow up on {name}');
+      return {a:'create_task',cfg:{name:nm,due:due,p:'Medium'}};
+    }
+    if((m=s.match(/^(?:set|make|change)\s+(?:its|the|it)?\s*(?:priority\s*)?(?:to\s+)?(critical|high|medium|low)(?:\s+priority)?$/i))) return {a:'set_priority',cfg:{p:cap(m[1].toLowerCase())}};
+    if((m=s.match(/^(?:move|put|set)\s+it\s+(?:to|in|into|as)\s+(waiting|in progress|completed|done|not started)$/i))){ var sv=m[1].toLowerCase(); return {a:'set_status',cfg:{s:sv==='done'?'Completed':sv.replace(/\b\w/g,function(c){ return c.toUpperCase(); })}}; }
+    if(/^(?:mark|set)\s+it\s+(?:as\s+)?(?:done|complete|completed|finished)$|^close it$|^complete it$/i.test(s)) return {a:'archive',cfg:{}};
+    if(/^(?:put|move|add)\s+it\s+(?:on|to)\s+today$|^make it due today$/i.test(s)) return {a:'due_today',cfg:{}};
+    return null;
+  }
+  function isTeammate(n){
+    var c=C(), q=String(n||'').toLowerCase(); if(!c||!q) return false;
+    return c.emps().some(function(e){ return e.n.toLowerCase()===q; })||(c.TPL||[]).some(function(t){ return String(t.n||'').toLowerCase()===q; });
+  }
+
+  /* ---------------- ready-made rules (added to the Recipes list) ---------------- */
+  var MORE=[
+    {name:'Prep me 30 minutes before every call',trigger:'meeting_soon',tcfg:{min:'30'},
+     steps:[{a:'ask_team',cfg:{who:'',text:'Prep me for {name} with {who} at {when}: who they are, what to raise, what to bring, and anything to buy on the way. My notes: {prep}'}}]},
+    {name:'Brief me every weekday at 8',trigger:'schedule',tcfg:{time:'08:00',days:'weekdays'},
+     steps:[{a:'ask_team',cfg:{who:'',text:'Brief me on today: my meetings, what is due, what is overdue, and the one thing to do first.'}}]},
+    {name:'After a call: write-up today, check in two days later',trigger:'meeting_ended',tcfg:{},
+     steps:[{a:'create_task',cfg:{name:'Write up {name}',due:'today',p:'High'}},{a:'wait',cfg:{n:'2',u:'days'}},{a:'notify',cfg:{msg:'Did {name} get its follow-up?'}}]},
+    {name:'Nudge me when a waiting task goes quiet for 3 days',trigger:'item_stale',tcfg:{days:'3',st:'Waiting'},
+     steps:[{a:'notify',cfg:{msg:'{name} has been waiting 3 days. Chase it?'}},{a:'create_task',cfg:{name:'Chase: {name}',due:'today',p:'High'}}]},
+    {name:'Critical work done: check the result a week later',trigger:'status_changes',tcfg:{to:'Completed'},filters:[{c:'priority_is',cfg:{p:'Critical'}}],
+     steps:[{a:'wait',cfg:{n:'7',u:'days'}},{a:'create_task',cfg:{name:'Check the result of {name}',due:'today'}}]}
+  ];
+  MORE.forEach(function(m){
+    U.TEMPLATES.push({name:m.name,trigger:m.trigger,tcfg:m.tcfg,condition:(m.filters&&m.filters.length)?'all':'none',ccfg:{list:m.filters||[]},
+      action:'flow',acfg:{steps:m.steps}});
+  });
+  /* each added rule gets its own copy (a stamp in one must not reach another) */
+  U.addTemplate=function(ix){
+    var t=U.TEMPLATES[ix]; if(!t) return null;
+    var r=W.create('automations',{name:t.name,trigger:t.trigger,tcfg:clone(t.tcfg),condition:t.condition||'none',ccfg:clone(t.ccfg),
+      action:t.action,acfg:clone(t.acfg),enabled:true,runs:[]},'user');
+    if(r&&r.id&&r.action==='flow'){ r.acfg.rule=r.id; W.save(); }
+    return r;
+  };
+
+  /* =====================================================================
+     Meeting notes -> action items and decisions (Fireflies / Otter)
+     ===================================================================== */
+  var DOW=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  var VERB=/\b(send|share|email|call|book|schedule|draft|write|review|update|prepare|prep|finish|fix|check|confirm|follow up|follow-up|set up|setup|order|buy|pay|invoice|post|publish|ask|reach out|contact|create|make|plan|research|look into|find|get|sign|submit|organi[sz]e|move|test|ship|deliver|introduce|loop in|circle back)\b/;
+  function dueIn(s,base){
+    var t=String(s||'').toLowerCase(), b=new Date(base||now()); b.setHours(0,0,0,0); var d0=b.getTime(), m;
+    if(/\b(today|eod|end of (?:the )?day|tonight)\b/.test(t)) return {at:d0,txt:(t.match(/\b(?:by\s+)?(today|eod|end of (?:the )?day|tonight)\b/)||[''])[0]};
+    if(/\btomorrow\b/.test(t)) return {at:d0+DAY,txt:(t.match(/\b(?:by\s+)?tomorrow\b/)||[''])[0]};
+    if((m=t.match(/\b(?:by\s+|on\s+|before\s+)?(?:next\s+)?(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri)\b/))){
+      var full=DOW.filter(function(d){ return d.indexOf(m[1])===0; })[0], want=DOW.indexOf(full), have=b.getDay();
+      var add=(want-have+7)%7||7; if(/next\s/.test(m[0])&&add<7) add+=7;
+      return {at:d0+add*DAY,txt:m[0]};
+    }
+    if((m=t.match(/\b(?:by\s+)?(?:the\s+)?end of (?:the\s+)?week\b|\bthis week\b/))){ var f=(5-b.getDay()+7)%7; return {at:d0+f*DAY,txt:m[0]}; }
+    if((m=t.match(/\b(?:by\s+)?next week\b/))) return {at:d0+7*DAY,txt:m[0]};
+    if((m=t.match(/\bin\s+(\d+|a|one|two|three)\s+(days?|weeks?)\b/))){ var n=num(m[1]); return {at:d0+n*(/week/.test(m[2])?7:1)*DAY,txt:m[0]}; }
+    if((m=t.match(/\b(?:by\s+)?(\d{1,2})\/(\d{1,2})\b/))){ var dt=new Date(b.getFullYear(),+m[1]-1,+m[2]); if(dt.getTime()<d0-DAY) dt.setFullYear(dt.getFullYear()+1); return {at:dt.getTime(),txt:m[0]}; }
+    return null;
+  }
+  function people(meeting){ return String(meeting&&meeting.attendees||'').split(/[,;&]|\band\b/).map(function(x){ return x.trim(); }).filter(function(x){ return x&&x.length<40; }); }
+  function actions(notes,meeting,base){
+    var lines=String(notes||'').replace(/\r/g,'').replace(/([.!?])\s+(?=[A-Z@\[])/g,'$1\n').split(/\n+/).map(function(l){ return l.trim(); }).filter(Boolean);
+    var names=people(meeting), out=[], decisions=[], seen={};
+    lines.forEach(function(l0){
+      var l=l0.replace(/^\s*(?:[-*\u2022\u2013]|\d+[.)])\s*/,'');
+      var low=l.toLowerCase(), explicit=false, owner='', m;
+      if(/^(?:decided|decision|agreed|we agreed|we decided|we'll go with|going with)\b/i.test(l)||/^(?:decision|decided)\s*:/i.test(l)){
+        decisions.push(cap(l.replace(/^(?:decision|decided)\s*:\s*/i,''))); return;
+      }
+      if((m=l.match(/^\s*(?:\[\s?\]|todo|to do|to-do|action(?: item)?|ai|next step|follow[- ]?up)\s*[:\-\u2013]?\s*/i))&&m[0].trim()){ explicit=true; l=l.slice(m[0].length); low=l.toLowerCase(); }
+      if(/^\[x\]/i.test(l)) return;
+      if((m=l.match(/^@([A-Za-z][\w.-]*)\s*[:,-]?\s*/))){ owner=m[1]; l=l.slice(m[0].length); }
+      else if((m=l.match(/^(I|I'll|I will|we|we'll|we will|you|you'll)\b\s*(?:will|'ll|need to|needs to|to|should|must|can)?\s*/i))&&/\b(will|'ll|need|to|should|must)\b/i.test(m[0]+' '+l.slice(m[0].length).split(' ')[0])){ owner=/^(i|i'll|i will|we|we'll|we will)$/i.test(m[1].trim())?'me':'them'; l=l.slice(m[0].length); }
+      else if((m=l.match(/^([A-Z][a-z]+)\s+(?:will|'ll|is going to|needs to|need to|to|should|must|owns|takes)\s+/))&&(names.indexOf(m[1])>=0||names.some(function(n){ return n.split(' ')[0]===m[1]; })||m[1]!=='We')){
+        if(['The','This','That','It','There','We','They','He','She'].indexOf(m[1])<0){ owner=m[1]; l=l.slice(m[0].length); }
+      }
+      var verbOk=VERB.test(l.toLowerCase());
+      if(!explicit&&!owner&&!/\b(need to|needs to|must|should|will|let's|lets|action)\b/i.test(low)) return;
+      if(!verbOk&&!explicit) return;
+      var d=dueIn(l,base);
+      var task=l;
+      if(d&&d.txt) task=task.replace(new RegExp('\\s*'+d.txt.replace(/[.*+?^${}()|[\]\\\/]/g,'\\$&')+'\\b','i'),'');
+      task=task.replace(/^(?:will|'ll|to|needs? to|should|must)\s+/i,'').replace(/\s*[.;,]+\s*$/,'').trim();
+      if(task.length<4) return;
+      task=cap(task);
+      var k=task.toLowerCase(); if(seen[k]) return; seen[k]=1;
+      out.push({text:task,owner:owner==='them'?'':owner,due:d?d.at:null,dueTxt:d?d.txt.replace(/^(by|on|before)\s+/,''):'' ,line:l0});
+    });
+    return {items:out,decisions:decisions};
+  }
+  function addActions(meeting,list){
+    var made=0;
+    (list||[]).forEach(function(x){
+      var own=x.owner&&x.owner!=='me'?x.owner:'';
+      var it=W.create('items',{name:x.text+(own?' ('+own+')':''),status:'Not Started',priority:'Medium',
+        due:x.due||W.startOfDay()+3*DAY,notes:'From the call \u201c'+(meeting.title||'')+'\u201d'+(own?'. Owner: '+own:'')+'.\n'+(x.line||''),
+        meetingId:meeting.id,owner:own||'me',checklist:[]},'user');
+      if(it&&it.id) made++;
+    });
+    if(made&&meeting.id) W.update('meetings',meeting.id,{actionsPulled:now()},'user');
+    return made;
+  }
+
+  /* ---------------- the screens ---------------- */
+  /* Automations: a box to say the rule, the builder behind +, and the
+     tools that inspired it (KovaApps, behind a link, not a new tab). */
+  function paintAuto(){
+    var body=$('waBody'); if(!body||body.querySelector('.kfl-say')) return;
+    var first=body.querySelector('.card');
+    var box=document.createElement('div');
+    box.className='card kfl-say';
+    box.innerHTML='<div class="kfl-h">Say the rule</div>'
+      +'<div class="kfl-sub">Write it like you would tell an assistant. You see it before it is saved.</div>'
+      +'<textarea class="kfl-in" id="kflSay" rows="2" placeholder="When a call ends, make a write-up task, wait 2 days, then remind me"></textarea>'
+      +'<div class="kfl-ex">'+['30 minutes before every call, prep me','Every weekday at 8, ask Ravi to brief me','When a waiting task sits for 3 days, remind me to chase it'].map(function(x){ return '<button class="kfl-chip" data-kf="ex">'+esc(x)+'</button>'; }).join('')+'</div>'
+      +'<div class="kfl-row"><button class="btn" data-kf="build">Build it</button><button class="btn ghost" data-kf="blank">Start from scratch</button></div>'
+      +'<button class="kfl-link" data-kf="apps"><span>How the best tools do it</span><small>86 apps, what each does best, and what Kova took</small><i aria-hidden="true">\u203a</i></button>';
+    if(first&&first.nextSibling) body.insertBefore(box,first.nextSibling); else body.appendChild(box);
+    box.addEventListener('click',function(e){
+      var b=e.target.closest('[data-kf]'); if(!b) return;
+      var k=b.dataset.kf;
+      if(k==='ex'){ $('kflSay').value=b.textContent; $('kflSay').focus(); }
+      else if(k==='build') fromWords($('kflSay').value);
+      else if(k==='blank') builder({trigger:'status_changes',tcfg:{to:'Completed'},filters:[],steps:[{a:'notify',cfg:{msg:'{name} is done'}}]});
+      else if(k==='apps'){ if(window.KovaApps) KovaApps.open(); else say('Loading\u2026'); }
+    });
+  }
+  function fromWords(text){
+    var r=parse(text);
+    if(r.error&&!r.spec){ say(r.error); return; }
+    if(r.error){ builder(r.spec,r.error); return; }
+    builder(r.spec);
+  }
+
+  /* the builder: WHEN, ONLY IF, THEN (steps), with Test it and Save */
+  var B=null;
+  function opts(list,val){ return list.map(function(o){ return '<option'+(String(o)===String(val)?' selected':'')+'>'+esc(o)+'</option>'; }).join(''); }
+  function fieldHtml(f,cfg,path){
+    var v=cfg[f.k]!=null?cfg[f.k]:(f.opts?f.opts[0]:'');
+    var lab=f.n?'<span>'+esc(f.n)+'</span>':'';
+    if(f.opts) return '<label class="kfl-f">'+lab+'<select data-p="'+path+'" data-k="'+f.k+'">'+opts(f.opts,v)+'</select></label>';
+    return '<label class="kfl-f wide">'+lab+'<input data-p="'+path+'" data-k="'+f.k+'" type="'+(f.type==='time'?'time':'text')+'" value="'+esc(v||'')+'" placeholder="'+esc(f.ph||'')+'"></label>';
+  }
+  function builder(spec,warn){
+    B=clone(spec); B.filters=B.filters||[]; B.steps=B.steps||[]; B.tcfg=B.tcfg||{};
+    if(!window.openSheet) return;
+    openSheet('<div class="grab"></div><div class="kfl-sheet" id="kflB"></div>');
+    drawBuilder(warn);
+  }
+  var TRIG_ORDER=['status_changes','item_created','due_passed','item_stale','meeting_soon','meeting_ended','schedule','goal_updated'];
+  function drawBuilder(warn,result){
+    var el=$('kflB'); if(!el||!B) return;
+    var tr=T[B.trigger]||T.status_changes;
+    var h='<div class="kfl-title">'+(B.id?'Edit rule':'New rule')+'</div>'
+      +(warn?'<div class="kfl-warn">'+esc(warn)+'</div>':'')
+      +'<label class="kfl-f wide"><span>Name</span><input id="kflName" value="'+esc(B.name||'')+'" placeholder="'+esc(autoName(B))+'"></label>'
+      +'<div class="kfl-sec">When</div><div class="kfl-box">'
+      +'<select id="kflTrig">'+TRIG_ORDER.map(function(k){ return '<option value="'+k+'"'+(k===B.trigger?' selected':'')+'>'+esc(T[k].n)+'</option>'; }).join('')+'</select>'
+      +'<div class="kfl-fs">'+(tr.fields||[]).map(function(f){ return fieldHtml(f,B.tcfg,'t'); }).join('')+'</div></div>'
+      +'<div class="kfl-sec">Only if <small>optional</small></div>'
+      +B.filters.map(function(x,i){ var f=F[x.c]; return '<div class="kfl-box kfl-st"><select data-fi="'+i+'">'+Object.keys(F).map(function(k){ return '<option value="'+k+'"'+(k===x.c?' selected':'')+'>'+esc(F[k].n)+'</option>'; }).join('')+'</select>'
+        +'<div class="kfl-fs">'+(f?f.fields:[]).map(function(fd){ return fieldHtml(fd,x.cfg||(x.cfg={}),'f'+i); }).join('')+'</div><button class="kfl-x" data-kb="rmf" data-i="'+i+'" aria-label="Remove filter">\u00d7</button></div>'; }).join('')
+      +'<button class="kfl-add" data-kb="addf">+ Add a filter</button>'
+      +'<div class="kfl-sec">Then</div>'
+      +B.steps.map(function(x,i){ var d=S[x.a]; return '<div class="kfl-box kfl-st"><b class="kfl-n">'+(i+1)+'</b><select data-si="'+i+'">'+Object.keys(S).map(function(k){ return '<option value="'+k+'"'+(k===x.a?' selected':'')+'>'+esc(S[k].n)+'</option>'; }).join('')+'</select>'
+        +'<div class="kfl-fs">'+(d?d.fields:[]).map(function(fd){ return fieldHtml(fd,x.cfg||(x.cfg={}),'s'+i); }).join('')+'</div>'
+        +'<span class="kfl-mv">'+(i?'<button class="kfl-x" data-kb="up" data-i="'+i+'" aria-label="Move up">\u2191</button>':'')+'<button class="kfl-x" data-kb="rms" data-i="'+i+'" aria-label="Remove step">\u00d7</button></span></div>'; }).join('')
+      +'<button class="kfl-add" data-kb="adds">+ Add a step</button>'
+      +'<div class="kfl-hint">Words like {name}, {who}, {when} and {prep} are filled in from the task or the call.</div>'
+      +(result?'<div class="kfl-test">'+(result.ok?result.lines.map(function(l){ return '<div><b>'+esc(l.k)+'</b><span>'+esc(l.v)+'</span></div>'; }).join(''):'<div class="kfl-warn">'+esc(result.error)+'</div>')+'</div>':'')
+      +'<div class="kfl-row"><button class="btn ghost" data-kb="test">Test it</button><button class="btn" data-kb="save">'+(B.id?'Save changes':'Save and switch on')+'</button></div>';
+    el.innerHTML=h;
+    el.onchange=function(e){
+      var x=e.target;
+      if(x.id==='kflTrig'){ B.trigger=x.value; B.tcfg={}; drawBuilder(); return; }
+      if(x.dataset.fi!=null){ B.filters[+x.dataset.fi]={c:x.value,cfg:{}}; drawBuilder(); return; }
+      if(x.dataset.si!=null){ B.steps[+x.dataset.si]={a:x.value,cfg:{}}; drawBuilder(); return; }
+      setField(x);
+    };
+    el.oninput=function(e){ if(e.target.dataset.p) setField(e.target); if(e.target.id==='kflName') B.name=e.target.value; };
+    el.onclick=function(e){
+      var b=e.target.closest('[data-kb]'); if(!b) return;
+      var k=b.dataset.kb, i=+b.dataset.i;
+      readAll();
+      if(k==='addf'){ B.filters.push({c:'priority_is',cfg:{p:'Critical'}}); drawBuilder(); }
+      else if(k==='rmf'){ B.filters.splice(i,1); drawBuilder(); }
+      else if(k==='adds'){ B.steps.push({a:'notify',cfg:{msg:'Check {name}'}}); drawBuilder(); }
+      else if(k==='rms'){ B.steps.splice(i,1); drawBuilder(); }
+      else if(k==='up'){ var s=B.steps.splice(i,1)[0]; B.steps.splice(i-1,0,s); drawBuilder(); }
+      else if(k==='test'){ drawBuilder('',test(B)); }
+      else if(k==='save') save();
+    };
+  }
+  function setField(x){
+    var p=x.dataset.p, k=x.dataset.k; if(!p||!k) return;
+    var tgt=p==='t'?B.tcfg:(p.charAt(0)==='f'?B.filters[+p.slice(1)].cfg:B.steps[+p.slice(1)].cfg);
+    tgt[k]=x.value;
+  }
+  function readAll(){ var el=$('kflB'); if(!el) return; el.querySelectorAll('[data-p]').forEach(setField); var n=$('kflName'); if(n) B.name=n.value; }
+  function save(){
+    readAll();
+    var err=check(B); if(err){ drawBuilder(err); return; }
+    if(B.id){
+      W.update('automations',B.id,{name:B.name||autoName(B),trigger:B.trigger,tcfg:clone(B.tcfg),condition:B.filters.length?'all':'none',ccfg:{list:clone(B.filters)},action:'flow',acfg:{steps:clone(B.steps),rule:B.id}},'user');
+    }else make(B);
+    if(window.closeSheet) closeSheet();
+    say(B.id?'Rule saved.':'Rule saved and switched on.');
+    B=null;
+    if(window.__workAuto) __workAuto.draw();
+  }
+
+  /* Meeting: "Pull action items" under the notes */
+  function paintMeeting(){
+    var body=$('wmdBody'); if(!body||body.querySelector('.kfl-pull')) return;
+    var ta=$('wmdNotes'); if(!ta) return;
+    var b=document.createElement('button');
+    b.className='btn ghost kfl-pull'; b.type='button';
+    b.innerHTML='Pull action items from the notes';
+    var save=$('wmdSaveNotes'); if(save&&save.parentNode) save.parentNode.insertBefore(b,save.nextSibling);
+    b.onclick=function(){ pullSheet(); };
+  }
+  function curMeeting(){
+    var id=window.__workMeet&&__workMeet.cur&&__workMeet.cur();
+    if(id&&W.find('meetings',id)) return W.find('meetings',id);
+    var t=($('wmdTitle')||{}).textContent||'';
+    var ta=$('wmdNotes');
+    var L=W.list('meetings');
+    return L.filter(function(m){ return m.notes===(ta&&ta.value); })[0]
+      ||L.filter(function(m){ var s=m.title.length>30?m.title.slice(0,30)+'\u2026':m.title; return s===t; })[0]||null;
+  }
+  var PULL=null;
+  function pullSheet(){
+    var m=curMeeting(), ta=$('wmdNotes');
+    if(!m){ say('Open a meeting first.'); return; }
+    var text=ta?ta.value:m.notes;
+    if(ta&&ta.value!==m.notes) W.update('meetings',m.id,{notes:ta.value},'user');
+    var r=actions(text,m,m.at||now());
+    PULL={m:m,items:r.items.map(function(x){ x.on=true; return x; }),decisions:r.decisions};
+    if(!window.openSheet) return;
+    openSheet('<div class="grab"></div><div class="kfl-sheet" id="kflP"></div>');
+    drawPull();
+  }
+  function drawPull(){
+    var el=$('kflP'); if(!el||!PULL) return;
+    var on=PULL.items.filter(function(x){ return x.on; }).length;
+    el.innerHTML='<div class="kfl-title">From \u201c'+esc(PULL.m.title)+'\u201d</div>'
+      +(PULL.items.length?'<div class="kfl-sub">Action items found in your notes. Untick any that are not.</div>'
+        +PULL.items.map(function(x,i){ return '<label class="kfl-ai"><input type="checkbox" data-pi="'+i+'"'+(x.on?' checked':'')+'><span><b>'+esc(x.text)+'</b><small>'
+          +[x.owner?(x.owner==='me'?'You':esc(x.owner)):'You',x.due?'due '+esc(cap(x.dueTxt)||new Date(x.due).toLocaleDateString()):'due in 3 days'].join(' \u00b7 ')+'</small></span></label>'; }).join('')
+        :'<div class="kfl-warn">No action items found. Write them as \u201cSam will send the deck by Friday\u201d, \u201cTODO: book the venue\u201d or \u201c@Ana review the copy\u201d.</div>')
+      +(PULL.decisions.length?'<div class="kfl-sec">Decided</div>'+PULL.decisions.map(function(d){ return '<div class="kfl-dec">'+esc(d)+'</div>'; }).join(''):'')
+      +'<div class="kfl-row">'+(PULL.items.length?'<button class="btn" data-pk="add"'+(on?'':' disabled')+'>Add '+on+' task'+(on===1?'':'s')+'</button>':'')+'<button class="btn ghost" data-pk="close">Close</button></div>';
+    el.onchange=function(e){ var i=e.target.dataset.pi; if(i!=null){ PULL.items[+i].on=e.target.checked; drawPull(); } };
+    el.onclick=function(e){
+      var b=e.target.closest('[data-pk]'); if(!b) return;
+      if(b.dataset.pk==='close'){ if(window.closeSheet) closeSheet(); return; }
+      var n=addActions(PULL.m,PULL.items.filter(function(x){ return x.on; }));
+      if(PULL.decisions.length) W.update('meetings',PULL.m.id,{decisions:PULL.decisions},'user');
+      if(window.closeSheet) closeSheet();
+      say(n+' task'+(n===1?'':'s')+' added to your board.');
+      if(window.__workMeet) __workMeet.detail();
+      if(window.__workDraw) try{ __workDraw.refresh(); }catch(x){}
+    };
+  }
+
+  /* repaint when the screens are drawn again */
+  function watch(id,fn){
+    var el=$(id); if(!el||!window.MutationObserver) return;
+    fn();
+    new MutationObserver(function(){ fn(); }).observe(el,{childList:true});
+  }
+  function wire(){
+    watch('waBody',paintAuto);
+    watch('wmdBody',paintMeeting);
+    var nb=$('waNew');
+    if(nb) nb.onclick=function(){ if(window.go) go('workauto'); builder({trigger:'status_changes',tcfg:{to:'Completed'},filters:[],steps:[{a:'notify',cfg:{msg:'{name} is done'}}]}); };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
+  try{ sweep(); }catch(e){ console.warn('flow sweep',e); }
+  setInterval(function(){ try{ sweep(); }catch(e){} },MIN);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) try{ sweep(); }catch(e){} });
+  if(window.__workAuto) try{ __workAuto.draw(); }catch(e){}
+
+  return {parse:parse,make:make,check:check,test:test,sweep:sweep,resume:resume,waits:waits,runSteps:runSteps,
+    actions:actions,addActions:addActions,dueIn:dueIn,builder:builder,fromWords:fromWords,pull:pullSheet,
+    STEPS:S,FILTERS:F,MORE:MORE,describe:function(a){ return U.describe(a); },_setNow:function(f){ NOW=f||null; }};
 })();
 
 </script>

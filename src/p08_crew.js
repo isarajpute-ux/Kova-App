@@ -362,6 +362,28 @@ window.KovaCrew=(function(){
       s:obj({url:S_STR},['url']),
       run:function(a){ return window.KovaAsk?KovaAsk.fetchPage(a.url):{error:'Reading pages is not available here.'}; },
       label:function(r,a){ return r.error?'Could not read '+String(a.url||'').slice(0,60)+': '+r.error:'Read '+(r.title||String(a.url||'').slice(0,60)); }},
+    best_tools:{g:'read',kind:'read',d:'Which of the 86 leading work, automation, CRM, marketing, data and developer apps is best for a need, with the five reasons it leads and what Kova already does the same way. need = what the user wants to do.',
+      s:obj({need:S_STR},['need']),
+      run:function(a){
+        if(!window.KovaApps) return {error:'The app guide is still loading.'};
+        var L=KovaApps.recommend(a.need,3);
+        return {need:a.need,apps:L.map(function(x){ return {name:x.n,group:x.grp,best_at:x.best,reasons:x.why,in_kova:x.take,evidence:KovaApps.EV[x.ev]}; })};
+      },
+      label:function(r){ return r.error?'Could not check the app guide':'Checked the app guide: '+(r.apps.length?r.apps.map(function(x){ return x.name; }).join(', '):'nothing close'); }},
+    create_automation:{g:'tasks',kind:'write',d:'Create a Work OS automation from one plain sentence, e.g. "When a call ends, make a write-up task, wait 2 days, then remind me" or "30 minutes before every call, prep me". Triggers: a task moves to a status, a task is created, goes overdue, sits quiet N days, a meeting is N minutes away, a meeting ends, every day/weekday at a time, a goal is updated. Steps: create a task, notify me, wait N minutes/hours/days, set priority, move it to a status, put it on today, ask the AI team, mark it complete.',
+      s:obj({rule:S_STR,name:S_STR},['rule']),
+      run:function(a,ctx){
+        if(!window.KovaFlow) return {error:'Automations are still loading.'};
+        var r=KovaFlow.parse(a.rule);
+        if(r.error) return {error:r.error};
+        if(a.name) r.spec.name=String(a.name).slice(0,80);
+        r.spec.by='ai';
+        var made=KovaFlow.make(r.spec);
+        if(made&&made.id&&ctx&&ctx.undo) ctx.undo({coll:'automations',id:made.id,created:true});
+        return made&&made.id?{ok:true,id:made.id,name:made.name,rule:KovaFlow.describe(made)}:{error:'The rule could not be saved.'};
+      },
+      describe:function(a){ return {t:'Automation',n:a.name||String(a.rule||'').slice(0,60),s:'a new rule, switched on'}; },
+      label:function(r){ return r.error?'Could not make the rule: '+r.error:'Made the rule \u201c'+r.name+'\u201d'; }},
     post_feedback:{g:'publish',kind:'read',d:'What people are saying about a published post: the top comment themes with their share and a quote, what is working, what to fix and the next video. post = its title, or "latest".',
       s:obj({post:S_STR}),
       run:function(a){ return window.KovaAsk?KovaAsk.feedback(a.post||'latest'):{error:'Not available here.'}; },
