@@ -27,6 +27,12 @@
   status = 200
   force = true
 
+# a booking link (/book/isa) opens the booking page
+[[redirects]]
+  from = "/book/*"
+  to = "/book.html"
+  status = 200
+
 # SPA-style: every path serves the app shell. 200 (rewrite) not 301, so
 # the URL the user opened is preserved for the in-app router.
 [[redirects]]

@@ -1,4 +1,5 @@
 /api/*  /.netlify/functions/api/:splat  200!
+/book/*  /book.html  200
 /privacy  /privacy.html  200
 /terms  /terms.html  200
 /refunds  /refunds.html  200

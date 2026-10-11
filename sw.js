@@ -86,9 +86,9 @@ self.addEventListener('fetch', function(e){
   /* Realtime data, auth, analytics: always straight to network. */
   if (isFirebase(url)) return;
 
-  /* The Kova api (same site since the move to Netlify) and the privacy
+  /* The Kova api (same site since the move to Netlify), booking pages and the privacy
      page are live: never from cache. */
-  if (/\/api\/|\/\.netlify\/|\/privacy(\.html)?$/.test(new URL(url).pathname)) return;
+  if (/\/api\/|\/\.netlify\/|\/privacy(\.html)?$|\/book(\.html|\/)/.test(new URL(url).pathname)) return;
 
   /* Navigations and the shell: network-first, cache as fallback. */
   if (req.mode === 'navigate' || /\/index\.html$/.test(url) || url.endsWith('/')) {

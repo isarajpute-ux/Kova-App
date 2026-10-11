@@ -57,6 +57,13 @@
      POST /crew/ask     {emp,text,url?,deliverAt?,kind?,ref?}  -> {id,runAt}  a request to your AI team, done while Kova is closed (Work)   [auth]
      GET  /crew/asks    -> {items}  your requests and where they are   [auth]
      POST /crew/ask/cancel {id}  take back a request that has not started   [auth]
+     GET  /book/setup   your booking link settings   [auth]
+     POST /book/setup   {slug,name,title,mins,days,from,to,tz,ahead,buffer,notice,on}  claim a link name and save (Work)   [auth]
+     POST /book/busy    {busy:[{start,end}]}  your Work OS meeting times, so they show as busy   [auth]
+     GET  /book/list    your upcoming bookings   [auth]
+     POST /book/cancel  {id}  cancel one; the time opens again   [auth]
+     GET  /book/:id     the free times on someone's booking page (public: anyone with the link)
+     POST /book/:id     {start,name,email,note}  book one (public: anyone with the link)
      GET  /crew/plan    -> {prep,checkin}  meeting prep and check-in times   [auth]
      POST /crew/plan    {tz,prep:{on,time,emp},checkin:{on,time,emp}}  set them (Work)   [auth]
      POST /crew/fetch   {url}  -> {title,text,links}  read one public web page for a teammate (Work)   [auth]
@@ -112,6 +119,7 @@ const asksMod = require('./asks');
 const { fetchPage } = require('./webpage');
 const labs = require('./labs');
 const { makeCalendar, CalError } = require('./calendar');
+const { makeBooking, BookError } = require('./booking');
 const { makeSocial, SocialError } = require('./social');
 
 const seal = require('./seal');
@@ -1171,6 +1179,32 @@ async function mediaRemove(req, res, cfg) {
   res.json({ ok: true });
 }
 
+/* ---------- your booking link (booking.js) -------------------------------- */
+
+const bookingOf = (cfg) => makeBooking({ db: db(), tokens: oauth(cfg), push: { send: (uid, note) => pushOf(cfg).send(uid, note) } });
+async function bookTry(fn) {
+  try { return await fn(); }
+  catch (e) { if (e instanceof BookError) throw new HttpError(e.status, e.message); throw e; }
+}
+async function bookOwner(req, res, cfg, fn, pro) {
+  const u = await requireUser(req);
+  if (pro) await requirePro(u, cfg, 'work');
+  await rateLimit(`book_${u.uid}`, 120, 3600e3);
+  res.set('cache-control', 'no-store');
+  res.json(await bookTry(() => fn(bookingOf(cfg), u.uid, req.body || {})));
+}
+async function bookPublic(req, res, cfg, slug) {
+  const ip = sha(req.ip || 'x').slice(0, 16);
+  res.set('cache-control', 'no-store');
+  if (req.method === 'GET') {
+    await rateLimit(`bookv_${ip}`, 300, 3600e3);
+    return res.json(await bookTry(() => bookingOf(cfg).slots(slug)));
+  }
+  await rateLimit(`bookp_${ip}`, 20, 3600e3);
+  await rateLimit(`bookd_${String(slug).toLowerCase().slice(0, 30)}`, 60, 24 * 3600e3);
+  res.json(await bookTry(() => bookingOf(cfg).book(slug, req.body)));
+}
+
 /* ---------- push reminders ---------------------------------------------- */
 
 const pushOf = (cfg) => makePush({ db: db(), messaging: admin.messaging ? admin.messaging() : null, cfg });
@@ -1283,6 +1317,12 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/devices') return await devicesRoute(req, res, cfg, false);
     if (M === 'POST' && path === '/devices/remove') return await devicesRoute(req, res, cfg, true);
     if (M === 'POST' && path === '/reminders') return await remindersRoute(req, res, cfg);
+    if (M === 'GET' && path === '/book/setup') return await bookOwner(req, res, cfg, (B, uid) => B.get(uid));
+    if (M === 'POST' && path === '/book/setup') return await bookOwner(req, res, cfg, (B, uid, b) => B.setup(uid, b), true);
+    if (M === 'POST' && path === '/book/busy') return await bookOwner(req, res, cfg, (B, uid, b) => B.setBusy(uid, b));
+    if (M === 'GET' && path === '/book/list') return await bookOwner(req, res, cfg, async (B, uid) => ({ items: await B.list(uid) }));
+    if (M === 'POST' && path === '/book/cancel') return await bookOwner(req, res, cfg, (B, uid, b) => B.cancel(uid, b.id));
+    if (seg[0] === 'book' && seg.length === 2 && (M === 'GET' || M === 'POST')) return await bookPublic(req, res, cfg, seg[1]);
     if (M === 'GET' && path === '/billing/status') return await billingStatus(req, res, cfg);
     if (M === 'GET' && path === '/social/me') return await socialRoute(req, res, (S, uid) => S.me(uid));
     if (M === 'GET' && path === '/social/feed') return await socialRoute(req, res, (S, uid) => S.feed(uid));

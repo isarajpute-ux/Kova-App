@@ -586,6 +586,8 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 .ks-cd{font-size:14.5px;line-height:1.4;color:rgba(255,255,255,.75);margin-bottom:14px}
 .ks-cb{display:flex;justify-content:space-between;gap:8px}
 .ks-cb .ks-pill{height:40px}
+.ks-cbr{display:flex;gap:8px}
+.ks-pill[data-t="back"] .ki{margin:0 4px 0 -3px}
 /* section-coloured tours (Home, Vitals, Workout, Sleep, Fuel) */
 .ks-tour.tinted .ks-cstep{color:var(--tc)}
 .ks-tour.tinted .ks-coach{border-color:var(--tg);box-shadow:0 26px 60px rgba(0,0,0,.6),0 0 0 1px var(--tb)}

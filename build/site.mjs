@@ -26,7 +26,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
-const FILES = ['privacy.html', 'terms.html', 'refunds.html', 'cookies.html', 'licenses.html', 'recipes.json', 'sw.js', 'manifest.webmanifest', '_redirects',
+const FILES = ['book.html', 'privacy.html', 'terms.html', 'refunds.html', 'cookies.html', 'licenses.html', 'recipes.json', 'sw.js', 'manifest.webmanifest', '_redirects',
   'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
 const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
 /* after the first screen: the Work OS team and traction, and the p14
@@ -34,11 +34,11 @@ const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
    noise meter, the privacy banner and legal rows, the alert sounds, the
    Studio's workflow styles) */
 const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal', 'p08-chime', 'p08-studioflow',
-  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs', 'p08-alarm', 'p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-apps', 'p08-cmdk', 'p08-vdock'];
+  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs', 'p08-alarm', 'p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-apps', 'p08-cmdk', 'p08-vdock', 'p08-booking'];
 /* of those, the ones whose styles only matter once their own script has
    drawn something: the loader adds their stylesheet with the scripts,
    after the first screen, instead of a <link> fetched during it */
-export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock'];
+export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock', 'p08-booking'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '
@@ -186,6 +186,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   writeFileSync(join(out, 'index.html'), page);
   for (const [f, t] of Object.entries(files)) writeFileSync(join(out, f), t);
   for (const f of FILES) cpSync(join(root, f), join(out, f));
+  /* the booking page talks to the same server as the app */
+  if (api) writeFileSync(join(out, 'book.html'), readFileSync(join(out, 'book.html'), 'utf8').replace("var API=(window.KOVA_API||'/api')", 'var API=(' + JSON.stringify(api) + ')'));
   /* the split files are part of the install, so Work OS opens offline */
   const sw = readFileSync(join(out, 'sw.js'), 'utf8');
   writeFileSync(join(out, 'sw.js'), sw.replace("'./icon-180.png'\n];", "'./icon-180.png'" + Object.keys(files).map((f) => ",\n  './" + f + "'").join('') + '\n];')

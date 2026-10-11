@@ -80,6 +80,10 @@ Vercel's Hobby plan is for personal, non-commercial projects. It is fine while y
 
 **Already on Netlify?** Nothing changes there; `netlify.toml` still works. Use one host for the server at a time so the timer does not run twice (it would not double-post, every job is claimed first, but it is wasted work).
 
+## 2d. Your booking link (no keys)
+
+Work OS › Meetings › **Your booking link** sets up `https://<your site>/book/<name>` (`functions/booking.js`, `book.html`). People see only your free times (your hours, minus Google Calendar when connected, minus your Work OS meetings, minus calls already booked) and book one; it becomes a Work OS meeting and you get a notification. With Google connected (scope `calendar.events`, already requested), the event goes on your calendar with them invited. `vercel.json`, `netlify.toml` and `_redirects` already send `/book/*` to the page.
+
 ## 3. AI (Anthropic)
 
 | Variable | Where to get it | Without it |

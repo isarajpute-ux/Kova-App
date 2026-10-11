@@ -1,0 +1,36 @@
+/* KovaBook (p23): the booking link card on Meetings and its setup pop-up.
+   Thin outlines, the app's accent; dark, soft light and light glass. */
+.kbk-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kbk-h{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.kbk-s{font-size:11.5px;font-weight:300;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin:4px 0 10px}
+.kbk-link{margin-top:8px;padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--acc) 45%,transparent);font-size:13.5px;word-break:break-all;color:var(--ron-txt,#fff)}
+.kbk-link.off{opacity:.55;border-color:var(--ron-line,rgba(255,255,255,.16))}
+.kbk-row{display:flex;gap:8px}
+.kbk-b{flex:1;padding:9px 8px;border-radius:12px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:transparent;color:var(--ron-txt,#fff);font:inherit;font-size:12.5px;cursor:pointer;transition:border-color .2s,transform .15s}
+.kbk-b:hover{border-color:var(--acc)}
+.kbk-b:active{transform:scale(.97)}
+.kbk-sec{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ron-txt-2,rgba(255,255,255,.7));margin:14px 0 6px}
+.kbk-it{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--ron-line-2,rgba(255,255,255,.08))}
+.kbk-it:first-of-type{border-top:0}
+.kbk-it b{display:block;font-size:13px;font-weight:500}
+.kbk-it small{display:block;font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72));margin-top:1px}
+.kbk-x{flex-shrink:0;padding:6px 10px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.8));font:inherit;font-size:11px;cursor:pointer;transition:all .2s}
+.kbk-x.armed{border-color:#FF8A96;color:#FF8A96}
+.kbk-none{font-size:12px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72));margin-top:12px}
+.kbk-tog{width:42px;height:24px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.18));background:rgba(255,255,255,.08);position:relative;cursor:pointer;flex-shrink:0;padding:0;transition:background .25s,border-color .25s}
+.kbk-tog span{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.6);transition:transform .25s cubic-bezier(.22,1,.36,1),background .25s}
+.kbk-tog.on{background:color-mix(in srgb,var(--acc) 30%,transparent);border-color:var(--acc)}
+.kbk-tog.on span{transform:translateX(18px);background:var(--acc)}
+.kbk-chips{display:flex;flex-wrap:wrap;gap:6px}
+.kbk-chips .kfl-chip.on{border-color:var(--acc);color:var(--ron-txt,#fff);background:color-mix(in srgb,var(--acc) 16%,transparent)}
+.kbk-two{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0}
+.kbk-pre{font-size:11.5px;opacity:.75;white-space:nowrap}
+.kbk-b:focus-visible,.kbk-x:focus-visible,.kbk-tog:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+body.light-mode .kbk-link,body.light-mode .kbk-b{color:#1C1A17}
+body.light-mode .kbk-b,body.light-mode .kbk-x,body.light-mode .kbk-tog{border-color:rgba(28,26,23,.16)}
+body.light-mode .kbk-s,body.light-mode .kbk-sec,body.light-mode .kbk-it small,body.light-mode .kbk-none,body.light-mode .kbk-x{color:rgba(28,26,23,.68)}
+body.light-mode .kbk-x.armed{color:#B3263A;border-color:#B3263A}
+body.light-mode .kbk-tog{background:rgba(28,26,23,.08)}
+body.light-mode .kbk-tog span{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+body.light-mode .kbk-chips .kfl-chip.on{color:#1C1A17}
+body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}

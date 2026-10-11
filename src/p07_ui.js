@@ -11,7 +11,7 @@ window.KovaTour=(function(){
   var st=null;
   function $(s){ return document.querySelector(s); }
   function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  var ARROW='<svg class="ki" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  var ARROW='<svg class="ki" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>', BACK='<svg class="ki" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
   function rect(el){
     var r=el.getBoundingClientRect(), pad=10;
     var top=Math.max(8,r.top-pad);
@@ -90,13 +90,15 @@ window.KovaTour=(function(){
     if(!st||st.i!==i) return;
     var s=st.steps[i];
     st.el=el; st.ride=false;
+    if(st.seen[st.seen.length-1]!==i) st.seen.push(i);
     var sp=$('#ksSpot'); if(sp) sp.classList.remove('ride');
     var g=rect(el); spot(g);
     setTimeout(function(){ if(st&&st.i===i){ st.ride=true; if(sp) sp.classList.add('ride'); } },560);
     var coach=$('#ksCoach'); if(!coach) return;
     var n=st.steps.length;
     coach.innerHTML='<div class="ks-cstep">'+(i+1)+' / '+n+'</div><div class="ks-ct">'+esc(s.t)+'</div><div class="ks-cd">'+esc(s.d)+'</div>'
-      +'<div class="ks-cb"><button class="ks-pill small" data-t="skip">Skip</button><button class="ks-pill small white" data-t="next">'+(i===n-1?'Done':'Next')+ARROW+'</button></div>';
+      +'<div class="ks-cb"><button class="ks-pill small" data-t="skip">Skip</button><span class="ks-cbr">'+(st.seen.length>1?'<button class="ks-pill small" data-t="back" aria-label="Back">'+BACK+'Back</button>':'')
+      +'<button class="ks-pill small white" data-t="next">'+(i===n-1?'Done':'Next')+ARROW+'</button></span></div>';
     var cw=Math.min(300,window.innerWidth-24), ch=150, below=g.top+g.h+14, above=g.top-14;
     coach.style.width=cw+'px';
     coach.style.left=Math.max(12,Math.min(window.innerWidth-cw-12,g.r.left+g.r.width/2-cw/2))+'px';
@@ -123,6 +125,17 @@ window.KovaTour=(function(){
       setTimeout(wait,60);
     })();
   }
+  /* back to the step before (the last one actually shown) */
+  function back(){
+    if(!st||st.seen.length<2) return;
+    st.seen.pop(); go(st.seen.pop());
+  }
+  document.addEventListener('keydown',function(e){
+    if(!st||!$('#ksTour')) return;
+    if(e.key==='ArrowRight'){ e.preventDefault(); go(st.i+1); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); back(); }
+    else if(e.key==='Escape'){ e.preventDefault(); end(); }
+  });
   function run(steps,o){
     if(st) end();
     var ov=document.createElement('div'); ov.className='ks ks-tour'; ov.id='ksTour';
@@ -136,13 +149,14 @@ window.KovaTour=(function(){
     document.body.appendChild(ov);
     ov.addEventListener('click',function(e){
       var a=e.target.closest('[data-t]'); if(!a||!st) return;
-      if(a.getAttribute('data-t')==='next') go(st.i+1); else end();
+      var k=a.getAttribute('data-t');
+      if(k==='next') go(st.i+1); else if(k==='back') back(); else end();
     });
-    st={steps:steps,o:o||{},i:-1,el:null,ride:true};
+    st={steps:steps,o:o||{},i:-1,el:null,ride:true,seen:[]};
     requestAnimationFrame(follow);
     go(0);
   }
-  return {run:run,end:end,active:function(){ return !!st; },once:once,seen:seen,mark:mark,canRemember:canRemember};
+  return {run:run,end:end,back:back,next:function(){ if(st) go(st.i+1); },step:function(){ return st?st.i:-1; },active:function(){ return !!st; },once:once,seen:seen,mark:mark,canRemember:canRemember};
 })();
 
 /* ---------------------------------------------------------------------
@@ -290,6 +304,7 @@ window.KovaScreenTour=(function(){
       return {t:t[0],d:t[1],el:get,move:function(){
         /* a step on another screen goes there first; the engine waits for it */
         if(onScreen()!==where&&typeof window.go==='function'){ if(W&&W.reset) W.reset(); window.go(where); }
+        if(t[4]) try{ t[4](); }catch(e){}
         return 0;
       }};
     });
@@ -341,7 +356,9 @@ window.KovaScreenTour=(function(){
     if(h){ e.preventDefault(); e.stopPropagation(); run(h.getAttribute('data-ktour')); }
   },true);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addButtons); else setTimeout(addButtons,0);
-  return {run:run,onScreen:onScreenHook,steps:steps,TOURS:TOURS};
+  /* a part of Kova that loads later adds its own tour */
+  function register(id,name,list){ TOURS[id]=list; NAME[id]=name; addButtons(); }
+  return {run:run,onScreen:onScreenHook,steps:steps,TOURS:TOURS,register:register};
 })();
 
 window.KovaCanvas=(function(){

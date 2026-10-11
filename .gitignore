@@ -11,3 +11,6 @@ dist/
 .claude/
 .look/
 native/sounds/
+
+# a copy of dist/ the preview pane serves
+preview/

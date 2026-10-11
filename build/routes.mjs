@@ -95,7 +95,7 @@ function clientCalls() {
   return calls;
 }
 const match = (pattern, p) => new RegExp('^' + pattern.replace(/:[a-z]+/g, '[^/]+') + '$').test(p.replace(/:x/g, 'X'));
-const BY = { '/oauth/callback': 'the provider, after you approve', '/billing/webhook': 'RevenueCat', '/media/file': 'signed links in the app (img/video src)',
+const BY = { '/book/:id': 'the booking page (book.html)', '/oauth/callback': 'the provider, after you approve', '/billing/webhook': 'RevenueCat', '/media/file': 'signed links in the app (img/video src)',
   '/health/:token': 'the Apple Health shortcut / Health Auto Export (POST); the app reads it (GET)', '/social/me': 'not called yet (reserved for a profile screen)',
   '/social/followers/remove': 'not called yet (reserved for "remove follower")', '/posts/:id': 'Studio, while a post is sending' };
 

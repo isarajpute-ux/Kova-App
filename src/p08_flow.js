@@ -693,7 +693,16 @@ window.KovaFlow=(function(){
   }
 
   /* Meeting: "Pull action items" under the notes */
+  /* the meeting screen rewrites its title on every draw, which drops the
+     tour's "?"; put it back */
+  function meetHelp(){
+    var t=$('wmdTitle'); if(!t||t.querySelector('.kt-help')) return;
+    var b=document.createElement('button');
+    b.type='button'; b.className='kt-help'; b.setAttribute('data-ktour','workmeeting'); b.setAttribute('aria-label','Show me around this meeting'); b.textContent='?';
+    t.appendChild(b);
+  }
   function paintMeeting(){
+    meetHelp();
     var body=$('wmdBody'); if(!body||body.querySelector('.kfl-pull')) return;
     var ta=$('wmdNotes'); if(!ta) return;
     var b=document.createElement('button');
@@ -758,6 +767,29 @@ window.KovaFlow=(function(){
     var nb=$('waNew');
     if(nb) nb.onclick=function(){ if(window.go) go('workauto'); builder({trigger:'status_changes',tcfg:{to:'Completed'},filters:[],steps:[{a:'notify',cfg:{msg:'{name} is done'}}]}); };
   }
+  /* guided tours for Automations and a Meeting (Back, Next, Skip) */
+  function tours(){
+    var T=window.KovaScreenTour; if(!T||!T.register) return;
+    var secAfter=function(txt){ return function(){ var h=[].slice.call(document.querySelectorAll('#waBody .sec-h')).filter(function(x){ return x.textContent.trim()===txt; })[0]; return h&&h.nextElementSibling; }; };
+    var card=function(id){ return function(){ var e=document.getElementById(id); return e&&e.closest('.card'); }; };
+    T.register('workauto','Automations',[
+      ['Say the rule','Write it the way you would tell an assistant. You see the rule before it is saved.','#waBody .kfl-say .kfl-in'],
+      ['Ready examples','Tap one to try it, then change the words.','#waBody .kfl-ex'],
+      ['Build it','Turns your words into steps you can check, test and change.','#waBody .kfl-say .kfl-row'],
+      ['How the best tools do it','86 apps, what each does best, and what Kova took from it.','#waBody .kfl-link'],
+      ['Your rules','Each rule has its own switch, and every run says what it did or why it stopped.',secAfter('Your rules')],
+      ['Recipes','Ready-made rules. Add one in a tap.',secAfter('Recipes')],
+      ['New rule','Or build one step by step: when, only if, then.','#waNew']
+    ]);
+    T.register('workmeeting','Meeting',[
+      ['The call','When it is, who is on it, and the link to join.','#wmdBody .card.card-lg'],
+      ['Before the call','What to raise or bring. Your AI team can prep this for you.',card('wmdPrep')],
+      ['After the call','What was decided, in your words.',card('wmdNotes')],
+      ['Pull action items','Kova finds the tasks, owners and dates in your notes. You tick the real ones.','#wmdBody .kfl-pull'],
+      ['Action items','Everything that came out of the call, on your board.',card('wmdAddTask')]
+    ]);
+  }
+  tours();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
   try{ sweep(); }catch(e){ console.warn('flow sweep',e); }
   setInterval(function(){ try{ sweep(); }catch(e){} },MIN);

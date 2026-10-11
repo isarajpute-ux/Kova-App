@@ -55,7 +55,9 @@ window.KovaVDock=(function(){
     care:{o:'<path d="M7 4.5h7l4 4V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V6a1.5 1.5 0 0 1 1-1.5Z"/><path d="M14 4.5V8a.6.6 0 0 0 .6.6H18"/>',
            f:'<path d="M7.5 4.5H14V8a.6.6 0 0 0 .6.6H18V18a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 18V6a1.5 1.5 0 0 1 1.5-1.5Z" class="kvd-fill"/>'}
   };
-  function glyph(id,on){ var g=G[id]||G.signals; return '<svg viewBox="0 0 24 24" aria-hidden="true" class="kvd-g">'+(on?g.f:g.o)+'</svg>'; }
+  function glyph(id,on){ var g=G[id]||G.signals; return '<svg viewBox="0 0 24 24" aria-hidden="true" class="kvd-g '+(on?'kvd-gf':'kvd-go')+'">'+(on?g.f:g.o)+'</svg>'; }
+  /* both drawings sit in every tile and cross-fade, so a tap never jumps */
+  function glyphs(id){ return '<span class="kvd-gw">'+glyph(id,false)+glyph(id,true)+'</span>'; }
 
   /* ---------------- the sections that exist right now ---------------- */
   function sections(){
@@ -92,15 +94,17 @@ window.KovaVDock=(function(){
     tiles();
     var want=cur&&find(cur)?cur:(find(lsGet())?lsGet():L[0].id);
     show(want,false);
-    built=true;
+    built=true; lift();
+    setTimeout(function(){ center(false); },60);
     return true;
   }
   function tiles(){
     var row=$('kvdRow'); if(!row) return;
     var L=sections();
-    row.innerHTML=L.map(function(x,i){
+    /* the glow is one piece that slides from tile to tile */
+    row.innerHTML='<span class="kvd-ind" id="kvdInd" aria-hidden="true"></span>'+L.map(function(x,i){
       return '<button class="kvd-t" role="tab" id="kvdT-'+esc(x.id)+'" data-kt="'+esc(x.id)+'" aria-selected="false" aria-controls="kvdP-'+esc(x.id)+'" tabindex="-1" title="'+esc(x.n)+'">'
-        +glyph(x.id,false)+'<span class="kvd-tl">'+esc(x.n)+'</span></button>';
+        +glyphs(x.id)+'<span class="kvd-tl">'+esc(x.n)+'</span></button>';
     }).join('');
     L.forEach(function(x){ x.b&&(x.b.id='kvdP-'+x.id); x.b&&x.b.setAttribute('role','tabpanel'); x.b&&x.b.setAttribute('aria-labelledby','kvdT-'+x.id); });
     mark();
@@ -110,13 +114,22 @@ window.KovaVDock=(function(){
     row.querySelectorAll('.kvd-t').forEach(function(t){
       var on=t.dataset.kt===cur;
       t.classList.toggle('on',on); t.setAttribute('aria-selected',on?'true':'false'); t.tabIndex=on?0:-1;
-      var g=t.querySelector('.kvd-g'); if(g) g.outerHTML=glyph(t.dataset.kt,on);
     });
+    slide();
+  }
+  function slide(){
+    var ind=$('kvdInd'), t=$('kvdT-'+cur); if(!ind||!t) return;
+    ind.style.width=t.offsetWidth+'px';
+    ind.style.transform='translateX('+t.offsetLeft+'px)';
+    ind.classList.toggle('ready',!!t.offsetWidth);
   }
 
   /* ---------------- show one ---------------- */
   function show(id,user){
     var x=find(id); if(!x) return false;
+    /* slide in from the side you are heading to */
+    var L0=sections().map(function(y){ return y.id; }), from=L0.indexOf(cur), to=L0.indexOf(id), sc=scr();
+    if(sc) sc.classList.toggle('kvd-back',from>=0&&to<from&&!(from===L0.length-1&&to===0)||(from===0&&to===L0.length-1));
     sections().forEach(function(y){
       var on=y.id===id;
       y.w.classList.toggle('kvd-cur',on);
@@ -124,7 +137,7 @@ window.KovaVDock=(function(){
     });
     cur=id; lsSet(id);
     var L=sections(), i=L.indexOf(L.filter(function(y){ return y.id===id; })[0]);
-    var nm=$('kvdName'); if(nm) nm.textContent=x.n;
+    var nm=$('kvdName'); if(nm&&nm.textContent!==x.n){ nm.textContent=x.n; nm.classList.remove('kvd-tx'); void nm.offsetWidth; nm.classList.add('kvd-tx'); }
     var ps=$('kvdPos'); if(ps) ps.textContent=(i+1)+' / '+L.length;
     var sb=$('kvdSub'); if(sb) sb.textContent=summary(id);
     mark();
@@ -177,7 +190,7 @@ window.KovaVDock=(function(){
     /* the wheel look: tiles away from the middle turn and fade a little */
     var raf=0;
     row.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(function(){ raf=0; spin(row); }); },{passive:true});
-    window.addEventListener('resize',function(){ spin(row); });
+    window.addEventListener('resize',function(){ spin(row); slide(); });
   }
   function spin(row){
     row=row||$('kvdRow'); if(!row||!row.clientWidth) return;
@@ -191,7 +204,7 @@ window.KovaVDock=(function(){
     var row=$('kvdRow'), t=$('kvdT-'+cur); if(!row||!t||!row.clientWidth){ spin(row); return; }
     var to=t.offsetLeft+t.offsetWidth/2-row.clientWidth/2;
     try{ row.scrollTo({left:to,behavior:smooth?'smooth':'auto'}); }catch(e){ row.scrollLeft=to; }
-    spin(row);
+    spin(row); slide();
   }
 
   /* ---------------- data ---------------- */
@@ -350,11 +363,32 @@ window.KovaVDock=(function(){
       if(want) show(want,false);
     }).observe(s,{subtree:true,attributes:true,attributeOldValue:true,attributeFilter:['class']});
     /* fresh numbers each time Vitals is opened */
-    new MutationObserver(function(){ if(s.classList.contains('on')&&built){ var sb=$('kvdSub'); if(sb) sb.textContent=summary(cur); paintCards(cur); center(false); } })
+    new MutationObserver(function(){ lift(); if(s.classList.contains('on')&&built){ var sb=$('kvdSub'); if(sb) sb.textContent=summary(cur); paintCards(cur); center(false); } })
       .observe(s,{attributes:true,attributeFilter:['class']});
   }
 
   /* nothing is moved until Vitals is first opened, so loading Kova stays light */
+  /* the guided tour of Vitals walks the dock: each stop opens its section */
+  function tour(){
+    var T=window.KovaScreenTour; if(!T||!T.register) return;
+    var q=function(sel){ return function(){ return document.querySelector(sel); }; };
+    var at=function(id){ return function(){ show(id,false); }; };
+    T.register('vitals','Vitals',[
+      ['Pick a part of Vitals','Every part of Vitals is one tile here. Swipe along, then tap one.','#kvdDock'],
+      ['Where you are','The part you are on, and arrows to step through all of them.','#kvdHead'],
+      ['Recovery','Today\u2019s score from sleep, HRV and resting heart rate, and where it sits.',q('#s-vitals .kvd-power .kvd-big'),'vitals',at('today')],
+      ['Three readings','HRV, resting heart rate and sleep against your normal. Coloured when one is off.',q('#s-vitals .kvd-sms'),'vitals',at('today')],
+      ['Sleep and trend','Two weeks of nights: a long dash is a full night, a dot is a night with no data.',q('#s-vitals .kvd-trend'),'vitals',at('today')],
+      ['Steadiest and most off','The reading closest to your normal, and the one furthest from it.',function(){ return document.querySelector('#s-vitals .kvd-pair')||document.querySelector('#s-vitals .kvd-empty'); },'vitals',at('signals')],
+      ['Every reading','Each signal against your own normal range. Tap one to read it.','#sigBio','vitals',at('signals')],
+      ['Connect your watch','Link Apple Watch for real readings, not estimates.','#s-vitals .ronrange[data-go="watch"]','vitals',at('feeling')],
+      ['Heart and stress','Your heart through the day, and when stress peaked.','#s-vitals .card[data-go="stress"]','vitals',at('heart')],
+      ['Health and actions','Add conditions and medication for reminders.','#s-vitals .card[data-go="health"]','vitals',at('care')],
+      ['Find anything','Tap here and type what you are looking for: a reading, a screen, a task.','#s-vitals .hdr-r [data-kcmd]']
+    ]);
+  }
+  tour();
+  function lift(){ var s=scr(); document.body.classList.toggle('kvd-vis',!!(s&&built&&s.classList.contains('on'))); }
   function start(){
     var s=scr(); if(!s) return;
     watch();

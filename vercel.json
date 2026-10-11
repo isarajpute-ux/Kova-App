@@ -15,6 +15,7 @@
   "rewrites": [
     { "source": "/api", "destination": "/api/index?__p=/" },
     { "source": "/api/:path*", "destination": "/api/index?__p=/:path*" },
+    { "source": "/book/:slug", "destination": "/book.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/refunds", "destination": "/refunds.html" },

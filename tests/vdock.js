@@ -32,6 +32,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const tiles = [...doc.querySelectorAll('#kvdRow .kvd-t')];
   ck('one tile each, in a tab list, each named', tiles.length === 7 && $('#kvdRow').getAttribute('role') === 'tablist' && tiles.every((t) => t.getAttribute('role') === 'tab' && t.title && t.querySelector('svg')));
   ck('the dock sits at the bottom of Vitals', scr.lastElementChild.id === 'kvdDock');
+  ck('on Vitals, Ask Kova floats above the dock, not beside it', doc.body.classList.contains('kvd-vis') && /body\.kvd-vis \.kfab\{bottom:calc\(112px/.test(css));
   ck('the old "Collapse everything" bar and drop-down headers are replaced (styles hide them)', /#s-vitals\.kvd-on>\.vall\{display:none\}/.test(css) && /#s-vitals\.kvd-on>\.vsec>\.vsec-h\{display:none\}/.test(css));
 
   /* one at a time */
@@ -40,13 +41,16 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('the title reads "Vitals: Today" with its place, 1 / 7', $('#kvdName').textContent === 'Today' && $('#kvdHead .kvd-hl').textContent === 'Vitals:' && $('#kvdPos').textContent === '1 / 7');
   click(doc.getElementById('kvdT-signals')); await wait(20);
   ck('tap a tile: that section shows, with its title', V.current() === 'signals' && curOnly('signals') && $('#kvdName').textContent === 'Readings & signals' && $('#kvdPos').textContent === '5 / 7');
-  ck('the tile you are on is selected and drawn filled; the rest are outlines', doc.getElementById('kvdT-signals').getAttribute('aria-selected') === 'true' && doc.getElementById('kvdT-signals').classList.contains('on')
-    && !!doc.querySelector('#kvdT-signals .kvd-fill') && !doc.querySelector('#kvdT-heart .kvd-fill') && tiles.filter((t) => t.getAttribute('aria-selected') === 'true').length === 1);
+  ck('the tile you are on is selected; its filled drawing fades in over the outline (both are in every tile, so nothing jumps)', doc.getElementById('kvdT-signals').getAttribute('aria-selected') === 'true' && doc.getElementById('kvdT-signals').classList.contains('on')
+    && [...doc.querySelectorAll('#kvdRow .kvd-t')].every((t) => t.querySelector('.kvd-go') && t.querySelector('.kvd-gf .kvd-fill')) && doc.querySelectorAll('#kvdRow .kvd-t.on').length === 1
+    && /\.kvd-t\.on \.kvd-gf\{opacity:1/.test(css) && /\.kvd-t\.on \.kvd-go\{opacity:0/.test(css));
+  ck('one glow slides to the tile you pick, instead of tiles flipping', !!doc.getElementById('kvdInd') && /translateX\(/.test(doc.getElementById('kvdInd').style.transform) && /\.kvd-ind\{[^}]*transition:transform \.5s/.test(css));
   ck('its section is open and labelled by its tile', doc.getElementById('kvdP-signals').classList.contains('open') && doc.getElementById('kvdP-signals').getAttribute('aria-labelledby') === 'kvdT-signals');
   click($('#kvdHead [data-kv="next"]')); await wait(10);
   ck('the arrow by the title steps to the next one', V.current() === 'heart');
+  ck('going forward, the section slides in from the right', !scr.classList.contains('kvd-back'));
   click($('#kvdHead [data-kv="prev"]')); click($('#kvdHead [data-kv="prev"]')); await wait(10);
-  ck('and back', V.current() === 'feeling');
+  ck('and back, sliding in from the left', V.current() === 'feeling' && scr.classList.contains('kvd-back') && /kvdInB/.test(css));
   const row = $('#kvdRow');
   key(row, 'ArrowRight'); await wait(10);
   ck('keyboard: arrow right on the dock moves on', V.current() === 'signals');
@@ -122,8 +126,12 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const cyc = scr.querySelector('.kcx-vsec'); V.show('cycle', true); cyc.remove(); await wait(30);
   ck('a section removed (Cycle, for a man) leaves the dock, and the screen moves to one that exists', V.sections().length === 6 && doc.querySelectorAll('#kvdRow .kvd-t').length === 6 && V.current() !== 'cycle' && $('#kvdPos').textContent.endsWith('/ 6'));
 
+  w.go('home'); await wait(60);
+  ck('leaving Vitals puts Ask Kova back where it was', !doc.body.classList.contains('kvd-vis'));
+  w.go('vitals'); await wait(60);
   ck('styles for dark, soft light and light glass', /body\.light-mode \.kvd-dock/.test(css) && /body\.soft-light \.kvd-dock/.test(css) && /body\.light-mode \.kvd-t\.on/.test(css));
-  ck('the look of the images: thin big numbers, the glow, the dot grid, squircles that turn like a wheel', /\.kvd-num\{font-size:68px;font-weight:200/.test(css) && /\.kvd-power::before/.test(css) && /background-size:15px 15px/.test(css) && /rotateY\(calc\(var\(--kvd-d/.test(css));
+  ck('the look of the images: thin big numbers and the glow; no dot grid behind Vitals (that stays on Work OS)', /\.kvd-num\{font-size:68px;font-weight:200/.test(css) && /\.kvd-power::before/.test(css) && !/#s-vitals\.kvd-on\{background-image/.test(css) && !/background-size:15px 15px/.test(css));
+  ck('the dock spans the width, with wide tiles spaced apart and no tilt that makes them overlap', /\.kvd-dock\{[^}]*margin:18px 0 0/.test(css) && /\.kvd-t\{[^}]*flex:0 0 80px/.test(css) && /\.kvd-row\{[^}]*gap:12px/.test(css) && !/rotateY/.test(css));
   ck('motion is calmer when the phone asks for less', /prefers-reduced-motion:reduce/.test(css));
 
   const bad = errors.filter((e) => !/Not implemented|Could not parse CSS|csstree/i.test(e));
