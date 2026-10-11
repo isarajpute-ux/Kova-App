@@ -3646,18 +3646,30 @@ window.KovaMedia = (function(){
    password flow is legitimate here in a way it was not before.
    ================================================================= */
 window.KovaCloudAuth = (function(){
-  function modal(show){
+  /* the screen itself is KovaSignIn (src/p08_signin.js): Sign in,
+     Create account and Reset password, with a message area that can
+     carry the next step as a button */
+  /* KovaSignIn arrives with the after-first-screen files; asked for
+     before then, the sheet opens and fills in the moment it lands */
+  function modal(show, opts){
     var el = document.getElementById('kova-auth-modal');
-    if (el) el.style.display = show ? 'flex' : 'none';
+    if (!el) return;
+    el.style.display = show ? 'flex' : 'none';
+    if (!show) return;
+    function draw(){ if (el.style.display !== 'none' && window.KovaSignIn && (opts || !document.getElementById('kova-email'))) KovaSignIn.render((opts && opts.mode) || 'in', opts && opts.email); }
+    if (window.KovaSignIn) return draw();
+    addEventListener('kova:lazy', function once(){ removeEventListener('kova:lazy', once); draw(); });
+    try { if (window.__kovaLoadWork) __kovaLoadWork(); } catch(e){}
   }
-  function err(msg){
+  function err(msg, actions, tone){
+    if (window.KovaSignIn) return KovaSignIn.error(msg, actions, tone);
     var el = document.getElementById('kova-auth-err');
-    if (el){ el.textContent = msg || ''; el.style.display = msg ? 'block' : 'none'; }
+    if (el){ el.textContent = msg || ''; el.hidden = !msg; }
   }
   function busy(on, label){
-    var b = document.getElementById('kova-auth-go');
-    if (b){ b.disabled = !!on; b.textContent = on ? (label||'Working...') : 'Sign in'; }
+    if (window.KovaSignIn) return KovaSignIn.busy(on, label);
   }
+  function to(mode, email){ return function(){ if (window.KovaSignIn) KovaSignIn.render(mode, email); }; }
   /* Firebase error codes are not sentences. Anything unmapped falls
      through with its code attached rather than a generic "try again",
      because an error you cannot name is an error you cannot fix. */
@@ -3666,9 +3678,12 @@ window.KovaCloudAuth = (function(){
     if (c === 'auth/invalid-email')        return 'Check the email: it needs an @ and a domain, like name@gmail.com.';
     if (c === 'auth/user-not-found')       return 'There is no account with that email yet. Tap "Create account" to make one.';
     if (c === 'auth/wrong-password' ||
-        c === 'auth/invalid-credential')   return 'That email and password do not match. Check both (capital letters count in the password), or reset it.';
-    if (c === 'auth/email-already-in-use') return 'That email already has an account. Sign in instead.';
-    if (c === 'auth/weak-password')        return 'Password needs to be at least 6 characters.';
+        c === 'auth/invalid-credential' ||
+        c === 'auth/invalid-login-credentials') return 'That email and password do not match. Check both (capital letters count in the password), or reset it.';
+    if (c === 'auth/email-already-in-use' ||
+        c === 'auth/credential-already-in-use') return 'That email already has an account. Sign in instead.';
+    if (c === 'auth/weak-password')        return 'Make the password 8 or more characters, with a letter and a number.';
+    if (c === 'auth/missing-password')     return 'Type your password.';
     if (c === 'auth/too-many-requests')    return 'Too many attempts. Wait a minute and try again.';
     if (c === 'auth/network-request-failed') return 'No connection. Your data is saved on this device and will sync later.';
     if (c === 'auth/popup-closed-by-user') return '';
@@ -3719,27 +3734,51 @@ window.KovaCloudAuth = (function(){
 
   return {
     signIn: function(email, pw){
-      if (!auth) return err('Backend unavailable. Working offline on this device.');
+      if (!auth) return err('Sign-in is offline right now. Everything keeps working on this device.');
       email = String(email || '').replace(/\s+/g, '').toLowerCase();
-      err(''); busy(true, 'Signing in...');
+      err(''); busy(true, 'Signing in\u2026');
       auth.signInWithEmailAndPassword(email, pw)
-        .then(function(){ KovaAnalytics.track('login', { method: 'email' }); })
-        .catch(function(e){ err(human(e)); })
+        .then(function(){ KovaAnalytics.track('login', { method: 'email' }); toastSafe('Signed in as ' + email + '.'); })
+        .catch(function(e){
+          var c = (e && e.code) || '';
+          /* Firebase no longer says whether the account exists, so offer both ways forward */
+          if (/invalid-credential|invalid-login-credentials|wrong-password|user-not-found/.test(c))
+            return err('That password does not match an account for ' + email + '. Capital letters count.',
+              [['Reset password', to('reset', email)], ['New here? Create an account', to('up', email)]]);
+          err(human(e));
+        })
         .then(function(){ busy(false); });
     },
     signUp: function(email, pw){
-      if (!auth) return err('Backend unavailable. Working offline on this device.');
+      if (!auth) return err('Sign-in is offline right now. Everything keeps working on this device.');
       email = String(email || '').replace(/\s+/g, '').toLowerCase();
-      err(''); busy(true, 'Creating...');
-      auth.createUserWithEmailAndPassword(email, pw)
-        .then(function(){
-          KovaAnalytics.track('sign_up', { method: 'email' });
+      err(''); busy(true, 'Creating your account\u2026');
+      /* a guest who used "Skip" keeps everything: the guest account
+         becomes the real one instead of being left behind */
+      var u = auth.currentUser, linking = !!(u && u.isAnonymous && firebase.auth && firebase.auth.EmailAuthProvider);
+      var p = linking ? u.linkWithCredential(firebase.auth.EmailAuthProvider.credential(email, pw))
+                      : auth.createUserWithEmailAndPassword(email, pw);
+      p.then(function(res){
+          var user = (res && res.user) || auth.currentUser;
+          KovaAnalytics.track('sign_up', { method: 'email', fromGuest: linking });
           /* a brand new account starts empty in the cloud, so the
              device's existing data is what should win - push it up
              rather than pulling an empty store down over it */
           KovaCloud.pushAll();
+          try { if (user && user.sendEmailVerification) user.sendEmailVerification(); } catch(x){}
+          if (linking) {
+            try { var a = JSON.parse(localStorage.getItem('kova.auth')||'{}'); a.email = email; a.uid = user && user.uid; localStorage.setItem('kova.auth', JSON.stringify(a)); } catch(x){}
+            modal(false);
+            try { if (window.__paintSettings) __paintSettings(); } catch(x){}
+          }
+          toastSafe('Account created for ' + email + '. We sent a link to confirm the address.');
         })
-        .catch(function(e){ err(human(e)); })
+        .catch(function(e){
+          var c = (e && e.code) || '';
+          if (/email-already-in-use|credential-already-in-use/.test(c))
+            return err('There is already an account for ' + email + '.', [['Sign in instead', to('in', email)], ['Reset password', to('reset', email)]]);
+          err(human(e));
+        })
         .then(function(){ busy(false); });
     },
     google: function(){
@@ -3768,10 +3807,14 @@ window.KovaCloudAuth = (function(){
         });
     },
     reset: function(email){
-      if (!auth || !email) return err('Enter your email first, then tap this again.');
+      email = String(email || '').replace(/\s+/g, '').toLowerCase();
+      if (!auth || !email) return err('Type your email first, then tap this again.');
+      busy(true, 'Sending\u2026');
       auth.sendPasswordResetEmail(email)
-        .then(function(){ err('Reset link sent to ' + email + '.'); })
-        .catch(function(e){ err(human(e)); });
+        /* Firebase answers the same whether or not the account exists */
+        .then(function(){ err('If there is an account for ' + email + ', a link to choose a new password is on its way. Check spam too.', [['Back to sign in', to('in', email)]], 'good'); })
+        .catch(function(e){ err(human(e)); })
+        .then(function(){ busy(false); });
     },
     signOut: function(){
       if (!auth) return;
@@ -3782,10 +3825,10 @@ window.KovaCloudAuth = (function(){
       var u = auth && auth.currentUser;
       return { signedIn: !!u, email: u && u.email, uid: u && u.uid, anon: !!(u && u.isAnonymous) };
     },
-    open: function(){
+    open: function(opts){
       if (!auth) return;
       try { localStorage.removeItem('kova.auth.skipped'); } catch(e){}
-      err(''); modal(true);
+      modal(true, opts || { mode: 'in' }); err('');
     }
   };
 })();
@@ -7413,82 +7456,87 @@ body.soft-light .kb-thumbs img{border-color:#4E4A55}
 @media (max-width:360px){ .kbs-grid{grid-template-columns:repeat(2,1fr)} }
 
 </style>
+<style id="p08-signin">
+/* KovaSignIn (p18): the email and password screen. Dark by default,
+   soft light and light glass below. */
+#kova-auth-modal{position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:24px 16px;overflow-y:auto;
+  background:radial-gradient(ellipse 130% 95% at 50% -6%,#0B0B0C 0%,#050506 52%,#040003 100%)!important;font-family:'Outfit',sans-serif;color:#F3F4F7}
+.ksi{width:360px;max-width:100%;margin:auto;display:flex;flex-direction:column;align-items:stretch;gap:14px}
+.ksi-brand{text-align:center;font-size:30px;font-weight:300;letter-spacing:-.03em}
+.ksi-card{display:flex;flex-direction:column;padding:20px;border-radius:22px;background:rgba(255,255,255,.045);border:.5px solid rgba(255,255,255,.10);
+  backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
+.ksi-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:13px;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.10);margin-bottom:16px}
+.ksi-seg button{padding:9px 6px;border:0;border-radius:10px;background:none;color:rgba(243,244,247,.6);font:inherit;font-size:13px;cursor:pointer}
+.ksi-seg button.on{background:#F3F4F7;color:#0A0A0C;font-weight:500}
+.ksi-h{font-size:19px;font-weight:400;letter-spacing:-.02em}
+.ksi-sub{font-size:12px;font-weight:300;line-height:1.5;color:rgba(243,244,247,.55);margin:3px 0 14px}
+.ksi-l{font-size:9.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,244,247,.45);margin:4px 0 7px}
+.ksi-in{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);
+  color:inherit;font:inherit;font-size:15px;font-weight:300;outline:none;margin-bottom:6px}
+.ksi-in:focus{border-color:rgba(255,255,255,.5);box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+.ksi-pw{position:relative}
+.ksi-pw .ksi-in{padding-right:64px}
+.ksi-eye{position:absolute;right:6px;top:6px;height:32px;padding:0 10px;border:0;border-radius:9px;background:rgba(255,255,255,.07);color:inherit;font:inherit;font-size:12px;cursor:pointer}
+.ksi-tip{display:none;font-size:12px;font-weight:300;color:rgba(243,244,247,.7);margin:0 0 8px}
+.ksi-tip.on{display:block}
+.ksi-fix{border:0;background:none;padding:0;font:inherit;font-weight:500;color:#F3F4F7;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ksi-caps{font-size:11.5px;color:#F0B35B;margin:0 0 8px}
+.ksi-rules{list-style:none;margin:2px 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;font-weight:300;color:rgba(243,244,247,.55)}
+.ksi-rules li::before{content:"";display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%;border:1px solid currentColor;vertical-align:1px}
+.ksi-rules li.ok{color:#7DD8A6}
+.ksi-rules li.ok::before{background:currentColor}
+.ksi-match{min-height:16px;font-size:11.5px;font-weight:300;margin:0 0 4px}
+.ksi-match.ok{color:#7DD8A6}
+.ksi-match.bad{color:#F0B35B}
+.ksi-msg{display:flex;flex-direction:column;gap:8px;margin:6px 0 2px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.45;
+  background:rgba(232,96,122,.10);border:.5px solid rgba(232,96,122,.35);color:#F7C6CF}
+.ksi-msg[hidden],.ksi-caps[hidden]{display:none}
+.ksi-msg.good{background:rgba(125,216,166,.10);border-color:rgba(125,216,166,.35);color:#CDEFDB}
+.ksi-acts{display:flex;flex-wrap:wrap;gap:8px}
+.ksi-acts button{padding:6px 11px;border-radius:99px;border:.5px solid currentColor;background:none;color:inherit;font:inherit;font-size:12px;cursor:pointer}
+.ksi-go{width:100%;padding:13px;margin-top:12px;border:0;border-radius:12px;background:#F3F4F7;color:#0A0A0C;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.ksi-go:disabled{opacity:.6;cursor:default}
+.ksi-link,.ksi-skip{align-self:center;margin-top:10px;padding:4px 6px;border:0;background:none;color:rgba(243,244,247,.6);font:inherit;font-size:12.5px;font-weight:300;cursor:pointer}
+.ksi-link{text-decoration:underline;text-underline-offset:3px}
+.ksi-or{display:flex;align-items:center;gap:10px;margin:14px 0 12px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,244,247,.3)}
+.ksi-or::before,.ksi-or::after{content:"";flex:1;height:.5px;background:rgba(255,255,255,.12)}
+.ksi-alt{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:12px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:13px;cursor:pointer}
+.ksi-note{text-align:center;font-size:10.5px;font-weight:300;line-height:1.5;color:rgba(243,244,247,.3)}
+.ksi button:focus-visible,.ksi-in:focus-visible{outline:2px solid #F3F4F7;outline-offset:2px}
+
+body.light-mode #kova-auth-modal{background:radial-gradient(ellipse 130% 95% at 50% -6%,#FFFFFF 0%,#F4F1EC 55%,#ECE7DF 100%)!important;color:#1C1A17}
+body.light-mode .ksi-card{background:rgba(255,255,255,.72);border-color:rgba(28,26,23,.10);box-shadow:0 18px 48px rgba(28,26,23,.10),inset 0 1px 0 #fff}
+body.light-mode .ksi-seg{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,.10)}
+body.light-mode .ksi-seg button{color:rgba(28,26,23,.6)}
+body.light-mode .ksi-seg button.on,body.light-mode .ksi-go{background:#1C1A17;color:#fff}
+body.light-mode .ksi-sub,body.light-mode .ksi-tip,body.light-mode .ksi-rules{color:rgba(28,26,23,.6)}
+body.light-mode .ksi-l,body.light-mode .ksi-link,body.light-mode .ksi-skip{color:rgba(28,26,23,.55)}
+body.light-mode .ksi-in{background:#fff;border-color:rgba(28,26,23,.16)}
+body.light-mode .ksi-in:focus{border-color:rgba(28,26,23,.5);box-shadow:0 0 0 3px rgba(28,26,23,.06)}
+body.light-mode .ksi-eye,body.light-mode .ksi-alt{background:rgba(28,26,23,.05);border-color:rgba(28,26,23,.14)}
+body.light-mode .ksi-fix{color:#1C1A17}
+body.light-mode .ksi-rules li.ok,body.light-mode .ksi-match.ok{color:#1E7A4B}
+body.light-mode .ksi-match.bad,body.light-mode .ksi-caps{color:#A4600F}
+body.light-mode .ksi-msg{color:#8E2238;background:rgba(194,55,47,.07);border-color:rgba(194,55,47,.3)}
+body.light-mode .ksi-msg.good{color:#14603A;background:rgba(30,122,75,.08);border-color:rgba(30,122,75,.3)}
+body.light-mode .ksi-or,body.light-mode .ksi-note{color:rgba(28,26,23,.4)}
+body.light-mode .ksi-or::before,body.light-mode .ksi-or::after{background:rgba(28,26,23,.14)}
+body.light-mode .ksi button:focus-visible,body.light-mode .ksi-in:focus-visible{outline-color:#1C1A17}
+body.soft-light #kova-auth-modal{background:radial-gradient(ellipse 130% 95% at 50% -6%,#5E574F 0%,#45403B 55%,#3A3632 100%)!important}
+body.soft-light .ksi-card{background:rgba(255,255,255,.08)}
+@media (prefers-reduced-motion:no-preference){ .ksi-card{animation:ksiIn .28s ease-out} @keyframes ksiIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} }
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
 
 <!-- ─── KOVA AUTH ────────────────────────────────────────
-     Restyled onto the app's own design language: neutral ground, one
-     accent, frosted surface, 9px label floor. The previous version of
-     this modal used a violet/blue gradient, which is the one colour
-     family explicitly rejected for this app. -->
-<div id="kova-auth-modal" style="display:none;position:fixed;inset:0;z-index:9999;
-  background:radial-gradient(ellipse 130% 95% at 50% -6%,#0B0B0C 0%,#050506 52%,#040003 100%);
-  align-items:center;justify-content:center;flex-direction:column;gap:18px;
-  font-family:'Outfit',sans-serif;padding:24px">
-
-  <div style="text-align:center">
-    <div style="font-size:30px;font-weight:300;letter-spacing:-.03em;color:#F3F4F7">Kova</div>
-    <div style="color:rgba(243,244,247,.5);font-size:12.5px;font-weight:300;margin-top:3px">
-      Your health, on every device you own.</div>
-  </div>
-
-  <div style="background:rgba(255,255,255,.045);border:.5px solid rgba(255,255,255,.10);
-    border-radius:20px;padding:22px;width:330px;max-width:92vw;backdrop-filter:blur(22px) saturate(1.4);
-    box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)">
-
-    <div style="font-size:9px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;
-      color:rgba(243,244,247,.32);margin-bottom:9px">EMAIL</div>
-    <input id="kova-email" type="email" autocomplete="email" placeholder="you@example.com"
-      style="width:100%;padding:11px 14px;border-radius:12px;border:.5px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.05);color:#F3F4F7;font-size:14px;font-weight:300;
-      margin-bottom:12px;box-sizing:border-box;outline:none;font-family:inherit"/>
-
-    <div style="font-size:9px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;
-      color:rgba(243,244,247,.32);margin-bottom:9px">PASSWORD</div>
-    <input id="kova-password" type="password" autocomplete="current-password" placeholder="At least 6 characters"
-      style="width:100%;padding:11px 14px;border-radius:12px;border:.5px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.05);color:#F3F4F7;font-size:14px;font-weight:300;
-      margin-bottom:6px;box-sizing:border-box;outline:none;font-family:inherit"/>
-
-    <div id="kova-auth-err" style="display:none;font-size:11px;font-weight:300;line-height:1.45;
-      color:#E8607A;margin:8px 0 2px"></div>
-
-    <button id="kova-auth-go"
-      onclick="KovaCloudAuth.signIn(document.getElementById('kova-email').value,document.getElementById('kova-password').value)"
-      style="width:100%;padding:13px;border-radius:12px;border:none;background:#F3F4F7;color:#0A0A0C;
-      font-size:13.5px;font-weight:600;cursor:pointer;margin-top:12px;font-family:inherit">Sign in</button>
-
-    <button onclick="KovaCloudAuth.signUp(document.getElementById('kova-email').value,document.getElementById('kova-password').value)"
-      style="width:100%;padding:13px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);
-      background:transparent;color:#F3F4F7;font-size:13.5px;font-weight:400;cursor:pointer;
-      margin-top:8px;font-family:inherit">Create account</button>
-
-    <div style="display:flex;align-items:center;gap:9px;margin:14px 0 12px">
-      <div style="flex:1;height:.5px;background:rgba(255,255,255,.10)"></div>
-      <div style="font-size:9px;letter-spacing:.14em;color:rgba(243,244,247,.28)">OR</div>
-      <div style="flex:1;height:.5px;background:rgba(255,255,255,.10)"></div>
-    </div>
-
-    <button onclick="KovaCloudAuth.google()"
-      style="width:100%;padding:12px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.04);color:#F3F4F7;font-size:13px;font-weight:400;cursor:pointer;
-      font-family:inherit;display:flex;align-items:center;justify-content:center;gap:9px">
-      <svg viewBox="0 0 24 24" width="15" height="15"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Continue with Google</button>
-
-    <div style="display:flex;justify-content:space-between;margin-top:13px">
-      <div onclick="KovaCloudAuth.reset(document.getElementById('kova-email').value)"
-        style="font-size:11px;font-weight:300;color:rgba(243,244,247,.45);cursor:pointer">Forgot password</div>
-      <div onclick="KovaCloudAuth.guest()"
-        style="font-size:11px;font-weight:300;color:rgba(243,244,247,.45);cursor:pointer">Skip for now</div>
-    </div>
-  </div>
-
-  <div style="color:rgba(243,244,247,.26);font-size:10.5px;font-weight:300;text-align:center;
-    max-width:300px;line-height:1.5">
-    Your data syncs only to your own account. Skipping keeps everything on this device.</div>
-</div>
+     Email and password (Firebase). KovaSignIn (src/p08_signin.js) draws
+     Sign in, Create account and Reset password into it; the styles for
+     all three appearances are in src/p08_signin.css. -->
+<div id="kova-auth-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:#050506;overflow-y:auto" aria-modal="true" role="dialog" aria-label="Sign in to Kova"><div class="ksi" id="ksiRoot"></div></div>
 </div>
 
 <div class="app" id="app" data-pillar="move">
@@ -22980,16 +23028,33 @@ var METAPHORS={
      recipe an `img` (relative path or data URI) and it renders on top;
      a missing, slow or broken file leaves the plate showing rather
      than a hole, so half a photo set is a valid state.               */
+  /* Unsplash serves any size on request, so ask for what the place needs:
+     a sharp square for the cards (twice the size on big and high-density
+     screens) and the whole photo, uncropped, for the recipe page. A 400 px
+     square stretched across a laptop is what made them look zoomed in. */
+  var UNSPLASH=/^https:\/\/images\.unsplash\.com\//;
+  function photo(url, w, square){
+    if(!UNSPLASH.test(url||'')) return url;
+    return url.split('?')[0]+'?w='+w+(square?'&h='+w+'&fit=crop':'&fit=max')+'&q=80&auto=format';
+  }
+  function photoAttrs(url, ws, square, sizes){
+    var a='src="'+photo(url, ws[0], square)+'"';
+    if(UNSPLASH.test(url||'')) a+=' srcset="'+ws.map(function(w){ return photo(url,w,square)+' '+w+'w'; }).join(', ')+'" sizes="'+sizes+'"';
+    return a;
+  }
   function art(r, h, cls){
-    var box='<div class="rcpart '+(cls||'')+'" style="height:'+h+';'+r.viz+'">';
+    var full=cls==='full';
+    var box='<div class="rcpart '+(cls||'')+'" style="'+(full?'':'height:'+h+';')+r.viz+'">';
+    if(r.img&&full) box+='<img class="rcp-bg" alt="" aria-hidden="true" src="'+photo(r.img,400,true)+'" onerror="this.remove()"/>';
     if(r.img){
-      box+='<img alt="" loading="lazy" src="'+r.img+'" '
+      box+='<img alt="'+(full?String(r.n).replace(/"/g,'&quot;'):'')+'" loading="lazy" '
+        +(full?photoAttrs(r.img,[800,1200,1600],false,'(min-width:760px) 680px, 100vw'):photoAttrs(r.img,[400,800],true,'(min-width:760px) 300px, 50vw'))+' '
         +'onload="this.classList.add(\'ok\')" '
         +'onerror="this.remove()"/>';
     }
     return box+'</div>';
   }
-  window.KovaFood={art:art, has:function(r){ return !!r.img; }};
+  window.KovaFood={art:art, photo:photo, has:function(r){ return !!r.img; }};
 
   window.__RECIPES=RECIPES;
 
@@ -23029,7 +23094,7 @@ var METAPHORS={
       return '<div class="card rcard tap" data-id="'+r.id+'" style="margin:0;padding:0;overflow:hidden;display:flex;flex-direction:column">'
         // square image tile
         +'<div class="rcpart" style="aspect-ratio:1/1;'+r.viz+'">'
-        +(r.img?'<img alt="" loading="lazy" src="'+r.img+'" onload="this.classList.add(\'ok\')" onerror="this.remove()"/>':'')
+        +(r.img?'<img alt="" loading="lazy" '+photoAttrs(r.img,[400,800],true,'(min-width:760px) 260px, 45vw')+' onload="this.classList.add(\'ok\')" onerror="this.remove()"/>':'')
         +'<div style="position:absolute;left:6px;top:6px;background:rgba(0,0,0,.42);backdrop-filter:blur(10px);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:8.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+r.tag+'</div>'
         +'<div style="position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.42);backdrop-filter:blur(10px);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:9px;font-weight:700;color:var(--acc)">'+r.kcal+' kcal</div>'
         +'</div>'
@@ -23054,7 +23119,7 @@ var METAPHORS={
     if(!r)return;
     document.getElementById('rcpEyebrow').textContent=(r.meal+' · '+r.t).toUpperCase();
     document.getElementById('rcpTitle').textContent=r.n;
-    var h='<div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">'+art(r,'170px')+'</div>';
+    var h='<div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">'+art(r,'auto','full')+'</div>';
     // macros
     h+='<div class="card"><div class="lbl" style="margin-bottom:9px">PER SERVING · MAKES '+r.srv+'</div>'
       +'<div style="display:flex;gap:8px">'
@@ -38818,6 +38883,14 @@ window.KovaAuth = (function(){
 
   function esc(x){ var d=document.createElement('div'); d.textContent=x==null?'':String(x); return d.innerHTML; }
 
+  /* the email-and-password screen, for anyone who has a password or when
+     no code can be sent; signing in there takes this wall down too */
+  function passwordLink(getEmail, mode){
+    var b=document.getElementById('afPw'); if(!b) return;
+    if(!(window.KovaCloudAuth&&window.KOVA_FB&&KOVA_FB.ok)){ b.style.display='none'; return; }
+    b.onclick=b.onkeydown=function(e){ if(e.type==='keydown'&&e.key!=='Enter') return; ageGate(function(){ KovaCloudAuth.open({mode:mode,email:getEmail()}); }, getEmail()); };
+  }
+
   /* every step slides in instead of snapping, so moving from email to code
      to "you're in" reads as one flow */
   function step(html){
@@ -38837,7 +38910,7 @@ window.KovaAuth = (function(){
       + '</div>'
       + '<div class="af-tip" id="afTip" aria-live="polite"></div>'
       + '<button class="af-go" id="afSend"'+(validEmail(prefill)?'':' disabled')+'>Send code</button>'
-      + '<div class="af-note">New here? The same code creates your account.</div>'
+      + '<div class="af-note">New here? The same code creates your account. Have a password? <b id="afPw" role="button" tabindex="0">Sign in with it</b></div>'
       + provs('Or continue with')
       + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>'
       + '<div class="af-legal">By continuing you agree to the <a href="terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
@@ -38860,6 +38933,7 @@ window.KovaAuth = (function(){
 
     onProv('authGoogle',function(){ ageGate(function(){ oauthFlow('google'); }); });
     onProv('authApple',function(){ ageGate(function(){ oauthFlow('apple'); }); });
+    passwordLink(function(){ return cleanEmail(em.value); }, 'in');
     var sk=document.getElementById('authSkip');
     sk.onclick = function(){ ageGate(function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); }); };
     sk.onkeydown = function(e){ if(e.key==='Enter') sk.click(); };
@@ -38923,11 +38997,12 @@ window.KovaAuth = (function(){
       + '<div class="af-h">Code not sent</div>'
       + '<div class="af-lbl" style="margin:0 0 18px 4px;line-height:1.55">' + esc(why) + '</div>'
       + '<button class="af-go" id="afRetry">Try again</button>'
-      + '<div class="af-foot" style="margin-top:14px"><b id="afBack" role="button" tabindex="0">Change the email</b></div>'
+      + '<div class="af-foot" style="margin-top:14px"><b id="afPw" role="button" tabindex="0">Use a password instead</b> \u00b7 <b id="afBack" role="button" tabindex="0">Change the email</b></div>'
       + provs('Meanwhile')
       + '<div class="af-foot">Everything works offline. <b id="authSkip">Use Kova without an account</b></div>');
 
     document.getElementById('afRetry').onclick   = function(){ sendCode(email); };
+    passwordLink(function(){ return email; }, 'up');
     document.getElementById('afBack').onclick    = function(){ renderWelcome(email); };
     onProv('authGoogle',function(){ oauthFlow('google'); });
     onProv('authApple',function(){ oauthFlow('apple'); });
@@ -40775,6 +40850,11 @@ body.light-mode .naplog{background:rgba(20,24,32,.035);border-color:rgba(20,24,3
 .rcpart>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   opacity:0;transition:opacity .32s ease-out}
 .rcpart>img.ok{opacity:1}
+/* the recipe page: the whole photo at its own shape, never cropped */
+.rcpart.full{min-height:170px;display:flex;align-items:center;justify-content:center}
+.rcpart.full>img{position:relative;z-index:1;inset:auto;display:block;width:100%;height:auto;max-height:70vh;object-fit:contain}
+/* a tall photo on a wide screen: the sides show a soft blur of the same photo, not a flat band */
+.rcpart.full>img.rcp-bg{position:absolute;z-index:0;inset:-24px;width:calc(100% + 48px);height:calc(100% + 48px);max-height:none;object-fit:cover;filter:blur(22px) brightness(.55) saturate(1.1);opacity:1}
 .rcpsearch{display:flex;align-items:center;gap:9px;padding:10px 13px;
   border-radius:14px;margin-bottom:9px;
   background:rgba(255,255,255,.055);border:.5px solid rgba(255,255,255,.11)}
@@ -58436,6 +58516,168 @@ window.KovaBody=(function(){
 
   return {paint:paint,open:open,add:add,remove:remove,estimate:estimate,logWeight:logWeight,pics:pics,wlog:wlog,trend:trend,
     _S:S,_shrink:shrink,_bytes:bytes};
+})();
+
+</script>
+<script id="p08-signin">
+/* =====================================================================
+   KovaSignIn - the email and password screen (p18).
+
+   Before this one form did two jobs: "Sign in" and "Create account" read
+   the same two boxes, there was no way to see the password, no second
+   box to catch a typo in a new one, and a wrong password only ever said
+   "do not match". Now:
+     - two clear modes, Sign in and Create account, and a third for a
+       forgotten password;
+     - the email box has autocorrect, autocapitalise and spellcheck off,
+       cleans spaces and capitals, offers "Did you mean ...@gmail.com?",
+       and every message names the exact address it used;
+     - Show / Hide on the password, a Caps Lock warning, and for a new
+       account the rules ticked off as you type plus a second box that
+       has to match;
+     - errors say what to do next, with the button for it: Reset
+       password, Create an account, Sign in instead.
+   Firebase (KovaCloudAuth, index.html) still does the signing in; this
+   only draws the screen and checks what can be checked before sending.
+   Dark, soft light and light glass.
+   ===================================================================== */
+window.KovaSignIn=(function(){
+  'use strict';
+  var M='in', ACT=[];
+  var DOMAINS=['gmail.com','icloud.com','outlook.com','hotmail.com','yahoo.com','live.com','me.com','aol.com','proton.me','protonmail.com','msn.com'];
+  function $(id){ return document.getElementById(id); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function clean(v){ return String(v||'').replace(/\s+/g,'').toLowerCase(); }
+  function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+  function dist(a,b){
+    var m=a.length,n=b.length,d=[],i,j; for(i=0;i<=m;i++) d[i]=[i]; for(j=0;j<=n;j++) d[0][j]=j;
+    for(i=1;i<=m;i++) for(j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    return d[m][n];
+  }
+  /* a misspelt common domain: gmial.com, gmail.con, hotmial.com */
+  function suggest(v){
+    v=clean(v); var at=v.lastIndexOf('@'); if(at<1) return '';
+    var dom=v.slice(at+1).replace(/\.(con|cpm|comm|cm|vom|om)$/,'.com');
+    if(DOMAINS.indexOf(dom)>=0) return dom!==v.slice(at+1)?v.slice(0,at+1)+dom:'';
+    var best='',bd=3; DOMAINS.forEach(function(d){ var x=dist(dom,d); if(x<bd){ bd=x; best=d; } });
+    return best&&bd<=2?v.slice(0,at+1)+best:'';
+  }
+  function rules(pw){ return {len:pw.length>=8, mix:/[a-z]/i.test(pw)&&/\d/.test(pw)}; }
+
+  var TITLES={in:'Welcome back',up:'Create your account',reset:'Reset your password'};
+  var SUBS={in:'Sign in to sync your health and work across your devices.',up:'One account for every device. Your data syncs only to it.',reset:'We will email you a link to choose a new password.'};
+  var GO={in:'Sign in',up:'Create account',reset:'Send reset link'};
+
+  function render(mode,email){
+    var root=$('ksiRoot'); if(!root) return;
+    if(mode) M=mode;
+    var keep=email!=null?email:(($('kova-email')||{}).value||'');
+    var pw=M!=='reset';
+    root.innerHTML='<div class="ksi-brand">Kova</div>'
+      +'<div class="ksi-card" role="form" aria-labelledby="ksiH">'
+      +(M!=='reset'?'<div class="ksi-seg" role="tablist" aria-label="Sign in or create an account">'
+        +'<button type="button" role="tab" data-m="in" aria-selected="'+(M==='in')+'"'+(M==='in'?' class="on"':'')+'>Sign in</button>'
+        +'<button type="button" role="tab" data-m="up" aria-selected="'+(M==='up')+'"'+(M==='up'?' class="on"':'')+'>Create account</button></div>':'')
+      +'<div class="ksi-h" id="ksiH">'+TITLES[M]+'</div><div class="ksi-sub">'+SUBS[M]+'</div>'
+      +'<label class="ksi-l" for="kova-email">Email</label>'
+      +'<input class="ksi-in" id="kova-email" type="email" inputmode="email" autocomplete="'+(M==='up'?'email':'username')+'" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="you@example.com" value="'+esc(keep)+'"/>'
+      +'<div class="ksi-tip" id="ksiTip" aria-live="polite"></div>'
+      +(pw?'<label class="ksi-l" for="kova-password">'+(M==='up'?'Choose a password':'Password')+'</label>'
+        +'<div class="ksi-pw"><input class="ksi-in" id="kova-password" type="password" autocomplete="'+(M==='up'?'new-password':'current-password')+'" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="'+(M==='up'?'8 or more characters':'Your password')+'"/>'
+        +'<button type="button" class="ksi-eye" id="ksiEye" aria-pressed="false" aria-controls="kova-password">Show</button></div>'
+        +'<div class="ksi-caps" id="ksiCaps" hidden>Caps Lock is on</div>':'')
+      +(M==='up'?'<ul class="ksi-rules" id="ksiRules"><li data-r="len">8 or more characters</li><li data-r="mix">A letter and a number</li></ul>'
+        +'<label class="ksi-l" for="kova-password2">Type it again</label>'
+        +'<input class="ksi-in" id="kova-password2" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="The same password"/>'
+        +'<div class="ksi-match" id="ksiMatch" aria-live="polite"></div>':'')
+      +'<div class="ksi-msg" id="kova-auth-err" role="alert" hidden></div>'
+      +'<button type="button" class="ksi-go" id="kova-auth-go">'+GO[M]+'</button>'
+      +(M==='in'?'<button type="button" class="ksi-link" data-m="reset">Forgot password?</button>':'')
+      +(M==='reset'?'<button type="button" class="ksi-link" data-m="in">Back to sign in</button>':'')
+      +(M!=='reset'?'<div class="ksi-or"><span>or</span></div>'
+        +'<button type="button" class="ksi-alt" onclick="KovaCloudAuth.google()"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>':'')
+      +'<button type="button" class="ksi-skip" onclick="KovaCloudAuth.guest()">Skip for now</button>'
+      +'</div>'
+      +'<div class="ksi-note">Your data syncs only to your own account. Skipping keeps everything on this device.</div>';
+    wire();
+    check(false);
+  }
+
+  function wire(){
+    var root=$('ksiRoot'), em=$('kova-email'), pw=$('kova-password'), p2=$('kova-password2');
+    root.onclick=function(e){
+      var m=e.target.closest('[data-m]'); if(m){ render(m.getAttribute('data-m')); var f=$(m.getAttribute('data-m')==='reset'?'kova-email':'kova-password'); if(f&&$('kova-email').value) f.focus(); else $('kova-email').focus(); return; }
+      var a=e.target.closest('[data-act]'); if(a&&ACT[+a.getAttribute('data-act')]) ACT[+a.getAttribute('data-act')]();
+    };
+    $('kova-auth-go').onclick=submit;
+    em.oninput=function(){ check(false); };
+    em.onblur=function(){ check(true); };
+    [em,pw,p2].forEach(function(x){ if(x) x.addEventListener('keydown',function(e){
+      if(e.getModifierState) $('ksiCaps')&&( $('ksiCaps').hidden=!(e.getModifierState('CapsLock')&&x!==em) );
+      if(e.key==='Enter'){ e.preventDefault(); submit(); }
+    }); });
+    if(pw) pw.oninput=function(){ live(); };
+    if(p2) p2.oninput=function(){ live(); };
+    var eye=$('ksiEye');
+    if(eye) eye.onclick=function(){
+      var show=pw.type==='password';
+      [pw,p2].forEach(function(x){ if(x) x.type=show?'text':'password'; });
+      eye.textContent=show?'Hide':'Show'; eye.setAttribute('aria-pressed',String(show));
+    };
+  }
+  /* the email: tidy, suggest, and only after leaving the box, say what is missing */
+  function check(final){
+    var em=$('kova-email'), tip=$('ksiTip'); if(!em||!tip) return;
+    var v=clean(em.value), sg=v?suggest(v):'';
+    if(sg){ tip.className='ksi-tip on'; tip.innerHTML='Did you mean <button type="button" class="ksi-fix" id="ksiFix">'+esc(sg)+'</button>?';
+      $('ksiFix').onmousedown=function(e){ e.preventDefault(); };
+      $('ksiFix').onclick=function(){ em.value=sg; check(false); var p=$('kova-password'); (p||em).focus(); }; return; }
+    if(final&&v&&!valid(v)){ tip.className='ksi-tip on'; tip.textContent=v.indexOf('@')<0?'That needs an @, like name@gmail.com.':'That address looks unfinished, like name@gmail.com.'; return; }
+    tip.className='ksi-tip'; tip.textContent='';
+  }
+  function live(){
+    var pw=($('kova-password')||{}).value||'', r=rules(pw), ul=$('ksiRules');
+    if(ul) [].forEach.call(ul.children,function(li){ li.classList.toggle('ok',!!r[li.getAttribute('data-r')]); });
+    var p2=$('kova-password2'), m=$('ksiMatch');
+    if(p2&&m){
+      if(!p2.value){ m.className='ksi-match'; m.textContent=''; }
+      else if(p2.value===pw){ m.className='ksi-match ok'; m.textContent='Passwords match'; }
+      else if(pw.indexOf(p2.value)===0){ m.className='ksi-match'; m.textContent=''; }
+      else { m.className='ksi-match bad'; m.textContent='These do not match yet'; }
+    }
+    error('');
+  }
+  function submit(){
+    var go=$('kova-auth-go'); if(go&&go.disabled) return;
+    var em=$('kova-email'), email=clean(em&&em.value);
+    if(em) em.value=email;
+    if(!email) return error('Type your email first.'), em&&em.focus();
+    if(!valid(email)) return error('That email looks unfinished: it needs an @ and a domain, like name@gmail.com.'), em.focus();
+    if(!window.KovaCloudAuth) return error('Sign-in is not available here.');
+    if(M==='reset') return KovaCloudAuth.reset(email);
+    var pw=($('kova-password')||{}).value||'';
+    if(!pw) return error(M==='up'?'Choose a password.':'Type your password.'), $('kova-password').focus();
+    if(M==='up'){
+      var r=rules(pw);
+      if(!r.len||!r.mix) return error('Make the password 8 or more characters, with a letter and a number.'), $('kova-password').focus();
+      if(pw!==($('kova-password2')||{}).value) return error('The two passwords do not match. Type it again in the second box.'), $('kova-password2').focus();
+      return KovaCloudAuth.signUp(email,pw);
+    }
+    KovaCloudAuth.signIn(email,pw);
+  }
+  /* a message, and the buttons that act on it: [['Reset password', fn], ...] */
+  function error(msg,actions,tone){
+    var el=$('kova-auth-err'); if(!el) return;
+    ACT=(actions||[]).map(function(a){ return a[1]; });
+    if(!msg){ el.hidden=true; el.innerHTML=''; return; }
+    el.hidden=false; el.className='ksi-msg'+(tone?' '+tone:'');
+    el.innerHTML='<span>'+esc(msg)+'</span>'+(actions&&actions.length?'<span class="ksi-acts">'+actions.map(function(a,i){ return '<button type="button" data-act="'+i+'">'+esc(a[0])+'</button>'; }).join('')+'</span>':'');
+  }
+  function busy(on,label){
+    var b=$('kova-auth-go'); if(!b) return;
+    b.disabled=!!on; b.classList.toggle('busy',!!on); b.textContent=on?(label||'Working…'):GO[M];
+  }
+  return {render:render,mode:function(){ return M; },error:error,busy:busy,suggest:suggest,clean:clean,rules:rules};
 })();
 
 </script>
