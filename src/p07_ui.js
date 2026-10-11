@@ -17,17 +17,43 @@ window.KovaTour=(function(){
     var top=Math.max(8,r.top-pad);
     return {r:r,left:r.left-pad,top:top,w:r.width+pad*2,h:Math.max(40,Math.min(window.innerHeight-16-top,r.height+pad*2))};
   }
+  /* the light moves with transform (cheap for the phone) and is only
+     touched when its target really moved */
+  var last='';
   function spot(g){
     var sp=$('#ksSpot'); if(!sp||!g) return;
-    sp.style.left=g.left+'px'; sp.style.top=g.top+'px'; sp.style.width=g.w+'px'; sp.style.height=g.h+'px';
+    var k=Math.round(g.left)+','+Math.round(g.top)+','+Math.round(g.w)+','+Math.round(g.h);
+    if(k===last) return; last=k;
+    sp.style.transform='translate3d('+Math.round(g.left)+'px,'+Math.round(g.top)+'px,0)';
+    sp.style.width=Math.round(g.w)+'px'; sp.style.height=Math.round(g.h)+'px';
   }
+  var tick=0;
   function follow(){
     if(!st||!$('#ksTour')) return;
+    tick++;
     /* the app went somewhere this tour does not cover (a notification, a
        link, the camera): the tour ends there instead of floating over it */
-    if(st.o.screens){ var on=$('.screen.on'), id=on?on.id.replace(/^s-/,''):''; if(id&&st.o.screens.indexOf(id)<0){ end('left'); return; } }
-    if(st.el&&st.ride) spot(rect(st.el));
+    if(st.o.screens&&tick%15===0){ var on=$('.screen.on'), id=on?on.id.replace(/^s-/,''):''; if(id&&st.o.screens.indexOf(id)<0){ end('left'); return; } }
+    /* keep the light on a target that scrolls or moves, a few times a
+       second rather than every frame */
+    if(st.el&&st.ride&&!document.hidden&&tick%4===0) spot(rect(st.el));
     requestAnimationFrame(follow);
+  }
+  /* a stop inside a closed tab (Customize's Rules, Fuel's Weight): open
+     that tab first, so it is shown, not skipped */
+  function reveal(el){
+    for(var p=el&&el.parentElement;p&&p!==document.body;p=p.parentElement){
+      if(p.classList&&p.classList.contains('tabpane')&&p.style.display==='none'){
+        var body=p.parentElement, strip=body&&body.previousElementSibling, i=Array.prototype.indexOf.call(body.children,p);
+        var tab=strip&&strip.querySelector('.stgtab[data-i="'+i+'"]');
+        if(tab) tab.click(); else p.style.display='';
+      }
+      /* the swipeable chart panes (Fuel's Energy, Rhythm, Calories, Weight) */
+      if(p.classList&&p.classList.contains('gpane')&&!p.classList.contains('on')){
+        var host=p.parentElement&&p.parentElement.parentElement, b=host&&host.querySelector('button[data-p="'+p.getAttribute('data-pane')+'"]');
+        if(b) b.click();
+      }
+    }
   }
   function end(why){
     var o=$('#ksTour'); if(o) o.remove();
@@ -120,9 +146,10 @@ window.KovaTour=(function(){
     (function wait(){
       if(!st||st.i!==i) return;
       var el=resolve(s);
+      if(el&&!shown(el)) reveal(el);
       if(shown(el)){ var ms=center(el); setTimeout(function(){ place(i,el); },ms); return; }
-      if(Date.now()-t0>1500) return go(i+1);
-      setTimeout(wait,60);
+      if(Date.now()-t0>900) return go(i+1);
+      setTimeout(wait,50);
     })();
   }
   /* back to the step before (the last one actually shown) */
@@ -152,7 +179,7 @@ window.KovaTour=(function(){
       var k=a.getAttribute('data-t');
       if(k==='next') go(st.i+1); else if(k==='back') back(); else end();
     });
-    st={steps:steps,o:o||{},i:-1,el:null,ride:true,seen:[]};
+    st={steps:steps,o:o||{},i:-1,el:null,ride:true,seen:[]}; last=''; tick=0;
     requestAnimationFrame(follow);
     go(0);
   }
@@ -227,9 +254,10 @@ window.KovaScreenTour=(function(){
   function q(sel){ return document.querySelector(sel); }
   function up(id,sel){ return function(){ var e=document.getElementById(id); return e&&e.closest(sel||'.card'); }; }
   function cardWith(scr,text){ return function(){
-    var all=document.querySelectorAll('#s-'+scr+' .card');
-    for(var i=0;i<all.length;i++){ if(all[i].textContent.trim().indexOf(text)===0&&all[i].getClientRects().length) return all[i]; }
-    return null;
+    /* a visible one first; else one in a closed tab, which the tour opens */
+    var all=document.querySelectorAll('#s-'+scr+' .card'), hid=null;
+    for(var i=0;i<all.length;i++){ if(all[i].textContent.trim().indexOf(text)===0){ if(all[i].getClientRects().length) return all[i]; hid=hid||all[i]; } }
+    return hid;
   }; }
   function rail(){ var r=q('.rail'); if(r&&r.getClientRects().length) return r; return q('.tabbar')||q('nav'); }
   var TOURS={

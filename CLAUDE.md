@@ -16,7 +16,7 @@ Kova is a health app (Today, Workout, Fuel, Sleep, Vitals, Learn) with a Work OS
 
 ## Tests (every feature has one; keep them green)
 - `node tests/e2e/runall.mjs` runs every `tests/*.js` (use `P=3` if the machine is busy; a few files time out under load, rerun them alone).
-- Browser suites, one at a time: `node tests/e2e/<name>.mjs` for perf, flows, contrast, keyboard, pages, signin, store, park, compare, cut, camera.
+- Browser suites, one at a time: `node tests/e2e/<name>.mjs` for perf, flows, contrast, keyboard, tours, pages, signin, store, park, compare, cut, camera.
 
 ## The owner's rules (they matter)
 1. Every screen works in **dark, soft light and light glass**.

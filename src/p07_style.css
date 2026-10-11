@@ -571,12 +571,13 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 /* ----- guided tour: a moving spotlight and one short line ----- */
 .ks-world.ks-glide{transition:transform .7s cubic-bezier(.33,.7,.2,1)}
 .ks-tour{position:fixed;inset:0;z-index:400;pointer-events:auto}
-.ks-spot{position:fixed;left:50%;top:50%;width:0;height:0;border-radius:28px;pointer-events:none;
+.ks-spot{position:fixed;left:0;top:0;width:0;height:0;border-radius:28px;pointer-events:none;will-change:transform,width,height;
+  transform:translate3d(50vw,50vh,0);
   box-shadow:0 0 0 200vmax rgba(4,4,6,.66),0 0 0 2px var(--tc,rgba(255,255,255,.85)),0 0 34px var(--tg,rgba(255,255,255,.35));
-  transition:left .55s cubic-bezier(.33,.7,.2,1),top .55s cubic-bezier(.33,.7,.2,1),width .55s cubic-bezier(.33,.7,.2,1),height .55s cubic-bezier(.33,.7,.2,1)}
-.ks-spot.ride{transition:none}
+  transition:transform .5s cubic-bezier(.22,1,.36,1),width .5s cubic-bezier(.22,1,.36,1),height .5s cubic-bezier(.22,1,.36,1)}
+.ks-spot.ride{transition:transform .18s linear,width .18s linear,height .18s linear}
 .ks-coach{position:fixed;left:50%;top:50%;padding:18px 18px 14px;border-radius:22px;
-  background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,.06));-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);
+  background:linear-gradient(160deg,rgba(255,255,255,.17),rgba(255,255,255,.08));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);will-change:transform,opacity;
   border:1px solid rgba(255,255,255,.16);box-shadow:0 26px 60px rgba(0,0,0,.6);opacity:0;transform:translateY(8px) scale(.98);
   transition:opacity .3s ease,transform .3s ease,left .45s ease,top .45s ease}
 .ks-coach.on{opacity:1;transform:none}
@@ -665,3 +666,5 @@ body.ks-on #kovaFab{display:none!important}
   .ks-acc{grid-template-columns:1fr 1fr}
   .ks-card{height:172px}
 }
+
+@media (prefers-reduced-motion:reduce){ .ks-spot,.ks-spot.ride,.ks-coach{transition:none} }

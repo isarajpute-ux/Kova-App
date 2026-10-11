@@ -89,6 +89,8 @@ jobs:
         run: node tests/e2e/contrast.mjs
       - name: Keyboard only (Tab, Enter, Escape)
         run: node tests/e2e/keyboard.mjs
+      - name: Every guided tour shows all its stops, quickly
+        run: node tests/e2e/tours.mjs
       - name: Closed screens parked, every screen opens whole
         run: node tests/e2e/park.mjs
       - name: The camera (fake camera device), frame, zoom and shot
