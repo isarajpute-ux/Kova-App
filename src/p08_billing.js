@@ -20,7 +20,7 @@
    The answer is cached, so a Pro phone stays Pro offline.
 
    Plans (p19): Health is the base, Training and Work OS are add-ons, sold
-   as three plans in one subscription group: health, health_train, all,
+   as four plans in one subscription group: health, health_train, health_work, all,
    each yearly (30 days free) and monthly (14 days free). RevenueCat
    packages are named <plan>_<year|month>; entitlements are health, train
    and work (the old kova_pro still means all three). An offering that
@@ -121,7 +121,10 @@ window.KovaBilling=(function(){
 
   /* the packages by plan: health_year, health_train_month, all_year...;
      the old two-package offering is the "all" plan */
-  var TIERS=['health','health_train','all'];
+  var TIERS=['health','health_train','health_work','all'];
+  /* if a plan is missing from the offering, the nearest one that still has
+     everything asked for */
+  var UP={health:['health','health_train','health_work','all'],health_train:['health_train','all'],health_work:['health_work','all'],all:['all']};
   function packages(){
     if(pkgs) return Promise.resolve(pkgs);
     return sdk().then(function(p){ return p.kind==='native'?p.n.getOfferings():p.w.getOfferings(); }).then(function(o){
@@ -141,7 +144,7 @@ window.KovaBilling=(function(){
   /* the plan a tier asks for, or the nearest one the offering has */
   function pkgFor(pk,t,per){
     if(pk[t+'_'+per]) return pk[t+'_'+per];
-    var up=TIERS.slice(TIERS.indexOf(t));
+    var up=UP[t]||['all'];
     for(var i=0;i<up.length;i++) if(pk[up[i]+'_'+per]) return pk[up[i]+'_'+per];
     return null;
   }
@@ -202,7 +205,7 @@ window.KovaBilling=(function(){
     var trial=go.textContent;
     go.onclick=function(){
       var plan=pickedPlan();
-      var wanted=plan.tier==='all'?PARTS:plan.tier==='health_train'?['health','train']:['health'];
+      var wanted=plan.tier==='all'?PARTS:plan.tier==='health_train'?['health','train']:plan.tier==='health_work'?['health','work']:['health'];
       if(isPro()&&wanted.every(function(k){ return has(k); })){ note('That is already in your plan'+(C.period==='trial'?' (free trial)':'')+'.'); return; }
       go.disabled=true; go.textContent='Opening checkout…'; note('');
       buy(plan).then(function(){
@@ -285,8 +288,8 @@ window.KovaBilling=(function(){
     work:{screens:['s-work','s-workspace','s-worktoday','s-worktasks','s-workprojects','s-workgoals','s-workauto','s-workteam','s-workstudio','s-workcompose'],t:'Get your hours back',d:'Add Work OS and an AI team that researches, posts and reports back while you live your life.'}
   };
   function addPrice(part){
-    var T=window.__planTiers||{health:{month:9.99},health_train:{month:13.99},all:{month:19.99}};
-    var d=part==='train'?T.health_train.month-T.health.month:T.all.month-T.health_train.month;
+    var T=window.__planTiers||{health:{month:9.99},health_train:{month:13.99},health_work:{month:17.99},all:{month:19.99}};
+    var d=part==='train'?T.health_train.month-T.health.month:T.health_work.month-T.health.month;
     return '$'+d.toFixed(2)+' a month';
   }
   function gates(){

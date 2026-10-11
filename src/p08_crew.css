@@ -197,7 +197,7 @@ body.light-mode .crw-card{box-shadow:0 6px 18px rgba(40,44,54,.06)}
 /* Work OS sits on the same ground as the rest of the app in soft light and
    light glass (it had its own darker grey, and a sand colour) */
 body.soft-light .app.app[data-pillar="work"]{background:radial-gradient(ellipse 135% 100% at 50% -8%,#5C5E66 0%,#4C4E55 40%,#414248 74%,#3A3B40 100%)}
-body.light-mode .app.app[data-pillar="work"]{background:radial-gradient(ellipse 140% 105% at 50% -10%,#EAE8E4 0%,#DFDDD8 44%,#D4D2CD 100%)}
+body.light-mode .app.app[data-pillar="work"]{background:radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
 
 #s-workteam > .hdr{display:none}
 .app.crd-wide .wrap{max-width:1180px}
@@ -695,3 +695,29 @@ body.light-mode .crw-teach button+button{background:rgba(21,23,27,.08);color:#15
 .crw-cloud input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--c-ink);flex-shrink:0}
 .crw-cloud b{display:block;font-weight:600;font-size:13.5px}
 .crw-cloud small{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--c-mute)}
+
+/* ---- Work OS in Soft Light: one blended look (p24) ----
+   The lit cards were solid white with dark text while some of their
+   children stayed white, the plain cards were darker than the rest of
+   Soft Light, and the tabs were near-black. Now: the plain cards are the
+   same glass as Home; the lit ones are a foggy pale-blue glass with white
+   words; the tabs are glass, the chosen one foggy white-blue. */
+body.soft-light .app[data-pillar="work"]{
+  --wk-1:rgba(226,236,252,.42);--wk-2:rgba(196,212,238,.30);--wk-3:rgba(160,182,218,.24);
+  --wk-rgb:190,210,240;--wk-on:#FFFFFF;--wk-on-2:rgba(255,255,255,.74);
+  --wk-edge:rgba(220,232,252,.55);--wk-edge-blend:screen;--wk-edge-op:.35;--wk-glow:.22;--wk-chrome:255,255,255}
+body.soft-light .app[data-pillar="work"] .wk-lit,
+body.soft-light .app .wglow.wk-lit{border:1px solid rgba(225,235,252,.38);color:#fff;
+  -webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);
+  box-shadow:0 0 28px rgba(190,210,240,.18),0 12px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.35)}
+body.soft-light .app[data-pillar="work"] .wk-lit :is(.wgl-t,.wgl-n,.wglow-t,.wstress-t,b,strong,h3){color:#fff}
+body.soft-light .app[data-pillar="work"] .wk-lit :is(.wgl-k,.wglow-k,.wgl-sub,.sub,.lbl,small){color:rgba(255,255,255,.74)}
+body.soft-light .app[data-pillar="work"] :is(.wgl,.card):not(.wk-lit):not(.wglow){
+  background:linear-gradient(155deg,rgba(255,255,255,.17),rgba(255,255,255,.08));border-color:rgba(255,255,255,.28);color:#fff}
+body.soft-light .app[data-pillar="work"] :is(.wgl,.card):not(.wk-lit) :is(.wgl-t,.wgl-n){color:#fff}
+body.soft-light .app[data-pillar="work"] :is(.wgl,.card):not(.wk-lit) :is(.wgl-k,.wgl-sub){color:rgba(255,255,255,.72)}
+body.soft-light .wk-tab{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.22);color:#fff;box-shadow:none}
+body.soft-light .wk-tab.on{background:linear-gradient(180deg,#EEF3FB,#D6E1F1);border-color:rgba(255,255,255,.7);color:#1B2430;box-shadow:0 0 18px rgba(190,210,240,.35)}
+body.soft-light .wk-tab.on i{background:#1B2430}
+body.soft-light .app[data-pillar="work"] .wk-lit .btn:not(.ghost){background:#fff;color:#1B2430}
+body.soft-light .app[data-pillar="work"] .wk-lit .wstress-b{background:#fff;color:#1B2430;box-shadow:0 4px 12px rgba(0,0,0,.15)}

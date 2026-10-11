@@ -95,15 +95,16 @@ Work OS › Meetings › **Your booking link** sets up `https://<your site>/book
 
 ## 4. Payments (RevenueCat, with Stripe on the web and the App Store / Google Play in the app)
 
-**The plans.** Health is the base; Training and Work OS + AI team are add-ons. In the stores they are three plans in **one subscription group**, so moving between them is an upgrade or downgrade, never two bills:
+**The plans.** Health is the base; Training and Work OS + AI team are add-ons. In the stores they are four plans in **one subscription group**, so moving between them is an upgrade or downgrade, never two bills:
 
 | Plan (RevenueCat package id) | Gives entitlements | Yearly | Monthly |
 |---|---|---|---|
 | `health_year` / `health_month` | `health` | $59.99, 30 days free | $9.99, 14 days free |
 | `health_train_year` / `health_train_month` | `health`, `train` | $84.99, 30 days free | $13.99, 14 days free |
+| `health_work_year` / `health_work_month` | `health`, `work` | $104.99, 30 days free | $17.99, 14 days free |
 | `all_year` / `all_month` | `health`, `train`, `work` | $119.99, 30 days free | $19.99, 14 days free |
 
-Work OS includes Training, so "Health + Work" is the `all` plan. The app shows the store's own prices once they load; the numbers above are its defaults. Trial lengths come from RevenueCat's September 2026 data on 17,000 apps: yearly plans convert best with 17–32 day trials, monthly ones peak at 10–16 days. The card goes in at the start; the server sends "your free trial ends in 2 days" once per trial.
+Training and Work OS are separate switches; both together are the `all` plan, a little cheaper than adding them one by one. The app shows the store's own prices once they load; the numbers above are its defaults. Trial lengths come from RevenueCat's September 2026 data on 17,000 apps: yearly plans convert best with 17–32 day trials, monthly ones peak at 10–16 days. The card goes in at the start; the server sends "your free trial ends in 2 days" once per trial.
 
 Until `REVENUECAT_SECRET_KEY` is set, every part stays open and nothing is charged. The old single entitlement `kova_pro` still unlocks everything, so early subscribers keep what they have.
 

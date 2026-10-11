@@ -203,7 +203,7 @@ window.KovaPost=(function(){
 
   function blank(){
     return {id:uid('post'),kind:'post',title:'Untitled post',created:Date.now(),updated:Date.now(),
-            status:'draft',format:'image',aspect:'4:5',coverText:false,media:[],
+            status:'draft',format:'image',aspect:'orig',coverText:false,media:[],
             heading:'',body:'',caption:'',tags:'',targets:[],over:{},
             opts:{youtube:{privacy:'public'},tiktok:{mode:'direct'},metaads:JSON.parse(JSON.stringify(AD_DEF))},link:'',subreddit:'',
             mode:'now',when:0,fav:false,results:{},server:null};

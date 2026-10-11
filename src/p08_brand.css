@@ -33,39 +33,26 @@ body.light-mode .ks-brands .lb{color:rgba(18,20,24,.6)}
 .ks-card .ph.g .kb-logo{margin:auto}
 .wpill .kb-logo{border-radius:4px;margin-right:1px}
 
-/* ---- Studio field tabs: the one you tap rises, curves and takes its own
-   colour; the text panel under it glows the same way ---- */
+/* ---- Studio field tabs: the one you tap rises and curves. One colour per
+   appearance, never a rainbow: a white glow in dark, a light foggy blue in
+   soft light, a black glow in light glass. The text panel under it glows
+   the same way. ---- */
 #s-workstudio .ks-dt{transition:transform .28s cubic-bezier(.2,.9,.3,1),background .28s ease,box-shadow .28s ease,border-radius .28s ease}
-#s-workstudio .ks-dt.on{transform:translateY(-9px);border-radius:28px 28px 0 0;color:#fff;border-color:rgba(255,255,255,.28)}
+#s-workstudio .ks-dt.on{transform:translateY(-9px);border-radius:28px 28px 0 0;color:#fff;border-color:rgba(255,255,255,.28);
+  background:linear-gradient(128deg,#2E2E33 0%,#5C5C64 50%,#B9B9C1 100%);box-shadow:0 0 30px rgba(255,255,255,.22),0 -6px 20px rgba(0,0,0,.3)}
 #s-workstudio .ks-dt.on .a{color:#fff}
-#s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.8)}
-#s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#5A2E16 0%,#9A5527 50%,#D9955A 100%);box-shadow:0 0 28px rgba(217,140,80,.32),0 -6px 20px rgba(0,0,0,.3)}
-#s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#1C2C58 0%,#2E55A6 50%,#79A3F2 100%);box-shadow:0 0 28px rgba(110,150,240,.32),0 -6px 20px rgba(0,0,0,.3)}
-#s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#5A1622 0%,#A3283A 50%,#E8707C 100%);box-shadow:0 0 28px rgba(230,90,105,.32),0 -6px 20px rgba(0,0,0,.3)}
-#s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#143D2C 0%,#21774E 50%,#5FC892 100%);box-shadow:0 0 28px rgba(90,200,140,.3),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.82)}
 #s-workstudio .ks-dt.done .a::after{background:currentColor;box-shadow:none}
-/* the glow behind the words, in the open field's colour */
+/* the glow behind the words */
 #s-workstudio .ks-dock[data-f] .ks-front::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;transition:background .35s ease;
   background:radial-gradient(70% 120% at 8% 100%,var(--fglow) 0%,transparent 62%),radial-gradient(50% 90% at 95% 0%,var(--fglow2) 0%,transparent 70%)}
-#s-workstudio .ks-dock[data-f="heading"]{--fglow:rgba(214,112,48,.5);--fglow2:rgba(214,112,48,.18)}
-#s-workstudio .ks-dock[data-f="body"]{--fglow:rgba(70,120,235,.48);--fglow2:rgba(70,120,235,.16)}
-#s-workstudio .ks-dock[data-f="caption"]{--fglow:rgba(220,55,70,.5);--fglow2:rgba(220,55,70,.18)}
-#s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(55,185,115,.42);--fglow2:rgba(55,185,115,.15)}
-/* soft light: a touch brighter */
-body.soft-light #s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#7A4220 0%,#B36A35 50%,#E8AA72 100%)}
-body.soft-light #s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#2A3F78 0%,#3E69C0 50%,#93B6F6 100%)}
-body.soft-light #s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#7A2030 0%,#BA3A4C 50%,#F08A95 100%)}
-body.soft-light #s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#1E5A40 0%,#2E9262 50%,#78D8A6 100%)}
-/* light glass: pale tints, dark words */
-body.light-mode #s-workstudio .ks-dt.on{color:#1B1D21;border-color:rgba(18,20,24,.14)}
-body.light-mode #s-workstudio .ks-dt.on .a{color:#1B1D21}
-body.light-mode #s-workstudio .ks-dt.on .b{color:rgba(27,29,33,.66)}
-body.light-mode #s-workstudio .ks-dt.on[data-f="heading"]{background:linear-gradient(128deg,#FFF4EA 0%,#F6D2B0 55%,#EDB07C 100%);box-shadow:0 0 24px rgba(220,140,80,.25),0 -6px 18px rgba(40,44,54,.1)}
-body.light-mode #s-workstudio .ks-dt.on[data-f="body"]{background:linear-gradient(128deg,#F1F5FF 0%,#C9D9FA 55%,#9DBAF2 100%);box-shadow:0 0 24px rgba(90,130,230,.22),0 -6px 18px rgba(40,44,54,.1)}
-body.light-mode #s-workstudio .ks-dt.on[data-f="caption"]{background:linear-gradient(128deg,#FFF0F2 0%,#F7C6CC 55%,#EE9AA4 100%);box-shadow:0 0 24px rgba(220,80,100,.22),0 -6px 18px rgba(40,44,54,.1)}
-body.light-mode #s-workstudio .ks-dt.on[data-f="tags"]{background:linear-gradient(128deg,#EEFAF3 0%,#BFE8D0 55%,#8ED3AE 100%);box-shadow:0 0 24px rgba(60,170,110,.22),0 -6px 18px rgba(40,44,54,.1)}
-body.light-mode #s-workstudio .ks-dock[data-f="heading"]{--fglow:rgba(230,140,70,.3);--fglow2:rgba(230,140,70,.12)}
-body.light-mode #s-workstudio .ks-dock[data-f="body"]{--fglow:rgba(80,130,235,.26);--fglow2:rgba(80,130,235,.1)}
-body.light-mode #s-workstudio .ks-dock[data-f="caption"]{--fglow:rgba(225,70,90,.26);--fglow2:rgba(225,70,90,.1)}
-body.light-mode #s-workstudio .ks-dock[data-f="tags"]{--fglow:rgba(50,170,105,.24);--fglow2:rgba(50,170,105,.1)}
+#s-workstudio .ks-dock[data-f]{--fglow:rgba(255,255,255,.16);--fglow2:rgba(255,255,255,.07)}
+/* soft light: a light, foggy blue */
+body.soft-light #s-workstudio .ks-dt.on{background:linear-gradient(128deg,#3D4D66 0%,#6F86AA 52%,#BCCBE2 100%);box-shadow:0 0 30px rgba(170,195,235,.32),0 -6px 20px rgba(0,0,0,.22);border-color:rgba(220,232,250,.35)}
+body.soft-light #s-workstudio .ks-dock[data-f]{--fglow:rgba(170,195,235,.30);--fglow2:rgba(170,195,235,.12)}
+/* light glass: a black glow, white words */
+body.light-mode #s-workstudio .ks-dt.on{color:#fff;border-color:rgba(18,20,24,.4);background:linear-gradient(128deg,#141518 0%,#2C2E33 55%,#50535A 100%);box-shadow:0 0 26px rgba(18,20,24,.28),0 -6px 18px rgba(18,20,24,.14)}
+body.light-mode #s-workstudio .ks-dt.on .a{color:#fff}
+body.light-mode #s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.78)}
+body.light-mode #s-workstudio .ks-dock[data-f]{--fglow:rgba(18,20,24,.10);--fglow2:rgba(18,20,24,.05)}
 @media (prefers-reduced-motion:reduce){#s-workstudio .ks-dt{transition:none}}

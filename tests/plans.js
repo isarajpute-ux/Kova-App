@@ -1,5 +1,5 @@
 /* Plans (p19): Health is the base, Training and Work OS + AI team are
-   add-ons, sold as three plans (health, health_train, all) yearly with 30
+   add-ons, sold as four plans (health, health_train, health_work, all) yearly with 30
    days free and monthly with 14. The app builds the plan, buys the right
    package and shows what is not in it; the server checks each paid route
    against the part it belongs to and sends one "trial ends in 2 days"
@@ -28,7 +28,7 @@ function boot(opts) {
     analytics: () => ({ logEvent() {}, setUserId() {} }) };
   w.fetch = () => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}), text: () => Promise.resolve('') });
   const P = (id, price) => ({ identifier: id, packageType: 'CUSTOM', webBillingProduct: { currentPrice: { formattedPrice: price } } });
-  const pk = [P('health_year', '€49.99'), P('health_month', '€8.99'), P('health_train_year', '€74.99'), P('health_train_month', '€12.99'), P('all_year', '€109.99'), P('all_month', '€17.99')];
+  const pk = [P('health_year', '€49.99'), P('health_month', '€8.99'), P('health_train_year', '€74.99'), P('health_train_month', '€12.99'), P('health_work_year', '€94.99'), P('health_work_month', '€15.99'), P('all_year', '€109.99'), P('all_month', '€17.99')];
   const rc = { purchases: [] };
   let active = null;
   const ci = () => ({ managementURL: 'x', entitlements: { active: active || {} } });
@@ -57,14 +57,27 @@ function boot(opts) {
     && A.doc.querySelector('.pln-row.fixed') && /Health/.test(A.doc.querySelector('.pln-row.fixed').textContent)
     && !!A.doc.querySelector('[data-add="train"]') && !!A.doc.querySelector('[data-add="work"]'));
   ck('plan: it opens on Everything, yearly, 30 days free, $119.99', /Everything/.test(A.doc.querySelector('.pln-sum').textContent) && /\$119\.99/.test(A.doc.getElementById('planTotal').textContent) && /Start 30 days free/.test(A.doc.getElementById('planGo').textContent));
-  ck('plan: Work OS shows its price over Health ($60 a year) and Training says it comes with it', /\+\$60\.00\/yr/.test(A.doc.querySelector('[data-add="work"]').textContent) && /Included with Work OS/.test(A.doc.querySelector('[data-add="train"]').textContent));
+  const sum = () => A.doc.querySelector('.pln-sum').textContent, total = () => A.doc.getElementById('planTotal').textContent;
+  const on = (k) => A.doc.querySelector('[data-add="' + k + '"]').getAttribute('aria-checked') === 'true';
+  ck('plan: both add-ons start on; each shows what it adds ($15 Training, $35 Work OS a year) and the bundle saving', /\+\$15\.00\/yr/.test(A.doc.querySelector('[data-add="train"]').textContent) && /\+\$35\.00\/yr/.test(A.doc.querySelector('[data-add="work"]').textContent) && /save \$10\.00 a year/.test(A.doc.getElementById('planBody').textContent));
+  ck('plan: neither add-on is locked or "included" in the other', !A.doc.querySelector('.pln-row.fixed [data-add]') && !/Included with Work OS/.test(A.doc.getElementById('planBody').textContent));
   A.doc.querySelector('[data-add="work"]').click(); await wait(5);
-  ck('plan: Work off is Health alone, $59.99 a year', /\$59\.99/.test(A.doc.getElementById('planTotal').textContent) && /then \$59\.99 a year/.test(fine()) && A.doc.querySelector('[data-add="work"]').getAttribute('aria-checked') === 'false');
+  ck('plan: pressing Work OS turns off only Work OS; Training stays on ($84.99)', !on('work') && on('train') && /Health \+ Training/.test(sum()) && /\$84\.99/.test(total()));
   A.doc.querySelector('[data-add="train"]').click(); await wait(5);
-  ck('plan: adding Training is +$25.00 a year, $84.99 in all', /Health \+ Training/.test(A.doc.querySelector('.pln-sum').textContent) && /\$84\.99/.test(A.doc.getElementById('planTotal').textContent));
+  ck('plan: then pressing Training turns it off: Health alone, $59.99 a year', !on('train') && !on('work') && /\$59\.99/.test(total()) && /then \$59\.99 a year/.test(fine()));
+  A.doc.querySelector('[data-add="work"]').click(); await wait(5);
+  ck('plan: Work OS on its own is Health + Work OS, $104.99 (no Training forced in)', on('work') && !on('train') && /Health \+ Work OS/.test(sum()) && /\$104\.99/.test(total()));
+  A.doc.querySelector('[data-add="work"]').click(); await wait(5);
+  A.doc.querySelector('[data-add="train"]').click(); await wait(5);
+  ck('plan: adding Training is +$25.00 a year, $84.99 in all', /Health \+ Training/.test(sum()) && /\$84\.99/.test(total()));
   A.doc.querySelector('#planTog [data-p="month"]').click(); await wait(5);
   ck('plan: monthly is 14 days free', /Start 14 days free/.test(A.doc.getElementById('planGo').textContent) && /Free for 14 days, then \$13\.99 a month/.test(fine()));
-  ck('plan: each part opens to show what changes for you, not features', (A.doc.querySelector('[data-more="work"]').click(), !A.doc.getElementById('plnDrop-work').hidden && /hours|prepared|handled/.test(A.doc.getElementById('plnDrop-work').textContent) && A.doc.querySelector('[data-more="work"]').getAttribute('aria-expanded') === 'true'));
+  A.doc.querySelector('[data-more="health"]').click();
+  const hd = A.doc.getElementById('plnDrop-health').textContent;
+  ck('plan: Health opens to say exactly what is inside, in short lines: scan, barcode, recipes, sleep, watch, Ask Kova', !A.doc.getElementById('plnDrop-health').hidden && /barcode/.test(hd) && /Recipes/.test(hd) && /sleep score/i.test(hd) && /HRV/.test(hd) && /bloated/.test(hd) && A.doc.querySelectorAll('#plnDrop-health li b').length >= 6);
+  A.doc.querySelector('[data-more="work"]').click();
+  ck('plan: Work OS names its AI team, Maya posting, meeting prep and the booking link', /AI team/.test(A.doc.getElementById('plnDrop-work').textContent) && /Maya/.test(A.doc.getElementById('plnDrop-work').textContent) && /booking link/i.test(A.doc.getElementById('plnDrop-work').textContent) && A.doc.querySelector('[data-more="work"]').getAttribute('aria-expanded') === 'true');
+  ck('plan: each line is short (no paragraphs)', [...A.doc.querySelectorAll('.pln-drop li')].every((li) => li.textContent.length <= 90));
   ck('plan: no feature list and no price talk, an arc of where you will be instead', /Where you will be/.test(A.doc.getElementById('planBody').textContent) && !/What each part gives you|One person, one price/.test(A.doc.getElementById('planBody').textContent));
   ck('without payments switched on, every part is open and nothing is locked', A.w.KovaBilling.has('train') && A.w.KovaBilling.has('work') && !A.doc.querySelector('.kbl'));
 
@@ -72,8 +85,9 @@ function boot(opts) {
   await wait(500);
   B.w.go('plan'); await wait(200);
   ck('store prices replace the defaults for every plan', /€109\.99/.test(B.doc.getElementById('planTotal').textContent) && /€17\.99/.test(B.doc.querySelector('#planTog [data-p="month"]').textContent));
-  B.doc.querySelector('[data-add="work"]').click(); await wait(5);
+  ck('a store price for Health + Work OS shows when only Work OS is on', (B.doc.querySelector('[data-add="train"]').click(), /€94\.99/.test(B.doc.getElementById('planTotal').textContent)));
   B.doc.querySelector('[data-add="train"]').click(); await wait(5);
+  B.doc.querySelector('[data-add="work"]').click(); await wait(5);
   B.doc.querySelector('#planTog [data-p="month"]').click(); await wait(5);
   B.doc.getElementById('planGo').click(); await wait(200);
   ck('Health + Training, monthly, buys exactly that package', B.rc.purchases[0] === 'health_train_month');

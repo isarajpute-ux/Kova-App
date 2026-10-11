@@ -5,8 +5,9 @@
    upgrade or a downgrade, never two bills:
      health        Fuel, Sleep, Vitals and the AI that reads them
      health_train  + Training
-     all           + Training + Work OS and the AI team (Work includes
-                   Training, so "Health + Work" is this plan)
+     health_work   + Work OS and the AI team
+     all           + both (a little less than adding them one by one)
+   Training and Work OS are two separate switches: either, both or neither.
    Yearly comes with 30 days free and monthly with 14, from RevenueCat's
    data on 17,000 apps (Sept 2026): annual plans convert best with trials
    of 17-32 days, monthly ones peak at 10-16. The card goes in at the
@@ -18,31 +19,53 @@
   var TIERS={
     health:      {n:'Health',            year:59.99,  month:9.99},
     health_train:{n:'Health + Training', year:84.99,  month:13.99},
+    health_work: {n:'Health + Work OS',  year:104.99, month:17.99},
     all:         {n:'Everything',        year:119.99, month:19.99}
   };
   var TRIAL={year:30, month:14};
-  /* train is your own choice; Work brings Training with it either way */
-  var S={period:'year', train:false, work:true};
+  /* two independent switches */
+  var S={period:'year', train:true, work:true};
 
-  function tier(){ return S.work?'all':S.train?'health_train':'health'; }
+  function tierOf(train,work){ return train&&work?'all':work?'health_work':train?'health_train':'health'; }
+  function tier(){ return tierOf(S.train,S.work); }
   function money(n){ return '$'+n.toFixed(2); }
   /* through window.__paintPlan, so KovaBilling sets the button up again */
   function repaint(){ (window.__paintPlan||paint)(); }
   function store(t,p){ var m=window.__planStore||{}; return m[t+'_'+p]||''; }
   function priceOf(t,p){ return store(t,p)||money(TIERS[t][p]); }
   function add(a,b,p){ var d=TIERS[a][p]-TIERS[b][p]; return '+'+money(d)+(p==='year'?'/yr':'/mo'); }
+  /* what turning one part on adds, given the other switch as it is */
+  function addOf(part,p){ return part==='train'?add(tierOf(true,S.work),tierOf(false,S.work),p):add(tierOf(S.train,true),tierOf(S.train,false),p); }
   function esc(x){ return String(x).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
   /* Sell where you end up, not the features (p19b). Each part is the
      person you become, with a small arrow that opens what changes; the
      price is there, quietly, never the headline. */
+  /* The headline sells where you end up; the arrow opens exactly what
+     is inside, one short line each, so nobody has to read an article. */
   var PARTS={
-    health:{t:'Wake up rested and in control of your energy', tag:'Health',
-      out:['Mornings you do not have to fight through','Meals that fuel you, known in one photo','See what drains your energy before it hits','Stop guessing about your body. Know.']},
-    train:{t:'Get stronger every week, and proud of the mirror', tag:'Training',
-      out:['Walk in knowing exactly what to do today','Watch your strength climb, week after week','A physique built on purpose, not by accident','Peak for the moments that matter']},
-    work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team',
-      out:['An AI team that researches, posts and reports back while you live','Walk into every meeting prepared','Content out the door without the grind','A clear head: everything handled, nothing forgotten']}
+    health:{t:'Wake up rested and in control of your energy', tag:'Health', sub:'Fuel, Sleep, Vitals, Recipes and Ask Kova',
+      out:[['Snap a plate or scan a barcode','calories, protein and carbs in seconds'],
+           ['Recipes for your goal','every macro counted for you'],
+           ['Spots what you are missing','protein, vitamins and water, before you feel it'],
+           ['A sleep score each morning','and the bedtime that fixes a bad night'],
+           ['Heart rate, HRV and stress from your watch','flagged the moment they leave your normal'],
+           ['Ask Kova anything','"why am I bloated?" answered from your own food log'],
+           ['Cycle and GLP-1 modes','your targets change with your body']]},
+    train:{t:'Get stronger every week, and proud of the mirror', tag:'Training', sub:'Workouts, Form Check and progress',
+      out:[['Today\u2019s workout, ready in one tap','built for your goal, your days and your time'],
+           ['Log a set in one tap','"Same" repeats your last set'],
+           ['Form Check','film a set and see what to fix'],
+           ['Every muscle covered','a weekly balance, with easier weeks built in'],
+           ['Records and progress','watch each lift climb'],
+           ['Push or go easy','your recovery score decides, not a guess']]},
+    work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team', sub:'An AI team, tasks, meetings and posting',
+      out:[['An AI team that works while you don\u2019t','research, social media and reports'],
+           ['Text them like a person','"Ravi, find three venues by 5pm" and the answer arrives'],
+           ['Send Maya a video','she posts it, then tells you what the comments say'],
+           ['Ready for every meeting','prep before, action items after'],
+           ['Rules in plain words','"when a call ends, remind me in 2 days"'],
+           ['A booking link, tasks and search','people book you, nothing gets lost']]}
   };
   S.open=S.open||{};
   function row(key,part,price,on,locked){
@@ -50,10 +73,10 @@
     return '<div class="pln-row'+(on?' on':'')+(locked?' fixed':'')+'">'
       + '<button type="button" class="pln-tg"'+(key?' data-add="'+key+'" role="switch" aria-checked="'+on+'"':' aria-disabled="true"')+'>'
       +   '<span class="pln-check" aria-hidden="true"></span>'
-      +   '<span class="pln-t"><i>'+P.tag+'<em class="pln-pr">'+price+'</em></i><b>'+P.t+'</b></span></button>'
+      +   '<span class="pln-t"><i>'+P.tag+'<em class="pln-pr">'+price+'</em></i><b>'+P.t+'</b><small class="pln-sub">'+P.sub+'</small></span></button>'
       + '<button type="button" class="pln-more'+(open?' open':'')+'" data-more="'+part+'" aria-expanded="'+open+'" aria-controls="'+id+'" aria-label="What changes for you">'
       +   '<svg class="ic"><use href="#i-chevron-down"/></svg></button>'
-      + '<ul class="pln-drop" id="'+id+'"'+(open?'':' hidden')+'>'+P.out.map(function(o){ return '<li>'+o+'</li>'; }).join('')+'</ul>'
+      + '<ul class="pln-drop" id="'+id+'"'+(open?'':' hidden')+'>'+P.out.map(function(o){ return '<li><b>'+o[0]+'</b><span>'+o[1]+'</span></li>'; }).join('')+'</ul>'
       + '</div>';
   }
 
@@ -69,8 +92,9 @@
       + '<div class="sub pln-lead">Rested mornings, a body you are proud of, and a day that runs itself. Choose what you want to change.</div>'
 
       + row('', 'health', 'Included', true, true)
-      + row('train', 'train', S.work?'Included with Work OS':add('health_train','health',P), S.train||S.work, S.work)
-      + row('work', 'work', add('all',S.train?'health_train':'health',P), S.work, false)
+      + row('train', 'train', addOf('train',P), S.train, false)
+      + row('work', 'work', addOf('work',P), S.work, false)
+      + (S.train&&S.work?'<div class="pln-both">Both together save '+money(TIERS.health_train[P]+TIERS.health_work[P]-TIERS.health[P]-TIERS.all[P])+(P==='year'?' a year':' a month')+'.</div>':'')
 
       /* yearly or monthly: both always show their real price */
       + '<div class="plan-tog pln-tog" id="planTog" role="radiogroup" aria-label="Billing">'
@@ -114,7 +138,6 @@
     el.querySelectorAll('[data-add]').forEach(function(b){
       b.onclick=function(){
         var k=b.getAttribute('data-add');
-        if(k==='train'&&S.work) return;
         S[k]=!S[k];
         repaint();
       };

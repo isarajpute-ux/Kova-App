@@ -65,7 +65,8 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   ck('closed chat panel is invisible, not just moved',/\.kchat\{[\s\S]{0,400}visibility:hidden/.test(html));
   // theme rules must not have been rewritten onto the button
   const themeSel=(html.match(/body\.(?:light-mode|soft-light) \.app\[data-pillar="[a-z]+"\]/g)||[]).length;
-  ck('app-wide theme pillar rules intact ('+themeSel+')',themeSel===72);
+  /* 72 app-wide rules, plus the 9 soft-light Work OS rules of p24 (src/p08_crew.css) */
+  ck('app-wide theme pillar rules intact ('+themeSel+')',themeSel===81);
   ck('per-pillar gradients: sleep/vitals/fuel/move',
      /kchat\[data-pillar="sleep"\]/.test(html)&&/kchat\[data-pillar="vitals"\]/.test(html)&&
      /kchat\[data-pillar="fuel"\]/.test(html)&&/kchat\[data-pillar="move"\]/.test(html));

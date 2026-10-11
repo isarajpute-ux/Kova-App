@@ -233,7 +233,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('editing saves the job description and the routine', C.emp(robin.id).job === 'I own the podcast and the newsletter.' && C.emp(robin.id).routine.freq === 'weekdays');
   ck('and routing follows the new description', RT('What should go in the next newsletter?') === 'Content Producer');
   ck('three appearances are styled', /body\.soft-light \.crd\{/.test(html) && /body\.light-mode \.crd\{/.test(html) && /body\.soft-light \.crw\{/.test(html));
-  ck('Work OS uses the main background in soft light and light glass', /body\.light-mode \.app\.app\[data-pillar="work"\]\{background:radial-gradient\(ellipse 140% 105% at 50% -10%,#EAE8E4/.test(html) && /body\.soft-light \.app\.app\[data-pillar="work"\]\{background:radial-gradient\(ellipse 135% 100% at 50% -8%,#5C5E66/.test(html));
+  ck('Work OS uses the main background in soft light and light glass (light glass: the foggy white)', /body\.light-mode \.app\.app\[data-pillar="work"\]\{background:radial-gradient\(ellipse 140% 105% at 50% -10%,#F2F3F5/.test(html) && /body\.soft-light \.app\.app\[data-pillar="work"\]\{background:radial-gradient\(ellipse 135% 100% at 50% -8%,#5C5E66/.test(html));
 
   // ---- the server route
   const { cleanCrew } = require('../functions/api.js');
