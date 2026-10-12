@@ -126,9 +126,25 @@ window.KovaCrew=(function(){
      tools:['wellness','tasks'],
      routine:{freq:'off',time:'07:30',job:'Plan today around my readiness.'},
      chips:['Plan today around my energy','Am I overloaded?','When should I do deep work?'],
-     hints:['focus','energy','tired','burnout','deep work','stress','balance','overload','rest']}
+     hints:['focus','energy','tired','burnout','deep work','stress','balance','overload','rest']},
+    /* p25: coaches for the body, not just the work. They read your own
+       sleep and food (read_health) and answer anything you ask them. */
+    {id:'nutrition', n:'Henry', title:'Nutrition Coach',
+     job:'I coach your eating. I read what you logged today against your target and tell you exactly what to eat to bulk, cut or hold, in calories, grams of protein and real meals.',
+     playbook:'1. read_health for today\u2019s food, your target and your sleep.\n2. Compare what you ate with the target.\n3. Plan the coming meal and tomorrow, in numbers.\n4. Answer the question first, in a few lines.',
+     tools:['wellness','tasks'],
+     routine:{freq:'daily',time:'20:00',job:'Check today\u2019s food against my target and tell me what to eat tomorrow.'},
+     chips:['How are my calories today, and how do I bulk up?','Am I eating enough protein?','What should I have for dinner?'],
+     hints:['calorie','kcal','protein','eat','food','meal','bulk','cut','diet','macro','nutrition','hungry','snack','weight']},
+    {id:'sleep', n:'Luna', title:'Sleep Coach',
+     job:'I look after your sleep. I read your nights (hours, stages, bedtime, how long you take to fall asleep, HRV), find what is hurting them, and check in at wind-down time: phone away, a book, lights low, a cool room.',
+     playbook:'1. read_health for your recent nights.\n2. Find the pattern: late bedtimes, slow sleep onset, short deep sleep.\n3. Give one thing to change tonight.\n4. Answer the question first, in a few lines.',
+     tools:['wellness','tasks'],
+     routine:{freq:'daily',time:'22:00',job:'Wind-down check-in: how did last night go, and the one thing to do tonight.'},
+     chips:['How is my sleep? Everything in one summary','What is making my sleep worse?','Why do I have dark circles?'],
+     hints:['sleep','tired','bed','night','rem','deep sleep','insomnia','wake','nap','dark circles','scroll','phone at night']}
   ];
-  var SEED=['chief','pm','social','research','inbox','analyst'];
+  var SEED=['chief','pm','social','research','inbox','analyst','nutrition','sleep'];
   function tpl(id){ return TPL.filter(function(t){ return t.id===id; })[0]||null; }
 
   /* ---------------- tool groups (what you switch on per employee) ---------------- */
@@ -173,6 +189,13 @@ window.KovaCrew=(function(){
       return;
     }
     migrate();
+    migrate25();
+  }
+  /* p25: teams made before the coaches existed get Henry and Luna once */
+  function migrate25(){
+    if(!window.KP||KP.get('crewV25')) return;
+    ['nutrition','sleep'].forEach(function(id){ if(!emps().some(function(e){ return e.tpl===id; })) hire(tpl(id),{n:freeName(tpl(id))},true); });
+    KP.set('crewV25',true);
   }
   /* p20: Maya became the Social Media Manager (she posts and reads the
      comments) and Ravi researches by default. A team that still has the
@@ -189,6 +212,34 @@ window.KovaCrew=(function(){
   function saveEmp(e,patch){ return W.update('agents',e.id,patch,'user'); }
   function touch(e,patch){ var row=W.find('agents',e.id); if(!row) return; Object.keys(patch).forEach(function(k){ row[k]=patch[k]; e[k]=patch[k]; }); try{ W.save(); }catch(x){} }
   function chief(){ return emps().filter(function(e){ return e.tpl==='chief'&&e.enabled; })[0]||null; }
+
+  /* ---------------- your health, as the team sees it (p25) ----------------
+     The same numbers the app shows: the nights on Sleep, today on Fuel and
+     the target from "Find my maintenance". Example data is labelled as
+     such, and a missing target is said, never filled in. */
+  function sample(){ try{ return !(window.KovaMode&&KovaMode.live); }catch(e){ return true; } }
+  function health(){
+    var N=(window.KOVA_WEEK||[]).filter(Boolean).map(function(n){
+      return {day:n.d,score:n.score,asleep_min:(n.deep||0)+(n.rem||0)+(n.light||0),bedtime:n.bed,onset_min:n.onset,efficiency_pct:n.eff,hrv_ms:n.hrv,deep_min:n.deep,rem_min:n.rem,light_min:n.light};
+    });
+    var t=null, tg=null;
+    try{ t=window.KovaFuel&&KovaFuel.totals?KovaFuel.totals():null; }catch(e){}
+    try{ tg=window.__fuelTargets?__fuelTargets():null; }catch(e){}
+    var own=!!(tg&&tg.base&&tg.base.src&&tg.base.src!=='demo');
+    return {source:sample()?'example data: Kova is showing its sample week, not the user\u2019s own readings':'the user\u2019s own data',
+      nights:N.length, sleep:N,
+      food_today:t&&t.kcal?{kcal:Math.round(t.kcal),protein_g:Math.round(t.p),carbs_g:Math.round(t.c),fat_g:Math.round(t.f)}:{kcal:0,note:'Nothing logged today yet.'},
+      target:own?{kcal:Math.round(tg.kcal),protein_g:Math.round(tg.p),carbs_g:Math.round(tg.c),fat_g:Math.round(tg.f)}:null,
+      target_note:own?'':'No personal calorie target yet: the user has not answered the five maintenance questions (Fuel > Find my maintenance).'};
+  }
+  function healthText(){
+    var h=health(), out=['Source: '+h.source+'.'];
+    try{ var sn=window.KovaChat&&KovaChat.snapshot?KovaChat.snapshot():''; if(sn) out.push(sn); }catch(e){}
+    if(!h.nights) out.push('No sleep nights recorded yet.');
+    out.push(h.target?'Daily target: '+h.target.kcal+' kcal, '+h.target.protein_g+' g protein.':h.target_note);
+    if(!h.food_today.kcal) out.push('Food today: nothing logged yet.');
+    return out.join('\n');
+  }
 
   /* ---------------- analyze work: all computed on this device ---------------- */
   function doneAt(i){ return i.status==='Completed'?(i.completedAt||i.updated||i.created||0):0; }
@@ -292,6 +343,9 @@ window.KovaCrew=(function(){
         return {available:true,readiness:fix>=2?'low':(fix===1?'medium':'high'),metrics:a.metrics.map(function(m){ return {name:m.name,value:m.value,unit:m.unit,status:m.status,note:(m.flags||[])[0]||''}; })};
       },
       label:function(r){ return r.available?'Checked your readiness: '+r.readiness:'Readiness not available yet'; }},
+    read_health:{g:'read',kind:'read',d:'The user\u2019s own health data in Kova: recent nights of sleep (score, hours asleep, bedtime, sleep onset, deep/REM/light minutes, HRV), food logged today with calories and macros, their calorie and protein target (or that none is set), training. Use it for any question about their body.',
+      s:obj({}), run:function(){ return health(); },
+      label:function(r){ return 'Read your health data: '+(r.nights?r.nights+' nights of sleep':'no sleep yet')+', '+(r.food_today&&r.food_today.kcal?Math.round(r.food_today.kcal)+' kcal today':'no food logged today'); }},
     read_memory:{g:'read',kind:'read',d:'What you and the team have asked the employee to remember, plus company notes.',
       s:obj({}), run:function(a,ctx){ return {mine:(ctx.emp.memory||[]).map(function(m){ return m.t; }),company:W.list('memories').slice(-20).map(function(m){ return m.text; })}; },
       label:function(){ return 'Read its memory'; }},
@@ -610,12 +664,14 @@ window.KovaCrew=(function(){
       +(function(){ var sn=snapshot(e); return sn?'KOVA\u2019S ANALYSIS BEFORE YOU START ('+sn.skillName+')\n'+JSON.stringify({summary:sn.summary,metrics:(sn.metrics||[]).map(function(m){ return m.label+': '+m.value+(m.unit||'')+' ('+m.note+')'; })}).slice(0,1600)+'\n\n':''; })()
       +'RULES\n'
       +'- Look at the real data with your read tools before you act. Never invent numbers, names, dates or email addresses; if something is missing, say so.\n'
-      +'- Use only your tools. If the job belongs to a teammate, hand_off to them with clear instructions.\n'
+      +'- Answer whatever the user asks you, directly, even when it is outside your title: health, sleep, food, training, money, life or work. Never say you only handle one area. For their body, use YOUR HEALTH below or read_health; for general knowledge, answer from what you know and say when something needs a doctor.\n'
+      +'- Hand a job to a teammate (hand_off) only when it needs that teammate\u2019s tools.\n'
       +'- Keep going until the job is done; do not stop to ask what you can find out yourself. If you truly need a decision, finish and say exactly what you need.\n'
       +'- Email is prepared for the user to approve; you never send anything yourself. Posts are Studio drafts; the user publishes.\n'
-      +'- Finish every job by calling write_report exactly once, with at least one chart built from real numbers, then reply with one short closing sentence.\n'
+      +'- A question gets a direct answer: a few short lines, their numbers first, then what to do. Call write_report only for real work (a plan, an analysis, a weekly report), once, with at least one chart built from real numbers, then one short closing sentence.\n'
       +'- Write plainly, like a capable colleague. No filler, no emojis.\n\n'
       +(team?'TEAM\n'+team+'\n\n':'')
+      +'YOUR HEALTH (from Kova)\n'+healthText()+'\n\n'
       +'ABOUT THE BUSINESS\n'+((A&&A.context)?A.context():'')+'\n\n'
       +(mem?'WHAT YOU REMEMBER\n'+mem+'\n\n':'')
       +'Now: '+d.toDateString()+' '+clock(d.getTime())+' ('+tz+').';
@@ -625,6 +681,12 @@ window.KovaCrew=(function(){
   function keyBrain(){ try{ if(window.KovaModel&&KovaModel.connected()){ var c=KovaModel.cfg(); if(c&&c.p==='anthropic'&&c.key) return c; } }catch(e){} return null; }
   function serverLikely(){ try{ return !S.down.server&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
   function brainName(){ return serverLikely()?'server':(keyBrain()?'key':'local'); }
+  /* why the team is answering without AI, in words the owner can act on */
+  function brainWhy(){
+    if(S.down&&S.down.why) return S.down.why;
+    try{ if(!(window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser)) return 'you are not signed in, so the team cannot reach the Kova server'; }catch(e){}
+    return 'the Kova server could not be reached';
+  }
   var BRAIN_N={server:'Kova server \u00b7 Claude',key:'Your Claude key',local:'Offline routines',taught:'What you showed them',cloud:'Kova server \u00b7 while Kova was closed'};
 
   /* ---------------- the model router (p15) ----------------
@@ -679,9 +741,9 @@ window.KovaCrew=(function(){
         return r.json().catch(function(){ return {}; }).then(function(j){
           if(r.ok){ job.brain='server'; return j; }
           if(r.status===429) throw new Error(j.error||'Daily limit reached.');
-          S.down.server=true; return viaKey();
+          S.down.server=true; S.down.why=String(j.error||('the Kova server answered '+r.status)); return viaKey();
         });
-      },function(){ S.down.server=true; return viaKey(); });
+      },function(){ S.down.server=true; S.down.why='the Kova server did not answer'; return viaKey(); });
     }
     return viaKey();
   }
@@ -1219,10 +1281,74 @@ window.KovaCrew=(function(){
         stages:['Check readiness','Map your energy','Rank today by effort','Match work to energy']};
     }};
 
+  /* ---- p25: sleep and food, from your own numbers (no AI needed) ---- */
+  function hm(min){ min=Math.round(min||0); return Math.floor(min/60)+'h '+('0'+(min%60)).slice(-2)+'m'; }
+  function avg(a){ return a.length?a.reduce(function(x,y){ return x+y; },0)/a.length:0; }
+  function bedMin(b){ var m=String(b||'').match(/(\d{1,2}):(\d{2})/); if(!m) return null; var x=+m[1]*60+(+m[2]); return x<12*60?x+24*60:x; }
+  function clockOf(x){ x=Math.round(x)%(24*60); var h=Math.floor(x/60), m=x%60; return (h%12||12)+':'+('0'+m).slice(-2)+(h<12?' am':' pm'); }
+  var WIND=['Phone out of the bedroom (or across the room) 30 to 60 minutes before bed: the scrolling, not just the light, keeps the brain switched on.',
+    'Read a paper book instead, under a warm, low lamp.',
+    'Lights low and the room cool, about 18 °C (65 °F), and dark.',
+    'Same bedtime within half an hour, weekends too.',
+    'No caffeine after 2 pm, and no big meal or alcohol in the last 3 hours.'];
+  SK.sleep={n:'Sleep summary',
+    reads:function(){ return [{name:'read_health',input:{}}]; },
+    build:function(e,text){
+      var h=health(), N=h.sleep, q=String(text||'');
+      if(!N.length) return {title:'Sleep summary',summary:'There are no nights recorded yet, so there is nothing to read. Wear your watch to bed and connect it in Settings > Connections; after the first night this summary fills in.',
+        metrics:[{label:'Nights',value:'0',note:'Nothing recorded yet'}],charts:[],sections:[{heading:'Tonight anyway',text:bullets(WIND.slice(0,3))}],stages:['Read your nights']};
+      var asleep=N.map(function(n){ return n.asleep_min; }), sc=N.map(function(n){ return +n.score||0; }), on=N.map(function(n){ return +n.onset_min||0; });
+      var beds=N.map(function(n){ return bedMin(n.bedtime); }).filter(function(x){ return x!=null; });
+      var aA=avg(asleep), aS=Math.round(avg(sc)), aOn=Math.round(avg(on)), aDeep=Math.round(avg(N.map(function(n){ return +n.deep_min||0; }))), aRem=Math.round(avg(N.map(function(n){ return +n.rem_min||0; })));
+      var spread=beds.length>1?Math.max.apply(null,beds)-Math.min.apply(null,beds):0, aBed=beds.length?avg(beds):null;
+      var worst=N.slice().sort(function(a,b){ return (+a.score||0)-(+b.score||0); })[0], best=N.slice().sort(function(a,b){ return (+b.score||0)-(+a.score||0); })[0];
+      /* what is hurting it, only from patterns in these nights */
+      var hurts=[];
+      if(aA<7*60) hurts.push('Short nights: '+hm(aA)+' asleep on average, under the 7 hours most adults need.');
+      if(aOn>=20) hurts.push('Slow to fall asleep: '+aOn+' minutes on average (under 15 is typical). Scrolling in bed is the most common cause.');
+      if(spread>=90) hurts.push('Bedtime moves around by '+hm(spread)+' across these nights; an irregular bedtime shifts your body clock.');
+      if(aBed!=null&&aBed>=24*60+15) hurts.push('Late bedtimes: around '+clockOf(aBed)+' on average.');
+      if(worst&&best&&bedMin(worst.bedtime)!=null&&bedMin(best.bedtime)!=null&&bedMin(worst.bedtime)-bedMin(best.bedtime)>=45) hurts.push('Your worst night ('+worst.day+', score '+worst.score+') started '+hm(bedMin(worst.bedtime)-bedMin(best.bedtime))+' later than your best ('+best.day+', score '+best.score+').');
+      if(!hurts.length) hurts.push('Nothing stands out in these nights: hours, sleep onset and bedtime all look steady.');
+      var sec=[{heading:'What is hurting your sleep',text:bullets(hurts)},{heading:'Tonight',text:bullets(WIND)}];
+      if(/dark circle|eye bag|puffy/i.test(q)) sec.push({heading:'Dark circles',text:bullets(['Short or broken sleep makes them more visible: blood vessels under thin skin show through more when you are tired.',
+        'Other common causes: genetics, allergies or a blocked nose, rubbing your eyes, dehydration and salty food late at night.',
+        'If they appear suddenly, or with swelling or pain, ask a doctor.'])});
+      return {title:'Sleep summary',
+        summary:(h.source.indexOf('example')===0?'From Kova\u2019s example week (not your own nights yet): ':'')+'last '+N.length+' nights, '+hm(aA)+' asleep on average, score '+aS+'. '+(hurts[0]||''),
+        metrics:[{label:'Asleep',value:hm(aA),note:'Average a night'},{label:'Score',value:String(aS),note:'Average'},{label:'Falling asleep',value:String(aOn),unit:' min',note:aOn>=20?'Slow':'Fine'},
+          {label:'Deep',value:String(aDeep),unit:' min',note:'Average'},{label:'REM',value:String(aRem),unit:' min',note:'Average'},{label:'Bedtime',value:aBed!=null?clockOf(aBed):'–',note:spread?'Moves '+hm(spread):'Steady'}],
+        charts:[{type:'bars',title:'Hours asleep',unit:'h',data:N.map(function(n){ return {label:n.day,value:Math.round(n.asleep_min/6)/10}; })},
+          {type:'donut',title:'Sleep stages (average)',data:[{label:'Deep',value:aDeep},{label:'REM',value:aRem},{label:'Light',value:Math.round(avg(N.map(function(n){ return +n.light_min||0; })))}]}],
+        sections:sec, stages:['Read your nights','Find the pattern','Plan tonight']};
+    }};
+  SK.nutrition={n:'Food check',
+    reads:function(){ return [{name:'read_health',input:{}}]; },
+    build:function(e,text){
+      var h=health(), t=h.food_today, tg=h.target, q=String(text||''), bulk=/bulk|gain|put on|mass|bigger/i.test(q), cut=/\bcut\b|lose|lean|fat loss|slim/i.test(q);
+      var eaten=t.kcal||0, sec=[];
+      if(!tg) return {title:'Food check',summary:(eaten?'You have logged '+eaten+' kcal today. ':'Nothing logged today yet. ')+'Kova has no calorie target for you yet, so it cannot say how far off you are. Answer the five questions in Fuel > Find my maintenance and ask again.',
+        metrics:[{label:'Eaten today',value:String(eaten),unit:' kcal',note:eaten?'Logged':'Nothing logged'},{label:'Target',value:'Not set',note:'Find my maintenance'}],charts:[],
+        sections:[{heading:'Next step',text:bullets(['Fuel > Find my maintenance: five questions, and Kova works out your target from your body, steps, sleep and training.',bulk?'Then aim about 300 kcal a day above it to bulk, with protein at 1.6 to 2.2 g per kg of body weight.':'Then log meals with Snap or the barcode scanner.'])}],stages:['Read today','Check the target']};
+      var goal=tg.kcal+(bulk?300:cut?-400:0), left=goal-eaten, pLeft=Math.max(0,tg.protein_g-(t.protein_g||0));
+      sec.push({heading:bulk?'To bulk up':cut?'To cut':'The rest of today',text:bullets([
+        (bulk?'Eat about '+goal+' kcal a day, roughly 300 over your maintenance of '+tg.kcal+'. A small surplus builds muscle with less fat; aim to gain about 0.25 to 0.5 kg a week.':cut?'Eat about '+goal+' kcal a day, roughly 400 under your maintenance of '+tg.kcal+', and keep protein high so the weight lost is fat.':'Your target today is '+tg.kcal+' kcal.'),
+        left>0?'Left today: '+left+' kcal'+(pLeft?' and '+pLeft+' g protein':'')+'.':'You are '+(-left)+' kcal over today\u2019s '+(bulk?'bulking ':'')+'number.',
+        pLeft>=30?'Protein first: '+pLeft+' g is about '+Math.ceil(pLeft/30)+' portion'+(Math.ceil(pLeft/30)>1?'s':'')+' of chicken, fish, Greek yogurt, eggs or tofu (about 30 g each).':'Protein is on track for today.',
+        bulk?'Easy extra calories: whole milk, oats, peanut butter, rice, olive oil on food, a banana with nuts.':'',
+        bulk?'Train with weights 3 to 4 times a week: the surplus only becomes muscle with the training.':''])});
+      return {title:'Food check',
+        summary:(h.source.indexOf('example')===0?'From Kova\u2019s example data: ':'')+eaten+' of '+goal+' kcal today'+(bulk?' (bulking)':cut?' (cutting)':'')+', '+(t.protein_g||0)+' of '+tg.protein_g+' g protein.',
+        metrics:[{label:'Eaten',value:String(eaten),unit:' kcal',note:'Today'},{label:bulk?'Bulk target':cut?'Cut target':'Target',value:String(goal),unit:' kcal',note:'Maintenance '+tg.kcal},
+          {label:'Protein',value:String(t.protein_g||0),unit:' g',note:'of '+tg.protein_g+' g'},{label:'Left',value:String(Math.max(0,left)),unit:' kcal',note:left>0?'To eat today':'Over'}],
+        charts:[{type:'gauge',title:'Calories today',unit:'%',value:Math.min(150,Math.round(eaten/goal*100))},{type:'bars',title:'Macros today',unit:'g',data:[{label:'Protein',value:t.protein_g||0},{label:'Carbs',value:t.carbs_g||0},{label:'Fat',value:t.fat_g||0}]}],
+        sections:sec, stages:['Read today','Compare with the target','Plan the next meal']};
+    }};
+
   /* which skills each role has, and which words call each one */
   var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief'],
     /* Maya posts and reads comments (server tools); drafting stays Zoe's lane */
-    social:['analyze','content']};
+    social:['analyze','content'],nutrition:['nutrition'],sleep:['sleep']};
   var SK_WORDS={triage:/overdue|triage|\blate\b|behind|re-?plan|re-?date|clean ?up|stuck/i,
     breakdown:/break\b.*\b(down|into)|new project|plan (a|the|my|this) project|project (for|called|named)|steps (for|to)/i,
     projects:/project|progress|milestone/i,
@@ -1233,10 +1359,17 @@ window.KovaCrew=(function(){
     research:/research|competitor|market|look up|find out|pricing|industry|trending/i,
     schedule:/meeting|call|schedule|book|calendar|slot|my week|plan (my|the) week/i,
     focus:/focus|energy|tired|deep work|stress|overload|readiness|burn/i,
-    brief:/brief|today|standup|stand-up|morning|my day|priorit|what should i|at risk/i};
+    brief:/brief|today|standup|stand-up|morning|my day|priorit|what should i|at risk/i,
+    sleep:/\bsleep|\bslept|bedtime|\bbed\b|\bnights?\b|\brem\b|deep sleep|insomnia|dark circles|\bnap|doom ?scroll|wake up/i,
+    nutrition:/calorie|kcal|protein|\beat|food|meal|bulk|diet|macro|nutrition|carb|hungry|snack|breakfast|lunch|dinner/i};
   function skillsOf(e){ if(SK_FOR[e.tpl]) return SK_FOR[e.tpl]; var t=(e.title+' '+e.job).toLowerCase(), out=Object.keys(SK_WORDS).filter(function(k){ return SK_WORDS[k].test(t); }); return out.length?out:['analyze']; }
   function pickSkill(e,text){
     var own=skillsOf(e), t=String(text||'');
+    /* p25: a question about your sleep or food is answered by whoever you
+       asked, from your own numbers, not handed round or turned into a
+       work report because it said "today" */
+    var body=['sleep','nutrition'].filter(function(k){ return SK_WORDS[k].test(t); })[0];
+    if(body) return {id:body,matched:true};
     for(var i=0;i<own.length;i++) if(SK_WORDS[own[i]].test(t)) return {id:own[i],matched:true};
     var other=Object.keys(SK_WORDS).filter(function(k){ return SK_WORDS[k].test(t); })[0];
     if(other){ var mate=emps().filter(function(x){ return x.enabled&&x.id!==e.id&&skillsOf(x)[0]===other; })[0]; if(mate) return {id:other,handoff:mate}; return {id:other,matched:true}; }
@@ -1277,8 +1410,9 @@ window.KovaCrew=(function(){
     var e=emp(job.emp), sk=SK[job.skill]||SK.analyze, rep=null;
     try{ rep=sk.build(e,job.text,job); }catch(x){ rep=null; }
     if(rep){ rep.skill=job.skill; job.report=rep; log(job,'Wrote the report','report'); }
-    finish(job,job.matched===false?'I cannot do “'+job.text.split('\n')[0].slice(0,80)+'” offline; that needs the Kova server or your own Claude key. Here is my '+sk.n.toLowerCase()+' instead.'
-      :'Done on this device with my '+sk.n.toLowerCase()+' skill, not AI. With the Kova server, Claude does this with more judgement.');
+    var why=brainWhy();
+    finish(job,job.matched===false?'I cannot answer “'+job.text.split('\n')[0].slice(0,80)+'” without AI ('+why+'). Here is my '+sk.n.toLowerCase()+' instead.'
+      :'Answered on this device from your numbers, without AI ('+why+'). With AI on, I can answer anything you ask.');
   }
 
   /* ---------------- routines: schedules and events ---------------- */
@@ -2344,5 +2478,5 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

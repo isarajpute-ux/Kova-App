@@ -91,7 +91,7 @@ window.KovaListen=(function(){
     requestAnimationFrame(function(){ if(S.pop) S.pop.classList.add('on'); });
   }
   function close(){
-    clearInterval(S.timer); clearTimeout(S.wait);
+    clearInterval(S.timer); clearTimeout(S.wait); clearInterval(S.follow); S.job=null;
     var p=S.pop; S.pop=null; S.emp=null; S.state='';
     if(p){ p.classList.remove('on'); setTimeout(function(){ p.remove(); },250); }
   }
@@ -104,7 +104,7 @@ window.KovaListen=(function(){
   function paintPop(){
     var p=S.pop, e=S.emp; if(!p||!e) return;
     var st=S.state, body='';
-    if(st==='sent') body='<div class="kl2-say">'+esc(e.n)+' is on it.</div><div class="kl2-row"><button class="kl2-b" data-k="open">Open '+esc(e.n)+'</button><button class="kl2-b ghost" data-k="close">Close</button></div>';
+    if(st==='sent') body=answer(e);
     else if(st==='typing'||st==='edit') body='<textarea id="klAsk" rows="3" placeholder="What do you need, '+esc(e.n)+'?">'+esc(S.ask)+'</textarea>'
       +'<div class="kl2-row"><button class="kl2-b" data-k="send">Send to '+esc(e.n)+'</button><button class="kl2-b ghost" data-k="close">Cancel</button></div>';
     else body='<div class="kl2-heard">'+(S.heard?'“'+esc(S.heard)+'”':'')+'</div>'
@@ -121,17 +121,53 @@ window.KovaListen=(function(){
     var t=document.getElementById('klAsk'); if(t) S.ask=t.value;
     var e=S.emp, job=clean(S.ask);
     if(!e||!job){ S.state='typing'; paintPop(); return; }
-    var C=crew(); if(C) C.start(C.emp(e.id)||e,job,'voice');
-    S.state='sent'; paintPop();
-    setTimeout(function(){ if(S.state==='sent') close(); },5000);
+    var C=crew(), j=C?C.start(C.emp(e.id)||e,job,'voice'):null;
+    S.job=j&&j.id; S.state='sent'; paintPop();
+    /* p25: the box used to say "on it" and close after five seconds, so the
+       answer landed on a screen you were not looking at. Now it stays and
+       shows the work, then the answer, following a hand-off to a teammate. */
+    clearInterval(S.follow);
+    S.follow=setInterval(function(){
+      var jj=cur(); if(!S.pop||!jj){ clearInterval(S.follow); return; }
+      var kid=child(jj); if(kid){ S.job=kid.id; var C2=crew(), to=C2&&C2.emp(kid.emp); if(to) S.emp=to; }
+      var j2=cur(), sig=j2?[j2.id,j2.state,j2.steps.length,j2.say||'',!!j2.report].join('|'):'';
+      if(sig!==S.sig){ S.sig=sig; paintPop(); }     /* repaint on a change only, so a long answer can be scrolled */
+      if(jj.state!=='running'&&jj.state!=='paused'&&!kid&&!(jj.after&&jj.after.length&&jj.state==='done')) clearInterval(S.follow);
+    },400);
+  }
+  function jobs(){ var C=crew(); return (C&&C._S&&C._S.jobs)||{}; }
+  function cur(){ return S.job?jobs()[S.job]||null:null; }
+  function child(j){ var J=jobs(); return Object.keys(J).map(function(k){ return J[k]; }).filter(function(x){ return x.meta&&x.meta.parent===j.id; })[0]||null; }
+  function md(t){ var C=crew(); return C&&C.md?C.md(t):esc(t).replace(/\n/g,'<br>'); }
+  function answer(e){
+    var j=cur(), st=j?j.state:'running', last=j&&j.steps&&j.steps.length?j.steps[j.steps.length-1].t:'';
+    var asked=j?'<div class="kl2-heard">“'+esc(j.text.split('\n')[0].slice(0,140))+'”</div>':'';
+    if(!j||st==='running'||st==='paused')
+      return asked+'<div class="kl2-say"><span class="kl2-wave"><i></i><i></i><i></i></span>'+esc(e.n)+' is working'+(last?': '+esc(String(last).replace(/ \u00b7 .*/,'').slice(0,80)):'…')+'</div>'
+        +'<div class="kl2-row"><button class="kl2-b ghost" data-k="open">Watch in the team</button><button class="kl2-b ghost" data-k="close">Close</button></div>';
+    var r=j.report, out='';
+    if(st==='waiting') out='<div class="kl2-ans">'+esc(e.n)+' needs your OK before going on.</div>';
+    else if(st==='failed') out='<div class="kl2-ans bad">'+esc(j.note||'This one could not be finished.')+'</div>';
+    else if(st==='stopped') out='<div class="kl2-ans">Stopped.</div>';
+    else {
+      if(r&&r.summary) out+='<div class="kl2-ans"><b>'+esc(r.title||'')+'</b>'+md(r.summary)+'</div>';
+      if(r&&r.metrics&&r.metrics.length) out+='<div class="kl2-mets">'+r.metrics.slice(0,4).map(function(m){ return '<span><b>'+esc(m.value)+esc(m.unit||'')+'</b>'+esc(m.label)+'</span>'; }).join('')+'</div>';
+      if(j.say&&!(r&&r.summary&&j.brain==='local')) out+='<div class="kl2-ans'+(r?' small':'')+'">'+md(j.say)+'</div>';
+      else if(j.say) out+='<div class="kl2-note">'+esc(j.say)+'</div>';
+      if(!out) out='<div class="kl2-ans">Done.</div>';
+    }
+    return asked+'<div class="kl2-scroll">'+out+'</div><div class="kl2-row">'
+      +'<button class="kl2-b" data-k="again">Ask '+esc(e.n)+' more</button>'
+      +'<button class="kl2-b ghost" data-k="open">'+(st==='waiting'?'Review':r?'See it all':'Open '+esc(e.n))+'</button><button class="kl2-b ghost" data-k="close">Close</button></div>';
   }
   function onPop(ev){
     var b=ev.target.closest('[data-k]'); if(!b) return;
     var k=b.getAttribute('data-k');
     if(k==='close'){ close(); return; }
     if(k==='send'){ send(); return; }
+    if(k==='again'){ clearInterval(S.follow); S.job=null; S.ask=''; S.state='typing'; paintPop(); return; }
     if(k==='edit'||k==='type'){ clearInterval(S.timer); clearTimeout(S.wait); S.state=k==='edit'?'edit':'typing'; paintPop(); return; }
-    if(k==='open'){ var id=S.emp&&S.emp.id; close(); if(window.go) go('workteam'); var C=crew(); if(C&&id){ C._S.view='emp'; C._S.emp=id; C._S.scroll=true; C.paint(); } }
+    if(k==='open'){ var id=S.emp&&S.emp.id; clearInterval(S.follow); close(); if(window.go) go('workteam'); var C=crew(); if(C&&id){ C._S.view='emp'; C._S.emp=id; C._S.scroll=true; C.paint(); } }
   }
 
   /* ---------------- the microphone ---------------- */

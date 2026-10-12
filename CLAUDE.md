@@ -33,6 +33,7 @@ Kova is a health app (Today, Workout, Fuel, Sleep, Vitals, Learn) with a Work OS
 - **Automations** (`src/p08_flow.js`): rules said in plain words, multi-step with waits and filters, Test it. **Search** (`src/p08_cmdk.js`): Cmd/Ctrl+K and the header search icons. **App guide** (`src/p08_apps.js`): 86 apps, why each leads, what Kova took.
 - **Booking link** (`functions/booking.js`, `book.html`, `src/p08_booking.js`): like Calendly; `/book/<name>`; bookings become Work OS meetings.
 - **AI team** (`functions/asks.js`, `src/p08_asks.js`, `src/p08_crew.js`): requests by text ("tell me at 11"), meeting prep, check-ins, Maya posts videos and reports the comments.
+  - p25: every teammate answers anything (health too) with `read_health` (sleep nights, food today, target); Henry (Nutrition Coach) and Luna (Sleep Coach). Without AI they answer sleep/food from the numbers and say why AI is off. Saying "hey <name> ..." keeps the box open with the answer (`src/p08_listen.js`).
 
 ## Still to do (waiting on the owner)
 - Push the branch, merge the PR, follow `VERCEL-STEP-BY-STEP.md` (keys go into Vercel, never into chat).

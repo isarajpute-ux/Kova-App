@@ -42,10 +42,10 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const doc = w.document, C = w.KovaCrew, W = w.WorkOS, DAY = 864e5, now = Date.now(), sod = W.startOfDay();
   ck('KovaCrew is on the page', !!C && typeof C.start === 'function');
   const E = () => C.emps(); const by = (t) => E().filter((e) => e.title === t)[0];
-  ck('the starter team is hired: Chief of Staff, Project Manager, Social Media Manager (Maya), Research Analyst, Client Success, Growth Analyst',
-    E().map((e) => e.title).join('|') === 'Chief of Staff|Project Manager|Social Media Manager|Research Analyst|Client Success|Growth Analyst' && by('Social Media Manager').n === 'Maya' && by('Growth Analyst').n === 'Theo');
+  ck('the starter team is hired: Chief of Staff, Project Manager, Social Media Manager (Maya), Research Analyst, Client Success, Growth Analyst, Nutrition Coach (Henry), Sleep Coach (Luna)',
+    E().map((e) => e.title).join('|') === 'Chief of Staff|Project Manager|Social Media Manager|Research Analyst|Client Success|Growth Analyst|Nutrition Coach|Sleep Coach' && by('Nutrition Coach').n === 'Henry' && by('Sleep Coach').n === 'Luna' && by('Social Media Manager').n === 'Maya' && by('Growth Analyst').n === 'Theo');
   ck('starter routines are off until you turn them on', E().every((e) => e.routine.freq === 'off'));
-  ck('ten roles to hire from, each with a job and a playbook', C.TPL.length === 10 && C.TPL.every((t) => t.job.length > 60 && t.playbook.length > 40));
+  ck('twelve roles to hire from, each with a job and a playbook', C.TPL.length === 12 && C.TPL.every((t) => t.job.length > 60 && t.playbook.length > 40));
 
   // ---- data to work on
   W.list('items').forEach((i) => W.remove('items', i.id, 'system'));
@@ -148,13 +148,13 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const jl = C.start(C.emp(leo.id), 'Triage my overdue tasks', 'you'); await wait(200);
   ck('offline triage re-dates overdue work by priority (High to tomorrow, Low to a week)', jl.state === 'done'
     && W.find('items', late1.id).due === sod + DAY && W.find('items', late2.id).due === sod + 7 * DAY && jl.report && jl.report.title === 'Overdue triage');
-  ck('offline work is labelled as a routine, not AI', /not AI/.test(jl.say));
+  ck('offline work is labelled: answered without AI, and why', /without AI \(/.test(jl.say));
   C.undo(jl.id);
   ck('undo puts the old dates back', W.find('items', late1.id).due === sod - 5 * DAY && W.find('items', late2.id).due === sod - 2 * DAY);
   const ja = C.start(C.emp(maya.id), 'How is the work going?', 'you'); await wait(200);
   ck('offline analysis reports the real numbers', ja.report && ja.report.metrics[0].value === '3' && /\+200%/.test(ja.report.metrics[0].note) && ja.report.metrics[1].value === '2');
   const jn = C.start(C.emp(jade.id), 'Write a poem about spring', 'you'); await wait(100);
-  ck('offline, a job it cannot do says what it needs', jn.state === 'done' && /Kova server or your own Claude key/.test(jn.say));
+  ck('offline, a job it cannot do says why (no AI, and the reason)', jn.state === 'done' && /without AI \(/.test(jn.say));
   C._S.down.server = false;
 
   // ---- routines
@@ -173,7 +173,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('an "Updated" line over a large title', /Updated/.test(body.querySelector('.crd-upd').textContent) && /team$/.test(body.querySelector('.crd-title').textContent));
   ck('four labelled stats with the real numbers', body.querySelectorAll('.crd-stat').length === 4 && /Finished3/.test(body.querySelector('.crd-stats').textContent.replace(/\s+/g, '')));
   ck('a stage timeline and a focus card with the wireframe globe', !!body.querySelector('.crd-flow .crd-step') && !!body.querySelector('.crd-focus .crd-globe'));
-  ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 7 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
+  ck('one tab per employee, plus Hire', body.querySelectorAll('.crd-tabs [data-c="tab"]').length === 9 && !!body.querySelector('.crd-tabs [data-c="hire"]'));
   ck('five tiles, the big one with 7d / 30d / 90d, every one with a chart', body.querySelectorAll('.crd-tiles .crd-t').length === 5 && body.querySelectorAll('.crd-t.t-big [data-c="jrange"]').length === 3 && [...body.querySelectorAll('.crd-tiles .crd-t')].every((t) => t.querySelector('svg.crd-ch, svg.crd-jc, .crd-srows')));
   body.querySelector('.crd-t.t-big [data-c="jrange"][data-r="90"]').click(); await wait(10);
   ck('the date range changes', C._S.range === 90 && body.querySelector('.crd-t.t-big [data-r="90"]').classList.contains('on'));
@@ -182,7 +182,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   body.querySelector('.crd-nav [data-n="team"]').click(); await wait(10);
 
   // ---- every role does real work: numbers, charts and advice
-  const all9 = C.TPL.map((t) => { const tmp = { id: 'tmp_' + t.id, tpl: t.id, n: t.n, title: t.title, job: t.job, tools: t.tools, enabled: true }; const r = C.SK[C.skillsOf(tmp)[0]].build(tmp, '', null); return { id: t.id, r }; });
+  const all9 = C.TPL.filter((t) => t.id !== 'sleep' && t.id !== 'nutrition').map((t) => { const tmp = { id: 'tmp_' + t.id, tpl: t.id, n: t.n, title: t.title, job: t.job, tools: t.tools, enabled: true }; const r = C.SK[C.skillsOf(tmp)[0]].build(tmp, '', null); return { id: t.id, r }; });
   ck('all nine roles return 4+ metrics, a chart and advice from the data', all9.every((x) => x.r.metrics.length >= 4 && x.r.charts.length >= 1 && x.r.sections.length >= 1 && x.r.summary));
   ck('every chart type draws', ['bars', 'line', 'donut', 'gauge', 'hills', 'week', 'matrix'].every((t) => /<svg/.test(C.chart({ type: t, value: 50, data: [{ label: 'a', value: 2, x: 1, y: 3 }, { label: 'b', value: 5, x: 2, y: 2 }] }, 'card'))));
   const brief = all9.find((x) => x.id === 'chief').r;

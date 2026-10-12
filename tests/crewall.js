@@ -100,7 +100,7 @@ async function settle(C, job, ms) {
   const have = C.emps().map((e) => e.tpl);
   C.TPL.forEach((t) => { if (have.indexOf(t.id) < 0) C.hire(t, null, true); });
   const team = C.emps();
-  ck('all ten roles are on the team (' + team.map((e) => e.n).join(', ') + ')', team.length === 10 && C.TPL.every((t) => team.some((e) => e.tpl === t.id)));
+  ck('all twelve roles are on the team (' + team.map((e) => e.n).join(', ') + ')', team.length === 12 && C.TPL.every((t) => team.some((e) => e.tpl === t.id)));
 
   // ---------- on the server: every role, every tool ----------
   const FB = w.KOVA_FB; FB.ok = true; FB.auth = FB.auth || {}; FB.auth.currentUser = user;

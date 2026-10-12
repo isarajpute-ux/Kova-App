@@ -56,8 +56,10 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   for (let i = 0; i < 30 && !Object.values(C.jobs()).some((x) => x.source === 'voice'); i++) await wait(100);   // slower under a busy machine
   const j = Object.values(C.jobs()).filter((x) => x.source === 'voice').pop();
   ck('after 3 seconds it goes to Maya', Object.keys(C.jobs()).length === before + 1 && j && C.emp(j.emp).n === 'Maya' && /work go this week/i.test(j.text));
-  for (let i = 0; i < 20 && !/Maya is on it/.test((doc.getElementById('klPop') || {}).textContent || ''); i++) await wait(100);   // slower under a busy machine
-  ck('the box says she is on it, with a way to open her', /Maya is on it/.test(doc.getElementById('klPop').textContent));
+  for (let i = 0; i < 30 && !/Ask Maya more/.test((doc.getElementById('klPop') || {}).textContent || ''); i++) await wait(100);   // slower under a busy machine
+  ck('the box stays and shows her answer, with a way to ask more and to open her', /Ask Maya more/.test(doc.getElementById('klPop').textContent) && !!doc.querySelector('#klPop [data-k="open"]'));
+  await wait(5500);
+  ck('it does not close by itself after a few seconds', !!doc.getElementById('klPop') && /Ask Maya more/.test(doc.getElementById('klPop').textContent));
   L.close(); await wait(300);
 
   say('hey leo triage my overdue tasks', true); await wait(30);
