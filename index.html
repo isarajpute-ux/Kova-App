@@ -39723,15 +39723,21 @@ window.KovaAuth = (function(){
     var standalone=(window.navigator.standalone===true)||
       (window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
     try{ localStorage.setItem('kova.auth.pending',provider); }catch(e){}
-    if(standalone){ FB.auth.signInWithRedirect(prov); return; }
+    function fail(e){
+      try{ localStorage.removeItem('kova.auth.pending'); }catch(x){}
+      var m=authError(e, provider), el=document.getElementById('afErr');
+      if(el) el.textContent=m;
+    }
+    /* the full-page way can be refused before it leaves (e.g. this site
+       is not on Firebase's allow list): say so, like the pop-up does */
+    function redirect(){ var p=FB.auth.signInWithRedirect(prov); if(p&&p.catch) p.catch(fail); }
+    if(standalone){ redirect(); return; }
     FB.auth.signInWithPopup(prov)
       .then(function(r){ try{ localStorage.removeItem('kova.auth.pending'); }catch(e){} signedIn(r.user, provider); })
       .catch(function(e){
         var code=(e&&e.code)||'';
-        if(/popup-blocked|operation-not-supported/.test(code)){ FB.auth.signInWithRedirect(prov); return; }
-        try{ localStorage.removeItem('kova.auth.pending'); }catch(x){}
-        var m=authError(e, provider), el=document.getElementById('afErr');
-        if(el) el.textContent=m;
+        if(/popup-blocked|operation-not-supported/.test(code)){ redirect(); return; }
+        fail(e);
       });
   }
 

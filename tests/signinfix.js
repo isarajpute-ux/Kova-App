@@ -54,6 +54,15 @@ function dob(w, doc, d, m, y) {
   ck('and the way forward is still on screen', !!A.doc.getElementById('afEmail') && !!A.doc.getElementById('authSkip'));
   ck('only the yes is kept, never the birthday', /"at":\d+/.test(A.w.localStorage.getItem('kova.age16') || '') && !/1992|29/.test((A.w.localStorage.getItem('kova.age16') || '').replace(/"at":\d+/, '')));
 
+  /* the pop-up blocked, and the full-page way refused too */
+  const E = boot();
+  E.auth.signInWithPopup = () => Promise.reject({ code: 'auth/popup-blocked' });
+  E.auth.signInWithRedirect = () => Promise.reject({ code: 'auth/unauthorized-domain' });
+  await wait(400);
+  E.w.localStorage.setItem('kova.age16', JSON.stringify({ at: 1 }));
+  E.doc.getElementById('authGoogle').click(); await wait(120);
+  ck('pop-up blocked and the full-page way refused: still said on screen', /Google sign-in is not switched on/.test((E.doc.getElementById('afErr') || { textContent: '' }).textContent) && !E.w.localStorage.getItem('kova.auth.pending'));
+
   /* sixteen tomorrow */
   const B = boot();
   await wait(400);

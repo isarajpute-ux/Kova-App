@@ -66,7 +66,7 @@ await page.evaluate(() => {
   firebase.auth.GoogleAuthProvider = { credential: (i, a) => ({ provider: 'google.com', idToken: i, accessToken: a }) };
   firebase.auth.OAuthProvider = function (id) { this.addScope = () => {}; this.credential = (x) => Object.assign({ provider: id }, x); };
   KOVA_FB.ok = true;
-  KOVA_FB.auth = { currentUser: null, signInWithCredential: (c) => { window.__cred = c; return Promise.resolve({ user: { uid: 'u9', email: 'sam@example.com', displayName: 'Sam', providerData: [] } }); },
+  KOVA_FB.auth = { currentUser: null, onAuthStateChanged: () => () => {}, signInWithCredential: (c) => { window.__cred = c; return Promise.resolve({ user: { uid: 'u9', email: 'sam@example.com', displayName: 'Sam', providerData: [] } }); },
     signInWithPopup: () => { window.__popup = 1; return Promise.reject(new Error('no pop-ups in the app')); }, signInWithRedirect: () => { window.__popup = 1; } };
 });
 await page.click('#authApple');
