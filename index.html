@@ -50915,7 +50915,7 @@ window.KovaCrew=(function(){
      hints:['focus','energy','tired','burnout','deep work','stress','balance','overload','rest']},
     /* p25: coaches for the body, not just the work. They read your own
        sleep and food (read_health) and answer anything you ask them. */
-    {id:'nutrition', n:'Henry', title:'Nutrition Coach',
+    {id:'nutrition', n:'Sage', title:'Nutrition Coach',
      job:'I coach your eating. I read what you logged today against your target and tell you exactly what to eat to bulk, cut or hold, in calories, grams of protein and real meals.',
      playbook:'1. read_health for today\u2019s food, your target and your sleep.\n2. Compare what you ate with the target.\n3. Plan the coming meal and tomorrow, in numbers.\n4. Answer the question first, in a few lines.',
      tools:['wellness','tasks'],
@@ -50928,9 +50928,23 @@ window.KovaCrew=(function(){
      tools:['wellness','tasks'],
      routine:{freq:'daily',time:'22:00',job:'Wind-down check-in: how did last night go, and the one thing to do tonight.'},
      chips:['How is my sleep? Everything in one summary','What is making my sleep worse?','Why do I have dark circles?'],
-     hints:['sleep','tired','bed','night','rem','deep sleep','insomnia','wake','nap','dark circles','scroll','phone at night']}
+     hints:['sleep','tired','bed','night','rem','deep sleep','insomnia','wake','nap','dark circles','scroll','phone at night']},
+    {id:'training', n:'Atlas', title:'Training Coach',
+     job:'I coach your training. I read the sessions you logged (how often, how long, how much you lifted) and your recovery, and tell you what to train, how hard, and when to rest.',
+     playbook:'1. read_health for your sessions and recovery.\n2. Check how often and how much you trained this week against last.\n3. Say what to do today: push, train easy or rest.\n4. Answer the question first, in a few lines.',
+     tools:['wellness','tasks'],
+     routine:{freq:'off',time:'07:00',job:'Tell me what to train today and how hard, from my recovery.'},
+     chips:['What should I train today?','Am I training enough?','How do I build more muscle?'],
+     hints:['workout','train','lift','gym','exercise','muscle','strength','squat','bench','cardio','reps','sets','run']},
+    {id:'vitals', n:'Cora', title:'Recovery Coach',
+     job:'I watch your heart and recovery. I read your resting heart rate, HRV, training load, sleep, bedtime, food and water against your normal, and tell you what is off and what to do about it.',
+     playbook:'1. read_wellness and read_health.\n2. Name what is outside your normal, with the number.\n3. Give the one thing to do today.\n4. Answer the question first, in a few lines.',
+     tools:['wellness','tasks'],
+     routine:{freq:'off',time:'08:00',job:'Check my recovery this morning and tell me what is off.'},
+     chips:['How is my recovery today?','Why is my HRV low?','Is my resting heart rate normal?'],
+     hints:['hrv','heart rate','resting heart','recovery','readiness','vitals','pulse','stress','spo2']}
   ];
-  var SEED=['chief','pm','social','research','inbox','analyst','nutrition','sleep'];
+  var SEED=['chief','pm','social','research','inbox','analyst','nutrition','sleep','training','vitals'];
   function tpl(id){ return TPL.filter(function(t){ return t.id===id; })[0]||null; }
 
   /* ---------------- tool groups (what you switch on per employee) ---------------- */
@@ -50976,8 +50990,17 @@ window.KovaCrew=(function(){
     }
     migrate();
     migrate25();
+    migrate26();
   }
-  /* p25: teams made before the coaches existed get Henry and Luna once */
+  /* p26: the coaches are named for what they look after: Sage (food),
+     Luna (sleep), Atlas (training), Cora (heart and recovery) */
+  function migrate26(){
+    if(!window.KP||KP.get('crewV26')) return;
+    emps().forEach(function(e){ if(e.tpl==='nutrition'&&e.n==='Henry'&&!emps().some(function(x){ return x.n==='Sage'; })) touch(e,{n:'Sage'}); });
+    ['training','vitals'].forEach(function(id){ if(!emps().some(function(e){ return e.tpl===id; })) hire(tpl(id),{n:freeName(tpl(id))},true); });
+    KP.set('crewV26',true);
+  }
+  /* p25: teams made before the coaches existed get the food and sleep coaches once */
   function migrate25(){
     if(!window.KP||KP.get('crewV25')) return;
     ['nutrition','sleep'].forEach(function(id){ if(!emps().some(function(e){ return e.tpl===id; })) hire(tpl(id),{n:freeName(tpl(id))},true); });
@@ -51012,11 +51035,16 @@ window.KovaCrew=(function(){
     try{ t=window.KovaFuel&&KovaFuel.totals?KovaFuel.totals():null; }catch(e){}
     try{ tg=window.__fuelTargets?__fuelTargets():null; }catch(e){}
     var own=!!(tg&&tg.base&&tg.base.src&&tg.base.src!=='demo');
+    var log=lsJ('kova_log_v1',[]), wk=Date.now()-7*DAY;
+    var sess=(Array.isArray(log)?log:[]).filter(function(x){ return x&&x.t; }).slice(-30).map(function(x){ return {at:new Date(x.t).toDateString(),t:x.t,name:x.day||'',minutes:+x.mins||0,volume:+x.vol||0}; });
+    var a=null; try{ a=window.KovaAgent&&KovaAgent.audit?KovaAgent.audit():null; }catch(e){}
+    var vit=a&&a.metrics?a.metrics.map(function(m){ return {name:m.name,value:m.value,unit:m.unit||'',status:m.status,note:(m.flags||[])[0]||''}; }):[];
     return {source:sample()?'example data: Kova is showing its sample week, not the user\u2019s own readings':'the user\u2019s own data',
       nights:N.length, sleep:N,
       food_today:t&&t.kcal?{kcal:Math.round(t.kcal),protein_g:Math.round(t.p),carbs_g:Math.round(t.c),fat_g:Math.round(t.f)}:{kcal:0,note:'Nothing logged today yet.'},
       target:own?{kcal:Math.round(tg.kcal),protein_g:Math.round(tg.p),carbs_g:Math.round(tg.c),fat_g:Math.round(tg.f)}:null,
-      target_note:own?'':'No personal calorie target yet: the user has not answered the five maintenance questions (Fuel > Find my maintenance).'};
+      target_note:own?'':'No personal calorie target yet: the user has not answered the five maintenance questions (Fuel > Find my maintenance).',
+      sessions:sess, sessions_7d:sess.filter(function(x){ return x.t>=wk; }).length, vitals:vit};
   }
   function healthText(){
     var h=health(), out=['Source: '+h.source+'.'];
@@ -52108,6 +52136,38 @@ window.KovaCrew=(function(){
           {type:'donut',title:'Sleep stages (average)',data:[{label:'Deep',value:aDeep},{label:'REM',value:aRem},{label:'Light',value:Math.round(avg(N.map(function(n){ return +n.light_min||0; })))}]}],
         sections:sec, stages:['Read your nights','Find the pattern','Plan tonight']};
     }};
+  SK.training={n:'Training check',
+    reads:function(){ return [{name:'read_health',input:{}}]; },
+    build:function(){
+      var h=health(), S7=h.sessions.filter(function(x){ return x.t>=Date.now()-7*DAY; }), P7=h.sessions.filter(function(x){ return x.t>=Date.now()-14*DAY&&x.t<Date.now()-7*DAY; });
+      var fix=h.vitals.filter(function(m){ return m.status==='fix'; }), call=fix.length>=2?'rest':fix.length===1?'easy':'push';
+      if(!h.sessions.length) return {title:'Training check',summary:'No workouts logged yet, so there is nothing to read. Log one in Workout (one tap starts today\u2019s), or import from Strong or Hevy in Settings.',
+        metrics:[{label:'Sessions',value:'0',note:'Nothing logged'}],charts:[],sections:[{heading:'To start',text:bullets(['Three full-body sessions a week is a strong start: squat, push, pull and a hinge each time.','Add a set or a little weight each week; that steady increase is what builds muscle.'])}],stages:['Read your sessions']};
+      var mins=S7.reduce(function(a,x){ return a+x.minutes; },0), vol=S7.reduce(function(a,x){ return a+x.volume; },0), last=h.sessions[h.sessions.length-1];
+      var days=[6,5,4,3,2,1,0].map(function(i){ var d0=new Date(Date.now()-i*DAY).toDateString(); return {label:d0.slice(0,3),value:h.sessions.filter(function(x){ return x.at===d0; }).reduce(function(a,x){ return a+x.minutes; },0)}; });
+      return {title:'Training check',
+        summary:S7.length+' session'+(S7.length===1?'':'s')+' this week ('+P7.length+' the week before), '+mins+' minutes. Today: '+({push:'you are recovered, push.',easy:'one check is off, train easy.',rest:'two or more checks are off, rest or walk.'})[call],
+        metrics:[{label:'Sessions',value:String(S7.length),note:'This week'},{label:'Minutes',value:String(mins),note:'This week'},{label:'Volume',value:String(vol),note:'Lifted this week'},{label:'Last',value:String(last.name||'Session').slice(0,18),note:last.at}],
+        charts:[{type:'bars',title:'Minutes trained, last 7 days',unit:'min',data:days}],
+        sections:[{heading:'Today',text:bullets([call==='push'?'Recovery looks fine: a hard session is a good idea today.':call==='easy'?'One recovery check is off ('+fix[0].name+'): train, but keep it lighter.':'Recovery is low ('+fix.map(function(m){ return m.name; }).join(', ')+'): rest or take an easy walk.',
+          S7.length<3?'Aim for 3 sessions this week; you have '+S7.length+'.':'You have hit 3 or more sessions this week: keep that rhythm.',
+          'To build muscle: add a set or a little weight each week, and eat enough protein (ask Sage).'])}],
+        stages:['Read your sessions','Check recovery','Plan today']};
+    }};
+  SK.vitals={n:'Recovery check',
+    reads:function(){ return [{name:'read_health',input:{}}]; },
+    build:function(){
+      var h=health(), V=h.vitals, fix=V.filter(function(m){ return m.status==='fix'; });
+      if(!V.length) return {title:'Recovery check',summary:'No heart or recovery readings yet. Connect your watch in Settings > Connections; after a night or two this fills in.',
+        metrics:[{label:'Readings',value:'0',note:'Nothing yet'}],charts:[],sections:[],stages:['Read your vitals']};
+      return {title:'Recovery check',
+        summary:fix.length?fix.length+' of '+V.length+' checks are off: '+fix.map(function(m){ return m.name+' ('+m.value+(m.unit||'')+')'; }).join(', ')+'.':'All '+V.length+' checks are in your normal range.',
+        metrics:V.slice(0,6).map(function(m){ return {label:m.name,value:String(m.value),unit:m.unit?(' '+m.unit):'',note:m.status==='fix'?'Off':'Normal'}; }),
+        charts:[{type:'gauge',title:'Checks in range',unit:'%',value:Math.round((V.length-fix.length)/V.length*100)}],
+        sections:[{heading:fix.length?'What is off':'All good',text:bullets(fix.length?fix.map(function(m){ return m.name+': '+(m.note||'outside your normal'); }):['Nothing is outside your normal today.'])},
+          {heading:'Today',text:bullets([fix.length?'Go easier today: lighter training, an early night, water with every meal.':'A good day for your hardest work or training.','A low HRV or a raised resting heart rate for 2+ days in a row, with feeling unwell, is worth checking with a doctor.'])}],
+        stages:['Read your vitals','Compare with your normal','Plan today']};
+    }};
   SK.nutrition={n:'Food check',
     reads:function(){ return [{name:'read_health',input:{}}]; },
     build:function(e,text){
@@ -52134,7 +52194,7 @@ window.KovaCrew=(function(){
   /* which skills each role has, and which words call each one */
   var SK_FOR={chief:['brief','analyze','projects'],pm:['triage','breakdown','projects'],analyst:['analyze'],inbox:['followups'],content:['content'],research:['research'],finance:['finance','followups'],sched:['schedule','focus'],coach:['focus','brief'],
     /* Maya posts and reads comments (server tools); drafting stays Zoe's lane */
-    social:['analyze','content'],nutrition:['nutrition'],sleep:['sleep']};
+    social:['analyze','content'],nutrition:['nutrition'],sleep:['sleep'],training:['training'],vitals:['vitals']};
   var SK_WORDS={triage:/overdue|triage|\blate\b|behind|re-?plan|re-?date|clean ?up|stuck/i,
     breakdown:/break\b.*\b(down|into)|new project|plan (a|the|my|this) project|project (for|called|named)|steps (for|to)/i,
     projects:/project|progress|milestone/i,
@@ -52147,14 +52207,16 @@ window.KovaCrew=(function(){
     focus:/focus|energy|tired|deep work|stress|overload|readiness|burn/i,
     brief:/brief|today|standup|stand-up|morning|my day|priorit|what should i|at risk/i,
     sleep:/\bsleep|\bslept|bedtime|\bbed\b|\bnights?\b|\brem\b|deep sleep|insomnia|dark circles|\bnap|doom ?scroll|wake up/i,
-    nutrition:/calorie|kcal|protein|\beat|food|meal|bulk|diet|macro|nutrition|carb|hungry|snack|breakfast|lunch|dinner/i};
+    nutrition:/calorie|kcal|protein|\beat|food|meal|bulk|diet|macro|nutrition|carb|hungry|snack|breakfast|lunch|dinner/i,
+    training:/workout|\btrain|\blift|\bgym|exercise|muscle|strength|squat|bench|cardio|\breps\b/i,
+    vitals:/\bhrv\b|heart rate|resting heart|recovery|vitals|\bpulse|spo2/i};
   function skillsOf(e){ if(SK_FOR[e.tpl]) return SK_FOR[e.tpl]; var t=(e.title+' '+e.job).toLowerCase(), out=Object.keys(SK_WORDS).filter(function(k){ return SK_WORDS[k].test(t); }); return out.length?out:['analyze']; }
   function pickSkill(e,text){
     var own=skillsOf(e), t=String(text||'');
     /* p25: a question about your sleep or food is answered by whoever you
        asked, from your own numbers, not handed round or turned into a
        work report because it said "today" */
-    var body=['sleep','nutrition'].filter(function(k){ return SK_WORDS[k].test(t); })[0];
+    var body=['sleep','nutrition','vitals','training'].filter(function(k){ return SK_WORDS[k].test(t); })[0];
     if(body) return {id:body,matched:true};
     for(var i=0;i<own.length;i++) if(SK_WORDS[own[i]].test(t)) return {id:own[i],matched:true};
     var other=Object.keys(SK_WORDS).filter(function(k){ return SK_WORDS[k].test(t); })[0];

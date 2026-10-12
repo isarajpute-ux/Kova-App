@@ -136,7 +136,7 @@ const DAY = 864e5;
   // hiring in one tap
   C._S.view = 'hire'; C.paint(); await wait(20);
   const hv = d.getElementById('s-workteam'), before = C.emps().length;
-  ck('Hire shows how many roles are on the team and the ones ready to hire', new RegExp(before + ' of 12 roles on your team').test(hv.textContent) && hv.querySelectorAll('[data-c="hirenow"]').length === 12 - before);
+  ck('Hire shows how many roles are on the team and the ones ready to hire', new RegExp(before + ' of 14 roles on your team').test(hv.textContent) && hv.querySelectorAll('[data-c="hirenow"]').length === 14 - before);
   const zoeBtn = hv.querySelector('[data-c="hirenow"][data-t="content"]');
   ck('each role says what they do, what to ask them, and has Hire and Customize', /Hire Zoe/.test(zoeBtn.textContent) && /Ask Zoe/.test(zoeBtn.closest('.crd-role').textContent) && !!zoeBtn.closest('.crd-role').querySelector('[data-c="tpl"]'));
   zoeBtn.click(); await wait(30);
