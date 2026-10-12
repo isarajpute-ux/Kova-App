@@ -34,11 +34,11 @@ const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
    noise meter, the privacy banner and legal rows, the alert sounds, the
    Studio's workflow styles) */
 const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal', 'p08-chime', 'p08-studioflow',
-  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs', 'p08-alarm', 'p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-apps', 'p08-cmdk', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen'];
+  'p08-studiotheme', 'p08-cycle', 'p08-social', 'p08-import', 'p08-launch', 'p08-cut', 'p08-camera', 'p08-labs', 'p08-alarm', 'p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-apps', 'p08-cmdk', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen', 'p08-formcues'];
 /* of those, the ones whose styles only matter once their own script has
    drawn something: the loader adds their stylesheet with the scripts,
    after the first screen, instead of a <link> fetched during it */
-export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen'];
+export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen', 'p08-formcues'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '

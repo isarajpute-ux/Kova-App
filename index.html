@@ -852,6 +852,8 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .exnum.ok{background:var(--good);border-color:var(--good);color:#12241B}
 .exnum.act{background:var(--acc-dim);border-color:var(--acc);color:var(--acc)}
 .exname{font-family:Outfit,sans-serif;font-size:14px;font-weight:500;line-height:1.15;color:var(--txt)}
+.exinfo{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:7px;padding:0;vertical-align:1px;border-radius:50%;border:1px solid currentColor;background:transparent;color:var(--txt-3,rgba(255,255,255,.55));font:italic 600 11px Georgia,serif;line-height:1;cursor:pointer;position:relative}
+.exinfo::after{content:'';position:absolute;inset:-12px}
 .exrow.dne .exname{color:var(--txt-3);text-decoration:line-through;text-decoration-color:var(--ink-4,rgba(255,255,255,.35))}
 .setgrid{display:grid;grid-template-columns:22px 1fr 1fr 30px;gap:8px;align-items:center}
 .setrow{background:rgba(255,255,255,.10);border:.5px solid rgba(255,255,255,.28);border-radius:10px;padding:8px 10px;margin-bottom:5px}
@@ -8097,6 +8099,25 @@ body.light-mode .kbk-chips .kfl-chip.on{color:#1C1A17}
 body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 
 </style>
+<style id="p08-formcues">
+/* ---- KovaFormCues: how to do an exercise, in a sheet ---- */
+.kfc{font-family:'Outfit',sans-serif;color:var(--txt)}
+.kfc-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.kfc-h>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kfc-h b{font-size:18px;font-weight:600}.kfc-h span{font-size:12px;color:var(--txt-3,rgba(255,255,255,.6))}
+.kfc-x{width:32px;height:32px;border-radius:50%;border:.5px solid var(--glass-brd,rgba(255,255,255,.18));background:transparent;color:var(--txt);font-size:18px;line-height:1;cursor:pointer}
+.kfc-mus{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.kfc-mus span{padding:5px 10px;border-radius:999px;font-size:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.18));color:var(--txt-3,rgba(255,255,255,.7))}
+.kfc-mus span.on{background:var(--acc-bg,rgba(255,255,255,.12));border-color:var(--acc-brd,rgba(255,255,255,.4));color:var(--acc,#fff);font-weight:600}
+.kfc-l{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3,rgba(255,255,255,.6));margin:4px 0 6px}
+.kfc-cues,.kfc-mis{margin:0 0 14px;padding-left:20px;font-size:14px;line-height:1.5}
+.kfc-cues li,.kfc-mis li{margin-bottom:5px}
+.kfc-cues li::marker{color:var(--acc,#fff);font-weight:700}
+.kfc-mis li::marker{color:#E8707C}
+.kfc-none{font-size:14px;line-height:1.5;margin:0 0 14px}
+.kfc-go{width:100%}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -9196,6 +9217,7 @@ window.KovaMenu=(function(){
   <div class="card kova">
     <div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA</div></div>
     <div class="kova-txt" id="hsKova"></div>
+    <div class="kova-txt" id="hsTrend" style="margin-top:8px"></div>
   </div>
 
   <div class="card" style="border-color:rgba(255,255,255,.2)">
@@ -12956,6 +12978,7 @@ window.KovaHealth = (function(){
       switch(row.n){
         case 'HRV':
           if(!has('hrv')) break;
+          row.real = true;
           var hv = store.f.hrv;
           row.v   = hv + 'ms';
           row.pct = Math.round(Math.min(100, (hv / hrvB) * 75));
@@ -12966,6 +12989,7 @@ window.KovaHealth = (function(){
           break;
         case 'Resting HR':
           if(!has('hr')) break;
+          row.real = true;
           var h = store.f.hr;
           row.v   = h + 'bpm';
           row.pct = Math.round(Math.min(100, (rhrB / h) * 80));
@@ -12975,6 +12999,7 @@ window.KovaHealth = (function(){
           break;
         case 'Sleep':
           if(min){
+            row.real = true;
             row.v   = fmtSleep(min);
             row.pct = Math.round(Math.min(100, (min / 420) * 100));
             row.c   = min >= 420 ? 'var(--good)' : (min >= 360 ? 'var(--warn)' : 'var(--bad)');
@@ -12990,6 +13015,7 @@ window.KovaHealth = (function(){
           break;
         case 'Steps':
           if(!has('steps')) break;
+          row.real = true;
           row.v   = store.f.steps.toLocaleString();
           row.pct = Math.round(Math.min(100, (store.f.steps / 10000) * 100));
           row.c   = store.f.steps >= 10000 ? 'var(--good)' : (store.f.steps >= 6000 ? 'var(--warn)' : 'var(--bad)');
@@ -15290,7 +15316,7 @@ var KSESS=(function(){
     h+='<div class="exhead">'
       +'<div class="exnum '+(all?'ok':(i===S.act&&S.mode==='guided'?'act':''))+'">'+(all?'\u2713':(sl||(i+1)))+'</div>'
       +'<div style="flex:1;min-width:0">'
-      +'<div class="exname">'+e.n+'</div>'
+      +'<div class="exname">'+e.n+'<button type="button" class="exinfo" data-exinfo="'+String(e.n).replace(/"/g,'&quot;')+'" aria-label="How to do '+String(e.n).replace(/"/g,'&quot;')+'">i</button></div>'
       +'<div class="exmeta">'+x.m+' \u00b7 '+(S.mode==='guided'?('<em>'+e.tgt.sets+' \u00d7 '+e.tgt.lo+'\u2013'+e.tgt.hi+'</em>'):(e.sets.length+' sets'))
       +(L?' \u00b7 Last: '+lastLabel(L):'')+'</div></div>'
       +'<div class="dots">'+e.sets.map(function(s,j){
@@ -17647,7 +17673,12 @@ window.ronGauge=function(el,o){
 (function(){
   if(!document.getElementById('hsOrbit')) return;
 
-  var BIRTH_AGE=19;   // until a real date of birth is captured
+  /* p26: the example week's age (19) only stands in while Kova shows its
+     sample data. With your own data, your age comes from Fuel > Find my
+     maintenance, and without it the dial says so instead of guessing. */
+  var SAMPLE_AGE=19;
+  function live(){ try{ return !!(window.KovaMode&&KovaMode.live); }catch(e){ return false; } }
+  function realAge(){ try{ var p=window.KovaMaint&&KovaMaint.prof&&KovaMaint.prof(); return p&&+p.age>0?+p.age:null; }catch(e){ return null; } }
 
   function sig(n){
     var t=window.KOVA_SIG||[];
@@ -17657,34 +17688,61 @@ window.ronGauge=function(el,o){
   function numOf(v){ var m=String(v||'').match(/[\d.]+/); return m?parseFloat(m[0]):0; }
 
   function inputs(){
-    var rhr=numOf(sig('Resting HR')&&sig('Resting HR').v)||68;
-    var hrv=numOf(sig('HRV')&&sig('HRV').v)||38;
-    var slp=numOf(sig('Sleep')&&sig('Sleep').v)||5;
-    var stp=parseInt(String(sig('Steps')&&sig('Steps').v||'8412').replace(/[^0-9]/g,''),10)||8412;
+    /* a reading counts only if it is real: from your watch, or the
+       example data while Kova shows the example (never filled in) */
+    function val(n){ var r=sig(n); if(!r) return null; if(live()&&!r.real) return null; return r.v; }
+    var rhr=numOf(val('Resting HR'))||null;
+    var hrv=numOf(val('HRV'))||null;
+    var sv=val('Sleep'), sm=String(sv||'').match(/(\d+)\s*h(?:\s*(\d+)\s*m)?/), slp=sm?(+sm[1]+(+(sm[2]||0))/60):(numOf(sv)||null);
+    var stp=val('Steps')!=null?(parseInt(String(val('Steps')).replace(/[^0-9]/g,''),10)||null):null;
 
     function band(v,lo,hi,invert){
       var p=(v-lo)/(hi-lo);
       if(invert) p=1-p;
       return Math.max(0,Math.min(100,Math.round(p*100)));
     }
+    function one(n,v,txt,s,w,h){ return v==null?{n:n,v:'No data',s:null,w:w,h:h,miss:true}:{n:n,v:txt,s:s,w:w,h:h}; }
     return [
-      {n:'Resting HR', v:rhr+' bpm',  s:band(rhr,45,80,1), w:.32,
-       h:'Lower is fitter. The strongest signal here.'},
-      {n:'HRV',        v:hrv+' ms',   s:band(hrv,20,70,0), w:.28,
-       h:'Higher means your nervous system is recovering.'},
-      {n:'Sleep',      v:slp+' h',    s:band(slp,4.5,8,0), w:.24,
-       h:'Short sleep shows up here before anywhere else.'},
-      {n:'Daily steps',v:stp.toLocaleString(), s:band(stp,3000,12000,0), w:.16,
-       h:'Movement outside the gym, which drives resting heart rate.'}
+      one('Resting HR', rhr, rhr+' bpm', rhr!=null?band(rhr,45,80,1):0, .32,
+       'Lower is fitter. The strongest signal here.'),
+      one('HRV', hrv, hrv+' ms', hrv!=null?band(hrv,20,70,0):0, .28,
+       'Higher means your nervous system is recovering.'),
+      one('Sleep', slp, slp!=null?(Math.round(slp*10)/10)+' h':'', slp!=null?band(slp,4.5,8,0):0, .24,
+       'Short sleep shows up here before anywhere else.'),
+      one('Daily steps', stp, stp!=null?stp.toLocaleString():'', stp!=null?band(stp,3000,12000,0):0, .16,
+       'Movement outside the gym, which drives resting heart rate.')
     ];
   }
 
+  /* score: the weighted inputs you have (weights re-balanced over them).
+     Each input's share of the shift is exact: (s - 50) x weight / total
+     weight / 10 x 1.5 years, so "Sleep is adding 1.2 years" is the sum
+     itself, not an estimate on top of it. */
   function compute(){
-    var I=inputs();
-    var score=I.reduce(function(a,b){ return a+b.s*b.w; },0);
+    var I=inputs(), have=I.filter(function(x){ return !x.miss; }), W=have.reduce(function(a,b){ return a+b.w; },0);
+    if(!have.length) return {I:I, none:true, score:50, age:null, shift:0, have:0};
+    var score=have.reduce(function(a,b){ return a+b.s*b.w; },0)/W;
     var shift=(score-50)/10*1.5;
-    var age=Math.max(14, BIRTH_AGE-shift);
-    return {I:I, score:score, age:age, shift:shift};
+    have.forEach(function(x){ x.yrs=(x.s-50)*x.w/W/10*1.5; });
+    var base=live()?realAge():SAMPLE_AGE;
+    return {I:I, score:score, age:base!=null?Math.max(14, base-shift):null, shift:shift, have:have.length};
+  }
+  /* one reading a day, so the trend is from your own days, not a guess */
+  var HKEY='kova.hs.hist';
+  function hist(){ try{ var h=JSON.parse(localStorage.getItem(HKEY)||'[]'); return Array.isArray(h)?h:[]; }catch(e){ return []; } }
+  function record(c){
+    if(c.none||!live()) return hist();
+    var d=new Date(), k=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+    var h=hist().filter(function(x){ return x.d!==k; }); h.push({d:k,shift:Math.round(c.shift*100)/100}); h=h.slice(-60);
+    try{ localStorage.setItem(HKEY,JSON.stringify(h)); }catch(e){}
+    return h;
+  }
+  function trend(h){
+    var L=h.slice(-14); if(L.length<7) return {need:7-L.length};
+    var n=L.length, xs=L.map(function(x,i){ return i; }), ys=L.map(function(x){ return x.shift; });
+    var mx=xs.reduce(function(a,b){ return a+b; },0)/n, my=ys.reduce(function(a,b){ return a+b; },0)/n;
+    var num=0, den=0; for(var i=0;i<n;i++){ num+=(xs[i]-mx)*(ys[i]-my); den+=(xs[i]-mx)*(xs[i]-mx); }
+    return {per30:den?num/den*30:0};
   }
 
   /* the particle ring. The dust goes all the way round so the number sits
@@ -17763,10 +17821,32 @@ window.ronGauge=function(el,o){
     return out;
   }
 
+  function inputRows(I){
+    return I.map(function(x){
+      var col=x.miss?'var(--txt-3,rgba(255,255,255,.5))':(x.s>=70?'var(--good)':(x.s>=45?'var(--warn)':'var(--bad)'));
+      return '<div class="hsin"><div class="hsinn">'+x.n+'</div>'
+        +'<div class="hsinb"><i style="width:'+(x.miss?0:x.s)+'%;background:'+col+'"></i></div>'
+        +'<div class="hsinv" style="color:'+col+'">'+x.v+'</div></div>';
+    }).join('');
+  }
   function paint(){
-    var c=compute();
+    var c=compute(), T=document.getElementById('hsTrend');
     document.getElementById('hsOrbit').innerHTML=orbit(Math.max(.08,Math.min(1,c.score/100)));
-    document.getElementById('hsAge').textContent=c.age.toFixed(1);
+    if(c.none){
+      /* nothing real yet: say so, never a number made from example readings */
+      document.getElementById('hsAge').textContent='\u2014';
+      document.getElementById('hsDelta').textContent='no readings yet';
+      document.getElementById('hsPace').textContent='\u2014';
+      document.getElementById('hsVerdictTitle').textContent='No readings yet';
+      document.getElementById('hsVerdictTxt').textContent='Fitness age needs at least one real reading: resting heart rate, HRV, sleep or daily steps. Connect your watch in Settings > Connections and it fills in after the first night.';
+      document.getElementById('hsInputs').innerHTML=inputRows(c.I);
+      document.getElementById('hsKova').textContent='Kova does not guess this number. It appears once your own readings arrive.';
+      if(T) T.textContent='';
+      var sa0=document.getElementById('slpHsAge'); if(sa0) sa0.textContent='\u2014';
+      var ss0=document.getElementById('slpHsSub'); if(ss0) ss0.textContent='No readings yet';
+      return;
+    }
+    document.getElementById('hsAge').textContent=c.age!=null?c.age.toFixed(1):'\u2014';
     var d=document.getElementById('hsDelta');
     var yrs=Math.abs(c.shift).toFixed(1);
     if(c.shift>0.2){ d.textContent=yrs+' years younger'; }
@@ -17787,8 +17867,9 @@ window.ronGauge=function(el,o){
 
     /* one named verdict, the way the reference states it */
     var vt=document.getElementById('hsVerdictTitle'), vx=document.getElementById('hsVerdictTxt');
-    var weak=c.I.slice().sort(function(a,b){return a.s-b.s})[0];
-    var strong=c.I.slice().sort(function(a,b){return b.s-a.s})[0];
+    var have=c.I.filter(function(x){ return !x.miss; });
+    var weak=have.slice().sort(function(a,b){return a.yrs-b.yrs})[0];
+    var strong=have.slice().sort(function(a,b){return b.yrs-a.yrs})[0];
     if(pace<0.9){ vt.textContent='Steady and healthy';
       vx.textContent='Your fitness age is under your real age and your pace is slow, thanks to your '+strong.n.toLowerCase()+'.'; }
     else if(pace<1.1){ vt.textContent='Holding level';
@@ -17796,22 +17877,31 @@ window.ronGauge=function(el,o){
     else { vt.textContent='Running ahead of you';
       vx.textContent='Your pace is above calendar speed. '+weak.n+' is pulling it up.'; }
 
-    document.getElementById('hsInputs').innerHTML=c.I.map(function(x){
-      var col=x.s>=70?'var(--good)':(x.s>=45?'var(--warn)':'var(--bad)');
-      return '<div class="hsin"><div class="hsinn">'+x.n+'</div>'
-        +'<div class="hsinb"><i style="width:'+x.s+'%;background:'+col+'"></i></div>'
-        +'<div class="hsinv" style="color:'+col+'">'+x.v+'</div></div>';
-    }).join('');
+    document.getElementById('hsInputs').innerHTML=inputRows(c.I);
 
+    /* the biggest drag, in years, straight from the sum */
+    var drag=weak&&weak.yrs<-0.05?weak.n+' is your biggest ageing factor right now: it is adding about '+Math.abs(weak.yrs).toFixed(1)+' year'+(Math.abs(weak.yrs)>=0.95&&Math.abs(weak.yrs)<1.05?'':'s')+'. Fix this first. '+weak.h
+      :(strong&&strong.yrs>0.05?strong.n+' is doing the most for you: it takes about '+strong.yrs.toFixed(1)+' years off.':'Every input is close to the middle of its healthy range.');
+    var miss=c.I.filter(function(x){ return x.miss; }).map(function(x){ return x.n.toLowerCase(); });
     document.getElementById('hsKova').textContent =
-      (c.shift>0 ? 'You are about '+yrs+' years under your age. '
-                 : 'You are about '+yrs+' years over your age. ')
-      + weak.n+' is holding the number down. '+weak.h;
+      (c.shift>0 ? 'You are about '+yrs+' years under your age. ' : 'You are about '+yrs+' years over your age. ')
+      + drag
+      + (c.age==null?' Add your age in Fuel > Find my maintenance to see your fitness age itself.':'')
+      + (miss.length?' Not counted yet (no readings): '+miss.join(', ')+'.':'');
+    /* where it is heading, from your own days */
+    if(T){
+      if(!live()) T.textContent='';
+      else { var tr=trend(record(c));
+        T.textContent=tr.need?'Trend: '+tr.need+' more day'+(tr.need>1?'s':'')+' of readings and Kova shows where this is heading.'
+          :(tr.per30>0.1?'\u2191 On track to be about '+tr.per30.toFixed(1)+' years younger in 30 days at this pace.'
+          :tr.per30<-0.1?'\u2193 Heading about '+Math.abs(tr.per30).toFixed(1)+' years older in 30 days at this pace.'
+          :'\u2192 Holding steady over the last two weeks.'); }
+    }
 
     /* the Sleep screen entry point carries the same number */
     var sa=document.getElementById('slpHsAge');
     if(sa){
-      sa.textContent=c.age.toFixed(1);
+      sa.textContent=c.age!=null?c.age.toFixed(1):'\u2014';
       var ss=document.getElementById('slpHsSub');
       if(ss) ss.textContent = (c.shift>0.2 ? yrs+' years under your real age'
                             : (c.shift<-0.2 ? yrs+' years over your real age'
@@ -17836,6 +17926,11 @@ window.ronGauge=function(el,o){
     toast('History lands once Kova has been logging for a full week.');
   });
 
+  /* the stepper's labels follow today's date; there is no "next week" yet */
+  (function(){ var f=function(t){ return new Date(t).toLocaleDateString([],{month:'short',day:'numeric'}); };
+    var pl=document.getElementById('hsPrevLbl'), nl=document.getElementById('hsNextLbl');
+    if(pl) pl.textContent=f(Date.now()-7*864e5);
+    if(nl&&nl.parentNode) nl.parentNode.style.visibility='hidden'; })();
   window.__paintHealthSpan=paint;
   paint();
 })();
@@ -25028,125 +25123,9 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   };
 })();
 
-/* ---------- work: image-1 style command dashboard ---------- */
-(function(){
-  var kpiEl=document.getElementById('wkHeroKpi');
-  if(!kpiEl) return;
-
-  function prof(){ var a=KP.get('workAns')||{}; return a.job||KP.get('workJob')||'Work'; }
-
-  // greeting follows the actual clock
-  var h=new Date().getHours();
-  var g = h<12?'Good morning':(h<18?'Good afternoon':'Good evening');
-  document.getElementById('wkGreet').textContent=g;
-  document.getElementById('wkGreetSub').textContent='Kova has logged 12 entries today. Here is where '+prof().toLowerCase()+' stands.';
-
-  document.getElementById('wkHeroChips').innerHTML=
-    ['2 invoices unpaid','1 deadline today'].map(function(t){
-      return '<div style="background:rgba(255,255,255,.10);border:.5px solid rgba(255,255,255,.26);border-radius:14px;padding:4px 10px;font-size:10.5px;color:var(--txt,#FFFFFF)">'+t+'</div>';
-    }).join('');
-
-  var KPI=[
-    {i:'i-list-details',l:'Tasks today',v:'12',s:'7 done · 5 to go'},
-    {i:'i-clock',    l:'Hours logged',v:'5.4h',s:'of 8h planned'},
-    {i:'i-check',l:'On budget',v:'92%',s:'2 jobs at risk'}
-  ];
-  kpiEl.innerHTML=KPI.map(function(k){
-    return '<div style="background:rgba(255,255,255,.09);border:.5px solid rgba(255,255,255,.22);border-radius:12px;padding:9px 8px">'
-      +'<div style="display:flex;align-items:center;gap:4px"><svg class="ic" style="font-size:11px;color:var(--ink-2,rgba(255,255,255,.8))"><use href="#'+k.i+'"/></svg>'
-      +'<span style="font-size:8.5px;font-weight:600;color:var(--ink-1,rgba(255,255,255,.9))">'+k.l+'</span></div>'
-      +'<div style="font-size:20px;font-weight:800;color:var(--acc);margin-top:4px;letter-spacing:-.5px">'+k.v+'</div>'
-      +'<div style="font-size:8px;color:var(--ink-2,rgba(255,255,255,.75));margin-top:2px">'+k.s+'</div></div>';
-  }).join('');
-
-  var MET=[
-    {i:'i-calendar-stats',l:'Jobs this week',v:'8',s:'5 done · 3 to go',p:62,c:'var(--good)'},
-    {i:'i-flag',l:'Missed follow-ups',v:'3',s:'oldest is 6 days',p:28,c:'var(--bad)'},
-    {i:'i-clipboard-text',l:'Invoices pending',v:'2',s:'$1,240 outstanding',p:44,c:'var(--warn)'},
-    {i:'i-arrow-up-right',l:'Revenue MTD',v:'$4,280',s:'on track for $6.1K',p:71,c:'var(--acc)'}
-  ];
-  document.getElementById('wkMetrics').innerHTML=MET.map(function(m){
-    return '<div class="card" style="margin:0;padding:12px 11px">'
-      +'<div style="display:flex;align-items:center;gap:6px"><svg class="ic" style="font-size:13px;color:var(--ink-2,rgba(255,255,255,.85))"><use href="#'+m.i+'"/></svg>'
-      +'<span style="font-size:9.5px;color:var(--ink-1,rgba(255,255,255,.9));font-weight:500">'+m.l+'</span></div>'
-      +'<div style="font-size:22px;font-weight:800;color:'+m.c+';margin-top:5px;letter-spacing:-.5px">'+m.v+'</div>'
-      +'<div style="font-size:9px;color:var(--ink-2,rgba(255,255,255,.75));margin-top:1px">'+m.s+'</div>'
-      +'<div style="display:flex;justify-content:space-between;margin-top:8px"><span style="font-size:8.5px;color:var(--ink-3,rgba(255,255,255,.7))">Progress</span>'
-      +'<span style="font-size:8.5px;color:var(--txt,#FFFFFF);font-weight:600">'+m.p+'%</span></div>'
-      +'<div class="risk-track" style="margin-top:4px"><div class="risk-fill" data-w="'+m.p+'" style="width:0%;background:'+m.c+';box-shadow:0 0 5px rgba(255,255,255,.25)"></div></div>'
-      +'</div>';
-  }).join('');
-  setTimeout(function(){
-    document.querySelectorAll('#wkMetrics .risk-fill').forEach(function(f){f.style.width=f.dataset.w+'%'});
-  },90);
-
-  var ACTS=[
-    {i:'i-check',c:'var(--good)',t:'Logged 2.5h on the Harper job',s:'42 min ago'},
-    {i:'i-clipboard-text',   c:'var(--acc)', t:'Invoice #114 marked sent · $680',s:'2 hours ago'},
-    {i:'i-flag',c:'var(--warn)',t:'Follow-up with Dana is 6 days overdue',s:'flagged this morning'},
-    {i:'i-arrow-up-right', c:'var(--good)',t:'Best week this month for booked hours',s:'yesterday'}
-  ];
-  function paintActs(all){
-    document.getElementById('wkActivity').innerHTML=(all?ACTS:ACTS.slice(0,3)).map(function(a){
-      return '<div style="display:flex;gap:10px;padding:9px 0;border-top:.5px solid rgba(255,255,255,.08)">'
-        +'<div style="width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
-        +'<svg class="ic" style="font-size:13px;color:'+a.c+'"><use href="#'+a.i+'"/></svg></div>'
-        +'<div style="flex:1;min-width:0"><div style="font-size:11.5px;color:var(--txt,#FFFFFF);line-height:1.35">'+a.t+'</div>'
-        +'<div style="font-size:9px;color:var(--ink-3,rgba(255,255,255,.7));margin-top:2px">'+a.s+'</div></div></div>';
-    }).join('');
-  }
-  var actAll=false; paintActs(false);
-  document.getElementById('wkActAll').onclick=function(){actAll=!actAll;paintActs(actAll);this.textContent=actAll?'Show less':'View all'};
-
-  var SCHED={
-    today:[
-      {t:'09:00',d:'45m',n:'Harper kitchen — site visit',sub:'Quoted job · deposit paid',st:'done'},
-      {t:'11:30',d:'2h', n:'Deep work block',sub:'No calls scheduled',st:'done'},
-      {t:'14:00',d:'30m',n:'Call — Dana follow-up',sub:'Overdue 6 days',st:'due'},
-      {t:'15:30',d:'1h', n:'Send invoice #115',sub:'$560 · net 14',st:'due'},
-      {t:'17:00',d:'30m',n:'Admin and inbox',sub:'Weekly cleanup',st:'due'},
-      {t:'18:00',d:'20m',n:'Log the day in Kova',sub:'Keeps your rate accurate',st:'due'}
-    ],
-    tom:[
-      {t:'08:30',d:'3h', n:'Miller install — day 1',sub:'Materials already on site',st:'due'},
-      {t:'12:00',d:'30m',n:'Lunch, actually taken',sub:'You skipped 3 this week',st:'due'},
-      {t:'13:00',d:'1h', n:'Quote — Whitfield job',sub:'Lead came in Tuesday',st:'due'},
-      {t:'15:00',d:'1h', n:'Chase 2 unpaid invoices',sub:'$1,240 outstanding',st:'due'},
-      {t:'16:30',d:'45m',n:'Plan next week',sub:'Kova drafts it for you',st:'due'}
-    ],
-    week:[
-      {t:'Mon',d:'6.5h',n:'4 blocks · 1 job closed',sub:'$680 invoiced',st:'done'},
-      {t:'Tue',d:'7h',  n:'5 blocks · 2 quotes sent',sub:'Best day this week',st:'done'},
-      {t:'Wed',d:'5.4h',n:'4 blocks · 1 overdue',sub:'Dana follow-up slipped',st:'done'},
-      {t:'Thu',d:'—',   n:'6 blocks planned',sub:'Today',st:'due'},
-      {t:'Fri',d:'—',   n:'5 blocks planned',sub:'Install day',st:'due'}
-    ]
-  };
-  function paintSched(k){
-    var rows=SCHED[k]||[];
-    var done=rows.filter(function(r){return r.st==='done'}).length;
-    document.getElementById('wkSchedSub').textContent=done+' of '+rows.length+' blocks completed';
-    document.getElementById('wkSchedList').innerHTML=rows.map(function(r){
-      var isDone=r.st==='done';
-      return '<div style="display:flex;gap:10px;padding:10px 0;border-top:.5px solid rgba(255,255,255,.08)">'
-        +'<div style="min-width:44px;flex-shrink:0"><div style="font-size:11.5px;font-weight:700;color:var(--txt,#FFFFFF)">'+r.t+'</div>'
-        +'<div style="font-size:8.5px;color:var(--ink-3,rgba(255,255,255,.65))">'+r.d+'</div></div>'
-        +'<div style="width:2px;border-radius:2px;background:'+(isDone?'var(--good)':'var(--acc)')+';flex-shrink:0"></div>'
-        +'<div style="flex:1;min-width:0"><div style="font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF);line-height:1.3">'+r.n+'</div>'
-        +'<div style="font-size:9px;color:var(--ink-3,rgba(255,255,255,.7));margin-top:2px">'+r.sub+'</div></div>'
-        +'<div style="flex-shrink:0;align-self:center;background:rgba(255,255,255,.09);border:.5px solid rgba(255,255,255,'+(isDone?'.22':'.3')+');border-radius:12px;padding:3px 8px;font-size:8.5px;font-weight:600;color:'+(isDone?'var(--good)':'var(--acc)')+'">'
-        +(isDone?'Done':'Due')+'</div></div>';
-    }).join('');
-  }
-  paintSched('today');
-  document.querySelectorAll('#wkSchedTabs .tog').forEach(function(t){
-    t.onclick=function(){
-      document.querySelectorAll('#wkSchedTabs .tog').forEach(function(x){x.classList.remove('on')});
-      t.classList.add('on'); paintSched(t.dataset.k);
-    };
-  });
-  window.__wkDash=function(){ document.getElementById('wkGreetSub').textContent='Kova has logged 12 entries today. Here is where '+prof().toLowerCase()+' stands.'; };
-})();
+/* (p26) the old "image-1" Work OS dashboard was removed: the elements it
+   drew into were gone, so it never ran, and it carried made-up revenue
+   and invoices. */
 
 /* ---------- notification scheduler: fires on a clock, app-wide ---------- */
 (function(){
@@ -28476,7 +28455,7 @@ window.KovaPlan=(function(){
         +'<span class="pgds">'+d.ex.length+' lifts \u00b7 '+d.sets+' sets</span>'
         +'<span class="pgcv">\u25be</span></span></div>'
         +d.ex.map(function(e){
-          return '<div class="pgex"><span class="pgxn">'+e.e+'</span>'
+          return '<div class="pgex"><span class="pgxn">'+e.e+'<button type="button" class="exinfo" data-exinfo="'+String(e.e).replace(/"/g,'&quot;')+'" aria-label="How to do '+String(e.e).replace(/"/g,'&quot;')+'">i</button></span>'
             +'<span class="pgxr">'+e.s+' \u00d7 '+e.lo+'\u2013'+e.r+'</span></div>';
         }).join('')
         +'</div>';
@@ -54784,7 +54763,7 @@ window.KovaQuick=(function(){
         +'<div class="kq-res"><div class="kq-big">'+k+'<small>kcal</small></div><div class="kq-p">'+p+' g protein · '+Math.round(t.c*scale)+' c · '+Math.round(t.f*scale)+' f</div></div>'
         +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+(R.ms?' · read in '+(R.ms/1000).toFixed(1)+' s':'')+'</div>'
         +'<div class="kq-line"><span class="kova-dot"></span>'+esc(line({kcal:k,p:p}))+'</div>'
-        +'<div class="kq-por" role="group" aria-label="Portion">'+[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.25,'1¼×'],[1.5,'1½×']].map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
+        +'<div class="kq-por" role="group" aria-label="Portion">'+PORTIONS.map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
         +'<button class="btn kq-log" data-kq="log">Log it</button>';
     }
     else if(state==='empty') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-msg">No food found on that photo. Try again with the plate filling the square.</div><button class="btn" data-kq="again">Retake</button>';
@@ -54812,9 +54791,18 @@ window.KovaQuick=(function(){
     if(k==='y'||k==='r'){ T.taps--; onChip(b,'sheet'); if(window.closeSheet) closeSheet(); return; }
     if(k==='log') logIt();
   }
+  /* p26: up to 3 servings (a big bowl of pasta is often 2 or more), and
+     the amount you usually pick for a dish is chosen for you next time */
+  var PORTIONS=[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.5,'1½×'],[2,'2×'],[3,'3×']], PKEY='kova.portion.v1';
+  function dishKey(items){ return (items||[]).map(function(i){ return String(i.ingredient||'').toLowerCase().trim(); }).filter(Boolean).sort().join('+').slice(0,120); }
+  function usual(items){ var k=dishKey(items); if(!k) return 1; var m=lsJ(PKEY,{}), v=m[k]&&+m[k].s; return PORTIONS.some(function(x){ return x[0]===v; })?v:1; }
+  function remember(items,s){ var k=dishKey(items); if(!k) return; var m=lsJ(PKEY,{}); m[k]={s:s,at:Date.now()};
+    var ks=Object.keys(m); if(ks.length>200) ks.sort(function(a,b){ return m[a].at-m[b].at; }).slice(0,ks.length-200).forEach(function(x){ delete m[x]; });
+    try{ localStorage.setItem(PKEY,JSON.stringify(m)); }catch(e){} }
   function logIt(){
     if(!R||!R.total||!F()) return;
     var t=R.total, s=scale;
+    remember(R.items,s);
     var e=F().add({src:'photo',kcal:Math.round(t.kcal*s),p:Math.round(t.p*s),c:Math.round(t.c*s),f:Math.round(t.f*s),
       m:t.m?Object.keys(t.m).reduce(function(o,k){ o[k]=Math.round(t.m[k]*s*10)/10; return o; },{}):null,
       conf:t.conf,items:R.items.map(function(i){ return {n:i.ingredient,g:Math.round((+i.estimated_weight_grams||0)*s),conf:+i.confidence_percentage||0}; })});
@@ -54836,7 +54824,7 @@ window.KovaQuick=(function(){
     openSheet2('reading');
     try{ if(window.KovaMedia) KovaMedia.attach('food',dataUrl,{name:'meal.jpg',ref:'quick-log'}); }catch(e){}
     read(dataUrl,'').then(function(items){
-      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0;
+      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0; scale=usual(R.items);
       try{ if(window.KovaAnalytics) KovaAnalytics.track('meal_read',{ms:R.ms,items:R.items.length}); }catch(x){}
       paint(R.items.length?'result':'empty');
     },function(e){
@@ -62266,6 +62254,149 @@ window.KovaBook=(function(){
   document.addEventListener('visibilitychange',function(){ if(!document.hidden) refresh(); });
 
   return {refresh:refresh,paint:paint,importAll:importAll,sendBusy:sendBusy,cancel:cancel,link:link,sheet:sheet,suggestSlug:suggestSlug,_S:S};
+})();
+
+</script>
+<script id="p08-formcues">
+/* =====================================================================
+   KovaFormCues - "how do I do this one?" on every exercise (p26).
+
+   A small (i) next to each exercise name in a workout and in your
+   program opens a sheet: the muscles it works, 3 to 5 cues for doing it
+   well, and the mistakes that cost results or hurt. Written for the 30
+   lifts people do most; anything else says so and offers Form Check,
+   which reviews a clip of you doing it. No video, so nothing to load.
+   Dark, soft light and light glass.
+   ===================================================================== */
+window.KovaFormCues=(function(){
+  'use strict';
+  /* [match, name, primary, also, cues, mistakes] */
+  var L=[
+    [/romanian|\brdl\b/i,'Romanian deadlift','Hamstrings, glutes','Lower back, grip',
+      ['Soft bend in the knees, then keep it fixed','Push the hips back, as if closing a car door with them','Bar stays close, sliding down the thighs','Stop when the hamstrings stop stretching, usually just below the knee','Squeeze the glutes to stand tall'],
+      ['Rounding the lower back to reach lower','Bending the knees more as you go, which turns it into a squat','Letting the bar drift away from the legs']],
+    [/bulgarian|split squat/i,'Bulgarian split squat','Quads, glutes','Adductors, core',
+      ['Back foot laces-down on the bench','Front foot far enough forward that the heel stays down','Drop the back knee straight down','Drive through the whole front foot to stand'],
+      ['Standing too close to the bench, so the knee pushes far forward and the heel lifts','Wobbling knee: slow down and keep it over the toes']],
+    [/hack squat/i,'Hack squat','Quads','Glutes',
+      ['Back and hips flat on the pad','Feet shoulder width, mid-platform','Lower under control until thighs are at least parallel','Push through the mid-foot without locking the knees hard'],
+      ['Heels lifting off the platform','Cutting the depth short when the weight goes up']],
+    [/front squat/i,'Front squat','Quads, glutes','Upper back, core',
+      ['Bar on the front of the shoulders, elbows high','Big breath and brace before you go down','Sit straight down between the heels','Keep the elbows up as you stand'],
+      ['Elbows dropping, so the bar rolls forward','Rounding the upper back']],
+    [/squat/i,'Squat','Quads, glutes','Adductors, lower back, core',
+      ['Brace before you go down: big breath into the belly','Push the knees out in line with the toes','Hips and knees bend together','Keep the weight over the middle of the foot','Stand up by pushing the floor away'],
+      ['Knees caving in','Heels lifting off the floor','Chest folding forward out of the bottom']],
+    [/good morning/i,'Good morning','Hamstrings, lower back','Glutes',
+      ['Bar on the upper back, like a squat','Soft knees, then push the hips back','Keep the back flat the whole way','Go only as low as you can keep it flat'],
+      ['Rounding the back','Using a weight that is too heavy: this one is for control']],
+    [/hip thrust|glute bridge/i,'Hip thrust','Glutes','Hamstrings, quads',
+      ['Shoulder blades on the bench edge, bar over the hip crease (use a pad)','Feet flat, shins vertical at the top','Chin tucked, ribs down','Drive the hips up until they are in line with the knees and shoulders, squeeze for a second'],
+      ['Arching the lower back at the top instead of squeezing the glutes','Feet too far out, so the hamstrings take over']],
+    [/deadlift/i,'Deadlift','Hamstrings, glutes, back','Grip, lats, quads',
+      ['Bar over the middle of the foot','Grip just outside the legs, shins touch the bar','Pull the slack out of the bar before it leaves the floor','Push the floor away; hips and shoulders rise together','Stand tall, do not lean back'],
+      ['Rounding the lower back','Hips shooting up first','Bar drifting away from the legs']],
+    [/incline.*(press|bench)/i,'Incline press','Upper chest, front shoulders','Triceps',
+      ['Bench at 30 to 45 degrees','Shoulder blades pulled back and down','Lower to the upper chest, elbows about 45 degrees from the body','Press up and slightly back'],
+      ['Bench set too steep, so it becomes a shoulder press','Elbows flared straight out to the sides']],
+    [/bench press|chest press/i,'Bench press','Chest','Front shoulders, triceps',
+      ['Eyes under the bar, shoulder blades pinched back and down','Feet planted, slight arch in the upper back','Lower to the lower chest, elbows about 45 degrees from the body','Press up and slightly back over the shoulders'],
+      ['Bouncing the bar off the chest','Elbows flared straight out, which strains the shoulders','Hips lifting off the bench']],
+    [/arnold/i,'Arnold press','Shoulders','Triceps, upper chest',
+      ['Start with palms facing you at chin height','Rotate the palms forward as you press up','Finish with the weights over the shoulders','Reverse the turn on the way down'],
+      ['Arching the lower back to finish the rep','Rushing the turn']],
+    [/overhead press|shoulder press|military/i,'Overhead press','Shoulders','Triceps, upper chest, core',
+      ['Squeeze glutes and abs so the ribs stay down','Bar starts on the front of the shoulders','Move the head back slightly, then forward as the bar passes','Finish with the arms by the ears'],
+      ['Leaning back and turning it into a standing incline press','Pressing the bar out in front instead of straight up']],
+    [/chin.?up/i,'Chin-up','Lats, biceps','Upper back',
+      ['Palms facing you, hands shoulder width','Start from a dead hang with the shoulders engaged','Pull the elbows down to the ribs','Chin over the bar, then lower all the way'],
+      ['Half reps that never reach a full hang','Swinging to get up']],
+    [/pull.?up/i,'Pull-up','Lats','Biceps, upper back, grip',
+      ['Hands just outside the shoulders, palms away','Start each rep from a dead hang','Pull the elbows down and back toward the hips','Chest toward the bar; lower under control'],
+      ['Kicking or swinging for momentum','Shrugging the shoulders up to the ears']],
+    [/lat pull.?down|pulldown/i,'Lat pulldown','Lats','Biceps, upper back',
+      ['Thighs locked under the pads','Lean back slightly','Pull the bar to the upper chest, elbows down to the sides','Let it rise under control until the arms are straight'],
+      ['Leaning far back and rowing the weight down','Pulling behind the neck']],
+    [/dumbbell row|one.?arm row|db row/i,'Dumbbell row','Lats, upper back','Rear shoulders, biceps',
+      ['Hand and knee on the bench, back flat','Let the weight hang straight down','Pull the elbow toward the hip','Pause at the top, lower slowly'],
+      ['Twisting the torso to lift it','Pulling with the hand instead of the elbow']],
+    [/cable row|seated row/i,'Seated cable row','Upper back, lats','Rear shoulders, biceps',
+      ['Sit tall, chest up, slight bend in the knees','Pull the handle to the lower ribs','Squeeze the shoulder blades together at the end','Let the arms straighten without rounding forward'],
+      ['Rocking the torso back and forth to move the weight','Shrugging the shoulders up']],
+    [/barbell row|bent.?over row|pendlay|\brow\b/i,'Barbell row','Upper back, lats','Rear shoulders, biceps, lower back',
+      ['Hinge until the torso is about 45 degrees, back flat','Grip a little wider than the shoulders','Pull the bar to the lower ribs','Lower under control; keep the torso still'],
+      ['Standing up as you pull, so the hips do the work','Rounding the back']],
+    [/face pull/i,'Face pull','Rear shoulders, upper back','Rotator cuff',
+      ['Rope at face height, thumbs toward you','Pull toward the eyes, hands apart','Finish with the elbows high and the hands beside the ears','Squeeze for a second'],
+      ['Too heavy, so you lean back and row it','Elbows dropping below the hands']],
+    [/lateral raise|side raise/i,'Lateral raise','Side shoulders','Upper traps',
+      ['Slight bend in the elbows, fixed','Raise out to the sides, leading with the elbows','Stop at shoulder height','Lower slowly, about 2 seconds'],
+      ['Swinging the body to move the weight','Shrugging the shoulders up']],
+    [/leg press/i,'Leg press','Quads, glutes','Hamstrings',
+      ['Back and hips flat on the seat','Feet shoulder width, mid-platform','Lower until the knees are near 90 degrees, hips still down','Push through the whole foot without locking the knees hard'],
+      ['Lower back lifting off the pad at the bottom','Knees caving in']],
+    [/leg curl|hamstring curl/i,'Leg curl','Hamstrings','Calves',
+      ['Knees in line with the machine pivot','Pad just above the heels','Curl all the way, squeeze for a second','Lower slowly'],
+      ['Hips lifting off the pad','Letting the weight drop on the way back']],
+    [/leg extension/i,'Leg extension','Quads','',
+      ['Knee in line with the machine pivot','Pad on the lower shin','Straighten fully and squeeze the thighs','Lower slowly over 2 to 3 seconds'],
+      ['Kicking the weight up with momentum','Lifting the hips off the seat']],
+    [/lunge/i,'Lunge','Quads, glutes','Adductors, hamstrings',
+      ['Step far enough that both knees bend to about 90 degrees','Drop the back knee straight down','Front heel stays down','Push through the front foot to come back'],
+      ['Front knee caving in','Short steps that put all the strain on the front knee']],
+    [/tricep|skull ?crusher|pushdown|french press/i,'Triceps extension','Triceps','',
+      ['Keep the upper arms still','Lower until the elbows are fully bent','Straighten fully and squeeze','Control the way down'],
+      ['Elbows flaring out','Swinging the upper arms to move the weight']],
+    [/curl/i,'Biceps curl','Biceps','Forearms',
+      ['Elbows pinned to your sides','Curl up without moving the shoulders','Squeeze at the top','Lower all the way, slowly'],
+      ['Swinging the body to lift the weight','Half reps that never straighten the arm']],
+    [/fly|flye|pec deck/i,'Cable fly','Chest','Front shoulders',
+      ['Slight fixed bend in the elbows','Open wide until you feel a stretch across the chest','Bring the hands together in an arc, as if hugging a tree','Squeeze for a second'],
+      ['Bending the elbows and turning it into a press','Going so wide the shoulders strain']],
+    [/box jump/i,'Box jump','Quads, glutes, calves','Hamstrings',
+      ['Stand close, feet hip width','Swing the arms back, then up as you jump','Land softly with both feet, knees bent','Step down; do not jump down'],
+      ['A box so high you land in a deep squat','Knees caving on landing']],
+    [/kettlebell swing|kb swing/i,'Kettlebell swing','Glutes, hamstrings','Core, grip, shoulders',
+      ['It is a hinge, not a squat: push the hips back','Hike the bell back between the legs','Snap the hips forward to float the bell to chest height','Let it fall and hinge again'],
+      ['Lifting with the arms','Squatting it instead of hinging','Leaning back at the top']],
+    [/plank/i,'Plank','Core','Shoulders, glutes',
+      ['Elbows under the shoulders','Squeeze the glutes and pull the ribs down','Body in one straight line from head to heels','Breathe slowly; stop when the form goes'],
+      ['Hips sagging toward the floor','Hips piked high']],
+    [/push.?up|press.?up/i,'Push-up','Chest, triceps','Front shoulders, core',
+      ['Hands just wider than the shoulders','Body in one line, glutes and abs tight','Lower until the chest is near the floor, elbows about 45 degrees','Push the floor away'],
+      ['Hips sagging','Elbows flared straight out','Half reps']],
+    [/\bdips?\b/i,'Dip','Chest, triceps','Front shoulders',
+      ['Lock the arms at the top, shoulders down','Lean slightly forward for more chest, upright for more triceps','Lower until the upper arms are about level with the floor','Push back up to straight arms'],
+      ['Going so deep the shoulders roll forward and hurt','Shrugging the shoulders up']]
+  ];
+  function find(name){ name=String(name||''); for(var i=0;i<L.length;i++) if(L[i][0].test(name)) return L[i]; return null; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function html(name){
+    var f=find(name);
+    var h='<div class="kfc"><div class="kfc-h"><div><b>'+esc(name)+'</b>'+(f&&f[1].toLowerCase()!==String(name).toLowerCase()?'<span>How to do it, as a '+esc(f[1].toLowerCase())+'</span>':'<span>How to do it</span>')+'</div>'
+      +'<button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>';
+    if(!f) return h+'<p class="kfc-none">There are no written cues for this exercise yet. Form Check can look at a clip of you doing it and tell you what to fix.</p>'
+      +'<button type="button" class="btn kfc-go" data-kfc="fc">Open Form Check</button></div>';
+    h+='<div class="kfc-mus"><span class="on">'+esc(f[2])+'</span>'+(f[3]?'<span>'+esc(f[3])+'</span>':'')+'</div>'
+      +'<div class="kfc-l">How to do it</div><ol class="kfc-cues">'+f[4].map(function(c){ return '<li>'+esc(c)+'</li>'; }).join('')+'</ol>'
+      +'<div class="kfc-l">Common mistakes</div><ul class="kfc-mis">'+f[5].map(function(c){ return '<li>'+esc(c)+'</li>'; }).join('')+'</ul>'
+      +'<button type="button" class="btn ghost kfc-go" data-kfc="fc">Check my form on video</button></div>';
+    return h;
+  }
+  function open(name){
+    if(!window.openSheet) return;
+    openSheet(html(name));
+    try{ if(window.KovaAnalytics) KovaAnalytics.track('form_cues',{has:!!find(name)}); }catch(e){}
+  }
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-exinfo]');
+    if(b){ ev.preventDefault(); ev.stopPropagation(); open(b.getAttribute('data-exinfo')); return; }
+    var k=ev.target.closest&&ev.target.closest('[data-kfc]'); if(!k) return;
+    var a=k.getAttribute('data-kfc');
+    if(window.closeSheet) closeSheet();
+    if(a==='fc'){ try{ go('formcheck'); }catch(e){} }
+  },true);
+  return {find:find,open:open,html:html,count:L.length};
 })();
 
 </script>

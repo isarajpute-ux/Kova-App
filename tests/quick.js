@@ -99,6 +99,23 @@ function boot(opts) {
   const ql2 = A.events.filter((e) => e[0] === 'quick_log');
   ck('a recent meal logs in one tap', w.KovaFuel.today().length === before + 2 && ql2[ql2.length - 1][1].taps === 1);
 
+  // ---------- portions: up to 3 servings, and your usual amount remembered (p26) ----------
+  w.go('fuel'); await wait(30); doc.getElementById('scanBtn').click();
+  A.cam.onShot('data:image/jpeg;base64,' + 'B'.repeat(600)); await wait(3000);
+  let sh2 = doc.querySelector('#sheetIn .kq');
+  const opts = [...sh2.querySelectorAll('.kq-por [data-kq="s"]')].map((b) => b.textContent);
+  ck('portions go up to 3 servings: ½× ¾× 1× 1½× 2× 3×', opts.join(' ') === '½× ¾× 1× 1½× 2× 3×');
+  sh2.querySelector('.kq-por [data-v="2"]').click(); await wait(20);
+  sh2 = doc.querySelector('#sheetIn .kq');
+  ck('2× doubles the calories before logging', /1144\s*kcal/.test(sh2.querySelector('.kq-big').textContent.replace(/\s+/g, ' ')));
+  sh2.querySelector('[data-kq="log"]').click(); await wait(50);
+  ck('and the doubled amount is what gets logged', w.KovaFuel.today().slice(-1)[0].kcal === 1144);
+  w.go('fuel'); await wait(30); doc.getElementById('scanBtn').click();
+  A.cam.onShot('data:image/jpeg;base64,' + 'B'.repeat(600)); await wait(3000);
+  const sh3 = doc.querySelector('#sheetIn .kq');
+  ck('the same dish next time starts on your usual 2×', sh3.querySelector('.kq-por .on').getAttribute('data-v') === '2' && /1144\s*kcal/.test(sh3.querySelector('.kq-big').textContent.replace(/\s+/g, ' ')));
+  if (w.closeSheet) w.closeSheet();
+
   // ---------- portions ----------
   rail.click(); A.cam.onShot('data:image/jpeg;base64,' + 'C'.repeat(600)); await wait(3000);
   doc.querySelector('#sheetIn .kq [data-kq="s"][data-v="0.5"]').click();

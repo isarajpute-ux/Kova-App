@@ -1,0 +1,16 @@
+/* ---- KovaFormCues: how to do an exercise, in a sheet ---- */
+.kfc{font-family:'Outfit',sans-serif;color:var(--txt)}
+.kfc-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.kfc-h>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kfc-h b{font-size:18px;font-weight:600}.kfc-h span{font-size:12px;color:var(--txt-3,rgba(255,255,255,.6))}
+.kfc-x{width:32px;height:32px;border-radius:50%;border:.5px solid var(--glass-brd,rgba(255,255,255,.18));background:transparent;color:var(--txt);font-size:18px;line-height:1;cursor:pointer}
+.kfc-mus{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.kfc-mus span{padding:5px 10px;border-radius:999px;font-size:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.18));color:var(--txt-3,rgba(255,255,255,.7))}
+.kfc-mus span.on{background:var(--acc-bg,rgba(255,255,255,.12));border-color:var(--acc-brd,rgba(255,255,255,.4));color:var(--acc,#fff);font-weight:600}
+.kfc-l{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3,rgba(255,255,255,.6));margin:4px 0 6px}
+.kfc-cues,.kfc-mis{margin:0 0 14px;padding-left:20px;font-size:14px;line-height:1.5}
+.kfc-cues li,.kfc-mis li{margin-bottom:5px}
+.kfc-cues li::marker{color:var(--acc,#fff);font-weight:700}
+.kfc-mis li::marker{color:#E8707C}
+.kfc-none{font-size:14px;line-height:1.5;margin:0 0 14px}
+.kfc-go{width:100%}

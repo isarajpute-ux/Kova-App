@@ -174,7 +174,7 @@ window.KovaQuick=(function(){
         +'<div class="kq-res"><div class="kq-big">'+k+'<small>kcal</small></div><div class="kq-p">'+p+' g protein · '+Math.round(t.c*scale)+' c · '+Math.round(t.f*scale)+' f</div></div>'
         +'<div class="kq-src">Estimated from photo, ±'+Math.round(band(t.conf)*100)+'% (about ±'+pm+' kcal) · '+R.items.length+' item'+(R.items.length===1?'':'s')+': '+esc(R.items.map(function(i){ return i.ingredient; }).slice(0,4).join(', '))+(R.ms?' · read in '+(R.ms/1000).toFixed(1)+' s':'')+'</div>'
         +'<div class="kq-line"><span class="kova-dot"></span>'+esc(line({kcal:k,p:p}))+'</div>'
-        +'<div class="kq-por" role="group" aria-label="Portion">'+[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.25,'1¼×'],[1.5,'1½×']].map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
+        +'<div class="kq-por" role="group" aria-label="Portion">'+PORTIONS.map(function(x){ return '<button class="kq-pc'+(scale===x[0]?' on':'')+'" data-kq="s" data-v="'+x[0]+'" aria-pressed="'+(scale===x[0])+'">'+x[1]+'</button>'; }).join('')+'</div>'
         +'<button class="btn kq-log" data-kq="log">Log it</button>';
     }
     else if(state==='empty') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-msg">No food found on that photo. Try again with the plate filling the square.</div><button class="btn" data-kq="again">Retake</button>';
@@ -202,9 +202,18 @@ window.KovaQuick=(function(){
     if(k==='y'||k==='r'){ T.taps--; onChip(b,'sheet'); if(window.closeSheet) closeSheet(); return; }
     if(k==='log') logIt();
   }
+  /* p26: up to 3 servings (a big bowl of pasta is often 2 or more), and
+     the amount you usually pick for a dish is chosen for you next time */
+  var PORTIONS=[[.5,'½×'],[.75,'¾×'],[1,'1×'],[1.5,'1½×'],[2,'2×'],[3,'3×']], PKEY='kova.portion.v1';
+  function dishKey(items){ return (items||[]).map(function(i){ return String(i.ingredient||'').toLowerCase().trim(); }).filter(Boolean).sort().join('+').slice(0,120); }
+  function usual(items){ var k=dishKey(items); if(!k) return 1; var m=lsJ(PKEY,{}), v=m[k]&&+m[k].s; return PORTIONS.some(function(x){ return x[0]===v; })?v:1; }
+  function remember(items,s){ var k=dishKey(items); if(!k) return; var m=lsJ(PKEY,{}); m[k]={s:s,at:Date.now()};
+    var ks=Object.keys(m); if(ks.length>200) ks.sort(function(a,b){ return m[a].at-m[b].at; }).slice(0,ks.length-200).forEach(function(x){ delete m[x]; });
+    try{ localStorage.setItem(PKEY,JSON.stringify(m)); }catch(e){} }
   function logIt(){
     if(!R||!R.total||!F()) return;
     var t=R.total, s=scale;
+    remember(R.items,s);
     var e=F().add({src:'photo',kcal:Math.round(t.kcal*s),p:Math.round(t.p*s),c:Math.round(t.c*s),f:Math.round(t.f*s),
       m:t.m?Object.keys(t.m).reduce(function(o,k){ o[k]=Math.round(t.m[k]*s*10)/10; return o; },{}):null,
       conf:t.conf,items:R.items.map(function(i){ return {n:i.ingredient,g:Math.round((+i.estimated_weight_grams||0)*s),conf:+i.confidence_percentage||0}; })});
@@ -226,7 +235,7 @@ window.KovaQuick=(function(){
     openSheet2('reading');
     try{ if(window.KovaMedia) KovaMedia.attach('food',dataUrl,{name:'meal.jpg',ref:'quick-log'}); }catch(e){}
     read(dataUrl,'').then(function(items){
-      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0;
+      busy=false; R.items=items||[]; R.total=totalOf(R.items); R.ms=Date.now()-R.t0; scale=usual(R.items);
       try{ if(window.KovaAnalytics) KovaAnalytics.track('meal_read',{ms:R.ms,items:R.items.length}); }catch(x){}
       paint(R.items.length?'result':'empty');
     },function(e){
