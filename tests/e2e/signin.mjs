@@ -6,7 +6,7 @@
 import { chromium } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { serve, openPage } from './harness.mjs';
+import { serve, openPage, FIREBASE_STUB } from './harness.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
@@ -31,11 +31,14 @@ await page.click('#afFix');
 ck('one tap fixes it', (await page.inputValue('#afEmail')) === 'sam@gmail.com' && !(await page.isDisabled('#afSend')));
 await page.click('#afSend');
 await page.waitForSelector('#afYear', { timeout: 5000 });
-ck('the first way in asks the year you were born (16 and over), neutrally', (await page.isDisabled('#afAgeGo')) && /16 and over/.test(await page.textContent('#authInner')));
+ck('the first way in asks the date of birth (16 and over), neutrally', (await page.isDisabled('#afAgeGo')) && /16 and over/.test(await page.textContent('#authInner')) && !!(await page.$('#afDay')) && !!(await page.$('#afMonth')));
+await page.selectOption('#afDay', '31'); await page.selectOption('#afMonth', '1'); await page.selectOption('#afYear', '1990');
+ck('31 February is not a date: Continue stays off and it says why', (await page.isDisabled('#afAgeGo')) && /February 1990 has no day 31/.test(await page.textContent('#afAgeErr')));
+await page.selectOption('#afDay', '14'); await page.selectOption('#afMonth', '5');
 await page.selectOption('#afYear', String(new Date().getFullYear() - 30));
 await page.click('#afAgeGo');
 await page.waitForSelector('#afCode1', { timeout: 5000 });
-ck('only the yes is kept, not the year', await page.evaluate(() => { const v = localStorage.getItem('kova.age16'); return !!v && !/19\d\d|20\d\d-/.test(v.replace(/"at":\d+/, '')); }));
+ck('only the yes is kept, not the birthday', await page.evaluate(() => { const v = localStorage.getItem('kova.age16'); return !!v && !/19\d\d|20\d\d-/.test(v.replace(/"at":\d+/, '')); }));
 ck('the code step slides in after the email', await page.evaluate(() => document.getElementById('authInner').classList.contains('af-in')));
 await page.type('#afCode1', '123465', { delay: 40 });
 await page.waitForTimeout(250);
@@ -63,11 +66,25 @@ await kid.page.waitForSelector('#authSkip', { timeout: 15000 });
 ck('the welcome screen says continuing means agreeing to the Terms and the Privacy Policy', /agree to the Terms/.test(await kid.page.textContent('#authInner')));
 await kid.page.click('#authSkip');
 await kid.page.waitForSelector('#afYear');
-await kid.page.selectOption('#afYear', String(new Date().getFullYear() - 12));
+/* sixteen tomorrow is still fifteen today */
+const tmr = new Date(Date.now() + 864e5);
+await kid.page.selectOption('#afDay', String(tmr.getDate())); await kid.page.selectOption('#afMonth', String(tmr.getMonth()));
+await kid.page.selectOption('#afYear', String(tmr.getFullYear() - 16));
 await kid.page.click('#afAgeGo');
 await kid.page.waitForTimeout(300);
-ck('under 16: Kova stops there, nothing saved', /16 and over/.test(await kid.page.textContent('#authInner')) && !(await kid.page.evaluate(() => localStorage.getItem('kova.age16'))) && !(await kid.page.$('#afYear')));
-await kid.context.close(); await b.close(); site.close();
+ck('under 16 (even turning 16 tomorrow): Kova stops there, nothing saved', /16 and over/.test(await kid.page.textContent('#authInner')) && !(await kid.page.evaluate(() => localStorage.getItem('kova.age16'))) && !(await kid.page.$('#afYear')));
+await kid.context.close();
+/* Firebase answering "nobody signed in" while the page is still loading
+   (what the real one does) used to open its sign-in sheet on top of the
+   welcome screen: two sign-in screens stacked */
+const early = await openPage(b, null, { storage: {} });
+await early.context.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: FIREBASE_STUB.replace('setTimeout(function(){cb(null)},0)', 'cb(null)') }));
+await early.page.goto(site.url + '/index.html', { waitUntil: 'load' });
+await early.page.waitForSelector('#afEmail', { timeout: 15000 });
+await early.page.waitForTimeout(600);
+ck('one sign-in screen, not two stacked', await early.page.evaluate(() => getComputedStyle(document.getElementById('kova-auth-modal')).display === 'none'));
+ck('the welcome screen has a line where Google and Apple problems are shown', !!(await early.page.$('#afErr')));
+await early.context.close(); await b.close(); site.close();
 const failed = R.filter((x) => !x[1]);
 R.forEach((x) => console.log((x[1] ? 'PASS ' : 'FAIL ') + x[0]));
 console.log(`\n${R.length - failed.length}/${R.length} passing`);

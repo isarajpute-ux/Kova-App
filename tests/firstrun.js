@@ -46,8 +46,8 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   const skip = doc.getElementById('authSkip');
   ck('the welcome screen offers Kova without an account', !!skip);
   skip.click(); await wait(80);
-  ck('the first way in asks your year of birth: Kova is for 16 and over', !!doc.getElementById('afYear') && /16 and over/.test(wallText(doc)));
-  doc.getElementById('afYear').value = String(new Date().getFullYear() - 25); doc.getElementById('afYear').dispatchEvent(new w.Event('change'));
+  ck('the first way in asks your date of birth (day, month, year): Kova is for 16 and over', !!doc.getElementById('afDay') && !!doc.getElementById('afMonth') && !!doc.getElementById('afYear') && /16 and over/.test(wallText(doc)));
+  [['afDay', '14'], ['afMonth', '5'], ['afYear', String(new Date().getFullYear() - 25)]].forEach(([id, v]) => { doc.getElementById(id).value = v; doc.getElementById(id).dispatchEvent(new w.Event('change')); });
   doc.getElementById('afAgeGo').click(); await wait(80);
   ck('no biometric prompt before the first win', !/Enable biometric unlock/.test(wallText(doc)));
   ck('question 1 comes straight away: what Kova is for, several allowed', /Three quick questions, then your day/.test(wallText(doc)) && /What do you want Kova for/.test(wallText(doc)) && doc.getElementById('obNext').disabled);

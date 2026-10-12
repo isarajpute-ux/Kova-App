@@ -70,7 +70,7 @@ await page.evaluate(() => {
     signInWithPopup: () => { window.__popup = 1; return Promise.reject(new Error('no pop-ups in the app')); }, signInWithRedirect: () => { window.__popup = 1; } };
 });
 await page.click('#authApple');
-if (await page.$('#afYear')) { await page.selectOption('#afYear', String(new Date().getFullYear() - 30)); await page.click('#afAgeGo'); }
+if (await page.$('#afYear')) { await page.selectOption('#afDay', '14'); await page.selectOption('#afMonth', '5'); await page.selectOption('#afYear', String(new Date().getFullYear() - 30)); await page.click('#afAgeGo'); }
 await page.waitForFunction(() => window.__cred, null, { timeout: 5000 }).catch(() => {});
 const r = await page.evaluate(() => ({ calls: window.__calls, cred: window.__cred, popup: !!window.__popup, err: (document.getElementById('afErr') || {}).textContent || '' }));
 ck('Apple opens the phone\'s own sign-in sheet, not a web pop-up', r.calls.length === 1 && r.calls[0][0] === 'apple' && r.calls[0][1].skipNativeAuth === true && !r.popup);

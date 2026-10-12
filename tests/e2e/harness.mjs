@@ -44,7 +44,7 @@ export function serve(dir, { brotli = false } = {}) {
   return warm.then(() => new Promise((ok) => server.listen(0, '127.0.0.1', () => ok({ url: 'http://127.0.0.1:' + server.address().port, close: () => server.close() }))));
 }
 
-const FIREBASE_STUB = `
+export const FIREBASE_STUB = `
 (function(){
   var auth={currentUser:null,onAuthStateChanged:function(cb){setTimeout(function(){cb(null)},0);return function(){}},signOut:function(){return Promise.resolve()},
     signInAnonymously:function(){return Promise.reject(new Error('offline test'))},signInWithEmailAndPassword:function(){return Promise.reject(new Error('offline test'))},

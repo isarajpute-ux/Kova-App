@@ -3690,7 +3690,7 @@ window.KovaCloudAuth = (function(){
     if (c === 'auth/too-many-requests')    return 'Too many attempts. Wait a minute and try again.';
     if (c === 'auth/network-request-failed') return 'No connection. Your data is saved on this device and will sync later.';
     if (c === 'auth/popup-closed-by-user') return '';
-    if (c === 'auth/unauthorized-domain')  return 'This domain is not in the Firebase authorised list yet.';
+    if (c === 'auth/unauthorized-domain')  return 'Google sign-in is not switched on for ' + location.hostname + ' yet. Use your email and a password for now.';
     return (e && e.message) ? e.message + (c ? ' ('+c+')' : '') : 'Something went wrong.';
   }
 
@@ -3727,9 +3727,19 @@ window.KovaCloudAuth = (function(){
         /* the welcome screen has its own sign-in (email code, Google,
            Apple, or no account); a second form on top of it is two
            sign-in screens before anything else */
-        var wall = document.getElementById('authWall');
-        var wallUp = !!(wall && wall.style.display !== 'none' && !wall.classList.contains('gone'));
-        if (!skipped && !wallUp) modal(true);
+        /* Firebase can answer "nobody" before the page has finished
+           loading, i.e. before the welcome screen has decided whether to
+           show. Asking then saw no welcome screen and opened this sheet
+           on top of it: two sign-in screens stacked. Wait until the
+           welcome screen has made up its mind. */
+        var decide = function(){
+          if (auth.currentUser) return;
+          var wall = document.getElementById('authWall');
+          var wallUp = !!(wall && wall.style.display !== 'none' && !wall.classList.contains('gone'));
+          if (!skipped && !wallUp) modal(true);
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(decide, 0); });
+        else setTimeout(decide, 0);
       }
     });
   }
@@ -39072,6 +39082,9 @@ body.light-mode .usual{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,
 body.light-mode .af-legal{color:rgba(28,26,23,.66)}body.light-mode .af-legal a{color:#1C1A17}
 .af-sel{padding-left:22px;appearance:none;-webkit-appearance:none;background-image:none}
 .af-sel option{color:#111}
+.af-dob{display:grid;grid-template-columns:.8fr 1.45fr 1fr;gap:8px}
+.af-dob .af-wrap{margin-bottom:14px}
+.af-dob .af-sel{padding-left:14px;padding-right:8px;min-width:0}
 .af-note{font-size:12px;color:var(--ink-4,rgba(255,255,255,.46));margin-top:10px;font-family:Outfit,sans-serif}
 .af-go.busy{position:relative;color:transparent!important}
 .af-go.busy::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid rgba(17,18,20,.25);border-top-color:#111214;animation:afSpin .7s linear infinite}
@@ -39123,6 +39136,8 @@ body.light-mode .af-ico,body.light-mode .af-act{color:rgba(28,26,23,.42)}
 body.light-mode .af-go{background:radial-gradient(130% 220% at 50% 50%,#2A2622 0%,#1C1A17 60%);color:#F6F4F0}
 body.light-mode .af-prov{background:rgba(28,26,23,.05);border-color:rgba(28,26,23,.14);color:#1C1A17}
 body.light-mode .af-h,body.light-mode .af-mark,body.light-mode .af-foot b{color:#1C1A17}
+body.light-mode .af-foot,body.light-mode .af-note{color:rgba(28,26,23,.56)}
+body.light-mode .af-tip,body.light-mode .af-legal{color:rgba(28,26,23,.62)}
 body.light-mode .af-code input{background:rgba(28,26,23,.05);border-color:rgba(28,26,23,.18);color:#1C1A17}
 
 .ob-sub{text-align:left;margin:-4px 0 16px;padding:12px 14px;border-radius:20px;background:rgba(232,96,122,.1);border:1px solid rgba(232,96,122,.32)}
@@ -39385,6 +39400,7 @@ window.KovaAuth = (function(){
       + '<button class="af-go" id="afSend"'+(validEmail(prefill)?'':' disabled')+'>Send code</button>'
       + '<div class="af-note">New here? The same code creates your account. Have a password? <b id="afPw" role="button" tabindex="0">Sign in with it</b></div>'
       + provs('Or continue with')
+      + '<div class="af-err" id="afErr" role="alert" aria-live="polite"></div>'
       + '<div class="af-foot">No account needed. <b id="authSkip" role="button" tabindex="0">Use Kova without one</b></div>'
       + '<div class="af-legal">By continuing you agree to the <a href="terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>');
 
@@ -39404,8 +39420,12 @@ window.KovaAuth = (function(){
     em.onkeydown=function(e){ if(e.key==='Enter'&&!go.disabled) go.click(); };
     go.onclick=function(){ var v=cleanEmail(em.value); ageGate(function(){ sendCode(v); }, v); };
 
-    onProv('authGoogle',function(){ ageGate(function(){ oauthFlow('google'); }); });
-    onProv('authApple',function(){ ageGate(function(){ oauthFlow('apple'); }); });
+    /* after the birthday step, back to this screen before Google or Apple
+       opens, so a refusal lands on the line that shows it (the birthday
+       screen has none: a refused pop-up used to leave nothing to read) */
+    function via(p){ var v=cleanEmail(em.value); ageGate(function(){ if(!document.getElementById('afErr')) renderWelcome(v); oauthFlow(p); }, v); }
+    onProv('authGoogle',function(){ via('google'); });
+    onProv('authApple',function(){ via('apple'); });
     passwordLink(function(){ return cleanEmail(em.value); }, 'in');
     var sk=document.getElementById('authSkip');
     sk.onclick = function(){ ageGate(function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); }); };
@@ -39414,27 +39434,53 @@ window.KovaAuth = (function(){
   }
 
   /* Kova is for people 16 and over (GDPR's highest age of digital consent;
-     COPPA's 13 in the US). A neutral question - the year, not "are you
-     16?" - asked once, before the first way in. Only the yes is kept,
-     never the year; a no is remembered for the session so it cannot just
-     be tried again. */
+     COPPA's 13 in the US). A neutral question - the date of birth, not
+     "are you 16?" - asked once, before the first way in. The full date
+     (day, month, year), so someone who turns 16 later this year is not
+     let in early. Only the yes is kept, never the date; a no is
+     remembered for the session so it cannot just be tried again. */
+  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function ageOn(d, m, y, now){
+    now=now||new Date();
+    var a=now.getFullYear()-y;
+    if(now.getMonth()<m || (now.getMonth()===m && now.getDate()<d)) a--;
+    return a;
+  }
   function ageGate(next, email){
     if(rd('kova.age16')) { next(); return; }
     var blocked=false; try{ blocked=sessionStorage.getItem('kova.under16')==='1'; }catch(e){}
     if(blocked){ underAge(); return; }
-    var y=new Date().getFullYear(), opts='<option value="">Year you were born</option>';
-    for(var i=y; i>=y-100; i--) opts+='<option value="'+i+'">'+i+'</option>';
+    var y=new Date().getFullYear(), i;
+    var dO='<option value="">Day</option>', mO='<option value="">Month</option>', yO='<option value="">Year</option>';
+    for(i=1; i<=31; i++) dO+='<option value="'+i+'">'+i+'</option>';
+    for(i=0; i<12; i++) mO+='<option value="'+i+'">'+MONTHS[i]+'</option>';
+    for(i=y; i>=y-100; i--) yO+='<option value="'+i+'">'+i+'</option>';
     step('<div class="af-mark">kova</div>'
       + '<div class="af-h">Before you start</div>'
-      + '<div class="af-lbl" style="margin:-14px 0 20px 4px;line-height:1.5">Kova is for people 16 and over. What year were you born?</div>'
-      + '<div class="af-wrap"><select class="af af-sel" id="afYear" aria-label="Year you were born">'+opts+'</select></div>'
+      + '<div class="af-lbl" style="margin:-14px 0 20px 4px;line-height:1.5">Kova is for people 16 and over. When were you born?</div>'
+      + '<div class="af-dob" role="group" aria-label="Date of birth">'
+        + '<div class="af-wrap"><select class="af af-sel" id="afDay" aria-label="Day you were born">'+dO+'</select></div>'
+        + '<div class="af-wrap"><select class="af af-sel" id="afMonth" aria-label="Month you were born">'+mO+'</select></div>'
+        + '<div class="af-wrap"><select class="af af-sel" id="afYear" aria-label="Year you were born">'+yO+'</select></div>'
+      + '</div>'
+      + '<div class="af-err" id="afAgeErr" aria-live="polite"></div>'
       + '<button class="af-go" id="afAgeGo" disabled>Continue</button>'
-      + '<div class="af-foot">Kova keeps only that you are 16 or over, not the year.<br/><b id="afAgeBack" role="button" tabindex="0">Back</b></div>');
-    var sel=document.getElementById('afYear'), g=document.getElementById('afAgeGo');
-    sel.onchange=function(){ g.disabled=!sel.value; };
+      + '<div class="af-foot">Kova keeps only that you are 16 or over, not your birthday.<br/><b id="afAgeBack" role="button" tabindex="0">Back</b></div>');
+    var sd=document.getElementById('afDay'), sm=document.getElementById('afMonth'), sy=document.getElementById('afYear');
+    var g=document.getElementById('afAgeGo'), er=document.getElementById('afAgeErr');
+    /* 31 February is not a date: say so instead of quietly rolling it into March */
+    function real(){ var d=+sd.value, m=+sm.value, yy=+sy.value; var t=new Date(yy, m, d); return t.getFullYear()===yy && t.getMonth()===m && t.getDate()===d; }
+    function check(){
+      var all=!!(sd.value && sm.value!=='' && sy.value);
+      var ok=all && real();
+      er.textContent = all && !ok ? MONTHS[+sm.value]+' '+sy.value+' has no day '+sd.value+'.' : '';
+      g.disabled=!ok;
+    }
+    sd.onchange=sm.onchange=sy.onchange=check;
     document.getElementById('afAgeBack').onclick=function(){ renderWelcome(email); };
     g.onclick=function(){
-      var age=y-(+sel.value);
+      if(g.disabled) return;
+      var age=ageOn(+sd.value, +sm.value, +sy.value);
       if(age>=16){ wr('kova.age16',{at:Date.now()}); try{ if(window.KovaAnalytics) KovaAnalytics.track('age_confirmed',{}); }catch(e){} next(); }
       else { try{ sessionStorage.setItem('kova.under16','1'); }catch(e){} underAge(); }
     };
@@ -39472,6 +39518,7 @@ window.KovaAuth = (function(){
       + '<button class="af-go" id="afRetry">Try again</button>'
       + '<div class="af-foot" style="margin-top:14px"><b id="afPw" role="button" tabindex="0">Use a password instead</b> \u00b7 <b id="afBack" role="button" tabindex="0">Change the email</b></div>'
       + provs('Meanwhile')
+      + '<div class="af-err" id="afErr" role="alert" aria-live="polite"></div>'
       + '<div class="af-foot">Everything works offline. <b id="authSkip">Use Kova without an account</b></div>');
 
     document.getElementById('afRetry').onclick   = function(){ sendCode(email); };
@@ -39479,7 +39526,7 @@ window.KovaAuth = (function(){
     document.getElementById('afBack').onclick    = function(){ renderWelcome(email); };
     onProv('authGoogle',function(){ oauthFlow('google'); });
     onProv('authApple',function(){ oauthFlow('apple'); });
-    document.getElementById('authSkip').onclick  = function(){ promptBiometric(function(){ firstRunDone(); }); };
+    document.getElementById('authSkip').onclick  = function(){ wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); }); };
   }
 
   /* One box for the six digits (drawn as six slots), so fixing one digit is
@@ -39615,7 +39662,7 @@ window.KovaAuth = (function(){
     var name=provider==='google'?'Google':'Apple';
     if(/popup-closed|cancelled-popup|user-cancel/.test(code)) return '';
     if(/operation-not-allowed/.test(code)) return name+' sign-in is not switched on for Kova yet.';
-    if(/unauthorized-domain/.test(code)) return 'This address is not on Kova’s sign-in allow list yet.';
+    if(/unauthorized-domain/.test(code)) return name+' sign-in is not switched on for '+location.hostname+' yet. Use your email, or Kova without an account for now.';
     if(/network/.test(code)) return 'No connection. Try again, or continue without an account.';
     return name+' sign-in did not complete'+(code?' ('+code.replace('auth/','')+')':'')+'.';
   }
@@ -39903,7 +39950,9 @@ window.KovaAuth = (function(){
     return h+'</div>';
   }
 
+  var obOn=false;
   function obStep(i){
+    obOn=true;
     var Q = OB_Q[i];
     if(!Q){ obFirstWin(); return; }
     if(i===0 && !obA.__t0) obA.__t0 = Date.now();
@@ -40079,7 +40128,12 @@ window.KovaAuth = (function(){
      device and still has to be satisfied. */
   function dismiss(){
     try { if (hasBio()) return; } catch(e){}
-    if (wall && wall.style.display !== 'none') unlock();
+    if (!wall || wall.style.display === 'none' || wall.classList.contains('gone')) return;
+    /* signed in from the sign-in sheet: a new person still gets the
+       setup questions (the first screen used to skip straight past them),
+       and someone already answering them is left where they are */
+    if (obDone()) unlock();
+    else if (!obOn) { document.getElementById('app').classList.add('auth-locked'); obStep(0); }
   }
 
   /* public API for settings (change PIN, sign out, etc.) */
