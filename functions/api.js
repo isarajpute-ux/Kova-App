@@ -133,6 +133,7 @@ const oauth = (cfg) => makeOAuth({ db: db(), cfg });
 
 /* ---------- auth ------------------------------------------------------ */
 
+function hasAdminKeys() { try { return require('./env').capabilities().firebaseAdmin; } catch (e) { return true; } }
 async function requireUser(req) {
   const h = req.get('authorization') || '';
   const m = h.match(/^Bearer\s+(.+)$/i);
@@ -140,6 +141,9 @@ async function requireUser(req) {
   try {
     return await admin.auth().verifyIdToken(m[1]);
   } catch (e) {
+    /* without its Firebase keys the server cannot check anyone, so say
+       that instead of blaming the person's session (p25) */
+    if (!hasAdminKeys()) throw new HttpError(401, 'The Kova server is missing its Firebase keys (FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY in Vercel), so it cannot check who you are yet.');
     throw new HttpError(401, 'Your session expired. Sign in again.');
   }
 }

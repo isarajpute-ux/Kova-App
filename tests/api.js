@@ -105,6 +105,8 @@ const ck = (n, c) => R.push([n, !!c]);
   // auth gate
   ck('status without a token is 401', (await call('GET', '/status')).status === 401);
   ck('status with a forged token is 401', (await call('GET', '/status', { token: 'forged' })).status === 401);
+  { const f = await call('GET', '/status', { token: 'forged' }), keys = require('../functions/env').capabilities().firebaseAdmin;
+    ck('a server without its Firebase keys says so, instead of "your session expired"', keys || /missing its Firebase keys/.test(JSON.stringify(f.body))); }
 
   // health relay
   const t1 = await call('POST', '/health/token', { token: 'good-alice' });
