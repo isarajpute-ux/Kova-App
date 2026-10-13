@@ -3715,6 +3715,7 @@ window.KovaCloudAuth = (function(){
           localStorage.setItem('kova.auth', JSON.stringify(a));
         } catch(e){}
         try { if (window.__paintSettings) __paintSettings(); } catch(e){}
+        try { if (window.KovaProfile && KovaProfile.paintAll) KovaProfile.paintAll(); } catch(e){}
         /* gate() already ran on DOMContentLoaded, before this callback
            could possibly have fired, so the legacy wall is on screen by
            now. Take it down here too or a Firebase sign-in leaves the
@@ -4846,7 +4847,7 @@ body.soft-light .ks-wave .r i{background:linear-gradient(90deg,rgba(255,255,255,
 body.soft-light .ks-wave .r i.d{background:rgb(255,255,255)}
 body.soft-light .ks-sugg .ks-pill{background:rgba(255,255,255,0.125);border-color:rgba(255,255,255,0.125)}
 body.soft-light .ks-start{background:linear-gradient(160deg,rgba(255,255,255,0.163),rgba(255,255,255,0.056) 60%,rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.15);box-shadow:0 40px 90px rgba(0,0,0,0.385),inset 0 1px 0 rgba(255,255,255,.14)}
-body.soft-light .ks-start p{color:rgba(255,255,255,0.75)}
+body.soft-light .ks-start p,body.soft-light .ks-start .ks-what li{color:rgba(255,255,255,0.75)}
 body.soft-light .ks-start .row .ks-pill:not(.white){background:rgba(81,81,81,0.55);border-color:rgba(255,255,255,0.1)}
 body.soft-light .ks-drop-menu{background:rgba(92,92,92,0.97);border:1px solid rgba(255,255,255,0.1);box-shadow:0 30px 80px rgba(0,0,0,0.455)}
 body.soft-light .ks-qrow:hover{background:rgba(255,255,255,0.075)}
@@ -5058,7 +5059,8 @@ body.light-mode .ks-sugg .ks-pill{background:rgba(18,20,24,0.1);border-color:rgb
 body.light-mode .ks-start{background:linear-gradient(160deg,rgba(18,20,24,0.13),rgba(18,20,24,0.045) 60%,rgba(18,20,24,0.08));border:1px solid rgba(18,20,24,0.12);box-shadow:0 40px 90px rgba(40,44,54,0.22),inset 0 1px 0 rgba(255,255,255,0.7)}
 body.light-mode .ks-start .ast{color:rgb(18,18,18);filter:drop-shadow(0 0 16px rgba(24,26,30,0.158))}
 body.light-mode .ks-start h3{color:rgb(18,18,18)}
-body.light-mode .ks-start p{color:rgba(18,20,24,0.6)}
+body.light-mode .ks-start p,body.light-mode .ks-start .ks-what li{color:rgba(18,20,24,0.62)}
+body.light-mode .ks-start .ks-what b{color:rgb(18,18,18)}
 body.light-mode .ks-start .row .ks-pill:not(.white){background:rgba(245,245,245,0.55);border-color:rgba(18,20,24,0.08)}
 body.light-mode .ks-veil{background:radial-gradient(60% 60% at 50% 45%,rgba(40,44,54,0.14),rgba(40,44,54,0.32))}
 body.light-mode .ks-drop-menu{background:rgba(252,252,252,0.97);border:1px solid rgba(18,20,24,0.08);box-shadow:0 30px 80px rgba(40,44,54,0.26)}
@@ -6643,12 +6645,19 @@ body.light-mode .app{--hair:rgba(28,26,23,.1)}
 @media (max-width:340px){#s-workstudio .ks-veil{left:48px}}
 /* the Studio's Get started card on a phone: its two buttons share the row
    when there is room and stack when there is not; text sized to fit */
+/* p27: smaller on phones (it filled an iPhone 16 Pro Max), and it scrolls
+   inside itself rather than running off a short screen */
 @media (max-width:520px){
-  #s-workstudio .ks-start{padding:30px 22px 22px}
-  #s-workstudio .ks-start .ast{margin-bottom:34px}
-  #s-workstudio .ks-start h3{font-size:24px}
-  #s-workstudio .ks-start p{font-size:16px;margin-bottom:26px}
-  #s-workstudio .ks-start .ks-big{height:56px;font-size:17px}
+  #s-workstudio .ks-start{padding:22px 18px 16px;border-radius:26px;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain}
+  #s-workstudio .ks-start .ast{margin-bottom:14px}
+  #s-workstudio .ks-start .ast svg{width:38px;height:38px}
+  #s-workstudio .ks-start h3{font-size:21px;margin-bottom:12px}
+  #s-workstudio .ks-start p{font-size:15px;margin-bottom:18px}
+  #s-workstudio .ks-start .ks-what{gap:9px;margin-bottom:18px}
+  #s-workstudio .ks-start .ks-what li{font-size:14px;line-height:1.38;padding-left:16px}
+  #s-workstudio .ks-start .ks-big{height:48px;font-size:16px;border-radius:16px;gap:12px}
+  #s-workstudio .ks-start .row{margin-top:8px}
+  #s-workstudio .ks-start .row .ks-pill{height:44px;font-size:15px;border-radius:16px}
   #s-workstudio .ks-start .row{flex-wrap:wrap}
   #s-workstudio .ks-start .row>*{flex:1 1 130px;min-width:0}
 }
@@ -8133,7 +8142,7 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
 
 <nav class="rail">
-  <div class="avatar tap" id="avatar" data-go="profile" role="button" tabindex="0" title="Your profile">I</div>
+  <div class="avatar tap" id="avatar" data-go="profile" role="button" tabindex="0" title="Your profile" aria-label="Your profile"></div>
   <div class="rnav" data-go="home" title="Home"><svg class="ic"><use href="#i-layout-grid"/></svg></div>
   <div class="rnav" data-go="fuel" title="Fuel"><svg class="ic"><use href="#i-flame"/></svg></div>
   <div class="rnav" data-go="sleep" title="Sleep"><svg class="ic"><use href="#i-moon"/></svg></div>
@@ -10342,10 +10351,14 @@ body.light-mode .ks-parw{background:rgba(255,255,255,.95);border-color:rgba(18,2
   background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.045) 60%,rgba(255,255,255,.08));
   -webkit-backdrop-filter:blur(30px) saturate(1.3);backdrop-filter:blur(30px) saturate(1.3);
   border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 90px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.14)}
-.ks-start .ast{display:flex;justify-content:center;margin-bottom:62px;color:#fff;filter:drop-shadow(0 0 16px rgba(255,255,255,.45))}
+.ks-start .ast{display:flex;justify-content:center;margin-bottom:34px;color:#fff;filter:drop-shadow(0 0 16px rgba(255,255,255,.45))}
 .ks-start .ast svg{width:58px;height:58px}
 .ks-start h3{font-size:28px;font-weight:500;letter-spacing:-.01em;margin:0 0 10px;color:#fff}
 .ks-start p{font-size:18px;line-height:1.35;color:rgba(255,255,255,.6);margin:0 0 40px;font-weight:400}
+.ks-start .ks-what{list-style:none;margin:0 0 30px;padding:0;display:flex;flex-direction:column;gap:12px}
+.ks-start .ks-what li{position:relative;padding-left:20px;font-size:15.5px;line-height:1.4;color:rgba(255,255,255,.62)}
+.ks-start .ks-what li::before{content:'';position:absolute;left:2px;top:.55em;width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.55}
+.ks-start .ks-what b{font-weight:600;color:#fff}
 .ks-start .ks-big{width:100%;height:64px;border-radius:21px;justify-content:center;font-size:19px;gap:18px}
 .ks-start .ks-big i{width:12px;height:12px;border-radius:50%;background:var(--ks-ink)}
 .ks-start .row{display:flex;gap:10px;margin-top:12px}
@@ -11701,7 +11714,7 @@ body.ks-on #kovaFab{display:none!important}
   <div><div class="eyebrow">YOUR ACCOUNT</div><div class="title">Settings</div></div></div></div>
 
   <div class="card tap" id="setMeRow" data-go="profile" style="display:flex;align-items:center;gap:12px;padding:14px">
-    <div class="avatar" id="setMeAva" style="width:48px;height:48px;font-size:19px">K</div>
+    <div class="avatar" id="setMeAva" style="width:48px;height:48px;font-size:19px"></div>
     <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600" id="setMeName">Add your name</div>
     <div class="sub" id="setMeSub">Member since &mdash;</div></div>
     <svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg>
@@ -34204,8 +34217,35 @@ window.KovaProfile=(function(){
 
   function initials(n){
     var p=String(n||'').trim().split(/\s+/).filter(Boolean);
-    if(!p.length) return 'K';
+    if(!p.length) return '';
     return (p[0][0]+(p.length>1?p[p.length-1][0]:'')).toUpperCase();
+  }
+  /* p27: the rail said "I" and Settings "K" for everyone. Every avatar now
+     shows your photo, or your initials once you have a name, or a plain
+     person outline until then. */
+  var PERSON='<svg viewBox="0 0 24 24" width="52%" height="52%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"/></svg>';
+  function paintAva(el,m){
+    if(!el) return;
+    if(m.avatar){ el.style.backgroundImage='url('+m.avatar+')'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; el.textContent=''; return; }
+    el.style.backgroundImage='';
+    var i=initials(m.name);
+    if(i) el.textContent=i; else el.innerHTML=PERSON;
+  }
+  /* signed in with Google or Apple and no name yet: use the name on that
+     account (never one made from the email address) */
+  function fromAccount(m){
+    if(m.name) return m;
+    var a=null; try{ a=JSON.parse(localStorage.getItem('kova.auth')||'null'); }catch(e){}
+    var n=a&&a.name&&String(a.name).trim();
+    if(n&&a.email&&n.toLowerCase()===String(a.email).split('@')[0].toLowerCase()) n='';
+    if(n){ m.name=n.slice(0,60); saveMe(m); }
+    return m;
+  }
+  function paintAll(){
+    var m=fromAccount(me());
+    paintAva(document.getElementById('avatar'),m);
+    paintAva(document.getElementById('setMeAva'),m);
+    paintAva(document.getElementById('pfAva'),m);
   }
 
   function monthYear(ts){
@@ -34250,9 +34290,7 @@ window.KovaProfile=(function(){
     var m=me();
 
     /* hero */
-    var av=document.getElementById('pfAva');
-    if(m.avatar){ av.style.backgroundImage='url('+m.avatar+')'; av.textContent=''; }
-    else { av.style.backgroundImage=''; av.textContent=initials(m.name||'Kova'); }
+    paintAll(); m=me();
 
     host.textContent=m.name||'Add your name';
     document.getElementById('pfRole').textContent=
@@ -34478,11 +34516,7 @@ window.KovaProfile=(function(){
     var av=document.getElementById('setMeAva');
     var nm=document.getElementById('setMeName');
     var sb=document.getElementById('setMeSub');
-    if(av){
-      if(m.avatar){ av.style.backgroundImage='url('+m.avatar+')'; av.style.backgroundSize='cover';
-                    av.style.backgroundPosition='center'; av.textContent=''; }
-      else { av.style.backgroundImage=''; av.textContent=initials(m.name||'Kova'); }
-    }
+    paintAll(); m=me();
     if(nm) nm.textContent=m.name||'Add your name';
     if(sb) sb.textContent=[m.role,'Member since '+monthYear(m.since)].filter(Boolean).join(' \u00b7 ');
   }
@@ -34507,7 +34541,11 @@ window.KovaProfile=(function(){
     if(id==='settings'){ paintSettingsRow(); }
   }
 
-  return {onScreen:onScreen, paint:paint, me:me, paintSettingsRow:paintSettingsRow};
+  /* the rail's avatar is on every screen: paint it at start, and again
+     when an account signs in or the cloud brings a profile down */
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',paintAll); else paintAll();
+  window.addEventListener('kova:cloud',paintAll);
+  return {onScreen:onScreen, paint:paint, me:me, paintSettingsRow:paintSettingsRow, paintAll:paintAll};
 })();
 </script>
 
@@ -46194,7 +46232,8 @@ window.KovaCanvas=(function(){
 
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
-    ast:'<path d="M12 2.6v18.8M2.6 12h18.8M5.35 5.35l13.3 13.3M18.65 5.35L5.35 18.65" stroke-width="2.5"/>',
+    /* p27: Kova's own script K (the app icon), not the eight-armed sparkle that read as another brand's mark */
+    kova:'<path d="M8.2 6.1c.9-1.6 2.6-2.6 4.3-2.4M13.1 3.6C11.6 8.4 9.6 13.8 7.3 18.2c-.8 1.5-1.9 2.2-2.9 1.6M19.6 4.1c-1.6-.5-3.6.6-5.5 2.6-1.7 1.8-3.3 3.9-4.6 5.4M9.6 12c2.2-.3 3.5 1.1 4.1 3.4.6 2.4 1.8 4.4 4.3 3.6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
     chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
@@ -46375,7 +46414,7 @@ window.KovaCanvas=(function(){
     var p=P(), el=$('#ksTop'); if(!el||!p) return;
     var active=KPo.all().filter(function(x){ return x.status==='scheduled'||x.status==='publishing'||x.status==='uploading'; }).length;
     el.innerHTML=
-      '<button class="ks-mark" data-a="home" aria-label="Work OS home">'+ic('ast')+'</button>'
+      '<button class="ks-mark" data-a="home" aria-label="Work OS home">'+ic('kova')+'</button>'
       +'<div class="ks-tabs">'
         +'<button class="ks-tab doc" data-a="rename" title="Rename"><span>'+esc(p.title||'Untitled post')+'</span>'
           +'<i class="'+(p.status==='draft'?'':'saved')+'"></i></button>'
@@ -47070,9 +47109,14 @@ window.KovaCanvas=(function(){
     var anyLinked=KPo.ORDER.some(function(k){ return KPo.linkState(k)==='on'; });
     if(dismissed||KPo.all().some(function(x){ return (x.media||[]).length||x.status!=='draft'; })||anyLinked) return;
     var v=document.createElement('div'); v.className='ks-veil';
-    v.innerHTML='<div class="ks-start"><div class="ast">'+ic('ast')+'</div>'
-      +'<h3>Get started today</h3>'
-      +'<p>Drop in photos or clips, write it once, and send it to YouTube, Instagram, TikTok, LinkedIn and X.</p>'
+    v.innerHTML='<div class="ks-start"><div class="ast">'+ic('kova')+'</div>'
+      +'<h3>Your content, handled</h3>'
+      +'<ul class="ks-what">'
+        +'<li><b>Add your photos or clips.</b> Kova trims and fits them to every app.</li>'
+        +'<li><b>Your AI team writes it.</b> Caption, hashtags and a version per app.</li>'
+        +'<li><b>You tap post.</b> YouTube, Instagram, TikTok, LinkedIn and X at once.</li>'
+        +'<li><b>Maya reports back.</b> What people say and what to make next.</li>'
+      +'</ul>'
       +'<button class="ks-pill white ks-big" data-a="v-connect"><i></i>Connect your accounts</button>'
       +'<div class="row"><button class="ks-pill" data-a="v-drafts">Drafts only</button>'
       +'<button class="ks-pill white" data-a="v-start">'+ic('wand')+'Get Started</button></div></div>';
@@ -47132,7 +47176,7 @@ window.KovaCanvas=(function(){
     var signed=false; try{ signed=!!(window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){}
     var biz=''; try{ biz=String(((window.WorkOS&&WorkOS.all&&WorkOS.all())||{}).profile&&WorkOS.all().profile.business||''); }catch(e){}
     var br=[['Chat model',signed?'Claude, on the Kova server':'Sign in to use it'],['Memory',biz?'This post and '+biz.slice(0,24):'This post and your profile'],['Tool','Hashtags · checks · publish']];
-    return '<div class="ks-agent"><div class="ks-agn"><span class="ks-agi" aria-hidden="true">'+ic('ast')+'</span><div><b>AI Agent</b><small>Kova writer</small></div>'+(signed&&r.done>=2?'<span class="ks-agk" aria-label="Ready">'+ic('check')+'</span>':'')+'</div>'
+    return '<div class="ks-agent"><div class="ks-agn"><span class="ks-agi" aria-hidden="true">'+ic('kova')+'</span><div><b>AI Agent</b><small>Kova writer</small></div>'+(signed&&r.done>=2?'<span class="ks-agk" aria-label="Ready">'+ic('check')+'</span>':'')+'</div>'
       +'<svg class="ks-agw" viewBox="0 0 300 54" preserveAspectRatio="none" aria-hidden="true"><path d="M150 0 C150 28 50 20 50 54"/><path d="M150 0 L150 54"/><path d="M150 0 C150 28 250 20 250 54"/></svg>'
       +'<div class="ks-agb">'+br.map(function(b){ return '<div><b>'+b[0]+'</b><small>'+esc(b[1])+'</small></div>'; }).join('')+'</div></div>';
   }

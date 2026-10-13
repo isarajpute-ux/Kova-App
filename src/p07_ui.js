@@ -396,7 +396,8 @@ window.KovaCanvas=(function(){
 
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
-    ast:'<path d="M12 2.6v18.8M2.6 12h18.8M5.35 5.35l13.3 13.3M18.65 5.35L5.35 18.65" stroke-width="2.5"/>',
+    /* p27: Kova's own script K (the app icon), not the eight-armed sparkle that read as another brand's mark */
+    kova:'<path d="M8.2 6.1c.9-1.6 2.6-2.6 4.3-2.4M13.1 3.6C11.6 8.4 9.6 13.8 7.3 18.2c-.8 1.5-1.9 2.2-2.9 1.6M19.6 4.1c-1.6-.5-3.6.6-5.5 2.6-1.7 1.8-3.3 3.9-4.6 5.4M9.6 12c2.2-.3 3.5 1.1 4.1 3.4.6 2.4 1.8 4.4 4.3 3.6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
     chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
@@ -577,7 +578,7 @@ window.KovaCanvas=(function(){
     var p=P(), el=$('#ksTop'); if(!el||!p) return;
     var active=KPo.all().filter(function(x){ return x.status==='scheduled'||x.status==='publishing'||x.status==='uploading'; }).length;
     el.innerHTML=
-      '<button class="ks-mark" data-a="home" aria-label="Work OS home">'+ic('ast')+'</button>'
+      '<button class="ks-mark" data-a="home" aria-label="Work OS home">'+ic('kova')+'</button>'
       +'<div class="ks-tabs">'
         +'<button class="ks-tab doc" data-a="rename" title="Rename"><span>'+esc(p.title||'Untitled post')+'</span>'
           +'<i class="'+(p.status==='draft'?'':'saved')+'"></i></button>'
@@ -1272,9 +1273,14 @@ window.KovaCanvas=(function(){
     var anyLinked=KPo.ORDER.some(function(k){ return KPo.linkState(k)==='on'; });
     if(dismissed||KPo.all().some(function(x){ return (x.media||[]).length||x.status!=='draft'; })||anyLinked) return;
     var v=document.createElement('div'); v.className='ks-veil';
-    v.innerHTML='<div class="ks-start"><div class="ast">'+ic('ast')+'</div>'
-      +'<h3>Get started today</h3>'
-      +'<p>Drop in photos or clips, write it once, and send it to YouTube, Instagram, TikTok, LinkedIn and X.</p>'
+    v.innerHTML='<div class="ks-start"><div class="ast">'+ic('kova')+'</div>'
+      +'<h3>Your content, handled</h3>'
+      +'<ul class="ks-what">'
+        +'<li><b>Add your photos or clips.</b> Kova trims and fits them to every app.</li>'
+        +'<li><b>Your AI team writes it.</b> Caption, hashtags and a version per app.</li>'
+        +'<li><b>You tap post.</b> YouTube, Instagram, TikTok, LinkedIn and X at once.</li>'
+        +'<li><b>Maya reports back.</b> What people say and what to make next.</li>'
+      +'</ul>'
       +'<button class="ks-pill white ks-big" data-a="v-connect"><i></i>Connect your accounts</button>'
       +'<div class="row"><button class="ks-pill" data-a="v-drafts">Drafts only</button>'
       +'<button class="ks-pill white" data-a="v-start">'+ic('wand')+'Get Started</button></div></div>';
@@ -1334,7 +1340,7 @@ window.KovaCanvas=(function(){
     var signed=false; try{ signed=!!(window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){}
     var biz=''; try{ biz=String(((window.WorkOS&&WorkOS.all&&WorkOS.all())||{}).profile&&WorkOS.all().profile.business||''); }catch(e){}
     var br=[['Chat model',signed?'Claude, on the Kova server':'Sign in to use it'],['Memory',biz?'This post and '+biz.slice(0,24):'This post and your profile'],['Tool','Hashtags · checks · publish']];
-    return '<div class="ks-agent"><div class="ks-agn"><span class="ks-agi" aria-hidden="true">'+ic('ast')+'</span><div><b>AI Agent</b><small>Kova writer</small></div>'+(signed&&r.done>=2?'<span class="ks-agk" aria-label="Ready">'+ic('check')+'</span>':'')+'</div>'
+    return '<div class="ks-agent"><div class="ks-agn"><span class="ks-agi" aria-hidden="true">'+ic('kova')+'</span><div><b>AI Agent</b><small>Kova writer</small></div>'+(signed&&r.done>=2?'<span class="ks-agk" aria-label="Ready">'+ic('check')+'</span>':'')+'</div>'
       +'<svg class="ks-agw" viewBox="0 0 300 54" preserveAspectRatio="none" aria-hidden="true"><path d="M150 0 C150 28 50 20 50 54"/><path d="M150 0 L150 54"/><path d="M150 0 C150 28 250 20 250 54"/></svg>'
       +'<div class="ks-agb">'+br.map(function(b){ return '<div><b>'+b[0]+'</b><small>'+esc(b[1])+'</small></div>'; }).join('')+'</div></div>';
   }

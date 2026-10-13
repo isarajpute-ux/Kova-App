@@ -88,7 +88,7 @@ body.soft-light .ks-wave .r i{background:linear-gradient(90deg,rgba(255,255,255,
 body.soft-light .ks-wave .r i.d{background:rgb(255,255,255)}
 body.soft-light .ks-sugg .ks-pill{background:rgba(255,255,255,0.125);border-color:rgba(255,255,255,0.125)}
 body.soft-light .ks-start{background:linear-gradient(160deg,rgba(255,255,255,0.163),rgba(255,255,255,0.056) 60%,rgba(255,255,255,0.1));border:1px solid rgba(255,255,255,0.15);box-shadow:0 40px 90px rgba(0,0,0,0.385),inset 0 1px 0 rgba(255,255,255,.14)}
-body.soft-light .ks-start p{color:rgba(255,255,255,0.75)}
+body.soft-light .ks-start p,body.soft-light .ks-start .ks-what li{color:rgba(255,255,255,0.75)}
 body.soft-light .ks-start .row .ks-pill:not(.white){background:rgba(81,81,81,0.55);border-color:rgba(255,255,255,0.1)}
 body.soft-light .ks-drop-menu{background:rgba(92,92,92,0.97);border:1px solid rgba(255,255,255,0.1);box-shadow:0 30px 80px rgba(0,0,0,0.455)}
 body.soft-light .ks-qrow:hover{background:rgba(255,255,255,0.075)}
@@ -300,7 +300,8 @@ body.light-mode .ks-sugg .ks-pill{background:rgba(18,20,24,0.1);border-color:rgb
 body.light-mode .ks-start{background:linear-gradient(160deg,rgba(18,20,24,0.13),rgba(18,20,24,0.045) 60%,rgba(18,20,24,0.08));border:1px solid rgba(18,20,24,0.12);box-shadow:0 40px 90px rgba(40,44,54,0.22),inset 0 1px 0 rgba(255,255,255,0.7)}
 body.light-mode .ks-start .ast{color:rgb(18,18,18);filter:drop-shadow(0 0 16px rgba(24,26,30,0.158))}
 body.light-mode .ks-start h3{color:rgb(18,18,18)}
-body.light-mode .ks-start p{color:rgba(18,20,24,0.6)}
+body.light-mode .ks-start p,body.light-mode .ks-start .ks-what li{color:rgba(18,20,24,0.62)}
+body.light-mode .ks-start .ks-what b{color:rgb(18,18,18)}
 body.light-mode .ks-start .row .ks-pill:not(.white){background:rgba(245,245,245,0.55);border-color:rgba(18,20,24,0.08)}
 body.light-mode .ks-veil{background:radial-gradient(60% 60% at 50% 45%,rgba(40,44,54,0.14),rgba(40,44,54,0.32))}
 body.light-mode .ks-drop-menu{background:rgba(252,252,252,0.97);border:1px solid rgba(18,20,24,0.08);box-shadow:0 30px 80px rgba(40,44,54,0.26)}
