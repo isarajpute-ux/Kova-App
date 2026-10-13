@@ -912,6 +912,9 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .exp-btn.open .exp-chev{transform:rotate(180deg)}
 .exp-body{max-height:0;overflow:hidden;transition:max-height .34s cubic-bezier(.4,0,.2,1),opacity .24s;opacity:0}
 .exp-body.open{max-height:4000px;opacity:1;margin-top:8px}
+.kova-autosteps{margin:10px 0 4px;padding-left:20px;line-height:1.5}
+.kova-autosteps li{margin:0 0 5px}
+.kova-autosteps b{color:var(--txt,#FFFFFF);font-weight:600}
 /* the clip box has to leave room for the inner card's shadow, or the
    bottom edge reads as a hard cut when the panel is open */
 #sigWrap{margin-bottom:14px;padding-bottom:0;transition:padding-bottom .24s}
@@ -12780,6 +12783,38 @@ window.KovaHealth = (function(){
     return Math.round(total > 24 ? total : total * 60);
   }
 
+  /* "2026-10-13 07:02:11 -0700" -> ms (Safari will not parse it as is) */
+  function haeTime(x){
+    var m = String(x||'').match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}(?::\d{2})?)\s*(?:([+-])(\d{2}):?(\d{2})|Z)?$/);
+    if(!m) return NaN;
+    return Date.parse(m[1] + 'T' + m[2] + (m[3] ? m[3] + m[4] + ':' + m[5] : 'Z'));
+  }
+  function haeWhen(s){ return String((s && (s.date || s.endDate || s.startDate)) || ''); }
+
+  /* Summarize Data off: sleep arrives as stages (Core, REM, Deep, Asleep,
+     Awake, In Bed) with a start and an end. Last night = every asleep
+     stage that ended within 16 hours of the last one; overlapping stages
+     (a watch and a sleep app both writing) are counted once. */
+  function haeSleepNight(data){
+    var segs = [], end = 0;
+    data.forEach(function(s){
+      if(!s || !/^(core|rem|deep|asleep|unspecified)$/i.test(String(s.value||''))) return;
+      var a = haeTime(s.startDate), b = haeTime(s.endDate);
+      if(!(a < b)) return;
+      segs.push([a, b]); if(b > end) end = b;
+    });
+    segs = segs.filter(function(x){ return x[1] > end - 16 * 3600e3; })
+               .sort(function(x, y){ return x[0] - y[0]; });
+    var ms = 0, cs = -1, ce = -1;
+    segs.forEach(function(x){
+      if(x[0] > ce){ if(ce > cs) ms += ce - cs; cs = x[0]; ce = x[1]; }
+      else if(x[1] > ce) ce = x[1];
+    });
+    if(ce > cs) ms += ce - cs;
+    var min = Math.round(ms / 60000);
+    return min > 0 ? min : null;
+  }
+
   function haeDevice(metrics){
     for(var i=0;i<metrics.length;i++){
       var m = metrics[i];
@@ -12807,21 +12842,22 @@ window.KovaHealth = (function(){
       if(!field || !m.data || !m.data.length) return;
 
       var sorted = m.data.slice().sort(function(a,b){
-        return String((b&&b.date)||'').localeCompare(String((a&&a.date)||''));
+        return haeWhen(b).localeCompare(haeWhen(a));
       });
       var latest = sorted[0];
 
       if(field === 'sleep'){
-        var min = haeSleep(latest);
+        var staged = m.data.some(function(s){ return s && typeof s.value === 'string' && s.startDate; });
+        var min = staged ? haeSleepNight(m.data) : haeSleep(latest);
         if(min){ out.sleep = String(min); hit = true; }
         return;
       }
 
       if(HAE_CUMULATIVE[field]){
         /* daily totals: sum the latest day rather than take one sample */
-        var day = String((latest&&latest.date)||'').slice(0,10), sum = 0, got = false;
+        var day = haeWhen(latest).slice(0,10), sum = 0, got = false;
         m.data.forEach(function(s){
-          if(String((s&&s.date)||'').slice(0,10) !== day) return;
+          if(haeWhen(s).slice(0,10) !== day) return;
           var v = haeValue(s);
           if(v !== null){ sum += v; got = true; }
         });
@@ -30560,18 +30596,30 @@ window.KovaTalk=(function(){
       + '</div>'
       + '<div class="exp-body" id="kovaAdvWrap">'
       + '<div class="sub" style="margin-bottom:8px;line-height:1.5">'
-      + 'Skips steps 2 and 3 forever. Kova gives you a private sync address; paste it into '
-      + 'Health Auto Export (REST API automation, JSON) or your Shortcut\u2019s \u201cGet contents of URL\u201d '
-      + 'as a POST, and new readings arrive on their own. Treat the address like a password.'
+      + 'Skips steps 2 and 3 forever: your watch data arrives on its own, about every hour while your '
+      + 'phone is unlocked. It uses Health Auto Export\u2019s automations, which need that app\u2019s '
+      + 'Premium (free for 7 days). Kova gives you a private sync address; treat it like a password.'
       + '</div>'
       + '<div class="card syncbtn" data-act="relay" style="padding:10px 11px;cursor:pointer">'
       + '<div style="font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF)">'
       + (relayUrl ? 'Copy my sync address' : 'Get my sync address') + '</div>'
       + '<div class="sub" style="margin-top:3px;word-break:break-all">' + (relayUrl || 'Not set') + '</div></div>'
       + (relayUrl
-          ? '<div class="card syncbtn" data-act="pull" style="padding:10px 6px;margin-top:6px;text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF)">Sync now</div>'
+          ? '<ol class="sub kova-autosteps">'
+            + '<li>In Health Auto Export tap <b>Automations</b>, then <b>New Automation</b>, then <b>REST API</b>.</li>'
+            + '<li><b>URL</b>: paste your sync address.</li>'
+            + '<li><b>Data Type</b>: Health Metrics. Pick Sleep Analysis, Resting Heart Rate, Heart Rate Variability, '
+            + 'Step Count, Active Energy and Apple Exercise Time.</li>'
+            + '<li><b>Export Format</b> JSON, <b>Summarize Data</b> on, <b>Time Grouping</b> Day, <b>Date Range</b> Today.</li>'
+            + '<li><b>Sync Cadence</b>: every 1 hour. Turn the automation on.</li>'
+            + '<li>Tap <b>Manual Export</b> once, come back here and tap <b>Sync now</b>.</li>'
+            + '</ol>'
+            + '<div class="card syncbtn" data-act="pull" style="padding:10px 6px;margin-top:6px;text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF)">Sync now</div>'
           : '')
       + '<div class="card syncbtn" data-act="paste" style="padding:10px 6px;margin-top:6px;text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF)">Paste from clipboard</div>'
+      + (relayUrl
+          ? '<div class="card syncbtn" data-act="relaynew" style="padding:10px 6px;margin-top:6px;text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--txt,#FFFFFF)">Make a new address (the old one stops working)</div>'
+          : '')
       + '</div>'
 
       + '<div class="sub" style="margin-top:14px;line-height:1.5">'
@@ -30646,9 +30694,10 @@ window.KovaTalk=(function(){
     var head = fr === 'none' ? 'No watch data yet'
              : n + ' field' + (n === 1 ? '' : 's') + ' \u00b7 ' + KH.ageText();
     var sub  = fr === 'none'
-        ? 'Run the Kova Sync shortcut on your iPhone to send Apple Health data over.'
+        ? (KH.relay() ? 'Automatic sync is on. Waiting for the first send: in Health Auto Export tap Manual Export.'
+                      : 'Turn on Automatic sync under Watch, or bring in a Health Auto Export file.')
         : fr === 'fresh' ? 'Readings are current. Kova is showing your real numbers.'
-        : fr === 'aging' ? 'Getting old. Run the shortcut again for a current picture.'
+        : fr === 'aging' ? (KH.relay() ? 'Getting old. Unlock your phone or open Health Auto Export so it can send.' : 'Getting old. Export again for a current picture.')
         : 'Stale. These numbers are old enough to be misleading.';
 
     return '<div class="card" id="kovaSyncCard" style="padding:12px 13px;margin-bottom:8px;border-color:'
@@ -30662,7 +30711,7 @@ window.KovaTalk=(function(){
       + '<div style="display:flex;gap:6px;margin-top:10px">'
       + '<div class="card syncbtn" data-act="paste" style="flex:1;padding:8px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--txt,#FFFFFF)">Paste sync</div>'
       + '<div class="card syncbtn" data-act="pull"  style="flex:1;padding:8px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--txt,#FFFFFF)">Pull now</div>'
-      + '<div class="card syncbtn" data-act="relay" style="flex:1;padding:8px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--txt,#FFFFFF)">Relay</div>'
+      + '<div class="card syncbtn" data-act="relay" style="flex:1;padding:8px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--txt,#FFFFFF)">Auto sync</div>'
       + '</div></div>';
   }
 
@@ -30670,7 +30719,7 @@ window.KovaTalk=(function(){
     var t = document.createElement('div');
     t.className = 'kova-sync-toast';
     t.style.cssText = 'position:fixed;bottom:96px;left:50%;transform:translateX(-50%);'
-      + 'background:rgba(20,20,22,.94);color:var(--ink-1,#FFF);font-size:11.5px;padding:8px 15px;'
+      + 'background:rgba(20,20,22,.94);color:#FFFFFF;font-size:11.5px;padding:8px 15px;'
       + 'border-radius:100px;z-index:99999;pointer-events:none;backdrop-filter:blur(12px);'
       + 'white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.5)';
     t.textContent = msg;
@@ -30699,23 +30748,56 @@ window.KovaTalk=(function(){
                 : n === 0 ? 'No new readings on the server yet' : 'Kova server unreachable');
         if(n > 0) paintConnect();
       });
-    }else if(act === 'relay'){
-      /* the address comes from the Kova server, tied to this account */
+    }else if(act === 'relay' || act === 'relaynew'){
+      /* the address comes from the Kova server, tied to this account, so
+         it needs a real sign-in (a guest address would be lost later) */
       if(!window.KovaLink){ syncToast('Sync server unavailable'); return; }
-      syncToast('Getting your sync address\u2026');
-      KovaLink.healthUrl(false).then(function(url){
-        if(!url){ syncToast('Could not reach the Kova server'); return; }
-        var copied = navigator.clipboard && navigator.clipboard.writeText
-          ? navigator.clipboard.writeText(url).then(function(){ return true; }, function(){ return false; })
-          : Promise.resolve(false);
-        copied.then(function(ok){
-          if(!ok) prompt('Your private sync address. Copy it into Health Auto Export or your Shortcut:', url);
-          else syncToast('Sync address copied');
-          paintConnect();
-          if(window.__watchSetup && document.getElementById('kovaAdvWrap')) try{ __watchSetup(); }catch(e){}
-        });
+      var CA = window.KovaCloudAuth, st = CA && CA.status ? CA.status() : null;
+      if(!st || !st.signedIn || st.anon){
+        syncToast('Sign in first, so the address is tied to your account');
+        if(CA && CA.open) CA.open({mode:'in'});
+        return;
+      }
+      var fresh = act === 'relaynew';
+      if(fresh && !confirm('Make a new sync address? The old one stops working, so paste the new one into Health Auto Export.')) return;
+      var have = fresh ? '' : KH.relay();
+      if(!have) syncToast('Getting your sync address\u2026');
+      var urlP = have ? Promise.resolve(have) : KovaLink.healthUrl(fresh);
+      Promise.all([urlP, copyAddress(have, urlP)]).then(function(r){
+        var url = r[0];
+        if(!url){ syncToast('The Kova server did not answer. Try again in a minute.'); return; }
+        if(r[1]) syncToast(fresh ? 'New address copied. Paste it into Health Auto Export' : 'Sync address copied');
+        else prompt('Your private sync address. Copy it into Health Auto Export:', url);
+        paintConnect();
+        if(window.__watchSetup && document.getElementById('kovaAdvWrap')) try{
+          __watchSetup();
+          setTimeout(function(){
+            var w = document.getElementById('kovaAdvWrap'), c = document.getElementById('kovaAdvChev');
+            if(w) w.classList.add('open'); if(c) c.style.transform = 'rotate(180deg)';
+          }, 70);
+        }catch(e){}
       });
     }
+  }
+
+  /* Safari only lets a page copy during the tap itself. A known address is
+     copied at once; a new one goes through a ClipboardItem that waits for
+     the server, which Safari and Chrome both accept. false = could not copy
+     (the caller then shows the address in a box to copy by hand). */
+  function copyAddress(now, later){
+    var C = navigator.clipboard;
+    var yes = function(){ return true; }, no = function(){ return false; };
+    try{
+      if(now && C && C.writeText) return C.writeText(now).then(yes, no);
+      if(window.ClipboardItem && C && C.write){
+        return C.write([new ClipboardItem({'text/plain': later.then(function(u){
+          if(!u) throw new Error('no address');
+          return new Blob([u], {type:'text/plain'});
+        })})]).then(yes, no);
+      }
+      if(C && C.writeText) return later.then(function(u){ return u ? C.writeText(u).then(yes, no) : false; });
+    }catch(e){}
+    return Promise.resolve(false);
   }
 
   function paintConnect(){

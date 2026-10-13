@@ -59,6 +59,37 @@ function haeSleep(s) {
   return Math.round(total > 24 ? total : total * 60);
 }
 
+/* "2026-10-13 07:02:11 -0700" -> ms */
+function haeTime(x) {
+  const m = String(x || '').match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}(?::\d{2})?)\s*(?:([+-])(\d{2}):?(\d{2})|Z)?$/);
+  if (!m) return NaN;
+  return Date.parse(m[1] + 'T' + m[2] + (m[3] ? m[3] + m[4] + ':' + m[5] : 'Z'));
+}
+const haeWhen = (s) => String((s && (s.date || s.endDate || s.startDate)) || '');
+
+/* Summarize Data off: sleep arrives as stages (Core, REM, Deep, Asleep,
+   Awake, In Bed) with a start and an end. Last night = every asleep stage
+   that ended within 16 hours of the last one; overlapping stages (a watch
+   and a sleep app both writing) are counted once. */
+function haeSleepNight(data) {
+  let segs = [], end = 0;
+  for (const s of data) {
+    if (!s || !/^(core|rem|deep|asleep|unspecified)$/i.test(String(s.value || ''))) continue;
+    const a = haeTime(s.startDate), b = haeTime(s.endDate);
+    if (!(a < b)) continue;
+    segs.push([a, b]); if (b > end) end = b;
+  }
+  segs = segs.filter((x) => x[1] > end - 16 * 3600e3).sort((x, y) => x[0] - y[0]);
+  let ms = 0, cs = -1, ce = -1;
+  for (const x of segs) {
+    if (x[0] > ce) { if (ce > cs) ms += ce - cs; cs = x[0]; ce = x[1]; }
+    else if (x[1] > ce) ce = x[1];
+  }
+  if (ce > cs) ms += ce - cs;
+  const min = Math.round(ms / 60000);
+  return min > 0 ? min : null;
+}
+
 function haeDevice(metrics) {
   for (const m of metrics) {
     if (!m || !m.data) continue;
@@ -80,20 +111,20 @@ function normalizeHAE(payload) {
   for (const m of metrics) {
     const field = haeField(m && m.name);
     if (!field || !Array.isArray(m.data) || !m.data.length) continue;
-    const sorted = m.data.slice().sort((a, b) =>
-      String((b && b.date) || '').localeCompare(String((a && a.date) || '')));
+    const sorted = m.data.slice().sort((a, b) => haeWhen(b).localeCompare(haeWhen(a)));
     const latest = sorted[0];
     if (field === 'sleep') {
-      const min = haeSleep(latest);
+      const staged = m.data.some((s) => s && typeof s.value === 'string' && s.startDate);
+      const min = staged ? haeSleepNight(m.data) : haeSleep(latest);
       if (min) out.sleep = String(min);
       continue;
     }
     if (CUMULATIVE[field]) {
       // daily totals: sum the latest day rather than take one sample
-      const day = String((latest && latest.date) || '').slice(0, 10);
+      const day = haeWhen(latest).slice(0, 10);
       let sum = 0, got = false;
       for (const s of m.data) {
-        if (String((s && s.date) || '').slice(0, 10) !== day) continue;
+        if (haeWhen(s).slice(0, 10) !== day) continue;
         const v = haeValue(s);
         if (v !== null) { sum += v; got = true; }
       }
