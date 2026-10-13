@@ -3,7 +3,7 @@
 #kova-auth-modal{position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:24px 16px;overflow-y:auto;
   background:radial-gradient(ellipse 130% 95% at 50% -6%,#0B0B0C 0%,#050506 52%,#040003 100%)!important;font-family:'Outfit',sans-serif;color:#F3F4F7}
 .ksi{width:360px;max-width:100%;margin:auto;display:flex;flex-direction:column;align-items:stretch;gap:14px}
-.ksi-brand{text-align:center;font-size:30px;font-weight:300;letter-spacing:-.03em}
+.ksi-brand{text-align:center;font-size:28px;font-weight:600;letter-spacing:-.03em}
 .ksi-card{display:flex;flex-direction:column;padding:20px;border-radius:22px;background:rgba(255,255,255,.045);border:.5px solid rgba(255,255,255,.10);
   backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
 .ksi-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:13px;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.10);margin-bottom:16px}

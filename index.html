@@ -13,6 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="Kova"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="apple-touch-icon" href="icon-180.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
 <script>
 /* Service worker: offline shell + it is the only storage that iOS shares
@@ -7516,7 +7517,7 @@ body.soft-light .kb-thumbs img{border-color:#4E4A55}
 #kova-auth-modal{position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;flex-direction:column;padding:24px 16px;overflow-y:auto;
   background:radial-gradient(ellipse 130% 95% at 50% -6%,#0B0B0C 0%,#050506 52%,#040003 100%)!important;font-family:'Outfit',sans-serif;color:#F3F4F7}
 .ksi{width:360px;max-width:100%;margin:auto;display:flex;flex-direction:column;align-items:stretch;gap:14px}
-.ksi-brand{text-align:center;font-size:30px;font-weight:300;letter-spacing:-.03em}
+.ksi-brand{text-align:center;font-size:28px;font-weight:600;letter-spacing:-.03em}
 .ksi-card{display:flex;flex-direction:column;padding:20px;border-radius:22px;background:rgba(255,255,255,.045);border:.5px solid rgba(255,255,255,.10);
   backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.07)}
 .ksi-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:13px;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.10);margin-bottom:16px}
@@ -39095,8 +39096,12 @@ body.light-mode .usual{background:rgba(28,26,23,.04);border-color:rgba(28,26,23,
 
 .af-h{font-family:Outfit,sans-serif;font-size:26px;font-weight:600;letter-spacing:-.02em;
   line-height:1.22;color:var(--txt,#FFFFFF);margin-bottom:26px}
-.af-mark{font-family:Outfit,sans-serif;font-size:19px;font-weight:500;font-style:italic;
+.af-mark{font-family:Outfit,sans-serif;font-size:19px;font-weight:600;
   letter-spacing:-.02em;color:var(--txt,#FFFFFF);margin-bottom:14px}
+/* p27: Kova's mark (the cut K and its dot, brand/kova-mark.svg) before the word */
+.af-mark,.ksi-brand{display:flex;align-items:center;justify-content:center;gap:.3em;text-transform:lowercase}
+.af-mark::before,.ksi-brand::before{content:'';width:1.1em;height:1.1em;flex-shrink:0;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(-2 0)' fill='%23000'%3E%3Cpath d='M12 10h21v34l33-34h26L33 70v20H12z'/%3E%3Ccircle cx='74' cy='76' r='14'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(-2 0)' fill='%23000'%3E%3Cpath d='M12 10h21v34l33-34h26L33 70v20H12z'/%3E%3Ccircle cx='74' cy='76' r='14'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
 
 /* six code boxes */
 .auth-inner.af-in{animation:afIn .38s cubic-bezier(.2,.8,.2,1)}
@@ -46232,8 +46237,8 @@ window.KovaCanvas=(function(){
 
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
-    /* p27: Kova's own script K (the app icon), not the eight-armed sparkle that read as another brand's mark */
-    kova:'<path d="M8.2 6.1c.9-1.6 2.6-2.6 4.3-2.4M13.1 3.6C11.6 8.4 9.6 13.8 7.3 18.2c-.8 1.5-1.9 2.2-2.9 1.6M19.6 4.1c-1.6-.5-3.6.6-5.5 2.6-1.7 1.8-3.3 3.9-4.6 5.4M9.6 12c2.2-.3 3.5 1.1 4.1 3.4.6 2.4 1.8 4.4 4.3 3.6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    /* p27: Kova's mark, the cut K and its dot (brand/kova-mark.svg), not the eight-armed sparkle that read as another brand's mark */
+    kova:'<g transform="scale(.24) translate(-2 0)" fill="currentColor" stroke="none"><path d="M12 10h21v34l33-34h26L33 70v20H12z"/><circle cx="74" cy="76" r="14"/></g>',
     chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',

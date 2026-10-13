@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
 const FILES = ['book.html', 'privacy.html', 'terms.html', 'refunds.html', 'cookies.html', 'licenses.html', 'recipes.json', 'sw.js', 'manifest.webmanifest', '_redirects',
-  'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png'];
+  'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png', 'icon-32.png'];
 const JS_TYPES = /^(|text\/javascript|application\/javascript|module)$/i;
 /* after the first screen: the Work OS team and traction, and the p14
    pieces nothing on the first screen needs (the scanner's body read, the

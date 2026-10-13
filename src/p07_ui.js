@@ -396,8 +396,8 @@ window.KovaCanvas=(function(){
 
   /* ---- icons: thin rounded strokes, the reference's weight ---- */
   var IC={
-    /* p27: Kova's own script K (the app icon), not the eight-armed sparkle that read as another brand's mark */
-    kova:'<path d="M8.2 6.1c.9-1.6 2.6-2.6 4.3-2.4M13.1 3.6C11.6 8.4 9.6 13.8 7.3 18.2c-.8 1.5-1.9 2.2-2.9 1.6M19.6 4.1c-1.6-.5-3.6.6-5.5 2.6-1.7 1.8-3.3 3.9-4.6 5.4M9.6 12c2.2-.3 3.5 1.1 4.1 3.4.6 2.4 1.8 4.4 4.3 3.6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    /* p27: Kova's mark, the cut K and its dot (brand/kova-mark.svg), not the eight-armed sparkle that read as another brand's mark */
+    kova:'<g transform="scale(.24) translate(-2 0)" fill="currentColor" stroke="none"><path d="M12 10h21v34l33-34h26L33 70v20H12z"/><circle cx="74" cy="76" r="14"/></g>',
     chart:'<path d="M5 19v-5M10 19V9M15 19v-7M20 19V5"/>',
     search:'<circle cx="10.5" cy="10.5" r="6.6"/><path d="M20 20l-4.7-4.7"/>',
     dots:'<circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
