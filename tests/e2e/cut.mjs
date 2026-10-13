@@ -14,6 +14,15 @@ const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'ks.started': 'true', 'kova.
 const { context, page, pageErrors } = await openPage(b, null, { storage: STORE, viewport: { width: 390, height: 844 } });
 await page.goto(site.url + '/index.html', { waitUntil: 'load' });
 await page.waitForFunction(() => window.KovaCut && window.KovaCanvas, null, { timeout: 30000 });
+/* the editor records and saves with MediaRecorder. Safari on iPhone has
+   it (iOS 14.3+), but some WebKit builds for Linux (GitHub's runners) do
+   not: there the test cannot even make its clips, so it says so plainly
+   instead of failing, and still runs in full everywhere else (p27) */
+if (!(await page.evaluate(() => typeof MediaRecorder !== 'undefined'))) {
+  console.log('SKIP this browser build has no MediaRecorder, so nothing can be recorded or saved here (Safari on iPhone has it). The editor is tested in full in Chromium.');
+  console.log('::notice title=Video editor in this WebKit build::skipped: no MediaRecorder in this build');
+  await context.close(); await b.close(); site.close(); process.exit(0);
+}
 await page.evaluate(() => { KP.set('tourSeen', true); go('workstudio'); });   /* the once-ever walkthrough would open over it */
 await page.waitForTimeout(800);
 /* two short clips with sound, recorded right here, and a song */

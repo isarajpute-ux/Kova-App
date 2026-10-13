@@ -29,8 +29,10 @@ function boot(opts) {
   w.fetch = () => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({}), text: () => Promise.resolve('') });
   const P = (id, price) => ({ identifier: id, packageType: 'CUSTOM', webBillingProduct: { currentPrice: { formattedPrice: price } } });
   const pk = [P('health_year', '€49.99'), P('health_month', '€8.99'), P('health_train_year', '€74.99'), P('health_train_month', '€12.99'), P('health_work_year', '€94.99'), P('health_work_month', '€15.99'), P('all_year', '€109.99'), P('all_month', '€17.99')];
-  const rc = { purchases: [] };
+  /* rc.set(): what the store says you own, so the app's own re-check
+     (5 s after opening) agrees with the plan the test just applied */
   let active = null;
+  const rc = { purchases: [], set: (a) => { active = a; } };
   const ci = () => ({ managementURL: 'x', entitlements: { active: active || {} } });
   const inst = {
     getOfferings: () => Promise.resolve({ current: { availablePackages: pk } }),
@@ -94,6 +96,7 @@ function boot(opts) {
 
   /* what is in the plan */
   const until = new Date(Date.now() + 20 * DAY);
+  B.rc.set({ health: { periodType: 'NORMAL', willRenew: true, expirationDate: until } });
   B.w.KovaBilling._take({ managementURL: 'x', entitlements: { active: { health: { periodType: 'NORMAL', willRenew: true, expirationDate: until } } } });
   ck('a Health plan has Health, not Training or Work', B.w.KovaBilling.has('health') && !B.w.KovaBilling.has('train') && !B.w.KovaBilling.has('work') && B.w.KovaBilling.planName() === 'Health');
   B.w.go('move'); await wait(60);
@@ -103,6 +106,7 @@ function boot(opts) {
   if (start) start.click(); await wait(200);
   ck('starting a workout without Training opens the plans with Training ticked and Work not', B.doc.getElementById('s-plan').classList.contains('on')
     && B.doc.querySelector('[data-add="train"]').getAttribute('aria-checked') === 'true' && B.doc.querySelector('[data-add="work"]').getAttribute('aria-checked') === 'false');
+  B.rc.set({ kova_pro: { periodType: 'TRIAL', willRenew: true, expirationDate: until } });
   B.w.KovaBilling._take({ managementURL: 'x', entitlements: { active: { kova_pro: { periodType: 'TRIAL', willRenew: true, expirationDate: until } } } });
   B.w.go('move'); await wait(60);
   ck('the old single entitlement (kova_pro) still means everything, and the card goes', B.w.KovaBilling.has('work') && B.w.KovaBilling.has('train') && !B.doc.querySelector('#s-move .kbl'));
