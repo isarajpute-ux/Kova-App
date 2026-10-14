@@ -47,7 +47,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   /* swimming: the week, in lengths, with drills explained */
   quiz('swimming'); w.go('move'); await wait(150);
   const slot = $('#goalSlot').textContent;
-  ck('Workout says what it is built around', /Built around/i.test(slot) && /Swim stronger/.test(slot));
+  ck('Workout says what it is built around', /Built around/i.test(slot) && /Swimming/.test(slot));
   ck('Train, Eat and Sleep each say what swimming asks of them', /swims \+ \d gym days/.test(slot) && /Carbs before swims/.test(slot) && /8–9 hours/.test(slot));
   ck('the swims are written out with distances in lengths', doc.querySelectorAll('#goalSlot .kg-ses').length >= 4 && /\d+ lengths/.test(slot) && /Threshold/.test(slot) && /Technique/.test(slot));
   click([...doc.querySelectorAll('#goalSlot .kg-ses')].find((b) => /Technique/.test(b.textContent))); await wait(60);
@@ -92,7 +92,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
 
   /* Fuel and Sleep follow the goal, with your own numbers */
   quiz('swimming'); w.go('fuel'); await wait(150);
-  ck('Fuel says what swimming asks of food, with protein in grams from your weight', /Swim stronger/i.test($('#goalFuel').textContent) && /Carbs before swims/.test($('#goalFuel').textContent) && /115–145 g protein a day/.test($('#goalFuel').textContent));
+  ck('Fuel says what swimming asks of food, with protein in grams from your weight', /Swimming/i.test($('#goalFuel').textContent) && /Carbs before swims/.test($('#goalFuel').textContent) && /115–145 g protein a day/.test($('#goalFuel').textContent));
   w.go('sleep'); await wait(150);
   ck('Sleep says the hours swimming needs and waits for real nights before comparing', /8–9 hours a night/.test($('#goalSleep').textContent) && /once your watch sends three/.test($('#goalSleep').textContent));
   for (let d = 1; d <= 4; d++) w.KovaSleepLog.record({ t: Date.now() - d * 864e5, mins: 400 });
@@ -120,7 +120,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   pick(/Lat pulldown/); await wait(80);
   const rx = ($('#mcResult .kg-rx') || {}).textContent || '';
   const PG = w.KovaPlan.goals.swimming.rep.comp;
-  ck('Lat pulldown for a swimmer: sets, reps and rest from the goal', /For your goal: Swim stronger/.test(rx) && new RegExp('REPS' + PG[0] + '-' + PG[1]).test(rx.replace(/\s+/g, '')) && /SETS3/.test(rx.replace(/\s+/g, '')) && /REST1–1.5min/.test(rx.replace(/\s+/g, '')));
+  ck('Lat pulldown for a swimmer: sets, reps and rest from the goal', /For your goal: Swimming/.test(rx) && new RegExp('REPS' + PG[0] + '-' + PG[1]).test(rx.replace(/\s+/g, '')) && /SETS3/.test(rx.replace(/\s+/g, '')) && /REST1–1.5min/.test(rx.replace(/\s+/g, '')));
   ck('…and why it matters: it is the swimming pull', /This is the swimming pull/.test(rx));
   click($('#mcAdd')); await wait(30);
   ck('with no plan yet, Add says to build one first', /Build your plan first/.test(toasts[toasts.length - 1] || ''));

@@ -41,7 +41,7 @@ const { window } = dom;
 
 // minimal firebase stub: signed in. The fake api records each upload part.
 const uploads = [];
-let failNext = false;
+let failNext = 0;
 const me = { uid: 'u1', email: 'a@b.c', getIdToken: () => Promise.resolve('tok') };
 window.firebase = {
   initializeApp() {}, apps: [{}],
@@ -69,7 +69,7 @@ window.fetch = (u, o = {}) => {
     const q = new URL(u).searchParams;
     const path = 'users/u1/' + q.get('kind') + '/' + q.get('id') + '.' + q.get('ext');
     uploads.push({ path, type: q.get('type'), i: +q.get('i'), n: +q.get('n'), auth: (o.headers || {}).Authorization });
-    if (failNext) { failNext = false; return Promise.reject(new TypeError('network request failed')); }
+    if (failNext > 0) { failNext--; return Promise.reject(new TypeError('network request failed')); }
     const last = +q.get('i') === +q.get('n') - 1;
     const body = last
       ? { ok: true, path, url: 'https://kova.local/api/media/file?p=' + encodeURIComponent(path) + '&e=0&s=sig', bytes: 2, type: q.get('type') }
@@ -114,8 +114,9 @@ setTimeout(() => {
       ck('index records the signed link', idx[0] && /\/api\/media\/file\?p=users%2Fu1%2F/.test(idx[0].url));
       ck('index is filterable by kind', window.KovaMedia.indexed('form').length === 1);
 
-      // failure must not throw and must report honestly
-      failNext = true;
+      // failure must not throw and must report honestly (each part gets one
+      // retry, so the connection is down for both tries)
+      failNext = 2;
       let seen = null;
       return window.KovaMedia.attach('food', 'data:image/jpeg;base64,BBBB', {
         name: 'x.jpg', onState: (st, msg) => { if (st === 'error') seen = msg; },

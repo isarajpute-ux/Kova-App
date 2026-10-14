@@ -90,6 +90,22 @@ function fakeSupa(opt) {
     let bad = ''; try { makeSupaStore({ url: 'abcd.supabase.co', key: KEY }); } catch (e) { bad = e.message; }
     ck('supa: a URL without https:// is caught with a plain message', /must look like https:\/\/abcd\.supabase\.co/.test(bad));
   }
+  /* a phone video in parts: the last part checks the others with one
+     listing, it never downloads them again (that ran out of time) */
+  {
+    const S = fakeSupa();
+    const M = makeMedia({ store: makeSupaStore({ url: URL0, key: KEY, fetch: S.f }), secret: 's', base: 'https://x/api' });
+    const q = (i, n, id) => ({ kind: 'form', id: id || 'vid1', ext: 'mp4', i, n, type: 'video/mp4' });
+    await M.putPart('u1', q(0, 3), Buffer.alloc(CH, 1));
+    await M.putPart('u1', q(1, 3), Buffer.alloc(CH, 2));
+    const before = S.log.length;
+    const r = await M.putPart('u1', q(2, 3), Buffer.from('end'));
+    const lastCalls = S.log.slice(before);
+    ck('media: a 3-part video becomes one file', r.ok && r.bytes === 2 * CH + 3 && /users\/u1\/form\/vid1\.mp4/.test(r.path));
+    ck('media: the last part never downloads the earlier parts again', !lastCalls.some((l) => l.m === 'GET' && /::[01]$/.test(decodeURIComponent(l.p))));
+    let miss = null; try { await M.putPart('u1', q(1, 2, 'vid2'), Buffer.from('x')); } catch (e) { miss = e; }
+    ck('media: a missing part is still caught (409, send it again)', miss && miss.status === 409 && /Part 1 of 2 is missing/.test(miss.message));
+  }
   {
     const S = fakeSupa({ needBearer: true });
     const st = makeSupaStore({ url: URL0, key: KEY, fetch: S.f });

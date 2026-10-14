@@ -260,11 +260,25 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   type(q, 'send the deck'); await wait(10);
   ck('finds the task', K._S.rows.some((r) => r.kind === 'task' && r.t === 'Send the deck (Sam)'));
   type(q, 'ravi'); await wait(10);
-  ck('finds the teammate', K._S.rows.some((r) => r.kind === 'mate' && r.t === 'Ravi'));
+  ck('finds the teammate', K._S.rows.some((r) => r.kind === 'mate' && /^Ravi\b/.test(r.t)));
   type(q, 'zapier'); await wait(10);
   ck('finds the app guide', K._S.rows.some((r) => r.kind === 'app' && r.t === 'Zapier'));
   type(q, 'slep'); await wait(10);
   ck('letters in order still find a screen ("slep" -> Sleep)', K._S.rows.some((r) => r.kind === 'screen' && r.t === 'Sleep') || K._S.rows.some((r) => r.t === 'Sleep sounds'));
+  /* p30: everyday questions land somewhere, never "nothing found" */
+  const first = (t) => { type(q, t); return K._S.rows.filter((r) => r.kind === 'screen')[0] || {}; };
+  type(q, "where's my calories"); await wait(10);
+  ck('"where\'s my calories" goes to Fuel first, and is not turned into a task', K._S.rows[0].t === 'Fuel' && !K._S.rows.some((r) => r.key === 'do:task'));
+  ck('"where is my eating" finds Fuel', first('where is my eating').t === 'Fuel');
+  ck('a typo still lands: "calroies" finds Fuel', first('calroies').t === 'Fuel');
+  ck('"how do I change to dark mode" finds Settings', first('how do I change to dark mode').t === 'Settings');
+  ck('"I\'m tired" finds Sleep, "my macros" finds Fuel, "post to tiktok" finds Studio-side work', first("I'm tired").t === 'Sleep' && first('my macros').t === 'Fuel');
+  type(q, 'nutrition coach'); await wait(10);
+  ck('"nutrition coach" finds the Nutrition Coach first, and Enter does not make a task', /Nutrition Coach/.test(K._S.rows[0].t) && K._S.rows[0].kind === 'mate' && K._S.rows.findIndex((r) => r.key === 'do:task') !== 0);
+  ck('"fuel coach" and "my nutritionist" find them too', (type(q, 'fuel coach'), /Nutrition Coach/.test(K._S.rows[0].t)) && (type(q, 'my nutritionist'), K._S.rows.some((r) => /Nutrition Coach/.test(r.t))));
+  ck('"call the bank tomorrow" is still a task first', (type(q, 'call the bank tomorrow'), K._S.rows[0].key === 'do:task'));
+  type(q, 'xqzzv blorp'); await wait(10);
+  ck('nothing close: it still offers places to go ("Did you mean") and Ask Kova, never an empty list', K._S.rows.some((r) => r.group === 'Did you mean') && K._S.rows.some((r) => r.key === 'do:kova') && !/Nothing found/.test($('#kcmdL').textContent));
   type(q, 'meet'); await wait(10);
   key(q, 'ArrowDown'); key(q, 'ArrowDown'); await wait(5);
   ck('arrow keys move the selection', K._S.sel === 2 && !!$('#kcmdL .kcmd-r.on'));

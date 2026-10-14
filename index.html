@@ -3184,7 +3184,10 @@ window.KOVA_RC = window.KOVA_RC || { web: '', ios: '', android: '', entitlement:
 
 window.KOVA_FB_CONFIG = {
   apiKey: "AIzaSyDJYGzllOsNlKu5utIaZ93cJxeLKjo64mk",
-  authDomain: "kova-ee9d5.firebaseapp.com",
+  /* Google sign-in comes back to this site itself (vercel.json passes
+     /__/auth to Firebase). Coming back to firebaseapp.com instead is what
+     Safari blocks, which left people signed out on the home screen. */
+  authDomain: /^kovactive\.vercel\.app$/.test(location.hostname) ? location.hostname : "kova-ee9d5.firebaseapp.com",
   databaseURL: "https://kova-ee9d5-default-rtdb.firebaseio.com",
   projectId: "kova-ee9d5",
   storageBucket: "kova-ee9d5.firebasestorage.app",
@@ -3510,145 +3513,7 @@ window.KovaCloud = (function(){
   };
 })();
 
-/* =================================================================
-   KovaMedia - file storage for the things that are not JSON:
-   form-check videos, food photos, machine/equipment scans, avatars.
-   These are far too big for the realtime db, which is why they get
-   their own path and why only the resulting URL goes in the store.
 
-   Files go to the Kova api (/media/upload, Netlify Blobs on the free
-   plan) in 3 MB parts, because a function takes at most 6 MB per
-   request. Firebase Storage needs the paid Blaze plan since Feb 2026,
-   so it is no longer used.
-   ================================================================= */
-window.KovaMedia = (function(){
-  function uid(){
-    try { return (KOVA_FB.auth && KOVA_FB.auth.currentUser && KOVA_FB.auth.currentUser.uid) || null; }
-    catch(e){ return null; }
-  }
-  /* Blob | File | dataURL -> Blob, since the camera module hands back a
-     data URL and the file inputs hand back a File. */
-  function toBlob(x){
-    if (x instanceof Blob) return Promise.resolve(x);
-    if (typeof x === 'string' && x.indexOf('data:') === 0) {
-      return fetch(x).then(function(r){ return r.blob(); });
-    }
-    return Promise.reject(new Error('unsupported media type'));
-  }
-  return {
-    /* kind: 'form' | 'food' | 'machine' | 'avatar' | 'doc' | 'post' | 'lab' */
-    CHUNK: 3 * 1024 * 1024,
-    MAX: 120 * 1024 * 1024,
-    upload: function(kind, data, name, onProgress){
-      var self = this;
-      if (!window.KovaLink) return Promise.reject(new Error('storage unavailable'));
-      return toBlob(data).then(function(blob){
-        if (blob.size > self.MAX) throw new Error('That file is over 120 MB.');
-        var ext  = (name && name.indexOf('.') > 0) ? name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)
-                 : (blob.type.indexOf('video') === 0 ? 'mp4' : 'jpg');
-        if (ext.length < 2) ext = 'bin';
-        var id = Date.now() + '' + Math.floor(Math.random()*1000);
-        var n = Math.max(1, Math.ceil(blob.size / self.CHUNK)), i = 0;
-        function one(){
-          var part = blob.slice(i * self.CHUNK, Math.min(blob.size, (i + 1) * self.CHUNK));
-          var q = '/media/upload?kind=' + encodeURIComponent(kind) + '&id=' + id + '&ext=' + ext +
-                  '&i=' + i + '&n=' + n + '&type=' + encodeURIComponent(blob.type || '');
-          return KovaLink.authFetch(q, { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: part })
-            .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
-              if (!r.ok) throw new Error(j.error || ('upload failed (' + r.status + ')'));
-              i++;
-              if (onProgress) onProgress(i / n);
-              if (i < n) return one();
-              KovaAnalytics.track('media_upload', { kind: kind, bytes: blob.size });
-              return { url: j.url, path: j.path, bytes: j.bytes || blob.size, type: blob.type };
-            }); });
-        }
-        return one();
-      });
-    },
-    /* attach() is what the capture points actually call.
-
-       Rules it follows, because media upload must never be allowed to
-       break the feature it belongs to:
-         - it NEVER blocks. Form-check analysis, machine ident and food
-           logging all run locally and are already done by the time this
-           starts; the upload rides along behind them.
-         - a failure is reported once, quietly, and the local result is
-           untouched. Being offline in a gym is the normal case here,
-           not the exception.
-         - every successful upload is indexed in KP under 'media', which
-           rides the existing sync layer - so the LIST of your clips
-           reaches your other devices even before the files are opened
-           there.
-
-       kind: 'form' | 'food' | 'machine' | 'avatar' | 'doc' */
-    attach: function(kind, data, opts){
-      opts = opts || {};
-      var self = this;
-      var label = opts.name || (kind + ' file');
-
-      /* Signed out or backend down: say so once, do not pretend. A
-         silent no-op here is how someone loses a month of clips and
-         only finds out when they change phone. */
-      var u = null;
-      try { u = KOVA_FB.auth && KOVA_FB.auth.currentUser; } catch(e){}
-      if (!u || !window.KovaLink) {
-        if (opts.onState) opts.onState('local', 'Saved on this device only');
-        return Promise.resolve(null);
-      }
-
-      if (opts.onState) opts.onState('uploading', 'Uploading\u2026');
-
-      return this.upload(kind, data, opts.name, function(frac){
-        if (opts.onState) opts.onState('uploading',
-          'Uploading ' + Math.round(frac * 100) + '%');
-      }).then(function(res){
-        /* index it so it is findable later and syncs as data */
-        try {
-          var idx = (window.KP && KP.get('media')) || [];
-          idx.push({
-            kind: kind, url: res.url, path: res.path,
-            name: label, at: Date.now(), bytes: res.bytes, ref: opts.ref || null
-          });
-          /* cap the index, not the bucket - the files stay, only the
-             local list is trimmed so the synced key cannot grow forever */
-          if (idx.length > 300) idx = idx.slice(-300);
-          if (window.KP) KP.set('media', idx);
-        } catch(e){}
-        if (opts.onState) opts.onState('done', 'Backed up');
-        if (opts.onDone) opts.onDone(res);
-        return res;
-      }).catch(function(e){
-        if (opts.onState) opts.onState('error',
-          /network/i.test(e.message) ? 'No connection \u00b7 saved on this device'
-                                     : 'Upload failed \u00b7 saved on this device');
-        return null;
-      });
-    },
-    /* everything indexed locally, newest first - cheaper than listAll()
-       and works offline because it reads the synced KP index */
-    indexed: function(kind){
-      var idx = [];
-      try { idx = (window.KP && KP.get('media')) || []; } catch(e){}
-      return idx.filter(function(m){ return !kind || m.kind === kind; }).reverse();
-    },
-    remove: function(path){
-      if (!window.KovaLink) return Promise.reject(new Error('storage unavailable'));
-      return KovaLink.authFetch('/media/remove', { json: { path: path } }).then(function(r){
-        if (!r.ok) throw new Error('Could not delete that file (' + r.status + ').');
-        try {
-          var idx = (window.KP && KP.get('media')) || [];
-          if (window.KP) KP.set('media', idx.filter(function(m){ return m.path !== path; }));
-        } catch(e){}
-      });
-    },
-    /* everything this user has uploaded of one kind, newest first -
-       from the synced index, which every upload writes */
-    list: function(kind){
-      return Promise.resolve(this.indexed(kind).map(function(m){ return { url: m.url, path: m.path }; }));
-    }
-  };
-})();
 
 /* =================================================================
    Auth. Firebase Auth replaces the old note that a static PWA has
@@ -3797,7 +3662,7 @@ window.KovaCloudAuth = (function(){
         .catch(function(e){
           var c = (e && e.code) || '';
           if (/email-already-in-use|credential-already-in-use/.test(c))
-            return err('There is already an account for ' + email + '.', [['Sign in instead', to('in', email)], ['Reset password', to('reset', email)]]);
+            return err('You already have a Kova account with ' + email + '. Sign in instead. If you made it with Google, tap Continue with Google.', [['Sign in instead', to('in', email)], ['Continue with Google', function(){ KovaCloudAuth.google(); }], ['Reset password', to('reset', email)]]);
           err(human(e));
         })
         .then(function(){ busy(false); });
@@ -3806,9 +3671,19 @@ window.KovaCloudAuth = (function(){
       if (!auth) return err('Backend unavailable.');
       err('');
       var p = new firebase.auth.GoogleAuthProvider();
+      p.setCustomParameters({ prompt: 'select_account' });
+      /* the phone's home-screen app cannot keep a pop-up: go full page */
+      var standalone = (window.navigator.standalone === true) || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+      function full(){ try { localStorage.setItem('kova.auth.pending', 'google'); } catch(x){} busy(true, 'Opening Google\u2026'); var r = auth.signInWithRedirect(p); if (r && r.catch) r.catch(function(e){ busy(false); err(human(e)); }); }
+      if (standalone) return full();
       auth.signInWithPopup(p)
         .then(function(){ KovaAnalytics.track('login', { method: 'google' }); })
-        .catch(function(e){ err(human(e)); });
+        .catch(function(e){
+          var c = (e && e.code) || '';
+          if (/popup-blocked|operation-not-supported/.test(c)) return full();
+          if (/popup-closed|cancelled-popup/.test(c)) return;
+          err(human(e));
+        });
     },
     /* Lets someone use the app before deciding to make an account, and
        keeps their data - anonymous accounts upgrade in place. */
@@ -3816,7 +3691,7 @@ window.KovaCloudAuth = (function(){
       if (!auth) { modal(false); return; }
       err('');
       auth.signInAnonymously()
-        .then(function(){ KovaAnalytics.track('login', { method: 'anonymous' }); })
+        .then(function(){ KovaAnalytics.track('login', { method: 'anonymous' }); modal(false); try { if (window.KovaAuth && KovaAuth.dismiss) KovaAuth.dismiss(); } catch(x){} })
         .catch(function(e){
           /* "Skip" must always get the person in. If guest accounts are
              switched off in the Firebase console (admin-restricted-operation)
@@ -3825,6 +3700,7 @@ window.KovaCloudAuth = (function(){
           KovaAnalytics.track('login_skip_local', { code: (e && e.code) || '' });
           try { localStorage.setItem('kova.auth.skipped', String(Date.now())); } catch(x){}
           modal(false);
+          try { if (window.KovaAuth && KovaAuth.skipLocal) KovaAuth.skipLocal(); } catch(x){}
         });
     },
     reset: function(email){
@@ -7564,6 +7440,7 @@ body.soft-light .kb-thumbs img{border-color:#4E4A55}
 .ksi-alt{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:12px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);
   background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:13px;cursor:pointer}
 .ksi-note{text-align:center;font-size:10.5px;font-weight:300;line-height:1.5;color:rgba(243,244,247,.3)}
+.ksi-note a{color:inherit;text-decoration:underline}
 .ksi button:focus-visible,.ksi-in:focus-visible{outline:2px solid #F3F4F7;outline-offset:2px}
 
 body.light-mode #kova-auth-modal{background:radial-gradient(ellipse 130% 95% at 50% -6%,#FFFFFF 0%,#F4F1EC 55%,#ECE7DF 100%)!important;color:#1C1A17}
@@ -14037,10 +13914,13 @@ function go(id,opts){
   /* p75: leaving the sounds screen no longer stops the sound. Playback
      survives navigation and the top bar takes over the transport. */
   if(window.KovaBar) KovaBar.onScreen(id);
+  /* screens that listen for being opened (Compose repaints its accounts) */
+  try{ document.dispatchEvent(new CustomEvent('kova:screen',{detail:id})); }catch(e){}
   /* the sounds screen has its own ground; see .app.snd */
   var _app=document.getElementById('app');
   if(_app) _app.classList.toggle('snd', id==='sounds');
   if(id==='settings'&&window.__paintSettings) __paintSettings();
+  if((id==='workintegrations'||id==='settings')&&window.drawIntegrations) try{ drawIntegrations(); }catch(e){ console.warn('integrations',e); }
   if(window.KovaStudio) try{ KovaStudio.onScreen(id); }catch(e){ console.warn('studio paint',e); }
   if(window.KovaCanvas) try{ KovaCanvas.onScreen(id); }catch(e){ console.warn('studio canvas',e); }
   if(window.KovaWorkTour) try{ KovaWorkTour.onScreen(id); }catch(e){}
@@ -18180,17 +18060,19 @@ window.ronGauge=function(el,o){
                             : 'Level with your real age'));
     }
 
-    var info=document.getElementById('hsInfo');
-    if(info) info.onclick=function(){
-      openSheet('<div class="grab"></div><div class="title-s" style="font-size:18px;margin-bottom:10px">How this is worked out</div>'
-        +'<div class="sub" style="line-height:1.6;font-size:11px">Four inputs are scored against healthy ranges, then weighted: '
-        +'resting heart rate the most, then HRV, then sleep, then daily steps. Fifty out of a hundred means your fitness age matches '
-        +'your real age. Every ten points either side is worth roughly a year and a half.<br><br>'
-        +'Whoop and similar apps add VO2 max, body composition and lean mass. Kova has no way to measure those from a phone, so it '
-        +'leaves them out rather than guessing at them. That makes this number rougher than theirs, and honest about why.</div>');
-    };
   }
 
+  /* the info button works with or without readings (it used to be wired
+     only after the first reading, so with none it did nothing) */
+  var info=document.getElementById('hsInfo');
+  if(info) info.onclick=function(){
+    openSheet('<div class="grab"></div><div class="title-s" style="font-size:18px;margin-bottom:10px">How this is worked out</div>'
+      +'<div class="sub" style="line-height:1.6;font-size:11px">Four inputs are scored against healthy ranges, then weighted: '
+      +'resting heart rate the most, then HRV, then sleep, then daily steps. Fifty out of a hundred means your fitness age matches '
+      +'your real age. Every ten points either side is worth roughly a year and a half.<br><br>'
+      +'Whoop and similar apps add VO2 max, body composition and lean mass. Kova has no way to measure those from a phone, so it '
+      +'leaves them out rather than guessing at them. That makes this number rougher than theirs, and honest about why.</div>');
+  };
   /* the date stepper is presentational until there is a real history store */
   var nav=document.getElementById('hsNav');
   if(nav) nav.addEventListener('click',function(e){
@@ -19911,9 +19793,15 @@ function openLibrary(title,rec,onPick){
      when it is useful, instead of permanently on a screen they are trying
      to read. */
   var pr=document.getElementById('wchPair');
+  /* it used to open the Health profile (vitamins and minerals): it opens
+     Settings at "Connect your health data", already unfolded */
   if(pr) pr.onclick=function(){
-    if(typeof go==='function') go('health');
-    toast('Pairing is set up under Connect your health data.');
+    if(typeof go==='function') go('settings');
+    setTimeout(function(){
+      var w=document.getElementById('hcWrap'), b=document.getElementById('hcToggle');
+      if(w&&!w.classList.contains('open')&&b) b.click();
+      if(b) b.scrollIntoView({block:'start',behavior:'smooth'});
+    },320);
   };
 
   var d=document.getElementById('wchDemo');
@@ -22880,7 +22768,7 @@ var METAPHORS={
     document.getElementById('explainOutTxt').textContent=txt;
     out.style.display='block';
   }
-  document.getElementById('explainGo').onclick=function(){var q=input.value.trim();if(!q)return;explain(q)};
+  document.getElementById('explainGo').onclick=function(){var q=input.value.trim();if(!q){ toast('Type what you want explained first.'); try{ input.focus(); }catch(e){} return; }explain(q)};
   var chips=document.getElementById('explainChips');
   if(chips){
     chips.innerHTML=Object.keys(LIB).map(function(q){return '<div class="chip exq" data-q="'+q+'" style="font-size:10.5px">'+q+'</div>'}).join('');
@@ -24890,18 +24778,19 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
 
   var Q=[
     {c:'WHAT YOU WANT · 1 OF 7',q:'What are you training for?',s:'This sets your rep ranges, rest, and weekly volume.',k:'goal',t:'single',o:[
-      ['Build my physique','Bodybuilding · 8–12 reps','bodybuilding'],
-      ['Perform: power and speed','Athletic · 3–8 reps','athletic'],
-      ['Get stage-ready','Show prep · lean down, keep the muscle','showprep'],
-      ['Lift the heaviest weight','Powerlifting · 1–5 reps','powerlifting'],
-      ['Lose fat, keep muscle','Weight loss · 10–15 reps','weightloss'],
-      ['Lean and defined','Toning · 10–15 reps','toning'],
-      ['Stay strong and mobile','General health · 10–15 reps','health'],
-      ['Bodyweight strength and skills','Calisthenics · harder moves, not more weight','calisthenics'],
-      ['Run farther or faster','Running · 5K to marathon','endurance'],
-      ['Swim stronger','Swimming · laps, pace and dryland','swimming'],
-      ['Hike bigger days','Hiking · climbs, descents, pack','hiking'],
-      ['Ride stronger','Cycling · FTP-based rides','hikebike']]},
+      /* p30: the title is the plain name people look for; the line under it says what it means */
+      ['Bodybuilding','Build your physique · 8–12 reps','bodybuilding'],
+      ['Athletic performance','Power and speed · 3–8 reps','athletic'],
+      ['Show prep','Get stage-ready · lean down, keep the muscle','showprep'],
+      ['Powerlifting','Lift the heaviest weight · 1–5 reps','powerlifting'],
+      ['Weight loss','Lose fat, keep muscle · 10–15 reps','weightloss'],
+      ['Tone and appearance','Lean and defined · 10–15 reps','toning'],
+      ['General health','Stay strong and mobile · 10–15 reps','health'],
+      ['Calisthenics','Bodyweight strength and skills, like handstands','calisthenics'],
+      ['Running','5K to marathon · farther or faster','endurance'],
+      ['Swimming','Laps, pace and dryland','swimming'],
+      ['Hiking','Climbs, descents and carrying a pack','hiking'],
+      ['Cycling','Road or trail · FTP-based rides','hikebike']]},
 
     {c:'YOUR EXPERIENCE · 2 OF 7',q:'How long have you trained consistently?',s:'This plus your bodyweight is how Kova picks your starting weights.',k:'exp',t:'single',bw:1,o:[
       ['Under 6 months','New to lifting','new'],
@@ -25103,19 +24992,25 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
 
     if(s.t==='mins'){
       h+='<div style="display:flex;align-items:baseline;gap:8px;margin:22px 0 4px">'
-        +'<div class="big" id="qMinN" style="font-size:56px">'+st.a.mins+'</div>'
-        +'<div class="lbl" style="letter-spacing:1.5px">MINUTES</div></div>';
+        +'<div class="big" id="qMinN" style="font-size:56px">'+qHM(st.a.mins).n+'</div>'
+        +'<div class="lbl" id="qMinU" style="letter-spacing:1.5px">'+qHM(st.a.mins).u+'</div></div>';
       h+='<div class="sub" id="qMinNote" style="line-height:1.45"></div>';
       h+='<div class="slider-wrap" style="margin-top:20px"><div class="slider-bg"></div>'
         +'<div class="slider-fill" id="qMinF"></div><div class="slider-knob" id="qMinK"></div>'
         +'<input class="slider-in" id="qMinIn" type="range" min="20" max="150" step="5" value="'+st.a.mins+'"/></div>';
-      h+='<div class="slider-ends"><span>20 min</span><span>85 min</span><span>2h 30m</span></div>';
+      h+='<div class="slider-ends"><span>20 min</span><span>1 hr 25 min</span><span>2 hr 30 min</span></div>';
     }
 
     body.innerHTML=h;
     bind(s);
   }
 
+  /* p30: past an hour it reads in hours ("1 hr 30 min"), not "90 minutes" */
+  function qHM(m){
+    if(m<60) return {n:String(m),u:'MINUTES'};
+    var h=Math.floor(m/60), r=m%60;
+    return r?{n:h+'h '+r+'m',u:''}:{n:String(h),u:h===1?'HOUR':'HOURS'};
+  }
   function bind(s){
     body.querySelectorAll('.qopt').forEach(function(e){
       e.onclick=function(){
@@ -25150,7 +25045,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     if(mi){
       var upd=function(){
         st.a.mins=+mi.value;
-        document.getElementById('qMinN').textContent=st.a.mins;
+        var hm=qHM(st.a.mins); document.getElementById('qMinN').textContent=hm.n; document.getElementById('qMinU').textContent=hm.u;
         var pct=((st.a.mins-20)/130)*100;
         document.getElementById('qMinF').style.width=pct+'%';
         document.getElementById('qMinK').style.left='calc('+pct+'% - 11px)';
@@ -25689,7 +25584,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     el.querySelectorAll('.agrm').forEach(function(e){e.onclick=function(){var x=H();x.alg=x.alg.filter(function(a){return a!==e.dataset.a});save(x);paintAlg();}});
   }
   document.getElementById('algAdd').onclick=function(){
-    var i=document.getElementById('algIn'), v=i.value.trim(); if(!v)return;
+    var i=document.getElementById('algIn'), v=i.value.trim(); if(!v){ toast('Type the allergy first, like peanuts.'); try{ i.focus(); }catch(e){} return; }
     var x=H(); if(x.alg.indexOf(v)<0)x.alg.push(v); save(x); i.value=''; paintAlg();
   };
 
@@ -26450,6 +26345,20 @@ window.KovaMotion=(function(){
       var t=[], energy=[], cy=[], cxs=[], spread=[], boxH=[], boxW=[];
       var i=0, aborted=false;
 
+      /* p30: a few clear stills on the way through (for naming the
+         exercise), taken from frames already decoded, so they cost nothing */
+      var SM=(opts.stills||[]).slice(), shots=[], sc=null;
+      function still(time){
+        if(!SM.length||!opts.onStills||time<SM[0]*dur-0.01) return;
+        while(SM.length&&time>=SM[0]*dur-0.01) SM.shift();
+        try{
+          if(!sc){ sc=document.createElement('canvas'); var vw=videoEl.videoWidth||640, vh=videoEl.videoHeight||360, k=Math.min(1,512/Math.max(vw,vh)); sc.width=Math.max(1,Math.round(vw*k)); sc.height=Math.max(1,Math.round(vh*k)); }
+          sc.getContext('2d').drawImage(videoEl,0,0,sc.width,sc.height); shots.push(sc.toDataURL('image/jpeg',0.72));
+        }catch(e){}
+        if(!SM.length) sendStills();
+      }
+      function sendStills(){ var cb=opts.onStills; opts.onStills=null; if(cb&&shots.length) try{ cb(shots.slice()); }catch(e){} }
+
       function seekTo(time){
         return new Promise(function(res){
           var done=false;
@@ -26476,29 +26385,7 @@ window.KovaMotion=(function(){
         seekTo(i*step).then(function(){
           var g;
           try{ g=grab(); }catch(e){ return reject(new Error('frame-read')); }
-          if(prev){
-            var sum=0, wy=0, wx=0, cnt=0;
-            var minY=H, maxY=0, minX=W, maxX=0;
-            for(var y=0;y<H;y++){
-              for(var x=0;x<W;x++){
-                var k=y*W+x;
-                var dv=Math.abs(g[k]-prev[k]);
-                if(dv>12){            // ignore sensor noise / compression shimmer
-                  sum+=dv; wy+=dv*y; wx+=dv*x; cnt++;
-                  if(y<minY)minY=y; if(y>maxY)maxY=y;
-                  if(x<minX)minX=x; if(x>maxX)maxX=x;
-                }
-              }
-            }
-            spread.push(cnt/(W*H));
-            boxH.push(cnt? (maxY-minY)/H : 0);
-            boxW.push(cnt? (maxX-minX)/W : 0);
-            energy.push(sum/(W*H));
-            cy.push(cnt? (wy/sum) : (cy.length?cy[cy.length-1]:H/2));
-            cxs.push(cnt? (wx/sum) : (cxs.length?cxs[cxs.length-1]:W/2));
-            t.push(i*step);
-          }
-          prev=g;
+          still(i*step); take(g,i*step);
           i++;
           if(onProgress && i%6===0) onProgress(i/n);
           (window.requestAnimationFrame||setTimeout)(stepOnce);
@@ -26506,12 +26393,40 @@ window.KovaMotion=(function(){
       }
 
       function finish(){
+        sendStills();
         try{ resolve(derive(t,energy,cy,cxs,dur,{spread:spread,boxH:boxH,boxW:boxW,W:W,H:H})); }
         catch(e){ reject(e); }
       }
 
-      videoEl.pause();
-      stepOnce();
+      /* p30: the fast way. Jumping to 220 points one by one cost a phone up
+         to a third of a second each (over a minute for a 30-second clip).
+         Playing the clip through, muted and sped up, hands over the frames
+         as they are shown, so the same clip reads in a few seconds. The old
+         jump-by-jump way is kept for a clip that will not play. */
+      function take(g,time){
+        if(prev){
+          var sum=0, wy=0, wx=0, cnt=0, minY=H, maxY=0, minX=W, maxX=0;
+          for(var y=0;y<H;y++){ for(var x=0;x<W;x++){
+            var k=y*W+x, dv=Math.abs(g[k]-prev[k]);
+            if(dv>12){ sum+=dv; wy+=dv*y; wx+=dv*x; cnt++; if(y<minY)minY=y; if(y>maxY)maxY=y; if(x<minX)minX=x; if(x>maxX)maxX=x; }
+          } }
+          spread.push(cnt/(W*H)); boxH.push(cnt?(maxY-minY)/H:0); boxW.push(cnt?(maxX-minX)/W:0);
+          energy.push(sum/(W*H));
+          cy.push(cnt?(wy/sum):(cy.length?cy[cy.length-1]:H/2));
+          cxs.push(cnt?(wx/sum):(cxs.length?cxs[cxs.length-1]:W/2));
+          t.push(time);
+        }
+        prev=g;
+      }
+      function wipe(){ prev=null; t=[]; energy=[]; cy=[]; cxs=[]; spread=[]; boxH=[]; boxW=[]; i=0; }
+      /* p30: the fast way (src/p08_formai.js plays the clip through instead
+         of 220 seeks); the seek-by-seek way if it is not loaded or fails */
+      var fast=window.KovaMotionFast;
+      (fast?fast(videoEl,{dur:dur,step:step,opts:opts,grab:grab,take:take,still:still,onProgress:onProgress}):Promise.reject(new Error('no-fast'))).then(function(got){
+        /* enough of the clip seen (frames can be dropped at speed): use it */
+        if(got>=Math.max(12,Math.floor(n*0.45))){ try{ videoEl.currentTime=0; }catch(e){} return finish(); }
+        wipe(); videoEl.pause(); stepOnce();
+      },function(){ wipe(); try{ videoEl.pause(); videoEl.playbackRate=1; }catch(e){} stepOnce(); });
     });
   }
 
@@ -27417,6 +27332,16 @@ window.KovaBrain=(function(){
   var LEVELS=[['New to it','never trained this'],['Some reps in','months, not years'],['Solid','years, chasing detail']];
 
   var picked=-1, lvl=1, RES=null, isVideo=false;
+  /* p30: Kova's AI names the exercise from stills of the clip (AIID), so
+     nobody scrolls a list. AIP is the request while it is out. */
+  var AIID=null, AIP=null;
+  function aiOn(){ return !!(window.KovaFormAI&&KovaFormAI.ready&&KovaFormAI.ready()); }
+  /* the AI's answer becomes the pick (src/p08_formai.js matches it to the
+     list, or adds it with its movement pattern's programming) */
+  function applyAI(o){
+    var k=(o&&window.KovaFormAI&&KovaFormAI.apply)?KovaFormAI.apply(o,LIFTS,PROF):-1;
+    if(k<0) return false; picked=k; o.idx=k; return true;
+  }
 
   drop.onclick=function(){ file.click(); };
 
@@ -27431,7 +27356,7 @@ window.KovaBrain=(function(){
     document.getElementById('fcResult').style.display='none';
     document.getElementById('fcName').textContent=f.name.length>34?f.name.slice(0,31)+'\u2026':f.name;
     isVideo = f.type.indexOf('video')===0;
-    RES=null; picked=-1;
+    RES=null; picked=-1; AIID=null; AIP=null;
 
     var n=(KP.get('fcClips')||0)+1; KP.set('fcClips',n);
     var cc=document.getElementById('fcCount'); if(cc) cc.innerHTML=n+'<span class="unit"> clips</span>';
@@ -27497,22 +27422,41 @@ window.KovaBrain=(function(){
   function runAnalysis(v){
     document.getElementById('fcSetup').style.display='none';
     bar(0.02,'Reading the clip\u2026');
-    KovaMotion.analyze(v,{fps:12,maxSamples:220},function(p){
+    var mine=CLIP, ai=aiOn();
+    function ident(imgs){
+      if(mine!==CLIP) return;
+      AIP=KovaFormAI.identify(imgs,LIFTS.map(function(L){ return L.n; }).filter(function(n){ return n!=='Something else'; }))
+        .then(function(o){ if(mine!==CLIP) return; AIID=o; applyAI(o); return o; })
+        .catch(function(){ if(mine===CLIP) AIID={fail:1}; });
+    }
+    KovaMotion.analyze(v,{fps:12,maxSamples:220,stills:ai?[0.12,0.38,0.62,0.86]:null,onStills:ai?ident:null},function(p){
       bar(0.05+p*0.9, 'Tracking movement \u2014 '+Math.round(p*100)+'%');
     }).then(function(r){
-      RES=r; bar(1,'Done');
+      RES=r;
       /* publish it so a set in the session can claim these numbers */
       if(r&&r.confidence>=45&&r.reps>=2){
         window.__lastMotion={con:r.avgCon,ecc:r.avgEcc,fat:r.fatigue,reps:r.reps,
                              conf:Math.round(r.confidence),t:Date.now()};
       }
-      setTimeout(function(){
-        document.getElementById('fcScan').style.display='none';
-        showMeasured();
-      },260);
+      /* give the AI a few seconds to name the lift, so the result does not
+         flip from a guess to the real name */
+      var wait=(AIP&&!AIID)?Promise.race([AIP,new Promise(function(ok){ setTimeout(ok,9000); })]):Promise.resolve();
+      if(AIP&&!AIID) bar(0.97,'Naming the exercise\u2026');
+      wait.then(function(){
+        if(mine!==CLIP) return;
+        bar(1,'Done');
+        setTimeout(function(){
+          document.getElementById('fcScan').style.display='none';
+          showMeasured();
+        },200);
+      });
     }).catch(function(){
       document.getElementById('fcScan').style.display='none';
-      RES=null; showStill();
+      RES=null;
+      /* the movement could not be read, but the stills may still name it */
+      var wait=AIP&&!AIID?Promise.race([AIP,new Promise(function(ok){ setTimeout(ok,9000); })]):Promise.resolve();
+      /* it used to say "That is a photo" here, about a video */
+      wait.then(function(){ if(mine===CLIP) showMeasured(); });
     });
   }
 
@@ -27526,7 +27470,7 @@ window.KovaBrain=(function(){
       host.innerHTML='<div class="card" style="border-color:var(--warn)">'
         +'<div style="display:flex;gap:9px"><svg class="ic" style="font-size:15px;color:var(--warn);flex-shrink:0;margin-top:1px"><use href="#i-info-circle"/></svg>'
         +'<div style="font-size:11px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.92))">'
-        +'<b>Kova could not read a clean set from this clip.</b><br>'
+        +'<b>'+(AIID&&AIID.idx!=null?'Kova named the exercise, but could not count clean reps in this clip.':'Kova could not read a clean set from this clip.')+'</b><br>'
         +(r?('It found '+r.reps+' repeating movement'+(r.reps===1?'':'s')+' at '+r.confidence+'% confidence, which is too low to build a plan from. '):'')
         +'For best results: film from the side, hold the camera still, keep your whole body in frame, and do 3 or more reps.'
         +'</div></div></div>';
@@ -27623,8 +27567,22 @@ window.KovaBrain=(function(){
     if(!RES||!RES.patterns||!RES.patterns.length) return null;
     return RES.patterns[0];
   }
+  function autoRun(){
+    if(!window.__fcAuto){
+      window.__fcAuto=1;
+      setTimeout(function(){ window.__fcAuto=0; var b=document.getElementById('fcRun'); if(b) b.click(); },140);
+    }
+  }
   function paintDetected(){
     var host=document.getElementById('fcDetected'); if(!host) return;
+    if(AIID&&AIID.idx!=null&&LIFTS[AIID.idx]&&window.KovaFormAI&&KovaFormAI.paintNamed){
+      document.getElementById('fcPickWrap').style.display='none';
+      KovaFormAI.paintNamed(host,{A:AIID,L:LIFTS,picked:picked,top:detectedTop(),col:scoreCol,
+        pick:function(k){ picked=k; paintDetected(); var b=document.getElementById('fcRun'); if(b) b.click(); },
+        more:function(){ var w=document.getElementById('fcPickWrap'); w.style.display=w.style.display==='block'?'none':'block'; if(w.style.display==='block'){ paintLifts(); var q2=document.getElementById('fcSearch'); if(q2) q2.focus(); } }});
+      if(picked<0) picked=AIID.idx;
+      return autoRun();
+    }
     var top=detectedTop();
     if(!top){
       host.innerHTML='<div class="sec-h" style="margin-top:0">Pick the exercise</div>'
@@ -27660,7 +27618,11 @@ window.KovaBrain=(function(){
         +'</div>';
     }
     h+='<div class="chip" id="fcShowAll" style="display:inline-flex;margin-bottom:4px">Search all exercises instead</div>';
+    if(!aiOn()) h+='<div class="sub" style="margin:8px 2px 0;line-height:1.5">Signed in, Kova names the exact exercise from the clip for you. <b role="button" tabindex="0" id="fcSignIn" style="color:var(--acc);cursor:pointer">Sign in</b></div>';
+    else if(AIID&&!AIID.fail) h+='<div class="sub" style="margin:8px 2px 0;line-height:1.5">Kova could not see the exercise clearly in this clip, so this is the movement pattern. Tap the right one.</div>';
     host.innerHTML=h;
+    var si=document.getElementById('fcSignIn');
+    if(si) si.onclick=function(){ if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); };
 
     host.querySelectorAll('.fcpick').forEach(function(e){
       e.onclick=function(){
@@ -28455,6 +28417,13 @@ window.KovaPlan=(function(){
 
   var BIG=['Chest','Back','Quads','Hamstrings','Shoulders','Glutes'];
   function budget(g,m){ return BIG.indexOf(m)>-1 ? g.sets.big : g.sets.small; }
+  /* p30: how to run the sets, said once with the plan */
+  function howSets(id){
+    if(id==='athletic') return 'Each exercise is 2-3 sets. Every rep fast; end the set when the speed drops, never grind to failure.';
+    if(id==='health') return 'Each exercise is 2-3 sets, stopping 2-3 reps before you could not do another.';
+    if(id==='powerlifting') return 'Each lift is 3 heavy sets, 1-2 reps short of failure. Beat the top of the range on all of them and add weight next time.';
+    return 'Each exercise is 2-3 hard sets: take the last one to failure (on heavy lifts, 1-2 reps short). Hit the top of the rep range on every set and add weight next time.';
+  }
 
   /* p09: sport days. For these goals the gym serves the sport, so each day
      is written out: what it must contain, how many sets, what reps. The
@@ -28472,14 +28441,14 @@ window.KovaPlan=(function(){
         {x:['Y-T-W raise','Face pull'],s:2,r:[10,12]},
         {x:['Dead bug','Plank'],s:3,r:[8,12]}]],
       ['Dryland B · legs, starts and core',[
-        {x:['Box jump'],s:4,r:[3,5]},
+        {x:['Box jump'],s:3,r:[3,5]},
         {x:['Goblet squat','Trap bar deadlift'],s:3,r:[6,10]},
         {x:['Romanian deadlift','Single leg Romanian deadlift'],s:3,r:[8,10]},
         {x:['Push up'],s:3,r:[8,15]},
         {x:['Pallof press','Side plank'],s:3,r:[10,12]},
         {x:['Face pull','Cable external rotation'],s:2,r:[12,15]}]],
       ['Dryland C · strength',[
-        {x:['Chin up','Pull up'],s:4,r:[5,8]},
+        {x:['Chin up','Pull up'],s:3,r:[5,8]},
         {x:['Bulgarian split squat'],s:3,r:[8,10]},
         {x:['Single arm dumbbell row'],s:3,r:[8,12]},
         {x:['Medicine ball rotational throw'],s:3,r:[6,8]},
@@ -28488,7 +28457,7 @@ window.KovaPlan=(function(){
     ],
     hiking:[
       ['Legs A · the climb',[
-        {x:['Step up'],s:4,r:[8,12]},
+        {x:['Step up'],s:3,r:[8,12]},
         {x:['Bulgarian split squat'],s:3,r:[8,12]},
         {x:['Romanian deadlift'],s:3,r:[8,10]},
         {x:['Standing calf raise'],s:3,r:[12,15]},
@@ -28508,7 +28477,7 @@ window.KovaPlan=(function(){
     ],
     hikebike:[
       ['Legs · strength',[
-        {x:['Barbell back squat','Leg press'],s:4,r:[5,8]},
+        {x:['Barbell back squat','Leg press'],s:3,r:[5,8]},
         {x:['Bulgarian split squat'],s:3,r:[8,10]},
         {x:['Romanian deadlift'],s:3,r:[6,10]},
         {x:['Standing calf raise'],s:3,r:[10,15]},
@@ -28520,7 +28489,7 @@ window.KovaPlan=(function(){
         {x:['Pallof press'],s:3,r:[10,12]},
         {x:['Side plank'],s:3,r:[20,40]}]],
       ['Legs · single leg and power',[
-        {x:['Box jump'],s:4,r:[3,5]},
+        {x:['Box jump'],s:3,r:[3,5]},
         {x:['Step up'],s:3,r:[8,10]},
         {x:['Single leg Romanian deadlift'],s:3,r:[8,10]},
         {x:['Hip thrust'],s:3,r:[8,12]},
@@ -28598,7 +28567,7 @@ window.KovaPlan=(function(){
     /* p09: sport days. The gym days are written for the sport; the other
        days of the week are for swimming, hiking, riding or running. */
     var sw=sportWeek(goalId,daysWanted||g.days);
-    if(sw) return {name:goalId, goal:goalId, generated:1, sport:true, days:sw, rest:g.rest, why:g.why,
+    if(sw) return {name:goalId, goal:goalId, generated:1, sport:true, days:sw, rest:g.rest, why:g.why+' '+howSets(goalId),
                    mins:minutes||60, perWeek:sw.length, capped:(daysWanted||0)>sw.length};
     var d=Math.max(2,Math.min(6, daysWanted||g.days));
     var tpl = (d===3 && (goalId==='bodybuilding'||goalId==='calisthenics')) ? PPL3 : TEMPLATES[d];
@@ -28643,7 +28612,10 @@ window.KovaPlan=(function(){
         var x=pick(cand,seed+di*11+pi,used);
         if(!x) return;
         used.push(x.n);
-        var sets=Math.max(3,Math.min(5,share(x.m)));
+        /* p30: 2-3 hard working sets per exercise, like the programs people
+           actually follow (it used to give 4-5). Volume comes from taking
+           them close to failure, not from more sets. */
+        var sets=Math.max(2,Math.min(3,share(x.m)));
         if(setsUsed+sets>setCap) sets=setCap-setsUsed;
         if(sets<2) return;
         ex.push({e:x.n,s:sets,r:g.rep.comp[1],lo:g.rep.comp[0],slot:'compound'});
@@ -28665,7 +28637,7 @@ window.KovaPlan=(function(){
         if(!cand2.filter(function(z){return used.indexOf(z.n)<0}).length) cand2=wide2;
         var y=pick(cand2,seed+di*31+i*7,used);
         if(!y) continue;
-        var s2=Math.max(2,Math.min(4,share(m)));
+        var s2=Math.max(2,Math.min(3,share(m)));
         if(setsUsed+s2>setCap) s2=setCap-setsUsed;
         if(s2<2) break;
         used.push(y.n);
@@ -28687,7 +28659,7 @@ window.KovaPlan=(function(){
 
     return {
       name:(GOALS[goalId]?goalId:'bodybuilding'), goal:goalId, generated:1,
-      days:days, rest:g.rest, why:g.why, mins:minutes, perWeek:d
+      days:days, rest:g.rest, why:g.why+' '+howSets(goalId), mins:minutes, perWeek:d
     };
   }
 
@@ -37514,8 +37486,13 @@ window.WorkAI=(function(){
   function drawIntegrations(){
     var el=document.getElementById('wintBody');
     var host=document.getElementById('setIntBody');
-    var target=host||el;
+    /* one copy at a time (the controls have ids): the Integrations screen
+       when it is showing, else the Settings section. Drawing only into
+       Settings left the screen blank for "Connect an account" and Search. */
+    var scr=document.getElementById('s-workintegrations');
+    var target=(scr&&scr.classList.contains('on'))?el:(host||el);
     if(!target) return;
+    if(target===el&&host) host.innerHTML=''; else if(el&&target!==el) el.innerHTML='';
 
     var groups={};
     W.platforms.forEach(function(p){ (groups[p.grp]=groups[p.grp]||[]).push(p); });
@@ -40635,7 +40612,14 @@ window.KovaAuth = (function(){
     if(!hasAccount() && !hasBio() && !rd(LK)){
       /* first launch — show welcome */
       document.getElementById('app').classList.add('auth-locked');
-      renderWelcome();
+      /* one sign-in screen everywhere: with Firebase up, the first launch
+         gets the same boxed card as Settings (Sign in / Create account,
+         Google), after the birthday question. The email-code screen is
+         the fallback when Firebase cannot load. */
+      if(window.KOVA_FB&&KOVA_FB.ok&&window.KovaCloudAuth&&KovaCloudAuth.open){
+        inner.innerHTML='<div class="af-mark">kova</div>';
+        ageGate(function(){ inner.innerHTML='<div class="af-mark">kova</div>'; KovaCloudAuth.open({mode:'in'}); });
+      } else renderWelcome();
       finishRedirect();
     } else if(hasBio()){
       /* return visit with biometric enrolled — offer the unlock */
@@ -40654,6 +40638,9 @@ window.KovaAuth = (function(){
   function dismiss(){
     try { if (hasBio()) return; } catch(e){}
     if (!wall || wall.style.display === 'none' || wall.classList.contains('gone')) return;
+    /* remember the way in, so the next launch does not flash the sign-in
+       card while Firebase is still waking up */
+    try { if (!hasAccount() && !rd(LK)) wr(LK, {at:Date.now()}); } catch(e){}
     /* signed in from the sign-in sheet: a new person still gets the
        setup questions (the first screen used to skip straight past them),
        and someone already answering them is left where they are */
@@ -40688,7 +40675,13 @@ window.KovaAuth = (function(){
 
   document.addEventListener('DOMContentLoaded', gate);
 
-  return { gate:gate, dismiss:dismiss, hasAccount:hasAccount, hasBio:hasBio, getAccount:getAccount, signOut:signOut,
+  /* "Skip for now" on the sign-in card when no guest account can be made:
+     the same as "Use Kova without one" */
+  function skipLocal(){
+    if (!wall || wall.style.display === 'none' || wall.classList.contains('gone')) return;
+    wr(LK, {at:Date.now()}); promptBiometric(function(){ firstRunDone(); });
+  }
+  return { gate:gate, dismiss:dismiss, skipLocal:skipLocal, hasAccount:hasAccount, hasBio:hasBio, getAccount:getAccount, signOut:signOut,
            setBiometric:setBiometric, onboard:onboard, onboarded:obDone };
 })();
 </script>
@@ -53371,6 +53364,14 @@ window.KovaCrew=(function(){
   }
   var DETAIL={jobs:dJobs,ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
   var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
+  /* p30: straight to one teammate's page, ready to message them (search,
+     "nutrition coach") */
+  function openMate(id){
+    if(!emp(id)) return false;
+    S.view='team'; S.nav='team'; S.tab=id; S.draft=null; paint(); top0();
+    setTimeout(function(){ var t=document.getElementById('crwEmpAsk'); if(t) try{ t.focus({preventScroll:true}); }catch(e){} },220);
+    return true;
+  }
   function detail(k){
     if(!DETAIL[k]) return;
     var was=S.view==='detail'&&dCur===k;
@@ -53990,7 +53991,7 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();
 
 </script>
@@ -55122,7 +55123,7 @@ window.KovaBilling=(function(){
     var go=function(url){ if(url){ try{ window.open(url,'_blank','noopener'); }catch(e){ location.href=url; } return true; } return false; };
     if(native()&&P&&P.n&&P.n.showManageSubscriptions) return P.n.showManageSubscriptions().catch(function(){ go(STORE[plat()]); });
     if(C.manage&&go(C.manage)) return Promise.resolve();
-    if(!configured()){ go(STORE[plat()]||''); return Promise.resolve(); }
+    if(!configured()){ if(!go(STORE[plat()]||'')) say('You have no subscription to manage. Payments are not switched on yet, so nothing is being charged.'); return Promise.resolve(); }
     return info().then(function(){ if(!go(C.manage||STORE[plat()]||'')) say('You have no active subscription to manage.'); })
       .catch(function(){ if(!go(STORE[plat()]||'')) say('Could not open your subscription right now.'); });
   }
@@ -60285,10 +60286,10 @@ window.KovaSignIn=(function(){
       +(M==='in'?'<button type="button" class="ksi-link" data-m="reset">Forgot password?</button>':'')
       +(M==='reset'?'<button type="button" class="ksi-link" data-m="in">Back to sign in</button>':'')
       +(M!=='reset'?'<div class="ksi-or"><span>or</span></div>'
-        +'<button type="button" class="ksi-alt" onclick="KovaCloudAuth.google()"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>':'')
-      +'<button type="button" class="ksi-skip" onclick="KovaCloudAuth.guest()">Skip for now</button>'
+        +'<button type="button" class="ksi-alt" data-k="google"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>':'')
+      +'<button type="button" class="ksi-skip" data-k="skip">Skip for now</button>'
       +'</div>'
-      +'<div class="ksi-note">Your data syncs only to your own account. Skipping keeps everything on this device.</div>';
+      +'<div class="ksi-note">Your data syncs only to your own account. Skipping keeps everything on this device.<br/>By continuing you agree to the <a href="terms.html" target="_blank" rel="noopener">Terms</a> and the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</div>';
     wire();
     check(false);
   }
@@ -60298,6 +60299,7 @@ window.KovaSignIn=(function(){
     root.onclick=function(e){
       var m=e.target.closest('[data-m]'); if(m){ render(m.getAttribute('data-m')); var f=$(m.getAttribute('data-m')==='reset'?'kova-email':'kova-password'); if(f&&$('kova-email').value) f.focus(); else $('kova-email').focus(); return; }
       var a=e.target.closest('[data-act]'); if(a&&ACT[+a.getAttribute('data-act')]) ACT[+a.getAttribute('data-act')]();
+      var k=e.target.closest('[data-k]'); if(k&&window.KovaCloudAuth){ if(k.getAttribute('data-k')==='google') KovaCloudAuth.google(); else KovaCloudAuth.guest(); }
     };
     $('kova-auth-go').onclick=submit;
     em.oninput=function(){ check(false); };
@@ -61285,6 +61287,55 @@ window.KovaCmd=(function(){
     ['plan','Plans','subscription pricing upgrade trial billing']
   ];
 
+  /* p30: the words people actually type ("where's my eating", "macros",
+     "I'm tired"), so a broad question still lands somewhere. */
+  var SYN={
+    fuel:'eat eating ate diet macro carb fat sugar meal breakfast lunch dinner snack hungry water hydration drink calorie kcal food protein nutrient vitamin mineral fiber sodium',
+    recipes:'recipe cooking cook dish',
+    move:'workout exercise gym lift lifting training train set rep split program routine muscle strength weight dumbbell barbell',
+    formcheck:'form technique posture clip video squat deadlift',
+    machine:'machine equipment scan',
+    sleep:'tired insomnia bedtime dream wake asleep',
+    vitals:'heart pulse bpm readiness oxygen spo2 temperature',
+    stress:'anxious anxiety calm breathe breathing meditation meditate relax',
+    maint:'scale bmi measurement photo progress',
+    zone2:'walk walking run running jog steps cardio',
+    health:'allergy allergies medication medicine meds condition',
+    settings:'theme dark light mode notification reminder appearance units language sync backup',
+    profile:'account login sign password email name',
+    plan:'subscription payment pay billing price pro upgrade trial cancel',
+    workstudio:'post instagram tiktok youtube content caption reel social',
+    worktasks:'task todo',
+    workmeetings:'meeting call zoom calendar',
+    workteam:'ai team agent assistant'
+  };
+  var FILLER=" where wheres where's whats what's what how hows is are am was my me i i'm im the a an show find open go goto to see do does check can could page tab section screen please at of for view get bring up want need you your in on with about it its this that there here our we ";
+  function toks(q){ return String(q||'').toLowerCase().replace(/[^a-z0-9\s']/g,' ').split(/\s+/).filter(function(t){ return t&&FILLER.indexOf(' '+t+' ')<0; }).map(function(t){ return t.replace(/'s$/,''); }); }
+  function ed(a,b){ if(Math.abs(a.length-b.length)>2) return 9; var d=[],i,j; for(i=0;i<=a.length;i++) d[i]=[i]; for(j=0;j<=b.length;j++) d[0][j]=j;
+    for(i=1;i<=a.length;i++) for(j=1;j<=b.length;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[a.length][b.length]; }
+  /* one word against a list of words: same word, same start ("calories" /
+     "calorie", "eating" / "eat"), or one slip ("calroies") */
+  function wordHit(t,list){
+    var best=0;
+    list.forEach(function(w){
+      if(!w) return;
+      if(w===t) best=Math.max(best,3);
+      else if(Math.min(w.length,t.length)>=3&&(w.indexOf(t)===0||t.indexOf(w)===0)) best=Math.max(best,2);
+      else if(t.length>=4&&ed(t,w)<=(t.length>=7?2:1)) best=Math.max(best,1);
+    });
+    return best;
+  }
+  function meaning(q,title,words,id){
+    var T=toks(q); if(!T.length) return 0;
+    var tl=String(title).toLowerCase().split(/\s+/), wl=(String(words||'')+' '+(SYN[id]||'')).toLowerCase().split(/\s+/), sc=0;
+    T.forEach(function(t){ var a=wordHit(t,tl), b=wordHit(t,wl); sc+=a===3?60:a===2?50:b===3?45:b===2?38:a===1?30:b===1?22:0; });
+    return Math.min(95,sc);
+  }
+  var TASKV=/^(call|email|e-mail|text|message|send|pay|buy|order|book|write|finish|fix|review|schedule|follow up|prepare|prep|plan|update|submit|renew|clean|draft|post|reply|check in|invoice|ship|file|cancel|sign|read|print|pick up|drop off)\b/i;
+  /* the teammates by what people call them */
+  var MATE_ALIAS={nutrition:'nutritionist dietitian dietician fuel food diet eating coach',sleep:'sleep coach bedtime',pa:'assistant secretary',social:'social media manager instagram tiktok posts'};
+  function isQuestion(q){ return /^(where|what|how|why|when|which|is|are|can|do|does|show|find|open|take me|i want|i need|i'm|im)\b/i.test(q)||/\?\s*$/.test(q); }
+
   /* ---------------- matching ---------------- */
   function score(q,text,words){
     if(!q) return 1;
@@ -61360,7 +61411,11 @@ window.KovaCmd=(function(){
       }
       if(w){
         var tk=quick(q);
-        if(tk.name&&!looksLikeRule(q)) add('do','Do','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },mate?500:950);
+        /* p30: a line is only a task first when it reads like one (a day, !high,
+           #project, or a to-do word). "nutrition coach" + Enter used to add a
+           task called "Nutrition coach". Otherwise it is offered last. */
+        var tasky=!!tk.due||/(^|\s)[!#]\w/.test(q)||/^(task|todo|to do|remind me)\b/i.test(q)||TASKV.test(q);
+        if(tk.name&&!looksLikeRule(q)&&!(isQuestion(q)&&!tk.due)) add('do',tasky?'Do':'Or make it a task','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },tasky?(mate?500:950):1);
       }
       if(window.KovaApps){
         var rec=KovaApps.recommend(q,1)[0];
@@ -61374,7 +61429,15 @@ window.KovaCmd=(function(){
     }
 
     /* screens */
-    SCREENS.forEach(function(s){ var sc=score(ql,s[1],s[2]); if(sc) add('screen','Go to',s[1],'','s:'+s[0],function(){ nav(s[0]); },sc*(q?1:0.5),s[0]); });
+    SCREENS.forEach(function(s){ var sc=Math.max(score(ql,s[1],s[2]),q?meaning(q,s[1],s[2],s[0]):0); if(sc) add('screen','Go to',s[1],'','s:'+s[0],function(){ nav(s[0]); },sc*(q?1:0.5),s[0]); });
+    /* never a dead end: nothing matched, so offer the closest screens and Kova itself */
+    if(q&&!rows.some(function(r){ return r.group==='Go to'; })){
+      var near=SCREENS.map(function(s){ var T=toks(q), best=9; T.forEach(function(t){ (s[1]+' '+s[2]+' '+(SYN[s[0]]||'')).toLowerCase().split(/\s+/).forEach(function(w){ if(w.length>=3) best=Math.min(best,ed(t,w)); }); }); return [s,best]; })
+        .filter(function(x){ return x[1]<=3; }).sort(function(a,b){ return a[1]-b[1]; }).slice(0,3).map(function(x){ return x[0]; });
+      if(!near.length) near=SCREENS.filter(function(s){ return /^(fuel|move|sleep|vitals|work)$/.test(s[0]); });
+      near.forEach(function(s,i){ add('screen','Did you mean',s[1],'','s:'+s[0],function(){ nav(s[0]); },10-i,s[0]); });
+    }
+    if(q&&q.length>=3&&(window.KOVA_ASK||window.KovaChat)) add('do',isQuestion(q)?'Do':'Ask Kova','Ask Kova: “'+q+'”','an answer in plain words','do:kova',function(){ if(window.KOVA_ASK) KOVA_ASK(q); else KovaChat.open(q); },isQuestion(q)?880:300);
     if(w){
       w.list('items').forEach(function(i){
         var sc=score(ql,i.name,(i.notes||'')+' '+(i.status||'')); if(!sc||!q) return;
@@ -61389,8 +61452,10 @@ window.KovaCmd=(function(){
       w.list('files').concat(w.list('folders')).forEach(function(f){ var sc=score(ql,f.name||f.title); if(sc&&q) add('file','Files',f.name||f.title,'file','f:'+f.id,function(){ nav('workfiles'); },sc,f.id); });
     }
     if(window.KovaCrew&&KovaCrew.emps) KovaCrew.emps().forEach(function(e){
-      var sc=score(ql,e.n,e.title+' '+(e.job||'')); if(!sc||!q) return;
-      add('mate','Your AI team',e.n,e.title,'e:'+e.id,function(){ nav('workteam'); if(KovaCrew.detail) setTimeout(function(){ try{ KovaCrew.detail(e.id); }catch(x){} },120); },sc,e.id);
+      if(!q) return;
+      var sc=Math.max(score(ql,e.n,e.title+' '+(e.job||'')),meaning(q,e.n+' '+e.title,(e.hints||[]).join(' ')+' '+(MATE_ALIAS[e.id]||''),'')*1.05);
+      if(sc<22) return;
+      add('mate','Your AI team',e.n+' · '+e.title,'open their page and message them','e:'+e.id,function(){ openMate(e.id); },sc+5,e.id);
     });
     if(window.KovaApps&&q.length>=2) KovaApps.all().forEach(function(a){
       var sc=score(ql,a.n,a.grp+' '+a.best); if(sc>=45) add('app','How the best tools do it',a.n,a.best,'a:'+a.id,function(){ KovaApps.open(a.id); },sc-10,a.id);
@@ -61405,7 +61470,8 @@ window.KovaCmd=(function(){
       if(per[r.group]<=(r.group==='Do'?4:(r.group==='Go to'&&!q?6:5))){ kept.push(r); if(seen.indexOf(r.group)<0) seen.push(r.group); }
     });
     var FIXED=['Do','Recent','Go to'];
-    function rank(g){ if(g==='Do') return 0; if(g==='Recent') return 1; return 2+(q?seen.indexOf(g):FIXED.indexOf(g)); }
+    var qn=q&&isQuestion(q)&&!looksLikeRule(q);
+    function rank(g){ if(qn&&g==='Go to') return -1; if(g==='Do') return 0; if(g==='Recent') return 1; if(g==='Did you mean') return 98; if(g==='Ask Kova') return 99; if(g==='Or make it a task') return 100; return 2+(q?seen.indexOf(g):FIXED.indexOf(g)); }
     var out=[];
     seen.slice().sort(function(a,b){ return rank(a)-rank(b); }).forEach(function(g){ kept.forEach(function(r){ if(r.group===g) out.push(r); }); });
     return out.slice(0,30);
@@ -61428,6 +61494,10 @@ window.KovaCmd=(function(){
     if(A&&A.wants&&A.wants(text)) return A.send(e,text).catch(function(){});
     if(C&&e&&C.start){ C.start(e,text,'you'); say(e.n+' is on it.'); nav('workteam'); return; }
     nav('workteam'); say('Set up your AI team first.');
+  }
+  function openMate(id){
+    nav('workteam');
+    setTimeout(function(){ try{ if(KovaCrew.openMate) KovaCrew.openMate(id); }catch(x){} },140);
   }
   function openTask(id){ if(window.__workDraw&&__workDraw.open){ __workDraw.open(id); } else nav('worktasks'); }
   function openMeeting(id){ if(window.__workMeet&&__workMeet.open) __workMeet.open(id); else nav('workmeetings'); }
@@ -61481,7 +61551,7 @@ window.KovaCmd=(function(){
         +'<svg class="ic" aria-hidden="true"><use href="#'+(ICON[r.kind]||'i-arrow-right')+'"/></svg>'
         +'<span><b>'+esc(r.t)+'</b>'+(r.s?'<small>'+esc(r.s)+'</small>':'')+'</span></div>';
     });
-    if(!S.rows.length) h='<div class="kcmd-none">Nothing found. Press ↵ to make it a task.</div>';
+    if(!S.rows.length) h='<div class="kcmd-none">Type a word or a question, like “where are my calories”.</div>';
     L.innerHTML=h;
     var inp=S.el.querySelector('#kcmdQ'); if(inp) inp.setAttribute('aria-activedescendant','kcmdR'+S.sel);
     var on=L.querySelector('.kcmd-r.on'); if(on&&on.scrollIntoView&&keepList) on.scrollIntoView({block:'nearest'});
@@ -61518,13 +61588,22 @@ window.KovaCmd=(function(){
   function wire(){
     document.querySelectorAll('.hdr-r .iconbtn').forEach(function(b){
       if(b.id||b.dataset.kcmd||b.getAttribute('onclick')||b.dataset.go) return;
-      var u=b.querySelector('use'); if(!u||(u.getAttribute('href')||'')!=='#i-search') return;
+      var u=b.querySelector('use'); if(!u) return;
+      /* the bell opens Settings at Notifications, where reminders are set */
+      if((u.getAttribute('href')||'')==='#i-bell'){
+        b.dataset.kcmd='bell'; b.setAttribute('aria-label','Reminders'); b.setAttribute('role','button'); if(!b.hasAttribute('tabindex')) b.tabIndex=0;
+        var bell=function(){ try{ go('settings'); }catch(e){} setTimeout(function(){ var c=document.getElementById('permCard'); if(c) c.scrollIntoView({block:'center',behavior:'smooth'}); },350); };
+        b.addEventListener('click',bell);
+        b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); bell(); } });
+        return;
+      }
+      if((u.getAttribute('href')||'')!=='#i-search') return;
       b.dataset.kcmd='1'; b.setAttribute('aria-label','Search Kova'); b.setAttribute('role','button'); if(!b.hasAttribute('tabindex')) b.tabIndex=0;
       b.addEventListener('click',function(){ open(); });
       b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
     });
     var wk=document.querySelector('#s-work .hdr-r');
-    if(wk&&!wk.querySelector('[data-kcmd]')){
+    if(wk&&!wk.querySelector('[data-kcmd="1"]')){
       var b=document.createElement('div');
       b.className='iconbtn'; b.dataset.kcmd='1'; b.setAttribute('role','button'); b.tabIndex=0; b.setAttribute('aria-label','Search Kova');
       b.innerHTML='<svg class="ic"><use href="#i-search"/></svg>';
@@ -61535,7 +61614,7 @@ window.KovaCmd=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
 
-  return {open:open,close:close,toggle:toggle,build:build,quick:quick,score:score,pick:pick,isOpen:function(){ return S.on; },_S:S,SCREENS:SCREENS};
+  return {open:open,close:close,toggle:toggle,build:build,quick:quick,score:score,meaning:meaning,pick:pick,isOpen:function(){ return S.on; },_S:S,SCREENS:SCREENS};
 })();
 
 </script>
@@ -63691,12 +63770,12 @@ window.KovaFormAI=(function(){
       +'"safety":"anything that risks injury, or an empty string"}\n'
       +'At most 5 findings, the ones that matter most first.';
   }
-  function ask(sys,imgs){
-    var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
+  function ask(sys,imgs,text,max){
+    var c=KovaModel.cfg(), P=KovaModel.providers[c.p], say=text||'Review my technique.';
     var content=c.p==='anthropic'
-      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:'Review my technique.'}])
-      : [{type:'text',text:'Review my technique.'}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
-    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],{temperature:0,max_tokens:1400});
+      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:say}])
+      : [{type:'text',text:say}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
+    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],{temperature:0,max_tokens:max||1400});
     return fetch(P.url,{method:'POST',headers:req.headers,body:req.body}).then(function(r){
       return r.json().catch(function(){ return {}; }).then(function(j){
         if(!r.ok) throw new Error((j&&j.error)||('The review did not come back ('+r.status+').'));
@@ -63769,8 +63848,117 @@ window.KovaFormAI=(function(){
       try{ if(window.KovaAnalytics) KovaAnalytics.track('form_ai',{lift:S.lift,n:imgs.length}); }catch(e){}
     }).catch(function(e){ if(host.__fai===S) paintError(host,(e&&e.message)||'Try again in a moment.'); });
   }
-  return {mount:mount,times:times,prompt:prompt,clean:clean,_ask:ask,_frames:frames};
+  /* p30: name the exercise from four stills of the set, so nobody has to
+     pick it from a list. LIST is every exercise Form Check has programming
+     for; anything else comes back with its movement pattern. */
+  var PATS=['squat','hinge','vpush','vpull','hpush','hpull','iso','cardio'];
+  var ID_SYS='You name the exercise a person is doing in photos from a gym or home workout (stills from one set, in order). '
+    +'Reply with JSON only, no other text: {"exercise":"its common name","match":"the exact name from LIST if one fits, else empty",'
+    +'"pattern":"one of squat, hinge, vpush, vpull, hpush, hpull, iso, cardio","equipment":"barbell, dumbbells, kettlebell, cable, machine, bodyweight or similar",'
+    +'"view":"side, front, back or angle","confidence":0-100,"also":["up to 2 other names from LIST it could be"],"why":"one short sentence: what in the photos shows it"}. '
+    +'vpush = overhead press, vpull = pull-ups and pulldowns, hpush = bench and push-ups, hpull = rows, iso = one joint (curls, raises, extensions). '
+    +'If no one is exercising, or you cannot tell, give exercise "" and confidence 0. Never guess a name you cannot see.';
+  function identify(imgs,names){
+    if(!ready()) return Promise.reject(new Error('signed-out'));
+    imgs=(imgs||[]).filter(Boolean).slice(0,4);
+    if(!imgs.length) return Promise.reject(new Error('no-frames'));
+    return ask(ID_SYS,imgs,'LIST: '+(names||[]).join(', '),400).then(function(o){
+      o=o||{};
+      return {exercise:String(o.exercise||'').slice(0,60).trim(),match:String(o.match||'').slice(0,60).trim(),
+        pattern:PATS.indexOf(String(o.pattern||''))>=0?String(o.pattern):'',equipment:String(o.equipment||'').slice(0,40),
+        view:String(o.view||'').slice(0,12),confidence:Math.max(0,Math.min(100,Math.round(+o.confidence||0))),
+        also:(Array.isArray(o.also)?o.also:[]).slice(0,2).map(function(x){ return String(x||'').slice(0,60); }).filter(Boolean),
+        why:String(o.why||'').slice(0,200)};
+    });
+  }
+  /* the answer, matched to Form Check's list (L); a name not on it is added
+     with its movement pattern's programming (P). Returns its index, or -1. */
+  function liftIndex(L,nm){
+    nm=String(nm||'').toLowerCase().trim(); if(!nm) return -1;
+    for(var k=0;k<L.length;k++) if(L[k].n.toLowerCase()===nm) return k;
+    for(var k2=0;k2<L.length;k2++){ var a=L[k2].n.toLowerCase(); if(a!=='something else'&&(nm.indexOf(a)>=0||a.indexOf(nm)>=0)) return k2; }
+    return -1;
+  }
+  function apply(o,L,P){
+    if(!o||!o.exercise||o.confidence<35) return -1;
+    var k=liftIndex(L,o.match); if(k<0) k=liftIndex(L,o.exercise);
+    if(k<0&&o.pattern&&P[o.pattern]){
+      var pr=P[o.pattern], nm=o.exercise.charAt(0).toUpperCase()+o.exercise.slice(1);
+      L.splice(L.length-1,0,{id:o.pattern+':'+nm, pid:o.pattern, n:nm, pat:pr.pat, ic:pr.ic,
+        prime:pr.prime, also:pr.also, tempo:pr.tempo, rx:pr.rx, cues:pr.cues, faults:pr.faults});
+      k=L.length-2;
+    }
+    return k;
+  }
+  /* "Kova identified this": named from the clip itself, one tap if it is
+     something else, no list to scroll. c: {A, L, picked, top, col, pick, more} */
+  function paintNamed(host,c){
+    var A=c.A, L=c.L, me=L[A.idx], alts=[];
+    (A.also||[]).forEach(function(n){ var k=liftIndex(L,n); if(k>=0&&k!==A.idx&&alts.indexOf(k)<0) alts.push(k); });
+    if(c.top) c.top.lifts.forEach(function(n){ var k=liftIndex(L,n); if(alts.length<4&&k>=0&&k!==A.idx&&alts.indexOf(k)<0) alts.push(k); });
+    var seen=[A.equipment?A.equipment.charAt(0).toUpperCase()+A.equipment.slice(1):'', A.view&&A.view!=='unclear'?'filmed from the '+A.view:''].filter(Boolean).join(', ');
+    var cur=c.picked<0?A.idx:c.picked;
+    var chip=function(k){ var on=(cur===k); return '<div class="chip fcpick" data-k="'+k+'" style="'+(on?'background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600':'')+'">'+esc(L[k].n)+'</div>'; };
+    host.innerHTML='<div class="card card-lg" style="border-color:var(--acc-brd);background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+      +'<div style="flex:1;min-width:0"><div class="lbl" style="color:var(--acc)">KOVA IDENTIFIED THIS</div>'
+      +'<div class="title-s" style="font-size:19px;margin-top:3px">'+esc(me.n)+'</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.45">'+esc(seen?seen+'. ':'')+esc(A.why||'')+'</div></div>'
+      +'<div style="text-align:right;flex-shrink:0;margin-left:10px"><div class="lbl">SURE</div>'
+      +'<div style="font-size:20px;font-weight:800;color:'+c.col(A.confidence)+';margin-top:2px">'+A.confidence+'%</div></div></div>'
+      +'<div style="margin-top:12px;padding-top:11px;border-top:.5px solid rgba(255,255,255,.12)">'
+      +'<div class="lbl" style="margin-bottom:7px">NOT IT? ONE TAP</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'+[A.idx].concat(alts).map(chip).join('')
+      +'<div class="chip" id="fcShowAll">Something else</div></div></div></div>';
+    host.querySelectorAll('.fcpick').forEach(function(e){ e.onclick=function(){ c.pick(+e.getAttribute('data-k')); }; });
+    var sa=host.querySelector('#fcShowAll'); if(sa) sa.onclick=c.more;
+  }
+  return {mount:mount,times:times,prompt:prompt,clean:clean,ready:ready,identify:identify,apply:apply,paintNamed:paintNamed,ID_SYS:ID_SYS,_ask:ask,_frames:frames};
 })();
+
+/* p30: Form Check's fast read. Jumping to 220 points of a clip one by one
+   cost a phone up to a third of a second each (over a minute for a
+   30-second clip). Playing it through, muted and sped up, hands over the
+   frames as they are shown, so the same clip reads in a few seconds.
+   KovaMotion.analyze (index.html) calls this and falls back to seeking
+   if it is not loaded or the clip will not play. c: {dur, step, opts,
+   grab, take, still, onProgress}. Resolves with the frames read. */
+window.KovaMotionFast=function(v,c){
+  return new Promise(function(ok,no){
+    if(c.opts.noPlay||typeof v.play!=='function') return no(new Error('no-play'));
+    var done=false, next=0, got=0, rvfc=typeof v.requestVideoFrameCallback==='function';
+    var last=-1, stuck=0, watch, prevCt=-1, looped=v.loop;
+    function end(err){
+      if(done) return; done=true; clearInterval(watch);
+      v.removeEventListener('ended',onEnd);
+      try{ v.pause(); v.playbackRate=1; v.loop=looped; }catch(e){}
+      if(err) no(err); else ok(got);
+    }
+    function onEnd(){ end(); }
+    function frame(now,meta){
+      if(done) return;
+      var ct=(meta&&typeof meta.mediaTime==='number')?meta.mediaTime:v.currentTime;
+      /* back at the start: it went round, so it has all been seen */
+      if(ct<prevCt-0.5) return end(); prevCt=ct;
+      if(ct>=next-c.step*0.4){
+        var g; try{ g=c.grab(); }catch(e){ return end(new Error('frame-read')); }
+        c.take(g,ct); c.still(ct); got++; next=ct+c.step;
+        if(c.onProgress&&got%4===0) c.onProgress(Math.min(0.99,ct/c.dur));
+      }
+      if(v.ended||ct>=c.dur-0.04) return end();
+      arm();
+    }
+    function arm(){ if(rvfc) v.requestVideoFrameCallback(frame); else (window.requestAnimationFrame||setTimeout)(function(){ frame(0,null); }); }
+    v.addEventListener('ended',onEnd);
+    /* a clip that stops moving (a decoder that gives up) falls back */
+    watch=setInterval(function(){ var t=v.currentTime; if(t===last){ if(++stuck>=8) end(new Error('stalled')); } else { stuck=0; last=t; } },250);
+    try{ v.muted=true; v.playsInline=true; v.setAttribute('playsinline',''); v.loop=false; }catch(e){}
+    try{ v.currentTime=0; }catch(e){}
+    try{ v.playbackRate=c.opts.rate||4; }catch(e){ try{ v.playbackRate=2; }catch(e2){} }
+    var pr; try{ pr=v.play(); }catch(e){ return end(new Error('no-play')); }
+    if(pr&&pr.then) pr.then(arm,function(){ end(new Error('no-play')); }); else arm();
+  });
+};
 
 </script>
 <script id="p08-goal">
@@ -63797,9 +63985,9 @@ window.KovaGoal=(function(){
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
 
-  var NAME={bodybuilding:'Build my physique',athletic:'Power and speed',showprep:'Get stage-ready',powerlifting:'Lift the heaviest weight',
-    weightloss:'Lose fat, keep muscle',toning:'Lean and defined',health:'Stay strong and mobile',calisthenics:'Bodyweight strength and skills',
-    endurance:'Run farther or faster',swimming:'Swim stronger',hiking:'Hike bigger days',hikebike:'Ride stronger'};
+  var NAME={bodybuilding:'Bodybuilding',athletic:'Athletic performance',showprep:'Show prep',powerlifting:'Powerlifting',
+    weightloss:'Weight loss',toning:'Tone and appearance',health:'General health',calisthenics:'Calisthenics',
+    endurance:'Running',swimming:'Swimming',hiking:'Hiking',hikebike:'Cycling'};
   var SPORT={endurance:'running',swimming:'swimming',hiking:'hiking',hikebike:'riding'};
   var UNIT={endurance:'run',swimming:'swim',hiking:'hike',hikebike:'ride'};
 
@@ -63867,8 +64055,8 @@ window.KovaGoal=(function(){
   /* ---------- sets, reps and rest for one exercise, by goal ---------- */
   var RX={bodybuilding:{s:3,note:'Stop each set 1–2 reps before you could not do another.'},
     showprep:{s:3,note:'Keep lifting the weights you use now while calories come down.'},
-    athletic:{s:4,note:'Move the weight fast. End the set when the speed drops.'},
-    powerlifting:{s:4,note:'Machines are extra work here. The main lifts come first.'},
+    athletic:{s:3,note:'Move the weight fast. End the set when the speed drops.'},
+    powerlifting:{s:3,note:'Three heavy sets. Beat the top of the rep range on all three and add weight next time.'},
     weightloss:{s:3,note:'Real effort on every set is what keeps your muscle in a diet.'},
     toning:{s:3,note:'Close to failure on the last set: the look comes from muscle plus less fat.'},
     health:{s:2,note:'Leave 2–3 reps in the tank. You should feel better after, not wrecked.'},
@@ -64755,6 +64943,159 @@ window.KovaFileAI=(function(){
     else if(a==='tasks') addTasks();
   });
   return {open:open,kind:kind,content:content,clean:clean,_sys:SYS};
+})();
+
+</script>
+<script id="p08-media">
+/* p30: moved out of the first download (index.html) - nothing uploads
+   before the first screen, and every caller checks window.KovaMedia. */
+/* =================================================================
+   KovaMedia - file storage for the things that are not JSON:
+   form-check videos, food photos, machine/equipment scans, avatars.
+   These are far too big for the realtime db, which is why they get
+   their own path and why only the resulting URL goes in the store.
+
+   Files go to the Kova api (/media/upload, Netlify Blobs on the free
+   plan) in 3 MB parts, because a function takes at most 6 MB per
+   request. Firebase Storage needs the paid Blaze plan since Feb 2026,
+   so it is no longer used.
+   ================================================================= */
+window.KovaMedia = (function(){
+  function uid(){
+    try { return (KOVA_FB.auth && KOVA_FB.auth.currentUser && KOVA_FB.auth.currentUser.uid) || null; }
+    catch(e){ return null; }
+  }
+  /* Blob | File | dataURL -> Blob, since the camera module hands back a
+     data URL and the file inputs hand back a File. */
+  function toBlob(x){
+    if (x instanceof Blob) return Promise.resolve(x);
+    if (typeof x === 'string' && x.indexOf('data:') === 0) {
+      return fetch(x).then(function(r){ return r.blob(); });
+    }
+    return Promise.reject(new Error('unsupported media type'));
+  }
+  return {
+    /* kind: 'form' | 'food' | 'machine' | 'avatar' | 'doc' | 'post' | 'lab' */
+    CHUNK: 3 * 1024 * 1024,
+    MAX: 120 * 1024 * 1024,
+    upload: function(kind, data, name, onProgress){
+      var self = this;
+      if (!window.KovaLink) return Promise.reject(new Error('storage unavailable'));
+      return toBlob(data).then(function(blob){
+        if (blob.size > self.MAX) throw new Error('That file is over 120 MB.');
+        var ext  = (name && name.indexOf('.') > 0) ? name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)
+                 : (blob.type.indexOf('video') === 0 ? 'mp4' : 'jpg');
+        if (ext.length < 2) ext = 'bin';
+        var id = Date.now() + '' + Math.floor(Math.random()*1000);
+        var n = Math.max(1, Math.ceil(blob.size / self.CHUNK)), sent = 0;
+        function put(i){
+          var part = blob.slice(i * self.CHUNK, Math.min(blob.size, (i + 1) * self.CHUNK));
+          var q = '/media/upload?kind=' + encodeURIComponent(kind) + '&id=' + id + '&ext=' + ext +
+                  '&i=' + i + '&n=' + n + '&type=' + encodeURIComponent(blob.type || '');
+          function go(tries){
+            return KovaLink.authFetch(q, { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: part })
+              .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
+                if (!r.ok) { var er = new Error(j.error || ('upload failed (' + r.status + ')')); er.status = r.status; throw er; }
+                return j;
+              }); })
+              /* one retry per part: a phone on gym wifi drops the odd request */
+              .catch(function(e){ if (tries < 1 && !(e.status >= 400 && e.status < 500 && e.status !== 409 && e.status !== 429)) return go(tries + 1); throw e; });
+          }
+          return go(0).then(function(j){ sent++; if (onProgress) onProgress(sent / n); return j; });
+        }
+        /* every part but the last goes up three at a time (it used to be one
+           after another); the last one goes alone, since it checks the rest */
+        var next = 0;
+        function lane(){ if (next >= n - 1) return Promise.resolve(); var k = next++; return put(k).then(lane); }
+        var lanes = []; for (var L = 0; L < Math.min(3, n - 1); L++) lanes.push(lane());
+        return Promise.all(lanes).then(function(){ return put(n - 1); }).then(function(j){
+          KovaAnalytics.track('media_upload', { kind: kind, bytes: blob.size });
+          return { url: j.url, path: j.path, bytes: j.bytes || blob.size, type: blob.type };
+        });
+      });
+    },
+    /* attach() is what the capture points actually call.
+
+       Rules it follows, because media upload must never be allowed to
+       break the feature it belongs to:
+         - it NEVER blocks. Form-check analysis, machine ident and food
+           logging all run locally and are already done by the time this
+           starts; the upload rides along behind them.
+         - a failure is reported once, quietly, and the local result is
+           untouched. Being offline in a gym is the normal case here,
+           not the exception.
+         - every successful upload is indexed in KP under 'media', which
+           rides the existing sync layer - so the LIST of your clips
+           reaches your other devices even before the files are opened
+           there.
+
+       kind: 'form' | 'food' | 'machine' | 'avatar' | 'doc' */
+    attach: function(kind, data, opts){
+      opts = opts || {};
+      var self = this;
+      var label = opts.name || (kind + ' file');
+
+      /* Signed out or backend down: say so once, do not pretend. A
+         silent no-op here is how someone loses a month of clips and
+         only finds out when they change phone. */
+      var u = null;
+      try { u = KOVA_FB.auth && KOVA_FB.auth.currentUser; } catch(e){}
+      if (!u || !window.KovaLink) {
+        if (opts.onState) opts.onState('local', 'Saved on this device only');
+        return Promise.resolve(null);
+      }
+
+      if (opts.onState) opts.onState('uploading', 'Uploading\u2026');
+
+      return this.upload(kind, data, opts.name, function(frac){
+        if (opts.onState) opts.onState('uploading',
+          'Uploading ' + Math.round(frac * 100) + '%');
+      }).then(function(res){
+        /* index it so it is findable later and syncs as data */
+        try {
+          var idx = (window.KP && KP.get('media')) || [];
+          idx.push({
+            kind: kind, url: res.url, path: res.path,
+            name: label, at: Date.now(), bytes: res.bytes, ref: opts.ref || null
+          });
+          /* cap the index, not the bucket - the files stay, only the
+             local list is trimmed so the synced key cannot grow forever */
+          if (idx.length > 300) idx = idx.slice(-300);
+          if (window.KP) KP.set('media', idx);
+        } catch(e){}
+        if (opts.onState) opts.onState('done', 'Backed up');
+        if (opts.onDone) opts.onDone(res);
+        return res;
+      }).catch(function(e){
+        if (opts.onState) opts.onState('error',
+          /network/i.test(e.message) ? 'No connection \u00b7 saved on this device'
+                                     : 'Upload failed \u00b7 saved on this device');
+        return null;
+      });
+    },
+    /* everything indexed locally, newest first - cheaper than listAll()
+       and works offline because it reads the synced KP index */
+    indexed: function(kind){
+      var idx = [];
+      try { idx = (window.KP && KP.get('media')) || []; } catch(e){}
+      return idx.filter(function(m){ return !kind || m.kind === kind; }).reverse();
+    },
+    remove: function(path){
+      if (!window.KovaLink) return Promise.reject(new Error('storage unavailable'));
+      return KovaLink.authFetch('/media/remove', { json: { path: path } }).then(function(r){
+        if (!r.ok) throw new Error('Could not delete that file (' + r.status + ').');
+        try {
+          var idx = (window.KP && KP.get('media')) || [];
+          if (window.KP) KP.set('media', idx.filter(function(m){ return m.path !== path; }));
+        } catch(e){}
+      });
+    },
+    /* everything this user has uploaded of one kind, newest first -
+       from the synced index, which every upload writes */
+    list: function(kind){
+      return Promise.resolve(this.indexed(kind).map(function(m){ return { url: m.url, path: m.path }; }));
+    }
+  };
 })();
 
 </script>

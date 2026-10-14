@@ -21,6 +21,8 @@
     { "source": "/refunds", "destination": "/refunds.html" },
     { "source": "/cookies", "destination": "/cookies.html" },
     { "source": "/licenses", "destination": "/licenses.html" },
+    { "source": "/__/auth/:path*", "destination": "https://kova-ee9d5.firebaseapp.com/__/auth/:path*" },
+    { "source": "/__/firebase/:path*", "destination": "https://kova-ee9d5.firebaseapp.com/__/firebase/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

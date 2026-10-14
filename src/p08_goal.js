@@ -21,9 +21,9 @@ window.KovaGoal=(function(){
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
 
-  var NAME={bodybuilding:'Build my physique',athletic:'Power and speed',showprep:'Get stage-ready',powerlifting:'Lift the heaviest weight',
-    weightloss:'Lose fat, keep muscle',toning:'Lean and defined',health:'Stay strong and mobile',calisthenics:'Bodyweight strength and skills',
-    endurance:'Run farther or faster',swimming:'Swim stronger',hiking:'Hike bigger days',hikebike:'Ride stronger'};
+  var NAME={bodybuilding:'Bodybuilding',athletic:'Athletic performance',showprep:'Show prep',powerlifting:'Powerlifting',
+    weightloss:'Weight loss',toning:'Tone and appearance',health:'General health',calisthenics:'Calisthenics',
+    endurance:'Running',swimming:'Swimming',hiking:'Hiking',hikebike:'Cycling'};
   var SPORT={endurance:'running',swimming:'swimming',hiking:'hiking',hikebike:'riding'};
   var UNIT={endurance:'run',swimming:'swim',hiking:'hike',hikebike:'ride'};
 
@@ -91,8 +91,8 @@ window.KovaGoal=(function(){
   /* ---------- sets, reps and rest for one exercise, by goal ---------- */
   var RX={bodybuilding:{s:3,note:'Stop each set 1–2 reps before you could not do another.'},
     showprep:{s:3,note:'Keep lifting the weights you use now while calories come down.'},
-    athletic:{s:4,note:'Move the weight fast. End the set when the speed drops.'},
-    powerlifting:{s:4,note:'Machines are extra work here. The main lifts come first.'},
+    athletic:{s:3,note:'Move the weight fast. End the set when the speed drops.'},
+    powerlifting:{s:3,note:'Three heavy sets. Beat the top of the rep range on all three and add weight next time.'},
     weightloss:{s:3,note:'Real effort on every set is what keeps your muscle in a diet.'},
     toning:{s:3,note:'Close to failure on the last set: the look comes from muscle plus less fat.'},
     health:{s:2,note:'Leave 2–3 reps in the tank. You should feel better after, not wrecked.'},

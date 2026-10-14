@@ -140,7 +140,7 @@ const user = (content) => ({ messages: [{ role: 'user', content }] });
   await until(() => /Lat pulldown/.test((A.doc.getElementById('mcResult') || {}).textContent || ''));
   const res = A.doc.getElementById('mcResult').textContent;
   ck('the answer names the machine and what it trains', /Lat pulldown/.test(res) && /Latissimus|lat/i.test(res));
-  ck('…with sets and reps for your goal and why it matters for swimming', /For your goal: Swim stronger/.test(res) && /swimming pull/.test(res));
+  ck('…with sets and reps for your goal and why it matters for swimming', /For your goal: Swimming/.test(res) && /swimming pull/.test(res));
 
   /* Form Check's technique review */
   const FA = A.w.KovaFormAI;

@@ -36,12 +36,13 @@ function dob(w, doc, d, m, y) {
 }
 
 (async () => {
-  /* Google refused */
+  /* Google refused. p30: one sign-in screen: the birthday first, then the
+     same boxed card as Settings, where the refusal is said */
+  const card = (doc) => doc.getElementById('kova-auth-modal');
+  const cardErr = (doc) => (doc.getElementById('kova-auth-err') || { textContent: '' }).textContent;
   const A = boot();
   await wait(400);
-  ck('the welcome screen is up and the sign-in sheet is not stacked on it', !!A.doc.getElementById('afEmail') && A.doc.getElementById('kova-auth-modal').style.display !== 'flex');
-  ck('the welcome screen has a place for sign-in problems', !!A.doc.getElementById('afErr'));
-  A.doc.getElementById('authGoogle').click(); await wait(60);
+  ck('the first screen is the birthday question, and the sign-in card is not stacked on it yet', !!A.doc.getElementById('afDay') && card(A.doc).style.display !== 'flex');
   ck('the age step asks day, month and year', !!A.doc.getElementById('afDay') && !!A.doc.getElementById('afMonth') && !!A.doc.getElementById('afYear'));
   ck('Continue waits for all three', A.doc.getElementById('afAgeGo').disabled);
   dob(A.w, A.doc, 31, 1, 1990);
@@ -49,9 +50,10 @@ function dob(w, doc, d, m, y) {
   dob(A.w, A.doc, 29, 1, 1992);
   ck('29 February in a leap year is a real date', !A.doc.getElementById('afAgeGo').disabled);
   A.doc.getElementById('afAgeGo').click(); await wait(120);
-  const err = (A.doc.getElementById('afErr') || { textContent: '' }).textContent;
-  ck('Google refused: the welcome screen says so, naming the address', /Google sign-in is not switched on for kovactive\.vercel\.app/.test(err));
-  ck('and the way forward is still on screen', !!A.doc.getElementById('afEmail') && !!A.doc.getElementById('authSkip'));
+  ck('then the boxed sign-in card opens (the same one as Settings)', card(A.doc).style.display === 'flex' && !!A.doc.querySelector('#ksiRoot [data-k="google"]'));
+  A.doc.querySelector('#ksiRoot [data-k="google"]').click(); await wait(120);
+  ck('Google refused: the card says so, naming the address', /Google sign-in is not switched on for kovactive\.vercel\.app/.test(cardErr(A.doc)));
+  ck('and the way forward is still on screen (email and password, Skip for now)', !!A.doc.getElementById('kova-email') && !!A.doc.querySelector('#ksiRoot [data-k="skip"]'));
   ck('only the yes is kept, never the birthday', /"at":\d+/.test(A.w.localStorage.getItem('kova.age16') || '') && !/1992|29/.test((A.w.localStorage.getItem('kova.age16') || '').replace(/"at":\d+/, '')));
 
   /* the pop-up blocked, and the full-page way refused too */
@@ -59,21 +61,19 @@ function dob(w, doc, d, m, y) {
   E.auth.signInWithPopup = () => Promise.reject({ code: 'auth/popup-blocked' });
   E.auth.signInWithRedirect = () => Promise.reject({ code: 'auth/unauthorized-domain' });
   await wait(400);
-  E.w.localStorage.setItem('kova.age16', JSON.stringify({ at: 1 }));
-  E.doc.getElementById('authGoogle').click(); await wait(120);
-  ck('pop-up blocked and the full-page way refused: still said on screen', /Google sign-in is not switched on/.test((E.doc.getElementById('afErr') || { textContent: '' }).textContent) && !E.w.localStorage.getItem('kova.auth.pending'));
+  dob(E.w, E.doc, 2, 3, 1990); E.doc.getElementById('afAgeGo').click(); await wait(120);
+  E.doc.querySelector('#ksiRoot [data-k="google"]').click(); await wait(120);
+  ck('pop-up blocked and the full-page way refused: still said on screen', /Google sign-in is not switched on/.test(cardErr(E.doc)));
 
   /* sixteen tomorrow */
   const B = boot();
   await wait(400);
-  B.doc.getElementById('authSkip').click(); await wait(60);
   const t = new Date(Date.now() + 864e5);
   dob(B.w, B.doc, t.getDate(), t.getMonth(), t.getFullYear() - 16);
   B.doc.getElementById('afAgeGo').click(); await wait(60);
-  ck('turning 16 tomorrow is still under 16 today: stopped, nothing kept', /16 and over/.test(text(B.doc)) && !B.w.localStorage.getItem('kova.age16') && !B.doc.getElementById('afYear'));
+  ck('turning 16 tomorrow is still under 16 today: stopped, nothing kept, no sign-in card', /16 and over/.test(text(B.doc)) && !B.w.localStorage.getItem('kova.age16') && !B.doc.getElementById('afYear') && card(B.doc).style.display !== 'flex');
   const C = boot();
   await wait(400);
-  C.doc.getElementById('authSkip').click(); await wait(60);
   const s = new Date();
   dob(C.w, C.doc, s.getDate(), s.getMonth(), s.getFullYear() - 16);
   C.doc.getElementById('afAgeGo').click(); await wait(60);

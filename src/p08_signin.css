@@ -44,6 +44,7 @@
 .ksi-alt{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:12px;border-radius:12px;border:.5px solid rgba(255,255,255,.16);
   background:rgba(255,255,255,.04);color:inherit;font:inherit;font-size:13px;cursor:pointer}
 .ksi-note{text-align:center;font-size:10.5px;font-weight:300;line-height:1.5;color:rgba(243,244,247,.3)}
+.ksi-note a{color:inherit;text-decoration:underline}
 .ksi button:focus-visible,.ksi-in:focus-visible{outline:2px solid #F3F4F7;outline-offset:2px}
 
 body.light-mode #kova-auth-modal{background:radial-gradient(ellipse 130% 95% at 50% -6%,#FFFFFF 0%,#F4F1EC 55%,#ECE7DF 100%)!important;color:#1C1A17}

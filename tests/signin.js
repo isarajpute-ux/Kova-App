@@ -89,7 +89,7 @@ function boot() {
   type('kova-password', 'kova2026'); type('kova-password2', 'kova2026');
   ck('matching passwords say so', /Passwords match/.test($('ksiMatch').textContent));
   $('kova-auth-go').click(); await wait(20);
-  ck('an email that already has an account says so, with Sign in instead and Reset password', /already an account for isa\.ratu@gmail\.com/.test(msg())
+  ck('an email that already has an account says so, with Sign in instead, Continue with Google and Reset password', /already have a Kova account with isa\.ratu@gmail\.com/.test(msg()) && /Continue with Google/.test($('kova-auth-err').textContent)
     && /Sign in instead/.test($('kova-auth-err').textContent));
   $('kova-auth-err').querySelector('button').click(); await wait(5);
   ck('"Sign in instead" goes back to Sign in with the email kept', /Welcome back/.test($('ksiH').textContent) && $('kova-email').value === 'isa.ratu@gmail.com');

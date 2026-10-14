@@ -11,7 +11,7 @@
                         JPEG photos, and the review shows each finding
      Add to my program  the lift really lands first on the matching day
      node tests/e2e/formai.mjs          (after npm run build) */
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { serve, openPage, SIGNED_OUT_LOCAL } from './harness.mjs';
@@ -21,7 +21,7 @@ const b = await chromium.launch();
 const site = await serve(join(root, 'dist'));
 
 /* 1. the clip */
-const maker = await b.newPage();
+const b0 = b; const maker = await b0.newPage();
 await maker.goto(site.url + '/licenses.html').catch(() => {});
 const clip = await maker.evaluate(async () => {
   const c = document.createElement('canvas'); c.width = 360; c.height = 640; const x = c.getContext('2d');
@@ -64,13 +64,15 @@ const STUB = `(function(){
 })();`;
 const PLAN = { name: 'bb', days: [{ n: 'Push day', ex: [{ e: 'Bench press', s: 3, r: 10 }] }, { n: 'Lower day', ex: [{ e: 'Leg press', s: 3, r: 10 }] }] };
 const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), 'kova.tours.v1': JSON.stringify({ home: 1, move: 1 }),
-  'kova_profile_v2': JSON.stringify({ quiz: { a: { goal: 3, exp: 1, days: 4, mins: 60, bw: 180 }, goal: 'powerlifting', days: 4, mins: 60, at: 1 }, plan: PLAN }) });
-const { context, page, pageErrors } = await openPage(b, null, { storage: STORE });
+  'kova_profile_v2': JSON.stringify({ quiz: { a: { goal: 3, exp: 1, days: 4, mins: 60, bw: 180 }, goal: 'powerlifting', days: 4, mins: 60, at: 1 }, plan: PLAN, tourSeen: true }) });
+const bw = process.env.ENGINE === 'webkit' ? await webkit.launch() : b;
+const { context, page, pageErrors } = await openPage(bw, null, { storage: STORE });
 await context.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: STUB }));
 const asks = [];
 await context.route(/\/api\/ai\/ask$/, async (r) => {
   const body = JSON.parse(r.request().postData() || '{}'); asks.push({ body, auth: r.request().headers().authorization });
   const n = ((body.messages || [])[0] || { content: [] }).content.filter((x) => x.type === 'image').length;
+  if (/You name the exercise/.test(body.system)) return r.fulfill({ contentType: 'application/json', body: JSON.stringify({ content: [{ type: 'text', text: JSON.stringify({ exercise: 'Back squat', match: 'Back squat', pattern: 'squat', equipment: 'barbell', view: 'side', confidence: 92, also: ['Front squat'], why: 'A bar on the upper back and the hips sink to knee height.' }) }] }) });
   await r.fulfill({ contentType: 'application/json', body: JSON.stringify({ content: [{ type: 'text', text: JSON.stringify({ view: 'side', overall: 'Depth is consistent across the set.',
     findings: [{ area: 'Depth', seen: 'Hips reach knee height in frame 2', verdict: 'good', cue: 'Keep it', frames: [2] },
       { area: 'Bar path', seen: 'The bar drifts forward in frame ' + n, verdict: 'fix', cue: 'Keep the bar over mid-foot', frames: [n] },
@@ -82,6 +84,7 @@ ck('signed in with no key of your own, Kova’s AI is on', await page.evaluate((
 
 /* 3. upload it */
 await page.evaluate(() => go('formcheck'));
+const t0 = Date.now();
 await page.setInputFiles('#fcFile', { name: 'squat.webm', mimeType: 'video/webm', buffer: Buffer.from(clip, 'base64') });
 const got = await page.waitForFunction(() => {
   const r = document.getElementById('fcResult'); if (r && r.style.display === 'block' && document.getElementById('fcAI')) return 'result';
@@ -89,7 +92,15 @@ const got = await page.waitForFunction(() => {
   if (/could not (read|be opened)/i.test(document.getElementById('s-formcheck').textContent)) return 'unreadable';
   return false;
 }, null, { timeout: 60000, polling: 200 }).then((h) => h.jsonValue()).catch(() => 'timeout');
+const secs = (Date.now() - t0) / 1000, clipLen = await page.evaluate(() => document.getElementById('fcVideo').duration);
+console.log('read a ' + clipLen.toFixed(1) + ' s clip in ' + secs.toFixed(1) + ' s');
 ck('a clip with no stated length is still read (not "could not read this video")', got === 'result' || got === 'pick');
+const named = asks.filter((a) => /You name the exercise/.test(a.body.system));
+const nImgs = named.length ? named[0].body.messages[0].content.filter((x) => x.type === 'image') : [];
+ck('Kova’s AI is asked to name the exercise, from 4 stills of the clip (JPEG photos)', named.length === 1 && nImgs.length === 4 && nImgs.every((x) => x.source.media_type === 'image/jpeg' && x.source.data.length > 1000));
+const det = await page.evaluate(() => ({ t: document.getElementById('fcDetected').innerText, list: document.getElementById('fcPickWrap').style.display }));
+ck('the exercise is named for you: "Kova identified this: Back squat", with one-tap alternatives and no list to scroll', /KOVA IDENTIFIED THIS/i.test(det.t) && /Back squat/.test(det.t) && /Front squat/.test(det.t) && det.list !== 'block');
+ck('the clip is read fast: tracking plus naming within 20 s (it used to take over a minute on a phone)', got === 'result' && secs < 20);
 if (got === 'pick') {
   await page.fill('#fcSearch', 'squat');
   await page.click('#fcLiftList .fcl');
@@ -99,16 +110,17 @@ const res = await page.evaluate(() => document.getElementById('fcResult').innerT
 const lift = await page.evaluate(() => (document.querySelector('#fcResult .title-s') || {}).textContent || '');
 const measured = await page.evaluate(() => (document.getElementById('fcMeasured').innerText || '') + ' ' + document.getElementById('fcResult').innerText);
 console.log('lift:', lift, '| reps line:', (measured.match(/\d+ reps?[^\n]*/i) || [''])[0]);
-ck('the plan names the lift', !!lift.trim());
-ck('reps and rest follow your goal (powerlifting: low reps, long rest)', /REPS\s*\n?\s*[1-5]-[3-6]/.test(res) && /3–5 min/.test(res) && /set for your goal: Lift the heaviest weight/.test(res));
+ck('the plan is for the lift Kova named', lift.trim() === 'Back squat');
+ck('reps and rest follow your goal (powerlifting: low reps, long rest)', /REPS\s*\n?\s*[1-5]-[3-6]/.test(res) && /3–5 min/.test(res) && /set for your goal: Powerlifting/.test(res));
 ck('Check my technique is offered, signed in', /Check my technique/.test(res));
 
 /* 4. the AI review */
 await page.click('#fcAI [data-fai="run"]');
 await page.waitForFunction(() => /Bar path/.test(document.getElementById('fcAI').textContent) || /did not work/.test(document.getElementById('fcAI').textContent), null, { timeout: 30000 });
-const ai = asks[asks.length - 1] || { body: { messages: [{ content: [] }] } };
+const tech = asks.filter((a) => !/You name the exercise/.test(a.body.system));
+const ai = tech[tech.length - 1] || { body: { messages: [{ content: [] }] } };
 const imgs = ai.body.messages[0].content.filter((x) => x.type === 'image');
-ck('frames from the set went to Kova’s AI with your sign-in, not a key', asks.length === 1 && ai.auth === 'Bearer tok-1');
+ck('frames from the set went to Kova’s AI with your sign-in, not a key', tech.length === 1 && ai.auth === 'Bearer tok-1' && asks.every((a) => a.auth === 'Bearer tok-1'));
 ck('between 3 and 6 frames, each a JPEG photo', imgs.length >= 3 && imgs.length <= 6 && imgs.every((x) => x.source.media_type === 'image/jpeg' && x.source.data.length > 1000));
 ck('the request is small enough for the server (under 4.5 MB)', JSON.stringify(ai.body).length < 4.5e6);
 const review = await page.evaluate(() => document.getElementById('fcAI').innerText);
@@ -125,6 +137,7 @@ ck('Add to my program puts the lift first on the matching day, and nowhere else'
 
 ck('no page errors', !pageErrors.length);
 if (pageErrors.length) console.log(pageErrors);
+if (bw !== b) await bw.close();
 await b.close(); site.close();
 const bad = R.filter((r) => !r[1]);
 R.forEach((r) => console.log((r[1] ? 'ok   ' : 'FAIL ') + r[0]));

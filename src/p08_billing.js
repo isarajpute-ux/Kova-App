@@ -186,7 +186,7 @@ window.KovaBilling=(function(){
     var go=function(url){ if(url){ try{ window.open(url,'_blank','noopener'); }catch(e){ location.href=url; } return true; } return false; };
     if(native()&&P&&P.n&&P.n.showManageSubscriptions) return P.n.showManageSubscriptions().catch(function(){ go(STORE[plat()]); });
     if(C.manage&&go(C.manage)) return Promise.resolve();
-    if(!configured()){ go(STORE[plat()]||''); return Promise.resolve(); }
+    if(!configured()){ if(!go(STORE[plat()]||'')) say('You have no subscription to manage. Payments are not switched on yet, so nothing is being charged.'); return Promise.resolve(); }
     return info().then(function(){ if(!go(C.manage||STORE[plat()]||'')) say('You have no active subscription to manage.'); })
       .catch(function(){ if(!go(STORE[plat()]||'')) say('Could not open your subscription right now.'); });
   }

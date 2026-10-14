@@ -73,10 +73,14 @@ function makeMedia(deps) {
     const path = `users/${uid}/${kind}/${id}.${ext}`;
     await store.set(part(path, i), buf);
     if (i < n - 1) return { ok: true, part: i };
-    /* the last part: check they are all there before calling it a file */
-    for (let k = 0; k < n - 1; k++) {
-      const b = await store.get(part(path, k), { type: 'arrayBuffer' });
-      if (!b) throw new MediaError(409, `Part ${k + 1} of ${n} is missing. Send it again.`);
+    /* the last part: check they are all there before calling it a file.
+       One listing, not a download of every part: fetching 60 MB back to
+       check a phone video ran out of time and the upload failed. */
+    if (n > 1) {
+      const have = new Set(((await store.list({ prefix: part(path, '') })).blobs || []).map((b) => b.key));
+      for (let k = 0; k < n - 1; k++) {
+        if (!have.has(part(path, k))) throw new MediaError(409, `Part ${k + 1} of ${n} is missing. Send it again.`);
+      }
     }
     const size = (n - 1) * CH + buf.length;
     const type = String(q.type || '').slice(0, 80) || 'application/octet-stream';

@@ -63,12 +63,12 @@ window.KovaFormAI=(function(){
       +'"safety":"anything that risks injury, or an empty string"}\n'
       +'At most 5 findings, the ones that matter most first.';
   }
-  function ask(sys,imgs){
-    var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
+  function ask(sys,imgs,text,max){
+    var c=KovaModel.cfg(), P=KovaModel.providers[c.p], say=text||'Review my technique.';
     var content=c.p==='anthropic'
-      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:'Review my technique.'}])
-      : [{type:'text',text:'Review my technique.'}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
-    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],{temperature:0,max_tokens:1400});
+      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:say}])
+      : [{type:'text',text:say}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
+    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],{temperature:0,max_tokens:max||1400});
     return fetch(P.url,{method:'POST',headers:req.headers,body:req.body}).then(function(r){
       return r.json().catch(function(){ return {}; }).then(function(j){
         if(!r.ok) throw new Error((j&&j.error)||('The review did not come back ('+r.status+').'));
@@ -141,5 +141,114 @@ window.KovaFormAI=(function(){
       try{ if(window.KovaAnalytics) KovaAnalytics.track('form_ai',{lift:S.lift,n:imgs.length}); }catch(e){}
     }).catch(function(e){ if(host.__fai===S) paintError(host,(e&&e.message)||'Try again in a moment.'); });
   }
-  return {mount:mount,times:times,prompt:prompt,clean:clean,_ask:ask,_frames:frames};
+  /* p30: name the exercise from four stills of the set, so nobody has to
+     pick it from a list. LIST is every exercise Form Check has programming
+     for; anything else comes back with its movement pattern. */
+  var PATS=['squat','hinge','vpush','vpull','hpush','hpull','iso','cardio'];
+  var ID_SYS='You name the exercise a person is doing in photos from a gym or home workout (stills from one set, in order). '
+    +'Reply with JSON only, no other text: {"exercise":"its common name","match":"the exact name from LIST if one fits, else empty",'
+    +'"pattern":"one of squat, hinge, vpush, vpull, hpush, hpull, iso, cardio","equipment":"barbell, dumbbells, kettlebell, cable, machine, bodyweight or similar",'
+    +'"view":"side, front, back or angle","confidence":0-100,"also":["up to 2 other names from LIST it could be"],"why":"one short sentence: what in the photos shows it"}. '
+    +'vpush = overhead press, vpull = pull-ups and pulldowns, hpush = bench and push-ups, hpull = rows, iso = one joint (curls, raises, extensions). '
+    +'If no one is exercising, or you cannot tell, give exercise "" and confidence 0. Never guess a name you cannot see.';
+  function identify(imgs,names){
+    if(!ready()) return Promise.reject(new Error('signed-out'));
+    imgs=(imgs||[]).filter(Boolean).slice(0,4);
+    if(!imgs.length) return Promise.reject(new Error('no-frames'));
+    return ask(ID_SYS,imgs,'LIST: '+(names||[]).join(', '),400).then(function(o){
+      o=o||{};
+      return {exercise:String(o.exercise||'').slice(0,60).trim(),match:String(o.match||'').slice(0,60).trim(),
+        pattern:PATS.indexOf(String(o.pattern||''))>=0?String(o.pattern):'',equipment:String(o.equipment||'').slice(0,40),
+        view:String(o.view||'').slice(0,12),confidence:Math.max(0,Math.min(100,Math.round(+o.confidence||0))),
+        also:(Array.isArray(o.also)?o.also:[]).slice(0,2).map(function(x){ return String(x||'').slice(0,60); }).filter(Boolean),
+        why:String(o.why||'').slice(0,200)};
+    });
+  }
+  /* the answer, matched to Form Check's list (L); a name not on it is added
+     with its movement pattern's programming (P). Returns its index, or -1. */
+  function liftIndex(L,nm){
+    nm=String(nm||'').toLowerCase().trim(); if(!nm) return -1;
+    for(var k=0;k<L.length;k++) if(L[k].n.toLowerCase()===nm) return k;
+    for(var k2=0;k2<L.length;k2++){ var a=L[k2].n.toLowerCase(); if(a!=='something else'&&(nm.indexOf(a)>=0||a.indexOf(nm)>=0)) return k2; }
+    return -1;
+  }
+  function apply(o,L,P){
+    if(!o||!o.exercise||o.confidence<35) return -1;
+    var k=liftIndex(L,o.match); if(k<0) k=liftIndex(L,o.exercise);
+    if(k<0&&o.pattern&&P[o.pattern]){
+      var pr=P[o.pattern], nm=o.exercise.charAt(0).toUpperCase()+o.exercise.slice(1);
+      L.splice(L.length-1,0,{id:o.pattern+':'+nm, pid:o.pattern, n:nm, pat:pr.pat, ic:pr.ic,
+        prime:pr.prime, also:pr.also, tempo:pr.tempo, rx:pr.rx, cues:pr.cues, faults:pr.faults});
+      k=L.length-2;
+    }
+    return k;
+  }
+  /* "Kova identified this": named from the clip itself, one tap if it is
+     something else, no list to scroll. c: {A, L, picked, top, col, pick, more} */
+  function paintNamed(host,c){
+    var A=c.A, L=c.L, me=L[A.idx], alts=[];
+    (A.also||[]).forEach(function(n){ var k=liftIndex(L,n); if(k>=0&&k!==A.idx&&alts.indexOf(k)<0) alts.push(k); });
+    if(c.top) c.top.lifts.forEach(function(n){ var k=liftIndex(L,n); if(alts.length<4&&k>=0&&k!==A.idx&&alts.indexOf(k)<0) alts.push(k); });
+    var seen=[A.equipment?A.equipment.charAt(0).toUpperCase()+A.equipment.slice(1):'', A.view&&A.view!=='unclear'?'filmed from the '+A.view:''].filter(Boolean).join(', ');
+    var cur=c.picked<0?A.idx:c.picked;
+    var chip=function(k){ var on=(cur===k); return '<div class="chip fcpick" data-k="'+k+'" style="'+(on?'background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600':'')+'">'+esc(L[k].n)+'</div>'; };
+    host.innerHTML='<div class="card card-lg" style="border-color:var(--acc-brd);background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+      +'<div style="flex:1;min-width:0"><div class="lbl" style="color:var(--acc)">KOVA IDENTIFIED THIS</div>'
+      +'<div class="title-s" style="font-size:19px;margin-top:3px">'+esc(me.n)+'</div>'
+      +'<div class="sub" style="margin-top:4px;line-height:1.45">'+esc(seen?seen+'. ':'')+esc(A.why||'')+'</div></div>'
+      +'<div style="text-align:right;flex-shrink:0;margin-left:10px"><div class="lbl">SURE</div>'
+      +'<div style="font-size:20px;font-weight:800;color:'+c.col(A.confidence)+';margin-top:2px">'+A.confidence+'%</div></div></div>'
+      +'<div style="margin-top:12px;padding-top:11px;border-top:.5px solid rgba(255,255,255,.12)">'
+      +'<div class="lbl" style="margin-bottom:7px">NOT IT? ONE TAP</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px">'+[A.idx].concat(alts).map(chip).join('')
+      +'<div class="chip" id="fcShowAll">Something else</div></div></div></div>';
+    host.querySelectorAll('.fcpick').forEach(function(e){ e.onclick=function(){ c.pick(+e.getAttribute('data-k')); }; });
+    var sa=host.querySelector('#fcShowAll'); if(sa) sa.onclick=c.more;
+  }
+  return {mount:mount,times:times,prompt:prompt,clean:clean,ready:ready,identify:identify,apply:apply,paintNamed:paintNamed,ID_SYS:ID_SYS,_ask:ask,_frames:frames};
 })();
+
+/* p30: Form Check's fast read. Jumping to 220 points of a clip one by one
+   cost a phone up to a third of a second each (over a minute for a
+   30-second clip). Playing it through, muted and sped up, hands over the
+   frames as they are shown, so the same clip reads in a few seconds.
+   KovaMotion.analyze (index.html) calls this and falls back to seeking
+   if it is not loaded or the clip will not play. c: {dur, step, opts,
+   grab, take, still, onProgress}. Resolves with the frames read. */
+window.KovaMotionFast=function(v,c){
+  return new Promise(function(ok,no){
+    if(c.opts.noPlay||typeof v.play!=='function') return no(new Error('no-play'));
+    var done=false, next=0, got=0, rvfc=typeof v.requestVideoFrameCallback==='function';
+    var last=-1, stuck=0, watch, prevCt=-1, looped=v.loop;
+    function end(err){
+      if(done) return; done=true; clearInterval(watch);
+      v.removeEventListener('ended',onEnd);
+      try{ v.pause(); v.playbackRate=1; v.loop=looped; }catch(e){}
+      if(err) no(err); else ok(got);
+    }
+    function onEnd(){ end(); }
+    function frame(now,meta){
+      if(done) return;
+      var ct=(meta&&typeof meta.mediaTime==='number')?meta.mediaTime:v.currentTime;
+      /* back at the start: it went round, so it has all been seen */
+      if(ct<prevCt-0.5) return end(); prevCt=ct;
+      if(ct>=next-c.step*0.4){
+        var g; try{ g=c.grab(); }catch(e){ return end(new Error('frame-read')); }
+        c.take(g,ct); c.still(ct); got++; next=ct+c.step;
+        if(c.onProgress&&got%4===0) c.onProgress(Math.min(0.99,ct/c.dur));
+      }
+      if(v.ended||ct>=c.dur-0.04) return end();
+      arm();
+    }
+    function arm(){ if(rvfc) v.requestVideoFrameCallback(frame); else (window.requestAnimationFrame||setTimeout)(function(){ frame(0,null); }); }
+    v.addEventListener('ended',onEnd);
+    /* a clip that stops moving (a decoder that gives up) falls back */
+    watch=setInterval(function(){ var t=v.currentTime; if(t===last){ if(++stuck>=8) end(new Error('stalled')); } else { stuck=0; last=t; } },250);
+    try{ v.muted=true; v.playsInline=true; v.setAttribute('playsinline',''); v.loop=false; }catch(e){}
+    try{ v.currentTime=0; }catch(e){}
+    try{ v.playbackRate=c.opts.rate||4; }catch(e){ try{ v.playbackRate=2; }catch(e2){} }
+    var pr; try{ pr=v.play(); }catch(e){ return end(new Error('no-play')); }
+    if(pr&&pr.then) pr.then(arm,function(){ end(new Error('no-play')); }); else arm();
+  });
+};

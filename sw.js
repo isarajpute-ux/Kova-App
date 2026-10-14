@@ -32,7 +32,7 @@ try {
   firebase.messaging();
 } catch (e) { /* no push on this install; reminders still show while Kova is open */ }
 
-var VERSION = 'kova-v5-114';
+var VERSION = 'kova-v5-115';
 var SHELL   = 'kova-shell-' + VERSION;
 var ASSETS  = 'kova-assets-' + VERSION;
 /* food and recipe photos (Unsplash): kept across versions, at most 80 */
@@ -88,7 +88,9 @@ self.addEventListener('fetch', function(e){
 
   /* The Kova api (same site since the move to Netlify), booking pages and the privacy
      page are live: never from cache. */
-  if (/\/api\/|\/\.netlify\/|\/privacy(\.html)?$|\/book(\.html|\/)/.test(new URL(url).pathname)) return;
+  /* /__/ is Google sign-in coming back (Firebase's pages, proxied by vercel.json):
+     never cached, and never saved as the app */
+  if (/\/api\/|\/__\/|\/\.netlify\/|\/privacy(\.html)?$|\/book(\.html|\/)/.test(new URL(url).pathname)) return;
 
   /* Navigations and the shell: network-first, cache as fallback. */
   if (req.mode === 'navigate' || /\/index\.html$/.test(url) || url.endsWith('/')) {

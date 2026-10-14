@@ -38,6 +38,13 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('the sport exercises exist in the library', ['Step up', 'Eccentric step down', 'Cable external rotation', 'Y-T-W raise', 'Box jump', 'Tibialis raise', 'Dead bug', 'Pogo hops'].every((n) => lib(n) && lib(n).n === n));
 
   // ---- gym days written for the sport
+  /* p30: realistic plans: 2-3 hard sets per exercise, never 4-5, and the plan says how to run them */
+  const goalsAll = Object.keys(P.goals), maxSets = [];
+  goalsAll.forEach((g) => [2, 3, 4, 5, 6].forEach((d) => [45, 60, 90].forEach((m) => { const pl = P.generate(g, d, m); pl.days.forEach((dy) => dy.ex.forEach((e) => maxSets.push([g, e.e, e.s]))); })));
+  const over = maxSets.filter((x) => x[2] > 3);
+  ck('every plan, every goal: 2-3 working sets per exercise (no 4 or 5 sets)', maxSets.length > 200 && !over.length && maxSets.every((x) => x[2] >= 1));
+  if (over.length) console.log(over.slice(0, 5));
+  ck('the plan says how to run the sets: close to failure, then add weight', /add weight next time/.test(P.generate('powerlifting', 4, 60).why) && /failure/.test(P.generate('bodybuilding', 4, 60).why));
   const sw = P.generate('swimming', 2, 60);
   ck('swimming: two dryland days, not a bodybuilding split', sw.sport && sw.days.length === 2 && /Dryland A/.test(sw.days[0].n) && !sw.days.some((d) => /Upper|Push|Legs A/.test(d.n)));
   ck('swimming: pulls, rotator cuff work and core on day A', (has(sw, 'Pull up') || has(sw, 'Lat pulldown')) && has(sw, 'Cable external rotation') && (has(sw, 'Dead bug') || has(sw, 'Plank')));
@@ -128,8 +135,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('and the tip is about those real numbers', /Quads could use 13 more sets/.test(doc.getElementById('cInsight').textContent) || /could use/.test(doc.getElementById('cInsight').textContent));
 
   // ---- the quiz
-  const quizOpts = w.document.getElementById('s-quiz') ? html.match(/'Swim stronger'/) && html.match(/'Hike bigger days'/) && html.match(/'Run farther or faster'/) : null;
-  ck('the quiz offers swimming, running, hiking, cycling and calisthenics', !!quizOpts && /'Ride stronger'/.test(html) && /'Bodyweight strength and skills'/.test(html));
+  const quizOpts = w.document.getElementById('s-quiz') ? html.match(/\['Swimming',/) && html.match(/\['Hiking',/) && html.match(/\['Running',/) && html.match(/\['Calisthenics',/) && html.match(/\['Cycling',/) : null;
+  ck('the quiz offers swimming, running, hiking, cycling and calisthenics', !!quizOpts && /'Road or trail · FTP-based rides'/.test(html) && /'Bodyweight strength and skills, like handstands'/.test(html));
 
   let p = 0, f = 0;
   R.forEach(([n, o]) => { console.log((o ? 'PASS' : 'FAIL') + ' - ' + n); o ? p++ : f++; });

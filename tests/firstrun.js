@@ -43,12 +43,13 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   await wait(700);
   const { w, doc } = A;
   ck('first open logs app_install', A.names().includes('app_install'));
-  const skip = doc.getElementById('authSkip');
-  ck('the welcome screen offers Kova without an account', !!skip);
-  skip.click(); await wait(80);
-  ck('the first way in asks your date of birth (day, month, year): Kova is for 16 and over', !!doc.getElementById('afDay') && !!doc.getElementById('afMonth') && !!doc.getElementById('afYear') && /16 and over/.test(wallText(doc)));
+  ck('the first screen asks your date of birth (day, month, year): Kova is for 16 and over', !!doc.getElementById('afDay') && !!doc.getElementById('afMonth') && !!doc.getElementById('afYear') && /16 and over/.test(wallText(doc)));
   [['afDay', '14'], ['afMonth', '5'], ['afYear', String(new Date().getFullYear() - 25)]].forEach(([id, v]) => { doc.getElementById(id).value = v; doc.getElementById(id).dispatchEvent(new w.Event('change')); });
   doc.getElementById('afAgeGo').click(); await wait(80);
+  const box = doc.getElementById('kova-auth-modal');
+  ck('then the same boxed sign-in card as Settings (one sign-in screen): Sign in / Create account, Google, Skip for now', box.style.display === 'flex' && /Create account/.test(box.textContent) && /Continue with Google/.test(box.textContent) && !!box.querySelector('.ksi-skip'));
+  box.querySelector('.ksi-skip').click(); await wait(120);
+  ck('"Skip for now" closes it and lets you in without an account', box.style.display === 'none');
   ck('no biometric prompt before the first win', !/Enable biometric unlock/.test(wallText(doc)));
   ck('question 1 comes straight away: what Kova is for, several allowed', /Three quick questions, then your day/.test(wallText(doc)) && /What do you want Kova for/.test(wallText(doc)) && doc.getElementById('obNext').disabled);
   pick(doc, 'fuel'); doc.getElementById('obNext').click(); await wait(30);
@@ -74,7 +75,7 @@ const pick = (doc, v) => { const b = doc.querySelector('.ob-opt[data-v="' + v + 
   const A2 = boot({ pre: dump });
   await wait(700);
   const wall2 = A2.doc.getElementById('authWall');
-  ck('after "Use Kova without one", the next launch skips the sign-in screen', !A2.doc.getElementById('authSkip') && (!wall2 || wall2.classList.contains('gone') || wall2.style.display === 'none'));
+  ck('after "Skip for now", the next launch skips the sign-in screen', !A2.doc.getElementById('authSkip') && (!wall2 || wall2.classList.contains('gone') || wall2.style.display === 'none'));
   ck('and there is no second sign-in form on top of the welcome screen', (() => { const m = A.doc.getElementById('kova-auth-modal'); return !m || m.style.display !== 'flex'; })());
 
   // ---------- the first win, then the plan ----------

@@ -1921,6 +1921,14 @@ window.KovaCrew=(function(){
   }
   var DETAIL={jobs:dJobs,ontime:dOnTime,status:dStatus,content:dContent,needs:dNeeds}, dCur=null;
   var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
+  /* p30: straight to one teammate's page, ready to message them (search,
+     "nutrition coach") */
+  function openMate(id){
+    if(!emp(id)) return false;
+    S.view='team'; S.nav='team'; S.tab=id; S.draft=null; paint(); top0();
+    setTimeout(function(){ var t=document.getElementById('crwEmpAsk'); if(t) try{ t.focus({preventScroll:true}); }catch(e){} },220);
+    return true;
+  }
   function detail(k){
     if(!DETAIL[k]) return;
     var was=S.view==='detail'&&dCur===k;
@@ -2540,5 +2548,5 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

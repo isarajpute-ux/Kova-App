@@ -45,6 +45,55 @@ window.KovaCmd=(function(){
     ['plan','Plans','subscription pricing upgrade trial billing']
   ];
 
+  /* p30: the words people actually type ("where's my eating", "macros",
+     "I'm tired"), so a broad question still lands somewhere. */
+  var SYN={
+    fuel:'eat eating ate diet macro carb fat sugar meal breakfast lunch dinner snack hungry water hydration drink calorie kcal food protein nutrient vitamin mineral fiber sodium',
+    recipes:'recipe cooking cook dish',
+    move:'workout exercise gym lift lifting training train set rep split program routine muscle strength weight dumbbell barbell',
+    formcheck:'form technique posture clip video squat deadlift',
+    machine:'machine equipment scan',
+    sleep:'tired insomnia bedtime dream wake asleep',
+    vitals:'heart pulse bpm readiness oxygen spo2 temperature',
+    stress:'anxious anxiety calm breathe breathing meditation meditate relax',
+    maint:'scale bmi measurement photo progress',
+    zone2:'walk walking run running jog steps cardio',
+    health:'allergy allergies medication medicine meds condition',
+    settings:'theme dark light mode notification reminder appearance units language sync backup',
+    profile:'account login sign password email name',
+    plan:'subscription payment pay billing price pro upgrade trial cancel',
+    workstudio:'post instagram tiktok youtube content caption reel social',
+    worktasks:'task todo',
+    workmeetings:'meeting call zoom calendar',
+    workteam:'ai team agent assistant'
+  };
+  var FILLER=" where wheres where's whats what's what how hows is are am was my me i i'm im the a an show find open go goto to see do does check can could page tab section screen please at of for view get bring up want need you your in on with about it its this that there here our we ";
+  function toks(q){ return String(q||'').toLowerCase().replace(/[^a-z0-9\s']/g,' ').split(/\s+/).filter(function(t){ return t&&FILLER.indexOf(' '+t+' ')<0; }).map(function(t){ return t.replace(/'s$/,''); }); }
+  function ed(a,b){ if(Math.abs(a.length-b.length)>2) return 9; var d=[],i,j; for(i=0;i<=a.length;i++) d[i]=[i]; for(j=0;j<=b.length;j++) d[0][j]=j;
+    for(i=1;i<=a.length;i++) for(j=1;j<=b.length;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[a.length][b.length]; }
+  /* one word against a list of words: same word, same start ("calories" /
+     "calorie", "eating" / "eat"), or one slip ("calroies") */
+  function wordHit(t,list){
+    var best=0;
+    list.forEach(function(w){
+      if(!w) return;
+      if(w===t) best=Math.max(best,3);
+      else if(Math.min(w.length,t.length)>=3&&(w.indexOf(t)===0||t.indexOf(w)===0)) best=Math.max(best,2);
+      else if(t.length>=4&&ed(t,w)<=(t.length>=7?2:1)) best=Math.max(best,1);
+    });
+    return best;
+  }
+  function meaning(q,title,words,id){
+    var T=toks(q); if(!T.length) return 0;
+    var tl=String(title).toLowerCase().split(/\s+/), wl=(String(words||'')+' '+(SYN[id]||'')).toLowerCase().split(/\s+/), sc=0;
+    T.forEach(function(t){ var a=wordHit(t,tl), b=wordHit(t,wl); sc+=a===3?60:a===2?50:b===3?45:b===2?38:a===1?30:b===1?22:0; });
+    return Math.min(95,sc);
+  }
+  var TASKV=/^(call|email|e-mail|text|message|send|pay|buy|order|book|write|finish|fix|review|schedule|follow up|prepare|prep|plan|update|submit|renew|clean|draft|post|reply|check in|invoice|ship|file|cancel|sign|read|print|pick up|drop off)\b/i;
+  /* the teammates by what people call them */
+  var MATE_ALIAS={nutrition:'nutritionist dietitian dietician fuel food diet eating coach',sleep:'sleep coach bedtime',pa:'assistant secretary',social:'social media manager instagram tiktok posts'};
+  function isQuestion(q){ return /^(where|what|how|why|when|which|is|are|can|do|does|show|find|open|take me|i want|i need|i'm|im)\b/i.test(q)||/\?\s*$/.test(q); }
+
   /* ---------------- matching ---------------- */
   function score(q,text,words){
     if(!q) return 1;
@@ -120,7 +169,11 @@ window.KovaCmd=(function(){
       }
       if(w){
         var tk=quick(q);
-        if(tk.name&&!looksLikeRule(q)) add('do','Do','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },mate?500:950);
+        /* p30: a line is only a task first when it reads like one (a day, !high,
+           #project, or a to-do word). "nutrition coach" + Enter used to add a
+           task called "Nutrition coach". Otherwise it is offered last. */
+        var tasky=!!tk.due||/(^|\s)[!#]\w/.test(q)||/^(task|todo|to do|remind me)\b/i.test(q)||TASKV.test(q);
+        if(tk.name&&!looksLikeRule(q)&&!(isQuestion(q)&&!tk.due)) add('do',tasky?'Do':'Or make it a task','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },tasky?(mate?500:950):1);
       }
       if(window.KovaApps){
         var rec=KovaApps.recommend(q,1)[0];
@@ -134,7 +187,15 @@ window.KovaCmd=(function(){
     }
 
     /* screens */
-    SCREENS.forEach(function(s){ var sc=score(ql,s[1],s[2]); if(sc) add('screen','Go to',s[1],'','s:'+s[0],function(){ nav(s[0]); },sc*(q?1:0.5),s[0]); });
+    SCREENS.forEach(function(s){ var sc=Math.max(score(ql,s[1],s[2]),q?meaning(q,s[1],s[2],s[0]):0); if(sc) add('screen','Go to',s[1],'','s:'+s[0],function(){ nav(s[0]); },sc*(q?1:0.5),s[0]); });
+    /* never a dead end: nothing matched, so offer the closest screens and Kova itself */
+    if(q&&!rows.some(function(r){ return r.group==='Go to'; })){
+      var near=SCREENS.map(function(s){ var T=toks(q), best=9; T.forEach(function(t){ (s[1]+' '+s[2]+' '+(SYN[s[0]]||'')).toLowerCase().split(/\s+/).forEach(function(w){ if(w.length>=3) best=Math.min(best,ed(t,w)); }); }); return [s,best]; })
+        .filter(function(x){ return x[1]<=3; }).sort(function(a,b){ return a[1]-b[1]; }).slice(0,3).map(function(x){ return x[0]; });
+      if(!near.length) near=SCREENS.filter(function(s){ return /^(fuel|move|sleep|vitals|work)$/.test(s[0]); });
+      near.forEach(function(s,i){ add('screen','Did you mean',s[1],'','s:'+s[0],function(){ nav(s[0]); },10-i,s[0]); });
+    }
+    if(q&&q.length>=3&&(window.KOVA_ASK||window.KovaChat)) add('do',isQuestion(q)?'Do':'Ask Kova','Ask Kova: “'+q+'”','an answer in plain words','do:kova',function(){ if(window.KOVA_ASK) KOVA_ASK(q); else KovaChat.open(q); },isQuestion(q)?880:300);
     if(w){
       w.list('items').forEach(function(i){
         var sc=score(ql,i.name,(i.notes||'')+' '+(i.status||'')); if(!sc||!q) return;
@@ -149,8 +210,10 @@ window.KovaCmd=(function(){
       w.list('files').concat(w.list('folders')).forEach(function(f){ var sc=score(ql,f.name||f.title); if(sc&&q) add('file','Files',f.name||f.title,'file','f:'+f.id,function(){ nav('workfiles'); },sc,f.id); });
     }
     if(window.KovaCrew&&KovaCrew.emps) KovaCrew.emps().forEach(function(e){
-      var sc=score(ql,e.n,e.title+' '+(e.job||'')); if(!sc||!q) return;
-      add('mate','Your AI team',e.n,e.title,'e:'+e.id,function(){ nav('workteam'); if(KovaCrew.detail) setTimeout(function(){ try{ KovaCrew.detail(e.id); }catch(x){} },120); },sc,e.id);
+      if(!q) return;
+      var sc=Math.max(score(ql,e.n,e.title+' '+(e.job||'')),meaning(q,e.n+' '+e.title,(e.hints||[]).join(' ')+' '+(MATE_ALIAS[e.id]||''),'')*1.05);
+      if(sc<22) return;
+      add('mate','Your AI team',e.n+' · '+e.title,'open their page and message them','e:'+e.id,function(){ openMate(e.id); },sc+5,e.id);
     });
     if(window.KovaApps&&q.length>=2) KovaApps.all().forEach(function(a){
       var sc=score(ql,a.n,a.grp+' '+a.best); if(sc>=45) add('app','How the best tools do it',a.n,a.best,'a:'+a.id,function(){ KovaApps.open(a.id); },sc-10,a.id);
@@ -165,7 +228,8 @@ window.KovaCmd=(function(){
       if(per[r.group]<=(r.group==='Do'?4:(r.group==='Go to'&&!q?6:5))){ kept.push(r); if(seen.indexOf(r.group)<0) seen.push(r.group); }
     });
     var FIXED=['Do','Recent','Go to'];
-    function rank(g){ if(g==='Do') return 0; if(g==='Recent') return 1; return 2+(q?seen.indexOf(g):FIXED.indexOf(g)); }
+    var qn=q&&isQuestion(q)&&!looksLikeRule(q);
+    function rank(g){ if(qn&&g==='Go to') return -1; if(g==='Do') return 0; if(g==='Recent') return 1; if(g==='Did you mean') return 98; if(g==='Ask Kova') return 99; if(g==='Or make it a task') return 100; return 2+(q?seen.indexOf(g):FIXED.indexOf(g)); }
     var out=[];
     seen.slice().sort(function(a,b){ return rank(a)-rank(b); }).forEach(function(g){ kept.forEach(function(r){ if(r.group===g) out.push(r); }); });
     return out.slice(0,30);
@@ -188,6 +252,10 @@ window.KovaCmd=(function(){
     if(A&&A.wants&&A.wants(text)) return A.send(e,text).catch(function(){});
     if(C&&e&&C.start){ C.start(e,text,'you'); say(e.n+' is on it.'); nav('workteam'); return; }
     nav('workteam'); say('Set up your AI team first.');
+  }
+  function openMate(id){
+    nav('workteam');
+    setTimeout(function(){ try{ if(KovaCrew.openMate) KovaCrew.openMate(id); }catch(x){} },140);
   }
   function openTask(id){ if(window.__workDraw&&__workDraw.open){ __workDraw.open(id); } else nav('worktasks'); }
   function openMeeting(id){ if(window.__workMeet&&__workMeet.open) __workMeet.open(id); else nav('workmeetings'); }
@@ -241,7 +309,7 @@ window.KovaCmd=(function(){
         +'<svg class="ic" aria-hidden="true"><use href="#'+(ICON[r.kind]||'i-arrow-right')+'"/></svg>'
         +'<span><b>'+esc(r.t)+'</b>'+(r.s?'<small>'+esc(r.s)+'</small>':'')+'</span></div>';
     });
-    if(!S.rows.length) h='<div class="kcmd-none">Nothing found. Press ↵ to make it a task.</div>';
+    if(!S.rows.length) h='<div class="kcmd-none">Type a word or a question, like “where are my calories”.</div>';
     L.innerHTML=h;
     var inp=S.el.querySelector('#kcmdQ'); if(inp) inp.setAttribute('aria-activedescendant','kcmdR'+S.sel);
     var on=L.querySelector('.kcmd-r.on'); if(on&&on.scrollIntoView&&keepList) on.scrollIntoView({block:'nearest'});
@@ -278,13 +346,22 @@ window.KovaCmd=(function(){
   function wire(){
     document.querySelectorAll('.hdr-r .iconbtn').forEach(function(b){
       if(b.id||b.dataset.kcmd||b.getAttribute('onclick')||b.dataset.go) return;
-      var u=b.querySelector('use'); if(!u||(u.getAttribute('href')||'')!=='#i-search') return;
+      var u=b.querySelector('use'); if(!u) return;
+      /* the bell opens Settings at Notifications, where reminders are set */
+      if((u.getAttribute('href')||'')==='#i-bell'){
+        b.dataset.kcmd='bell'; b.setAttribute('aria-label','Reminders'); b.setAttribute('role','button'); if(!b.hasAttribute('tabindex')) b.tabIndex=0;
+        var bell=function(){ try{ go('settings'); }catch(e){} setTimeout(function(){ var c=document.getElementById('permCard'); if(c) c.scrollIntoView({block:'center',behavior:'smooth'}); },350); };
+        b.addEventListener('click',bell);
+        b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); bell(); } });
+        return;
+      }
+      if((u.getAttribute('href')||'')!=='#i-search') return;
       b.dataset.kcmd='1'; b.setAttribute('aria-label','Search Kova'); b.setAttribute('role','button'); if(!b.hasAttribute('tabindex')) b.tabIndex=0;
       b.addEventListener('click',function(){ open(); });
       b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
     });
     var wk=document.querySelector('#s-work .hdr-r');
-    if(wk&&!wk.querySelector('[data-kcmd]')){
+    if(wk&&!wk.querySelector('[data-kcmd="1"]')){
       var b=document.createElement('div');
       b.className='iconbtn'; b.dataset.kcmd='1'; b.setAttribute('role','button'); b.tabIndex=0; b.setAttribute('aria-label','Search Kova');
       b.innerHTML='<svg class="ic"><use href="#i-search"/></svg>';
@@ -295,5 +372,5 @@ window.KovaCmd=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire); else wire();
 
-  return {open:open,close:close,toggle:toggle,build:build,quick:quick,score:score,pick:pick,isOpen:function(){ return S.on; },_S:S,SCREENS:SCREENS};
+  return {open:open,close:close,toggle:toggle,build:build,quick:quick,score:score,meaning:meaning,pick:pick,isOpen:function(){ return S.on; },_S:S,SCREENS:SCREENS};
 })();
