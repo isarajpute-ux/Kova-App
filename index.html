@@ -8298,6 +8298,11 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 #bodySvg g[stroke="rgba(255,255,255,.13)"]{stroke:rgba(255,255,255,.24)}
 body.light-mode #bodySvg .m[stroke="rgba(242,236,240,.16)"]{stroke:rgba(18,22,28,.34)}
 body.light-mode #bodySvg g[stroke="rgba(255,255,255,.13)"]{stroke:rgba(18,22,28,.26)}
+/* p30c: the woman's back is simple: the detail lines and muscle edges on
+   the back view are quieter; hair reads in every theme */
+#bodySvg[data-sex="f"] > g:last-of-type g[stroke="rgba(255,255,255,.13)"]{opacity:.35}
+#bodySvg[data-sex="f"] > g:last-of-type .m{stroke-opacity:.55}
+body.light-mode #bodySvg [data-hair]{fill:rgba(18,22,28,.30);stroke:rgba(18,22,28,.52)}
 
 </style>
 </head>
@@ -65598,9 +65603,12 @@ window.KovaBodyShape=(function(){
     return lerp(K,y);
   }
   function kl(y,f,b){ return lerp([[240,0.80-0.02*f+0.18*b],[330,0.80-0.02*f+0.16*b],[360,0.86+0.08*b],[420,0.90+0.06*b],[450,0.96]],y); }
-  function pt(x,y,P){
+  /* p30c: a woman's back is drawn slimmer than the front's shoulders
+     suggest, so it reads as a simple, slim back, not a bodybuilder's */
+  var BACKF=[[84,1],[112,0.93],[160,0.88],[205,0.95],[226,1]];
+  function pt(x,y,P,back){
     if(y<62) return [x,y];
-    var dx=x-100, s=dx<0?-1:1, a=Math.abs(dx), k=kt(y,P.f,P.b), Ty=lerp(T,y);
+    var dx=x-100, s=dx<0?-1:1, a=Math.abs(dx), k=kt(y,P.f,P.b)*(back&&P.f?lerp(BACKF,y):1), Ty=lerp(T,y);
     if(y>80&&y<268&&a>Ty+3){
       var Ay=lerp(A,y), ka=0.88-0.08*P.f+0.15*P.b;
       return [100+s*(Ay+Ty*(k-1)+(a-Ay)*ka),y];
@@ -65612,17 +65620,20 @@ window.KovaBodyShape=(function(){
     var leg=100+s*(lc*kh+(a-lc)*kl(y,P.f,P.b)), w=smooth(224,256,y);
     return [trunk+(leg-trunk)*w,y];
   }
-  function warp(d,P,isMuscle){
+  function warp(d,P,isMuscle,back){
     var out=[], nums=[];
     String(d).replace(/([MLCZ])|(-?\d*\.?\d+)/g,function(m0,c,n){ if(c){ flush(); out.push(c); } else nums.push(+n); return m0; });
     flush();
-    function flush(){ for(var i=0;i+1<nums.length;i+=2){ var x=isMuscle?fit(nums[i],nums[i+1]):nums[i]; var p=pt(x,nums[i+1],P); out.push((Math.round(p[0]*10)/10)+','+(Math.round(p[1]*10)/10)); } nums=[]; }
+    function flush(){ for(var i=0;i+1<nums.length;i+=2){ var x=isMuscle?fit(nums[i],nums[i+1]):nums[i]; var p=pt(x,nums[i+1],P,back); out.push((Math.round(p[0]*10)/10)+','+(Math.round(p[1]*10)/10)); } nums=[]; }
     return out.join(' ').replace(/ ([MLCZ]) /g,' $1').replace(/^([MLCZ]) /,'$1');
   }
 
-  var FILL='rgba(255,255,255,.055)', STROKE='rgba(255,255,255,.30)';
-  var HAIR_FRONT='M100,2 C86,2 76,12 76,30 C76,46 74,62 72,76 C80,80 90,78 94,70 L94,60 C86,52 82,40 82,28 C82,14 90,8 100,8 C110,8 118,14 118,28 C118,40 114,52 106,60 L106,70 C110,78 120,80 128,76 C126,62 124,46 124,30 C124,12 114,2 100,2 Z';
-  var HAIR_BACK='M100,2 C84,2 75,13 75,30 C75,50 73,64 72,78 C84,85 116,85 128,78 C127,64 125,50 125,30 C125,13 116,2 100,2 Z';
+  /* p30c: hair that reads as hair, not a hood or a wig: in front a cap with
+     a side-swept fringe and locks to the jaw, the face left clear; behind,
+     the back of the head and a ponytail down to the shoulder blades. Drawn
+     over the head outline, a little brighter than the skin. */
+  var HAIR_FRONT='M100,3 C86,3 77,12 77,27 C77,39 78,50 80,60 C81,64 84,64 85,60 C84,50 84,40 85,32 C90,26 96,22 104,20 C109,22 113,26 115,31 C116,40 116,50 115,60 C116,64 119,64 120,60 C122,50 123,39 123,27 C123,12 114,3 100,3 Z';
+  var HAIR_BACK='M100,3 C85,3 77,12 77,28 C77,42 80,52 86,58 C91,61 95,61 96,60 C94,72 94,86 97,98 C98,101 102,101 103,98 C106,86 106,72 104,60 C105,61 109,61 114,58 C120,52 123,42 123,28 C123,12 115,3 100,3 Z';
 
   function apply(){
     var svg=document.getElementById('bodySvg'); if(!svg) return null;
@@ -65633,17 +65644,19 @@ window.KovaBodyShape=(function(){
       var d0=p.getAttribute('data-d0'); if(!d0){ d0=p.getAttribute('d'); if(!d0) return; p.setAttribute('data-d0',d0); }
       var g=p.closest('g'); while(g&&g.parentNode!==svg) g=g.parentNode.closest('g');
       var outline=g&&g.querySelector('path:not([data-hair])')===p;
-      p.setAttribute('d',warp(d0,P,!outline));
+      p.setAttribute('d',warp(d0,P,!outline,!!(g&&g===figs[1])));
     });
     svg.querySelectorAll('[data-hair]').forEach(function(h){ h.remove(); });
+    svg.setAttribute('data-sex',P.f?'f':'m');
     if(P.f===1){
       var gs=svg.querySelectorAll(':scope > g');
       [gs[0],gs[1]].forEach(function(g,i){
         if(!g) return;
         var h=document.createElementNS('http://www.w3.org/2000/svg','path');
-        h.setAttribute('data-hair','1'); h.setAttribute('fill',FILL); h.setAttribute('stroke',STROKE); h.setAttribute('stroke-width','2'); h.setAttribute('stroke-linejoin','round');
+        h.setAttribute('data-hair','1'); h.setAttribute('fill','rgba(255,255,255,.17)'); h.setAttribute('stroke','rgba(255,255,255,.42)'); h.setAttribute('stroke-width','1.6'); h.setAttribute('stroke-linejoin','round');
         h.setAttribute('d',i===0?HAIR_FRONT:HAIR_BACK);
-        g.insertBefore(h,g.firstChild);
+        var ol=g.querySelector('path:not([data-hair])');
+        g.insertBefore(h,ol?ol.nextSibling:g.firstChild);
       });
     }
     note(P);
