@@ -15,17 +15,43 @@ window.KovaTour=(function(){
   function rect(el){
     var r=el.getBoundingClientRect(), pad=10;
     var top=Math.max(8,r.top-pad);
-    return {r:r,left:r.left-pad,top:top,w:r.width+pad*2,h:Math.max(40,Math.min(window.innerHeight-16-top,r.height+pad*2))};
+    return {r:r,left:r.left-pad,top:top,w:Math.max(2*RAD,r.width+pad*2),h:Math.max(2*RAD,Math.min(window.innerHeight-16-top,r.height+pad*2))};
   }
-  /* the light moves with transform (cheap for the phone) and is only
-     touched when its target really moved */
-  var last='';
+  /* p28: the dimmed page is four flat panels around the lit box plus four
+     rounded corners, and the glowing outline is its own small box. Every
+     part only ever moves or stretches with transform, which a phone does
+     on its graphics chip without redrawing anything, so the light glides
+     smoothly on an iPhone too. (It used to be one box with a page-sized
+     shadow whose width and height animated, which a phone has to repaint
+     on every frame: smooth on a computer, juddering on a phone.)
+     The outline changes size the same way: it takes its new size at once,
+     starts scaled to look like the old box, and scales back to 1. */
+  var RAD=20, last='', cur=null;
+  function parts(){ var o=$('#ksTour'); return o&&o.__p; }
   function spot(g){
-    var sp=$('#ksSpot'); if(!sp||!g) return;
-    var k=Math.round(g.left)+','+Math.round(g.top)+','+Math.round(g.w)+','+Math.round(g.h);
+    var P=parts(); if(!P||!g) return;
+    var n={l:Math.round(g.left),t:Math.round(g.top),w:Math.round(g.w),h:Math.round(g.h)};
+    var k=n.l+','+n.t+','+n.w+','+n.h;
     if(k===last) return; last=k;
-    sp.style.transform='translate3d('+Math.round(g.left)+'px,'+Math.round(g.top)+'px,0)';
-    sp.style.width=Math.round(g.w)+'px'; sp.style.height=Math.round(g.h)+'px';
+    var W=window.innerWidth, H=window.innerHeight;
+    if(P.W!==W||P.H!==H){ P.W=W; P.H=H; P.dim.forEach(function(d){ d.style.width=W+'px'; d.style.height=H+'px'; }); }
+    var cl=Math.max(0,Math.min(W,n.l)), cr=Math.max(cl,Math.min(W,n.l+n.w)), ct=Math.max(0,Math.min(H,n.t)), cb=Math.max(ct,Math.min(H,n.t+n.h));
+    var T=function(x,y,sx,sy){ return 'translate3d('+x+'px,'+y+'px,0) scale3d('+sx+','+sy+',1)'; };
+    P.dim[0].style.transform=T(0,0,1,ct/H);
+    P.dim[1].style.transform=T(0,cb,1,(H-cb)/H);
+    P.dim[2].style.transform=T(0,ct,cl/W,(cb-ct)/H);
+    P.dim[3].style.transform=T(cr,ct,(W-cr)/W,(cb-ct)/H);
+    var r=n.l+n.w-RAD, b=n.t+n.h-RAD;
+    [[n.l,n.t],[r,n.t],[n.l,b],[r,b]].forEach(function(c,i){ P.cn[i].style.transform=T(c[0],c[1],1,1); });
+    var sp=P.ring, o=cur; cur=n;
+    if(o&&(o.w!==n.w||o.h!==n.h)&&!sp.classList.contains('ride')){
+      sp.classList.add('jump');
+      sp.style.width=n.w+'px'; sp.style.height=n.h+'px';
+      sp.style.transform=T(o.l,o.t,o.w/n.w,o.h/n.h);
+      void sp.offsetWidth;
+      sp.classList.remove('jump');
+    } else { sp.style.width=n.w+'px'; sp.style.height=n.h+'px'; }
+    sp.style.transform=T(n.l,n.t,1,1);
   }
   var tick=0;
   function follow(){
@@ -107,8 +133,12 @@ window.KovaTour=(function(){
     if(r.top>=70&&r.bottom<=vh-190) return 0;
     var m=document.getElementById('main');
     if(m&&m.contains(el)){
-      var goal=m.scrollTop+r.top-Math.max(80,(vh-Math.min(r.height,vh*.5))/2-70);
-      if(m.scrollTo) m.scrollTo({top:Math.max(0,goal),behavior:'smooth'}); else m.scrollTop=Math.max(0,goal);
+      /* p28: a whole pixel, and checked: Safari can leave a smooth scroll to
+         154.8 px unfinished and then ignore the next one, which left the
+         light on a box still below the screen */
+      var goal=Math.round(Math.max(0,Math.min(m.scrollHeight-m.clientHeight,m.scrollTop+r.top-Math.max(80,(vh-Math.min(r.height,vh*.5))/2-70))));
+      if(m.scrollTo) m.scrollTo({top:goal,behavior:'smooth'}); else m.scrollTop=goal;
+      setTimeout(function(){ if(Math.abs(m.scrollTop-goal)>2) m.scrollTop=goal; },380);
     } else if(el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'center'});
     return 420;
   }
@@ -117,9 +147,10 @@ window.KovaTour=(function(){
     var s=st.steps[i];
     st.el=el; st.ride=false;
     if(st.seen[st.seen.length-1]!==i) st.seen.push(i);
-    var sp=$('#ksSpot'); if(sp) sp.classList.remove('ride');
+    var sp=$('#ksSpot'); if(sp){ sp.classList.remove('ride'); sp.style.opacity=''; }
+    var ov=$('#ksTour'); if(ov) ov.classList.remove('ride');
     var g=rect(el); spot(g);
-    setTimeout(function(){ if(st&&st.i===i){ st.ride=true; if(sp) sp.classList.add('ride'); } },560);
+    setTimeout(function(){ if(st&&st.i===i){ st.ride=true; if(sp) sp.classList.add('ride'); if(ov) ov.classList.add('ride'); } },560);
     var coach=$('#ksCoach'); if(!coach) return;
     var n=st.steps.length;
     coach.innerHTML='<div class="ks-cstep">'+(i+1)+' / '+n+'</div><div class="ks-ct">'+esc(s.t)+'</div><div class="ks-cd">'+esc(s.d)+'</div>'
@@ -127,8 +158,9 @@ window.KovaTour=(function(){
       +'<button class="ks-pill small white" data-t="next">'+(i===n-1?'Done':'Next')+ARROW+'</button></span></div>';
     var cw=Math.min(300,window.innerWidth-24), ch=150, below=g.top+g.h+14, above=g.top-14;
     coach.style.width=cw+'px';
-    coach.style.left=Math.max(12,Math.min(window.innerWidth-cw-12,g.r.left+g.r.width/2-cw/2))+'px';
-    coach.style.top=(below+ch<window.innerHeight?below:(above-ch>0?above-ch:Math.max(12,window.innerHeight-ch-24)))+'px';
+    /* placed with transform too, so the card glides instead of re-laying out every frame */
+    coach.style.setProperty('--cx',Math.round(Math.max(12,Math.min(window.innerWidth-cw-12,g.r.left+g.r.width/2-cw/2)))+'px');
+    coach.style.setProperty('--cy',Math.round(below+ch<window.innerHeight?below:(above-ch>0?above-ch:Math.max(12,window.innerHeight-ch-24)))+'px');
     coach.classList.remove('moving');
     requestAnimationFrame(function(){ coach.classList.add('on'); });
   }
@@ -140,15 +172,19 @@ window.KovaTour=(function(){
     if(i>=st.steps.length) return end();
     st.i=i;
     var coach=$('#ksCoach'); if(coach&&coach.classList.contains('on')) coach.classList.add('moving');
-    var s=st.steps[i];
-    try{ if(s.move) s.move(s,i); else if(st.o.move) st.o.move(s,i); }catch(e){}
-    var t0=Date.now();
+    var s=st.steps[i], moved=false;
+    try{ moved=!!(s.move?s.move(s,i):(st.o.move&&st.o.move(s,i))); }catch(e){}
+    /* p28: only a step that changed screen or section (or the first moments
+       of a tour, while its screen builds) waits for its box; anything else
+       is either there now or not at all, so a missing one is passed over at
+       once instead of leaving a dark screen with nothing lit */
+    var t0=Date.now(), limit=(moved||t0-st.start<1200)?900:150;
     (function wait(){
       if(!st||st.i!==i) return;
       var el=resolve(s);
       if(el&&!shown(el)) reveal(el);
       if(shown(el)){ var ms=center(el); setTimeout(function(){ place(i,el); },ms); return; }
-      if(Date.now()-t0>900) return go(i+1);
+      if(Date.now()-t0>limit) return go(i+1);
       setTimeout(wait,50);
     })();
   }
@@ -171,15 +207,26 @@ window.KovaTour=(function(){
     if(col){
       var n=parseInt(col.slice(1),16), rgb=[(n>>16)&255,(n>>8)&255,n&255].join(',');
       ov.classList.add('tinted'); ov.style.setProperty('--tc',col); ov.style.setProperty('--tg','rgba('+rgb+',.45)'); ov.style.setProperty('--tb','rgba('+rgb+',.16)');
+      /* the Next button's words: dark on a light colour, white on a dark one (light glass's deep accents) */
+      ov.style.setProperty('--tt',(.299*((n>>16)&255)+.587*((n>>8)&255)+.114*(n&255))/255>.55?'#111':'#FFF');
     }
-    ov.innerHTML='<div class="ks-spot ride" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';
+    ov.innerHTML='<div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div>'
+      +'<div class="ks-cn tl"></div><div class="ks-cn tr"></div><div class="ks-cn bl"></div><div class="ks-cn br"></div>'
+      +'<div class="ks-spot" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';
+    ov.style.setProperty('--kr',RAD+'px');
     document.body.appendChild(ov);
+    ov.__p={dim:[].slice.call(ov.querySelectorAll('.ks-dim')),cn:[].slice.call(ov.querySelectorAll('.ks-cn')),ring:ov.querySelector('#ksSpot')};
+    /* the whole page dims first, the light opens from the middle */
+    last=''; cur=null;
+    var mid={left:window.innerWidth/2-RAD,top:window.innerHeight/2-RAD,w:2*RAD,h:2*RAD};
+    spot(mid); ov.__p.ring.style.opacity='0';
+    void ov.offsetWidth;
     ov.addEventListener('click',function(e){
       var a=e.target.closest('[data-t]'); if(!a||!st) return;
       var k=a.getAttribute('data-t');
       if(k==='next') go(st.i+1); else if(k==='back') back(); else end();
     });
-    st={steps:steps,o:o||{},i:-1,el:null,ride:true,seen:[]}; last=''; tick=0;
+    st={steps:steps,o:o||{},i:-1,el:null,ride:true,seen:[],start:Date.now()}; tick=0;
     requestAnimationFrame(follow);
     go(0);
   }
@@ -206,7 +253,7 @@ window.KovaWorkTour=(function(){
   /* kept for callers: brings an element into view (the engine centres it) */
   function zoomTo(getEl){ var t=getEl&&getEl(); if(t&&t.scrollIntoView&&!/jsdom/i.test(navigator.userAgent||'')) t.scrollIntoView({behavior:'smooth',block:'center'}); return 0; }
   function stepOn(screen){
-    return function(){ if(onScreen()!==screen){ reset(); if(typeof go==='function') go(screen); } return 0; };
+    return function(){ if(onScreen()!==screen){ reset(); if(typeof go==='function') go(screen); return 1; } return 0; };
   }
   var STEPS=[
     {t:'Your Work OS',  d:'Studio, Board, AI team, Inbox and Files. Tap a tab to jump there.', el:el('#s-work .wk-tabs'), move:stepOn('work')},
@@ -317,6 +364,67 @@ window.KovaScreenTour=(function(){
       ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')]
     ]
   };
+  /* p28: with your own data (live mode) Today, Vitals, Sleep and Workout
+     show a plain card of what you have logged or synced instead of the
+     full sample screen (KovaLive). Their tours walk that card, so a tour
+     never points at boxes that are not there: that left a dark screen with
+     nothing lit, then quit. Stops for things that only show once there is
+     data are passed over when they are missing. */
+  var P=function(scr,sel){ return '#s-'+scr+' .kl-panel '+sel; };
+  var LIVE={
+    home:[
+      ['Your day','Each area shows only what you have logged or synced. Nothing here is made up.',P('home','.kv-card')],
+      ['One row per area','Fuel, Workout, Sleep, Vitals and Work. Tap a row to see that area\u2019s day.',P('home','.kl-row')],
+      ['Start here','Set your calorie target, or connect your watch so Sleep and Vitals fill in.',P('home','> .kl-acts')]
+    ],
+    vitals:[
+      ['Vitals','Resting heart rate, HRV, blood oxygen and breathing rate from your watch, each against its normal range.',P('vitals','.kv-card')],
+      ['Connect your watch','Set up the sync once. Your readings show here after the watch sends them.',P('vitals','.kl-act[data-act="watch"]')],
+      ['How syncing works','What your watch sends, and how often.',P('vitals','.kl-act[data-act="help"]')],
+      ['What comes next','Readiness, stress and fitness age build on two weeks of readings.',P('vitals','.kl-note')]
+    ],
+    sleep:[
+      ['Sleep','Last night from your watch: time asleep first, then stages if your watch records them.',P('sleep','.kv-card')],
+      ['Connect your watch','Set up the sync once. Each night shows up the morning after.',P('sleep','.kl-act[data-act="watch"]')],
+      ['How syncing works','What your watch sends, and how often.',P('sleep','.kl-act[data-act="help"]')],
+      ['Two weeks in','Sleep score, stage trends and what moves it need two weeks of nights.',P('sleep','.kl-note')],
+      ['Energy while you slept','What your body burned overnight, from your resting metabolism.','#slpBurn']
+    ],
+    move:[
+      ['Training','Your sessions this week and your last one, from what you log.',P('move','.kv-card')],
+      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')]
+    ]
+  };
+  /* finish every live tour the same way: getting around, and Kova itself */
+  var END={home:[['Move around','Every area is one tap away here.',rail],['Kova, one tap away','Chat, your seven health checks and your AI team. Kova sits in the sidebar, like the other areas.','#kgOrb']],
+    vitals:[['Find anything','Tap here and type what you are looking for: a reading, a screen, a task.','#s-vitals .hdr-r [data-kcmd]']]};
+  function gated(scr){ var e=document.getElementById('s-'+scr); return !!(e&&e.classList.contains('kl-gated')); }
+  /* the stops to play: a gated screen's stops become its live card's */
+  function list(id){
+    var out=[], done={};
+    (TOURS[id]||[]).forEach(function(t){
+      var where=t[3]||id;
+      if(LIVE[where]&&gated(where)){
+        if(done[where]) return; done[where]=1;
+        /* the card is drawn at once, so a stop it lacks is simply not there (5th field) */
+        LIVE[where].concat(END[where]||[]).forEach(function(x){ out.push([x[0],x[1],x[2],where===id?undefined:where,null,1]); });
+        return;
+      }
+      out.push(t);
+    });
+    return out;
+  }
+  /* a box hidden for good (a sample-only card, or one waiting on data) is
+     dropped before the tour starts, so the count reads 1 / 4, not 1 / 7
+     with gaps. Boxes in a closed tab or chart pane stay: the tour opens them. */
+  function hiddenForGood(el){
+    if(!el||!window.getComputedStyle) return false;
+    for(var p=el;p&&p!==document.body;p=p.parentElement){
+      if(p.classList&&(p.classList.contains('screen')||p.classList.contains('tabpane')||p.classList.contains('gpane'))) return false;
+      if(getComputedStyle(p).display==='none') return true;
+    }
+    return false;
+  }
   var NAME={home:'Today',move:'Workout',vitals:'Vitals',sleep:'Sleep',fuel:'Fuel',customize:'Customize workout'};
   function onScreen(){ var s=document.querySelector('.screen.on'); return s?s.id.replace(/^s-/,''):''; }
   function colour(){
@@ -326,15 +434,22 @@ window.KovaScreenTour=(function(){
   }
   function steps(id){
     var W=window.KovaWorkTour;
-    return (TOURS[id]||[]).map(function(t){
+    return list(id).map(function(t){
       var get=typeof t[2]==='function'?t[2]:function(){ return q(t[2]); };
       var where=t[3]||id;
-      return {t:t[0],d:t[1],el:get,move:function(){
+      return {t:t[0],d:t[1],el:get,now:!t[4],sure:!!t[5],move:function(){
         /* a step on another screen goes there first; the engine waits for it */
-        if(onScreen()!==where&&typeof window.go==='function'){ if(W&&W.reset) W.reset(); window.go(where); }
-        if(t[4]) try{ t[4](); }catch(e){}
-        return 0;
+        var moved=false;
+        if(onScreen()!==where&&typeof window.go==='function'){ if(W&&W.reset) W.reset(); window.go(where); moved=true; }
+        if(t[4]){ try{ t[4](); }catch(e){} moved=true; }
+        return moved;
       }};
+    }).filter(function(s){
+      /* only boxes that need no move to show can be judged now */
+      if(!s.now) return true;
+      var el=null; try{ el=s.el(); }catch(e){}
+      if(!el) return !s.sure;
+      return !hiddenForGood(el);
     });
   }
   function run(id){
@@ -342,9 +457,10 @@ window.KovaScreenTour=(function(){
     if(!TOURS[id]||!window.KovaTour) return false;
     if(onScreen()!==id&&typeof window.go==='function') window.go(id);
     KovaTour.mark(id);
-    var home=id, where=[id];
-    (TOURS[id]||[]).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
-    KovaTour.run(steps(id),{color:colour(),screens:where,done:function(why){
+    var home=id, where=[id], S=steps(id);
+    list(id).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
+    if(!S.length) return false;
+    KovaTour.run(S,{color:colour(),screens:where,done:function(why){
       if(window.KovaWorkTour) KovaWorkTour.reset();
       if(why==='left') return;                       /* you went elsewhere: stay there */
       if(onScreen()!==home&&typeof window.go==='function') window.go(home);
@@ -386,7 +502,7 @@ window.KovaScreenTour=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addButtons); else setTimeout(addButtons,0);
   /* a part of Kova that loads later adds its own tour */
   function register(id,name,list){ TOURS[id]=list; NAME[id]=name; addButtons(); }
-  return {run:run,onScreen:onScreenHook,steps:steps,TOURS:TOURS,register:register};
+  return {run:run,onScreen:onScreenHook,steps:steps,TOURS:TOURS,LIVE:LIVE,register:register};
 })();
 
 window.KovaCanvas=(function(){

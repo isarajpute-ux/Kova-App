@@ -3,8 +3,13 @@
    skipped because its box is missing or hidden), each step must arrive
    quickly, the lit box must sit on its target, and nothing may be left
    running when the tour ends.
+   p28: then again the way a phone plays them: Safari's engine at iPhone
+   size, with your own data (live mode, where Today, Vitals, Sleep and
+   Workout start as a plain card), each tour started by tapping "?" and
+   "Show me around". The light must only move with transform, which is
+   what keeps it smooth on a phone.
      node tests/e2e/tours.mjs          (after npm run build) */
-import { chromium } from 'playwright';
+import { chromium, webkit, devices } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { serve, openPage, SIGNED_OUT_LOCAL } from './harness.mjs';
@@ -71,7 +76,65 @@ for (const r of report) {
   ck(`${r.id}: the tour ends cleanly`, !r.left);
 }
 ck('no page errors', pageErrors.length === 0 || (console.error(pageErrors.slice(0, 5)), false));
-await context.close(); await b.close(); site.close();
+await context.close(); await b.close();
+
+/* ---- an iPhone, your own data, started by tapping ---- */
+{
+  const wb = await webkit.launch();
+  const { FIREBASE_STUB } = await import('./harness.mjs');
+  const ctx = await wb.newContext({ ...devices['iPhone 15 Pro Max'], serviceWorkers: 'block' });
+  await ctx.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: FIREBASE_STUB }));
+  await ctx.route(/gstatic\.com\/firebasejs\//, (r) => r.fulfill({ contentType: 'text/javascript', body: '' }));
+  await ctx.route(/googletagmanager\.com|google-analytics\.com|fonts\.googleapis\.com|fonts\.gstatic\.com|jsdelivr\.net|cdnjs\.cloudflare\.com/, (r) => r.fulfill({ contentType: 'text/css', body: '' }));
+  await ctx.route(/\/api\//, (r) => r.fulfill({ status: 404, contentType: 'application/json', body: '{}' }));
+  await ctx.addInitScript((s) => { for (const k in s) localStorage.setItem(k, s[k]); }, Object.assign({}, STORE, { kova_mode_v1: 'live' }));
+  const pg = await ctx.newPage();
+  const errs = []; pg.on('pageerror', (e) => errs.push(e.message));
+  await pg.goto(site.url + '/index.html', { waitUntil: 'load' });
+  await pg.waitForFunction(() => window.__kovaLazyDone && window.KovaVDock, null, { timeout: 30000 });
+  await pg.waitForTimeout(800);
+  const want = { home: 5, vitals: 4, sleep: 4, fuel: 4, move: 8 };
+  for (const id of Object.keys(want)) {
+    await pg.evaluate((id) => go(id), id);
+    await pg.waitForTimeout(700);
+    await pg.locator('#s-' + id + ' .kt-help').first().tap();
+    await pg.locator('.sheet [data-kh="tour"]').tap({ timeout: 4000 });
+    const shown = []; let stuck = false, slow = [];
+    for (let k = 0; k < 14; k++) {
+      const t0 = Date.now();
+      const got = await pg.waitForFunction((prev) => {
+        if (!document.getElementById('ksTour') && prev !== '') return { end: 1 };
+        const c = document.getElementById('ksCoach'); if (!c || !c.classList.contains('on')) return false;
+        const s = (c.querySelector('.ks-cstep') || {}).textContent; if (!s || s === prev) return false;
+        return { s, t: c.querySelector('.ks-ct').textContent };
+      }, shown.length ? shown[shown.length - 1].s : '', { timeout: 4000, polling: 50 }).then((h) => h.jsonValue()).catch(() => ({ stuck: 1 }));
+      if (got.end) break;
+      if (got.stuck) { stuck = true; break; }
+      if (Date.now() - t0 > 1300) slow.push(got.t + " " + (Date.now() - t0) + "ms");
+      await pg.waitForTimeout(650);
+      const on = await pg.evaluate(() => { const r = document.getElementById('ksSpot').getBoundingClientRect(); return r.width > 8 && r.height > 8 && r.top < innerHeight && r.bottom > 0; });
+      shown.push(Object.assign(got, { on }));
+      await pg.locator('#ksCoach [data-t="next"]').tap();
+    }
+    const total = shown.length ? +shown[0].s.split('/')[1] : 0;
+    console.log(`iPhone, own data, ${id}: ${shown.length}/${total} shown: ${shown.map((x) => x.t).join(', ')}${stuck ? ' | STUCK' : ''}${slow.length ? ' | slow: ' + slow.join(', ') : ''}${shown.some((x) => !x.on) ? ' | off: ' + shown.filter((x) => !x.on).map((x) => x.t).join(', ') : ''}`);
+    ck(`iPhone, own data, ${id}: every stop shows, numbered without gaps (${want[id]} stops)`, !stuck && shown.length === want[id] && total === want[id] && shown.every((x, i) => x.s.trim() === (i + 1) + ' / ' + total));
+    ck(`iPhone, own data, ${id}: each stop arrives within 1.3 s and is lit on screen`, !slow.length && shown.every((x) => x.on));
+    await pg.evaluate(() => { if (KovaTour.active()) KovaTour.end(); });
+  }
+  /* smooth: only transform moves (nothing is redrawn frame by frame) */
+  const motion = await pg.evaluate(() => {
+    KovaScreenTour.run('fuel');
+    const g = (sel) => getComputedStyle(document.querySelector(sel)).transitionProperty;
+    const r = [g('#ksSpot'), g('.ks-dim'), g('.ks-cn'), g('#ksCoach')];
+    KovaTour.end(); return r;
+  });
+  ck('the light, the dimmed page and the card only animate transform (and fading), never width, height, left or top: ' + motion.join(' | '),
+    motion.every((p) => !/width|height|left|top|all/.test(p)) && motion.every((p) => /transform/.test(p)));
+  ck('iPhone: no page errors', errs.length === 0 || (console.error(errs.slice(0, 5)), false));
+  await ctx.close(); await wb.close();
+}
+site.close();
 const failed = R.filter((x) => !x[1]);
 R.forEach((x) => console.log((x[1] ? 'PASS ' : 'FAIL ') + x[0]));
 console.log(`\n${R.length - failed.length}/${R.length} passing`);

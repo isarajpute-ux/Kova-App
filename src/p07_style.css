@@ -574,17 +574,32 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 
 /* ----- guided tour: a moving spotlight and one short line ----- */
 .ks-world.ks-glide{transition:transform .7s cubic-bezier(.33,.7,.2,1)}
-.ks-tour{position:fixed;inset:0;z-index:400;pointer-events:auto}
-.ks-spot{position:fixed;left:0;top:0;width:0;height:0;border-radius:28px;pointer-events:none;will-change:transform,width,height;
-  transform:translate3d(50vw,50vh,0);
-  box-shadow:0 0 0 200vmax rgba(4,4,6,.66),0 0 0 2px var(--tc,rgba(255,255,255,.85)),0 0 34px var(--tg,rgba(255,255,255,.35));
-  transition:transform .5s cubic-bezier(.22,1,.36,1),width .5s cubic-bezier(.22,1,.36,1),height .5s cubic-bezier(.22,1,.36,1)}
-.ks-spot.ride{transition:transform .18s linear,width .18s linear,height .18s linear}
-.ks-coach{position:fixed;left:50%;top:50%;padding:18px 18px 14px;border-radius:22px;
+.ks-tour{position:fixed;inset:0;z-index:400;pointer-events:auto;--kd:rgba(4,4,6,.66)}
+@keyframes ks-in{from{opacity:0}to{opacity:1}}
+/* p28: four flat panels and four rounded corners dim the page around the
+   lit box; they and the outline only move with transform (smooth on phones) */
+.ks-dim,.ks-cn,.ks-spot{position:fixed;left:0;top:0;pointer-events:none;transform-origin:0 0;will-change:transform;
+  transition:transform .5s cubic-bezier(.22,1,.36,1)}
+/* the dimmed parts fade in on their own: fading the whole tour layer would
+   cut the card off from the page behind it, and its frosted blur with it */
+.ks-dim,.ks-cn{animation:ks-in .25s ease both}
+.ks-dim{width:100vw;height:100vh;background:var(--kd)}
+.ks-cn{width:20px;height:20px}
+.ks-cn.tl{background:radial-gradient(circle 20px at 100% 100%,transparent 19.5px,var(--kd) 20px)}
+.ks-cn.tr{background:radial-gradient(circle 20px at 0 100%,transparent 19.5px,var(--kd) 20px)}
+.ks-cn.bl{background:radial-gradient(circle 20px at 100% 0,transparent 19.5px,var(--kd) 20px)}
+.ks-cn.br{background:radial-gradient(circle 20px at 0 0,transparent 19.5px,var(--kd) 20px)}
+.ks-spot{width:0;height:0;border-radius:20px;
+  box-shadow:0 0 0 2px var(--tc,rgba(255,255,255,.85)),0 0 34px var(--tg,rgba(255,255,255,.35));
+  transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .3s ease}
+.ks-tour.ride .ks-dim,.ks-tour.ride .ks-cn,.ks-spot.ride{transition:transform .18s linear}
+.ks-spot.jump{transition:none}
+.ks-coach{position:fixed;left:0;top:0;padding:18px 18px 14px;border-radius:22px;
   background:linear-gradient(160deg,rgba(255,255,255,.17),rgba(255,255,255,.08));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);will-change:transform,opacity;
-  border:1px solid rgba(255,255,255,.16);box-shadow:0 26px 60px rgba(0,0,0,.6);opacity:0;transform:translateY(8px) scale(.98);
-  transition:opacity .3s ease,transform .3s ease,left .45s ease,top .45s ease}
-.ks-coach.on{opacity:1;transform:none}
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 26px 60px rgba(0,0,0,.6);opacity:0;
+  transform:translate3d(var(--cx,calc(50vw - 150px)),calc(var(--cy,50vh) + 8px),0) scale(.98);
+  transition:opacity .3s ease,transform .45s cubic-bezier(.22,1,.36,1)}
+.ks-coach.on{opacity:1;transform:translate3d(var(--cx,0px),var(--cy,0px),0)}
 .ks-coach.on.moving{opacity:.55}
 .ks-cstep{font-size:11.5px;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px}
 .ks-ct{font-size:19px;font-weight:500;color:#fff;margin-bottom:4px}
@@ -596,8 +611,8 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 /* section-coloured tours (Home, Vitals, Workout, Sleep, Fuel) */
 .ks-tour.tinted .ks-cstep{color:var(--tc)}
 .ks-tour.tinted .ks-coach{border-color:var(--tg);box-shadow:0 26px 60px rgba(0,0,0,.6),0 0 0 1px var(--tb)}
-.ks-tour.tinted .ks-pill.white{background:var(--tc);border-color:var(--tc);color:#111;box-shadow:0 0 18px var(--tg)}
-.ks-tour.tinted .ks-pill.white .ki{color:#111}
+.ks-tour.tinted .ks-pill.white{background:var(--tc);border-color:var(--tc);color:var(--tt,#111);box-shadow:0 0 18px var(--tg)}
+.ks-tour.tinted .ks-pill.white .ki{color:var(--tt,#111)}
 .kt-help{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-left:10px;vertical-align:middle;
   border-radius:50%;border:1px solid color-mix(in srgb,var(--acc,#fff) 55%,transparent);background:color-mix(in srgb,var(--acc,#fff) 12%,transparent);
   color:var(--acc,#fff);font:600 14px/1 'Urbanist','Outfit',sans-serif;cursor:pointer;padding:0;position:relative;top:-2px}
@@ -671,4 +686,4 @@ body.ks-on #kovaFab{display:none!important}
   .ks-card{height:172px}
 }
 
-@media (prefers-reduced-motion:reduce){ .ks-spot,.ks-spot.ride,.ks-coach{transition:none} }
+@media (prefers-reduced-motion:reduce){ .ks-dim,.ks-cn{animation:none} .ks-dim,.ks-cn,.ks-spot,.ks-spot.ride,.ks-tour.ride .ks-dim,.ks-tour.ride .ks-cn,.ks-coach{transition:none} }
