@@ -734,7 +734,8 @@ const TGROUPS = ['broad', 'mid', 'niche', 'brand'];
    100 g, so the page can scale by the grams you type. FDC_API_KEY is a free
    api.data.gov key; DEMO_KEY works but is rate-limited per IP. */
 const FDC_N = { kcal: [1008, 2047, 2048], p: [1003], c: [1005], f: [1004],
-  fib: [1079], na: [1093], k: [1092], ca: [1087], fe: [1089], mg: [1090], c_: [1162], d: [1114], b12: [1178], fol: [1177, 1190] };
+  fib: [1079], na: [1093], k: [1092], ca: [1087], fe: [1089], mg: [1090], c_: [1162], d: [1114], b12: [1178], fol: [1177, 1190],
+  a: [1106], vk: [1185], zn: [1095] };
 function fdcFood(x) {
   const by = {};
   (x.foodNutrients || []).forEach((n) => {
@@ -745,7 +746,7 @@ function fdcFood(x) {
   const pick = (ids) => { for (const i of ids) if (by[i] != null) return by[i]; return null; };
   const r1 = (v) => Math.round((v || 0) * 10) / 10;
   const m = {};
-  ['fib', 'na', 'k', 'ca', 'fe', 'mg', 'c_', 'd', 'b12', 'fol'].forEach((k) => { const v = pick(FDC_N[k]); if (v != null) m[k === 'c_' ? 'c' : k] = r1(v); });
+  ['fib', 'na', 'k', 'ca', 'fe', 'mg', 'c_', 'd', 'b12', 'fol', 'a', 'vk', 'zn'].forEach((k) => { const v = pick(FDC_N[k]); if (v != null) m[k === 'c_' ? 'c' : k] = r1(v); });
   const kcal = pick(FDC_N.kcal);
   if (kcal == null) return null;
   return { id: x.fdcId, n: String(x.description || '').slice(0, 120), type: x.dataType || '',

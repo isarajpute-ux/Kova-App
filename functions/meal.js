@@ -26,17 +26,17 @@ RULES:
 - If the photo contains no food, return [].
 
 Respond with ONLY a JSON array, no prose, no markdown, one object per item with these short keys:
-n name, g grams, c confidence, kcal, p protein g, cb carbs g, f fat g, fib fiber g, na sodium mg, k potassium mg, ca calcium mg, fe iron mg, mg magnesium mg, vc vitamin C mg, vd vitamin D ug, b12 vitamin B12 ug, fol folate ug, v a few words on the size clue.
-Example: [{"n":"Grilled chicken breast","g":140,"c":88,"kcal":231,"p":43,"cb":0,"f":5,"fib":0,"na":90,"k":360,"ca":21,"fe":1.5,"mg":41,"vc":0,"vd":0.1,"b12":0.5,"fol":6,"v":"deck of cards"}]
+n name, g grams, c confidence, kcal, p protein g, cb carbs g, f fat g, fib fiber g, na sodium mg, k potassium mg, ca calcium mg, fe iron mg, mg magnesium mg, vc vitamin C mg, vd vitamin D ug, b12 vitamin B12 ug, fol folate ug, va vitamin A ug RAE, vk vitamin K ug, zn zinc mg, v a few words on the size clue.
+Example: [{"n":"Grilled chicken breast","g":140,"c":88,"kcal":231,"p":43,"cb":0,"f":5,"fib":0,"na":90,"k":360,"ca":21,"fe":1.5,"mg":41,"vc":0,"vd":0.1,"b12":0.5,"fol":6,"va":13,"vk":0.4,"zn":1.4,"v":"deck of cards"}]
 Micronutrients come from the USDA profile for that weight; 0 when the food has none.`;
 
 const NUM = ['estimated_weight_grams', 'confidence_percentage', 'calories', 'protein_grams', 'carbs_grams', 'fat_grams',
-  'fiber_grams', 'sodium_mg', 'potassium_mg', 'calcium_mg', 'iron_mg', 'magnesium_mg', 'vitamin_c_mg', 'vitamin_d_ug', 'vitamin_b12_ug', 'folate_ug'];
+  'fiber_grams', 'sodium_mg', 'potassium_mg', 'calcium_mg', 'iron_mg', 'magnesium_mg', 'vitamin_c_mg', 'vitamin_d_ug', 'vitamin_b12_ug', 'folate_ug', 'vitamin_a_ug', 'vitamin_k_ug', 'zinc_mg'];
 /* the model answers in short keys (fewer words to write is most of the
    speed); the page still gets the long names it has always read */
 const SHORT = { n: 'ingredient', g: 'estimated_weight_grams', c: 'confidence_percentage', kcal: 'calories', p: 'protein_grams', cb: 'carbs_grams', f: 'fat_grams',
   fib: 'fiber_grams', na: 'sodium_mg', k: 'potassium_mg', ca: 'calcium_mg', fe: 'iron_mg', mg: 'magnesium_mg', vc: 'vitamin_c_mg', vd: 'vitamin_d_ug',
-  b12: 'vitamin_b12_ug', fol: 'folate_ug', v: 'volume_clue' };
+  b12: 'vitamin_b12_ug', fol: 'folate_ug', va: 'vitamin_a_ug', vk: 'vitamin_k_ug', zn: 'zinc_mg', v: 'volume_clue' };
 function longKeys(i) {
   if (!i || typeof i !== 'object' || typeof i.ingredient === 'string') return i;
   const o = {};

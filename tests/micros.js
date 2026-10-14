@@ -3,7 +3,8 @@
    The built-in foods carry USDA values, the Micronutrients card counts what
    you actually logged against the NIH daily targets (women / men / adults,
    sodium as a limit), USDA search goes through the server and scales per
-   100 g to the grams typed, and the server keeps only the ten nutrients. */
+   100 g to the grams typed, and the server keeps only the thirteen nutrients
+   (p28: vitamin A, vitamin K and zinc joined the ten). */
 const fs = require('fs');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const html = fs.readFileSync(__dirname + '/../index.html', 'utf8');
@@ -31,9 +32,9 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
 (async () => {
   await wait(900);
   const doc = w.document, F = w.KovaFuel, M = w.KovaMicros;
-  ck('KovaMicros is on the page', !!M && typeof M.paint === 'function' && M.N.length === 10);
+  ck('KovaMicros is on the page', !!M && typeof M.paint === 'function' && M.N.length === 13 && M.N.slice(-3).map((n) => n[0]).join() === 'a,vk,zn');
   ck('the built-in foods carry USDA micronutrients', /name:'Salmon'[^}]*m:\{fib:0,na:104,k:653,ca:26,fe:\.6,mg:51,c:0,d:26,b12:4\.8,fol:58\}/.test(html) || /d:26,b12:4\.8/.test(html));
-  ck('the meal photo reader asks for the ten nutrients', /vitamin_d_ug/.test(html) && /folate_ug/.test(html) && /magnesium_mg/.test(html));
+  ck('the meal photo reader asks for the thirteen nutrients', /vitamin_d_ug/.test(html) && /folate_ug/.test(html) && /magnesium_mg/.test(html) && /vitamin_a_ug/.test(html) && /zinc_mg/.test(html));
 
   // live data: log two foods with micros and one without
   w.localStorage.setItem('kova.micro.sex', JSON.stringify('f'));
@@ -45,8 +46,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   M.paint();
   const g = doc.getElementById('microGrid'), txt = g ? g.textContent : '';
   ck('the card says how many foods have the data', /2 of 3 foods have vitamin and mineral data/.test(txt));
-  ck('one dropdown bar with a dot per nutrient', g && g.querySelectorAll('.kmi-dd').length === 1 && g.querySelectorAll('.kmi-dots i').length === 10);
-  ck('the dropdown starts closed and opens to ten compact rows', doc.getElementById('kmiMenu').hidden === true && (g.querySelector('.kmi-dd').click(), doc.getElementById('kmiMenu').hidden === false) && g.querySelectorAll('.kmi-r').length === 10);
+  ck('one dropdown bar with a dot per nutrient', g && g.querySelectorAll('.kmi-dd').length === 1 && g.querySelectorAll('.kmi-dots i').length === 13);
+  ck('the dropdown starts closed and opens to thirteen compact rows', doc.getElementById('kmiMenu').hidden === true && (g.querySelector('.kmi-dd').click(), doc.getElementById('kmiMenu').hidden === false) && g.querySelectorAll('.kmi-r').length === 13);
   ck('the closed bar says what is met and what is low', /\d+ met \u00b7 \d+ low/.test(g.querySelector('.kmi-dd').textContent));
   ck('women\'s iron target is 18 mg', /Iron0\.9 mgof 18 mg/.test(txt.replace(/\s+/g, '')) || /Iron\s*0\.9 mg\s*of 18 mg/.test(txt));
   ck('vitamin D met is marked met', [...g.querySelectorAll('.kmi-r')].some((c) => /Vitamin D/.test(c.textContent) && c.classList.contains('s-met')));
@@ -70,9 +71,9 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
 
   // server parser
   const { fdcFood } = require('../functions/api.js');
-  const x = fdcFood({ fdcId: 9, description: 'Oats', dataType: 'Foundation', foodNutrients: [{ nutrientId: 2047, value: 379 }, { nutrientId: 1003, value: 13.2 }, { nutrientId: 1079, value: 10.1 }, { nutrientId: 1177, value: 32 }, { nutrientId: 1093, value: 6 }, { nutrientId: 1234, value: 5 }] });
+  const x = fdcFood({ fdcId: 9, description: 'Oats', dataType: 'Foundation', foodNutrients: [{ nutrientId: 2047, value: 379 }, { nutrientId: 1003, value: 13.2 }, { nutrientId: 1079, value: 10.1 }, { nutrientId: 1177, value: 32 }, { nutrientId: 1093, value: 6 }, { nutrientId: 1234, value: 5 }, { nutrientId: 1095, value: 3.6 }, { nutrientId: 1185, value: 2 }, { nutrientId: 1106, value: 0 }] });
   ck('the server reads Atwater energy when 1008 is missing', x.kcal === 379 && x.p === 13.2);
-  ck('the server keeps only the ten nutrients', JSON.stringify(Object.keys(x.m).sort()) === JSON.stringify(['fib', 'fol', 'na']));
+  ck('the server keeps only the thirteen nutrients, zinc and vitamins A and K included', JSON.stringify(Object.keys(x.m).sort()) === JSON.stringify(['a', 'fib', 'fol', 'na', 'vk', 'zn']) && x.m.zn === 3.6 && x.m.vk === 2);
   ck('a food with no energy is skipped', fdcFood({ description: 'x', foodNutrients: [] }) === null);
   const api = require('fs').readFileSync(__dirname + '/../functions/api.js', 'utf8');
   ck('/foods/search is routed and signed-in only', /path === '\/foods\/search'\) return await foodsSearch/.test(api) && /async function foodsSearch[\s\S]{0,80}requireUser/.test(api));

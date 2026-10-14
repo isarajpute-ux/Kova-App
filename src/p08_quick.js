@@ -116,7 +116,7 @@ window.KovaQuick=(function(){
     items.forEach(function(i){
       t.kcal+=+i.calories||0; t.p+=+i.protein_grams||0; t.c+=+i.carbs_grams||0; t.f+=+i.fat_grams||0;
       t.conf=Math.min(t.conf,+i.confidence_percentage||0);
-      var MK={fib:'fiber_grams',na:'sodium_mg',k:'potassium_mg',ca:'calcium_mg',fe:'iron_mg',mg:'magnesium_mg',c:'vitamin_c_mg',d:'vitamin_d_ug',b12:'vitamin_b12_ug',fol:'folate_ug'};
+      var MK={fib:'fiber_grams',na:'sodium_mg',k:'potassium_mg',ca:'calcium_mg',fe:'iron_mg',mg:'magnesium_mg',c:'vitamin_c_mg',d:'vitamin_d_ug',b12:'vitamin_b12_ug',fol:'folate_ug',a:'vitamin_a_ug',vk:'vitamin_k_ug',zn:'zinc_mg'};
       Object.keys(MK).forEach(function(k){ if(i[MK[k]]!=null&&isFinite(+i[MK[k]])){ t.m=t.m||{}; t.m[k]=Math.round(((t.m[k]||0)+(+i[MK[k]]))*10)/10; } });
     });
     if(!items.length) t.conf=0;

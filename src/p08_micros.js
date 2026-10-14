@@ -1,7 +1,7 @@
 /* =====================================================================
    KovaMicros - vitamins and minerals in the food log (p09).
 
-   Ten nutrients that matter most for training and recovery, counted from
+   Thirteen nutrients that matter most for training and recovery, counted from
    what you actually logged today, against the US Dietary Reference Intakes
    (NIH Office of Dietary Supplements, adults 19-50). Sodium is a ceiling,
    not a target. Where some foods were logged without micronutrient data
@@ -15,7 +15,9 @@ window.KovaMicros=(function(){
   var N=[ // key, label, unit, women, men, limit?
     ['fib','Fiber','g',25,38],['na','Sodium','mg',2300,2300,1],['k','Potassium','mg',2600,3400],['ca','Calcium','mg',1000,1000],
     ['fe','Iron','mg',18,8],['mg','Magnesium','mg',310,400],['c','Vitamin C','mg',75,90],['d','Vitamin D','µg',15,15],
-    ['b12','Vitamin B12','µg',2.4,2.4],['fol','Folate','µg',400,400]];
+    ['b12','Vitamin B12','µg',2.4,2.4],['fol','Folate','µg',400,400],
+    /* p28: vitamin A (RAE), vitamin K and zinc, from USDA and photo meals too */
+    ['a','Vitamin A','µg',700,900],['vk','Vitamin K','µg',90,120],['zn','Zinc','mg',8,11]];
   function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function sex(){ var s=lsJ('kova.micro.sex',''); if(s) return s; try{ if(window.KovaCycle&&KovaCycle._data().on) return 'f'; }catch(e){} return 'a'; }
@@ -35,6 +37,9 @@ window.KovaMicros=(function(){
     var live=!!(window.KovaMode&&KovaMode.live), T=totals();
     if(!live&&!T.all){ return; }              /* the preview keeps its sample card */
     mg.style.display=''; var p1=mg.previousElementSibling; if(p1){ p1.style.display=''; if(p1.previousElementSibling) p1.previousElementSibling.style.display=''; }
+    /* p28: with your own data the Fuel screen hides its sample-only cards;
+       this one counts your real log, so it is shown (it was hidden too) */
+    [mg,p1,p1&&p1.previousElementSibling].forEach(function(x){ if(x) x.removeAttribute('data-demo'); });
     mg.classList.add('kmi-grid'); mg.style.gridTemplateColumns='';
     var s=sex(), open=!!lsJ('kova.micro.open',false);
     /* repaint only when something changed, so a tap is never lost to a rebuild */
