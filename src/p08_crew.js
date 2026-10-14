@@ -1714,7 +1714,7 @@ window.KovaCrew=(function(){
       +'<button class="crd-circ'+(on?' on':'')+'" data-c="listen" aria-pressed="'+on+'" aria-label="Call your team by name">'+svg(IC.mic)+'</button></div></div>';
   }
   function head(t,title,sub){ return '<div class="crd-upd">'+esc(sub||('Updated '+ago(t||Date.now())))+'</div><h1 class="crd-title">'+esc(title)+'</h1>'; }
-  function stat(label,v,unit,cap){ return '<div class="crd-stat"><span class="crd-lab">'+esc(label)+'</span><div class="crd-num">'+esc(fmtN(v))+(unit?'<sup>'+(unit==='person'?svg(IC.person):esc(unit))+'</sup>':'')+'</div><div class="crd-cap">'+esc(cap||'')+'</div></div>'; }
+  function stat(label,v,unit,cap){ var word=!/^[\d.,:%+\-\u2212 ]*$/.test(String(fmtN(v))); return '<div class="crd-stat"><span class="crd-lab">'+esc(label)+'</span><div class="crd-num'+(word?' w':'')+'">'+esc(fmtN(v))+(unit?'<sup>'+(unit==='person'?svg(IC.person):esc(unit))+'</sup>':'')+'</div><div class="crd-cap">'+esc(cap||'')+'</div></div>'; }
   function flow(j,e,sn){
     var rows=[];
     if(j){
@@ -1744,6 +1744,17 @@ window.KovaCrew=(function(){
       cap=nr?nr.e.n+': '+nr.e.routine.job:'Give them a job, or say a name.'; }
     return '<button class="crd-focus" data-c="'+c+'" data-id="'+esc(id)+'" data-j="'+esc(id)+'"><span class="crd-ft">'+esc(t)+'</span><span class="crd-arw">'+svg(IC.arrow)+'</span>'
       +'<span class="crd-fv">'+esc(v)+'<small>'+esc(suf)+'</small></span><span class="crd-fc">'+esc(cap)+'</span>'+globe()+'</button>';
+  }
+  /* p30: the team page lists every teammate as a row that opens their own
+     page (it was a strip of name pills that only swapped the numbers) */
+  function roster(){
+    return '<div class="crw-rh"><span class="crd-sh2">Your team</span><span class="crd-grow"></span>'
+        +'<button class="crd-pill ghost" data-c="hire">'+svg(IC.plus,'sm')+'Hire</button>'
+        +'<button class="crd-circ'+(S.showSet?' on':'')+'" data-c="settings" aria-label="Team settings">'+svg(IC.gear)+'</button></div>'
+      +'<div class="crw-roster">'+emps().map(function(e){ var st=statusOf(e);
+        return '<button class="crw-rc'+(e.enabled?'':' off')+'" data-c="tab" data-t="'+esc(e.id)+'">'+av(e)
+          +'<span class="crw-rn"><b>'+esc(e.n)+'</b><small>'+esc(e.title)+'</small></span>'
+          +'<span class="crw-rs s-'+st.k+'">'+esc(st.t)+'</span><span class="crw-rgo" aria-hidden="true">›</span></button>'; }).join('')+'</div>';
   }
   function tabsRow(active){
     return '<div class="crd-tabsrow"><div class="crd-tabs" role="tablist" aria-label="Employees">'
@@ -1923,6 +1934,13 @@ window.KovaCrew=(function(){
   var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
   /* p30: straight to one teammate's page, ready to message them (search,
      "nutrition coach") */
+  /* p30: a teammate's daily routine on or off from outside the team page
+     (the Fuel check-in card). job: what they run each time. */
+  function setRoutine(id,on,job,time){
+    var e=emp(id); if(!e) return false; var T=tpl(e.tpl);
+    var r=Object.assign({},e.routine||{},on?{freq:'daily',time:time||(T&&T.routine&&T.routine.time)||'20:00',job:job||(e.routine&&e.routine.job)||(T&&T.routine&&T.routine.job)||''}:{freq:'off'});
+    saveEmp(e,{routine:r}); return true;
+  }
   function openMate(id){
     if(!emp(id)) return false;
     S.view='team'; S.nav='team'; S.tab=id; S.draft=null; paint(); top0();
@@ -2040,7 +2058,7 @@ window.KovaCrew=(function(){
       +'<div class="crd-mid"><div class="crd-stats">'
         +stat('Finished',a.completed,'✓','Tasks done this week')+stat('Open',a.open,'','Still to do')+stat('Overdue',a.overdue,'!','Past their date')+stat('Team',L.length,'person','AI employees')
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
-      +tabsRow('all')
+      +roster()
       +'<div class="crd-tiles">'
         +jobsTile(L)
         +tileSm({tone:'g1',title:'On time',k:'ontime',value:ot.rate==null?'No score yet':ot.rate+'%',soft:ot.rate==null,suf:ot.rate==null?'':'/on time',chart:gaugeChart(ot.rate||0,'%',false),
@@ -2055,14 +2073,21 @@ window.KovaCrew=(function(){
       +'<div class="crd-below">'+composer(null)+(window.KovaAsk?KovaAsk.panel():'')+needsYou()+recent()+'</div>';
   }
   /* ---- one employee: their skill, live from your data ---- */
+  /* p30: one teammate is their own page: who they are and a box to message
+     them come first, then their live numbers, their skill, their jobs, and
+     what they do. It used to be the team page with their numbers swapped
+     in, the message box far down and the team's boxes still around it. */
   function empPage(e){
     var sn=snapshot(e), cur=busyWith(e.id), last=jobsOf(e.id).slice(-1)[0], m=(sn&&sn.metrics)||[];
-    return head(last?(last.end||last.at):0,e.n+' · '+e.title)
-      +'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
-      +flow(cur||last,e,sn)+focusCard(cur,e,sn)+'</div>'
-      +tabsRow(e.id)
+    return '<div class="crw-mate"><button class="crd-link crw-allt" data-c="tab" data-t="all">‹ All team</button>'
+        +'<div class="crw-mh">'+av(e,true)+'<div><h1 class="crd-title">'+esc(e.n)+'</h1><div class="crw-mt">'+esc(e.title)+(cur?' · working now':last?' · last job '+esc(ago(last.end||last.at)):'')+'</div></div></div>'
+        +'<div class="crw-mj">'+esc(String(e.job||'').split(/(?<=\.)\s/)[0]||'')+'</div></div>'
+      +composer(e)
+      +(m.length?'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
+        +flow(cur||last,e,sn)+(cur?focusCard(cur,e,sn):'')+'</div>':'')
       +'<div class="crd-tiles">'+empTiles(e,sn)+'</div>'
-      +'<div class="crd-below">'+teachCard(e)+(sn?skillBlock(e,sn):'')+jobBlock(e)+'</div>';
+      +'<div class="crd-below">'+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
+      +'<div class="crd-sh2">Your team</div>'+tabsRow(e.id);
   }
   function teachCard(e){
     var t=e.taught, rt=e.routine||{};
@@ -2100,9 +2125,10 @@ window.KovaCrew=(function(){
           +'<div class="crd-capn">'+esc(String(x.caption||'').split('\n').slice(-1)[0])+(x.tags?' <span>'+esc(x.tags)+'</span>':'')+'</div>'
           +'<button class="crd-link" data-c="idea" data-id="'+esc(eid||'')+'" data-j="'+esc(jid||'')+'" data-i="'+i+'"'+(saved?' disabled':'')+'>'+(saved?'Saved in the Studio ✓':'Save as a Studio draft')+'</button></div>'; }).join('')+'</div>';
   }
-  function jobBlock(e){
+  function jobBlock(e,noComposer){
     var T=tpl(e.tpl), jobs=jobsOf(e.id).slice(-12);
-    return composer(e)
+    return (noComposer?'':composer(e))
+      +'<div class="crd-sh2">Jobs</div><div class="crw-thread">'+(jobs.length?jobs.map(jobCard).join(''):'<div class="crw-empty">No jobs yet. Message '+esc(e.n)+' above, or say “'+esc(e.n)+'” on any screen.</div>')+'</div>'
       +'<div class="crd-card"><div class="crd-chd"><span>'+esc(e.n)+'’s job</span><button class="crd-link" data-c="edit" data-id="'+esc(e.id)+'">Edit</button></div>'
         +'<div class="crw-jd'+(S.open.jd?' open':'')+'">'+md(e.job||'No job description yet.')+'</div>'
         +(e.playbook?'<div class="crd-sh">Playbook</div><div class="crw-jd'+(S.open.jd?' open':'')+'">'+md(e.playbook)+'</div>':'')
@@ -2110,8 +2136,7 @@ window.KovaCrew=(function(){
         +'<div class="crd-facts"><span>'+esc(describeRoutine(e))+'</span><span>'+(e.approval==='all'?'Asks before every change':'Asks before anything leaves Kova')+'</span><span>'+((e.memory||[]).length)+' memories</span></div>'
         +'<div class="crd-tools">'+esc(GROUPS.filter(function(g){ return g.locked||(e.tools||[]).indexOf(g.id)>=0; }).map(function(g){ return g.n; }).join(' · '))+'</div>'
         +'<div class="crd-row">'+routineBtn(e,T)+'<span class="crd-grow"></span><span class="crd-hint">'+(e.enabled?'On':'Off')+'</span><button class="crw-tog'+(e.enabled?' on':'')+'" data-c="toggle" data-id="'+esc(e.id)+'" role="switch" aria-checked="'+e.enabled+'" aria-label="'+esc(e.n)+' on or off"><span></span></button></div>'
-      +'</div>'
-      +'<div class="crd-sh2">Jobs</div><div class="crw-thread">'+(jobs.length?jobs.map(jobCard).join(''):'<div class="crw-empty">No jobs yet. Give '+esc(e.n)+' one above, or say “'+esc(e.n)+'”.</div>')+'</div>';
+      +'</div>';
   }
   function routineBtn(e,T){
     if(e.routine&&e.routine.freq!=='off'&&e.routine.job) return '<button class="crd-btn ghost" data-c="runroutine" data-id="'+esc(e.id)+'">Run the routine now</button>';
@@ -2121,7 +2146,7 @@ window.KovaCrew=(function(){
   function composer(e){
     var id=e?'crwEmpAsk':'crwAsk', btn=e?'empask':'ask', T=e?tpl(e.tpl):null, sk=e?skillsOf(e)[0]:null;
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
-    return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Give '+esc(e.n)+' a job':'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
+    return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Message '+esc(e.n):'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
       +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
       +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
@@ -2548,5 +2573,5 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

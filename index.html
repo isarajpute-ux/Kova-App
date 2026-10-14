@@ -886,7 +886,7 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .chip.on{background:var(--acc-dim);border-color:var(--acc-brd);color:var(--acc)}
 
 .m{transition:fill .18s}
-.sheet{position:absolute;inset:0;background:rgba(10,12,14,.52);backdrop-filter:blur(8px);display:none;align-items:flex-start;justify-content:center;z-index:50}
+.sheet{position:fixed;inset:0;background:rgba(10,12,14,.52);backdrop-filter:blur(8px);display:none;align-items:flex-start;justify-content:center;z-index:50}
 .sheet.on{display:flex}
 @keyframes sheetDown{from{transform:translateY(-100%);opacity:.4}to{transform:translateY(0);opacity:1}}
 .sheet.on .sheet-in{animation:sheetDown .28s cubic-bezier(.2,.9,.3,1)}
@@ -5814,6 +5814,31 @@ body.soft-light .wk-tab.on i{background:#1B2430}
 body.soft-light .app[data-pillar="work"] .wk-lit .btn:not(.ghost){background:#fff;color:#1B2430}
 body.soft-light .app[data-pillar="work"] .wk-lit .wstress-b{background:#fff;color:#1B2430;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 
+/* p30: a teammate's own page, and the team as rows that open them */
+.crw-mate{margin:2px 0 16px}
+.crw-allt{display:inline-block;margin:0 0 10px;padding:0;font-size:13px;color:var(--d-mute)}
+.crw-mh{display:flex;align-items:center;gap:12px}
+.crw-mh .crd-title{margin:0;line-height:1.1}
+.crw-mt{font-size:13px;color:var(--d-mute);margin-top:3px}
+.crw-mj{font-size:13px;line-height:1.5;color:var(--d-ink);opacity:.82;margin-top:10px}
+.crw-rh{display:flex;align-items:center;gap:8px;margin:4px 0 10px}
+.crw-rh .crd-sh2{margin:0}
+.crw-roster{display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 18px}
+@container (min-width:620px){.crw-roster{grid-template-columns:1fr 1fr}}
+.crw-rc{display:flex;align-items:center;gap:11px;width:100%;min-height:58px;padding:10px 12px;border-radius:16px;border:1px solid var(--d-line);background:var(--d-card);color:var(--d-ink);font:inherit;text-align:left;cursor:pointer}
+.crw-rc.off{opacity:.55}
+.crw-rn{display:flex;flex-direction:column;min-width:0;flex:1}
+.crw-rn b{font-weight:500;font-size:14.5px}
+.crw-rn small{font-size:12px;color:var(--d-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crw-rs{font-size:11px;color:var(--d-mute);white-space:nowrap}
+.crw-rs.s-run,.crw-rs.s-wait{color:var(--d-ink);font-weight:500}
+.crw-rgo{font-size:18px;color:var(--d-faint)}
+/* numbers: words get a smaller size and may wrap, so nothing is cut off */
+.crd-num{overflow:visible;flex-wrap:wrap}
+.crd-num.w{font-size:24px;line-height:1.15;font-weight:400}
+.crd-cap{overflow-wrap:anywhere}
+.crw-mate~.crw-hero{margin-bottom:22px}
+
 </style>
 <style id="p08-help">
 /* ---- Help: two choices, and "Find anything" ---- */
@@ -8200,6 +8225,69 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 .kfa-ul{margin:0 0 6px;padding-left:18px}
 .kfa-ul li{font-size:12.5px;line-height:1.5;margin-bottom:6px;color:var(--txt-2,rgba(255,255,255,.9))}
 .kfa-ul li i{font-style:normal;opacity:.7}
+
+</style>
+<style id="p08-checkin">
+/* p30: the nutrition coach's check-in on Fuel */
+.kci{padding:14px 15px}
+.kci-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.kci-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;
+  background:var(--acc-dim,rgba(255,255,255,.1));color:var(--acc,#fff);flex-shrink:0}
+.kci-t{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF)}
+.kci-sub{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.7));margin-top:1px}
+.kci-say{font-size:13px;line-height:1.5;color:var(--txt,#FFFFFF);padding:10px 12px;border-radius:12px;background:var(--acc-dim,rgba(255,255,255,.06));margin-bottom:12px;white-space:pre-line}
+.kci-say.none{color:var(--txt-2,rgba(255,255,255,.8))}
+.kci-when{color:var(--txt-2,rgba(255,255,255,.6));font-size:11.5px}
+.kci-wk{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-2,rgba(255,255,255,.65));margin:2px 0 8px}
+.kci-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kci-c{padding:9px 10px;border-radius:12px;border:.5px solid var(--ron-line,rgba(255,255,255,.12));min-width:0}
+.kci-k{font-size:11px;color:var(--txt-2,rgba(255,255,255,.7))}
+.kci-v{font-size:17px;font-weight:600;color:var(--txt,#FFFFFF);margin-top:2px;overflow-wrap:anywhere}
+.kci-v.none{opacity:.5}
+.kci-s{font-size:10.5px;line-height:1.35;color:var(--txt-2,rgba(255,255,255,.6));margin-top:2px}
+.kci-row{display:flex;align-items:center;gap:10px}
+.kci-go{flex:1;margin:0}
+.kci-tog{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:6px 2px;color:var(--txt,#FFFFFF);font:inherit;font-size:12.5px;cursor:pointer}
+.kci-tog span{width:34px;height:20px;border-radius:999px;background:rgba(127,127,127,.35);position:relative;transition:background .2s}
+.kci-tog span::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.kci-tog.on span{background:var(--acc,#4ade80)}
+.kci-tog.on span::after{transform:translateX(14px)}
+.kci-msg{display:block;margin:10px auto 0;background:none;border:0;color:var(--acc,#fff);font:inherit;font-size:12.5px;cursor:pointer}
+
+</style>
+<style id="p08-goalplus">
+/* p30: the second question for hiking, cycling and calisthenics */
+.gp{padding:14px 15px}
+.gp-t{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF);margin-bottom:8px}
+.gp-q{font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF);margin:10px 0 7px}
+.gp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gp-chip{font:inherit;cursor:pointer}
+.gp-chip.on{background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600}
+.gp-f{font-size:12.5px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9));margin:10px 0 4px}
+.gp-f.none{opacity:.75}
+.gp-wk{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-2,rgba(255,255,255,.65));margin:10px 0 6px}
+.gp-list{display:flex;flex-direction:column;gap:7px}
+.gp-li{padding:9px 11px;border-radius:12px;border:.5px solid var(--ron-line,rgba(255,255,255,.12))}
+.gp-li b{display:block;font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF);margin-bottom:2px}
+.gp-li span{font-size:12px;line-height:1.45;color:var(--txt-2,rgba(255,255,255,.85))}
+.gp-form{display:grid;gap:9px;margin-top:10px}
+.gp-form label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.75))}
+.gp-in{display:flex;gap:6px}.gp-in input{flex:1;min-width:0}.gp-in select{width:76px}
+.gp-cd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+.gp-big{font-size:34px;font-weight:300;color:var(--txt,#FFFFFF);line-height:1}
+.gp-big small{font-size:13px;color:var(--txt-2,rgba(255,255,255,.7))}
+.gp-ph{font-size:12px;font-weight:600;color:var(--acc)}
+.gp-sk{margin-top:12px;padding:11px 12px;border-radius:14px;border:.5px solid var(--acc-brd,rgba(255,255,255,.2));background:var(--acc-dim,rgba(255,255,255,.04))}
+.gp-skh{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--txt,#FFFFFF)}
+.gp-skh span{font-size:11px;color:var(--txt-2,rgba(255,255,255,.7))}
+.gp-skw{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.75));margin:2px 0 8px}
+.gp-sn{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF)}
+.gp-sp{font-size:13px;color:var(--acc);margin-top:2px}
+.gp-mo{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.8));margin-top:4px}
+.gp-next{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.6));margin-top:6px}
+.gp-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:9px;flex-wrap:wrap}
+.gp-btn{margin:0;width:auto;padding-left:14px;padding-right:14px}
+.gp-link{background:none;border:0;color:var(--txt-2,rgba(255,255,255,.75));font:inherit;font-size:12px;cursor:pointer}
 
 </style>
 </head>
@@ -12355,6 +12443,7 @@ body.ks-on #kovaFab{display:none!important}
 
   <div class="kvx" id="fuelBal"></div>
   <div id="goalFuel"></div>
+  <div id="kciSlot" class="kl-keep"></div>
 
   <div class="card kova">
     <div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA · CROSS PILLAR</div></div>
@@ -36088,6 +36177,9 @@ window.KovaStudio=(function(){
      that is well clear of the day's baseline. A card that appears every
      afternoon is wallpaper. */
   function stressSpike(){
+    /* the stress curve is the sample day: with your own data there is no
+       stress reading yet, so no "120% at 4 pm" made from it */
+    if(window.KovaMode&&KovaMode.live) return null;
     var P=window.KOVA_STRESS;
     if(!Array.isArray(P)||P.length<4) return null;
     var vals=P.map(function(p){return p.v;});
@@ -44692,7 +44784,8 @@ window.KovaMaint=(function(){
   function fmt(x){ return Math.round(x).toLocaleString(); }
 
   /* ── profile ─────────────────────────────────────────────────── */
-  function prof(){ var p=kp('maint'); return (p&&p.v===1&&p.kg)?p:null; }
+  /* an older saved profile may have no training part: fill it in rather than crash */
+  function prof(){ var p=kp('maint'); if(!(p&&p.v===1&&p.kg)) return null; p=Object.assign({unit:'lb',goal:'maint',rate:0,steps:7000,sleepH:7.5},p); p.train=Object.assign({days:4,mins:60,type:'wmod',cardioMin:0,cardioLvl:'easy'},p.train||{}); return p; }
   function draft(){
     var p=prof(); if(p) return JSON.parse(JSON.stringify(p));
     var q=kp('quiz')||{}, a=q.a||{}, ob=kp('onboard')||{};
@@ -53157,7 +53250,7 @@ window.KovaCrew=(function(){
       +'<button class="crd-circ'+(on?' on':'')+'" data-c="listen" aria-pressed="'+on+'" aria-label="Call your team by name">'+svg(IC.mic)+'</button></div></div>';
   }
   function head(t,title,sub){ return '<div class="crd-upd">'+esc(sub||('Updated '+ago(t||Date.now())))+'</div><h1 class="crd-title">'+esc(title)+'</h1>'; }
-  function stat(label,v,unit,cap){ return '<div class="crd-stat"><span class="crd-lab">'+esc(label)+'</span><div class="crd-num">'+esc(fmtN(v))+(unit?'<sup>'+(unit==='person'?svg(IC.person):esc(unit))+'</sup>':'')+'</div><div class="crd-cap">'+esc(cap||'')+'</div></div>'; }
+  function stat(label,v,unit,cap){ var word=!/^[\d.,:%+\-\u2212 ]*$/.test(String(fmtN(v))); return '<div class="crd-stat"><span class="crd-lab">'+esc(label)+'</span><div class="crd-num'+(word?' w':'')+'">'+esc(fmtN(v))+(unit?'<sup>'+(unit==='person'?svg(IC.person):esc(unit))+'</sup>':'')+'</div><div class="crd-cap">'+esc(cap||'')+'</div></div>'; }
   function flow(j,e,sn){
     var rows=[];
     if(j){
@@ -53187,6 +53280,17 @@ window.KovaCrew=(function(){
       cap=nr?nr.e.n+': '+nr.e.routine.job:'Give them a job, or say a name.'; }
     return '<button class="crd-focus" data-c="'+c+'" data-id="'+esc(id)+'" data-j="'+esc(id)+'"><span class="crd-ft">'+esc(t)+'</span><span class="crd-arw">'+svg(IC.arrow)+'</span>'
       +'<span class="crd-fv">'+esc(v)+'<small>'+esc(suf)+'</small></span><span class="crd-fc">'+esc(cap)+'</span>'+globe()+'</button>';
+  }
+  /* p30: the team page lists every teammate as a row that opens their own
+     page (it was a strip of name pills that only swapped the numbers) */
+  function roster(){
+    return '<div class="crw-rh"><span class="crd-sh2">Your team</span><span class="crd-grow"></span>'
+        +'<button class="crd-pill ghost" data-c="hire">'+svg(IC.plus,'sm')+'Hire</button>'
+        +'<button class="crd-circ'+(S.showSet?' on':'')+'" data-c="settings" aria-label="Team settings">'+svg(IC.gear)+'</button></div>'
+      +'<div class="crw-roster">'+emps().map(function(e){ var st=statusOf(e);
+        return '<button class="crw-rc'+(e.enabled?'':' off')+'" data-c="tab" data-t="'+esc(e.id)+'">'+av(e)
+          +'<span class="crw-rn"><b>'+esc(e.n)+'</b><small>'+esc(e.title)+'</small></span>'
+          +'<span class="crw-rs s-'+st.k+'">'+esc(st.t)+'</span><span class="crw-rgo" aria-hidden="true">›</span></button>'; }).join('')+'</div>';
   }
   function tabsRow(active){
     return '<div class="crd-tabsrow"><div class="crd-tabs" role="tablist" aria-label="Employees">'
@@ -53366,6 +53470,13 @@ window.KovaCrew=(function(){
   var TILE_N={jobs:'Jobs done',ontime:'On time',status:'Work by status',content:'Content',needs:'Needs you'};
   /* p30: straight to one teammate's page, ready to message them (search,
      "nutrition coach") */
+  /* p30: a teammate's daily routine on or off from outside the team page
+     (the Fuel check-in card). job: what they run each time. */
+  function setRoutine(id,on,job,time){
+    var e=emp(id); if(!e) return false; var T=tpl(e.tpl);
+    var r=Object.assign({},e.routine||{},on?{freq:'daily',time:time||(T&&T.routine&&T.routine.time)||'20:00',job:job||(e.routine&&e.routine.job)||(T&&T.routine&&T.routine.job)||''}:{freq:'off'});
+    saveEmp(e,{routine:r}); return true;
+  }
   function openMate(id){
     if(!emp(id)) return false;
     S.view='team'; S.nav='team'; S.tab=id; S.draft=null; paint(); top0();
@@ -53483,7 +53594,7 @@ window.KovaCrew=(function(){
       +'<div class="crd-mid"><div class="crd-stats">'
         +stat('Finished',a.completed,'✓','Tasks done this week')+stat('Open',a.open,'','Still to do')+stat('Overdue',a.overdue,'!','Past their date')+stat('Team',L.length,'person','AI employees')
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
-      +tabsRow('all')
+      +roster()
       +'<div class="crd-tiles">'
         +jobsTile(L)
         +tileSm({tone:'g1',title:'On time',k:'ontime',value:ot.rate==null?'No score yet':ot.rate+'%',soft:ot.rate==null,suf:ot.rate==null?'':'/on time',chart:gaugeChart(ot.rate||0,'%',false),
@@ -53498,14 +53609,21 @@ window.KovaCrew=(function(){
       +'<div class="crd-below">'+composer(null)+(window.KovaAsk?KovaAsk.panel():'')+needsYou()+recent()+'</div>';
   }
   /* ---- one employee: their skill, live from your data ---- */
+  /* p30: one teammate is their own page: who they are and a box to message
+     them come first, then their live numbers, their skill, their jobs, and
+     what they do. It used to be the team page with their numbers swapped
+     in, the message box far down and the team's boxes still around it. */
   function empPage(e){
     var sn=snapshot(e), cur=busyWith(e.id), last=jobsOf(e.id).slice(-1)[0], m=(sn&&sn.metrics)||[];
-    return head(last?(last.end||last.at):0,e.n+' · '+e.title)
-      +'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
-      +flow(cur||last,e,sn)+focusCard(cur,e,sn)+'</div>'
-      +tabsRow(e.id)
+    return '<div class="crw-mate"><button class="crd-link crw-allt" data-c="tab" data-t="all">‹ All team</button>'
+        +'<div class="crw-mh">'+av(e,true)+'<div><h1 class="crd-title">'+esc(e.n)+'</h1><div class="crw-mt">'+esc(e.title)+(cur?' · working now':last?' · last job '+esc(ago(last.end||last.at)):'')+'</div></div></div>'
+        +'<div class="crw-mj">'+esc(String(e.job||'').split(/(?<=\.)\s/)[0]||'')+'</div></div>'
+      +composer(e)
+      +(m.length?'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
+        +flow(cur||last,e,sn)+(cur?focusCard(cur,e,sn):'')+'</div>':'')
       +'<div class="crd-tiles">'+empTiles(e,sn)+'</div>'
-      +'<div class="crd-below">'+teachCard(e)+(sn?skillBlock(e,sn):'')+jobBlock(e)+'</div>';
+      +'<div class="crd-below">'+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
+      +'<div class="crd-sh2">Your team</div>'+tabsRow(e.id);
   }
   function teachCard(e){
     var t=e.taught, rt=e.routine||{};
@@ -53543,9 +53661,10 @@ window.KovaCrew=(function(){
           +'<div class="crd-capn">'+esc(String(x.caption||'').split('\n').slice(-1)[0])+(x.tags?' <span>'+esc(x.tags)+'</span>':'')+'</div>'
           +'<button class="crd-link" data-c="idea" data-id="'+esc(eid||'')+'" data-j="'+esc(jid||'')+'" data-i="'+i+'"'+(saved?' disabled':'')+'>'+(saved?'Saved in the Studio ✓':'Save as a Studio draft')+'</button></div>'; }).join('')+'</div>';
   }
-  function jobBlock(e){
+  function jobBlock(e,noComposer){
     var T=tpl(e.tpl), jobs=jobsOf(e.id).slice(-12);
-    return composer(e)
+    return (noComposer?'':composer(e))
+      +'<div class="crd-sh2">Jobs</div><div class="crw-thread">'+(jobs.length?jobs.map(jobCard).join(''):'<div class="crw-empty">No jobs yet. Message '+esc(e.n)+' above, or say “'+esc(e.n)+'” on any screen.</div>')+'</div>'
       +'<div class="crd-card"><div class="crd-chd"><span>'+esc(e.n)+'’s job</span><button class="crd-link" data-c="edit" data-id="'+esc(e.id)+'">Edit</button></div>'
         +'<div class="crw-jd'+(S.open.jd?' open':'')+'">'+md(e.job||'No job description yet.')+'</div>'
         +(e.playbook?'<div class="crd-sh">Playbook</div><div class="crw-jd'+(S.open.jd?' open':'')+'">'+md(e.playbook)+'</div>':'')
@@ -53553,8 +53672,7 @@ window.KovaCrew=(function(){
         +'<div class="crd-facts"><span>'+esc(describeRoutine(e))+'</span><span>'+(e.approval==='all'?'Asks before every change':'Asks before anything leaves Kova')+'</span><span>'+((e.memory||[]).length)+' memories</span></div>'
         +'<div class="crd-tools">'+esc(GROUPS.filter(function(g){ return g.locked||(e.tools||[]).indexOf(g.id)>=0; }).map(function(g){ return g.n; }).join(' · '))+'</div>'
         +'<div class="crd-row">'+routineBtn(e,T)+'<span class="crd-grow"></span><span class="crd-hint">'+(e.enabled?'On':'Off')+'</span><button class="crw-tog'+(e.enabled?' on':'')+'" data-c="toggle" data-id="'+esc(e.id)+'" role="switch" aria-checked="'+e.enabled+'" aria-label="'+esc(e.n)+' on or off"><span></span></button></div>'
-      +'</div>'
-      +'<div class="crd-sh2">Jobs</div><div class="crw-thread">'+(jobs.length?jobs.map(jobCard).join(''):'<div class="crw-empty">No jobs yet. Give '+esc(e.n)+' one above, or say “'+esc(e.n)+'”.</div>')+'</div>';
+      +'</div>';
   }
   function routineBtn(e,T){
     if(e.routine&&e.routine.freq!=='off'&&e.routine.job) return '<button class="crd-btn ghost" data-c="runroutine" data-id="'+esc(e.id)+'">Run the routine now</button>';
@@ -53564,7 +53682,7 @@ window.KovaCrew=(function(){
   function composer(e){
     var id=e?'crwEmpAsk':'crwAsk', btn=e?'empask':'ask', T=e?tpl(e.tpl):null, sk=e?skillsOf(e)[0]:null;
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
-    return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Give '+esc(e.n)+' a job':'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
+    return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Message '+esc(e.n):'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
       +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
       +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
@@ -53991,7 +54109,7 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();
 
 </script>
@@ -65096,6 +65214,411 @@ window.KovaMedia = (function(){
       return Promise.resolve(this.indexed(kind).map(function(m){ return { url: m.url, path: m.path }; }));
     }
   };
+})();
+
+</script>
+<script id="p08-checkin">
+/* =====================================================================
+   KovaCheckin - your nutrition coach checks in, on Fuel (p30).
+
+   The owner asked for a check-in every day of the week from the Fuel
+   coach that looks at how everything is going, not just food. The card:
+     - the coach's latest check-in, in their words (a real job they ran);
+     - this week from your own data: days with food logged, calories and
+       protein against your target, workouts, sleep and weight. A number
+       with nothing behind it says so ("No data yet"), never a guess;
+     - "Check in now", and "Every evening" which turns on the coach's
+       daily routine (it runs on the server when signed in).
+   The coach is the AI team's Nutrition Coach (src/p08_crew.js).
+   Dark, soft light and light glass.
+   ===================================================================== */
+window.KovaCheckin=(function(){
+  'use strict';
+  var DAY=864e5;
+  var JOB='Daily check-in. Read my week with read_health: food against my target, protein, workouts, sleep and weight. '
+    +'In a few lines: how the week is going, what is working, what is not, and the one thing to do today.';
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function sod(t){ var d=new Date(t||Date.now()); d.setHours(0,0,0,0); return d.getTime(); }
+  function dk(t){ var d=new Date(t); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function live(){ try{ return !!(window.KovaMode&&KovaMode.live); }catch(e){ return false; } }
+  function ago(t){ var m=Math.round((Date.now()-t)/6e4); return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago'; }
+  function n0(x){ return Math.round(x).toLocaleString(); }
+
+  function coach(){
+    var C=window.KovaCrew; if(!C||!C.emps) return null;
+    return C.emps().filter(function(e){ return e.tpl==='nutrition'||e.id==='nutrition'; })[0]||null;
+  }
+
+  /* this week (the last 7 days, today included), all from your own logs */
+  function week(){
+    var F=window.KovaFuel, s0=sod()-6*DAY, logged=0, kc=0, pr=0;
+    for(var i=0;i<7;i++){
+      var list=[]; try{ list=F?F.forDay(F.dayKey(s0+i*DAY))||[]:[]; }catch(e){}
+      var sm=list.length&&F?F.sum(list):null;
+      if(sm&&sm.kcal>0){ logged++; kc+=sm.kcal; pr+=sm.p||0; }
+    }
+    var tg=null; try{ tg=window.__fuelTargets?__fuelTargets():null; }catch(e){}
+    var own=!!(tg&&tg.base&&tg.base.src&&tg.base.src!=='demo');
+    var L=live(), sess=(lsJ('kova_log_v1',[])||[]).filter(function(x){ return x&&x.t>=s0&&!(L&&x.seed); }).length;
+    var nights=[]; try{ nights=(window.KovaSleepLog&&KovaSleepLog.nights?KovaSleepLog.nights():[]).filter(function(x){ return x&&x.k>=dk(s0)&&x.mins>0; }); }catch(e){}
+    var wl=((window.KP&&KP.get('wlog'))||[]).filter(function(x){ return x&&x.kg>0; }).sort(function(a,b){ return a.t-b.t; });
+    var wNow=wl.length?wl[wl.length-1]:null, wThen=wl.filter(function(x){ return x.t<s0; }).slice(-1)[0]||wl.filter(function(x){ return x.t>=s0; })[0];
+    return {logged:logged, kcal:logged?kc/logged:null, protein:logged?pr/logged:null,
+      target:own?{kcal:tg.kcal,p:tg.p}:null, sessions:sess,
+      sleepH:nights.length?nights.reduce(function(a,x){ return a+x.mins; },0)/nights.length/60:null, nights:nights.length,
+      weight:wNow?wNow.kg:null, weightChange:(wNow&&wThen&&wThen!==wNow)?wNow.kg-wThen.kg:null};
+  }
+
+  function lastCheck(e){
+    var C=window.KovaCrew; if(!C||!e) return null;
+    return (C.jobsOf(e.id)||[]).filter(function(j){ return j.source==='routine'||j.source==='checkin'||/check-?in/i.test(j.text||''); }).slice(-1)[0]||null;
+  }
+  function busy(e){ var j=lastCheck(e); return !!(j&&(j.state==='running'||j.state==='waiting')); }
+
+  function cell(k,v,s){ return '<div class="kci-c"><div class="kci-k">'+esc(k)+'</div><div class="kci-v'+(v==='—'?' none':'')+'">'+esc(v)+'</div><div class="kci-s">'+esc(s)+'</div></div>'; }
+  function html(){
+    var e=coach(); if(!e) return '';
+    var W=week(), j=lastCheck(e), on=!!(e.routine&&e.routine.freq&&e.routine.freq!=='off'), t=e.routine&&e.routine.time||'20:00';
+    var said=j&&j.state==='done'?String(j.say||(j.report&&j.report.summary)||'').replace(/\*\*/g,'').trim():'';
+    var hh=+t.split(':')[0], when=(hh%12||12)+(t.split(':')[1]&&t.split(':')[1]!=='00'?':'+t.split(':')[1]:'')+(hh<12?' am':' pm');
+    var cal=W.kcal==null?'—':n0(W.kcal)+(W.target?' / '+n0(W.target.kcal):'');
+    return '<div class="card kci">'
+      +'<div class="kci-h"><span class="kci-av" aria-hidden="true">'+esc(e.n.charAt(0))+'</span><div><div class="kci-t">'+esc(e.n)+'’s check-in</div>'
+      +'<div class="kci-sub">Your nutrition coach · '+(on?'every evening at '+when:'check-ins are off')+'</div></div></div>'
+      +(busy(e)?'<div class="kci-say">'+esc(e.n)+' is reading your week…</div>'
+        :said?'<div class="kci-say">'+esc(said.slice(0,420))+(said.length>420?'…':'')+'<span class="kci-when"> · '+esc(ago(j.end||j.at))+'</span></div>'
+        :'<div class="kci-say none">No check-in yet. Tap Check in now and '+esc(e.n)+' reads your week: food, training, sleep and weight.</div>')
+      +'<div class="kci-wk">This week</div><div class="kci-g">'
+        +cell('Food logged',W.logged+' of 7 days',W.logged?'Keep logging, it is what '+e.n+' reads':'Nothing logged yet')
+        +cell('Calories a day',cal,W.kcal==null?'No food logged yet':W.target?'average against your target':'No target yet: Find my maintenance')
+        +cell('Protein a day',W.protein==null?'—':n0(W.protein)+' g'+(W.target&&W.target.p?' / '+n0(W.target.p)+' g':''),W.protein==null?'No food logged yet':'average')
+        +cell('Workouts',String(W.sessions),W.sessions?'this week':'None logged this week')
+        +cell('Sleep',W.sleepH==null?'—':W.sleepH.toFixed(1)+' h',W.sleepH==null?'No nights yet':'average of '+W.nights+' night'+(W.nights===1?'':'s'))
+        +cell('Weight',W.weight==null?'—':W.weight.toFixed(1)+' kg',W.weightChange==null?(W.weight==null?'No weigh-ins yet':'one weigh-in so far'):(W.weightChange>0?'+':'')+W.weightChange.toFixed(1)+' kg this week')
+      +'</div>'
+      +'<div class="kci-row"><button class="btn kci-go" data-kci="now"'+(busy(e)?' disabled':'')+'>Check in now</button>'
+      +'<button class="kci-tog'+(on?' on':'')+'" data-kci="tog" role="switch" aria-checked="'+on+'"><span></span>Every evening</button></div>'
+      +'<button class="kci-msg" data-kci="msg">Message '+esc(e.n)+'</button>'
+      +'</div>';
+  }
+
+  var host=null, timer=null;
+  function paint(){
+    host=document.getElementById('kciSlot'); if(!host) return;
+    host.innerHTML=html();
+    clearTimeout(timer);
+    var e=coach(); if(e&&busy(e)) timer=setTimeout(paint,4000);
+  }
+  function now(){
+    var e=coach(), C=window.KovaCrew; if(!e||!C||!C.start) return say('Your AI team is still loading. Try again in a second.');
+    if(busy(e)) return;
+    var j=C.start(e,JOB,'checkin'); if(j) say(e.n+' is reading your week.');
+    paint();
+  }
+  function toggle(){
+    var e=coach(), C=window.KovaCrew; if(!e||!C||!C.setRoutine) return;
+    var on=!(e.routine&&e.routine.freq&&e.routine.freq!=='off');
+    C.setRoutine(e.id,on,JOB,'20:00');
+    say(on?e.n+' will check in every evening at 8 pm.':'Evening check-ins are off.');
+    paint();
+  }
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-kci]'); if(!b) return;
+    var a=b.getAttribute('data-kci');
+    if(a==='now') now(); else if(a==='tog') toggle();
+    else if(a==='msg'){ var e=coach(); try{ go('workteam'); }catch(x){} setTimeout(function(){ if(e&&window.KovaCrew&&KovaCrew.openMate) KovaCrew.openMate(e.id); },160); }
+  });
+  document.addEventListener('kova:screen',function(e){ if(e&&e.detail==='fuel') paint(); });
+  setTimeout(paint,0);
+  return {paint:paint,week:week,coach:coach,now:now,toggle:toggle,JOB:JOB};
+})();
+
+</script>
+<script id="p08-goalplus">
+/* =====================================================================
+   KovaGoalPlus - the second question for three goals (p30).
+
+   The owner: pressing Hiking should ask what kind (rock climbing,
+   bouldering...); Cycling should ask "Do you compete? When is it? How
+   far?" and say how long there is to train; Calisthenics should ask which
+   skills (a handstand push-up...) and give the steps to get there, like
+   pike push-ups first. Asked as a pop-up right after the goal is picked in
+   the Workout quiz, and kept as a card on Workout ("Your focus") where it
+   can be changed and where the steps are ticked off.
+
+   The guidance follows common practice: periodised blocks for an event
+   (base, build, peak, taper) with the long ride growing toward the event;
+   progression ladders for calisthenics skills (move on at the target, 3
+   sets, skills first when fresh); for climbing, finger strength only after
+   a year of climbing, with antagonist work. Saved in KP 'goalPlus'.
+   ===================================================================== */
+window.KovaGoalPlus=(function(){
+  'use strict';
+  var DAY=864e5;
+  function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
+  function kset(k,v){ try{ if(window.KP) KP.set(k,v); }catch(e){} }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function st(){ var s=kp('goalPlus'); return s&&typeof s==='object'?s:{}; }
+  function put(patch){ var s=Object.assign(st(),patch); kset('goalPlus',s); return s; }
+  function gid(){ try{ return window.KovaGoal&&KovaGoal.id?KovaGoal.id():null; }catch(e){ return null; } }
+  function kind(g){ return g==='hiking'?'hike':g==='hikebike'?'cycle':g==='calisthenics'?'calis':null; }
+
+  /* ---------------- hiking ---------------- */
+  var HIKE=[
+    {id:'day',n:'Day hikes',s:'Longer, steeper days with a day pack',f:'Legs for the climb, knees for the way down, and the engine for 4 to 8 hours.',
+     w:[['Long hike','Add about 10% more time, or 150 m (500 ft) more climbing, each week, carrying the pack you will use.'],['Hill session','30 to 45 min of steady climbing: stairs, an incline treadmill at 10 to 15%, or hill repeats.'],['Strength, 2 days','Step-ups 3x10 a leg, slow step-downs 3x8, split squats 3x8, calf raises 3x15.']]},
+    {id:'pack',n:'Backpacking',s:'Multi-day trips with a loaded pack',f:'Carrying a heavy pack for hours, day after day.',
+     w:[['Weighted hike','Start at half your trip pack weight and add 1 to 2 kg (2 to 4 lb) a week until you carry the full load.'],['Back-to-back days','Once a month, hike two days in a row. That is what a trip feels like.'],['Strength, 2 days','Trap-bar or regular deadlift 3x5, step-ups with the pack 3x10, farmer carries 3x40 m, plank 3x45 s.']]},
+    {id:'peak',n:'Mountains and peaks',s:'Big climbs, altitude, scrambling',f:'Climbing power for 1,000 m (3,300 ft) days, and lungs for thin air.',
+     w:[['Long climb','Build total climbing toward your summit day: about 60 to 70% of it three weeks out.'],['Uphill intervals','6 to 8 x 4 min hard uphill, 3 min easy back down (stairs or incline).'],['Strength, 2 days','Weighted step-ups 3x8, Bulgarian split squats 3x8, single-leg RDL 3x8, slow step-downs 3x8.']]},
+    {id:'rock',n:'Rock climbing',s:'Sport, trad or top-rope routes',f:'Finger strength, pulling power and body tension, with the opposite muscles kept strong so shoulders and elbows last.',
+     w:[['Climb, 2 to 3 days','One session on routes at your limit, one for volume on easier routes, plus technique drills.'],['Fingers (after a year of climbing)','Hangboard: 6 x 10 s hangs on a 20 mm edge, 3 min rest. Never on sore fingers.'],['Strength, 2 days','Pull-ups 3x5 to 8, tuck front lever 3x10 s, push-ups 3x10, reverse wrist curls and shoulder external rotation 2x15.']]},
+    {id:'boulder',n:'Bouldering',s:'Short, powerful problems',f:'Maximum power, finger strength and core tension.',
+     w:[['Limit bouldering, 2 days','Problems you fall off. Rest 3 to 5 min between hard tries; stop when your tries get worse.'],['Power','Explosive pull-ups 3x3 and hanging knee raises 3x8. Campus board only if you have climbed for years.'],['Strength, 1 to 2 days','Weighted pull-ups 3x5, push-ups 3x10, reverse wrist curls 2x15, shoulder external rotation 2x15.']]}
+  ];
+
+  /* ---------------- cycling ---------------- */
+  var RACE=[['road','Road race'],['tt','Time trial'],['gravel','Gravel race'],['mtb','Mountain bike (XC)'],['fondo','Gran fondo or century'],['tri','Triathlon']];
+  /* weeks a rider with regular riding usually needs, by distance */
+  function needWeeks(km){ return km<50?6:km<100?8:km<161?12:16; }
+  function phase(w){ return w>=13?'Base':w>=7?'Build':w>=3?'Peak':w>=1?'Taper':w===0?'Race week':'Done'; }
+  function weeksTo(date){ var t=new Date(date+'T12:00:00').getTime(); if(!isFinite(t)) return null; var d0=new Date(); d0.setHours(12,0,0,0); return Math.floor((t-d0.getTime())/(7*DAY)); }
+  function mi(km){ return Math.round(km*0.621371); }
+  function d2(km){ return Math.round(km)+' km ('+mi(km)+' mi)'; }
+  function cyclePlan(c){
+    var km=+c.km||0, w=weeksTo(c.date), ph=phase(w), need=needWeeks(km);
+    var frac={Base:0.5,Build:0.7,Peak:0.9,Taper:0.5,'Race week':0.3}[ph]||0.6;
+    var spd=c.hours>0&&km>0?km/c.hours:null;
+    var S=[];
+    if(ph==='Base') S=[['Long ride','About '+d2(km*frac)+' at an easy pace you could talk through (zone 2). Add 10% a week.'],['Two endurance rides','60 to 90 min easy, zone 2. This is where the engine is built.'],['Strength, 2 days','Squats 3x5, Romanian deadlifts 3x6, single-leg step-ups 3x8. Heavy legs make each pedal stroke cheaper.']];
+    else if(ph==='Build') S=[['Threshold','2 x 15 to 20 min at 95 to 100% of FTP: hard but steady, a few words at a time.'],['VO2 max','5 x 4 min at 110 to 120% of FTP, 4 min easy between.'],['Long ride','About '+d2(km*frac)+', the last hour at race effort'+(spd?' ('+Math.round(spd)+' km/h, '+mi(spd)+' mph)':'')+'.']];
+    else if(ph==='Peak') S=[['Race pace','3 x 20 min at your race pace'+(spd?' ('+Math.round(spd)+' km/h, '+mi(spd)+' mph)':'')+', 5 min easy between.'],['Longest ride','About '+d2(km*frac)+' about three weeks out, eating and drinking what you will on the day.'],['Strength, 1 day','Keep it short and heavy: squats 2x5, step-ups 2x6. Nothing new now.']];
+    else if(ph==='Taper') S=[['Ride less','About 40 to 50% less riding than your biggest weeks. Keep the intensity, lose the volume.'],['Openers','Two short rides with 3 x 1 min hard. Sharp, not tired.'],['Rest','A full rest day two days before the event; an easy spin the day before.']];
+    else if(ph==='Race week') S=[['This week','Easy spins, one short opener, sleep and carbohydrate. The work is done.'],['On the day','Start slower than you want to. Eat every 30 to 45 min and drink to thirst.'],['After','An easy week. Then tell Kova your next one.']];
+    var note=w==null?'':w<need&&ph!=='Done'?'That is '+w+' week'+(w===1?'':'s')+'. A ride of '+d2(km)+' usually takes about '+need+' weeks to prepare for, coming from regular riding, so this plan starts later in the cycle and grows the long ride faster. If long rides are new to you, a later event is kinder.':'Enough time: about '+need+' weeks is typical for '+d2(km)+', and you have '+w+'.';
+    return {w:w,ph:ph,need:need,s:S,note:note,spd:spd};
+  }
+
+  /* ---------------- calisthenics ---------------- */
+  var SKILL=[
+    {id:'hspu',n:'Handstand push-up',why:'Shoulders, triceps and upper chest, balanced overhead.',L:[['Pike push-up','3 x 8','3 x 12 clean, head to the floor'],['Feet-raised pike push-up','3 x 6 to 8','3 x 10 with feet on a box'],['Wall handstand hold','3 x 30 s','3 x 45 s, belly to the wall, arms locked'],['Wall handstand push-up negatives','3 x 3, 4 s down','3 x 5 slow and controlled'],['Partial wall HSPU (to a pad)','3 x 4 to 6','3 x 6 with the pad lowered'],['Full wall handstand push-up','3 x 3 to 5','3 x 8'],['Freestanding handstand practice','10 min a day','a 20 s freestanding hold'],['Freestanding handstand push-up','3 x 1 to 3','you have it']]},
+    {id:'mu',n:'Muscle-up',why:'Pulling power that turns into a dip at the top.',L:[['Pull-ups','3 x 8','3 x 12'],['Chest-to-bar pull-ups','3 x 5','3 x 8'],['Explosive high pull-ups','3 x 4','the bar reaches your lower chest'],['Straight-bar dips','3 x 8','3 x 12'],['Muscle-up negatives','3 x 3, slow','3 x 5 controlled'],['Band-assisted muscle-ups','3 x 3','3 x 5 with a light band'],['Muscle-up singles','3 x 1 to 2','3 clean in a row'],['Muscle-ups','3 x 3 to 5','you have it']]},
+    {id:'fl',n:'Front lever',why:'Lats, abs and straight-arm strength.',L:[['Tuck front lever','3 x 10 to 15 s','3 x 20 s'],['Advanced tuck','3 x 10 s','3 x 15 s, back flat'],['One leg out','3 x 8 s each leg','3 x 12 s'],['Straddle front lever','3 x 6 s','3 x 10 s'],['Full front lever','3 x 5 s','3 x 10 s']]},
+    {id:'pl',n:'Planche',why:'Shoulders and straight-arm pushing strength. The slowest skill to build.',L:[['Planche lean','3 x 20 s','shoulders well past the hands for 30 s'],['Frog stand','3 x 20 s','3 x 30 s'],['Tuck planche','3 x 8 to 10 s','3 x 15 s'],['Advanced tuck planche','3 x 8 s','3 x 12 s, back flat'],['Straddle planche','3 x 5 s','3 x 8 s'],['Full planche','3 x 3 to 5 s','you have it']]},
+    {id:'pistol',n:'Pistol squat',why:'Single-leg strength, balance and ankle mobility.',L:[['Box pistol (to a bench)','3 x 6 each leg','3 x 10 to a low box'],['Pistol holding a counterweight','3 x 5 each leg','3 x 8'],['Full pistol squat','3 x 5 each leg','3 x 8'],['Weighted pistol','3 x 5 each leg','you have it']]},
+    {id:'lsit',n:'L-sit',why:'Abs, hip flexors and locked-out triceps.',L:[['Tuck L-sit','3 x 15 s','3 x 20 s'],['One leg straight','3 x 10 s each','3 x 15 s'],['Full L-sit','3 x 10 s','3 x 20 s'],['V-sit progressions','3 x 5 s','you have it']]},
+    {id:'pullup',n:'First (or more) pull-ups',why:'The base of every pulling skill.',L:[['Dead hang','3 x 30 s','3 x 45 s'],['Scapula pulls','3 x 10','3 x 12 with straight arms'],['Pull-up negatives','3 x 5, 5 s down','3 x 6 slow'],['Band-assisted pull-ups','3 x 6','3 x 8 with a light band'],['Pull-ups','3 x as many as clean','3 x 10'],['Weighted pull-ups','3 x 5','you have it']]}
+  ];
+  function skill(id){ return SKILL.filter(function(x){ return x.id===id; })[0]; }
+
+  /* ---------------- drawing ---------------- */
+  function chip(on,attrs,label){ return '<button class="chip gp-chip'+(on?' on':'')+'" '+attrs+'>'+esc(label)+'</button>'; }
+  function list(rows){ return '<div class="gp-list">'+rows.map(function(r){ return '<div class="gp-li"><b>'+esc(r[0])+'</b><span>'+esc(r[1])+'</span></div>'; }).join('')+'</div>'; }
+  function hikeHtml(s){
+    var cur=HIKE.filter(function(x){ return x.id===s.hike; })[0];
+    return '<div class="gp-q">What kind of hiking?</div><div class="gp-chips">'+HIKE.map(function(x){ return chip(s.hike===x.id,'data-gp="hike" data-v="'+x.id+'"',x.n); }).join('')+'</div>'
+      +(cur?'<div class="gp-f">'+esc(cur.f)+'</div><div class="gp-wk">Each week</div>'+list(cur.w):'<div class="gp-f none">Pick one and Kova writes your week for it.</div>');
+  }
+  function cycleHtml(s){
+    var c=s.cycle||{};
+    var h='<div class="gp-q">Do you compete?</div><div class="gp-chips">'+chip(c.compete===true,'data-gp="comp" data-v="1"','Yes, I race')+chip(c.compete===false,'data-gp="comp" data-v="0"','No, I ride for fitness')+'</div>';
+    if(c.compete===false) return h+'<div class="gp-f">Riding for fitness: most of your riding easy (you can talk), one harder session, and one long ride that grows about 10% a week.</div>'
+      +list([['Long ride','Start where you are comfortable, add 10% a week; every fourth week, ride less.'],['One hard session','4 x 4 min hard, 4 min easy, or a hilly route ridden steadily hard.'],['Strength, 2 days','Squats 3x5, Romanian deadlifts 3x6, step-ups 3x8.']]);
+    if(c.compete!==true) return h;
+    h+='<div class="gp-q">What do you race?</div><div class="gp-chips">'+RACE.map(function(r){ return chip(c.type===r[0],'data-gp="type" data-v="'+r[0]+'"',r[1]); }).join('')+'</div>'
+      +'<div class="gp-form"><label>Event date<input type="date" class="field" data-gpf="date" value="'+esc(c.date||'')+'"></label>'
+      +'<label>Distance<span class="gp-in"><input type="number" inputmode="decimal" class="field" data-gpf="dist" value="'+esc(c.dist||'')+'" placeholder="100"><select class="field" data-gpf="unit"><option value="km"'+(c.unit!=='mi'?' selected':'')+'>km</option><option value="mi"'+(c.unit==='mi'?' selected':'')+'>mi</option></select></span></label>'
+      +'<label>Target time (optional)<input type="text" class="field" data-gpf="time" value="'+esc(c.time||'')+'" placeholder="3:30 (hours:minutes)"></label></div>';
+    var km=c.dist>0?(c.unit==='mi'?c.dist/0.621371:+c.dist):0;
+    if(!c.date||!km) return h+'<div class="gp-f none">Add the date and distance and Kova counts down to it.</div>';
+    var hm=/^(\d{1,2})(?::(\d{2}))?$/.exec(String(c.time||'').trim()), hours=hm?(+hm[1])+(+(hm[2]||0))/60:0;
+    var P=cyclePlan({km:km,date:c.date,hours:hours});
+    if(P.w==null) return h;
+    if(P.ph==='Done') return h+'<div class="gp-f">That date has passed. Add your next event.</div>';
+    return h+'<div class="gp-cd"><div class="gp-big">'+P.w+'<small> week'+(P.w===1?'':'s')+' to go</small></div><div class="gp-ph">'+esc(P.ph)+' phase'+(P.spd?' · race pace '+Math.round(P.spd)+' km/h ('+mi(P.spd)+' mph)':'')+'</div></div>'
+      +'<div class="gp-f">'+esc(P.note)+'</div><div class="gp-wk">This week</div>'+list(P.s);
+  }
+  function calisHtml(s){
+    var C=s.calis||{skills:[],at:{}}, mine=C.skills||[];
+    var h='<div class="gp-f">Calisthenics is built on strong shoulders, chest and upper back: pull-ups, dips, push-ups and rows, 3 sets each, two or three times a week. Practise skills first in a session, while you are fresh.</div>'
+      +'<div class="gp-q">Which skills do you want?</div><div class="gp-chips">'+SKILL.map(function(x){ return chip(mine.indexOf(x.id)>=0,'data-gp="skill" data-v="'+x.id+'"',x.n); }).join('')+'</div>';
+    mine.forEach(function(id){
+      var k=skill(id); if(!k) return; var i=Math.max(0,Math.min(k.L.length-1,(C.at||{})[id]||0)), L=k.L[i];
+      h+='<div class="gp-sk"><div class="gp-skh"><b>'+esc(k.n)+'</b><span>Step '+(i+1)+' of '+k.L.length+'</span></div>'
+        +'<div class="gp-skw">'+esc(k.why)+'</div>'
+        +'<div class="gp-step"><div class="gp-sn">'+esc(L[0])+'</div><div class="gp-sp">'+esc(L[1])+'</div><div class="gp-mo">Move on when: '+esc(L[2])+'</div></div>'
+        +(k.L[i+1]?'<div class="gp-next">Next: '+esc(k.L[i+1][0])+'</div>':'')
+        +'<div class="gp-row">'+(i>0?'<button class="gp-link" data-gp="back" data-v="'+id+'">Back a step</button>':'')
+        +(k.L[i+1]?'<button class="btn gp-btn" data-gp="up" data-v="'+id+'">I can do this: next step</button>':'')+'</div></div>';
+    });
+    return h;
+  }
+  function body(g){ var s=st(), k=kind(g); return k==='hike'?hikeHtml(s):k==='cycle'?cycleHtml(s):k==='calis'?calisHtml(s):''; }
+  function title(g){ return kind(g)==='hike'?'Your hiking':kind(g)==='cycle'?'Your riding':'Your skills'; }
+
+  /* the card on Workout, under "Built around" */
+  function slot(){
+    var s=document.getElementById('gpSlot'), a=document.getElementById('goalSlot');
+    if(!s&&a&&a.parentNode){ s=document.createElement('div'); s.id='gpSlot'; s.className='kl-keep'; a.parentNode.insertBefore(s,a.nextSibling); }
+    return s;
+  }
+  function paint(){
+    var s=slot(); if(!s) return; var g=gid();
+    if(!kind(g)){ s.innerHTML=''; return; }
+    s.innerHTML='<div class="card gp" data-gpw="card"><div class="gp-t">'+esc(title(g))+'</div>'+body(g)+'</div>';
+  }
+  /* the pop-up, right after the goal is picked */
+  function ask(g){
+    if(!kind(g)||!window.openSheet) return;
+    openSheet('<div class="grab"></div><div class="gp" data-gpw="sheet"><div class="title-s" style="font-size:19px;margin-bottom:4px">'+esc(title(g))+'</div><div class="sub" style="margin-bottom:10px">One more question, so your plan fits what you actually do.</div><div id="gpSheet">'+body(g)+'</div>'
+      +'<button class="btn" data-gp="done" style="margin-top:12px">Done</button></div>');
+    put({asked:Object.assign({},st().asked||{},(function(o){ o[g]=Date.now(); return o; })({}))});
+  }
+  function repaint(){ var g=gid()||pendingGoal; var sh=document.getElementById('gpSheet'); if(sh) sh.innerHTML=body(g); paint(); }
+
+  function act(a,v){
+    var s=st();
+    if(a==='hike') put({hike:v});
+    else if(a==='comp') put({cycle:Object.assign({},s.cycle||{},{compete:v==='1'})});
+    else if(a==='type') put({cycle:Object.assign({},s.cycle||{},{type:v})});
+    else if(a==='skill'){ var C=Object.assign({skills:[],at:{}},s.calis||{}), i=C.skills.indexOf(v); if(i>=0) C.skills.splice(i,1); else C.skills.push(v); put({calis:C}); }
+    else if(a==='up'||a==='back'){ var C2=Object.assign({skills:[],at:{}},s.calis||{}), k=skill(v); C2.at=Object.assign({},C2.at||{}); var n=(C2.at[v]||0)+(a==='up'?1:-1); C2.at[v]=Math.max(0,Math.min(k.L.length-1,n)); put({calis:C2}); if(a==='up') say('Next step: '+k.L[C2.at[v]][0]+'.'); }
+    else if(a==='done'){ if(window.closeSheet) closeSheet(); return paint(); }
+    repaint();
+  }
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-gp]'); if(!b) return; act(b.getAttribute('data-gp'),b.getAttribute('data-v')); });
+  document.addEventListener('change',function(e){
+    var f=e.target.closest&&e.target.closest('[data-gpf]'); if(!f) return;
+    var c=Object.assign({},st().cycle||{}), k=f.getAttribute('data-gpf'), v=f.value;
+    if(k==='dist') c.dist=parseFloat(v)||0; else c[k]=v;
+    put({cycle:c}); repaint();
+  });
+
+  /* the Workout quiz: right after Hiking, Cycling or Calisthenics is picked */
+  var pendingGoal=null, MAP={'Hiking':'hiking','Cycling':'hikebike','Calisthenics':'calisthenics'};
+  document.addEventListener('click',function(e){
+    var o=e.target.closest&&e.target.closest('#qBody .qopt'); if(!o) return;
+    var t=(o.querySelector('.exname')||o).textContent.trim(), g=null;
+    Object.keys(MAP).forEach(function(n){ if(t.indexOf(n)===0) g=MAP[n]; });
+    if(g){ pendingGoal=g; setTimeout(function(){ ask(g); },250); }
+  },true);
+  document.addEventListener('kova:screen',function(e){ if(e&&e.detail==='move') paint(); });
+  setTimeout(paint,0);
+
+  return {paint:paint,ask:ask,state:st,cyclePlan:cyclePlan,weeksTo:weeksTo,phase:phase,needWeeks:needWeeks,HIKE:HIKE,SKILL:SKILL,RACE:RACE,_act:act};
+})();
+
+</script>
+<script id="p08-bodyshape">
+/* =====================================================================
+   KovaBodyShape - the body map looks like you (p30).
+
+   The Target muscles map (Workout > Customize) was one male figure for
+   everyone. Now, from what you told Kova:
+     - female or male (the setup question, or Fuel > Find my maintenance);
+     - your build: body fat you entered, or an estimate from height,
+       weight and age (Deurenberg's BMI formula). A heavier build gets a
+       fuller waist, hips and limbs; a leaner one, slimmer;
+     - and it follows your weigh-ins, so the figure leans out as your
+       weight comes down. The first estimate is kept to show the change.
+   The figure is reshaped, not redrawn: every point of the original paths
+   is moved sideways by a smooth amount that depends on its height (head,
+   shoulders, chest, waist, hips, thighs, calves) and on whether it is on
+   the arm or the trunk. Each muscle keeps its own shape, so tapping a
+   muscle works exactly as before.
+   ===================================================================== */
+window.KovaBodyShape=(function(){
+  'use strict';
+  /* half-width of the trunk and legs (T) and the centre line of the arm (A),
+     by height, measured from the original figure (centre x = 100) */
+  var T=[[60,12],[68,10],[84,50],[124,51],[162,41],[199,36],[232,52],[278,52],[326,44],[354,35],[396,36],[430,24],[450,18]];
+  var A=[[84,64],[124,64],[168,71],[214,80],[246,85],[265,86]];
+  function lerp(tab,y){
+    if(y<=tab[0][0]) return tab[0][1];
+    for(var i=1;i<tab.length;i++) if(y<=tab[i][0]){ var a=tab[i-1], b=tab[i]; return a[1]+(b[1]-a[1])*(y-a[0])/(b[0]-a[0]); }
+    return tab[tab.length-1][1];
+  }
+  function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+  /* who to draw */
+  function profile(){
+    var m=kp('maint')||{}, ob=kp('onboard')||{};
+    var sx=String(m.sex||ob.sex||'').toLowerCase(), f=/^f/.test(sx)?1:/^m/.test(sx)?0:null;
+    var wl=(kp('wlog')||[]).filter(function(x){ return x&&x.kg>0; }).sort(function(a,b){ return a.t-b.t; });
+    var kg=wl.length?wl[wl.length-1].kg:(m.kg||null), cm=m.hcm||null, age=m.age||30;
+    var bf=m.bf&&m.bf>=3&&m.bf<=60?+m.bf:null, how=bf?'the body fat you entered':'';
+    if(!bf&&kg&&cm){ var bmi=kg/Math.pow(cm/100,2); bf=clamp(1.2*bmi+0.23*age-10.8*(f===1?0:1)-5.4,5,55); how='your height, weight and age'; }
+    /* 0 = an average build for that sex (about 18% men, 28% women) */
+    var ref=f===1?28:18, b=bf==null?0:clamp((bf-ref)/12,-0.9,1.6);
+    return {f:f==null?0:f, known:f!=null, bf:bf, b:b, how:how, kg:kg};
+  }
+
+  /* how much wider (>1) or narrower (<1) the trunk is at height y */
+  function kt(y,f,b){
+    var K=[[60,1],[84,1-0.16*f+0.03*b],[140,1-0.12*f+0.06*b],[199,1-0.16*f+0.24*b],[240,1+0.10*f+0.13*b],[300,1+0.06*f+0.11*b],[360,1-0.04*f+0.05*b],[420,1-0.04*f],[450,1]];
+    return lerp(K,y);
+  }
+  function pt(x,y,P){
+    if(y<62) return [x,y];
+    var dx=x-100, s=dx<0?-1:1, a=Math.abs(dx), k=kt(y,P.f,P.b), Ty=lerp(T,y);
+    if(!(y>80&&y<268&&a>Ty+3)) return [100+dx*k,y];
+    var Ay=lerp(A,y), ka=1-0.16*P.f+0.15*P.b;
+    return [100+s*(Ay+Ty*(k-1)+(a-Ay)*ka),y];
+  }
+  function warp(d,P){
+    var out=[], nums=[];
+    String(d).replace(/([MLCZ])|(-?\d*\.?\d+)/g,function(m0,c,n){ if(c){ flush(); out.push(c); } else nums.push(+n); return m0; });
+    flush();
+    function flush(){ for(var i=0;i+1<nums.length;i+=2){ var p=pt(nums[i],nums[i+1],P); out.push((Math.round(p[0]*10)/10)+','+(Math.round(p[1]*10)/10)); } nums=[]; }
+    return out.join(' ').replace(/ ([MLCZ]) /g,' $1').replace(/^([MLCZ]) /,'$1');
+  }
+
+  var FILL='rgba(255,255,255,.055)', STROKE='rgba(255,255,255,.30)';
+  var HAIR_FRONT='M100,2 C86,2 76,12 76,30 C76,46 74,62 72,76 C80,80 90,78 94,70 L94,60 C86,52 82,40 82,28 C82,14 90,8 100,8 C110,8 118,14 118,28 C118,40 114,52 106,60 L106,70 C110,78 120,80 128,76 C126,62 124,46 124,30 C124,12 114,2 100,2 Z';
+  var HAIR_BACK='M100,2 C84,2 75,13 75,30 C75,50 73,64 72,78 C84,85 116,85 128,78 C127,64 125,50 125,30 C125,13 116,2 100,2 Z';
+
+  function apply(){
+    var svg=document.getElementById('bodySvg'); if(!svg) return null;
+    var P=profile(), on=P.f===1||Math.abs(P.b)>0.05;
+    svg.querySelectorAll('path').forEach(function(p){
+      if(p.hasAttribute('data-hair')) return;
+      var d0=p.getAttribute('data-d0'); if(!d0){ d0=p.getAttribute('d'); if(!d0) return; p.setAttribute('data-d0',d0); }
+      p.setAttribute('d',on?warp(d0,P):d0);
+    });
+    svg.querySelectorAll('[data-hair]').forEach(function(h){ h.remove(); });
+    if(P.f===1){
+      var gs=svg.querySelectorAll(':scope > g');
+      [gs[0],gs[1]].forEach(function(g,i){
+        if(!g) return;
+        var h=document.createElementNS('http://www.w3.org/2000/svg','path');
+        h.setAttribute('data-hair','1'); h.setAttribute('fill',FILL); h.setAttribute('stroke',STROKE); h.setAttribute('stroke-width','2'); h.setAttribute('stroke-linejoin','round');
+        h.setAttribute('d',i===0?HAIR_FRONT:HAIR_BACK);
+        g.insertBefore(h,g.firstChild);
+      });
+    }
+    note(P);
+    return P;
+  }
+
+  /* one line under the map: what it is drawn from, and the change since the first time */
+  function note(P){
+    var svg=document.getElementById('bodySvg'); if(!svg) return;
+    var n=document.getElementById('bodyShapeNote');
+    if(!n){ n=document.createElement('div'); n.id='bodyShapeNote'; n.className='sub'; n.style.cssText='padding:2px 10px 10px;line-height:1.45;font-size:11.5px'; svg.parentNode.appendChild(n); }
+    if(P.bf==null){ n.textContent=(P.known?(P.f?'Drawn as a woman. ':'Drawn as a man. '):'')+'Add your height and weight in Fuel > Find my maintenance and the figure matches your build, then leans out as your weigh-ins go down.'; return; }
+    var first=kp('shape0'); if(!first||typeof first.bf!=='number'){ first={bf:P.bf,t:Date.now()}; try{ KP.set('shape0',first); }catch(e){} }
+    var d=P.bf-first.bf;
+    n.textContent='Drawn for you: '+(P.f?'a woman':'a man')+', about '+Math.round(P.bf)+'% body fat, from '+P.how+'.'
+      +(Math.abs(d)>=0.5?' Since you started: '+(d<0?'':'+')+d.toFixed(1)+' points'+(d<0?', and the figure has leaned out with you.':'.'):' It leans out as your weigh-ins go down.');
+  }
+
+  document.addEventListener('kova:screen',function(e){ if(e&&e.detail==='customize') apply(); });
+  setTimeout(apply,0);
+  return {apply:apply,profile:profile,warp:warp,kt:kt,_pt:pt};
 })();
 
 </script>

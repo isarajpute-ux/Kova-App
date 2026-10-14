@@ -48,7 +48,7 @@ const STUB = `(function(){
 })();`;
 const asks = [];
 async function boot(theme) {
-  const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), kova_mode_v1: 'live', 'kova_profile_v2': JSON.stringify(theme ? { theme } : {}) });
+  const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), kova_mode_v1: 'live', 'kova_profile_v2': JSON.stringify(theme ? { theme, tourSeen: true } : { tourSeen: true }) });
   const o = await openPage(b, null, { storage: STORE });
   await o.context.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: STUB }));
   await o.context.route(/\/api\/ai\/ask$/, async (r) => {

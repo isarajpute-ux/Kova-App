@@ -721,3 +721,28 @@ body.soft-light .wk-tab.on{background:linear-gradient(180deg,#EEF3FB,#D6E1F1);bo
 body.soft-light .wk-tab.on i{background:#1B2430}
 body.soft-light .app[data-pillar="work"] .wk-lit .btn:not(.ghost){background:#fff;color:#1B2430}
 body.soft-light .app[data-pillar="work"] .wk-lit .wstress-b{background:#fff;color:#1B2430;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+
+/* p30: a teammate's own page, and the team as rows that open them */
+.crw-mate{margin:2px 0 16px}
+.crw-allt{display:inline-block;margin:0 0 10px;padding:0;font-size:13px;color:var(--d-mute)}
+.crw-mh{display:flex;align-items:center;gap:12px}
+.crw-mh .crd-title{margin:0;line-height:1.1}
+.crw-mt{font-size:13px;color:var(--d-mute);margin-top:3px}
+.crw-mj{font-size:13px;line-height:1.5;color:var(--d-ink);opacity:.82;margin-top:10px}
+.crw-rh{display:flex;align-items:center;gap:8px;margin:4px 0 10px}
+.crw-rh .crd-sh2{margin:0}
+.crw-roster{display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 18px}
+@container (min-width:620px){.crw-roster{grid-template-columns:1fr 1fr}}
+.crw-rc{display:flex;align-items:center;gap:11px;width:100%;min-height:58px;padding:10px 12px;border-radius:16px;border:1px solid var(--d-line);background:var(--d-card);color:var(--d-ink);font:inherit;text-align:left;cursor:pointer}
+.crw-rc.off{opacity:.55}
+.crw-rn{display:flex;flex-direction:column;min-width:0;flex:1}
+.crw-rn b{font-weight:500;font-size:14.5px}
+.crw-rn small{font-size:12px;color:var(--d-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crw-rs{font-size:11px;color:var(--d-mute);white-space:nowrap}
+.crw-rs.s-run,.crw-rs.s-wait{color:var(--d-ink);font-weight:500}
+.crw-rgo{font-size:18px;color:var(--d-faint)}
+/* numbers: words get a smaller size and may wrap, so nothing is cut off */
+.crd-num{overflow:visible;flex-wrap:wrap}
+.crd-num.w{font-size:24px;line-height:1.15;font-weight:400}
+.crd-cap{overflow-wrap:anywhere}
+.crw-mate~.crw-hero{margin-bottom:22px}

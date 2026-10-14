@@ -1,4 +1,8 @@
-/* The email sign-in in a real browser (server answered locally):
+/* The email sign-in in a real browser (server answered locally). p30:
+   with Firebase up, the first launch is the birthday and then the same
+   boxed sign-in card as Settings (one sign-in screen); the email-code
+   screen below is the fallback when Firebase cannot load, so those
+   checks run with Firebase blocked. The code screen:
    a slip in the email gets a "Did you mean", a typed code waits a beat
    before it is checked, a wrong code keeps the digits and says how many
    tries are left, and the right code ends on "You're in". Run with
@@ -12,7 +16,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
 const b = await chromium.launch();
 const site = await serve(join(root, 'dist'));
+const NOFB = (ctx) => ctx.route(/gstatic\.com\/firebasejs\//, (r) => r.fulfill({ contentType: 'text/javascript', body: '' }));
 const { context, page, pageErrors } = await openPage(b, null, { storage: {} });
+await NOFB(context);
 let verifies = 0, codeAt = [];
 await context.route(/\/api\/auth\/code$/, (r) => { codeAt.push(Date.now()); r.fulfill({ contentType: 'application/json', body: '{"ok":true}' }); });
 await context.route(/\/api\/auth\/verify$/, (r) => {
@@ -61,6 +67,7 @@ ck('no page errors', pageErrors.length === 0 || (console.error(pageErrors), fals
 await context.close();
 /* someone under 16 */
 const kid = await openPage(b, null, { storage: {} });
+await NOFB(kid.context);
 await kid.page.goto(site.url + '/index.html', { waitUntil: 'load' });
 await kid.page.waitForSelector('#authSkip', { timeout: 15000 });
 ck('the welcome screen says continuing means agreeing to the Terms and the Privacy Policy', /agree to the Terms/.test(await kid.page.textContent('#authInner')));
@@ -74,16 +81,21 @@ await kid.page.click('#afAgeGo');
 await kid.page.waitForTimeout(300);
 ck('under 16 (even turning 16 tomorrow): Kova stops there, nothing saved', /16 and over/.test(await kid.page.textContent('#authInner')) && !(await kid.page.evaluate(() => localStorage.getItem('kova.age16'))) && !(await kid.page.$('#afYear')));
 await kid.context.close();
-/* Firebase answering "nobody signed in" while the page is still loading
-   (what the real one does) used to open its sign-in sheet on top of the
-   welcome screen: two sign-in screens stacked */
+/* Firebase up, answering "nobody signed in" while the page is still
+   loading (what the real one does): one sign-in screen, never two stacked.
+   p30: the birthday first, then the boxed card, the same one as Settings. */
 const early = await openPage(b, null, { storage: {} });
 await early.context.route(/gstatic\.com\/firebasejs\/.*firebase-app-compat\.js/, (r) => r.fulfill({ contentType: 'text/javascript', body: FIREBASE_STUB.replace('setTimeout(function(){cb(null)},0)', 'cb(null)') }));
 await early.page.goto(site.url + '/index.html', { waitUntil: 'load' });
-await early.page.waitForSelector('#afEmail', { timeout: 15000 });
+await early.page.waitForSelector('#afYear', { timeout: 15000 });
 await early.page.waitForTimeout(600);
-ck('one sign-in screen, not two stacked', await early.page.evaluate(() => getComputedStyle(document.getElementById('kova-auth-modal')).display === 'none'));
-ck('the welcome screen has a line where Google and Apple problems are shown', !!(await early.page.$('#afErr')));
+ck('Firebase up: the birthday comes first, and no sign-in card is stacked on it', await early.page.evaluate(() => getComputedStyle(document.getElementById('kova-auth-modal')).display === 'none'));
+await early.page.selectOption('#afDay', '14'); await early.page.selectOption('#afMonth', '5'); await early.page.selectOption('#afYear', String(new Date().getFullYear() - 30));
+await early.page.click('#afAgeGo');
+await early.page.waitForSelector('#ksiRoot .ksi-card', { timeout: 15000 });
+const card = await early.page.evaluate(() => ({ open: getComputedStyle(document.getElementById('kova-auth-modal')).display, t: document.getElementById('ksiRoot').innerText, codeScreen: !!document.getElementById('afEmail') }));
+ck('then the boxed card (Sign in / Create account, Google, Skip for now), and no second screen under it', card.open === 'flex' && /Create account/.test(card.t) && /Continue with Google/.test(card.t) && /Skip for now/.test(card.t) && !card.codeScreen);
+ck('the card says continuing means agreeing to the Terms and the Privacy Policy', /agree to the Terms/.test(card.t) && /Privacy Policy/.test(card.t));
 await early.context.close(); await b.close(); site.close();
 const failed = R.filter((x) => !x[1]);
 R.forEach((x) => console.log((x[1] ? 'PASS ' : 'FAIL ') + x[0]));
