@@ -258,14 +258,14 @@ window.KovaVDock=(function(){
     var sub=function(id,label,val,unit,dlt,du){
       var m=a[id], st=m?m.status:'neglect', t=tone(st), d=dev(m);
       var bar=d==null?'':'<i style="left:'+(50+Math.max(-45,Math.min(45,d*1.5)))+'%"></i>';
-      return '<div class="kvd-sm '+t+'"><b>'+(val==null?'—':esc(val))+'<small>'+esc(unit)+'</small></b><span>'+esc(label)+'</span>'
+      return '<div class="kvd-sm '+t+'" data-k="'+id+'" role="button" tabindex="0" aria-label="'+esc(label)+(val==null?', no reading':', '+esc(val)+' '+esc(unit))+'. Opens '+esc(label)+'"><b>'+(val==null?'—':esc(val))+'<small>'+esc(unit)+'</small></b><span>'+esc(label)+'</span>'
         +'<em>'+(dlt==null?(st==='neglect'?'no reading':''):esc((dlt>0?'+':'')+dlt+du))+'</em><div class="kvd-mt">'+bar+'</div></div>';
     };
     var hrv=a.hrv, rhr=a.rhr, sl=a.sleep;
     return '<div class="kvd-card kvd-power">'
       +'<div class="kvd-ch"><div><div class="kvd-ct">Recovery</div><div class="kvd-cs">Today, from sleep, HRV and resting heart rate</div></div>'
       +'<button class="kvd-sq" data-go="recovery" aria-label="Open recovery"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>'
-      +'<div class="kvd-big"><span class="kvd-num">'+(s==null?'—':s)+'</span><span class="kvd-unit">'+(s==null?'':'/100')+'</span>'
+      +'<div class="kvd-big" role="button" tabindex="0" aria-label="'+(s==null?'No recovery score yet':'Recovery '+s+' of 100')+'. Shows where it comes from"><span class="kvd-num">'+(s==null?'—':s)+'</span><span class="kvd-unit">'+(s==null?'':'/100')+'</span>'
       +'<span class="kvd-word '+(s==null?'none':s>=75?'good':s>=50?'mid':'bad')+'">'+(s==null?'Wear your watch to bed for a score':esc(word(s)))+'</span></div>'
       +'<div class="kvd-track" role="img" aria-label="'+(s==null?'No score yet':'Recovery '+s+' of 100, '+word(s).toLowerCase())+'"><span class="kvd-band"></span><span class="kvd-pill" style="left:50%"></span><span class="kvd-pill" style="left:75%"></span>'
       +(pos==null?'':'<span class="kvd-knob" style="left:'+pos+'%"></span>')+'</div>'
@@ -287,7 +287,7 @@ window.KovaVDock=(function(){
       var w=Math.max(6,Math.min(46,Math.round(v/480*34)));
       return '<i style="width:'+w+'px;opacity:'+o+'" title="'+hm(v)+'"></i>';
     }).join('');
-    return '<div class="kvd-trend"><div class="kvd-trh"><span>Sleep and trend</span><b>'+(avg==null?'no nights yet':hm(avg)+' avg')+'</b></div>'
+    return '<div class="kvd-trend" role="button" tabindex="0" aria-label="Sleep over the last 14 nights. Opens Sleep"><div class="kvd-trh"><span>Sleep and trend</span><b>'+(avg==null?'no nights yet':hm(avg)+' avg')+'</b></div>'
       +'<div class="kvd-dash" aria-label="Sleep over the last 14 nights">'+segs+'</div></div>';
   }
   /* image 3, "Most / Least consistent": the reading closest to your normal
@@ -301,7 +301,7 @@ window.KovaVDock=(function(){
     var best=L[0], worst=L.length>1?L[L.length-1]:null;
     var val=function(x){ var m=x.m; return x.k==='sleep'?hm(m.value):(Math.round(m.value)+(m.unit&&m.unit.length<5?' '+m.unit:x.k==='food'?' g':'')); };
     var tile=function(x,vivid,title){
-      return '<div class="kvd-tile'+(vivid?' vivid ink-'+ink():'')+'"><div class="kvd-tt">'+esc(title)+'</div><div class="kvd-ts">'+esc(NAME[x.k])+'</div>'
+      return '<div class="kvd-tile'+(vivid?' vivid ink-'+ink():'')+'" data-k="'+x.k+'" role="button" tabindex="0" aria-label="'+esc(title)+': '+esc(NAME[x.k])+', '+esc(val(x))+'. Opens it"><div class="kvd-tt">'+esc(title)+'</div><div class="kvd-ts">'+esc(NAME[x.k])+'</div>'
         +'<div class="kvd-tv"><span class="kvd-num sm">'+esc(val(x))+'</span><em class="'+(vivid?'':Math.abs(x.d)>=10?'bad':'mid')+'">'+(x.d>0?'+':'')+x.d+' %</em></div>'
         +dots(x.d,vivid)+'</div>';
     };

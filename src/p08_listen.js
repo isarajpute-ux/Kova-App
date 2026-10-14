@@ -210,6 +210,16 @@ window.KovaListen=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,1800); }); else setTimeout(start,1800);
 
+  /* p28: open a teammate's box with a question already written, from a tap
+     elsewhere (Vitals' "Ask Cora"). Nothing is sent until you press Send.
+     who: a template id ('vitals') or a name ('Cora'). */
+  function ask(who,text){
+    var C=crew(); if(!C||!C.emps) return false;
+    var L=C.emps(), e=L.filter(function(x){ return x.tpl===who||String(x.n).toLowerCase()===String(who).toLowerCase(); })[0];
+    if(!e) return false;
+    open(e,''); S.ask=String(text||''); S.state='edit'; paintPop();
+    return true;
+  }
   return {supported:supported,set:set,on:function(){ return S.on; },running:function(){ return S.running; },error:function(){ return S.err; },
-    hear:hear,find:find,request:request,close:close,send:send,_S:S};
+    hear:hear,find:find,request:request,close:close,send:send,ask:ask,_S:S};
 })();
