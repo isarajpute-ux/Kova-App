@@ -96,7 +96,11 @@ window.KovaLabs=(function(){
         return viaServer({text:t}).then(function(r){ return {rows:r,how:'server'}; },function(e){ if(rows.length) return {rows:rows,how:'phone',note:e.message}; throw e; });
       });
     }
-    return toJpeg(file).then(function(d){ return viaServer({image:d.slice(d.indexOf(',')+1),mime:file.type||'image/jpeg'}); }).then(function(r){ return {rows:r,how:'server'}; });
+    /* p29: a phone photo is 3-5 MB, over the server's upload limit; 1,800 px
+       keeps small print readable and lands well under it */
+    return toJpeg(file).then(function(d){ return window.KovaModel&&KovaModel.fit?KovaModel.fit(d,1800):d; }).then(function(d){
+      var mt=window.KovaModel&&KovaModel.mime?KovaModel.mime(d):(file.type||'image/jpeg');
+      return viaServer({image:d.slice(d.indexOf(',')+1),mime:mt}); }).then(function(r){ return {rows:r,how:'server'}; });
   }
 
   /* ---------------- confirm, then save ---------------- */

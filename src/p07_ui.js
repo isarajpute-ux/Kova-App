@@ -320,6 +320,7 @@ window.KovaScreenTour=(function(){
     move:[
       ['Today’s session','What to train today, and why.','#s-move .card.kova[data-go="session"]'],
       ['Start workout','One tap. Kova logs your sets as you go.','#startBtn'],
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card'],
       ['This week','Every session. Tap a day to see it.',up('wkTotal')],
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill','customize'],
       ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid'),'customize'],
@@ -392,7 +393,8 @@ window.KovaScreenTour=(function(){
     ],
     move:[
       ['Training','Your sessions this week and your last one, from what you log.',P('move','.kv-card')],
-      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')]
+      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')],
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card']
     ]
   };
   /* finish every live tour the same way: getting around, and Kova itself */

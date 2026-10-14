@@ -37,6 +37,7 @@
      GET  /crew/inbox                              what they did: reports and proposed changes [auth]
      POST /crew/inbox/ack {ids}                    picked up by the app [auth]
      POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools) [auth]
+     POST /ai/ask      {system,messages,max_tokens,temperature}  Kova's own AI for a question or a photo (machine scan, form review, ingredients, voice): text and up to 8 images [auth]
      POST /hashtags     {post words}    hashtag ideas, grouped, with a rough size band [auth]
      POST /assist       {text}          the agent drafts a job: an email, a task, or an answer [auth]
      POST /assist/email {to,subject,body,send}  send the APPROVED email, or save it as a Gmail draft [auth]
@@ -802,6 +803,59 @@ function cleanCrew(b) {
    opus (src/p08_crew.js picks per job); anything else uses the server's
    default. Opus has its own, smaller daily allowance. */
 const CREW_MODELS = { haiku: 'claude-haiku-4-5-20251001', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
+/* ---------- Kova's own AI, for everything that used to need your key ----
+   p28: the Machine scan, Form Check's technique review, ingredients from a
+   photo, the voice and chat answers outside your data, and Work OS planning
+   all used to work only with a key you pasted in. Signed in, they come here
+   and use the server's key. Text and photos (base64 JPEG/PNG/WebP/GIF, at
+   most 8, each under ~1.6 MB), no tools; the answer comes back in
+   Anthropic's own shape, so the app reads it the same way either route. */
+const AI_IMG = /^image\/(jpeg|png|webp|gif)$/;
+function cleanAsk(b) {
+  const s = (v, n) => String(v == null ? '' : v).slice(0, n);
+  let imgs = 0;
+  const block = (x) => {
+    if (!x || typeof x !== 'object') return null;
+    if (x.type === 'text') { const t = s(x.text, 20000); return t.trim() ? { type: 'text', text: t } : null; }
+    if (x.type === 'image' && x.source && x.source.type === 'base64' && AI_IMG.test(String(x.source.media_type || ''))
+      && typeof x.source.data === 'string' && x.source.data.length > 0 && x.source.data.length < 2.2e6 && /^[A-Za-z0-9+/=\s]+$/.test(x.source.data.slice(0, 200))) {
+      if (++imgs > 8) throw new HttpError(413, 'Up to 8 photos at a time.');
+      return { type: 'image', source: { type: 'base64', media_type: x.source.media_type, data: x.source.data } };
+    }
+    return null;
+  };
+  const messages = (Array.isArray(b.messages) ? b.messages : []).slice(-20)
+    .filter((m) => m && (m.role === 'user' || m.role === 'assistant'))
+    .map((m) => ({ role: m.role, content: typeof m.content === 'string' ? s(m.content, 20000) : (Array.isArray(m.content) ? m.content.slice(0, 20).map(block).filter(Boolean) : '') }))
+    .filter((m) => (typeof m.content === 'string' ? m.content.trim() : m.content.length));
+  if (!messages.length || messages[0].role !== 'user') throw new HttpError(400, 'Ask something first.');
+  const out = { system: s(b.system, 24000), messages, max_tokens: Math.max(64, Math.min(2000, Math.round(+b.max_tokens || 900))) };
+  if (typeof b.temperature === 'number' && b.temperature >= 0 && b.temperature <= 1) out.temperature = b.temperature;
+  return out;
+}
+async function aiAsk(req, res, cfg) {
+  const u = await requireUser(req);
+  /* photos and videos cost real money per call, so a guest session (which
+     anyone can open endlessly) does not get Kova's AI; a signed-in one does */
+  if (u.firebase && u.firebase.sign_in_provider === 'anonymous') throw new HttpError(403, 'Sign in with your email or Google to use Kova\'s AI.');
+  await requirePro(u, cfg, 'any');
+  if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'Kova\'s AI is not set up on this server yet.');
+  await rateLimit(`ai_${u.uid}`, 300, 24 * 3600e3);
+  const c = cleanAsk(req.body || {});
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify(Object.assign({ model: cfg.model }, c))
+  });
+  if (!r.ok) {
+    const t = await r.text().catch(() => '');
+    console.error('ai', r.status, t.slice(0, 300));
+    throw new HttpError(502, 'Kova\'s AI could not answer just now. Try again in a moment.');
+  }
+  const j = await r.json();
+  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null });
+}
+
 async function crewStep(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg, 'work');
@@ -1289,6 +1343,7 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/write') return await writeRoute(req, res, cfg);
     if (M === 'POST' && path === '/foods/search') return await foodsSearch(req, res, cfg);
     if (M === 'POST' && path === '/crew/step') return await crewStep(req, res, cfg);
+    if (M === 'POST' && path === '/ai/ask') return await aiAsk(req, res, cfg);
     if (M === 'POST' && path === '/crew/cloud') return await crewCloud(req, res, cfg);
     if (M === 'GET' && path === '/crew/inbox') return await crewInbox(req, res);
     if (M === 'POST' && path === '/crew/inbox/ack') return await crewInboxAck(req, res);
@@ -1349,4 +1404,4 @@ async function handle(req, res, cfg) {
   }
 }
 
-module.exports = { handle, HttpError, configured, cleanPost, fdcFood, cleanCrew };
+module.exports = { handle, HttpError, configured, cleanPost, fdcFood, cleanCrew, cleanAsk };

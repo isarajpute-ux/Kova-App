@@ -93,7 +93,7 @@ await context.close(); await b.close();
   await pg.goto(site.url + '/index.html', { waitUntil: 'load' });
   await pg.waitForFunction(() => window.__kovaLazyDone && window.KovaVDock, null, { timeout: 30000 });
   await pg.waitForTimeout(800);
-  const want = { home: 5, vitals: 4, sleep: 4, fuel: 5, move: 8 };   /* Fuel's vitamins card counts your real log, so it is a stop too */
+  const want = { home: 5, vitals: 4, sleep: 4, fuel: 5, move: 9 };   /* p29: Workout adds "Built around your goal". Fuel's vitamins card counts your real log, so it is a stop too */
   for (const id of Object.keys(want)) {
     await pg.evaluate((id) => go(id), id);
     await pg.waitForTimeout(700);

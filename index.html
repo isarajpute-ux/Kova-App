@@ -8201,6 +8201,111 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 .kvt-where.off{color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
 
 </style>
+<style id="p08-formai">
+/* p28: Form Check's technique review */
+.fai-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.fai-t{font-size:13px;font-weight:700;color:var(--txt,#FFFFFF);margin-bottom:2px}
+.fai-badge{font-size:9.5px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:999px;color:var(--acc);border:1px solid var(--acc-brd,rgba(255,255,255,.3))}
+.fai .btn{margin-top:4px}
+.fai-p{line-height:1.5;margin-bottom:8px}
+.fai-note{font-size:10.5px;line-height:1.5;margin-top:10px;opacity:.8}
+.fai-bar{height:4px;border-radius:2px;background:rgba(127,127,127,.2);overflow:hidden}
+.fai-bar i{display:block;height:100%;width:40%;background:var(--acc);border-radius:2px;animation:faib 1.2s ease-in-out infinite}
+@keyframes faib{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+.fai-strip{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 10px;padding:0 2px;scrollbar-width:none}
+.fai-strip figure{margin:0;position:relative;flex:0 0 auto}
+.fai-strip img{display:block;height:72px;border-radius:9px}
+.fai-strip figcaption{position:absolute;left:4px;bottom:4px;font-size:9.5px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);border-radius:6px;padding:1px 5px}
+.fai-o{font-size:12.5px;line-height:1.5;margin-bottom:8px;color:var(--txt,#FFFFFF)}
+.fai-safe{font-size:11.5px;line-height:1.45;margin-bottom:8px;padding:8px 10px;border-radius:10px;color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.fai-f{padding:9px 0;border-top:.5px solid var(--ron-line,rgba(255,255,255,.1))}
+.fai-fh{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--txt,#FFFFFF)}
+.fai-v{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.fai-v.good{color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.fai-v.fix{color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.fai-v.unclear{color:var(--txt-3,rgba(255,255,255,.7));background:rgba(127,127,127,.16)}
+.fai-s{font-size:11.5px;line-height:1.45;margin-top:4px;color:var(--txt-2,rgba(255,255,255,.88))}
+.fai-fr{opacity:.65}
+.fai-c{font-size:11.5px;line-height:1.45;margin-top:4px;color:var(--acc)}
+
+</style>
+<style id="p08-goal">
+/* p29: KovaGoal - the goal card on Workout, the goal lines on Fuel and
+   Sleep, goal-based sets on the machine scan, and the sport guide sheets.
+   Colours come from the theme tokens so dark, soft light and light glass
+   all work. */
+.kg-card{padding:15px 14px 14px}
+.kg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.kg-name{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-top:2px;color:var(--txt,#FFFFFF)}
+.kg-chg{flex:0 0 auto;font-size:11.5px}
+.kg-p{line-height:1.5;margin:6px 0 10px;color:var(--txt-2,rgba(255,255,255,.9))}
+.kg-tie{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px}
+.kg-pil{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:10px;border-radius:13px;cursor:pointer;font:inherit;
+  background:var(--glass,rgba(255,255,255,.05));border:.5px solid var(--ron-line,rgba(255,255,255,.1));color:var(--txt,#FFFFFF);min-width:0}
+.kg-pil:active,.kg-ses:active,.kg-mini:active{transform:scale(.985)}
+.kg-k{font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--acc)}
+.kg-v{font-size:11.5px;line-height:1.35;overflow-wrap:anywhere}
+.kg-sec{margin:16px 0 7px!important;font-weight:600}
+.kg-step{font-size:12px;line-height:1.45;padding:9px 11px;border-radius:12px;margin-bottom:8px;
+  background:var(--acc-dim,rgba(255,255,255,.06));color:var(--txt,#FFFFFF)}
+.kg-step i{font-style:normal;font-size:10.5px;opacity:.75;margin-left:4px}
+.kg-ses{display:grid;grid-template-columns:30px 9px minmax(0,1fr) 12px;align-items:center;gap:9px;width:100%;text-align:left;padding:10px 4px;
+  font:inherit;color:var(--txt,#FFFFFF);background:none;border:0;border-top:.5px solid var(--ron-line,rgba(255,255,255,.1));cursor:pointer}
+.kg-day{font-size:11px;font-weight:600;opacity:.75}
+.kg-dot{width:8px;height:8px;border-radius:50%;background:var(--txt-3,rgba(255,255,255,.55))}
+.kg-dot.hard{background:var(--acc);box-shadow:0 0 6px var(--acc)}
+.kg-dot.long{background:var(--warn,#FFC46B)}
+.kg-dot.steady{background:color-mix(in srgb,var(--acc) 55%,transparent)}
+.kg-sn{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kg-sn b{font-size:12.5px;font-weight:600}
+.kg-sn span{font-size:11px;line-height:1.35;color:var(--txt-3,rgba(255,255,255,.72));overflow-wrap:anywhere}
+.kg-go{font-size:18px;opacity:.45;text-align:right}
+.kg-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.kg-acts .btn{flex:1 1 150px;width:auto;margin:0;padding:12px 13px;font-size:13px}
+/* Fuel and Sleep: one line, tap for the why */
+.kg-mini{cursor:pointer;padding:12px 14px}
+.kg-mh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kg-mh .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kg-mv{font-size:14px;font-weight:600;margin:5px 0 3px;color:var(--txt,#FFFFFF)}
+.kg-mini:focus-visible,.kg-pil:focus-visible,.kg-ses:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* machine scan */
+.kg-rx{border-color:var(--acc-brd)}
+.kg-rh{font-size:12px;font-weight:700;margin-bottom:9px;color:var(--txt,#FFFFFF)}
+.kg-rh b{color:var(--acc);font-weight:700}
+.kg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.kg-grid b{display:block;font-size:13px;font-weight:600;color:var(--acc);margin-top:3px}
+.kg-why{font-size:12px;line-height:1.45;margin-top:11px;padding:9px 11px;border-radius:12px;background:var(--acc-dim,rgba(255,255,255,.06));color:var(--txt,#FFFFFF)}
+.kg-note{line-height:1.45;margin-top:9px}
+.kg-cs{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:.5px solid var(--ron-line,rgba(255,255,255,.1))}
+.kg-cs b{font-size:12.5px;color:var(--txt,#FFFFFF)}
+.kg-cs span{font-size:11.5px;line-height:1.4;color:var(--txt-3,rgba(255,255,255,.72))}
+.kg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.kg-add i{font-style:normal;opacity:.7;margin-left:3px;font-size:10.5px}
+.kg-link{background:none;border:0;padding:8px 0 0;font:inherit;font-size:11.5px;color:var(--acc);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+/* sheets */
+.kg-sh{font-size:19px;font-weight:600;line-height:1.25;margin-bottom:6px;color:var(--txt,#FFFFFF)}
+.kg-d{border-top:.5px solid var(--ron-line,rgba(255,255,255,.12));padding:2px 0}
+.kg-d summary{cursor:pointer;list-style:none;padding:11px 0;font-size:13.5px;font-weight:600;color:var(--txt,#FFFFFF);display:flex;justify-content:space-between}
+.kg-d summary::-webkit-details-marker{display:none}
+.kg-d summary::after{content:'+';opacity:.55;font-weight:400}
+.kg-d[open] summary::after{content:'\2212'}
+.kg-d ul{margin:0 0 10px;padding-left:18px}
+.kg-d li{font-size:12.5px;line-height:1.5;margin-bottom:7px;color:var(--txt-2,rgba(255,255,255,.9))}
+.kg-d li b{color:var(--txt,#FFFFFF)}
+.kg-parts{display:flex;flex-direction:column;gap:2px;margin:6px 0}
+.kg-part{display:grid;grid-template-columns:22px 1fr;gap:9px;padding:8px 0;border-top:.5px solid var(--ron-line,rgba(255,255,255,.1))}
+.kg-part>span{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--acc-dim,rgba(255,255,255,.1));color:var(--acc)}
+.kg-part b{font-size:12.5px;color:var(--txt,#FFFFFF)}
+.kg-part div div{font-size:12px;line-height:1.45;color:var(--txt-2,rgba(255,255,255,.88))}
+.kg-tip{padding:9px 11px;border-radius:12px;background:var(--acc-dim,rgba(255,255,255,.06))}
+.kg-term{font-size:12px;line-height:1.45;margin-bottom:6px;color:var(--txt-2,rgba(255,255,255,.88))}
+.kg-term b{color:var(--txt,#FFFFFF);margin-right:3px}
+.kg-in{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:600;letter-spacing:.04em;margin-top:8px;color:var(--txt-2,rgba(255,255,255,.85))}
+.kg-in input{font:inherit;font-size:16px;font-weight:400;letter-spacing:0;padding:11px 12px;border-radius:12px;border:.5px solid var(--ron-line,rgba(255,255,255,.2));
+  background:var(--glass,rgba(255,255,255,.04));color:var(--txt,#FFFFFF)}
+@media (max-width:360px){.kg-tie{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -8415,6 +8520,8 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
   </div>
 
   <button class="btn" data-go="session" style="margin-bottom:8px" id="startBtn"><svg class="ic"><use href="#i-player-play"/></svg>Start workout</button>
+
+  <div id="goalSlot" class="kl-keep"></div>
 
   <div class="card roncard">
     <svg class="roncorner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -12150,6 +12257,8 @@ body.ks-on #kovaFab{display:none!important}
     </div>
   </div>
 
+  <div id="goalSleep" class="kl-keep"></div>
+
   <div class="card kova">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-left:8px">
       <div style="display:flex;align-items:center;gap:5px"><div class="kova-dot"></div><div class="kova-lbl" id="slpWhyLbl">WHY YOUR SCORE IS 53</div></div>
@@ -12349,6 +12458,7 @@ body.ks-on #kovaFab{display:none!important}
   </div>
 
   <div class="kvx" id="fuelBal"></div>
+  <div id="goalFuel"></div>
 
   <div class="card kova">
     <div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA · CROSS PILLAR</div></div>
@@ -20712,7 +20822,9 @@ function openLibrary(title,rec,onPick){
       });
     };
 
-    function readMeal(dataUrl){
+    function readMeal(dataUrl,fitted){
+    /* p28: shrunk to a real JPEG first (server limit, and the label matches) */
+    if(!fitted&&window.KovaModel&&KovaModel.fit&&/^data:image\//.test(dataUrl||'')){ KovaModel.fit(dataUrl).then(function(d){ readMeal(d,true); }); return; }
       var wrap=document.getElementById('mealShotWrap');
       var out=document.getElementById('mealOut');
       if(!wrap||!out) return;
@@ -20771,7 +20883,7 @@ function openLibrary(title,rec,onPick){
       var cfg=KovaModel.cfg(), P=KovaModel.providers[cfg.p];
       var b64=dataUrl.slice(dataUrl.indexOf(',')+1);
       var content = cfg.p==='anthropic'
-        ? [{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+        ? [{type:'image',source:{type:'base64',media_type:KovaModel.mime(dataUrl),data:b64}},
            {type:'text',text:userTxt}]
         : [{type:'text',text:userTxt},
            {type:'image_url',image_url:{url:dataUrl}}];
@@ -25786,6 +25898,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   ];
 
   var picked=-1, q='', lastShot=null, ident=null;
+  window.__kovaMachines=M;   /* p29: KovaGoal adds the cardio machines */
 
   /* A machine the model described because it is not one of the curated
      entries. Held here rather than pushed into M on purpose: M is also the
@@ -25851,7 +25964,9 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     return b;
   }
 
-  function identifyShot(dataUrl){
+  function identifyShot(dataUrl,fitted){
+    /* p28: shrunk to a real JPEG first (server limit, and the label matches) */
+    if(!fitted&&window.KovaModel&&KovaModel.fit&&/^data:image\//.test(dataUrl||'')){ KovaModel.fit(dataUrl).then(function(d){ identifyShot(d,true); }); return; }
     var b=bannerEl();
 
     if(!window.KovaModel||!KovaModel.connected()){
@@ -25931,7 +26046,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
     var b64=dataUrl.slice(dataUrl.indexOf(',')+1);
     var content = c.p==='anthropic'
-      ? [{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+      ? [{type:'image',source:{type:'base64',media_type:KovaModel.mime(dataUrl),data:b64}},
          {type:'text',text:'What equipment is this?'}]
       : [{type:'text',text:'What equipment is this?'},
          {type:'image_url',image_url:{url:dataUrl}}];
@@ -26171,6 +26286,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
 
   function show(){
     var m = gen || M[picked];
+    var GM=(window.KovaGoal&&KovaGoal.id())?KovaGoal.machine(m,ident):'';
     var h='<div class="card card-lg" style="border-color:var(--acc-brd);background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
       +'<div class="lbl" style="color:var(--acc)">'+(m.kind==='open'?'EQUIPMENT':'MACHINE')+'</div>'
       +'<div class="title-s" style="font-size:20px;margin-top:3px">'+m.n+'</div>'
@@ -26243,13 +26359,14 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
       /* No sets/reps prescription on a generated entry. The curated rx
          values are programming decisions per machine; inventing one from a
          photo would be the least grounded thing on the card. */
-      +(m.gen
+      /* p29: sets, reps and rest follow your goal (src/p08_goal.js) */
+      +(GM||((m.gen
         ? '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">Where to start</div>'
           +'<div class="sub" style="line-height:1.5">No set and rep guidance for this one, '
           +'since Kova has not verified the machine. Start light enough to complete every rep '
           +'with the form above, and stop if a joint hurts rather than a muscle burning.</div></div>'
-        : startCard(m.rx))
-      +'<button class="btn" id="mcAdd" style="margin-top:4px"><svg class="ic"><use href="#i-plus"/></svg>Add to my program</button>';
+        : startCard(m.rx))+(window.KovaGoal?KovaGoal.machine(m,ident):'')))
+      +(m.cardio?'':'<button class="btn" id="mcAdd" style="margin-top:4px"><svg class="ic"><use href="#i-plus"/></svg>Add to my program</button>');
 
     var R=document.getElementById('mcResult');
     R.innerHTML=h; R.style.display='block';
@@ -26275,11 +26392,14 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
       };
     });
 
-    document.getElementById('mcAdd').onclick=function(){ toast(m.n+' added to your program.'); };
+    /* p29: it really adds it to the right day of your plan (it used to only say so) */
+    var mcAdd=document.getElementById('mcAdd');
+    if(mcAdd) mcAdd.onclick=function(){ if(window.KovaGoal) KovaGoal.machineAdd(m); else toast('Still loading. Try again in a second.'); };
     R.scrollIntoView({behavior:'smooth',block:'start'});
   }
 
   paint();
+  window.__mcPaint=paint;
 })();
 
 /* ==========================================================
@@ -26453,7 +26573,9 @@ window.KovaMotion=(function(){
       var d=t[b]-t[a];
       var con=Math.max(0.05, t[topI]-t[a]);   // bottom -> top  = lifting
       var ecc=Math.max(0.05, t[b]-t[topI]);   // top -> bottom  = lowering
-      return {dur:d, ecc:ecc, con:con, amp:(top-bot)};
+      /* p28: when each rep starts, turns and ends, so Form Check can show
+         the AI the right frames */
+      return {dur:d, ecc:ecc, con:con, amp:(top-bot), t0:t[a], tTop:t[topI], t1:t[b]};
     });
 
     var durs=repStats.map(function(r){return r.dur});
@@ -27279,8 +27401,10 @@ window.KovaBrain=(function(){
 
   drop.onclick=function(){ file.click(); };
 
+  var CLIP='';
   file.onchange=function(){
     var f=this.files&&this.files[0]; if(!f) return;
+    CLIP=f.name+'|'+f.size+'|'+(f.lastModified||0);
     var url=URL.createObjectURL(f);
     var v=document.getElementById('fcVideo'), im=document.getElementById('fcImg');
     document.getElementById('fcEmpty').style.display='none';
@@ -27316,10 +27440,15 @@ window.KovaBrain=(function(){
       im.style.display='none'; v.style.display='block'; v.src=url;
       // Guard: if metadata never arrives (bad codec, corrupt file) or the
       // duration is unreadable, fall back rather than leaving a dead screen.
-      var started=false, bailed=false;
+      var started=false, bailed=false, fixing=false;
       function start(){
         if(started||bailed) return;
+        /* p29: clips recorded in a browser (WebM) often carry no length;
+           seeking far past the end makes the browser work it out */
+        if(v.duration===Infinity&&!fixing){ fixing=true; v.ondurationchange=start; v.ontimeupdate=start; try{ v.currentTime=1e101; }catch(e){} return; }
         if(!isFinite(v.duration)||v.duration<=0) return;
+        v.ondurationchange=null; v.ontimeupdate=null;
+        if(fixing){ try{ v.currentTime=0; }catch(e){} }
         started=true; clearTimeout(guard); runAnalysis(v);
       }
       function bail(msg){
@@ -27621,6 +27750,9 @@ window.KovaBrain=(function(){
           'Your last reps took '+r.fatigue+'% longer than your first. That is deep fatigue. Stop with one or two reps left.']);
     }
 
+    /* p29: reps and rest follow your goal (src/p08_goal.js); sets still adapt to the clip */
+    var GR=(window.KovaGoal&&KovaGoal.id())?KovaGoal.rx(L.n):null;
+    if(GR) L=Object.assign({},L,{rx:{s:GR.s,r:GR.r,rest:GR.rest}});
     // prescription adapts to what was seen
     var setAdj=[-1,0,1][lvl], sets=Math.max(2,L.rx.s+setAdj);
     if(usable && r.tempoConsistency<55) sets=Math.max(2,sets-1);
@@ -27661,7 +27793,7 @@ window.KovaBrain=(function(){
         return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div><div style="font-size:11.5px;font-weight:600;color:var(--acc);margin-top:3px">'+x[1]+'</div></div>';
       }).join('')+'</div>'
       +'<div style="font-size:10.5px;color:var(--ink-1,rgba(255,255,255,.9));line-height:1.5;margin-top:10px;padding-top:9px;border-top:.5px solid rgba(255,255,255,.10)">'
-      +'<b>Load:</b> '+loadCall+'</div></div>';
+      +'<b>Load:</b> '+loadCall+(GR?'<br>Reps and rest are set for your goal: '+KovaGoal.name()+'.':'')+'</div></div>';
 
     h+='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:8px">How to do it</div>'
       +L.cues.map(function(c,i){
@@ -27683,18 +27815,30 @@ window.KovaBrain=(function(){
       +'<div class="sub" style="line-height:1.5">Do this first on your <b style="color:var(--acc)">'+slot+'</b>, while you are fresh. '
       +'On a '+days+' day week, that is '+(days>=5?'twice':'once')+' a week.</div></div>';
 
-    h+='<div class="card" style="border-color:rgba(255,255,255,.2)"><div style="display:flex;gap:9px">'
-      +'<svg class="ic" style="font-size:15px;color:var(--warn);flex-shrink:0;margin-top:1px"><use href="#i-info-circle"/></svg>'
-      +'<div style="font-size:10.5px;line-height:1.5;color:var(--ink-1,rgba(255,255,255,.9))">'
-      +'<b>What Kova can see.</b> It reads your video for rep count, phase timing, how steady you were, and how much you faded. '
-      +'<b>What it cannot see yet:</b> joint angles. So it will not tell you your knees caved. That needs the full app.'
-      +'</div></div></div>';
+    /* p28: the technique review by Kova's AI (src/p08_formai.js): what the
+       frames show about depth, knees, back angle and bar path. It replaces
+       the note that joint angles needed "the full app". */
+    h+='<div id="fcAI"></div>';
 
     h+='<button class="btn" id="fcAdd" style="margin-top:4px"><svg class="ic"><use href="#i-plus"/></svg>Add to my program</button>';
 
     var R=document.getElementById('fcResult');
     R.innerHTML=h; R.style.display='block';
-    document.getElementById('fcAdd').onclick=function(){ toast(L.n+' added to your '+slot.toLowerCase()+'.'); };
+    if(window.KovaFormAI) KovaFormAI.mount(document.getElementById('fcAI'), isVideo?document.getElementById('fcVideo'):document.getElementById('fcImg'), L.n, RES, CLIP, isVideo);
+    /* p28: it really adds the lift to your plan (it used to only say so) */
+    document.getElementById('fcAdd').onclick=function(){
+      if(window.KovaGoal){ KovaGoal.addAndSay(L.n,sets,L.rx.r,true); return; }
+      var plan=KP.get('plan');
+      if(!plan||!plan.days||!plan.days.length){ toast('Build your plan first, then add '+L.n.toLowerCase()+' to it.'); if(typeof go==='function') go('quiz'); return; }
+      var want={'Lower day':/leg|lower|squat|hinge/i,'Push day':/push|chest|press|upper/i,'Pull day':/pull|back|row|upper/i,'Full body day':/full|total/i}[slot];
+      var day=plan.days.filter(function(d){ return want&&want.test(String(d.n||'')); })[0]||plan.days[0];
+      day.ex=day.ex||[];
+      if(day.ex.some(function(e){ return String(e.e).toLowerCase()===L.n.toLowerCase(); })){ toast(L.n+' is already in '+day.n+'.'); return; }
+      day.ex.unshift({e:L.n,s:sets,r:L.rx.r});
+      KP.set('plan',plan);
+      if(window.KSESS&&KSESS.reset) try{ KSESS.reset(); }catch(e){}
+      toast(L.n+' added to '+day.n+', first, '+sets+' \u00d7 '+L.rx.r+'.');
+    };
     R.scrollIntoView({behavior:'smooth',block:'start'});
     if(window.KovaVoice && KP.get('voiceOn')!==false){
       KovaVoice.say(usable
@@ -29502,11 +29646,33 @@ window.KovaSense=(function(){
    Nothing is sent anywhere until you add a key yourself.
    ========================================================== */
 window.KovaModel=(function(){
+  /* p28: with no key of your own, a signed-in person uses Kova's own AI
+     through the server (/api/ai/ask), so the Machine scan, ingredients from
+     a photo, Form Check's review, voice and chat answers and Work OS
+     planning work without pasting a key. The server answers in Anthropic's
+     shape, so every caller (P.build, fetch(P.url), P.read) is unchanged.
+     The sign-in token is kept fresh here, because building a request is
+     synchronous. A key you add yourself still wins. */
+  var TOK='';
+  function fb(){ return window.KOVA_FB&&KOVA_FB.ok&&KOVA_FB.auth?KOVA_FB.auth:null; }
+  function signedIn(){ var a=fb(), u=a&&a.currentUser; return !!(u&&!u.isAnonymous); }
+  function viaServer(){ return !cfg().key&&signedIn()&&!!TOK&&!!(window.KovaLink&&KovaLink.server); }
+  (function watch(){
+    var a=fb(); if(!a||!a.onIdTokenChanged){ setTimeout(watch,1500); return; }
+    a.onIdTokenChanged(function(u){ if(!u||u.isAnonymous){ TOK=''; return; } u.getIdToken().then(function(t){ TOK=t||''; },function(){}); });
+    setInterval(function(){ var u=a.currentUser; if(u&&!u.isAnonymous) u.getIdToken().then(function(t){ TOK=t||TOK; },function(){}); },10*60e3);
+  })();
   var PROVIDERS={
     anthropic:{
-      n:'Anthropic', url:'https://api.anthropic.com/v1/messages',
+      n:'Anthropic',
+      get url(){ return viaServer()?KovaLink.server()+'/ai/ask':'https://api.anthropic.com/v1/messages'; },
       model:'claude-sonnet-5',
       build:function(key,model,sys,msgs,opts){
+        if(!key&&viaServer()){
+          var o=opts||{}, sb={system:sys,messages:msgs,max_tokens:o.max_tokens||900};
+          if(typeof o.temperature==='number') sb.temperature=o.temperature;
+          return {headers:{'content-type':'application/json','authorization':'Bearer '+TOK},body:JSON.stringify(sb)};
+        }
         /* opts is optional and per-call. Callers that leave it out keep the
            old behaviour exactly: max_tokens 900 and the provider default
            temperature. Extraction calls pass temperature 0 — Anthropic's
@@ -29600,19 +29766,23 @@ window.KovaModel=(function(){
 
   function cfg(){
     var c=(window.KP&&KP.get('model'))||{};
-    return {p:c.p||'anthropic', key:c.key||'', model:c.model||PROVIDERS[c.p||'anthropic'].model};
+    /* p29: with no key of your own it is Kova's AI, which speaks Anthropic's
+       shape, whatever provider was picked before the key was removed */
+    var p=c.key?(c.p||'anthropic'):'anthropic';
+    return {p:p, key:c.key||'', model:(c.key&&c.model)||PROVIDERS[p].model};
   }
   function set(p,key,model){
     if(window.KP) KP.set('model',{p:p,key:key,model:model||PROVIDERS[p].model});
   }
   function clear(){ if(window.KP) KP.set('model',null); }
-  function connected(){ return !!cfg().key; }
-  function providerName(){ var c=cfg(); return (PROVIDERS[c.p]||PROVIDERS.anthropic).n; }
+  function ownKey(){ return !!cfg().key; }
+  function connected(){ return ownKey()||viaServer(); }
+  function providerName(){ var c=cfg(); return ownKey()?(PROVIDERS[c.p]||PROVIDERS.anthropic).n:'Kova\u2019s AI'; }
 
   var history=[];
   function ask(q){
     var c=cfg(), P=PROVIDERS[c.p];
-    if(!c.key||!P) return Promise.resolve(null);
+    if(!connected()||!P) return Promise.resolve(null);
     history.push({role:'user',content:q});
     if(history.length>10) history=history.slice(-10);
     /* voice needs the short spoken form; the typed panel does not */
@@ -29633,7 +29803,31 @@ window.KovaModel=(function(){
       });
   }
 
-  return { ask:ask, set:set, clear:clear, connected:connected, cfg:cfg,
+  /* p28: a photo as a JPEG at most 1280 px on its longest side, so it is
+     small enough for the server (and any key) and really is the JPEG the
+     callers label it as. A photo that cannot be decoded is passed through. */
+  /* p29: the photo's real type, so a PNG that could not be shrunk is not sent labelled as a JPEG */
+  function mime(d){ var m=/^data:(image\/(?:jpeg|png|webp|gif));/.exec(String(d||'')); return m?m[1]:'image/jpeg'; }
+  function fit(dataUrl,max){
+    max=max||1280;
+    return new Promise(function(done){
+      var fin=false, ok=function(v){ if(!fin){ fin=true; done(v); } };
+      setTimeout(function(){ ok(dataUrl); },4000);
+      try{
+        var img=new Image();
+        img.onload=function(){
+          var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height; if(!w||!h){ ok(dataUrl); return; }
+          var k=Math.min(1,max/Math.max(w,h)), c=document.createElement('canvas'); c.width=Math.round(w*k); c.height=Math.round(h*k);
+          var x=c.getContext('2d'); if(!x){ ok(dataUrl); return; }
+          x.drawImage(img,0,0,c.width,c.height);
+          try{ ok(c.toDataURL('image/jpeg',0.82)); }catch(e){ ok(dataUrl); }
+        };
+        img.onerror=function(){ ok(dataUrl); };
+        img.src=dataUrl;
+      }catch(e){ ok(dataUrl); }
+    });
+  }
+  return { ask:ask, set:set, clear:clear, connected:connected, ownKey:ownKey, viaServer:viaServer, cfg:cfg, fit:fit, mime:mime,
            providers:PROVIDERS, providerName:providerName,
            systemPrompt:systemPrompt, reset:function(){history=[]} };
 })();
@@ -30154,10 +30348,10 @@ window.KovaTalk=(function(){
       +'<use href="#i-sparkles"/></svg>'
       +'<div style="flex:1;min-width:0">'
       +'<div style="font-size:12px;font-weight:700;color:var(--txt,#FFFFFF)">'
-      +(on?'Connected to '+KovaModel.providerName():'Answer anything')+'</div>'
+      +(on?(KovaModel.ownKey()?'Connected to '+KovaModel.providerName():'Kova\u2019s AI is on'):'Answer anything')+'</div>'
       +'<div class="sub" style="font-size:9.5px;margin-top:1px">'
-      +(on?'Questions outside your data go to the model. Tap to change or disconnect.'
-          :'Add your own API key and Kova answers questions outside the app too.')
+      +(on?(KovaModel.ownKey()?'Questions outside your data go to the model. Tap to change or disconnect.':'Photos and questions outside your data go to Kova\u2019s server. Tap to use your own key instead.')
+          :'Sign in and Kova\u2019s own AI answers questions outside the app too, or add your own key.')
       +'</div></div>'
       +'<svg class="ic" style="font-size:13px;opacity:.5"><use href="#i-chevron-right"/></svg>'
       +'</div></div>';
@@ -30189,7 +30383,7 @@ window.KovaTalk=(function(){
         +'<div class="lbl">MODEL</div>'
         +'<input id="mdModel" class="field" placeholder="'+P.model+'" value="'+(c.model||'')+'" style="margin-bottom:14px"/>'
         +'<button class="btn" id="mdSave">Connect</button>'
-        +(KovaModel.connected()?'<button class="btn ghost" id="mdClear" style="margin-top:8px">Disconnect</button>':'')
+        +(KovaModel.ownKey()?'<button class="btn ghost" id="mdClear" style="margin-top:8px">Disconnect</button>':'')
         +'<div class="sub" style="font-size:9px;margin-top:12px;opacity:.65;line-height:1.5">'
         +'A browser key can be read by anyone with this device. Use a key you can revoke, and do not put '
         +'one on a shared phone. Kova works fully without this.</div>';
@@ -43767,7 +43961,9 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
     });
   }
 
-  function readIngredientsPhoto(dataUrl){
+  function readIngredientsPhoto(dataUrl,fitted){
+    /* p28: shrunk to a real JPEG first (server limit, and the label matches) */
+    if(!fitted&&window.KovaModel&&KovaModel.fit&&/^data:image\//.test(dataUrl||'')){ KovaModel.fit(dataUrl).then(function(d){ readIngredientsPhoto(d,true); }); return; }
     if(!window.KovaModel || !KovaModel.connected()){
       toast('No AI model connected — add one in Settings to scan ingredients by photo.');
       return;
@@ -43795,7 +43991,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
     var cfg = KovaModel.cfg(), P = KovaModel.providers[cfg.p];
     var b64 = dataUrl.slice(dataUrl.indexOf(',') + 1);
     var content = cfg.p === 'anthropic'
-      ? [{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:'Read the ingredient list.'}]
+      ? [{type:'image',source:{type:'base64',media_type:KovaModel.mime(dataUrl),data:b64}},{type:'text',text:'Read the ingredient list.'}]
       : [{type:'text',text:'Read the ingredient list.'},{type:'image_url',image_url:{url:dataUrl}}];
 
     var req = P.build(cfg.key, cfg.model, sys, [{role:'user',content:content}], {temperature:0, max_tokens:2000});
@@ -44352,7 +44548,11 @@ window.KovaMaint=(function(){
     {id:'wheavy',n:'Heavy compound lifts', s:'Squats, deadlifts, slow or explosive', met:5.0, code:'02052'},
     {id:'hiit', n:'Circuits / HIIT',       s:'Moderate intervals, little rest', met:7.0, code:'02210'},
     {id:'cal',  n:'Calisthenics',          s:'Push-ups, pull-ups, lunges, moderate', met:3.8, code:'02022'},
-    {id:'run',  n:'Running',               s:'About a 10 min/mile pace', met:9.3, code:'12050'}
+    {id:'run',  n:'Running',               s:'About a 10 min/mile pace', met:9.3, code:'12050'},
+    /* p29: the sport goals' own training, so a swimmer's burn counts swims */
+    {id:'swim', n:'Swimming laps',         s:'Freestyle, moderate effort', met:5.8, code:'18310'},
+    {id:'hike', n:'Hiking',                s:'Hills or trails, light pack', met:6.0, code:'17080'},
+    {id:'ride', n:'Cycling',               s:'About 12\u201314 mph, moderate', met:8.0, code:'01040'}
   ];
   var CARDIO=[{id:'easy',n:'Brisk walk',met:3.8},{id:'mod',n:'Jog',met:7.5},{id:'hard',n:'Run',met:9.3}];
   var GOALS=[
@@ -44363,7 +44563,8 @@ window.KovaMaint=(function(){
     {id:'leanbulk',n:'Lean bulk',       s:'Add muscle, minimal fat',          dir:1,  lo:.1, hi:.5,  def:.25, pkg:1.8, wq:'bodybuilding'},
     {id:'bulk',    n:'Gain weight',     s:'Faster gain, accepts more fat',    dir:1,  lo:.25,hi:1.0, def:.5,  pkg:1.6, wq:'bodybuilding'}
   ];
-  var WQ_IDX={bodybuilding:0,powerlifting:1,weightloss:2,toning:3,athletic:4,health:5};
+  var WQ_IDX={bodybuilding:0,athletic:1,showprep:2,powerlifting:3,weightloss:4,toning:5,health:6,calisthenics:7,endurance:8,swimming:9,hiking:10,hikebike:11};
+  var SPORT_T={swimming:'swim',hiking:'hike',hikebike:'ride',endurance:'run',powerlifting:'wheavy',calisthenics:'cal'};
   function G(id){ for(var i=0;i<GOALS.length;i++) if(GOALS[i].id===id) return GOALS[i]; return GOALS[2]; }
   function T(id){ for(var i=0;i<TYPES.length;i++) if(TYPES[i].id===id) return TYPES[i]; return TYPES[0]; }
   function C(id){ for(var i=0;i<CARDIO.length;i++) if(CARDIO[i].id===id) return CARDIO[i]; return CARDIO[0]; }
@@ -44385,8 +44586,9 @@ window.KovaMaint=(function(){
       train:{days:a.days||4, mins:a.mins||60, type:'wmod', pick:null, cardioMin:0, cardioLvl:'easy'},
       macros:null, applied:false};
     if(a.bw) d.kg=a.bw*LB;
-    var wq={bodybuilding:'leanbulk',powerlifting:'strength',weightloss:'cut',toning:'lean',athletic:'strength',health:'maint'}[q.goal];
+    var wq={bodybuilding:'leanbulk',powerlifting:'strength',weightloss:'cut',toning:'lean',athletic:'strength',health:'maint',showprep:'cut'}[q.goal];
     if(wq){ d.goal=wq; d.rate=G(wq).def; }
+    if(SPORT_T[q.goal]) d.train.type=SPORT_T[q.goal];
     try{ if(window.KovaHealth&&KovaHealth.has('steps')) d.steps=Math.round(KovaHealth.get('steps')); }catch(e){}
     var sh=sleepAvgH(); if(sh) d.sleepH=Math.round(sh*4)/4;
     return d;
@@ -44866,12 +45068,15 @@ window.KovaMaint=(function(){
   function sendWorkout(p){
     var q=kp('quiz')||{}, a=Object.assign({goal:0,exp:1,days:4,mins:60,gear:[0],limits:[5]},q.a||{});
     var wq=G(p.goal).wq;
+    /* p29: a swimmer, runner, hiker or rider keeps that goal; Fuel's goal is
+       about body weight, and a swimmer can lose fat too */
+    if(/^(swimming|hiking|hikebike|endurance|calisthenics|athletic|showprep)$/.test(q.goal||'')) wq=q.goal;
     a.goal=WQ_IDX[wq]; a.days=cl(p.train.days,2,6); a.mins=cl(p.train.mins,20,150); a.bw=Math.round(p.kg/LB);
     var nq=Object.assign({},q,{a:a,goal:wq,days:a.days,mins:a.mins,at:Date.now(),from:'fuel'});
     kset('quiz',nq);
     try{ if(window.__setMode) __setMode(wq,a.mins); }catch(e){}
     try{ if(window.__quizReload) __quizReload(); }catch(e){}
-    if(window.toast) toast('Workout set to '+G(p.goal).n.toLowerCase()+' \u00b7 '+a.days+' days \u00b7 '+a.mins+' min.');
+    if(window.toast) toast('Workout set to '+(wq===G(p.goal).wq?G(p.goal).n:(window.KovaGoal?KovaGoal.name(wq):wq)).toLowerCase()+' \u00b7 '+a.days+' days \u00b7 '+a.mins+' min.');
     if(typeof go==='function') setTimeout(function(){ go('customize'); },350);
   }
 
@@ -45119,7 +45324,7 @@ window.KovaLive=(function(){
     var L=sessions(), q=null; try{ q=KP.get('quiz'); }catch(e){}
     if(!L.length){
       return card('TRAINING','<div class="km-empty">'+(q?'Your plan is ready \u2014 '+q.days+' days, '+q.mins+' min. Log your first session and this screen starts filling in.':'No sessions yet. Answer a few questions and Kova builds a plan around your days and equipment, or just start lifting and log as you go.')+'</div>'
-        +'<div class="kl-acts">'+(q?btn('Start workout','session',1)+btn('See my plan','customize'):btn('Build my plan','quiz',1)+btn('Start a blank session','session'))+'</div>','Nothing on this screen is sample data.');
+        +'<div class="kl-acts">'+(q?btn('Start workout','session',1)+btn('See my plan','customize'):btn('Build my plan','quiz',1)+btn('Start a blank session','session'))+btn('Check my form','formcheck')+btn('Scan a machine','machine')+'</div>','Nothing on this screen is sample data.');
     }
     var now=new Date(), ws=new Date(now); ws.setDate(now.getDate()-((now.getDay()+6)%7)); ws.setHours(0,0,0,0);
     var thisWk=L.filter(function(s){return s.t>=ws.getTime();}), last=L[L.length-1];
@@ -45130,7 +45335,7 @@ window.KovaLive=(function(){
       +'<div><div class="kv-lbl">VOLUME</div><div class="kv-num">'+(last.vol||0).toLocaleString()+'<i>lb</i></div></div>'
       +'<div><div class="kv-lbl">TIME</div><div class="kv-num">'+(last.mins||0)+'<i>min</i></div></div></div>';
     return card('TRAINING',h,(last.day?esc(last.day)+' \u00b7 ':'')+new Date(last.t).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' \u00b7 '+L.length+' logged in total')
-      +'<div class="kl-acts" style="margin:0 0 10px">'+btn('Start workout','session',1)+btn('My plan','customize')+'</div>'
+      +'<div class="kl-acts" style="margin:0 0 10px">'+btn('Start workout','session',1)+btn('My plan','customize')+btn('Check my form','formcheck')+btn('Scan a machine','machine')+'</div>'
       +(L.length<6?'<div class="km-src kl-note">Volume trends, PRs and recovery need a few weeks of sessions. '+L.length+' logged so far.</div>':'');
   }
   function homePanel(){
@@ -46339,6 +46544,7 @@ window.KovaScreenTour=(function(){
     move:[
       ['Today’s session','What to train today, and why.','#s-move .card.kova[data-go="session"]'],
       ['Start workout','One tap. Kova logs your sets as you go.','#startBtn'],
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card'],
       ['This week','Every session. Tap a day to see it.',up('wkTotal')],
       ['Training for','What you train for sets your reps, rest and weekly volume.','#modePill','customize'],
       ['The rules','Reps, rest, weight and cardio for that goal - and how to train it.',up('rxGrid'),'customize'],
@@ -46411,7 +46617,8 @@ window.KovaScreenTour=(function(){
     ],
     move:[
       ['Training','Your sessions this week and your last one, from what you log.',P('move','.kv-card')],
-      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')]
+      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')],
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card']
     ]
   };
   /* finish every live tour the same way: getting around, and Kova itself */
@@ -56961,7 +57168,11 @@ window.KovaLabs=(function(){
         return viaServer({text:t}).then(function(r){ return {rows:r,how:'server'}; },function(e){ if(rows.length) return {rows:rows,how:'phone',note:e.message}; throw e; });
       });
     }
-    return toJpeg(file).then(function(d){ return viaServer({image:d.slice(d.indexOf(',')+1),mime:file.type||'image/jpeg'}); }).then(function(r){ return {rows:r,how:'server'}; });
+    /* p29: a phone photo is 3-5 MB, over the server's upload limit; 1,800 px
+       keeps small print readable and lands well under it */
+    return toJpeg(file).then(function(d){ return window.KovaModel&&KovaModel.fit?KovaModel.fit(d,1800):d; }).then(function(d){
+      var mt=window.KovaModel&&KovaModel.mime?KovaModel.mime(d):(file.type||'image/jpeg');
+      return viaServer({image:d.slice(d.indexOf(',')+1),mime:mt}); }).then(function(r){ return {rows:r,how:'server'}; });
   }
 
   /* ---------------- confirm, then save ---------------- */
@@ -63274,6 +63485,738 @@ window.KovaVTaps=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
   return {recovery:recovery,morning:morning,feeling:feeling,habit:habit,openReading:openReading,bio:bio,reading:readingSheet,rows:rows,habitId:habitId};
+})();
+
+</script>
+<script id="p08-formai">
+/* KovaFormAI (p28) - Form Check's technique review, by Kova's AI.
+
+   Form Check measures reps, tempo, steadiness and fade from the motion in
+   your clip (KovaMotion), but it cannot see joints. This takes still frames
+   from your set - the start, the turn and the end of your reps, or evenly
+   spread if the reps were not clear - and has Kova's AI (through the
+   server, or your own key) report what is VISIBLE: depth, knee and foot
+   position, back angle, bar path, lockout. Anything the camera angle hides
+   is said to be unclear instead of guessed. A photo gets the same review
+   from one frame.
+
+   It runs when you tap "Check my technique", once per clip and lift (each
+   review is one AI call with up to 6 small frames). */
+window.KovaFormAI=(function(){
+  'use strict';
+  var cache={};   /* clip+lift -> result */
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function ready(){ return !!(window.KovaModel&&KovaModel.connected()); }
+
+  /* when to look: start, turn and end of the first, middle and last rep */
+  function times(res,dur){
+    var T=[], R=(res&&res.repStats)||[];
+    var add=function(x){ if(isFinite(x)&&x>=0&&x<=dur) T.push(x); };
+    if(R.length&&R[0].t0!=null){
+      var pick=[R[0],R[Math.floor((R.length-1)/2)],R[R.length-1]];
+      add(pick[0].t0); add(pick[0].tTop); add(pick[1].tTop); add(pick[2].t0); add(pick[2].tTop); add(pick[2].t1);
+    }
+    if(T.length<3){ T=[]; for(var i=1;i<=6;i++) add(dur*(0.05+0.9*(i-1)/5)); }
+    T.sort(function(a,b){ return a-b; });
+    var out=[]; T.forEach(function(x){ if(!out.length||x-out[out.length-1]>0.2) out.push(x); });
+    return out.slice(0,6);
+  }
+  function seek(v,t){
+    return new Promise(function(ok){
+      var done=false, h=function(){ if(done) return; done=true; v.removeEventListener('seeked',h); ok(); };
+      v.addEventListener('seeked',h);
+      try{ v.currentTime=Math.min(t,Math.max(0,(v.duration||0)-0.05)); }catch(e){ h(); }
+      setTimeout(h,1200);
+    });
+  }
+  function grab(src,w,h){
+    var k=Math.min(1,560/Math.max(w,h)), c=document.createElement('canvas'); c.width=Math.max(1,Math.round(w*k)); c.height=Math.max(1,Math.round(h*k));
+    c.getContext('2d').drawImage(src,0,0,c.width,c.height);
+    return c.toDataURL('image/jpeg',0.78);
+  }
+  function frames(el,res){
+    if(el.tagName==='IMG') return Promise.resolve([grab(el,el.naturalWidth||el.width,el.naturalHeight||el.height)]);
+    var v=el, T=times(res,v.duration||0), out=[], was=v.currentTime;
+    try{ v.pause(); }catch(e){}
+    return T.reduce(function(p,t){ return p.then(function(){ return seek(v,t).then(function(){ out.push(grab(v,v.videoWidth,v.videoHeight)); }); }); },Promise.resolve())
+      .then(function(){ try{ v.currentTime=was; }catch(e){} return out; });
+  }
+
+  function prompt(lift,n,video){
+    return 'You are a strength coach reviewing '+(video?n+' still frames, in time order, from one set':'one photo')+' of: '+lift+'.\n'
+      +'Report ONLY what is visible. Check what applies to this lift: depth or range, knee and foot position, '
+      +'back and spine angle, hip position, bar or handle path, head and neck, heel contact, lockout, symmetry. '
+      +'If the camera angle, lighting or framing hides something, give it verdict "unclear" and say why. Never guess an angle you cannot see. '
+      +'No motivational language. Be specific, and give one short cue per finding.\n'
+      +'Reply with JSON only, no prose, no fences:\n'
+      +'{"view":"side|front|45 degrees|back|unclear","overall":"one sentence on the set",'
+      +'"findings":[{"area":"short name","seen":"what the frames show","verdict":"good|fix|unclear","cue":"one cue","frames":[1,2]}],'
+      +'"safety":"anything that risks injury, or an empty string"}\n'
+      +'At most 5 findings, the ones that matter most first.';
+  }
+  function ask(sys,imgs){
+    var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
+    var content=c.p==='anthropic'
+      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:'Review my technique.'}])
+      : [{type:'text',text:'Review my technique.'}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
+    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],{temperature:0,max_tokens:1400});
+    return fetch(P.url,{method:'POST',headers:req.headers,body:req.body}).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if(!r.ok) throw new Error((j&&j.error)||('The review did not come back ('+r.status+').'));
+        var raw=(P.read(j)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
+        if(a<0||z<a) throw new Error('The review came back in a form Kova could not read. Try again.');
+        return JSON.parse(raw.slice(a,z+1));
+      });
+    });
+  }
+  function clean(o){
+    var V={good:1,fix:1,unclear:1};
+    return {view:String((o&&o.view)||'unclear').slice(0,20),overall:String((o&&o.overall)||'').slice(0,300),
+      safety:String((o&&o.safety)||'').slice(0,300),
+      findings:((o&&o.findings)||[]).slice(0,5).map(function(f){ return {area:String(f.area||'').slice(0,40),seen:String(f.seen||'').slice(0,300),
+        verdict:V[f.verdict]?f.verdict:'unclear',cue:String(f.cue||'').slice(0,160),frames:(Array.isArray(f.frames)?f.frames:[]).filter(function(n){ return n>=1&&n<=6; }).slice(0,6)}; }).filter(function(f){ return f.area&&f.seen; })};
+  }
+
+  function card(inner){ return '<div class="card fai">'+inner+'</div>'; }
+  function head(sub){ return '<div class="fai-h"><div><div class="fai-t">Technique review</div><div class="sub">'+sub+'</div></div><span class="fai-badge">AI</span></div>'; }
+  function paintIdle(host,video){
+    host.innerHTML=card(head(video?'Kova’s AI looks at frames from your set: depth, knees, back angle, bar path.':'Kova’s AI looks at your position in this photo.')
+      +(ready()?'<button class="btn" data-fai="run">Check my technique</button>'
+        :'<div class="sub fai-p">Sign in and Kova’s own AI does this for you (or add your own key in Settings).</div><button class="btn ghost" data-fai="signin">Sign in</button>')
+      +'<div class="sub fai-note">Reps and tempo above are measured from the motion. This review is the AI’s read of your position, and it says when the angle hides something.</div>');
+  }
+  function paintBusy(host,n){ host.innerHTML=card(head(n?'Looking at '+n+' frame'+(n===1?'':'s')+' from your '+(n===1?'photo':'set')+'…':'Taking frames from your set…')+'<div class="fai-bar"><i></i></div>'); }
+  function paintResult(host,R,imgs){
+    var L={good:'Good',fix:'Fix',unclear:'Can’t tell from this angle'};
+    host.innerHTML=card(head('From '+imgs.length+' frame'+(imgs.length===1?'':'s')+(R.view&&R.view!=='unclear'?' · filmed from the '+esc(R.view):'')+' · AI read')
+      +'<div class="fai-strip">'+imgs.map(function(d,i){ return '<figure><img alt="Frame '+(i+1)+'" src="'+d+'"><figcaption>'+(i+1)+'</figcaption></figure>'; }).join('')+'</div>'
+      +(R.overall?'<div class="fai-o">'+esc(R.overall)+'</div>':'')
+      +(R.safety?'<div class="fai-safe"><b>Safety:</b> '+esc(R.safety)+'</div>':'')
+      +(R.findings.length?R.findings.map(function(f){
+        return '<div class="fai-f"><div class="fai-fh"><b>'+esc(f.area)+'</b><span class="fai-v '+f.verdict+'">'+L[f.verdict]+'</span></div>'
+          +'<div class="fai-s">'+esc(f.seen)+(f.frames.length?' <span class="fai-fr">(frame '+f.frames.join(', ')+')</span>':'')+'</div>'
+          +(f.cue&&f.verdict!=='good'?'<div class="fai-c">Cue: '+esc(f.cue)+'</div>':'')+'</div>';
+      }).join(''):'<div class="sub">The AI could not make out your position in these frames. Film from the side with your whole body in view and try again.</div>')
+      +'<button class="btn ghost" data-fai="again">Check again</button>');
+  }
+  function paintError(host,msg){
+    host.innerHTML=card(head('The review did not work this time.')+'<div class="sub fai-p">'+esc(msg)+'</div><button class="btn" data-fai="run">Try again</button>');
+  }
+
+  /* host: the element to draw in; el: the <video> or <img>; key: the clip */
+  function mount(host,el,lift,res,key,video){
+    if(!host||!el) return;
+    var id=key+'|'+lift;
+    host.__fai={el:el,lift:lift,res:res,id:id,video:video};
+    if(cache[id]) paintResult(host,cache[id].r,cache[id].imgs); else paintIdle(host,video);
+    if(host.__wired) return; host.__wired=1;
+    host.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('[data-fai]'); if(!b) return;
+      var a=b.getAttribute('data-fai'), S=host.__fai;
+      if(a==='signin'){ if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); return; }
+      if(a==='again') delete cache[S.id];
+      run(host,S);
+    });
+  }
+  function run(host,S){
+    if(!ready()){ paintIdle(host,S.video); return; }
+    paintBusy(host,0);
+    var imgs=[];
+    frames(S.el,S.res).then(function(f){
+      imgs=f.filter(Boolean); if(!imgs.length) throw new Error('Kova could not take frames from this clip.');
+      paintBusy(host,imgs.length);
+      return ask(prompt(S.lift,imgs.length,S.video),imgs);
+    }).then(function(o){
+      var R=clean(o); cache[S.id]={r:R,imgs:imgs};
+      if(host.__fai===S) paintResult(host,R,imgs);
+      try{ if(window.KovaAnalytics) KovaAnalytics.track('form_ai',{lift:S.lift,n:imgs.length}); }catch(e){}
+    }).catch(function(e){ if(host.__fai===S) paintError(host,(e&&e.message)||'Try again in a moment.'); });
+  }
+  return {mount:mount,times:times,prompt:prompt,clean:clean,_ask:ask,_frames:frames};
+})();
+
+</script>
+<script id="p08-goal">
+/* KovaGoal (p29) - one goal, everywhere.
+
+   What you train for (the Workout quiz: "Swim stronger", "Lean and
+   defined", "Hike bigger days"...) now steers every pillar instead of only
+   the lifting split:
+
+   - Workout: a "Built around" card. Train / Eat / Sleep each say what this
+     goal asks of them. For a sport the whole week is written out (laps,
+     drills, intervals, the long day), each session opens to the full set,
+     and "How to get faster" covers technique, what to swim / which trails /
+     where and how far to ride, and the gym work for it. Your test number
+     (CSS, 5K, climb rate, FTP) sets every pace (KovaSport does the maths).
+   - Machine scan and Form Check: sets, reps and rest follow the goal, a
+     line says why that machine matters for your sport, and "Add to my
+     program" really adds it to the right day of your plan.
+   - Fuel and Sleep: what the goal asks of food and sleep, with grams from
+     your own bodyweight and your own sleep average when Kova has them.
+     Nothing is invented: with no weight or no nights, it says so. */
+window.KovaGoal=(function(){
+  'use strict';
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
+
+  var NAME={bodybuilding:'Build my physique',athletic:'Power and speed',showprep:'Get stage-ready',powerlifting:'Lift the heaviest weight',
+    weightloss:'Lose fat, keep muscle',toning:'Lean and defined',health:'Stay strong and mobile',calisthenics:'Bodyweight strength and skills',
+    endurance:'Run farther or faster',swimming:'Swim stronger',hiking:'Hike bigger days',hikebike:'Ride stronger'};
+  var SPORT={endurance:'running',swimming:'swimming',hiking:'hiking',hikebike:'riding'};
+  var UNIT={endurance:'run',swimming:'swim',hiking:'hike',hikebike:'ride'};
+
+  /* the quiz is the truth; the Customize goal pill is the fallback */
+  function id(){
+    var q=kp('quiz'); if(q&&q.goal&&window.__kovaModeId) return __kovaModeId(q.goal);
+    if(q&&q.goal) return String(q.goal);
+    return null;
+  }
+  function name(g){ return NAME[g||id()]||'Your goal'; }
+  function isSport(g){ return !!SPORT[g||id()]; }
+  function bwKg(){
+    try{ var m=window.KovaMaint&&KovaMaint.prof(); if(m&&m.kg) return m.kg; }catch(e){}
+    var q=kp('quiz'); if(q&&q.a&&q.a.bw) return q.a.bw*0.45359237;
+    return null;
+  }
+  function sleepAvg(){
+    try{ var N=window.KovaSleepLog?KovaSleepLog.nights().slice(-7):[]; if(N.length>=3) return {h:N.reduce(function(a,n){ return a+n.mins; },0)/N.length/60,n:N.length}; }catch(e){}
+    return null;
+  }
+  function hm(h){ var m=Math.round(h*60); return Math.floor(m/60)+' h '+(m%60?(m%60)+' min':''); }
+
+  /* ---------- what each goal asks of training, food and sleep ----------
+     protein: g per kg of bodyweight (ISSN 2017 position stand ranges; the
+     higher end in a diet). sleep: hours (AASM adult 7+, athletes 8-9). */
+  var INFO={
+    bodybuilding:{train:'Lifting 4–5 days, 8–12 reps',eat:'A small surplus and protein at every meal',p:[1.6,2.2],s:[7,9],
+      eatL:'To add muscle, eat a little more than you burn: gain about 0.25% of your weight a week. Faster than that is mostly fat. Spread protein over 3 to 5 meals.',
+      sleepL:'Muscle is repaired and built while you sleep. Short nights mean weaker sessions and slower gains.'},
+    showprep:{train:'Keep lifting heavy while cardio rises',eat:'A slow, steady deficit with high protein',p:[2.0,2.5],s:[7,9],
+      eatL:'Lose about 0.5 to 1% of your weight a week. Protein stays high so the muscle stays while the fat comes off.',
+      sleepL:'Dieting makes sleep lighter. Protect the hours: short sleep in a diet makes more of what you lose come from muscle.'},
+    athletic:{train:'Sprints, jumps and fast lifts first',eat:'Carbs around training, protein at each meal',p:[1.6,2.0],s:[8,9],
+      eatL:'Fast, hard efforts run on carbohydrate. Eat carbs in the meal before training and protein within a couple of hours after.',
+      sleepL:'Speed, reaction time and accuracy drop after short nights. Eight to nine hours is the target in hard weeks.'},
+    powerlifting:{train:'Heavy squat, bench and deadlift',eat:'Enough to recover, a tiny surplus',p:[1.6,2.2],s:[7,9],
+      eatL:'Strength grows best at or slightly above maintenance. A deep diet costs strength on the bar.',
+      sleepL:'Heavy days need recovery. Most people lift worse after a short night, so sleep is part of the program.'},
+    weightloss:{train:'Lift 3–4 days, plus cardio and steps',eat:'A steady deficit, protein high',p:[1.8,2.2],s:[7,9],
+      eatL:'Eat a bit less than you burn, about 0.5% of your weight a week. High protein and lifting tell your body to keep its muscle.',
+      sleepL:'In a study of dieters, short sleep made far more of the weight lost come from muscle instead of fat. Sleep is part of the diet.'},
+    toning:{train:'Lift 3–4 days at 10–15 reps, plus cardio',eat:'A small deficit, protein high',p:[1.8,2.2],s:[7,9],
+      eatL:'"Lean and defined" is a little more muscle plus a little less fat. Eat slightly under what you burn (about 0.3% of your weight a week) and keep protein high.',
+      sleepL:'Short sleep raises hunger the next day and, in a diet, costs muscle. Seven to nine hours makes the deficit easier.'},
+    health:{train:'Full body 2–3 days, plus walks',eat:'Mostly whole foods, protein at each meal',p:[1.2,1.6],s:[7,9],
+      eatL:'No tracking needed: protein at each meal, vegetables most meals, water first. Your Fuel log shows what you actually eat.',
+      sleepL:'Seven to nine hours, and the same bed and wake time every day. Regular hours matter as much as total hours.'},
+    calisthenics:{train:'Bodyweight skills, harder moves over time',eat:'Stay near your weight, protein at each meal',p:[1.6,2.0],s:[7,9],
+      eatL:'Every pound you add makes pull-ups and dips harder, so most people progress best near their current weight.',
+      sleepL:'Skills are learned between sessions. Sleep is when practice turns into control.'},
+    endurance:{train:'Runs: mostly easy, one hard, one long',eat:'Carbs before long and hard runs',p:[1.4,1.8],s:[8,9],
+      eatL:'Eat carbs in the meal before long and hard runs. On runs longer than about 75 minutes, take 30 to 60 g of carbs an hour (a gel is about 22 to 25 g). Protein within a couple of hours after.',
+      sleepL:'High-mileage weeks need more sleep. If your resting heart rate is up and HRV is down in the morning, make that day easy.'},
+    swimming:{train:'Swims through the week, plus 2 dryland days',eat:'Carbs before swims, protein after',p:[1.4,1.8],s:[8,9],
+      eatL:'A carb snack 1 to 2 hours before you swim (toast, a banana, oats), then a meal with protein within about an hour after. Swimming makes most people very hungry: plan the meal so it is not the vending machine.',
+      sleepL:'Early-morning swims cut nights short. Go to bed earlier on those nights instead of skipping the swim.'},
+    hiking:{train:'Easy hikes, one uphill day, one long day',eat:'On the trail: a snack and 0.5 L of water every hour',p:[1.4,1.8],s:[7,9],
+      eatL:'On long hikes eat about 200 to 300 calories an hour (nuts, bars, fruit, a sandwich), and drink about 0.5 L (16 oz) of water an hour, more in heat. Add salt or electrolytes on hot days.',
+      sleepL:'A big day on your feet needs sleep to repair your legs. Sleep well before a long hike and take an extra hour the night after.'},
+    hikebike:{train:'Easy rides, 1–2 hard, 1 long',eat:'Long rides: 30–60 g of carbs an hour',p:[1.4,1.8],s:[8,9],
+      eatL:'Rides over 90 minutes: eat 30 to 60 g of carbs every hour (a banana is about 27 g) and drink a bottle an hour. Running out of energy on a ride is a food problem, not a fitness problem.',
+      sleepL:'Recovery happens asleep. If your morning resting heart rate is up and HRV is down, make that ride easy.'}
+  };
+
+  /* ---------- sets, reps and rest for one exercise, by goal ---------- */
+  var RX={bodybuilding:{s:3,note:'Stop each set 1–2 reps before you could not do another.'},
+    showprep:{s:3,note:'Keep lifting the weights you use now while calories come down.'},
+    athletic:{s:4,note:'Move the weight fast. End the set when the speed drops.'},
+    powerlifting:{s:4,note:'Machines are extra work here. The main lifts come first.'},
+    weightloss:{s:3,note:'Real effort on every set is what keeps your muscle in a diet.'},
+    toning:{s:3,note:'Close to failure on the last set: the look comes from muscle plus less fat.'},
+    health:{s:2,note:'Leave 2–3 reps in the tank. You should feel better after, not wrecked.'},
+    calisthenics:{s:3,note:'Use it to build strength for your bodyweight moves.'},
+    endurance:{s:3,note:'Heavy-ish and low reps build strength without bulk. Never the day before a hard run.'},
+    swimming:{s:3,note:'Moderate weight to protect your shoulders.'},
+    hiking:{s:3,note:'Lower slowly on every rep: that is what saves your knees on the way down.'},
+    hikebike:{s:3,note:'Heavy-ish legs make each pedal stroke cheaper. Keep it away from hard rides.'}};
+  var REPS={bodybuilding:[[8,12],[10,15],'1.5–2 min'],showprep:[[6,10],[10,15],'1.5–2 min'],athletic:[[3,6],[8,12],'2–3 min'],
+    powerlifting:[[3,5],[8,12],'3–5 min'],weightloss:[[8,12],[10,15],'1–1.5 min'],toning:[[10,15],[12,15],'45–75 s'],
+    health:[[10,15],[12,15],'1–1.5 min'],calisthenics:[[6,12],[10,15],'1–2 min'],endurance:[[5,8],[10,15],'1.5–2 min'],
+    swimming:[[8,12],[12,15],'1–1.5 min'],hiking:[[8,12],[12,15],'1–1.5 min'],hikebike:[[5,8],[10,15],'1.5–2 min']};
+  function kindOf(n){
+    n=String(n||'');
+    if(/treadmill|bike|cycle|rowing|rower|stair|elliptical/i.test(n)) return 'cardio';
+    if(/press|squat|row|pulldown|pull ?up|chin|smith|deadlift|lunge|dip|step|rack|cage|bench|barbell|thrust|swing|carry/i.test(n)) return 'comp';
+    return 'iso';
+  }
+  function rx(n,g){
+    g=g||id()||'bodybuilding';
+    var R=RX[g]||RX.bodybuilding, P=REPS[g]||REPS.bodybuilding, k=kindOf(n), r=k==='comp'?P[0]:P[1];
+    try{ var G=window.KovaPlan&&KovaPlan.goals&&KovaPlan.goals[g]; if(G&&G.rep){ r=k==='comp'?G.rep.comp:G.rep.iso; } }catch(e){}
+    return {s:k==='comp'?R.s:Math.max(2,R.s-(R.s>3?1:0)),r:r[0]+'-'+r[1],rest:P[2],note:R.note,kind:k,goal:g};
+  }
+
+  /* ---------- why this machine matters for your sport ---------- */
+  var WHY={
+    swimming:[[/rowing|rower|erg/i,'A good dryland machine: the same leg drive and pull as a stroke, and easy on the shoulders.'],
+      [/lat|pulldown|pull ?up|chin/i,'This is the swimming pull. Your lats drive every freestyle stroke.'],
+      [/row|rhomboid|rear delt|face pull/i,'Rows balance your shoulders. Swimmers need more pulling than pushing, about two to one.'],
+      [/shoulder press|overhead/i,'Keep this light. Your shoulders already do thousands of strokes a week; rotator cuff work matters more.'],
+      [/chest|pec/i,'Some chest work is fine. Keep it below your pulling so your shoulders stay healthy.'],
+      [/leg press|squat|quad|smith|hack/i,'Strong legs give you a harder push off every wall and a faster start.'],
+      [/hamstring|glute|curl/i,'Glutes and hamstrings help hold your hips high in the water, which cuts drag.'],
+      [/abduct|adduct/i,'Hip strength powers the breaststroke kick.'],
+      [/treadmill|elliptical|stair|bike/i,'Easy cardio on days off from the pool that rests your shoulders.']],
+    hiking:[[/stair|step/i,'The closest thing to a trail in a gym. Climb without leaning on the rails.'],
+      [/treadmill/i,'Set a 10 to 15% incline: incline walking is the best indoor hike training.'],
+      [/leg press|squat|quad|smith|hack|extension/i,'Quads lift you up the climb and brake you on the way down. Lower slowly: that is your descent training.'],
+      [/hamstring|curl|glute|deadlift/i,'Glutes and hamstrings push you up steep steps.'],
+      [/calf/i,'Calves and ankles carry you over rocks and roots.'],
+      [/abduct|adduct/i,'Side hip strength keeps your knees steady on uneven ground.'],
+      [/lat|row|pulldown|back/i,'Upper-back strength carries the pack and helps with poles.'],
+      [/bike|elliptical/i,'Easy on the knees: good recovery cardio between hikes.'],
+      [/chest|press|pec|shoulder/i,'Not the priority for hiking. Keep it short and save your energy for legs.']],
+    hikebike:[[/bike|cycle/i,'Your sport, indoors. Use it for easy zone 2 rides and sweet-spot intervals on bad-weather days.'],
+      [/leg press|squat|quad|smith|hack|extension/i,'Quads push the pedals down. Heavy-ish sets make every pedal stroke cheaper.'],
+      [/hamstring|curl|glute|deadlift|thrust/i,'Glutes and hamstrings add power through the whole pedal stroke.'],
+      [/lat|row|pulldown|back/i,'A strong back holds your riding position on long rides without aching.'],
+      [/core|abs|plank/i,'Your core is the base the legs push from. It stops you rocking on the saddle.'],
+      [/treadmill|elliptical|stair/i,'Fine cross-training, but riding is what builds cycling fitness.'],
+      [/chest|press|pec|shoulder/i,'Light upper-body work helps you hold the bars on long or rough rides.']],
+    endurance:[[/treadmill/i,'Your sport indoors. Good for easy runs and controlled intervals.'],
+      [/calf/i,'Calves take most of the load on every stride. Strong calves protect your Achilles.'],
+      [/leg press|squat|quad|smith|hack/i,'Heavy, low-rep leg work makes each stride cheaper without adding bulk.'],
+      [/hamstring|curl|glute|deadlift/i,'Glutes and hamstrings drive you forward and protect your knees.'],
+      [/abduct|adduct/i,'Side hip strength keeps your knees tracking straight.'],
+      [/bike|elliptical|stair|rowing|rower/i,'Easy cross-training: fitness without the pounding.'],
+      [/lat|row|pulldown|back|chest|press|pec|shoulder/i,'Upper body is a small part of running. A few sets keeps your posture tall late in a race.']]
+  };
+  function why(m,g){
+    g=g||id(); var L=WHY[g]; if(!L||!m) return '';
+    var t=[m.n,m.k,(m.pri||[]).join(' '),(m.sec||[]).join(' ')].join(' ');
+    for(var i=0;i<L.length;i++) if(L[i][0].test(t)) return L[i][1];
+    return '';
+  }
+
+  /* what to do on a cardio machine, by goal */
+  var CARDIO={
+    treadmill:{hiking:[['Incline walk','10–15% incline, 45–75 min at a pace you could talk through'],['Uphill intervals','15% incline: 5 × 4 min hard, 3 min easy between']],
+      endurance:[['Easy run','25–40 min at a pace you could talk in full sentences'],['Intervals','6 × 3 min comfortably hard, 2 min easy jog between']]},
+    bike:{hikebike:[['Endurance ride','60–90 min easy (zone 2: you can still talk)'],['Sweet spot','3 × 12 min at 88–93% of FTP, 5 min easy between']],
+      hiking:[['Easy spin','30–45 min, easy on the knees between hikes']]},
+    rowing:{swimming:[['Steady row','20–30 min steady, about 22–26 strokes a minute'],['Intervals','5 × 500 m hard, 2 min easy between']]},
+    stair:{hiking:[['Steady climb','20–40 min at a pace you can hold without the rails'],['Climb intervals','6 × 3 min hard, 2 min easy between']]},
+    all:[['Zone 2','30–45 min at a pace you could talk through'],['Intervals','8 × 1 min hard, 2 min easy between']]
+  };
+  function cardioFor(n,g){
+    var k=/treadmill/i.test(n)?'treadmill':/bike|cycle/i.test(n)?'bike':/rowing|rower/i.test(n)?'rowing':/stair/i.test(n)?'stair':'other';
+    return (CARDIO[k]&&CARDIO[k][g])||CARDIO.all;
+  }
+
+  /* best moves with a free-weight tool, by sport */
+  var BEST={
+    swimming:{dumbbell:['Single arm DB row','Bulgarian split squat','Goblet squat'],barbell:['Romanian deadlift','Barbell row'],cable:['Straight arm pulldown','Lat pulldown','Cable face pull','Pallof press'],bodyweight:['Pull up','Chin up','Push up','Plank']},
+    hiking:{dumbbell:['Step up','Bulgarian split squat','Farmer carry','Walking lunge'],barbell:['Romanian deadlift','Hip thrust'],cable:['Pallof press','Cable face pull'],bodyweight:['Single leg calf raise','Glute bridge','Plank']},
+    hikebike:{dumbbell:['Bulgarian split squat','Step up','Goblet squat'],barbell:['Barbell back squat','Romanian deadlift','Hip thrust'],cable:['Pallof press','Cable row'],bodyweight:['Plank','Back extension','Glute bridge']},
+    endurance:{dumbbell:['Bulgarian split squat','Step up','Walking lunge'],barbell:['Romanian deadlift','Hip thrust','Barbell back squat'],cable:['Pallof press'],bodyweight:['Single leg calf raise','Glute bridge','Plank']}
+  };
+
+  /* ---------- add one exercise to the right day of your plan ---------- */
+  var MOVE={'Seated cable row':'Cable row','Lying or seated leg curl':'Seated leg curl','Pec deck / chest fly':'Pec deck','Hip abduction / adduction machine':'Abduction machine'};
+  function dayFor(name){
+    var m='';
+    try{ m=(window.KSESS&&KSESS.lib)?(KSESS.lib(name).m||''):''; }catch(e){}
+    var t=(name+' '+m).toLowerCase();
+    if(/quad|ham|glute|calf|leg|squat|deadlift|lunge|step|thrust|hip|abduct/.test(t)) return /leg|lower|squat|hinge|climb|down|strength|start/i;
+    if(/back|lat|row|pull|chin|bicep|rear/.test(t)) return /pull|back|row|upper|posture|shoulder/i;
+    if(/chest|press|pec|shoulder|tricep|dip|push/.test(t)) return /push|chest|press|upper|pack/i;
+    if(/core|plank|ab|carry|pallof/.test(t)) return /core|posture|full|total/i;
+    return /full|total|upper|lower/i;
+  }
+  function addToPlan(name,sets,reps,first){
+    name=MOVE[name]||name;
+    var plan=kp('plan');
+    if(!plan||!plan.days||!plan.days.length) return {ok:false,need:'plan',msg:'Build your plan first, then add '+name.toLowerCase()+' to it.'};
+    var want=dayFor(name), day=plan.days.filter(function(d){ return want.test(String(d.n||'')); })[0]||plan.days[0];
+    day.ex=day.ex||[];
+    if(day.ex.some(function(e){ return String(e.e).toLowerCase()===name.toLowerCase(); })) return {ok:false,msg:name+' is already in '+day.n+'.'};
+    day.ex[first?'unshift':'push']({e:name,s:sets,r:reps});
+    try{ KP.set('plan',plan); }catch(e){}
+    try{ if(window.KSESS&&KSESS.reset) KSESS.reset(); }catch(e){}
+    return {ok:true,day:day.n,msg:name+' added to '+day.n+(first?', first':'')+': '+sets+' × '+reps+'.'};
+  }
+  function addAndSay(name,sets,reps,first){
+    var r=addToPlan(name,sets,reps,first);
+    if(window.toast) toast(r.msg);
+    if(r.need==='plan'&&typeof go==='function') setTimeout(function(){ go('quiz'); },700);
+    return r;
+  }
+
+  /* ---------- the machine scan's "Where to start", by goal ---------- */
+  function machine(m,ident){
+    var g=id(), gen=!!m.gen, h='';
+    if(!g){
+      return '<div class="card kg-rx"><div class="kg-rh">Sets and reps for your goal</div>'
+        +'<div class="sub kg-p">Tell Kova what you train for and every machine you scan gets sets, reps and rest for that goal.</div>'
+        +'<button class="btn ghost" data-kg="quiz">Pick my goal</button></div>';
+    }
+    var w=why(m,g);
+    if(m.cardio||kindOf(m.n)==='cardio'){
+      var C=cardioFor(m.n,g);
+      return '<div class="card kg-rx"><div class="kg-rh">For your goal: <b>'+esc(name(g))+'</b></div>'
+        +(w?'<div class="kg-why">'+esc(w)+'</div>':'')
+        +C.map(function(c){ return '<div class="kg-cs"><b>'+esc(c[0])+'</b><span>'+esc(c[1])+'</span></div>'; }).join('')
+        +'<button class="kg-link" data-kg="change">Change goal</button></div>';
+    }
+    if(m.kind==='open'){
+      var B=(BEST[g]||{})[m.eq]||[];
+      var R0=rx(B[0]||'press',g);
+      return '<div class="card kg-rx"><div class="kg-rh">For your goal: <b>'+esc(name(g))+'</b></div>'
+        +(B.length?'<div class="sub kg-p">Best moves for your '+esc(SPORT[g])+' with this. Tap one to add it to your program.</div>'
+          +'<div class="kg-chips">'+B.map(function(n){ var R=rx(n,g); return '<button class="chip kg-add" data-kg="addmove" data-n="'+esc(n)+'" data-s="'+R.s+'" data-r="'+R.r+'">'+esc(n)+' <i>'+R.s+' × '+R.r+'</i></button>'; }).join('')+'</div>'
+          :'<div class="sub kg-p">Pick a movement above, then add it. Big lifts: '+R0.s+' sets of '+REPS[g][0][0]+'-'+REPS[g][0][1]+'. Smaller moves: '+rx('curl',g).s+' sets of '+REPS[g][1][0]+'-'+REPS[g][1][1]+'. Rest '+R0.rest+'.</div>')
+        +'<div class="sub kg-note">'+esc(R0.note)+'</div>'
+        +'<button class="kg-link" data-kg="change">Change goal</button></div>';
+    }
+    var R=rx(m.n,g);
+    h='<div class="card kg-rx"><div class="kg-rh">For your goal: <b>'+esc(name(g))+'</b></div>'
+      +'<div class="kg-grid">'+[['SETS',R.s],['REPS',R.r],['REST',R.rest]].map(function(x){ return '<div><div class="lbl">'+x[0]+'</div><b>'+esc(x[1])+'</b></div>'; }).join('')+'</div>'
+      +(w?'<div class="kg-why">'+esc(w)+'</div>':'')
+      +'<div class="sub kg-note">'+esc(R.note)+(gen?' These numbers come from your goal; the machine itself was read from your photo, so check its placard.':' Pick a weight you can finish the full range with.')+'</div>'
+      +'<button class="kg-link" data-kg="change">Change goal</button></div>';
+    return h;
+  }
+  function machineAdd(m){
+    var g=id()||'bodybuilding';
+    if(m.cardio||kindOf(m.n)==='cardio'){ if(window.toast) toast('Cardio goes in your week, not your lifting plan. The sessions above are what to do on it.'); return; }
+    var n=m.n;
+    if(m.kind==='open'){
+      var on=document.querySelector('#mcResult .mcMove.on');
+      if(!on){ if(window.toast) toast('Pick a movement above first, then add it.'); return; }
+      n=on.getAttribute('data-n');
+    }
+    var R=rx(n,g); addAndSay(n,R.s,R.r);
+  }
+
+  /* ---------- sport guides: what to work on to get better ---------- */
+  var GUIDE={
+    swimming:{t:'How to swim faster',s:[
+      ['The words',['A <b>length</b> is one end of the pool to the other. People say <b>lap</b> for a length or for there-and-back; Kova counts lengths.','In a 25 m pool, 4 lengths is 100 m. In a 50 m pool, 2 lengths is 100 m.','<b>CSS</b> (critical swim speed) is the pace you could hold for about 30 minutes. Your threshold sets are swum at it.','A <b>kickboard</b> is held out in front for legs-only lengths. A <b>pull buoy</b> goes between your thighs for arms-only lengths. Most pools have them to borrow.']],
+      ['Which stroke',['<b>Freestyle (front crawl)</b> is the fastest stroke and the one to train for speed. Most of your laps are freestyle.','<b>Backstroke</b> is a good easy-day change: it opens up the shoulders that freestyle closes.','<b>Breaststroke</b> is the slowest. Fine for rest lengths; a wrong kick can hurt your knees.','<b>Butterfly</b> comes later: short repeats once your freestyle is solid.']],
+      ['What makes you faster (in this order)',['<b>Head down, eyes on the bottom.</b> Your hips rise and drag drops. Lifting your head sinks your legs.','<b>Breathe out under water, all the time.</b> Then the breath to the side is a quick in. Holding your breath is the main reason people tire after one length.','<b>Breathe to the side</b> with one goggle still in the water. Every 3 strokes (both sides) once you can.','<b>Reach long, then catch.</b> Enter in front of your shoulder, reach, then bend the elbow and push the water back toward your feet with your forearm and hand. Back, not down.','<b>Rotate from the hips</b>, side to side, like a log rolling. It puts your back muscles into the pull.','<b>Small, fast kick from the hips</b> with loose ankles. Big knee bends slow you down.','<b>Count strokes per length.</b> Fewer strokes at the same speed means better technique. Try to hold your count as you tire.']],
+      ['Drills, explained',['<b>Catch-up:</b> one hand waits in front until the other arrives. Teaches the long reach.','<b>Fingertip drag:</b> drag your fingertips along the water as the arm comes forward. Teaches a high elbow.','<b>6-kick switch:</b> 6 kicks on your side, then one stroke to the other side. Teaches rotation and balance.','<b>Side kick:</b> kick on your side, bottom arm stretched out. Teaches the breathing position.','<b>Sculling:</b> small figure-8 sweeps with the hands. Teaches the feel of holding water.']],
+      ['How much to swim',['<b>Learning:</b> 2 to 3 swims of 20 to 30 minutes. Stop at the wall as often as you need.','<b>Getting fitter:</b> 3 to 4 swims of 1,500 to 2,500 m.','<b>Racing:</b> 4 to 6 swims a week.','Add about 10% a week, and every fourth week swim less. Retest CSS every 6 to 8 weeks.']],
+      ['In the gym (dryland)',['<b>Pull:</b> pull-ups or lat pulldowns, and straight-arm pulldowns (the exact swimming pull).','<b>Shoulder health:</b> cable external rotations and Y-T-W raises every dryland day.','<b>Core:</b> dead bugs and planks hold your body flat in the water.','<b>Legs:</b> squats and box jumps for push-offs and starts.']],
+      ['At the pool',['Pick the lane that matches your speed. In a shared lane, swim on the right side (circle swimming).','To pass, tap the swimmer’s foot and go at the wall. Rest at the side of the wall, not the middle.','Use the pace clock on the wall to time your rest. Goggles that seal properly make everything easier.']]
+    ]},
+    hiking:{t:'How to get better at hiking',s:[
+      ['Pick the right trail',['Two numbers decide how hard a trail is: <b>distance</b> and <b>elevation gain</b> (how much you climb). Check both on the map or trail app before you go.','Divide the climb by the miles. Under 500 ft per mile is easy to moderate, 500 to 1,000 ft per mile is hard, over 1,000 ft per mile is steep.','Go up one step at a time. Change only one thing: distance, climbing or pack weight.']],
+      ['Your ladder',['<b>Start:</b> 3 to 5 miles with up to 1,000 ft of climbing.','<b>Next:</b> 5 to 8 miles with 1,500 to 2,500 ft.','<b>Then:</b> 8 to 12 miles with 2,500 to 4,000 ft.','<b>Big days:</b> 12+ miles and 4,000+ ft.','Move up when the current step leaves you tired but not sore for days.']],
+      ['How long it will take',['A planning rule (Naismith’s rule): about 1 hour for every 3 miles, plus 1 hour for every 2,000 ft of climbing.','Example: 8 miles with 2,000 ft of climbing is about 3 h 40 min of moving, before breaks.','Set a turn-around time and keep it, even if the top is close.']],
+      ['Going up',['Short steps and a pace you could still talk at. If you are gasping, slow down: you will be faster overall.','On steep ground, use the <b>rest step</b>: pause for a split second on the straight back leg between steps.','Poles let your arms help push you up.']],
+      ['Coming down (where knees get hurt)',['Short, quick steps with soft knees. Do not lock them.','Lengthen your poles for the descent and plant them ahead of you.','Stand over your feet. Leaning back makes you slip.','In the gym, slow step-downs train exactly this.']],
+      ['Your pack',['Start with 10 to 15 lb. Add 2 to 3 lb a week toward about 20% of your bodyweight for long day hikes.','Tighten the hip belt so your hips carry most of the weight, not your shoulders.']],
+      ['Food, water and feet',['About 0.5 L (16 oz) of water an hour, more in heat. Eat a snack every hour on long hikes.','Shoes broken in before a big hike, and wool or synthetic socks (not cotton).','Feel a hot spot? Stop and tape it straight away, before it is a blister.']],
+      ['In the gym',['<b>Step-ups</b> for the climb, <b>slow step-downs</b> for the descent.','<b>Split squats</b> and <b>single-leg deadlifts</b> for balance on uneven ground.','<b>Calf and shin raises</b> for your ankles, <b>farmer carries</b> for the pack.','On a treadmill: 10 to 15% incline. A stair climber is the closest thing to a trail.']]
+    ]},
+    hikebike:{t:'How to ride stronger',s:[
+      ['Where to ride',['<b>Road:</b> smooth and steady, best for long rides and building your engine.','<b>Bike paths and gravel:</b> quieter and safer, perfect for easy (zone 2) rides.','<b>Mountain bike trails</b> are rated <b>green</b> (easy), <b>blue</b> (intermediate) and <b>black</b> (hard). Start on green: trails build bike handling and core strength.','<b>Hills:</b> find a climb that takes 5 to 10 minutes. That is where your hard intervals go.']],
+      ['How far',['Think in time more than miles: hills and wind change the miles, the effort is what trains you.','<b>Starting:</b> 2 to 3 rides a week, about 30 to 60 miles in total.','<b>Regular:</b> 3 to 4 rides, about 75 to 150 miles.','<b>Strong:</b> 4 to 6 rides, 150 miles or more.','Grow the long ride by 10 to 15 minutes a week. Every fourth week, ride less.']],
+      ['How hard',['Most rides easy: you can still talk in sentences (zone 2).','One or two hard days a week: sweet-spot intervals or hill repeats.','<b>FTP</b> is the power (or effort) you could hold for about an hour. Test it every 6 weeks; every target here moves with it.']],
+      ['Technique',['<b>Spin, do not grind:</b> about 80 to 95 pedal turns a minute on the flat. Shift to an easier gear early on hills.','<b>Climbing:</b> stay seated on long climbs, stand for short steep bits. Keep the effort steady, not the speed.','<b>Bike fit:</b> at the bottom of the pedal stroke your knee is slightly bent. Pain at the front of the knee often means the seat is too low; at the back, too high.']],
+      ['Fuel',['Rides over 90 minutes: 30 to 60 g of carbs every hour (a banana is about 27 g) and a bottle of water an hour.','Eat before you are hungry. Running out of energy is a food problem, not a fitness problem.']],
+      ['In the gym',['<b>Squats or leg press:</b> the force behind each pedal stroke.','<b>Split squats and step-ups:</b> each leg on its own, like pedaling.','<b>Deadlifts and hip thrusts:</b> glute power.','<b>Planks, side planks, Pallof press:</b> a steady base on the saddle.','<b>Rows and back extensions:</b> hold your position without back pain. Two days a week, away from hard rides.']],
+      ['Safety',['Helmet every ride, lights front and back (day too), and ride with traffic.']]
+    ]},
+    endurance:{t:'How to run farther or faster',s:[
+      ['The rule that matters most',['About 80% of your running easy, 20% hard. Easy means you can talk in full sentences.','Most runners run their easy days too fast and their hard days too slow. Slow down the easy ones.']],
+      ['Your week',['<b>Easy runs</b> build the base. <b>Intervals</b> once a week make you faster. The <b>long run</b> makes you go farther.','Add no more than about 10% to your weekly distance, and only in a week where nothing hurts. Every fourth week, run less.']],
+      ['Form',['Quick, light steps, landing under your hips, not out in front.','Run tall, relax your shoulders and hands, look ahead.','Most runners do better with slightly more steps per minute than they naturally take.']],
+      ['Where to run',['Grass and trails for easy runs (softer, and they train your ankles).','A track or flat road for intervals, so the pace is honest.','Shoes: replace them at about 300 to 500 miles or when they feel flat.']],
+      ['Fuel',['Carbs in the meal before long and hard runs.','Past about 75 minutes, 30 to 60 g of carbs an hour.']],
+      ['In the gym',['Heavy, low-rep single-leg work (split squats, step-ups) and calf raises make each stride cheaper and protect the Achilles.','Two short sessions a week, never the day before a hard run.']]
+    ]},
+    toning:{t:'How to look lean and defined',s:[
+      ['What "toned" really is',['A bit more muscle with a bit less fat over it. There is no separate "toning" exercise: you build the muscle and lower the fat.','Spot-reducing does not work: crunches build abs but do not burn the fat on top of them. A small calorie deficit does.']],
+      ['Training',['Lift 3 to 4 days a week, 10 to 15 reps, with the last reps genuinely hard.','Add 3 to 4 cardio sessions on other days. Walking counts, and daily steps add up more than the sessions do.']],
+      ['Food',['Eat slightly under what you burn: aim to lose about 0.3% of your weight a week.','Keep protein high at every meal so the weight you lose is fat, not muscle.']],
+      ['Sleep',['Seven to nine hours. Short sleep raises next-day hunger and, in a diet, costs muscle.']]
+    ]},
+    weightloss:{t:'How to lose fat and keep muscle',s:[
+      ['Training',['Keep lifting with real effort: it tells your body to keep its muscle while the fat comes off.','Add cardio on top of lifting, never instead of it. Daily steps move more of the total than the workouts do.']],
+      ['Food',['A steady deficit of about 0.5% of your weight a week. Faster usually costs muscle and energy.','High protein at every meal; it also keeps you full.','If your lifting numbers fall for two weeks, the deficit is too deep: eat a bit more.']],
+      ['Sleep',['In dieters, short sleep made far more of the weight lost come from muscle instead of fat. Seven to nine hours is part of the plan.']]
+    ]},
+    bodybuilding:{t:'How to build muscle (and bulk well)',s:[
+      ['Training',['About 10 to 20 hard sets per muscle each week, most of them 1 to 2 reps short of failure.','Add a rep or a little weight whenever you hit the top of the rep range. Your log shows when.']],
+      ['Food',['A small surplus: gain about 0.25% of your weight a week. Faster is mostly fat.','Protein at every meal, about 1.6 to 2.2 g per kg of bodyweight a day.']],
+      ['Sleep',['Seven to nine hours. Muscle is repaired and built while you sleep.']]
+    ]}
+  };
+  GUIDE.showprep=GUIDE.weightloss;
+  function guideHtml(g){
+    var G=GUIDE[g]; if(!G) return '';
+    return '<div class="grab"></div><div class="kg-sh">'+esc(G.t)+'</div>'
+      +'<div class="sub kg-p">For your goal: '+esc(name(g))+'. Tap a section to open it.</div>'
+      +G.s.map(function(s,i){
+        return '<details class="kg-d"'+(i===0?' open':'')+'><summary>'+esc(s[0])+'</summary><ul>'+s[1].map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul></details>';
+      }).join('')
+      +'<div class="kg-acts"><button class="btn ghost" data-kg="ask">Ask Atlas, your training coach</button></div>';
+  }
+
+  /* words used in sessions, explained in the session pop-up */
+  var TERMS=[[/catch-up/i,'Catch-up','One hand waits in front until the other arrives. Teaches a long reach.'],
+    [/fingertip/i,'Fingertip drag','Drag your fingertips along the water as the arm comes forward. Teaches a high elbow.'],
+    [/6-kick/i,'6-kick switch','Six kicks on your side, then one stroke to the other side. Teaches rotation.'],
+    [/side-kick/i,'Side-kick breathing','Kick on your side with the bottom arm stretched out, face turning up to breathe.'],
+    [/kickboard|\d+ kick\b|\) kick\b|\bKick\b/,'Kick','Legs only, holding a kickboard out in front of you.'],
+    [/pull buoy/i,'Pull buoy','A float between your thighs so only your arms work.'],
+    [/\bbuild\b/i,'Build','Each length a little faster than the last.'],
+    [/CSS/,'CSS pace','The pace you could hold for about 30 minutes. Set it with the test in this card.'],
+    [/pyramid|25 · 50/i,'Pyramid','The distance goes up, then back down. Rest 30 seconds between each piece.'],
+    [/length/i,'Length','One end of the pool to the other.'],
+    [/strides/i,'Strides','About 20 seconds of quick, relaxed running, not a sprint. Walk back between them.'],
+    [/zone 2/i,'Zone 2','Easy enough that you can talk in full sentences.'],
+    [/sweet spot/i,'Sweet spot','Just under your FTP: hard but repeatable. 88 to 93% of FTP.'],
+    [/FTP/,'FTP','The power or effort you could hold for about an hour.'],
+    [/climb/i,'Climbing','Elevation gain: how many feet you go up in total.']];
+
+  /* ---------- the week: which day each session goes on ---------- */
+  var D=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  function week(g){
+    if(!window.KovaSport||!KovaSport.has(g)) return null;
+    var P=KovaSport.plan(g), hard=[1,3], easy=[0,2,4,6], hi=0, ei=0;
+    P.sessions.forEach(function(s,i){
+      s.i=i; s.v=tidy(s.v); s.parts=(s.parts||[]).map(function(p){ return [p[0],tidy(p[1])]; });
+      if(s.k==='long') s.day=5;
+      else if(s.k==='hard'&&hi<hard.length) s.day=hard[hi++];
+      else s.day=easy[(ei++)%easy.length];
+    });
+    P.sessions.sort(function(a,b){ return a.day-b.day; });
+    return P;
+  }
+  /* KovaSport.step is this week's version of one session (the threshold
+     set, the long run, the sweet-spot set): show it there, not beside it */
+  var STEP_AT={swimming:/threshold/i,endurance:/long run/i,hikebike:/sweet spot/i,hiking:/long hike/i};
+  function stepFor(g,s){
+    var st=window.KovaSport&&KovaSport.step(g);
+    if(!st||!STEP_AT[g]||!STEP_AT[g].test(s.d)) return null;
+    return String(s.v).indexOf(st.v)>-1?null:st;
+  }
+  /* "55% FTP–75% FTP" reads as "55–75% FTP"; "at comfortably hard" as "comfortably hard" */
+  function tidy(t){
+    return String(t||'').replace(/(\d+)% FTP\u2013(\d+)% FTP/g,'$1\u2013$2% FTP').replace(/ at comfortably hard/g,', comfortably hard')
+      .replace(/ at conversational pace/g,' at an easy, talking pace');
+  }
+  function gymDays(g){
+    try{ var q=kp('quiz')||{}, P=KovaPlan.generate(g,q.days||4,q.mins||60); return P.days.length; }catch(e){ return 2; }
+  }
+
+  /* ---------- painting ---------- */
+  function pillarLine(g,p){
+    var I=INFO[g]; if(!I) return '';
+    if(p==='train'){
+      if(SPORT[g]){ var W=week(g), n=W?W.sessions.filter(function(s){ return !/^optional/i.test(s.d); }).length:0;
+        return W?n+' '+UNIT[g]+(n===1?'':'s')+' + '+gymDays(g)+' gym days':I.train; }
+      return I.train;
+    }
+    if(p==='eat') return I.eat;
+    return I.s[0]+'–'+I.s[1]+' hours';
+  }
+  function slotHtml(){
+    var g=id();
+    if(!g){
+      return '<div class="card kg-card"><div class="lbl">BUILT AROUND</div><div class="kg-name">Your goal</div>'
+        +'<div class="sub kg-p">Tell Kova what you train for (looking lean, bulking, running, swimming, hiking, cycling...) and your workouts, food and sleep all follow it.</div>'
+        +'<button class="btn" data-kg="quiz">Pick my goal</button></div>';
+    }
+    var h='<div class="card kg-card"><div class="kg-top"><div><div class="lbl">BUILT AROUND</div><div class="kg-name">'+esc(name(g))+'</div></div>'
+      +'<button class="chip kg-chg" data-kg="change">Change</button></div>'
+      +'<div class="kg-tie">'+[['train','TRAIN'],['eat','EAT'],['sleep','SLEEP']].map(function(p){
+        return '<button type="button" class="kg-pil" data-kg="pillar" data-p="'+p[0]+'"><span class="kg-k">'+p[1]+'</span><span class="kg-v">'+esc(pillarLine(g,p[0]))+'</span></button>';
+      }).join('')+'</div>';
+    var W=window.KovaSport&&KovaSport.has(g)?week(g):null;
+    if(W){
+      var st=KovaSport.step(g), wk=KovaSport.weekNum(g), started=startedAt(g);
+      h+='<div class="lbl kg-sec">YOUR '+(SPORT[g]?UNIT[g].toUpperCase()+'S':(W.unit||'CARDIO').toUpperCase())+' THIS WEEK'+(started?' · WEEK '+wk+' OF 12':'')+'</div>'
+        +(st&&st.deload?'<div class="kg-step"><b>Back-off week.</b> '+esc(st.note)+'</div>':'')
+        +W.sessions.map(function(s){
+          var sx=stepFor(g,s);
+          return '<button type="button" class="kg-ses" data-kg="sess" data-i="'+s.i+'"><span class="kg-day">'+D[s.day]+'</span><i class="kg-dot '+s.k+'"></i>'
+            +'<span class="kg-sn"><b>'+esc(s.d)+'</b><span>'+(sx?'This week: '+esc(sx.v):esc(s.v))+'</span></span><span class="kg-go" aria-hidden="true">›</span></button>';
+        }).join('');
+      var T=W.test, v=KovaSport.vals()[T.key];
+      h+='<div class="kg-acts">'
+        +(GUIDE[g]?'<button class="btn" data-kg="guide">'+esc(GUIDE[g].t)+'</button>':'')
+        +'<button class="btn ghost" data-kg="test">'+(v?esc(T.n.split(' —')[0].split(' -')[0])+': '+esc(v):'Set your '+esc(testWord(g)))+'</button></div>';
+    } else if(GUIDE[g]){
+      h+='<div class="kg-acts"><button class="btn ghost" data-kg="guide">'+esc(GUIDE[g].t)+'</button></div>';
+    }
+    return h+'</div>';
+  }
+  function testWord(g){ return {swimming:'swim pace',endurance:'running pace',hiking:'climb rate',hikebike:'riding power',athletic:'jump distance'}[g]||'easy cardio time'; }
+  function startedAt(g){ try{ return !!(JSON.parse(localStorage.getItem('kova_sport_week_v1')||'{}')[g]); }catch(e){ return false; } }
+
+  function fuelHtml(){
+    var g=id(); if(!g||!INFO[g]) return '';
+    var I=INFO[g], kg=bwKg();
+    var pro=kg?Math.round(kg*I.p[0]/5)*5+'–'+Math.round(kg*I.p[1]/5)*5+' g protein a day':I.p[0]+'–'+I.p[1]+' g protein per kg';
+    return '<div class="card kg-mini" data-kg="pillar" data-p="eat" role="button" tabindex="0"><div class="kg-mh"><span class="lbl">FOR YOUR GOAL · '+esc(name(g).toUpperCase())+'</span><span class="kg-go">›</span></div>'
+      +'<div class="kg-mv">'+esc(I.eat)+'</div><div class="sub">'+esc(pro)+(kg?' (from your weight)':'. Add your weight in Fuel to see grams.')+'</div></div>';
+  }
+  function sleepHtml(){
+    var g=id(); if(!g||!INFO[g]) return '';
+    var I=INFO[g], A=sleepAvg(), short=A?I.s[0]-A.h:0;
+    return '<div class="card kg-mini" data-kg="pillar" data-p="sleep" role="button" tabindex="0"><div class="kg-mh"><span class="lbl">FOR YOUR GOAL · '+esc(name(g).toUpperCase())+'</span><span class="kg-go">›</span></div>'
+      +'<div class="kg-mv">'+I.s[0]+'–'+I.s[1]+' hours a night</div>'
+      +'<div class="sub">'+(A?'You averaged '+esc(hm(A.h))+' over '+A.n+' nights'+(short>0.2?', about '+esc(hm(short))+' short.':', right on target.'):'Kova compares this with your nights once your watch sends three.')+'</div></div>';
+  }
+
+  function pillarSheet(p){
+    var g=id(); if(!g) return;
+    var I=INFO[g], kg=bwKg(), h='<div class="grab"></div>';
+    if(p==='train'){
+      h+='<div class="kg-sh">Training for: '+esc(name(g))+'</div>';
+      if(SPORT[g]) h+='<div class="kg-p">'+esc(KovaSport.plan(g).intro)+'</div><div class="kg-p">'+esc(KovaSport.plan(g).split)+'</div><div class="kg-p"><b>Gym:</b> '+esc(KovaSport.plan(g).lift)+'</div>';
+      else h+='<div class="kg-p">'+esc(I.train)+'. '+esc((RX[g]||{}).note||'')+'</div>';
+      h+='<div class="kg-acts"><button class="btn" data-kg="plan">See my gym days</button>'+(GUIDE[g]?'<button class="btn ghost" data-kg="guide">'+esc(GUIDE[g].t)+'</button>':'')+'</div>';
+    } else if(p==='eat'){
+      h+='<div class="kg-sh">Eating for: '+esc(name(g))+'</div><div class="kg-p">'+esc(I.eatL)+'</div>'
+        +'<div class="kg-p"><b>Protein:</b> '+I.p[0]+' to '+I.p[1]+' g per kg of bodyweight a day'
+        +(kg?', which for you is about <b>'+Math.round(kg*I.p[0]/5)*5+' to '+Math.round(kg*I.p[1]/5)*5+' g</b>.':'. Add your weight in Fuel and Kova works out the grams.')+'</div>'
+        +'<div class="kg-acts"><button class="btn" data-kg="maint">Set my calories for this goal</button></div>';
+    } else {
+      var A=sleepAvg();
+      h+='<div class="kg-sh">Sleeping for: '+esc(name(g))+'</div><div class="kg-p">'+esc(I.sleepL)+'</div>'
+        +'<div class="kg-p"><b>Target:</b> '+I.s[0]+' to '+I.s[1]+' hours. '+(A?'Your last '+A.n+' nights averaged '+esc(hm(A.h))+'.':'Connect your watch and Kova checks your nights against it.')+'</div>'
+        +'<div class="kg-acts"><button class="btn" data-kg="bedtime">Plan my bedtime</button></div>';
+    }
+    if(window.openSheet) openSheet(h);
+  }
+  function sessSheet(i){
+    var g=id(), W=week(g); if(!W) return;
+    var s=W.sessions.filter(function(x){ return x.i===i; })[0]; if(!s) return;
+    var txt=[s.d,s.v,s.w||''].concat((s.parts||[]).map(function(p){ return p.join(' '); })).join(' '), seen={};
+    var terms=TERMS.filter(function(t){ if(seen[t[1]]||!t[0].test(txt)) return false; seen[t[1]]=1; return true; });
+    var sx=stepFor(g,s);
+    var h='<div class="grab"></div><div class="kg-sh">'+D[s.day]+' · '+esc(s.d)+'</div>'
+      +(sx?'<div class="kg-p kg-tip"><b>This week'+(sx.week?' (week '+sx.week+')':'')+': '+esc(sx.v)+'.</b> '+esc(sx.note)+'</div>':'<div class="kg-p"><b>'+esc(s.v)+'</b></div>')
+      +(s.parts&&s.parts.length?'<div class="kg-parts">'+s.parts.map(function(p,k){ var main=sx&&/^main$/i.test(p[0]); return '<div class="kg-part"><span>'+(k+1)+'</span><div><b>'+esc(p[0])+'</b><div>'+esc(main?sx.v:p[1])+'</div></div></div>'; }).join('')+'</div>':'')
+      +(s.w?'<div class="kg-p kg-tip">'+esc(s.w)+'</div>':'')
+      +(terms.length?'<div class="lbl" style="margin:12px 0 6px">WHAT THE WORDS MEAN</div>'+terms.map(function(t){ return '<div class="kg-term"><b>'+esc(t[1])+'</b> '+esc(t[2])+'</div>'; }).join(''):'')
+      +'<div class="kg-acts">'+(GUIDE[g]?'<button class="btn ghost" data-kg="guide">'+esc(GUIDE[g].t)+'</button>':'')+'</div>';
+    if(window.openSheet) openSheet(h);
+  }
+  function testSheet(){
+    var g=id(); if(!g||!window.KovaSport||!KovaSport.has(g)) return;
+    var P=KovaSport.plan(g), T=P.test, V=KovaSport.vals(), h='<div class="grab"></div><div class="kg-sh">Set your '+esc(testWord(g))+'</div>'
+      +'<div class="kg-p"><b>'+esc(T.n)+'.</b> '+esc(T.how)+'</div>'
+      +'<label class="kg-in"><span>Your result</span><input id="kgTest" value="'+esc(V[T.key]||'')+'" placeholder="'+esc(T.ph)+'" autocomplete="off"></label>';
+    if(g==='swimming'){
+      h+='<div class="lbl" style="margin:12px 0 6px">YOUR POOL</div><div class="kg-chips">'+[['25m','25 m'],['25y','25 yd'],['50m','50 m']].map(function(o){ return '<button class="chip'+((V.pool||'25m')===o[0]?' on':'')+'" data-kg="pool" data-v="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div>'
+        +'<div class="lbl" style="margin:12px 0 6px">WHERE YOU ARE</div><div class="kg-chips">'+[['learn','Still learning'],['fit','I can swim 400 without stopping']].map(function(o){ return '<button class="chip'+((V.level||'fit')===o[0]?' on':'')+'" data-kg="level" data-v="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div>';
+    }
+    h+='<div class="kg-acts"><button class="btn" data-kg="savetest">Save</button>'
+      +(startedAt(g)?'':'<button class="btn ghost" data-kg="start">Start my 12 weeks today</button>')+'</div>'
+      +'<div class="sub kg-p">Every pace in your week comes from this number. Retest every 6 to 8 weeks.</div>';
+    if(window.openSheet) openSheet(h);
+  }
+
+  function paint(){
+    var a=document.getElementById('goalSlot'); if(a) a.innerHTML=slotHtml();
+    var b=document.getElementById('goalFuel'); if(b) b.innerHTML=fuelHtml();
+    var c=document.getElementById('goalSleep'); if(c) c.innerHTML=sleepHtml();
+  }
+
+  /* ---------- one click handler for everything above ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-kg]'); if(!b) return;
+    var a=b.getAttribute('data-kg'), g=id();
+    if(a==='quiz'||a==='change'){ if(window.closeSheet) closeSheet(); if(typeof go==='function') go('quiz'); return; }
+    if(a==='pillar'){ pillarSheet(b.getAttribute('data-p')); return; }
+    if(a==='sess'){ sessSheet(+b.getAttribute('data-i')); return; }
+    if(a==='guide'){ if(window.openSheet) openSheet(guideHtml(g)); return; }
+    if(a==='test'){ testSheet(); return; }
+    if(a==='pool'||a==='level'){ KovaSport.setVal(a,b.getAttribute('data-v')); testSheet(); paint(); return; }
+    if(a==='savetest'){
+      var inp=document.getElementById('kgTest'), P=KovaSport.plan(g);
+      KovaSport.setVal(P.test.key,String(inp&&inp.value||'').trim().slice(0,24));
+      if(!startedAt(g)) KovaSport.startBlock(g);
+      if(window.closeSheet) closeSheet(); paint(); if(window.toast) toast('Saved. Your week now uses it.'); return;
+    }
+    if(a==='start'){ KovaSport.startBlock(g); if(window.closeSheet) closeSheet(); paint(); if(window.toast) toast('Week 1 starts today.'); return; }
+    if(a==='plan'){ if(window.closeSheet) closeSheet(); if(typeof go==='function') go('customize'); return; }
+    if(a==='maint'){ if(window.closeSheet) closeSheet(); if(typeof go==='function') go('maint'); return; }
+    if(a==='bedtime'){ if(window.closeSheet) closeSheet(); if(typeof go==='function') go('bedtime'); return; }
+    if(a==='ask'){
+      if(window.closeSheet) closeSheet();
+      var q={swimming:'How do I get faster at swimming? What should I swim this week?',hiking:'How do I get better at hiking? Which trails should I do next?',
+        hikebike:'How do I get stronger on the bike? How far should I ride this week?',endurance:'How do I run faster? What should my week look like?'}[g]||('How should I train for '+name(g).toLowerCase()+'?');
+      setTimeout(function(){ if(!(window.KovaListen&&KovaListen.ask&&KovaListen.ask('training',q))&&typeof go==='function') go('workteam'); },260);
+      return;
+    }
+    if(a==='addmove'){ addAndSay(b.getAttribute('data-n'),+b.getAttribute('data-s'),b.getAttribute('data-r')); return; }
+  });
+  document.addEventListener('keydown',function(e){
+    if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.classList&&e.target.classList.contains('kg-mini')){ e.preventDefault(); e.target.click(); }
+  });
+
+  /* ---------- cardio machines the scan knows (added to the curated list) ---------- */
+  var MACH=[
+    {n:'Stationary bike',k:'stationary exercise bike spin cycle upright recumbent',kind:'fixed',cardio:1,
+     pri:['Quadriceps','Glutes'],sec:['Hamstrings','Calves','Heart and lungs'],
+     set:['Seat height: with the pedal at the bottom, your knee stays slightly bent','Standing beside the bike, the seat level with your hip bone is a good first guess','Handlebars high enough that your back is not rounded'],
+     how:['Spin smoothly: about 80 to 95 pedal turns a minute on easy rides','Add resistance to make it harder, rather than pedaling slower','Keep your hips still on the seat; rocking means it is too high','Relax your shoulders and keep a light grip'],
+     miss:[['Seat too low','Your knees bend too far on every turn and start to ache at the front.'],['Grinding a heavy setting slowly','Tires your legs fast. Spin a lighter setting.'],['Bouncing on the seat','Usually too little resistance for the speed. Add a little.']],
+     rx:{s:1,r:'20-45 min',rest:'n/a'}},
+    {n:'Rowing machine',k:'rowing machine rower erg ergometer',kind:'fixed',cardio:1,
+     pri:['Legs (quads and glutes)','Upper back and lats'],sec:['Hamstrings','Core','Biceps','Heart and lungs'],
+     set:['Strap your feet so the strap crosses the widest part of your foot','Damper (the lever on the fan) on 3 to 5. Higher feels heavier but is not better','Sit tall, arms straight, shins upright to start'],
+     how:['Push with your legs first, then lean back slightly, then pull with your arms','On the way forward: arms, then body, then legs','Pull the handle to the bottom of your ribs','Come forward slower than you pushed back'],
+     miss:[['Pulling with the arms first','Your arms tire in a minute while your legs do nothing.'],['Damper on 10','A slow, heavy pull that strains the low back.'],['Rounding your back at the start','Sit tall from the hips to protect your low back.']],
+     rx:{s:1,r:'15-30 min',rest:'n/a'}},
+    {n:'Stair climber',k:'stair climber stairmaster stepmill step machine stairs',kind:'fixed',cardio:1,
+     pri:['Glutes','Quadriceps'],sec:['Calves','Hamstrings','Heart and lungs'],
+     set:['Start slow and step on while holding the rails','Stand tall with your weight over your feet','Hands light on the rails, for balance only'],
+     how:['Step through your whole foot, not just your toes','Chest up, hips under you','Pick a speed you can hold without hanging on','Slow it down rather than lean on the rails'],
+     miss:[['Leaning on the rails','Takes much of the work off your legs, so the calorie number is wrong too.'],['Tiny tiptoe steps','Mostly calves. Use full steps.'],['Hunching over the screen','Strains the low back. Stand tall.']],
+     rx:{s:1,r:'15-30 min',rest:'n/a'}},
+    {n:'Elliptical',k:'elliptical cross trainer arc trainer',kind:'fixed',cardio:1,
+     pri:['Quadriceps','Glutes'],sec:['Hamstrings','Calves','Chest and back (with the arms)','Heart and lungs'],
+     set:['Step on with the pedals still, holding the fixed handles','Feet flat in the middle of the pedals','Stand tall, hips over your feet'],
+     how:['Push through your heels to work glutes and hamstrings more','Use the moving handles to bring your upper body in','Add resistance before you add speed','Keep your weight on your legs, not the handles'],
+     miss:[['Fast with no resistance','Momentum does the work. Add resistance until you feel each stride.'],['Up on your toes','Numb feet and tight calves. Keep your feet flat.'],['Leaning on the handles','Takes the work off your legs.']],
+     rx:{s:1,r:'20-40 min',rest:'n/a'}}
+  ];
+  function addMachines(){
+    var M=window.__kovaMachines; if(!M||M.__kg) return;
+    M.__kg=1;
+    M.forEach(function(m){ if(/treadmill/i.test(m.n)) m.cardio=1; });
+    var at=-1; M.forEach(function(m,i){ if(m.n==='Not sure / not listed') at=i; });
+    var add=MACH.filter(function(x){ return !M.some(function(m){ return m.n===x.n; }); });
+    if(at<0) at=M.length;
+    Array.prototype.splice.apply(M,[at,0].concat(add));
+    try{ if(window.__mcPaint) __mcPaint(); }catch(e){}
+  }
+
+  /* repaint when the goal, the plan or the data behind the numbers change */
+  var t=null;
+  function later(){ clearTimeout(t); t=setTimeout(paint,80); }
+  ['kova:health','storage'].forEach(function(ev){ window.addEventListener(ev,later); });
+  /* every screen change goes through go(); repaint when one of ours opens */
+  function wrapGo(){
+    var real=window.go; if(typeof real!=='function'||real.__kg) return;
+    var w=function(id){ var r=real.apply(this,arguments); if(/^(move|fuel|sleep|machine|customize)$/.test(id)) later(); return r; };
+    w.__kg=1; window.go=w;
+  }
+  function init(){ wrapGo(); addMachines(); paint(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+
+  return {id:id,name:name,isSport:isSport,info:function(g){ return INFO[g||id()]||null; },rx:rx,kindOf:kindOf,why:why,cardioFor:cardioFor,
+    addToPlan:addToPlan,addAndSay:addAndSay,machine:machine,machineAdd:machineAdd,week:week,guide:guideHtml,paint:paint,
+    slotHtml:slotHtml,fuelHtml:fuelHtml,sleepHtml:sleepHtml,pillarSheet:pillarSheet,sessSheet:sessSheet,testSheet:testSheet,
+    GUIDE:GUIDE,INFO:INFO,MACH:MACH,_addMachines:addMachines};
 })();
 
 </script>
