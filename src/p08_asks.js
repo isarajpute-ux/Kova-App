@@ -216,7 +216,11 @@ window.KovaAsk=(function(){
     var p=SEND.post;
     SEND.cap={busy:true};
     paintSend();
-    api('/crew/caption',{json:{title:p.title,notes:[p.heading,p.body,p.caption].filter(Boolean).join('\n'),dur:SEND.dur,shape:SEND.sh,platforms:SEND.targets}}).then(function(c){
+    /* p29: with stills of the photo or clip, so Maya writes about what is in it */
+    var L=window.KovaLook, stills=L?L.framesFor(p).then(L.asImages,function(){ return []; }):Promise.resolve([]);
+    stills.then(function(imgs){
+      return api('/crew/caption',{json:{title:p.title,notes:[p.heading,p.body,p.caption].filter(Boolean).join('\n'),dur:SEND.dur,shape:SEND.sh,platforms:SEND.targets,images:imgs}});
+    }).then(function(c){
       SEND.cap=c; paintSend();
     },function(err){ SEND.cap={heading:p.heading||p.title||'',caption:p.caption||'',tags:p.tags||'',note:err.message}; paintSend(); });
   }

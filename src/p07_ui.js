@@ -1496,6 +1496,7 @@ window.KovaCanvas=(function(){
   var NEXT=[
     {id:'media',g:'Add',ic:'upload',t:'Photos or clips',s:'Drop them in; two or more make a slider',a:'n-media'},
     {id:'words',g:'AI',ic:'wand',t:'Write it with Kova',s:'A heading, caption and tags in your voice',a:'n-write'},
+    {id:'look',g:'AI',ic:'eye',t:'Check my photo or clip',s:'Kova looks at it: the opening, framing, light, text, and how it fits each app',a:'n-look'},
     {id:'where',g:'Action in an app',ic:'link',t:'Post to an app',s:'Instagram, TikTok, YouTube, LinkedIn, X and more',a:'n-where'},
     {id:'shape',g:'Transform',ic:'crop',t:'Shape it for each app',s:'Crop, cover frame and size per platform',a:'n-shape'},
     {id:'checks',g:'Check',ic:'eye',t:'Run every app\u2019s checks',s:'See what an app would reject, before you post',a:'n-checks'},
@@ -1536,6 +1537,7 @@ window.KovaCanvas=(function(){
     else if(a==='n-drafts') publish('draft');
     else if(a==='n-send') publish('now');
     else if(a==='n-maya'){ if(window.KovaAsk) KovaAsk.offerSend(P()); else toast('Your AI team is still loading. Try again in a moment.'); }
+    else if(a==='n-look'){ if(window.KovaLook) KovaLook.open(P()); else toast('Still loading. Try again in a moment.'); }
   }
 
   /* =============================== menus ============================= */
@@ -2312,7 +2314,7 @@ window.KovaCanvas=(function(){
       case 'write': write(); break;
       case 'flow': S.flow=!S.flow; S.next=false; paintNext(); paintFlowPanel(); paintTop(); break;
       case 'next': S.next=!S.next; S.flow=false; S.nextQ=''; paintFlowPanel(); paintNext(); paintTop(); if(S.next){ var nq=$('#ksNextQ'); if(nq&&S.desk) nq.focus(); } break;
-      case 'n-media': case 'n-write': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': case 'n-maya': doNext(a); break;
+      case 'n-media': case 'n-write': case 'n-look': case 'n-where': case 'n-shape': case 'n-checks': case 'n-sched': case 'n-drafts': case 'n-send': case 'n-maya': doNext(a); break;
       case 'usesugg': useSugg(); break;
       case 'dropsugg': S.sugg=''; paintDock(); break;
       case 'mic': mic(); break;

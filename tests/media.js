@@ -22,8 +22,9 @@ const sites = [...html.matchAll(/KovaMedia\.attach\('(\w+)'/g)].map(m => m[1]);
   ck('capture point wired for ' + k, sites.indexOf(k) >= 0);
 });
 /* the same kind may come from two flows (food: the meal scanner and the
-   two-tap quick log), but each flow names itself with its own ref */
-const refs = [...html.matchAll(/KovaMedia\.attach\('(\w+)',[\s\S]{0,120}?ref:\s*'([\w-]+)'/g)].map(m => m[1] + '/' + m[2]);
+   two-tap quick log; doc: Files and Workspace), but each flow names itself
+   with its own ref (a fixed name, or the id of the thing it belongs to) */
+const refs = [...html.matchAll(/KovaMedia\.attach\('(\w+)',[\s\S]{0,120}?ref:\s*('[\w-]+'|[\w.]+)/g)].map(m => m[1] + '/' + m[2]);
 const twice = sites.filter((k, i) => sites.indexOf(k) !== i);
 ck('no kind is wired twice by accident (a second flow carries its own ref)', twice.every(k => refs.filter(r => r.startsWith(k + '/')).length === sites.filter(x => x === k).length && new Set(refs.filter(r => r.startsWith(k + '/'))).size === sites.filter(x => x === k).length));
 

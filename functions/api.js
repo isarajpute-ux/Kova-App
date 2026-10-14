@@ -678,7 +678,8 @@ Rules:
 - Keep the person's own voice and facts from what they already wrote. Never invent numbers, names or claims.
 - If an instruction is given, follow it.
 - No emojis unless the person already used them.
-- Avoid these words: delve, testament, crucial, game-changer, leverage, seamless, unlock, revolutionize, "in today's fast-paced world".`;
+- Avoid these words: delve, testament, crucial, game-changer, leverage, seamless, unlock, revolutionize, "in today's fast-paced world".
+- If images are attached, they are the media itself (photos, or stills from the video in time order). Write about what is actually visible in them; never describe anything you cannot see.`;
 
 async function writeRoute(req, res, cfg) {
   const u = await requireUser(req);
@@ -700,7 +701,7 @@ async function writeRoute(req, res, cfg) {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({ model: cfg.model, max_tokens: 700, system: WRITE_SYSTEM,
-                           messages: [{ role: 'user', content: JSON.stringify(ask) }] })
+                           messages: [{ role: 'user', content: (function () { const im = asksMod.imageBlocks(b.images); return im.length ? im.concat([{ type: 'text', text: JSON.stringify(ask) }]) : JSON.stringify(ask); })() }] })
   });
   if (!r.ok) {
     console.error('write model', r.status, (await r.text().catch(() => '')).slice(0, 300));

@@ -688,10 +688,16 @@ window.KovaPost=(function(){
       return j.posts||[];
     });
   }
+  /* p29: with stills of the photo or clip (KovaLook), so the words are
+     about what is actually in it, not only the file's name */
   function write(post,field,instruction){
-    return api('/write',{json:{field:field,instruction:instruction||'',platforms:post.targets,format:post.format,
-      heading:post.heading,body:post.body,caption:post.caption,tags:post.tags,
-      media:included(post).map(function(m){ return {type:m.kind,name:m.name}; })}}).then(function(j){ return j.text||''; });
+    var L=window.KovaLook;
+    var stills=L?L.framesFor(post).then(L.asImages,function(){ return []; }):Promise.resolve([]);
+    return stills.then(function(imgs){
+      return api('/write',{json:{field:field,instruction:instruction||'',platforms:post.targets,format:post.format,
+        heading:post.heading,body:post.body,caption:post.caption,tags:post.tags,images:imgs,
+        media:included(post).map(function(m){ return {type:m.kind,name:m.name,seconds:Math.round(m.dur||0)}; })}});
+    }).then(function(j){ return j.text||''; });
   }
 
   return {PLAT:PLAT,ORDER:ORDER,GROUPS:GROUPS,KIND:KIND,FORMATS:FORMATS,FORMAT_N:FORMAT_N,ASPECTS:ASPECTS,ASPECT_N:ASPECT_N,FIELDS:FIELDS,

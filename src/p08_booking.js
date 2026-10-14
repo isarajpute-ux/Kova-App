@@ -90,7 +90,9 @@ window.KovaBook=(function(){
     }
     var h;
     if(!serverOk()){
-      h='<div class="kbk-h">Your booking link</div><div class="kbk-s">Let people pick a free time with you, like Calendly. It needs you signed in to Kova, because the link lives on the Kova server.</div>';
+      /* p29: a way in, not a dead end */
+      h='<div class="kbk-h">Your booking link</div><div class="kbk-s">Let people pick a free time with you, like Calendly. It needs you signed in to Kova, because the link lives on the Kova server.</div>'
+        +'<button class="btn" data-kb="signin">Sign in to set it up</button>';
     }else if(!S.cfg||S.cfg.none){
       h='<div class="kbk-h">Your booking link</div><div class="kbk-s">Share one link; people see only your free times and book one. It lands here as a meeting'+(S.cfg&&S.cfg.google?' and on your Google Calendar':'')+'.</div>'
         +'<button class="btn" data-kb="setup">Set up my link</button>';
@@ -109,6 +111,7 @@ window.KovaBook=(function(){
   }
   function onClick(e){
     var b=e.target.closest('[data-kb]'); if(!b) return;
+    if(b.getAttribute('data-kb')==='signin'){ if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); else if(typeof go==='function') go('settings'); return; }
     var k=b.dataset.kb;
     if(k==='setup') sheet();
     else if(k==='copy'){ copy(link()); }

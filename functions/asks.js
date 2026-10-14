@@ -329,7 +329,24 @@ function makeAsks(deps) {
    "Send to Maya" sheet asks for it before posting) */
 const CAPTION_SYSTEM = `You write social posts for the user, in their voice. You get the video's title, notes, length, shape and the platforms.
 Return ONE JSON object, nothing else: {"heading": string (a YouTube title, under 70 characters, no clickbait words like "shocking"), "caption": string (2-4 short lines for Instagram and TikTok, the first line a hook, ending with a soft call to action), "tags": string (5-8 hashtags separated by spaces, specific before broad)}.
-Never invent facts about the video beyond what you are given. No emojis unless the notes use them.`;
+Never invent facts about the video beyond what you are given. No emojis unless the notes use them.
+If images are attached, they are the media itself (stills from the video in time order, or the photos): write about what is actually visible in them, and never describe anything you cannot see.`;
+
+/* p29: up to 4 stills of a post's photo or clip, as Anthropic image blocks.
+   Accepts {mime,data} or a data: URL; anything else is dropped. */
+const IMG_TYPES = /^image\/(jpeg|png|webp)$/;
+function imageBlocks(arr, max) {
+  const out = [];
+  let total = 0;
+  (Array.isArray(arr) ? arr : []).slice(0, max || 4).forEach((x) => {
+    let mime = x && x.mime, data = x && x.data;
+    if (typeof x === 'string') { const m = /^data:(image\/[a-z]+);base64,(.*)$/.exec(x); if (m) { mime = m[1]; data = m[2]; } }
+    if (!IMG_TYPES.test(String(mime || '')) || typeof data !== 'string' || !data || data.length > 1.6e6 || !/^[A-Za-z0-9+/=]+$/.test(data.slice(0, 200))) return;
+    if ((total += data.length) > 3.6e6) return;
+    out.push({ type: 'image', source: { type: 'base64', media_type: mime, data } });
+  });
+  return out;
+}
 async function caption(deps, body) {
   const { cfg } = deps;
   const f = deps.fetch || ((...a) => global.fetch(...a));
@@ -338,7 +355,8 @@ async function caption(deps, body) {
   const ask = { title: s(b.title, 200), notes: s(b.notes, 1500), seconds: Math.round(+b.dur || 0), shape: s(b.shape, 20), platforms: (Array.isArray(b.platforms) ? b.platforms : []).slice(0, 6).map((x) => s(x, 20)), voice: s(b.voice, 400) };
   const r = await f('https://api.anthropic.com/v1/messages', { method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: cfg.mealModel || cfg.model, max_tokens: 600, temperature: 0.7, system: CAPTION_SYSTEM, messages: [{ role: 'user', content: JSON.stringify(ask) }] }) });
+    body: JSON.stringify({ model: cfg.mealModel || cfg.model, max_tokens: 600, temperature: 0.7, system: CAPTION_SYSTEM,
+      messages: [{ role: 'user', content: (function () { const im = imageBlocks(b.images); return im.length ? im.concat([{ type: 'text', text: JSON.stringify(ask) }]) : JSON.stringify(ask); })() }] }) });
   if (!r.ok) throw new AskError(502, 'Could not write the caption right now.');
   const j = await r.json();
   const text = (j.content || []).filter((x) => x.type === 'text').map((x) => x.text).join('');
@@ -348,4 +366,4 @@ async function caption(deps, body) {
   return { heading: s(o.heading, 100), caption: s(o.caption, 2000), tags: s(o.tags, 300) };
 }
 
-module.exports = { makeAsks, cleanAsk, cleanPlan, caption, AskError, KINDS, LEAD, CAPTION_SYSTEM };
+module.exports = { makeAsks, cleanAsk, cleanPlan, caption, imageBlocks, AskError, KINDS, LEAD, CAPTION_SYSTEM };
