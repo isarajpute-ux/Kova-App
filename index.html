@@ -8148,6 +8148,28 @@ body.soft-light .kbk-tog{background:rgba(255,255,255,.1)}
 }
 
 </style>
+<style id="p08-wearables">
+/* p28: your own wearable on the Watch screen, and the "What do you wear?" picker.
+   The tiles keep the dark stage behind each drawing in every look. */
+.kw-cap{cursor:pointer}
+.kw-chg{color:var(--acc)}
+#wchDev[role="button"]{cursor:pointer;border-radius:18px}
+#wchDev[role="button"]:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+.kw-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:360px){ .kw-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.kw-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border-radius:16px;cursor:pointer;
+  background:radial-gradient(ellipse 90% 70% at 50% 40%,#141416,#08080A);border:1px solid rgba(255,255,255,.08);font:inherit;color:#FFFFFF}
+.kw-opt svg{width:40px;height:48px}
+.kw-opt span{font-size:11px;line-height:1.2;text-align:center;color:rgba(255,255,255,.86)}
+.kw-opt.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 0 14px var(--acc-glow,rgba(255,255,255,.2))}
+.kw-opt:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kw-how{margin-top:14px;padding:12px 13px;border-radius:16px;border:.5px solid var(--ron-line,rgba(255,255,255,.12))}
+.kw-hn{font-weight:600;font-size:13px;margin-bottom:3px;color:var(--txt,#FFFFFF)}
+/* the name sits under the drawing, not across its strap */
+.wchrow #wchDevName.kw-cap{bottom:-24px!important;font-size:11.5px!important}
+.wchstage:has(.kw-cap) .wchbatt{margin-top:36px}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -12847,7 +12869,11 @@ window.KovaHealth = (function(){
     return min > 0 ? min : null;
   }
 
+  /* p28: several apps can write the same day (the phone counts steps, the
+     watch does the rest); the wearable is the device worth naming */
+  var HAE_WEAR = /watch|oura|whoop|garmin|^connect$|fitbit|pixel|galaxy|samsung|polar|coros|suunto|amazfit|zepp|withings|health mate|ultrahuman|ring|band/i;
   function haeDevice(metrics){
+    var first = '';
     for(var i=0;i<metrics.length;i++){
       var m = metrics[i];
       if(!m || !m.data) continue;
@@ -12855,11 +12881,15 @@ window.KovaHealth = (function(){
         var s = m.data[j];
         if(!s) continue;
         var v = s.source || s.sourceName || s.device || s.Source;
-        if(v) return String(v);
+        if(!v) continue;
+        /* "Isa's Apple Watch|Isa's iPhone" when several wrote one reading */
+        var parts = String(v).split('|');
+        for(var q=0;q<parts.length;q++){ var pt = parts[q].trim(); if(pt && HAE_WEAR.test(pt)) return pt; }
+        first = first || parts[0].trim();
       }
-      if(m.source) return String(m.source);
+      if(m.source){ if(HAE_WEAR.test(m.source)) return String(m.source); first = first || String(m.source); }
     }
-    return '';
+    return first;
   }
 
   function normalizeHAE(payload){
@@ -46295,7 +46325,7 @@ window.KovaScreenTour=(function(){
       ['Morning read','What changed overnight, in one line.','#s-vitals .card.kova'],
       ['Recovery score','How ready your body is today.','#s-vitals .card.card-lg'],
       ['What drives it','Sleep, HRV and resting heart rate behind the score.',up('recoveryGrid')],
-      ['Connect your watch','Link Apple Watch for real readings, not estimates.','#s-vitals .ronrange[data-go="watch"]'],
+      ['Connect your watch','Link your watch, ring or band for real readings, not estimates. Tap its picture there to choose yours.','#s-vitals .ronrange[data-go="watch"]'],
       ['Signals','Anything outside your normal range shows here first.','#symptomCards'],
       ['Stress','How your stress moved through the day.','#s-vitals .card[data-go="stress"]'],
       ['Health & meds','Add conditions and medication for reminders.','#s-vitals .card[data-go="health"]']
@@ -62304,7 +62334,7 @@ window.KovaVDock=(function(){
       ['Sleep and trend','Two weeks of nights: a long dash is a full night, a dot is a night with no data.',q('#s-vitals .kvd-trend'),'vitals',at('today')],
       ['Steadiest and most off','The reading closest to your normal, and the one furthest from it.',function(){ return document.querySelector('#s-vitals .kvd-pair')||document.querySelector('#s-vitals .kvd-empty'); },'vitals',at('signals')],
       ['Every reading','Each signal against your own normal range. Tap one to read it.','#sigBio','vitals',at('signals')],
-      ['Connect your watch','Link Apple Watch for real readings, not estimates.','#s-vitals .ronrange[data-go="watch"]','vitals',at('feeling')],
+      ['Connect your watch','Link your watch, ring or band for real readings, not estimates. Tap its picture there to choose yours.','#s-vitals .ronrange[data-go="watch"]','vitals',at('feeling')],
       ['Heart and stress','Your heart through the day, and when stress peaked.','#s-vitals .card[data-go="stress"]','vitals',at('heart')],
       ['Health and actions','Add conditions and medication for reminders.','#s-vitals .card[data-go="health"]','vitals',at('care')],
       ['Find anything','Tap here and type what you are looking for: a reading, a screen, a task.','#s-vitals .hdr-r [data-kcmd]']
@@ -62707,6 +62737,260 @@ window.KovaUpright=(function(){
   function on(){ build(); lock(); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',on); else on();
   return {standalone:standalone,lock:lock};
+})();
+
+</script>
+<script id="p08-wearables">
+/* KovaWearables (p28) - your own watch, ring or band on the Watch screen.
+
+   The Watch screen drew one of a few rough shapes, and Garmin, Fitbit,
+   Polar and COROS all got the same one. Now each common wearable has its
+   own drawing (Apple Watch, Ultra, Pixel Watch, Galaxy Watch, Garmin,
+   Fitbit, WHOOP, Oura, Ultrahuman, Galaxy Ring, Polar, COROS, Suunto,
+   Amazfit, Withings), picked from the name of the app that sent the data.
+   If nothing has synced yet, or the name says nothing, you choose yours:
+   tap the picture. Each choice says, honestly, how that device's data
+   reaches Kova (some do not share with Apple Health at all).
+   Drawn in the stage's own style: graphite and glass, the accent for the
+   face. The stage is dark in every look, so the drawings are too.      */
+window.KovaWearables=(function(){
+  'use strict';
+  var KEY='kova.wear';
+  var uid=0;
+
+  /* ---------- the drawings (viewBox 0 0 120 144) ---------- */
+  function defs(u){
+    return '<defs>'
+      +'<linearGradient id="kwc'+u+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(92,92,104,.95)"/><stop offset="1" stop-color="rgba(34,34,42,.95)"/></linearGradient>'
+      +'<linearGradient id="kwt'+u+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(134,124,104,.95)"/><stop offset="1" stop-color="rgba(66,60,48,.95)"/></linearGradient>'
+      +'<linearGradient id="kwm'+u+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgba(214,214,224,.95)"/><stop offset=".5" stop-color="rgba(96,96,108,.95)"/><stop offset="1" stop-color="rgba(178,178,190,.95)"/></linearGradient>'
+      +'<linearGradient id="kwb'+u+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.13)"/><stop offset="1" stop-color="rgba(255,255,255,.06)"/></linearGradient>'
+      +'<radialGradient id="kwg'+u+'" cx="50%" cy="32%" r="70%"><stop offset="0" stop-color="rgba(var(--acc-raw,232,96,122),.26)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></radialGradient>'
+      +'</defs>';
+  }
+  var LN='rgba(255,255,255,.30)', DIM='rgba(255,255,255,.12)', ACC='var(--acc)';
+  function strap(u,w,lines){
+    var a=60-w/2, b=60+w/2, s='<path d="M'+a+' 44 Q'+(a-2)+' 12 '+(a+2)+' 2 L'+(b-2)+' 2 Q'+(b+2)+' 12 '+b+' 44Z" fill="url(#kwb'+u+')" stroke="'+LN+'" stroke-width=".9"/>'
+      +'<path d="M'+a+' 100 Q'+(a-2)+' 132 '+(a+2)+' 142 L'+(b-2)+' 142 Q'+(b+2)+' 132 '+b+' 100Z" fill="url(#kwb'+u+')" stroke="'+LN+'" stroke-width=".9"/>';
+    if(lines) for(var y=8;y<42;y+=5) s+='<path d="M'+(a+2)+' '+y+'H'+(b-2)+'M'+(a+2)+' '+(144-y)+'H'+(b-2)+'" stroke="'+DIM+'" stroke-width=".8"/>';
+    return s;
+  }
+  function digital(cx,cy){
+    return '<path d="M'+(cx-18)+' '+(cy)+' Q'+cx+' '+(cy-16)+' '+(cx+18)+' '+cy+'" stroke="'+ACC+'" stroke-width="1.6" fill="none" opacity=".85"/>'
+      +'<rect x="'+(cx-15)+'" y="'+(cy-10)+'" width="30" height="5" rx="2.5" fill="rgba(255,255,255,.66)"/>'
+      +'<rect x="'+(cx-9)+'" y="'+(cy+2)+'" width="18" height="3.5" rx="1.75" fill="rgba(255,255,255,.30)"/>'
+      +'<circle cx="'+cx+'" cy="'+(cy+15)+'" r="2.3" fill="'+ACC+'" opacity=".9"/>';
+  }
+  function squareCase(u,rx,grad){
+    return '<rect x="22" y="38" width="76" height="68" rx="'+(rx-2)+'" fill="rgba(0,0,0,.45)"/>'
+      +'<rect x="20" y="36" width="80" height="72" rx="'+rx+'" fill="url(#'+grad+u+')" stroke="rgba(255,255,255,.32)" stroke-width="1.2"/>'
+      +'<rect x="26" y="42" width="68" height="60" rx="'+(rx-4)+'" fill="rgba(0,0,0,.74)" stroke="rgba(255,255,255,.10)" stroke-width=".7"/>'
+      +'<rect x="28" y="44" width="64" height="56" rx="'+(rx-6)+'" fill="url(#kwg'+u+')"/>';
+  }
+  function roundCase(u,r,grad){
+    return '<circle cx="61" cy="74" r="'+r+'" fill="rgba(0,0,0,.45)"/>'
+      +'<circle cx="60" cy="72" r="'+r+'" fill="url(#'+(grad||'kwc')+u+')" stroke="rgba(255,255,255,.32)" stroke-width="1.2"/>';
+  }
+  function roundScreen(u,r){
+    return '<circle cx="60" cy="72" r="'+r+'" fill="rgba(0,0,0,.76)" stroke="rgba(255,255,255,.10)" stroke-width=".7"/>'
+      +'<circle cx="60" cy="72" r="'+(r-2)+'" fill="url(#kwg'+u+')"/>';
+  }
+  function btn(x,y,h,col){ return '<rect x="'+x+'" y="'+y+'" width="5.5" height="'+(h||11)+'" rx="2.4" fill="'+(col||'rgba(255,255,255,.20)')+'" stroke="rgba(255,255,255,.28)" stroke-width=".7"/>'; }
+  function ticks(r1,r2,n,every){
+    var s='';
+    for(var i=0;i<n;i++){ var a=i/n*Math.PI*2, big=every&&i%every===0, rr=big?r1-2:r1;
+      s+='<line x1="'+(60+Math.sin(a)*rr).toFixed(1)+'" y1="'+(72-Math.cos(a)*rr).toFixed(1)+'" x2="'+(60+Math.sin(a)*r2).toFixed(1)+'" y2="'+(72-Math.cos(a)*r2).toFixed(1)+'" stroke="rgba(255,255,255,'+(big?.55:.25)+')" stroke-width="'+(big?1.4:.8)+'"/>'; }
+    return s;
+  }
+  /* round sport watch: buttons on the left and right, a bezel, data fields */
+  function sport(u,left,right,crown,bezelTicks){
+    var s=strap(u,36)+'<path d="M38 40 L46 34 M82 40 L74 34 M38 104 L46 110 M82 104 L74 110" stroke="'+LN+'" stroke-width="5" stroke-linecap="round"/>';
+    left.forEach(function(y){ s+=btn(14.5,y,10); });
+    right.forEach(function(y){ s+=btn(100,y,10); });
+    if(crown) s+='<rect x="99" y="64" width="8" height="16" rx="3.5" fill="rgba(255,255,255,.24)" stroke="rgba(255,255,255,.34)" stroke-width=".8"/>';
+    s+=roundCase(u,40)+'<circle cx="60" cy="72" r="34" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="5"/>';
+    if(bezelTicks) s+=ticks(39,35,bezelTicks,5);
+    s+=roundScreen(u,31)
+      +'<path d="M36 72 A24 24 0 0 1 84 72" stroke="'+ACC+'" stroke-width="2" fill="none" opacity=".8"/>'
+      +'<rect x="46" y="60" width="28" height="7" rx="3" fill="rgba(255,255,255,.66)"/>'
+      +'<rect x="40" y="74" width="16" height="4" rx="2" fill="rgba(255,255,255,.32)"/><rect x="64" y="74" width="16" height="4" rx="2" fill="rgba(255,255,255,.32)"/>'
+      +'<rect x="50" y="84" width="20" height="4" rx="2" fill="rgba(255,255,255,.24)"/>';
+    return s;
+  }
+  function ring(u,grad,flatTop){
+    var s='<ellipse cx="62" cy="76" rx="40" ry="46" fill="rgba(0,0,0,.4)"/>'
+      +'<path fill-rule="evenodd" d="M60 26 a40 46 0 1 0 0.01 0Z M60 40 a28 33 0 1 0 0.01 0Z" fill="url(#'+grad+u+')" stroke="rgba(255,255,255,.34)" stroke-width="1"/>'
+      +'<ellipse cx="60" cy="73" rx="28" ry="33" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="3"/>'
+      +'<path d="M36 82 Q60 108 84 82" stroke="rgba(255,255,255,.12)" stroke-width="5" fill="none"/>'
+      +'<circle cx="52" cy="100" r="1.8" fill="'+ACC+'" opacity=".9"/><circle cx="60" cy="102" r="1.8" fill="'+ACC+'" opacity=".9"/><circle cx="68" cy="100" r="1.8" fill="'+ACC+'" opacity=".9"/>'
+      +'<path d="M38 48 Q46 34 60 31" stroke="rgba(255,255,255,.55)" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    if(flatTop) s+='<path d="M48 27.5 H72" stroke="rgba(255,255,255,.6)" stroke-width="2.2" stroke-linecap="round"/>';
+    return s;
+  }
+  var DRAW={
+    apple:function(u){ return strap(u,36)+squareCase(u,26,'kwc')+btn(99,54,16)+btn(99.5,78,9)+digital(60,72); },
+    ultra:function(u){ return strap(u,38)+'<path d="M97 52 h6 v22 h-6" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>'+squareCase(u,18,'kwt')+btn(99,56,16)
+      +'<rect x="14.5" y="56" width="6" height="16" rx="2.4" fill="rgba(240,140,60,.9)" stroke="rgba(255,255,255,.25)" stroke-width=".7"/>'+digital(60,72); },
+    pixel:function(u){ return strap(u,30)+'<rect x="96" y="65" width="7" height="14" rx="3.5" fill="rgba(255,255,255,.24)" stroke="rgba(255,255,255,.34)" stroke-width=".8"/>'+roundCase(u,37)+roundScreen(u,34)
+      +'<circle cx="60" cy="72" r="28" fill="none" stroke="'+ACC+'" stroke-width="2.2" stroke-dasharray="120 200" stroke-linecap="round" transform="rotate(-90 60 72)" opacity=".85"/>'
+      +'<rect x="46" y="62" width="28" height="7" rx="3" fill="rgba(255,255,255,.7)"/><rect x="51" y="74" width="18" height="4" rx="2" fill="rgba(255,255,255,.32)"/>'; },
+    galaxy:function(u){ return strap(u,34)+btn(99,56,10)+btn(99,80,10)+roundCase(u,40)+'<circle cx="60" cy="72" r="36" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="6"/>'+ticks(39,34,24,6)+roundScreen(u,30)+digital(60,74); },
+    garmin:function(u){ return sport(u,[50,70,90],[56,86],false,60); },
+    polar:function(u){ return sport(u,[56,86],[56,86],false,0); },
+    coros:function(u){ return sport(u,[],[86],true,0); },
+    suunto:function(u){ return sport(u,[],[50,70,90],false,60); },
+    amazfit:function(u){ return sport(u,[],[56,86],false,0); },
+    withings:function(u){ return strap(u,30)+'<rect x="97" y="66" width="7" height="12" rx="3" fill="rgba(255,255,255,.26)" stroke="rgba(255,255,255,.34)" stroke-width=".8"/>'
+      +roundCase(u,38,'kwm')+'<circle cx="60" cy="72" r="33" fill="rgba(18,18,22,.95)" stroke="rgba(255,255,255,.14)"/>'+ticks(31,28,12,3)
+      +'<rect x="51" y="50" width="18" height="7" rx="3.5" fill="rgba(0,0,0,.9)" stroke="rgba(255,255,255,.18)" stroke-width=".6"/><rect x="54" y="52.5" width="12" height="2" rx="1" fill="'+ACC+'"/>'
+      +'<circle cx="60" cy="88" r="7" fill="none" stroke="rgba(255,255,255,.2)"/><path d="M60 88 L64 84" stroke="'+ACC+'" stroke-width="1.4" stroke-linecap="round"/>'
+      +'<path d="M60 72 L60 52 M60 72 L74 78" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round"/><circle cx="60" cy="72" r="2.4" fill="rgba(255,255,255,.9)"/>'; },
+    fitband:function(u){ return '<rect x="42" y="2" width="36" height="140" rx="16" fill="url(#kwb'+u+')" stroke="'+LN+'" stroke-width=".9"/>'
+      +'<rect x="40" y="36" width="40" height="72" rx="15" fill="url(#kwc'+u+')" stroke="rgba(255,255,255,.32)" stroke-width="1.2"/>'
+      +'<rect x="45" y="43" width="30" height="58" rx="10" fill="rgba(0,0,0,.76)"/><rect x="46" y="44" width="28" height="56" rx="9" fill="url(#kwg'+u+')"/>'
+      +'<rect x="51" y="56" width="18" height="6" rx="3" fill="rgba(255,255,255,.66)"/><rect x="53" y="67" width="14" height="3.5" rx="1.75" fill="rgba(255,255,255,.3)"/>'
+      +'<path d="M50 84 h4 l3 -6 l4 10 l3 -4 h6" stroke="'+ACC+'" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'; },
+    fitsq:function(u){ return strap(u,34)+btn(14.5,64,14)+squareCase(u,22,'kwc')+digital(60,72); },
+    whoop:function(u){ return strap(u,46,true)
+      +'<rect x="30" y="44" width="60" height="56" rx="15" fill="rgba(0,0,0,.45)" transform="translate(2 2)"/>'
+      +'<rect x="30" y="44" width="60" height="56" rx="15" fill="url(#kwc'+u+')" stroke="rgba(255,255,255,.30)" stroke-width="1.1"/>'
+      +'<rect x="36" y="50" width="48" height="44" rx="11" fill="rgba(0,0,0,.25)" stroke="rgba(255,255,255,.08)" stroke-width=".7"/>'
+      +'<path d="M46 72 H74" stroke="rgba(255,255,255,.18)" stroke-width="1.4" stroke-linecap="round"/><circle cx="60" cy="72" r="2.4" fill="'+ACC+'" opacity=".9"/>'; },
+    oura:function(u){ return ring(u,'kwm',false); },
+    uhring:function(u){ return ring(u,'kwc',false); },
+    gring:function(u){ return ring(u,'kwt',false); },
+    phone:function(u){ return '<rect x="34" y="18" width="52" height="108" rx="12" fill="url(#kwc'+u+')" stroke="rgba(255,255,255,.30)" stroke-width="1.2"/>'
+      +'<rect x="38" y="24" width="44" height="96" rx="9" fill="rgba(0,0,0,.74)"/><rect x="38" y="24" width="44" height="96" rx="9" fill="url(#kwg'+u+')"/>'
+      +'<rect x="52" y="27" width="16" height="3" rx="1.5" fill="rgba(255,255,255,.25)"/>'+digital(60,70); },
+    unknown:function(u){ return '<g opacity=".55">'+strap(u,36)+squareCase(u,26,'kwc')+'</g><path d="M54 66 a6 6 0 1 1 8 5.6 c-1.6 .7 -2 1.6 -2 3.4" stroke="rgba(255,255,255,.6)" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="60" cy="82" r="1.6" fill="rgba(255,255,255,.6)"/>'; }
+  };
+  function svg(id){ var u='k'+(++uid); return defs(u)+(DRAW[id]||DRAW.unknown)(u); }
+
+  /* ---------- which device, and how its data reaches Kova ---------- */
+  var HEALTH='On iPhone, Kova reads Apple Health.';
+  var ANDROID='It works with Android phones, where the Kova app reads Health Connect.';
+  var LIST=[
+    {id:'apple',   n:'Apple Watch',        how:'Writes straight into Apple Health on your iPhone.'},
+    {id:'ultra',   n:'Apple Watch Ultra',  how:'Writes straight into Apple Health on your iPhone.'},
+    {id:'oura',    n:'Oura Ring',          how:'Turn on Apple Health in the Oura app’s settings.'},
+    {id:'whoop',   n:'WHOOP',              how:'Turn on Apple Health in the WHOOP app. WHOOP does not share HRV there.'},
+    {id:'garmin',  n:'Garmin',             how:'In Garmin Connect, turn on Apple Health under connected apps.'},
+    {id:'fitband', n:'Fitbit',             how:'Fitbit does not share with Apple Health. On Android, the Fitbit app shares through Health Connect.'},
+    {id:'pixel',   n:'Pixel Watch',        how:'Pixel Watch needs an Android phone. '+ANDROID},
+    {id:'galaxy',  n:'Galaxy Watch',       how:'Galaxy Watch needs an Android phone. '+ANDROID},
+    {id:'gring',   n:'Galaxy Ring',        how:'Galaxy Ring needs an Android phone. '+ANDROID},
+    {id:'uhring',  n:'Ultrahuman Ring',    how:'Turn on Apple Health in the Ultrahuman app.'},
+    {id:'polar',   n:'Polar',              how:'Turn on Apple Health in the Polar Flow app.'},
+    {id:'coros',   n:'COROS',              how:'Turn on Apple Health in the COROS app.'},
+    {id:'suunto',  n:'Suunto',             how:'Turn on Apple Health in the Suunto app.'},
+    {id:'amazfit', n:'Amazfit',            how:'Turn on Apple Health in the Zepp app.'},
+    {id:'withings',n:'Withings',           how:'Turn on Apple Health in the Withings app.'},
+    {id:'phone',   n:'Just my iPhone',     how:'Your iPhone counts steps and walking on its own. Sleep and heart readings need a watch, ring or band.'}
+  ];
+  function byId(id){ for(var i=0;i<LIST.length;i++) if(LIST[i].id===id) return LIST[i]; return null; }
+  /* from the name of the app that wrote the data ("Isa's Apple Watch", "WHOOP", Garmin's "Connect") */
+  function detect(raw){
+    var t=String(raw||'').toLowerCase().trim();
+    if(!t) return null;
+    if(/watch ultra|\bultra\b.*watch/.test(t)) return 'ultra';
+    if(/ultrahuman/.test(t)) return 'uhring';
+    if(/galaxy ring/.test(t)) return 'gring';
+    if(/oura/.test(t)) return 'oura';
+    if(/whoop/.test(t)) return 'whoop';
+    if(/pixel/.test(t)) return 'pixel';
+    if(/galaxy|samsung/.test(t)) return 'galaxy';
+    if(/versa|sense/.test(t)) return 'fitsq';
+    if(/fitbit|charge|inspire|luxe/.test(t)) return 'fitband';
+    if(/garmin|fenix|fēnix|forerunner|venu|epix|instinct|vivoactive|^connect$/.test(t)) return 'garmin';
+    if(/polar/.test(t)) return 'polar';
+    if(/coros/.test(t)) return 'coros';
+    if(/suunto/.test(t)) return 'suunto';
+    if(/amazfit|zepp/.test(t)) return 'amazfit';
+    if(/withings|health mate|scanwatch/.test(t)) return 'withings';
+    if(/watch/.test(t)) return 'apple';
+    if(/iphone/.test(t)) return 'phone';
+    return null;
+  }
+  function picked(){
+    var v=null;
+    try{ v=window.KP&&KP.get('wearable'); }catch(e){}
+    if(!v) try{ v=localStorage.getItem(KEY); }catch(e){}
+    return byId(v)?v:null;
+  }
+  function pick(id){
+    if(!byId(id)) return;
+    try{ localStorage.setItem(KEY,id); }catch(e){}
+    try{ if(window.KP) KP.set('wearable',id); }catch(e){}
+    paint();
+  }
+  /* what to show: the synced source when it names a device, else your choice */
+  function current(){
+    var raw=''; try{ raw=window.KovaHealth?String(KovaHealth.device().raw||''):''; }catch(e){}
+    var d=detect(raw);
+    if(d) return {id:d, label:raw||byId(d).n, from:'sync'};
+    var p=picked();
+    if(p) return {id:p, label:byId(p).n, from:'pick'};
+    return {id:'unknown', label:'', from:''};
+  }
+
+  function paint(){
+    var s=document.getElementById('wchDev'); if(!s) return;
+    var c=current();
+    s.innerHTML=svg(c.id);
+    s.setAttribute('data-family',c.id);
+    s.setAttribute('role','button'); s.setAttribute('tabindex','0');
+    s.setAttribute('aria-label',(c.label?c.label+'. ':'')+'Choose your watch, ring or band');
+    var cap=document.getElementById('wchDevName');
+    if(cap){
+      cap.innerHTML=c.label?esc(c.label)+' <span class="kw-chg">· Change</span>':'Tap to choose your watch, ring or band';
+      cap.style.opacity=c.label?'.8':'.6';
+      cap.classList.add('kw-cap');
+    }
+  }
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]; }); }
+
+  function sheet(){
+    if(!window.openSheet) return;
+    var c=current();
+    openSheet('<div class="grab"></div><div class="kw-sheet"><div class="title-s" style="font-size:19px;margin-bottom:3px">What do you wear?</div>'
+      +'<div class="sub" style="line-height:1.5;margin-bottom:12px">'+HEALTH+' '+(c.from==='sync'?'Kova saw <b>'+esc(c.label)+'</b> in your synced data, so that one shows; your choice is used when the data does not say.':'Pick yours and the Watch screen shows it.')+'</div>'
+      +'<div class="kw-grid">'+LIST.map(function(x){
+        return '<button type="button" class="kw-opt'+(x.id===c.id?' on':'')+'" data-kw="'+x.id+'" aria-pressed="'+(x.id===c.id)+'">'
+          +'<svg viewBox="0 0 120 144" aria-hidden="true">'+svg(x.id)+'</svg><span>'+esc(x.n)+'</span></button>';
+      }).join('')+'</div>'
+      +'<div class="kw-how" id="kwHow">'+howHtml(c.id)+'</div></div>');
+    setTimeout(function(){
+      var g=document.querySelector('.sheet .kw-grid'); if(!g) return;
+      g.onclick=function(e){
+        var b=e.target.closest('[data-kw]'); if(!b) return;
+        pick(b.getAttribute('data-kw'));
+        g.querySelectorAll('.kw-opt').forEach(function(o){ var on=o===b; o.classList.toggle('on',on); o.setAttribute('aria-pressed',on); });
+        var h=document.getElementById('kwHow'); if(h) h.innerHTML=howHtml(b.getAttribute('data-kw'));
+      };
+    },30);
+  }
+  function howHtml(id){
+    var x=byId(id); if(!x) return '<div class="sub">Tap the one you wear to see how its readings reach Kova.</div>';
+    return '<div class="kw-hn">'+esc(x.n)+'</div><div class="sub" style="line-height:1.5">'+esc(x.how)+'</div>';
+  }
+
+  function wire(){
+    var s=document.getElementById('wchDev'), cap=document.getElementById('wchDevName');
+    [s,cap].forEach(function(el){
+      if(!el||el.__kw) return; el.__kw=1;
+      el.addEventListener('click',sheet);
+      el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sheet(); } });
+    });
+    if(cap){ cap.style.pointerEvents='auto'; cap.style.cursor='pointer'; }
+  }
+  function start(){
+    /* the inline painter still answers first; this one draws over it */
+    if(window.KovaDevice) KovaDevice.paint=paint;
+    window.addEventListener('kova:health',function(){ setTimeout(paint,0); });
+    wire(); paint();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+  return {detect:detect,current:current,pick:pick,picked:picked,paint:paint,sheet:sheet,list:LIST,draw:svg,ids:Object.keys(DRAW)};
 })();
 
 </script>

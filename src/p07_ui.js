@@ -340,7 +340,7 @@ window.KovaScreenTour=(function(){
       ['Morning read','What changed overnight, in one line.','#s-vitals .card.kova'],
       ['Recovery score','How ready your body is today.','#s-vitals .card.card-lg'],
       ['What drives it','Sleep, HRV and resting heart rate behind the score.',up('recoveryGrid')],
-      ['Connect your watch','Link Apple Watch for real readings, not estimates.','#s-vitals .ronrange[data-go="watch"]'],
+      ['Connect your watch','Link your watch, ring or band for real readings, not estimates. Tap its picture there to choose yours.','#s-vitals .ronrange[data-go="watch"]'],
       ['Signals','Anything outside your normal range shows here first.','#symptomCards'],
       ['Stress','How your stress moved through the day.','#s-vitals .card[data-go="stress"]'],
       ['Health & meds','Add conditions and medication for reminders.','#s-vitals .card[data-go="health"]']

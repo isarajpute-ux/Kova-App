@@ -381,7 +381,7 @@ window.KovaVDock=(function(){
       ['Sleep and trend','Two weeks of nights: a long dash is a full night, a dot is a night with no data.',q('#s-vitals .kvd-trend'),'vitals',at('today')],
       ['Steadiest and most off','The reading closest to your normal, and the one furthest from it.',function(){ return document.querySelector('#s-vitals .kvd-pair')||document.querySelector('#s-vitals .kvd-empty'); },'vitals',at('signals')],
       ['Every reading','Each signal against your own normal range. Tap one to read it.','#sigBio','vitals',at('signals')],
-      ['Connect your watch','Link Apple Watch for real readings, not estimates.','#s-vitals .ronrange[data-go="watch"]','vitals',at('feeling')],
+      ['Connect your watch','Link your watch, ring or band for real readings, not estimates. Tap its picture there to choose yours.','#s-vitals .ronrange[data-go="watch"]','vitals',at('feeling')],
       ['Heart and stress','Your heart through the day, and when stress peaked.','#s-vitals .card[data-go="stress"]','vitals',at('heart')],
       ['Health and actions','Add conditions and medication for reminders.','#s-vitals .card[data-go="health"]','vitals',at('care')],
       ['Find anything','Tap here and type what you are looking for: a reading, a screen, a task.','#s-vitals .hdr-r [data-kcmd]']

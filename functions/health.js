@@ -90,16 +90,25 @@ function haeSleepNight(data) {
   return min > 0 ? min : null;
 }
 
+/* several apps can write the same day (the phone counts steps, the watch
+   does the rest); the wearable is the device worth naming */
+const HAE_WEAR = /watch|oura|whoop|garmin|^connect$|fitbit|pixel|galaxy|samsung|polar|coros|suunto|amazfit|zepp|withings|health mate|ultrahuman|ring|band/i;
 function haeDevice(metrics) {
+  let first = '';
   for (const m of metrics) {
     if (!m || !m.data) continue;
     for (const s of m.data) {
-      const v = s && (s.source || s.sourceName || s.device || s.Source);
-      if (v) return String(v);
+      let v = s && (s.source || s.sourceName || s.device || s.Source);
+      if (!v) continue;
+      /* "Isa's Apple Watch|Isa's iPhone" when several wrote one reading */
+      const parts = String(v).split('|').map((x) => x.trim());
+      const w = parts.find((x) => x && HAE_WEAR.test(x));
+      if (w) return w;
+      first = first || parts[0];
     }
-    if (m.source) return String(m.source);
+    if (m.source) { if (HAE_WEAR.test(m.source)) return String(m.source); first = first || String(m.source); }
   }
-  return '';
+  return first;
 }
 
 function normalizeHAE(payload) {

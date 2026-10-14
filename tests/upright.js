@@ -37,7 +37,7 @@ function boot(standalone) {
   const css = fs.readFileSync(__dirname + '/../src/p08_upright.css', 'utf8');
   ck('it only covers a phone on its side (short, touch-only, landscape), never a tablet or computer', /@media \(orientation:landscape\) and \(max-height:500px\) and \(pointer:coarse\)/.test(css) && /^\.k-upright\{display:none\}/m.test(css));
   ck('it reads well in light glass (dark words on the light page)', /body\.light-mode \.k-upright\{background:#E7E5E0;color:#1C1A17\}/.test(css));
-  ck('it is in the app and loads after the first screen', /<script id="p08-upright">/.test(html) && /'p08-upright'\]/.test(fs.readFileSync(__dirname + '/../build/site.mjs', 'utf8')));
+  ck('it is in the app and loads after the first screen', /<script id="p08-upright">/.test(html) && /const LAZY = \[[^\]]*'p08-upright'/.test(fs.readFileSync(__dirname + '/../build/site.mjs', 'utf8')));
   let fail = 0;
   for (const [n, ok] of R) { console.log((ok ? 'ok   ' : 'FAIL ') + n); if (!ok) fail++; }
   console.log('\n' + (R.length - fail) + '/' + R.length + ' passed');
