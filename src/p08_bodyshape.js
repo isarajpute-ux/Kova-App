@@ -98,12 +98,14 @@ window.KovaBodyShape=(function(){
     return out.join(' ').replace(/ ([MLCZ]) /g,' $1').replace(/^([MLCZ]) /,'$1');
   }
 
-  /* p30c: hair that reads as hair, not a hood or a wig: in front a cap with
-     a side-swept fringe and locks to the jaw, the face left clear; behind,
-     the back of the head and a ponytail down to the shoulder blades. Drawn
-     over the head outline, a little brighter than the skin. */
-  var HAIR_FRONT='M100,3 C86,3 77,12 77,27 C77,39 78,50 80,60 C81,64 84,64 85,60 C84,50 84,40 85,32 C90,26 96,22 104,20 C109,22 113,26 115,31 C116,40 116,50 115,60 C116,64 119,64 120,60 C122,50 123,39 123,27 C123,12 114,3 100,3 Z';
-  var HAIR_BACK='M100,3 C85,3 77,12 77,28 C77,42 80,52 86,58 C91,61 95,61 96,60 C94,72 94,86 97,98 C98,101 102,101 103,98 C106,86 106,72 104,60 C105,61 109,61 114,58 C120,52 123,42 123,28 C123,12 115,3 100,3 Z';
+  /* p30c: hair that reads as hair, not a hood or a wig, drawn over the head
+     outline and a little brighter than the skin. */
+  /* p30d: long hair, past the shoulders. In front it falls from a side
+     fringe down both sides of the neck and over the shoulders to the upper
+     chest, the face left clear; behind, it covers the back of the head and
+     falls to between the shoulder blades. */
+  var HAIR_FRONT='M100,3 C86,3 77,12 77,27 C76,45 74,62 76,80 C78,96 82,108 86,121 C88,124 91,123 92,120 C91,105 90,91 90,79 C89,69 86,62 85,56 C84,48 84,40 85,32 C90,26 96,22 104,20 C109,22 113,26 115,31 C116,40 116,48 115,56 C114,62 111,69 110,79 C110,91 109,105 108,120 C109,123 112,124 114,121 C118,108 122,96 124,80 C126,62 124,45 123,27 C123,12 114,3 100,3 Z';
+  var HAIR_BACK='M100,3 C85,3 77,12 77,28 C77,44 75,60 77,78 C79,96 81,110 83,123 C92,129 108,129 117,123 C119,110 121,96 123,78 C125,60 123,44 123,28 C123,12 115,3 100,3 Z';
 
   function apply(){
     var svg=document.getElementById('bodySvg'); if(!svg) return null;
