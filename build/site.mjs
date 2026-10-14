@@ -186,6 +186,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   writeFileSync(join(out, 'index.html'), page);
   for (const [f, t] of Object.entries(files)) writeFileSync(join(out, f), t);
   for (const f of FILES) cpSync(join(root, f), join(out, f));
+  /* p28: the recipe photos, kept in Kova instead of loaded from Unsplash */
+  cpSync(join(root, 'food'), join(out, 'food'), { recursive: true });
   /* the booking page talks to the same server as the app */
   if (api) writeFileSync(join(out, 'book.html'), readFileSync(join(out, 'book.html'), 'utf8').replace("var API=(window.KOVA_API||'/api')", 'var API=(' + JSON.stringify(api) + ')'));
   /* the split files are part of the install, so Work OS opens offline */

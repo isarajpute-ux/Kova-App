@@ -14,6 +14,8 @@ const FILES = ['index.html', 'privacy.html', 'terms.html', 'refunds.html', 'cook
 
 rmSync(www, { recursive: true, force: true });
 mkdirSync(www, { recursive: true });
+/* p28: the recipe photos (a folder) */
+cpSync(join(here, '..', '..', 'food'), join(www, 'food'), { recursive: true });
 for (const f of FILES) {
   const src = join(root, f);
   if (!existsSync(src)) { console.error('missing ' + f); process.exit(1); }

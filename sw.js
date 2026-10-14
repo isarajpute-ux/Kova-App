@@ -107,15 +107,16 @@ self.addEventListener('fetch', function(e){
     return;
   }
 
-  /* Food and recipe photos: fetched with CORS so a real copy can be kept,
-     served from that copy next time and offline; offline with no copy, a
-     plain placeholder instead of a broken image. */
-  if (/^https:\/\/images\.unsplash\.com\//.test(url)) {
+  /* Food and recipe photos (p28: Kova's own copies in /food/, no longer
+     Unsplash's): kept after the first look, served from that copy next time
+     and offline; offline with no copy, a plain placeholder instead of a
+     broken image. */
+  if (/\/food\/photo-[0-9a-f-]+-(s400|s800|full)\.webp$/.test(new URL(url).pathname)) {
     e.respondWith(
       caches.open(PHOTOS).then(function(c){
         return c.match(url).then(function(hit){
           if (hit) return hit;
-          return fetch(url, { mode: 'cors', credentials: 'omit' }).then(function(res){
+          return fetch(req).then(function(res){
             if (res && res.ok) {
               c.put(url, res.clone());
               c.keys().then(function(ks){ if (ks.length > 80) c.delete(ks[0]); });
