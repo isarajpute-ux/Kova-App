@@ -38,7 +38,7 @@ const LAZY = ['p08-crew', 'p08-traction', 'p08-impact', 'p08-noise', 'p08-legal'
 /* of those, the ones whose styles only matter once their own script has
    drawn something: the loader adds their stylesheet with the scripts,
    after the first screen, instead of a <link> fetched during it */
-export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen', 'p08-formcues', 'p08-upright', 'p08-wearables', 'p08-vtaps', 'p08-formai', 'p08-goal', 'p08-look', 'p08-checkin', 'p08-goalplus'];
+export const LATE_CSS = ['p08-body', 'p08-signin', 'p08-plans', 'p08-asks', 'p08-flow', 'p08-vdock', 'p08-booking', 'p08-recap', 'p08-listen', 'p08-formcues', 'p08-upright', 'p08-wearables', 'p08-vtaps', 'p08-formai', 'p08-goal', 'p08-look', 'p08-checkin', 'p08-goalplus', 'p08-bodyshape'];
 /* Work OS and the study tools: code that only touches these loads later */
 export const WORK = ('work workcompose workstudio workspace workinbound workdiag workquiz learn accountability cards notebooks notebook '
   + 'worktoday worktasks workitem workprojects workgoals workprofile workactivity workintegrations workteam workauto '

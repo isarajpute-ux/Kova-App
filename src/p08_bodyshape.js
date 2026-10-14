@@ -12,8 +12,14 @@
    The figure is reshaped, not redrawn: every point of the original paths
    is moved sideways by a smooth amount that depends on its height (head,
    shoulders, chest, waist, hips, thighs, calves) and on whether it is on
-   the arm or the trunk. Each muscle keeps its own shape, so tapping a
-   muscle works exactly as before.
+   the arm, the trunk or a leg. Each muscle keeps its own shape, so tapping
+   a muscle works exactly as before.
+   p30b (the owner: "too big, like a jacked bodybuilder; slim and defined;
+   the muscles inside the leg outline"): every figure, the default too, is
+   a slim, fit build. Each leg is slimmed around its own centre (so there
+   is a gap between them, not one wide block), hips and glutes stay modest,
+   and the knee, shin, calf and foot shapes - which sat 10 to 15 px outside
+   the leg outline in the original drawing - are fitted inside it.
    ===================================================================== */
 window.KovaBodyShape=(function(){
   'use strict';
@@ -42,23 +48,50 @@ window.KovaBodyShape=(function(){
     return {f:f==null?0:f, known:f!=null, bf:bf, b:b, how:how, kg:kg};
   }
 
-  /* how much wider (>1) or narrower (<1) the trunk is at height y */
+  /* the original leg outline (right leg; the left mirrors it): inner and
+     outer edge, as distance from the centre line, by height */
+  var LI=[[240,0],[296,0],[316,1],[334,2],[350,3],[364,4],[378,5],[392,6],[416,6],[428,4],[440,5],[448,6]];
+  var LO=[[232,52],[262,54],[278,52],[296,50],[312,47],[326,44],[338,41],[346,37],[354,35],[368,37],[382,38],[396,36],[410,34],[422,28],[430,24],[437,21],[444,24],[448,12]];
+  /* where the drawn muscles sit by height (they drift outward below the thigh) */
+  var MI=[[300,5],[330,13],[345,24],[360,25],[390,24],[420,15],[448,14]];
+  var MO=[[300,50],[330,47],[360,47],[390,48],[420,46],[448,46]];
+  function smooth(a,b,y){ var t=clamp((y-a)/(b-a),0,1); return t*t*(3-2*t); }
+  /* fit a muscle point inside the leg outline (below the thigh) */
+  function fit(x,y){
+    if(y<296) return x;
+    var w=smooth(296,322,y), dx=x-100, s=dx<0?-1:1, a=Math.abs(dx);
+    var mi=lerp(MI,y), mo=lerp(MO,y), li=lerp(LI,y)+2.5, lo=lerp(LO,y)-2.5;
+    var u=clamp((a-mi)/Math.max(1,mo-mi),-0.05,1.05), na=li+u*(lo-li);
+    return 100+s*(a+w*(na-a));
+  }
+
+  /* the build. f: 1 female, 0 male. b: body fat against an average build
+     (0), negative leaner, positive fuller. Trunk: scaled from the centre
+     line; legs: each around its own centre; arms: around their own line. */
   function kt(y,f,b){
-    var K=[[60,1],[84,1-0.16*f+0.03*b],[140,1-0.12*f+0.06*b],[199,1-0.16*f+0.24*b],[240,1+0.10*f+0.13*b],[300,1+0.06*f+0.11*b],[360,1-0.04*f+0.05*b],[420,1-0.04*f],[450,1]];
+    var K=[[60,1],[84,0.94-0.10*f+0.03*b],[140,0.95-0.08*f+0.05*b],[199,0.96-0.12*f+0.24*b],[232,0.95+0.02*f+0.12*b],[262,0.95+0.02*f+0.12*b],[450,1]];
     return lerp(K,y);
   }
+  function kl(y,f,b){ return lerp([[240,0.80-0.02*f+0.18*b],[330,0.80-0.02*f+0.16*b],[360,0.86+0.08*b],[420,0.90+0.06*b],[450,0.96]],y); }
   function pt(x,y,P){
     if(y<62) return [x,y];
     var dx=x-100, s=dx<0?-1:1, a=Math.abs(dx), k=kt(y,P.f,P.b), Ty=lerp(T,y);
-    if(!(y>80&&y<268&&a>Ty+3)) return [100+dx*k,y];
-    var Ay=lerp(A,y), ka=1-0.16*P.f+0.15*P.b;
-    return [100+s*(Ay+Ty*(k-1)+(a-Ay)*ka),y];
+    if(y>80&&y<268&&a>Ty+3){
+      var Ay=lerp(A,y), ka=0.88-0.08*P.f+0.15*P.b;
+      return [100+s*(Ay+Ty*(k-1)+(a-Ay)*ka),y];
+    }
+    var trunk=100+dx*k;
+    if(y<224||a<0.5) return [trunk,y];
+    /* a leg point: around the leg's own centre, which follows the hips */
+    var li=lerp(LI,y), lo=lerp(LO,y), lc=(li+lo)/2, kh=kt(Math.min(y,262),P.f,P.b);
+    var leg=100+s*(lc*kh+(a-lc)*kl(y,P.f,P.b)), w=smooth(224,256,y);
+    return [trunk+(leg-trunk)*w,y];
   }
-  function warp(d,P){
+  function warp(d,P,isMuscle){
     var out=[], nums=[];
     String(d).replace(/([MLCZ])|(-?\d*\.?\d+)/g,function(m0,c,n){ if(c){ flush(); out.push(c); } else nums.push(+n); return m0; });
     flush();
-    function flush(){ for(var i=0;i+1<nums.length;i+=2){ var p=pt(nums[i],nums[i+1],P); out.push((Math.round(p[0]*10)/10)+','+(Math.round(p[1]*10)/10)); } nums=[]; }
+    function flush(){ for(var i=0;i+1<nums.length;i+=2){ var x=isMuscle?fit(nums[i],nums[i+1]):nums[i]; var p=pt(x,nums[i+1],P); out.push((Math.round(p[0]*10)/10)+','+(Math.round(p[1]*10)/10)); } nums=[]; }
     return out.join(' ').replace(/ ([MLCZ]) /g,' $1').replace(/^([MLCZ]) /,'$1');
   }
 
@@ -68,11 +101,14 @@ window.KovaBodyShape=(function(){
 
   function apply(){
     var svg=document.getElementById('bodySvg'); if(!svg) return null;
-    var P=profile(), on=P.f===1||Math.abs(P.b)>0.05;
+    var P=profile();
+    var figs=svg.querySelectorAll(':scope > g');
     svg.querySelectorAll('path').forEach(function(p){
       if(p.hasAttribute('data-hair')) return;
       var d0=p.getAttribute('data-d0'); if(!d0){ d0=p.getAttribute('d'); if(!d0) return; p.setAttribute('data-d0',d0); }
-      p.setAttribute('d',on?warp(d0,P):d0);
+      var g=p.closest('g'); while(g&&g.parentNode!==svg) g=g.parentNode.closest('g');
+      var outline=g&&g.querySelector('path:not([data-hair])')===p;
+      p.setAttribute('d',warp(d0,P,!outline));
     });
     svg.querySelectorAll('[data-hair]').forEach(function(h){ h.remove(); });
     if(P.f===1){

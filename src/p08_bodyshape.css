@@ -1,0 +1,7 @@
+/* p30b: the body map's muscles are outlined clearly enough to read as
+   defined (they were barely visible), in every theme. The highlight colours
+   for a picked muscle set their own stroke and are untouched. */
+#bodySvg .m[stroke="rgba(242,236,240,.16)"]{stroke:rgba(242,236,240,.34)}
+#bodySvg g[stroke="rgba(255,255,255,.13)"]{stroke:rgba(255,255,255,.24)}
+body.light-mode #bodySvg .m[stroke="rgba(242,236,240,.16)"]{stroke:rgba(18,22,28,.34)}
+body.light-mode #bodySvg g[stroke="rgba(255,255,255,.13)"]{stroke:rgba(18,22,28,.26)}

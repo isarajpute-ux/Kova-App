@@ -30,7 +30,7 @@ const num = (d) => (String(d).match(/-?\d*\.?\d+/g) || []).map(Number);
   const manShoulder = widthAt(80, 90), manWaist = widthAt(195, 205), manHip = widthAt(225, 240);
   ck('an average man: about 20% body fat from height, weight and age, close to the original figure', Math.round(man.bf) === 20 && Math.abs(manWaist - 36) < 2 && !svg.querySelector('[data-hair]'));
   const woman = set({ sex: 'f', kg: 56, hcm: 168, age: 27 });
-  ck('a woman: narrower shoulders, a smaller waist, wider hips, and hair', widthAt(80, 90) < manShoulder - 4 && widthAt(195, 205) < manWaist && widthAt(225, 240) > manHip * 0.97 && svg.querySelectorAll('[data-hair]').length === 2);
+  ck('a woman: narrower shoulders, a smaller waist, a curvier waist-to-hip line, hips no bigger than his, and hair', widthAt(80, 90) < manShoulder - 4 && widthAt(195, 205) < manWaist && widthAt(195, 205) / widthAt(225, 240) < manWaist / manHip - 0.08 && widthAt(225, 240) <= manHip + 1 && svg.querySelectorAll('[data-hair]').length === 2);
   const lean = widthAt(195, 205);
   set({ sex: 'f', kg: 95, hcm: 163, age: 40 });
   ck('a heavier build has a fuller waist', widthAt(195, 205) > lean + 6);
@@ -46,7 +46,16 @@ const num = (d) => (String(d).match(/-?\d*\.?\d+/g) || []).map(Number);
   ck('body fat you entered is used instead of the estimate', Math.round(set({ sex: 'f', kg: 60, hcm: 165, age: 30, bf: 22 }).bf) === 22 && /the body fat you entered/.test(doc.getElementById('bodyShapeNote').textContent));
   w.KP.set('maint', null); w.KP.set('wlog', []); w.KP.set('onboard', null);
   B.apply();
-  ck('with nothing known, the original figure, and it says what to add', outline().getAttribute('d') === d0 && /Add your height and weight/.test(doc.getElementById('bodyShapeNote').textContent));
+  ck('with nothing known: a slim, fit figure (not the bodybuilder it was), and it says what to add', outline().getAttribute('d') !== outline().getAttribute('data-d0') && /Add your height and weight/.test(doc.getElementById('bodyShapeNote').textContent));
+  /* the owner: the muscles must sit inside the leg outline (the original
+     knee, shin, calf and foot shapes stuck 10-15 px out of it) */
+  const out = (sel) => { const o = []; svg.querySelectorAll(sel).forEach((g) => { const ol = g.querySelector('path:not([data-hair])'); const op = num(ol.getAttribute('d')); const P = []; for (let i = 0; i + 1 < op.length; i += 2) P.push([Math.abs(op[i] - 100), op[i + 1]]);
+      g.querySelectorAll('.m').forEach((m) => { if (!/knee|shin|calf|foot/.test(m.id)) return; const n = num(m.getAttribute('d')); for (let i = 0; i + 1 < n.length; i += 2) { const a = Math.abs(n[i] - 100), y = n[i + 1]; const edge = Math.max(...P.filter((q) => Math.abs(q[1] - y) <= 12 && q[1] > 300).map((q) => q[0])); if (a > edge + 1) o.push([m.id, Math.round(a), Math.round(edge), Math.round(y)]); } }); }); return o; };
+  const stray = out(':scope > g');
+  ck('every knee, shin, calf and foot shape sits inside the leg outline', !stray.length);
+  if (stray.length) console.log(stray.slice(0, 5));
+  const gapAt = (y) => Math.min(...pts().filter((p) => Math.abs(p[1] - y) < 14 && p[1] > 300).map((p) => p[0]));
+  ck('the legs are two legs with a gap between them, not one block', gapAt(330) >= 3);
   ck('no page errors', !errors.filter((e) => !/Not implemented/.test(e)).length);
   if (errors.length) console.log(errors.slice(0, 3));
   let fail = 0; for (const [n, ok] of R) { console.log((ok ? 'PASS ' : 'FAIL ') + n); if (!ok) fail++; }
