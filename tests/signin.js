@@ -68,10 +68,10 @@ function boot() {
   ck('no password: it asks for it, nothing is sent', /Type your password/.test(msg()) && calls.length === 0);
   type('kova-password', 'wrongpass1');
   $('kova-auth-go').click(); await wait(20);
-  ck('a wrong password names the exact address and offers both ways forward', /does not match an account for isa\.ratu@gmail\.com/.test(msg())
-    && [...$('kova-auth-err').querySelectorAll('button')].map((b) => b.textContent).join('|') === 'Reset password|New here? Create an account');
+  ck('a wrong password names the exact address, says a Google-made account has no password, and offers Google, reset and create', /does not match an account for isa\.ratu@gmail\.com/.test(msg()) && /made your account with Google/.test(msg())
+    && [...$('kova-auth-err').querySelectorAll('button')].map((b) => b.textContent).join('|') === 'Continue with Google|Reset password|New here? Create an account');
   ck('it signed in with exactly that address', calls[0][0] === 'in' && calls[0][1] === 'isa.ratu@gmail.com');
-  $('kova-auth-err').querySelectorAll('button')[1].click(); await wait(5);
+  $('kova-auth-err').querySelectorAll('button')[2].click(); await wait(5);
   ck('"Create an account" switches to that tab and keeps the email', /Create your account/.test($('ksiH').textContent) && $('kova-email').value === 'isa.ratu@gmail.com' && !!$('kova-password2'));
 
   /* create account */

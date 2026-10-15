@@ -3184,10 +3184,13 @@ window.KOVA_RC = window.KOVA_RC || { web: '', ios: '', android: '', entitlement:
 
 window.KOVA_FB_CONFIG = {
   apiKey: "AIzaSyDJYGzllOsNlKu5utIaZ93cJxeLKjo64mk",
-  /* Google sign-in comes back to this site itself (vercel.json passes
-     /__/auth to Firebase). Coming back to firebaseapp.com instead is what
-     Safari blocks, which left people signed out on the home screen. */
-  authDomain: /^kovactive\.vercel\.app$/.test(location.hostname) ? location.hostname : "kova-ee9d5.firebaseapp.com",
+  /* Google sign-in can come back to this site itself (vercel.json passes
+     /__/auth to Firebase), which Safari handles better. It is off until
+     https://kovactive.vercel.app/__/auth/handler is an authorised redirect
+     URI on the Google OAuth client 861199831440-ecaq8jll...: switched on
+     before that, Google refused with redirect_uri_mismatch. Set
+     KOVA_AUTH_HERE to true once it is. */
+  authDomain: (window.KOVA_AUTH_HERE && /^kovactive\.vercel\.app$/.test(location.hostname)) ? location.hostname : "kova-ee9d5.firebaseapp.com",
   databaseURL: "https://kova-ee9d5-default-rtdb.firebaseio.com",
   projectId: "kova-ee9d5",
   storageBucket: "kova-ee9d5.firebasestorage.app",
@@ -3629,8 +3632,8 @@ window.KovaCloudAuth = (function(){
           var c = (e && e.code) || '';
           /* Firebase no longer says whether the account exists, so offer both ways forward */
           if (/invalid-credential|invalid-login-credentials|wrong-password|user-not-found/.test(c))
-            return err('That password does not match an account for ' + email + '. Capital letters count.',
-              [['Reset password', to('reset', email)], ['New here? Create an account', to('up', email)]]);
+            return err('That password does not match an account for ' + email + '. If you made your account with Google, it has no password: tap Continue with Google instead.',
+              [['Continue with Google', function(){ KovaCloudAuth.google(); }], ['Reset password', to('reset', email)], ['New here? Create an account', to('up', email)]]);
           err(human(e));
         })
         .then(function(){ busy(false); });
