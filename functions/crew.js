@@ -36,19 +36,33 @@ function parse(v) {
 }
 const hm = (s) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s || '')); return m && +m[1] < 24 && +m[2] < 60 ? +m[1] * 60 + +m[2] : -1; };
 
-/* ---- the registry the app keeps up to date ---- */
+/* ---- the registry the app keeps up to date ----
+   p31: besides each employee's routine, a saved skill can have its own
+   schedule ({id, sk}: registered as "<emp>~<skill>"), and pages can be
+   watched ({id, url, emp}: checked every few hours, see watch below). */
+const WATCH_EVERY = 6 * 3600e3;
+function cleanWatch(x) {
+  const id = String((x && x.id) || '').replace(/[^\w-]/g, '').slice(0, 40);
+  const emp = String((x && x.emp) || '').replace(/[^\w-]/g, '').slice(0, 40);
+  let url = null;
+  try { const u = new URL(String((x && x.url) || '').trim()); if (/^https?:$/.test(u.protocol)) url = u.href.slice(0, 600); } catch (e) { url = null; }
+  if (!id || !emp || !url) return null;
+  return { id, v: { url, emp, note: String((x && x.note) || '').slice(0, 120) } };
+}
 function cleanCloud(b) {
   const list = Array.isArray(b && b.emps) ? b.emps : [];
   const tz = String((b && b.tz) || 'UTC').slice(0, 64);
-  const out = {};
-  list.slice(0, 20).forEach((e) => {
+  const out = {}, watches = {};
+  list.slice(0, 40).forEach((e) => {
     const id = String((e && e.id) || '').replace(/[^\w-]/g, '').slice(0, 40);
+    const sk = String((e && e.sk) || '').replace(/[^\w-]/g, '').slice(0, 40);
     const freq = ['daily', 'weekdays', 'weekly'].includes(e && e.freq) ? e.freq : null;
     const t = hm(e && e.time);
     if (!id || !freq || t < 0) return;
-    out[id] = { freq, time: e.time, dow: Math.max(0, Math.min(6, +e.dow || 0)) };
+    out[sk ? id + '~' + sk : id] = { freq, time: e.time, dow: Math.max(0, Math.min(6, +e.dow || 0)) };
   });
-  return { tz, emps: out };
+  (Array.isArray(b && b.watches) ? b.watches : []).slice(0, 10).forEach((x) => { const w = cleanWatch(x); if (w) watches[w.id] = w.v; });
+  return { tz, emps: out, watches };
 }
 
 /* ---- whose routine is due now ---- */
@@ -70,8 +84,34 @@ async function due(db, t) {
       if (((u.ran || {})[id]) === L.date) continue;
       out.push({ uid, emp: id, date: L.date, slotAgo: L.mins - hm(r.time) });
     }
+    for (const id of Object.keys(u.watches || {})) {
+      if (t - (+((u.wchk || {})[id]) || 0) < WATCH_EVERY) continue;
+      out.push({ uid, emp: 'watch~' + id, date: L.date, slotAgo: 0 });
+    }
   }
   return out;
+}
+
+/* ---- a watched page: what is new on it, and what is gone ----
+   The page's readable text, one line per sentence-ish chunk, compared as
+   sets with the last copy, so a moved paragraph is not a change but a new
+   price is. Lines that match what you watch for come first. */
+function pageLines(text) {
+  const seen = new Set(), out = [];
+  String(text || '').split(/\n+|(?<=[.!?])\s+(?=[A-Z0-9$£€])/).forEach((l) => {
+    const t = l.replace(/\s+/g, ' ').trim().slice(0, 220);
+    if (t.length < 3 || seen.has(t)) return;
+    seen.add(t); out.push(t);
+  });
+  return out.slice(0, 600);
+}
+function hashOf(lines) { let h = 5381; const s = lines.join('\n'); for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36) + '.' + s.length; }
+function diffLines(before, after, note) {
+  const a = new Set(before), b = new Set(after);
+  const words = String(note || '').toLowerCase().split(/[^a-z0-9$£€]+/).filter((w) => w.length > 2);
+  const first = (L) => L.map((l, i) => [l, i, words.some((w) => l.toLowerCase().includes(w)) || (/price|\$|£|€/.test(words.join(' ')) && /[$£€]\s?\d/.test(l)) ? 0 : 1])
+    .sort((x, y) => x[2] - y[2] || x[1] - y[1]).map((x) => x[0]);
+  return { added: first(after.filter((l) => !a.has(l))), removed: first(before.filter((l) => !b.has(l))) };
 }
 
 /* ---- the person's Work OS, read only ---- */
@@ -136,17 +176,23 @@ function makeCrew(deps) {
   const now = deps.now || Date.now;
   const fetchFn = deps.fetch || globalThis.fetch;
 
-  async function run(uid, empId, opts) {
+  async function run(uid, key, opts) {
     opts = opts || {};
+    if (/^watch~/.test(key)) return watch(uid, key.slice(6));
     const t = now();
     const reg = ((await db.ref(`srv/crewCloud/${uid}`).once('value')).val()) || {};
     const tz = reg.tz || 'UTC', L = W.local(t, tz);
     const w = await workOf(db, uid);
+    const [empId, skId] = String(key).split('~');
     const e = (w.agents || []).find((a) => a && a.id === empId && a.crew);
-    const mark = () => db.ref(`srv/crewCloud/${uid}/ran/${empId}`).set(L.date);
-    if (!e || !e.enabled || !e.routine || !e.routine.job) { await mark(); return { skipped: 'no such routine' }; }
+    const mark = () => db.ref(`srv/crewCloud/${uid}/ran/${key}`).set(L.date);
+    /* a saved skill on its own schedule, or the employee's routine */
+    const sk = skId && e ? (e.skills || []).find((x) => x && x.id === skId && x.text) : null;
+    const jobText = skId ? (sk && sk.text) : (e && e.routine && e.routine.job);
+    if (!e || !e.enabled || !jobText) { await mark(); return { skipped: 'no such routine' }; }
     /* the open app already did it after the slot */
-    if (opts.slotAgo != null && e.lastRoutine && e.lastRoutine >= t - opts.slotAgo * 60e3) { await mark(); return { skipped: 'ran in the app' }; }
+    const last = skId ? +(sk.last || 0) : e.lastRoutine;
+    if (opts.slotAgo != null && last && last >= t - opts.slotAgo * 60e3) { await mark(); return { skipped: 'ran in the app' }; }
     if (!cfg.anthropicKey) { await mark(); return { skipped: 'no Claude key on the server' }; }
     /* the weekly step budget, shared with the app's count only roughly */
     const wk = W.local(t - ((DOW[L.weekday] + 6) % 7) * DAY, tz).date;
@@ -155,7 +201,7 @@ function makeCrew(deps) {
     const budget = +e.budget || 150;
     const model = (e.model && MODELS[e.model]) ? e.model : (AUTO[e.tpl] || 'sonnet');
     const tools = toolsFor(e).map((k) => ({ name: k, description: TOOLS[k].d, input_schema: TOOLS[k].s }));
-    const convo = [{ role: 'user', content: String(e.routine.job).slice(0, 4000) }];
+    const convo = [{ role: 'user', content: String(jobText).slice(0, 4000) }];
     const steps = [], proposals = [];
     let report = null, say = '', turns = 0;
     while (turns < MAX_TURNS) {
@@ -187,17 +233,54 @@ function makeCrew(deps) {
     }
     await useRef.set(used);
     const id = 'c' + t.toString(36) + '_' + empId.replace(/[^\w]/g, '').slice(-8) + Math.random().toString(36).slice(2, 6);
-    const item = { id, emp: empId, text: String(e.routine.job).slice(0, 4000), at: t, model, steps, proposals, report, say: say.slice(0, 2000) };
+    const item = Object.assign({ id, emp: empId, text: String(jobText).slice(0, 4000), at: t, model, steps, proposals, report, say: say.slice(0, 2000) }, skId ? { sk: skId } : {});
     await db.ref(`users/${uid}/crewInbox/${id}`).set(item);
     await mark();
     if (deps.push) {
       try { await deps.push.send(uid, { id, kind: 'crew', screen: 'workteam', title: `${e.n} finished your routine`,
-        body: proposals.length ? `${proposals.length} change${proposals.length > 1 ? 's' : ''} to approve. ${say}`.slice(0, 180) : (say || String(e.routine.job)).slice(0, 180) }); }
+        body: proposals.length ? `${proposals.length} change${proposals.length > 1 ? 's' : ''} to approve. ${say}`.slice(0, 180) : (say || String(jobText)).slice(0, 180) }); }
       catch (x) { /* no devices, or push not set up */ }
     }
     return { id, proposals: proposals.length, turns };
   }
-  return { run };
+
+  /* one watched page: read it, compare with the last copy, report a change */
+  async function watch(uid, id) {
+    const t = now();
+    const base = `srv/crewCloud/${uid}`;
+    const wt = (await db.ref(`${base}/watches/${id}`).once('value')).val();
+    await db.ref(`${base}/wchk/${id}`).set(t);
+    if (!wt || !wt.url) return { skipped: 'not watched' };
+    const read = deps.fetchPage || require('./webpage').fetchPage;
+    let page;
+    try { page = await read(wt.url); } catch (e) { return { error: (e && e.message) || 'Could not read the page.', url: wt.url }; }
+    const lines = pageLines([page.title, page.description, page.text].filter(Boolean).join('\n'));
+    const h = hashOf(lines);
+    const snapRef = db.ref(`${base}/wsnap/${id}`);
+    const prev = (await snapRef.once('value')).val();
+    await snapRef.set({ h, lines, at: t, title: String(page.title || '').slice(0, 200) });
+    const host = (() => { try { return new URL(wt.url).hostname.replace(/^www\./, ''); } catch (e) { return wt.url; } })();
+    if (!prev || !Array.isArray(prev.lines)) return { first: true, title: page.title || host, lines: lines.length };
+    if (prev.h === h) return { changed: false, title: page.title || host, since: prev.at };
+    const d = diffLines(prev.lines, lines, wt.note);
+    if (!d.added.length && !d.removed.length) return { changed: false, title: page.title || host, since: prev.at };
+    const when = W.local(prev.at, ((await db.ref(`${base}/tz`).once('value')).val()) || 'UTC').text;
+    const list = (L) => L.slice(0, 12).map((l) => '- ' + l).join('\n') + (L.length > 12 ? `\n- and ${L.length - 12} more` : '');
+    const report = { title: `What changed on ${host}`, summary: `${d.added.length} new line${d.added.length === 1 ? '' : 's'} and ${d.removed.length} gone since ${when}.${wt.note ? ' You watch it for: ' + wt.note + '.' : ''}`,
+      metrics: [{ label: 'New', value: String(d.added.length), note: 'on the page now' }, { label: 'Gone', value: String(d.removed.length), note: 'since the last check' }],
+      sections: [d.added.length ? { heading: 'New on the page', text: list(d.added) } : null, d.removed.length ? { heading: 'No longer there', text: list(d.removed) } : null].filter(Boolean) };
+    const say = `${host} changed: ${d.added.length} new, ${d.removed.length} gone.`;
+    const iid = 'w' + t.toString(36) + '_' + id.slice(-8) + Math.random().toString(36).slice(2, 5);
+    const item = { id: iid, emp: wt.emp, text: `Watch ${wt.url}`, at: t, model: '', watch: id,
+      steps: [{ t: `Read ${page.title || host}`, k: 'read' }, { t: `Compared it with the copy from ${when}`, k: 'read' }], proposals: [], report, say };
+    await db.ref(`users/${uid}/crewInbox/${iid}`).set(item);
+    if (deps.push) {
+      try { await deps.push.send(uid, { id: iid, kind: 'crew', screen: 'workteam', title: `A page you watch changed`, body: say.slice(0, 180) }); }
+      catch (x) { /* no devices, or push not set up */ }
+    }
+    return { changed: true, id: iid, title: page.title || host, added: d.added.length, removed: d.removed.length };
+  }
+  return { run, watch };
 }
 
-module.exports = { makeCrew, due, cleanCloud, slotDue, readWork, listTasks, toolsFor, workOf, parse, TOOLS, MODELS, AUTO, GRACE, WINDOW };
+module.exports = { makeCrew, due, cleanCloud, cleanWatch, pageLines, diffLines, hashOf, WATCH_EVERY, slotDue, readWork, listTasks, toolsFor, workOf, parse, TOOLS, MODELS, AUTO, GRACE, WINDOW };

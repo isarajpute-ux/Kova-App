@@ -215,6 +215,11 @@ window.KovaCmd=(function(){
       if(sc<22) return;
       add('mate','Your AI team',e.n+' · '+e.title,'open their page and message them','e:'+e.id,function(){ openMate(e.id); },sc+5,e.id);
     });
+    /* p31: the team's own work: past jobs and reports, saved skills, routines, watched pages */
+    if(q&&window.KovaTeamPlus&&KovaTeamPlus.list) KovaTeamPlus.list().forEach(function(x){
+      var sc=score(ql,x.text,x.words); if(sc<40) return;
+      add(x.kind==='job'?'job':'teamwork','Team work',x.t,x.s,'tw:'+x.kind+':'+x.ref+':'+x.t,function(){ KovaTeamPlus.open(x.kind,x.ref); },sc+(x.kind==='job'?2:0),x.kind+':'+x.ref);
+    });
     if(window.KovaApps&&q.length>=2) KovaApps.all().forEach(function(a){
       var sc=score(ql,a.n,a.grp+' '+a.best); if(sc>=45) add('app','How the best tools do it',a.n,a.best,'a:'+a.id,function(){ KovaApps.open(a.id); },sc-10,a.id);
     });
@@ -268,6 +273,7 @@ window.KovaCmd=(function(){
     if(r.kind==='project') return nav('workprojects');
     if(r.kind==='goal') return nav('workgoals');
     if(r.kind==='file') return nav('workfiles');
+    if((r.kind==='job'||r.kind==='teamwork')&&window.KovaTeamPlus){ var m=/^(\w+):(.+)$/.exec(r.ref||''); if(m) return KovaTeamPlus.open(m[1],m[2]); return nav('workteam'); }
   }
 
   /* ---------------- the bar ---------------- */

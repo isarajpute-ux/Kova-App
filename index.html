@@ -8308,6 +8308,142 @@ body.light-mode #bodySvg g[stroke="rgba(255,255,255,.13)"]{stroke:rgba(18,22,28,
 body.light-mode #bodySvg [data-hair]{fill:rgba(18,22,28,.30);stroke:rgba(18,22,28,.52)}
 
 </style>
+<style id="p08-teamplus">
+/* ---- KovaTeamPlus (p31): team chat, do it again, attachments, meet your
+   team, ready-made routines, watch a page, shared to Kova. Colours come
+   from the AI team's own tokens (--d-* on .crd, --c-* on .crw), so dark,
+   soft light and light glass all follow. ---- */
+.tp-tools{display:flex;gap:6px;align-self:flex-end}
+.tp-ic{width:40px;height:40px;border-radius:50%;border:1px solid var(--d-line,var(--c-line));background:var(--d-card2,var(--c-card2));color:var(--d-ink,var(--c-ink))!important;display:grid;place-items:center;padding:0;flex-shrink:0}
+.tp-ic svg{width:19px;height:19px}
+.tp-ic.on{background:var(--d-on,var(--c-on));color:var(--d-onInk,var(--c-onInk))!important;border-color:transparent;animation:tpPulse 1.4s ease-in-out infinite}
+@keyframes tpPulse{50%{box-shadow:0 0 0 6px rgba(255,255,255,.12)}}
+body.light-mode .tp-ic.on{animation-name:tpPulseL}
+@keyframes tpPulseL{50%{box-shadow:0 0 0 6px rgba(17,19,24,.1)}}
+.crw-send svg{width:18px;height:18px}
+.crw-send:disabled{opacity:.4;cursor:default}
+
+.tp-pend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tp-pend.in{margin-top:8px}
+.tp-file{display:inline-flex;align-items:center;gap:7px;max-width:100%;height:34px;padding:0 6px 0 4px;border-radius:12px;border:1px solid var(--d-line,var(--c-line));background:var(--d-card2,var(--c-card2));font-size:12px;color:var(--d-ink,var(--c-ink))}
+.tp-file img{width:26px;height:26px;border-radius:8px;object-fit:cover;display:block}
+.tp-file i{width:26px;height:26px;display:grid;place-items:center;opacity:.75}
+.tp-file i svg{width:16px;height:16px}
+.tp-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.tp-file button{border:0;background:none;width:24px;height:24px;border-radius:50%;font-size:16px;line-height:1;color:var(--d-mute,var(--c-mute))!important;padding:0}
+.tp-file.busy{padding:0 12px;color:var(--d-mute,var(--c-mute))}
+
+/* team chat */
+.tp-chat{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.tp-m{display:flex;gap:9px;align-items:flex-start;max-width:100%}
+.tp-m.you{justify-content:flex-end}
+.tp-m.you .tp-b{max-width:min(86%,560px);background:var(--d-on);color:var(--d-onInk);border-radius:20px 20px 6px 20px;padding:10px 14px;font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.tp-m.you .tp-file{background:rgba(127,127,127,.18);border-color:transparent;color:inherit}
+.tp-mn{font-weight:600}
+.tp-m.mate .tp-b{flex:1;min-width:0;max-width:640px;background:var(--d-card);border:1px solid var(--d-line);border-radius:6px 20px 20px 20px;padding:10px 14px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--d-shadow)}
+.tp-m.mate+.tp-m.mate{margin-left:22px}
+.tp-who{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;margin-bottom:4px}
+.tp-who b{font-size:13.5px;font-weight:600}
+.tp-who span{font-size:11.5px;color:var(--d-mute)}
+.tp-say{font-size:13.5px;line-height:1.5;overflow-wrap:anywhere}
+.tp-say p{margin:0 0 6px}.tp-say p:last-child{margin-bottom:0}
+.tp-say ul{margin:4px 0 6px;padding-left:18px}
+.tp-soft{color:var(--d-mute)}
+.tp-live{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--d-mute)}
+.tp-dots{display:inline-flex;gap:3px}
+.tp-dots i{width:5px;height:5px;border-radius:50%;background:currentColor;animation:tpDot 1.2s infinite ease-in-out}
+.tp-dots i:nth-child(2){animation-delay:.15s}.tp-dots i:nth-child(3){animation-delay:.3s}
+@keyframes tpDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.tp-dots i,.tp-ic.on{animation:none}}
+.tp-m.sys{justify-content:center;font-size:11.5px;color:var(--d-mute);text-align:center;padding:2px 12px}
+.tp-m .crd-link{margin-top:6px;display:inline-block}
+.tp-hello{display:flex;flex-direction:column;gap:6px}
+.tp-hello b{font-size:15px;font-weight:600}
+.tp-hello span{font-size:13px;line-height:1.5;color:var(--d-mute)}
+.tp-tries{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tp-tries .crd-pill{height:auto;min-height:38px;padding:8px 14px;white-space:normal;text-align:left;font-size:13px;line-height:1.3}
+.tp-cbox{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:3}
+.tp-cbox .crw-ask{margin-top:10px}
+.tp-cbox .crw-ask textarea{border-color:var(--d-line);background:var(--d-card2);color:var(--d-ink)}
+.tp-cbox .crw-ask textarea::placeholder{color:var(--d-faint)}
+.tp-at{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.tp-at::-webkit-scrollbar{display:none}
+.tp-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 6px;border-radius:17px;border:1px solid var(--d-pill-b,var(--c-line));background:var(--d-pill,var(--c-card2));color:var(--d-pill-ink,var(--c-ink))!important;font-size:12.5px;white-space:nowrap;flex-shrink:0}
+.tp-chip:first-child{padding-left:12px}
+.tp-chip .crw-av{width:24px;height:24px}.tp-chip .crw-av b{font-size:11px}
+.tp-crow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}
+.tp-hint{font-size:11.5px;color:var(--d-mute,var(--c-mute))}
+
+/* do it again, saved skills, schedules */
+.tp-again{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:12px;padding-top:10px;border-top:1px solid var(--c-line)}
+.tp-saved{font-size:12px;color:var(--c-mute)}
+.tp-pick{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 12px;margin-top:10px;padding:12px;border-radius:16px;background:var(--d-card2,var(--c-card2));border:1px solid var(--d-line,var(--c-line))}
+.tp-pick label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--d-mute,var(--c-mute))}
+.tp-pick select,.tp-pick input[type=time]{height:38px;border-radius:12px;border:1px solid var(--d-line,var(--c-line));background:var(--d-card,var(--c-field));color:var(--d-ink,var(--c-ink));font:inherit;font-size:13.5px;padding:0 10px;min-width:120px}
+body.light-mode .tp-pick select,body.light-mode .tp-pick input[type=time]{background:#fff}
+.tp-pick .tp-chk{flex-direction:row;align-items:center;gap:8px;font-size:12.5px;color:var(--d-ink,var(--c-ink));min-height:38px}
+.tp-pick .tp-chk input{width:18px;height:18px;accent-color:currentColor}
+.tp-pick .crd-row{width:100%;margin-top:2px;gap:8px;flex-wrap:wrap}
+.crd-btn.tp-sm{height:36px;padding:0 14px;font-size:12.5px}
+.tp-sk,.tp-st,.tp-wr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--d-line)}
+.tp-sk:first-of-type,.tp-st:first-of-type,.tp-wr:first-child{border-top:0}
+.tp-skt{display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1 1 220px}
+.tp-skt>div,.tp-wr>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tp-skt b,.tp-wr b{font-size:13.5px;font-weight:600;overflow-wrap:anywhere}
+.tp-skt span,.tp-wr span{font-size:11.5px;color:var(--d-mute)}
+.tp-skt small,.tp-wr small{font-size:12px;line-height:1.4;color:var(--d-mute);overflow-wrap:anywhere}
+.tp-ska{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tp-sk .tp-pick{flex-basis:100%}
+.tp-st .crw-tog{flex-shrink:0}
+
+/* meet your team */
+.tp-meet .tp-needs{display:flex;flex-wrap:wrap;gap:8px}
+.tp-meet .tp-needs .crd-pill{height:40px;padding:0 16px;font-size:13.5px}
+.tp-meetl{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.tp-mrow{display:flex;gap:10px;align-items:flex-start}
+.tp-mrow>div{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:13.5px}
+.tp-mrow b{font-weight:600}.tp-mrow span{color:var(--d-mute);font-size:12px}
+.tp-mrow small{font-size:12px;line-height:1.4;color:var(--d-mute)}
+.tp-meet .crd-row{margin-top:14px;gap:8px;flex-wrap:wrap}
+.tp-meet .crd-btn:disabled{opacity:.45;cursor:default}
+.tp-meet .tp-hint{margin-top:10px}
+.crd-tiles+.crd-card.tp-meet,.tp-meet{margin:14px 0}
+
+/* watch a page */
+.tp-wf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tp-wf input{flex:1 1 200px;min-width:0;height:42px;border-radius:14px;border:1px solid var(--d-line);background:var(--d-card2);color:var(--d-ink);font:inherit;font-size:13.5px;padding:0 12px}
+.tp-wf input::placeholder{color:var(--d-faint)}
+.tp-wf .crd-btn{height:42px}
+.tp-wf .crd-btn:disabled,.tp-ska .crd-btn:disabled{opacity:.45;cursor:default}
+.tp-wl{margin-top:10px}
+.tp-watch .crw-note{margin-bottom:10px}
+
+/* a found job flashes once */
+.crw-jobw.tp-flash .crw-job{animation:tpFlash 1.5s ease-out}
+@keyframes tpFlash{0%{box-shadow:0 0 0 3px var(--c-run)}100%{box-shadow:0 0 0 0 transparent}}
+
+/* shared to Kova */
+.tp-sheet{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.45);padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.tp-shb{width:100%;max-width:520px;max-height:80vh;overflow:auto;border-radius:24px;padding:18px;background:#1C1D20;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.5);padding-bottom:18px}
+body.soft-light .tp-shb{background:#4A4C51}
+body.light-mode .tp-shb{background:#FFFFFF;border-color:rgba(17,19,24,.1);box-shadow:0 24px 60px rgba(20,30,50,.2)}
+.tp-shb .crd-chd span{font-size:16px;font-weight:600}
+.tp-shp{font-size:13.5px;line-height:1.5;padding:10px 12px;border-radius:14px;background:var(--c-field);border:1px solid var(--c-line);white-space:pre-wrap;overflow-wrap:anywhere}
+.tp-shh{font-size:11.5px;color:var(--c-mute);margin:14px 0 8px}
+.tp-shb .tp-at{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none}
+.tp-shb .tp-chip{border-color:var(--c-line);background:var(--c-card2);color:var(--c-ink)!important}
+.tp-shb .crd-row{margin-top:12px}
+.tp-shb .crd-btn{background:var(--c-on);color:var(--c-onInk)}
+.tp-shb .crd-btn.ghost{background:transparent;border:1px solid var(--c-line);color:var(--c-ink)}
+
+/* on a phone the box gets the whole width; attach, voice and send sit under it */
+@container (max-width:560px){
+  .crw-ask:has(.tp-tools){flex-wrap:wrap}
+  .crw-ask:has(.tp-tools) textarea{flex:1 1 100%}
+  .crw-ask:has(.tp-tools) .tp-tools{margin-left:auto}
+}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -52104,24 +52240,31 @@ window.KovaCrew=(function(){
     if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve(false);
     var list=emps().filter(function(e){ var r=e.routine||{}; return e.enabled&&r.cloud&&r.job&&['daily','weekdays','weekly'].indexOf(r.freq)>=0; })
       .map(function(e){ return {id:e.id,freq:e.routine.freq,time:e.routine.time||'09:00',dow:+e.routine.dow||0}; });
-    var key=JSON.stringify(list)+tzName(), had=lsJ('kova.crew.cloud',false);
+    var watches=[];
+    emps().forEach(function(e){ if(!e.enabled) return;
+      (e.skills||[]).forEach(function(k){ var v=k.every; if(k.text&&v&&v.cloud&&['daily','weekdays','weekly'].indexOf(v.freq)>=0) list.push({id:e.id,sk:k.id,freq:v.freq,time:v.time||'09:00',dow:+v.dow||0}); });
+      (e.watches||[]).forEach(function(x){ if(x&&x.url) watches.push({id:x.id,url:x.url,emp:e.id,note:x.note||''}); }); });
+    var key=JSON.stringify(list)+JSON.stringify(watches)+tzName(), had=lsJ('kova.crew.cloud',false);
     if(key===S.cloudKey) return Promise.resolve(true);
     /* only for someone signed in, and only when there is something to say:
        routines to register, or ones registered before that are now off
        (never a sign-in just for this) */
-    if(!serverLikely()||(!list.length&&!had)) return Promise.resolve(false);
-    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list}}).then(function(r){ if(r.ok){ S.cloudKey=key; lsPut('kova.crew.cloud',list.length>0); return true; } return false; },function(){ return false; });
+    if(!serverLikely()||(!list.length&&!watches.length&&!had)) return Promise.resolve(false);
+    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list,watches:watches}}).then(function(r){ if(r.ok){ S.cloudKey=key; lsPut('kova.crew.cloud',list.length+watches.length>0); return true; } return false; },function(){ return false; });
   }
   function importCloud(it){
     var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
     var props=(it.proposals||[]).filter(function(p){ return p&&TOOLS[p.name]; });
     var ak=it.ask||null, AKN={prep:'Prepped tomorrow\u2019s meetings',checkin:'Checked in on you',comments:'Read the comments on your post'};
-    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
+    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||(e.routine&&e.routine.job)||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
       steps:[{t:ak?(ak.deliverAt&&ak.deliverAt>(it.at||0)-5*60e3&&ak.kind==='ask'?'Worked on it on the Kova server, ready for '+clock(ak.deliverAt)+' as you asked':(AKN[ak.kind]||'Worked on it on the Kova server')+' while Kova was closed'):'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
       changes:[],queue:props.map(function(p,i){ return {id:'p'+i,name:p.name,input:p.input||{}}; }),results:[],turns:0,convo:null,brain:'cloud',
       model:it.model||'',say:String(it.say||''),report:it.report||null};
+    if(it.sk||it.watch) job.source=it.sk?'skill':'watch';
     S.jobs[job.id]=job;
-    touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),lastRoutine:Math.max(e.lastRoutine||0,it.at||0)});
+    if(it.sk) touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),skills:(e.skills||[]).map(function(x){ return x.id===it.sk?Object.assign({},x,{last:Math.max(+x.last||0,it.at||0)}):x; })});
+    else if(it.watch) touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now()});
+    else touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),lastRoutine:Math.max(e.lastRoutine||0,it.at||0)});
     if(job.queue.length) proceed(job); else finish(job,job.say||'Done.');
     return job;
   }
@@ -52338,7 +52481,16 @@ window.KovaCrew=(function(){
   function saveJobs(){
     var L=Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).sort(function(a,b){ return b.at-a.at; });
     var keep={}; L.slice(0,50).forEach(function(j){ if(j.state==='done'||j.state==='failed'||j.state==='stopped') j.convo=j.convo&&j.convo.length>2?null:j.convo; keep[j.id]=j; });
-    S.jobs=keep; lsPut(JKEY,keep);
+    S.jobs=keep; lsPut(JKEY,noPhotos(keep));
+  }
+  /* p31: an attached photo travels with the job while it runs, but storage
+     keeps only the words (a photo would fill the browser's space) */
+  function noPhotos(all){
+    var out={};
+    Object.keys(all).forEach(function(k){ var j=all[k];
+      var has=j.convo&&j.convo.some(function(m){ return Array.isArray(m.content)&&m.content.some(function(b){ return b&&b.type==='image'; }); });
+      out[k]=has?Object.assign({},j,{convo:j.convo.map(function(m){ return Array.isArray(m.content)?{role:m.role,content:m.content.map(function(b){ return b&&b.type==='image'?{type:'text',text:'[a photo was attached]'}:b; })}:m; })}):j; });
+    return out;
   }
   function jobsOf(id){ return Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).filter(function(j){ return !id||j.emp===id; }).sort(function(a,b){ return a.at-b.at; }); }
   function waiting(){ return jobsOf().filter(function(j){ return j.state==='waiting'; }); }
@@ -53256,7 +53408,7 @@ window.KovaCrew=(function(){
   }
 
   /* ---- the pieces of the page ---- */
-  var NAV=[['team','Team'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports'],['usage','Usage']];
+  var NAV=[['team','Team'],['chat','Chat'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports'],['usage','Usage']];
   function topBar(){
     var nav=S.view==='team'?(S.nav||'team'):'', wt=waiting().length, on=!!(window.KovaListen&&KovaListen.on());
     return '<div class="crd-top">'
@@ -53612,6 +53764,7 @@ window.KovaCrew=(function(){
       +'<div class="crd-mid"><div class="crd-stats">'
         +stat('Finished',a.completed,'✓','Tasks done this week')+stat('Open',a.open,'','Still to do')+stat('Overdue',a.overdue,'!','Past their date')+stat('Team',L.length,'person','AI employees')
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
+      +(window.KovaTeamPlus?KovaTeamPlus.meet():'')
       +roster()
       +'<div class="crd-tiles">'
         +jobsTile(L)
@@ -53640,7 +53793,7 @@ window.KovaCrew=(function(){
       +(m.length?'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
         +flow(cur||last,e,sn)+(cur?focusCard(cur,e,sn):'')+'</div>':'')
       +'<div class="crd-tiles">'+empTiles(e,sn)+'</div>'
-      +'<div class="crd-below">'+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
+      +'<div class="crd-below">'+(window.KovaTeamPlus?KovaTeamPlus.mateExtra(e):'')+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
       +'<div class="crd-sh2">Your team</div>'+tabsRow(e.id);
   }
   function teachCard(e){
@@ -53701,7 +53854,8 @@ window.KovaCrew=(function(){
     var id=e?'crwEmpAsk':'crwAsk', btn=e?'empask':'ask', T=e?tpl(e.tpl):null, sk=e?skillsOf(e)[0]:null;
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
     return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Message '+esc(e.n):'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
-      +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea>'+(window.KovaTeamPlus?KovaTeamPlus.tools(id):'')+'<button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +(window.KovaTeamPlus?KovaTeamPlus.pend(id):'')
       +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
       +(e?'':listenRow())+'</div>';
@@ -53722,7 +53876,7 @@ window.KovaCrew=(function(){
   function jobsPage(){ var J=jobsOf().slice(-25).reverse(); return head(0,'Jobs',J.length+' job'+(J.length===1?'':'s')+' so far')+'<div class="crw-thread">'+(J.length?J.map(jobCard).join(''):'<div class="crd-card"><div class="crw-empty">No jobs yet. Give the team one on the Team page, or say a name.</div></div>')+'</div>'; }
   function approvalsPage(){ var wt=waiting(); return head(0,'Approvals',wt.length?wt.length+' waiting for your OK':'Nothing waiting')+(wt.length?wt.map(function(j){ return approvalCard(j,true); }).join(''):'<div class="crd-card"><div class="crw-empty">Nothing needs your approval. Anything that leaves Kova, like an email, waits here for you.</div></div>'); }
   function routinesPage(){
-    return head(0,'Routines','They run while Kova is open, and catch up when you open it')+emps().map(function(e){ var T=tpl(e.tpl), on=e.routine&&e.routine.freq!=='off'&&e.routine.job;
+    return head(0,'Routines','They run while Kova is open, and catch up when you open it')+(window.KovaTeamPlus?KovaTeamPlus.routinesExtra():'')+emps().map(function(e){ var T=tpl(e.tpl), on=e.routine&&e.routine.freq!=='off'&&e.routine.job;
       return '<div class="crd-card crd-rt"><div class="crd-rth">'+av(e)+'<div><b>'+esc(e.n)+'</b><span>'+esc(e.title)+'</span></div><span class="crw-st '+(on?'s-done':'s-off')+'">'+(on?esc(describeRoutine(e)):'Off')+'</span></div>'
         +'<div class="crd-rtj">'+esc(on?e.routine.job:(T&&T.routine&&T.routine.job?'Suggested: '+T.routine.job:'No routine yet.'))+'</div><div class="crd-row">'+routineBtn(e,T)+'<button class="crd-btn ghost" data-c="edit" data-id="'+esc(e.id)+'">Change it</button></div></div>'; }).join('');
   }
@@ -53734,7 +53888,7 @@ window.KovaCrew=(function(){
   function dash(){
     if(S.tab&&S.tab!=='all'&&!emp(S.tab)) S.tab='all';
     var nav=S.nav||'team', e=S.tab&&S.tab!=='all'?emp(S.tab):null;
-    var body=nav==='usage'?usagePage():nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
+    var body=nav==='chat'?(window.KovaTeamPlus?KovaTeamPlus.chatPage():head(0,'Team chat','Loading…')):nav==='usage'?usagePage():nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
     return '<div class="crd">'+topBar()+body+'</div>';
   }
 
@@ -53742,10 +53896,10 @@ window.KovaCrew=(function(){
   var ICON={read:'◦',write:'✓',send:'✉',handoff:'→',report:'▤',error:'!',blocked:'×',wait:'•',ok:'✓',skip:'–',think:'…',web:'⌕',info:'•'};
   function jobCard(j){
     var e=emp(j.emp)||{n:'?'};
-    var src={routine:'Routine',handoff:'Hand-off',team:'From the team',you:'You',voice:'By voice'}[j.source]||'You';
+    var src={routine:'Routine',handoff:'Hand-off',team:'From the team',you:'You',voice:'By voice',chat:'Team chat',skill:'Saved skill',share:'Shared to Kova',watch:'Watching a page'}[j.source]||'You';
     return '<div class="crw-jobw" id="job-'+esc(j.id)+'">'
-      +(j.source==='routine'||j.source==='handoff'||j.source==='voice'?'<div class="crw-src">'+esc(src)+'</div>':'')
-      +'<div class="crw-you">'+md(j.text)+'</div>'
+      +(/^(routine|handoff|voice|chat|skill|share|watch)$/.test(j.source)?'<div class="crw-src">'+esc(src)+'</div>':'')
+      +'<div class="crw-you">'+md(j.text)+(window.KovaTeamPlus?KovaTeamPlus.files(j):'')+'</div>'
       +'<div class="crw-job s-'+j.state+'">'
         +'<div class="crw-jh">'+av(e)+'<b>'+esc(e.n)+'</b><span>'+({running:'Working',waiting:'Needs you',paused:'Paused, you stepped in',done:'Done',failed:'Could not finish',stopped:'Stopped'}[j.state])+' · '+clock(j.at)+' · '+esc(BRAIN_N[j.brain]||'')+'</span>'
         +(j.state==='running'||j.state==='waiting'||j.state==='paused'?'<button class="crw-link" data-c="stop" data-j="'+esc(j.id)+'">Stop</button>':'')+'</div>'
@@ -53760,6 +53914,7 @@ window.KovaCrew=(function(){
         +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link" data-c="speak" data-j="'+esc(j.id)+'">Read it to me</button>':'')
         +((j.state==='done'||j.state==='stopped'||j.state==='failed')&&j.changes&&j.changes.length?'<button class="crw-link" data-c="undo" data-j="'+esc(j.id)+'">Undo '+j.changes.length+' change'+(j.changes.length>1?'s':'')+'</button>':'')
         +(j.undone?'<div class="crw-note">Undid '+j.undone+' change'+(j.undone>1?'s':'')+'.</div>':'')
+        +(window.KovaTeamPlus?KovaTeamPlus.again(j):'')
       +'</div></div>';
   }
   /* the bot's screen (p15): what it is doing right now, live, with the
@@ -54007,7 +54162,7 @@ window.KovaCrew=(function(){
       S.clear={crwAsk:1}; var ta=document.getElementById('crwAsk'); if(ta) ta.value='';
       /* a time ("at 11"), a link, or a time chip: it runs on the server and comes back to you */
       if(c==='ask'&&window.KovaAsk&&KovaAsk.wants(q)){ KovaAsk.send(r.emp,q).catch(function(){}); paint(); return; }
-      var j=start(r.emp,q,'team'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
+      var j=start(r.emp,q,'team'); if(j&&window.KovaTeamPlus) KovaTeamPlus.attach(j,'crwAsk'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return;
     }
     if(c==='empask'||c==='empq'){
@@ -54016,7 +54171,7 @@ window.KovaCrew=(function(){
       if(!e.enabled){ say(e.n+' is switched off.'); return; }
       var ta2=document.getElementById('crwEmpAsk'); if(ta2) ta2.value=''; S.clear={crwEmpAsk:1};
       if(c==='empask'&&window.KovaAsk&&KovaAsk.wants(t)){ KovaAsk.send(e,t).catch(function(){}); paint(); return; }
-      start(e,t,'you'); S.scroll=true; S.focus=true; paint(); return;
+      var je=start(e,t,'you'); if(je&&window.KovaTeamPlus) KovaTeamPlus.attach(je,'crwEmpAsk'); S.scroll=true; S.focus=true; paint(); return;
     }
     if(c==='listen'){ if(window.KovaListen) KovaListen.set(!KovaListen.on()); return; }
     if(c==='toggle'){ var e2=emp(id); if(e2){ saveEmp(e2,{enabled:!e2.enabled}); paint(); } return; }
@@ -54127,7 +54282,7 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,busy:busyWith,tpl:tpl,server:serverLikely,describeRoutine:describeRoutine,log:log,saveJobs:saveJobs,av:av,head:head,reportCard:reportCard,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();
 
 </script>
@@ -61593,6 +61748,11 @@ window.KovaCmd=(function(){
       if(sc<22) return;
       add('mate','Your AI team',e.n+' · '+e.title,'open their page and message them','e:'+e.id,function(){ openMate(e.id); },sc+5,e.id);
     });
+    /* p31: the team's own work: past jobs and reports, saved skills, routines, watched pages */
+    if(q&&window.KovaTeamPlus&&KovaTeamPlus.list) KovaTeamPlus.list().forEach(function(x){
+      var sc=score(ql,x.text,x.words); if(sc<40) return;
+      add(x.kind==='job'?'job':'teamwork','Team work',x.t,x.s,'tw:'+x.kind+':'+x.ref+':'+x.t,function(){ KovaTeamPlus.open(x.kind,x.ref); },sc+(x.kind==='job'?2:0),x.kind+':'+x.ref);
+    });
     if(window.KovaApps&&q.length>=2) KovaApps.all().forEach(function(a){
       var sc=score(ql,a.n,a.grp+' '+a.best); if(sc>=45) add('app','How the best tools do it',a.n,a.best,'a:'+a.id,function(){ KovaApps.open(a.id); },sc-10,a.id);
     });
@@ -61646,6 +61806,7 @@ window.KovaCmd=(function(){
     if(r.kind==='project') return nav('workprojects');
     if(r.kind==='goal') return nav('workgoals');
     if(r.kind==='file') return nav('workfiles');
+    if((r.kind==='job'||r.kind==='teamwork')&&window.KovaTeamPlus){ var m=/^(\w+):(.+)$/.exec(r.ref||''); if(m) return KovaTeamPlus.open(m[1],m[2]); return nav('workteam'); }
   }
 
   /* ---------------- the bar ---------------- */
@@ -65683,6 +65844,642 @@ window.KovaBodyShape=(function(){
   document.addEventListener('kova:screen',function(e){ if(e&&e.detail==='customize') apply(); });
   setTimeout(apply,0);
   return {apply:apply,profile:profile,warp:warp,kt:kt,_pt:pt};
+})();
+
+</script>
+<script id="p08-teamplus">
+/* =====================================================================
+   KovaTeamPlus - the rest of the Grok Bot way of working, for the AI
+   team (p31). All of it runs through the team's own job engine
+   (src/p08_crew.js), so every answer is a real job with its steps,
+   approvals, undo and weekly limits.
+
+   1. Team chat: several teammates in one conversation. "@Sage @Maya
+      plan this week's posts around my training" asks Sage, then Maya,
+      each seeing what the one before said; "@everyone" goes to the Chief
+      of Staff, who brings in whoever should answer. No @: Kova picks the
+      teammate whose job matches. A teammate's hand-offs show in the chat.
+   2. Do it again: every finished job can be run again, kept as a saved
+      skill (one tap later), or put on a schedule (a routine of its own,
+      also on the Kova server while Kova is closed).
+   3. Attachments: a photo, a video (4 stills), a PDF or a text file goes
+      with a message to a teammate or the chat; Kova's AI sees the photo.
+      The microphone dictates a voice note into the box.
+   4. Meet your team: on a new team, pick what you want help with; Kova
+      picks the teammates, gives each a first job, and turns on the
+      ready-made routines (morning brief, inbox sweep, comments roundup,
+      today's training, plan my week). They stay on the Routines page.
+   5. Watch a page: the Research teammate reads a page every 6 hours on
+      the Kova server and reports only what changed (functions/crew.js).
+   6. Search finds the team's past jobs, reports, skills and watches
+      (src/p08_cmdk.js asks list() here).
+   7. Share into Kova: on Android, Kova appears in the share menu
+      (manifest share_target, sw.js keeps what was shared); the shared
+      text, link or files go to a teammate, the chat, or a task.
+   ===================================================================== */
+window.KovaTeamPlus=(function(){
+  'use strict';
+  var CKEY='kova.crew.chat.v1', MKEY='kova.crew.meet.v1', DAY=864e5;
+  var S={pend:{}, reading:null, pick:null, pv:{}, rec:null, sel:[], roundFiles:null, share:null};
+  function K(){ return window.KovaCrew||null; }
+  function W(){ return window.WorkOS||null; }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function md(t){ var k=K(); return k&&k.md?k.md(t):esc(t); }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function lsPut(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function uid(p){ return (p||'x')+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+  function ago(t){ if(!t) return ''; var s=(Date.now()-t)/1000; if(s<60) return 'just now'; if(s<3600) return Math.round(s/60)+' min ago'; if(s<86400) return Math.round(s/3600)+' h ago'; return Math.round(s/86400)+' d ago'; }
+  function short(t,n){ t=String(t||'').replace(/\s+/g,' ').trim(); return t.length>n?t.slice(0,n-1).replace(/\s+\S*$/,'')+'…':t; }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function repaint(){ var k=K(); if(k&&k.paint) k.paint(); }
+  function mates(){ var k=K(); return k&&k.emps?k.emps().filter(function(e){ return e.enabled; }):[]; }
+  function byTpl(t){ return mates().filter(function(e){ return e.tpl===t; })[0]||null; }
+  function server(){ var k=K(); try{ return !!(k&&k.server&&k.server()); }catch(e){ return false; } }
+  function jobOf(id){ var k=K(); return k&&id?(k.jobs()[id]||null):null; }
+  function save(e,patch){ var w=W(); if(w&&e) w.update('agents',e.id,patch,'user'); }
+  var IC={clip:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5l-7.8 7.8a5 5 0 01-7.1-7.1l8.5-8.5a3.3 3.3 0 014.7 4.7l-8.5 8.5a1.7 1.7 0 01-2.4-2.4l7.8-7.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    mic:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    send:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    doc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'};
+  var DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  function every(v){
+    if(!v||!v.freq) return 'Not on a schedule';
+    return ({daily:'Every day',weekdays:'Weekdays',weekly:DAYS[(+v.dow||1)%7]+'s'}[v.freq]||v.freq)+' at '+(v.time||'09:00')+(v.cloud?', also while Kova is closed':'');
+  }
+
+  /* ================= 3. attachments and voice notes ================= */
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+  function kind(f){
+    var t=String(f.type||'').toLowerCase(), n=String(f.name||'').toLowerCase();
+    if(/^image\//.test(t)) return 'image';
+    if(/^video\//.test(t)) return 'video';
+    if(/pdf/.test(t)||/\.pdf$/.test(n)) return 'pdf';
+    if(/^text\//.test(t)||/json|csv/.test(t)||/\.(txt|md|csv|json|tsv)$/.test(n)) return 'text';
+    return 'other';
+  }
+  function dataUrl(b){ return new Promise(function(ok){ var fr=new FileReader(); fr.onload=function(){ ok(String(fr.result||'')); }; fr.onerror=function(){ ok(''); }; fr.readAsDataURL(b); }); }
+  function fit(d,max){ return d&&window.KovaModel&&KovaModel.fit?KovaModel.fit(d,max).catch(function(){ return d; }):Promise.resolve(d); }
+  function readFile(f){
+    var k=kind(f), n=String(f.name||'file').slice(0,80);
+    if(f.size>80e6) return Promise.reject(new Error(n+' is too big to read.'));
+    if(k==='image') return dataUrl(f).then(function(d){ return fit(d,1024); }).then(function(d){
+      if(!d) throw new Error(n+' could not be opened.');
+      return fit(d,96).then(function(th){ return {n:n,k:'image',imgs:[d],th:th}; }); });
+    if(k==='video'){
+      if(!window.KovaLook||!KovaLook.videoStills) return Promise.reject(new Error('Videos are still loading. Try again in a moment.'));
+      return KovaLook.videoStills(f,0).then(function(L){ L=(L||[]).filter(Boolean).slice(0,4); if(!L.length) throw new Error('Kova could not take stills from '+n+'.');
+        return Promise.all(L.map(function(d){ return fit(d,1024); })).then(function(F){ return fit(F[0],96).then(function(th){ return {n:n,k:'video',imgs:F,th:th}; }); }); });
+    }
+    if(k==='text') return f.text().then(function(t){ return {n:n,k:'text',text:String(t).slice(0,16000)}; });
+    if(k==='pdf'){
+      if(!window.KovaPdf) return Promise.reject(new Error('The PDF reader did not load. Try again.'));
+      return Promise.all([KovaPdf(),f.arrayBuffer()]).then(function(r){ return r[0].getDocument({data:r[1]}).promise; }).then(function(pdf){
+        var jobs=[]; for(var i=1;i<=Math.min(pdf.numPages,12);i++) jobs.push(pdf.getPage(i).then(function(p){ return p.getTextContent(); }).then(function(c){ return c.items.map(function(z){ return z.str; }).join(' '); }));
+        return Promise.all(jobs);
+      }).then(function(p){ var t=p.join('\n').trim(); if(!t) throw new Error(n+' is a scan with no text in it. Attach a photo of the page instead.'); return {n:n,k:'pdf',text:t.slice(0,16000)}; });
+    }
+    return Promise.reject(new Error('Kova cannot read '+n+' yet. Photos, videos, PDFs and text files work.'));
+  }
+  var input=null;
+  function picker(box){
+    if(!input){
+      input=document.createElement('input'); input.type='file'; input.multiple=true; input.hidden=true; input.id='tpFile';
+      input.accept='image/*,video/*,application/pdf,.pdf,text/*,.txt,.md,.csv,.json';
+      input.addEventListener('change',function(){ var L=[].slice.call(input.files||[]); input.value=''; addFiles(S.pickBox,L); });
+      document.body.appendChild(input);
+    }
+    S.pickBox=box; input.click();
+  }
+  function addFiles(box,L){
+    if(!box||!L||!L.length) return Promise.resolve([]);
+    var have=S.pend[box]||[], room=Math.max(0,4-have.length);
+    if(!room){ say('Four files at a time. Send these first.'); return Promise.resolve([]); }
+    if(L.length>room) say('Only the first '+room+' went in: four files at a time.');
+    S.reading=box; repaint();
+    return Promise.all(L.slice(0,room).map(function(f){ return readFile(f).catch(function(e){ say(e.message); return null; }); })).then(function(R){
+      R=R.filter(Boolean); S.pend[box]=(S.pend[box]||[]).concat(R); S.reading=null; repaint(); return R;
+    });
+  }
+  function tools(box){
+    var on=S.rec&&S.rec.box===box;
+    return '<span class="tp-tools"><button class="tp-ic" data-tp="attach" data-box="'+esc(box)+'" aria-label="Attach a photo, video or file">'+IC.clip+'</button>'
+      +(SR?'<button class="tp-ic'+(on?' on':'')+'" data-tp="mic" data-box="'+esc(box)+'" aria-pressed="'+!!on+'" aria-label="'+(on?'Stop the voice note':'Say it as a voice note')+'">'+IC.mic+'</button>':'')+'</span>';
+  }
+  function chip(f,box,i){
+    return '<span class="tp-file">'+(f.th?'<img src="'+esc(f.th)+'" alt="">':'<i>'+IC.doc+'</i>')+'<span>'+esc(f.n)+(f.k==='video'?' · 4 stills':'')+'</span>'
+      +(box!=null?'<button data-tp="unattach" data-box="'+esc(box)+'" data-i="'+i+'" aria-label="Remove '+esc(f.n)+'">×</button>':'')+'</span>';
+  }
+  function pend(box){
+    var P=S.pend[box]||[];
+    if(!P.length&&S.reading!==box) return '';
+    return '<div class="tp-pend">'+P.map(function(f,i){ return chip(f,box,i); }).join('')+(S.reading===box?'<span class="tp-file busy">Reading…</span>':'')+'</div>';
+  }
+  function files(j){ return j&&j.files&&j.files.length?'<div class="tp-pend in">'+j.files.map(function(f){ return chip(f,null); }).join('')+'</div>':''; }
+  function blocks(P){
+    var imgs=[]; (P||[]).forEach(function(f){ (f.imgs||[]).forEach(function(d){ imgs.push(d); }); });
+    return imgs.slice(0,4).map(function(d){ var m=/^data:(image\/(?:jpeg|png|webp|gif));base64,/.exec(d||''); return m?{type:'image',source:{type:'base64',media_type:m[1],data:d.slice(d.indexOf(',')+1)}}:null; }).filter(Boolean);
+  }
+  function fileWords(P){
+    var ph=(P||[]).filter(function(f){ return f.k==='image'; }), vi=(P||[]).filter(function(f){ return f.k==='video'; });
+    return (ph.length?'\n\n(Attached photo'+(ph.length>1?'s':'')+': '+ph.map(function(f){ return f.n; }).join(', ')+'. Describe only what you can see.)':'')
+      +(vi.length?'\n\n(Stills from the video '+vi.map(function(f){ return f.n; }).join(', ')+', in order.)':'')
+      +(P||[]).filter(function(f){ return f.text; }).map(function(f){ return '\n\nATTACHED FILE: '+f.n+'\n'+f.text; }).join('');
+  }
+  /* called right after a job starts, before its first step */
+  function attach(job,box,P){
+    P=P||S.pend[box]||[]; if(!job||!P.length) return job;
+    var k=K(), first=job.convo&&job.convo[0]; if(!first) return job;
+    var text=typeof first.content==='string'?first.content:'';
+    var B=blocks(P);
+    first.content=B.concat([{type:'text',text:(text+fileWords(P)).slice(0,30000)}]);
+    job.files=P.map(function(f){ return {n:f.n,k:f.k,th:f.th||''}; });
+    if(box) S.pend[box]=[];
+    if(B.length&&k&&k.brain&&k.brain()==='local') k.log(job,'Photos need Kova’s AI: sign in, or add your own Claude key in Settings. The words still went through.','blocked');
+    if(k) k.saveJobs();
+    return job;
+  }
+  function mic(box){
+    if(S.rec){ var was=S.rec.box; try{ S.rec.r.stop(); }catch(e){} S.rec=null; relisten(); repaint(); if(was===box) return; }
+    if(!SR){ say('Voice notes need a browser that can listen, like Chrome or Safari.'); return; }
+    var r=new SR(), ta=document.getElementById(box), base=ta?ta.value.replace(/\s*$/,''):'';
+    r.lang=navigator.language||'en-US'; r.interimResults=true; r.continuous=true;
+    r.onresult=function(ev){ var t='',i; for(i=0;i<ev.results.length;i++) t+=ev.results[i][0].transcript; var el=document.getElementById(box); if(el) el.value=(base?base+' ':'')+t.trim(); };
+    r.onerror=function(ev){ var why=ev&&ev.error; if(why!=='aborted'&&why!=='no-speech') say(why==='not-allowed'||why==='service-not-allowed'?'Kova needs the microphone for a voice note. Allow it in your browser settings.':'The voice note stopped ('+why+').'); };
+    r.onend=function(){ if(S.rec&&S.rec.r===r){ S.rec=null; relisten(); repaint(); } };
+    /* "hey <name>" listening and a voice note cannot share the microphone */
+    var L=window.KovaListen; if(L&&L.on&&L.on()){ try{ L.set(false); S.relisten=true; }catch(e){} }
+    try{ r.start(); S.rec={r:r,box:box}; repaint(); }catch(e){ relisten(); say('Voice notes are not available here.'); }
+  }
+  function relisten(){ if(S.relisten&&window.KovaListen){ S.relisten=false; try{ KovaListen.set(true); }catch(e){} } }
+
+  /* ================= 1. team chat ================= */
+  function chat(){ var c=lsJ(CKEY,null); if(!c||!Array.isArray(c.msgs)) c={msgs:[],round:null}; return c; }
+  function saveChat(c){ c.msgs=c.msgs.slice(-80); lsPut(CKEY,c); }
+  function mentions(text){
+    var t=String(text||''), L=mates(), out=[], re=/@([A-Za-z][\w'’-]*)/g, m;
+    var all=/(^|\s)@(everyone|team|all)\b/i.test(t);
+    while((m=re.exec(t))){
+      var nm=m[1].toLowerCase().replace(/['’]s$/,'');
+      var e=L.filter(function(x){ return x.n.toLowerCase()===nm; })[0];
+      if(e&&out.indexOf(e)<0) out.push(e);
+    }
+    return {list:out.slice(0,6),all:all};
+  }
+  function said(m){
+    var k=K(); if(!m) return '';
+    if(m.who==='you') return 'You: '+m.t;
+    if(m.who==='sys') return '';
+    var e=k.emp(m.who), j=jobOf(m.job), t='';
+    if(j){ t=j.say||''; if(j.report&&j.report.title) t+=(t?'\n':'')+'(Their report: '+j.report.title+(j.report.summary?' — '+short(j.report.summary,400):'')+')'; if(j.state==='waiting') t+=(t?' ':'')+'(waiting for the user’s OK)'; }
+    return (e?e.n:'A teammate')+': '+short(t||'(no answer yet)',800);
+  }
+  function context(e,c,src,r){
+    var i=c.msgs.indexOf(src), before=c.msgs.slice(Math.max(0,i-8),i), after=c.msgs.slice(i+1);
+    var names=r.names.filter(function(n){ return n!==e.n; });
+    return 'TEAM CHAT. You are '+e.n+', in a group chat with the user'+(names.length?' and your teammates '+names.join(', '):'')+'. Answer as yourself: a few short lines unless the job needs real work.\n'
+      +(before.length?'\nEarlier in the chat:\n'+before.map(said).filter(Boolean).join('\n')+'\n':'')
+      +'\nThe user’s message'+(r.all?' (to the whole team)':'')+':\n'+src.t+'\n'
+      +(after.length?'\nWhat your teammates already answered:\n'+after.map(said).filter(Boolean).join('\n')+'\n\nBuild on that, add your part, and do not repeat it.\n':'')
+      +(r.all&&e.tpl==='chief'?'\nThey asked everyone: use delegate to bring in the teammates who should answer, then give the combined answer.\n':'');
+  }
+  function send(text,box){
+    var k=K(); text=String(text||'').trim(); if(!k||!text) return null;
+    var c=chat();
+    if(c.round&&c.round.left&&c.round.left.length){ say('The team is still answering. Wait for them, or stop it.'); return null; }
+    var mm=mentions(text), who=mm.list.slice();
+    if(mm.all){ var ch=mates().filter(function(e){ return e.tpl==='chief'; })[0]; if(ch&&who.indexOf(ch)<0) who.unshift(ch); }
+    var P=(box&&S.pend[box])||[];
+    var you={id:uid('m'),who:'you',t:text,at:Date.now(),files:P.map(function(f){ return {n:f.n,k:f.k,th:f.th||''}; })};
+    c.msgs.push(you);
+    if(!who.length){
+      var r=k.route(text); if(!r){ c.msgs.pop(); say('Hire someone first.'); return null; }
+      who=[r.emp]; c.msgs.push({id:uid('m'),who:'sys',t:'Kova gave it to '+r.emp.n+': '+r.why+'.',at:Date.now()});
+    }
+    S.roundFiles=P.length?P:null; if(box) S.pend[box]=[];
+    c.round={from:you.id,left:who.map(function(e){ return e.id; }),names:who.map(function(e){ return e.n; }),all:mm.all};
+    saveChat(c); track('team_chat',{mates:who.length});
+    next();
+    return you;
+  }
+  function next(){
+    var k=K(), c=chat(), r=c.round; if(!k||!r) return;
+    if(!r.left.length){ c.round=null; saveChat(c); S.roundFiles=null; repaint(); return; }
+    var id=r.left.shift(), e=k.emp(id), src=c.msgs.filter(function(m){ return m.id===r.from; })[0];
+    if(!src){ c.round=null; saveChat(c); return; }
+    if(!e||!e.enabled){ c.msgs.push({id:uid('m'),who:'sys',t:(e?e.n+' is switched off':'That teammate is gone')+', so they did not answer.',at:Date.now()}); saveChat(c); return next(); }
+    var job=k.start(e,src.t,'chat',{chat:src.id});
+    if(!job){ c.msgs.push({id:uid('m'),who:'sys',t:e.n+' could not start on it.',at:Date.now()}); saveChat(c); return next(); }
+    job.convo[0].content=context(e,c,src,r);
+    if(S.roundFiles) attach(job,null,S.roundFiles); else k.saveJobs();
+    c.msgs.push({id:uid('m'),who:e.id,job:job.id,at:Date.now()}); saveChat(c);
+    var Q=k._S; Q.waits=Q.waits||{}; var prev=Q.waits[job.id];
+    Q.waits[job.id]=function(j){ if(prev) prev(j); setTimeout(next,40); };
+    repaint(); scrollChat();
+  }
+  function stopRound(){
+    var k=K(), c=chat(); if(!c.round) return;
+    var left=c.round.left.map(function(id){ var e=k.emp(id); return e?e.n:''; }).filter(Boolean);
+    c.round.left=[]; c.round=null;
+    var last=c.msgs.filter(function(m){ return m.job; }).slice(-1)[0], j=last&&jobOf(last.job);
+    if(j&&/running|waiting|paused/.test(j.state)) k.stop(j.id);
+    c.msgs.push({id:uid('m'),who:'sys',t:'You stopped it'+(left.length?'. Not asked: '+left.join(', '):'')+'.',at:Date.now()});
+    saveChat(c); repaint();
+  }
+  /* after a reload a round cannot carry on: say who was not asked */
+  function settleOld(){
+    var c=chat(), r=c.round; if(!r) return;
+    var last=c.msgs.filter(function(m){ return m.job; }).slice(-1)[0], j=last&&jobOf(last.job);
+    if(j&&/running|waiting|paused/.test(j.state)) return;
+    var k=K(), left=(r.left||[]).map(function(id){ var e=k&&k.emp(id); return e?e.n:''; }).filter(Boolean);
+    c.round=null; if(left.length) c.msgs.push({id:uid('m'),who:'sys',t:'Kova was closed before '+left.join(', ')+' answered. Ask again.',at:Date.now()});
+    saveChat(c);
+  }
+  function scrollChat(){ setTimeout(function(){ var t=document.querySelector('.tp-chat'); if(t&&t.lastElementChild&&t.lastElementChild.scrollIntoView) t.lastElementChild.scrollIntoView({block:'nearest'}); },60); }
+  function withAt(t){ return esc(t).replace(/(^|\s)@([A-Za-z][\w'’-]*)/g,'$1<b class="tp-mn">@$2</b>').replace(/\n/g,'<br>'); }
+  var STATE={running:'working',waiting:'needs your OK',paused:'paused, you stepped in',done:'',failed:'could not finish',stopped:'stopped'};
+  function mateMsg(e,j,depth,from){
+    var k=K(), st=STATE[j.state]||'', last=j.steps.filter(function(s){ return s.k!=='think'; }).slice(-1)[0];
+    var body=j.state==='running'||j.state==='paused'?'<div class="tp-live"><span class="tp-dots" aria-hidden="true"><i></i><i></i><i></i></span>'+esc(last?last.t:'Reading it')+'</div>'
+      :j.state==='waiting'?'<div class="tp-say">'+md(j.say||'I have something for you to approve.')+'</div><button class="crd-btn tp-sm" data-c="nav" data-n="approvals">Review it</button>'
+      :j.state==='done'?'<div class="tp-say">'+md(j.say||(j.report?'Here is the report.':'Done.'))+'</div>'+(j.report?'<button class="crd-link" data-tp="openjob" data-j="'+esc(j.id)+'">Open the report: '+esc(short(j.report.title,60))+'</button>':'')
+      :'<div class="tp-say">'+esc(j.note||'This one did not finish.')+'</div>';
+    var kids=depth<3?k.jobsOf().filter(function(x){ return x.meta&&x.meta.parent===j.id; }):[];
+    return '<div class="tp-m mate">'+k.av(e)+'<div class="tp-b"><div class="tp-who"><b>'+esc(e.n)+'</b><span>'+esc(e.title)+(from?' · handed over by '+esc(from):'')+(st?' · '+st:'')+'</span></div>'+body+'</div></div>'
+      +kids.map(function(x){ var ke=k.emp(x.emp); return ke?mateMsg(ke,x,depth+1,e.n):''; }).join('');
+  }
+  function msg(m){
+    var k=K();
+    if(m.who==='you') return '<div class="tp-m you"><div class="tp-b">'+withAt(m.t)+(m.files&&m.files.length?'<div class="tp-pend in">'+m.files.map(function(f){ return chip(f,null); }).join('')+'</div>':'')+'</div></div>';
+    if(m.who==='sys') return '<div class="tp-m sys">'+esc(m.t)+'</div>';
+    var e=k.emp(m.who), j=jobOf(m.job);
+    if(!e) return '';
+    if(!j) return '<div class="tp-m mate">'+k.av(e)+'<div class="tp-b"><div class="tp-who"><b>'+esc(e.n)+'</b></div><div class="tp-say tp-soft">This answer is no longer kept (Kova keeps the last 50 jobs).</div></div></div>';
+    return mateMsg(e,j,0,'');
+  }
+  var TRY=['@everyone what should I focus on today?','@Sage @Maya plan this week’s posts around my training','@Ravi what did my competitors post this week?'];
+  function chatPage(){
+    var k=K(), c=chat(), L=mates(), r=c.round, busy=!!(r&&(r.left.length||c.msgs.some(function(m){ var j=m.job&&jobOf(m.job); return j&&/running|paused/.test(j.state); })));
+    var lastAt=c.msgs.length?c.msgs[c.msgs.length-1].at:0;
+    var tr=TRY.filter(function(t){ return mentions(t).list.length||/@everyone/.test(t); });
+    return k.head(lastAt,'Team chat',c.msgs.length?'Updated '+ago(lastAt):'Several teammates in one conversation')
+      +'<div class="tp-chat" role="log" aria-label="Team chat">'+(c.msgs.length?c.msgs.map(msg).join('')
+        :'<div class="crd-card tp-hello"><b>Ask several teammates at once.</b><span>Type @ and a name, or @everyone. Each one answers in turn and sees what the others said. With no @, Kova picks who owns it.</span>'
+          +'<div class="tp-tries">'+tr.map(function(t){ return '<button class="crd-pill" data-tp="try" data-q="'+esc(t)+'">'+esc(t)+'</button>'; }).join('')+'</div></div>')+'</div>'
+      +'<div class="crd-card tp-cbox">'
+        +'<div class="tp-at" role="group" aria-label="Add a teammate to the message"><button class="tp-chip" data-tp="at" data-n="everyone">@everyone</button>'
+          +L.map(function(e){ return '<button class="tp-chip" data-tp="at" data-n="'+esc(e.n)+'">'+k.av(e)+'@'+esc(e.n)+'</button>'; }).join('')+'</div>'
+        +'<div class="crw-ask"><textarea id="tpChat" rows="2" placeholder="@Sage @Maya plan this week’s posts around my training" aria-label="Message the team"></textarea>'
+          +tools('tpChat')+'<button class="crw-send" data-tp="chatsend" aria-label="Send"'+(busy?' disabled':'')+'>'+IC.send+'</button></div>'
+        +pend('tpChat')
+        +'<div class="tp-crow">'+(busy?'<span class="tp-hint">The team is answering…</span><button class="crw-link" data-tp="chatstop">Stop</button>':'<span class="tp-hint">Anything that leaves Kova waits for your OK.</span>')
+          +(c.msgs.length&&!busy?'<button class="crw-link" data-tp="chatclear">Clear the chat</button>':'')+'</div>'
+      +'</div>';
+  }
+
+  /* ================= 2. do it again, saved skills, schedules ================= */
+  function skillsOf(e){ return (e&&e.skills||[]).filter(function(x){ return x&&x.text; }); }
+  function saveSkill(e,text,name,from,idv){
+    var L=skillsOf(e).slice(), ex=L.filter(function(x){ return idv?x.id===idv:x.text===text; })[0];
+    if(ex) return ex;
+    var sk={id:idv||uid('k'),name:short(name||String(text).split('\n')[0],60),text:String(text).slice(0,4000),at:Date.now(),from:from||''};
+    L.push(sk); save(e,{skills:L.slice(-20)}); return sk;
+  }
+  function setEvery(e,skId,v){
+    var L=skillsOf(e).map(function(x){ return x.id!==skId?x:Object.assign({},x,{every:v||null,last:v?Date.now():x.last}); });
+    save(e,{skills:L}); var k=K(); if(k&&k.syncCloud) k.syncCloud();
+  }
+  function dropSkill(e,skId){ save(e,{skills:skillsOf(e).filter(function(x){ return x.id!==skId; })}); var k=K(); if(k&&k.syncCloud) k.syncCloud(); }
+  function runSkill(e,sk){
+    var k=K(); if(!k||!e||!sk) return null;
+    if(!e.enabled){ say(e.n+' is switched off.'); return null; }
+    if(k.busy(e.id)){ say(e.n+' is already working.'); return null; }
+    var j=k.start(e,sk.text,'skill',{skill:sk.id});
+    k._S.view='team'; k._S.nav='team'; k._S.tab=e.id; k._S.scroll=true; repaint();
+    return j;
+  }
+  function pickHtml(key,v){
+    var p=S.pv[key]||{freq:(v&&v.freq)||'daily',time:(v&&v.time)||'09:00',dow:v&&v.dow!=null?+v.dow:1,cloud:v?!!v.cloud:server()};
+    S.pv[key]=p;
+    var opt=function(val,l,cur){ return '<option value="'+val+'"'+(String(cur)===String(val)?' selected':'')+'>'+l+'</option>'; };
+    return '<div class="tp-pick" data-key="'+esc(key)+'">'
+      +'<label>How often<select data-tpf="freq">'+opt('daily','Every day',p.freq)+opt('weekdays','Weekdays',p.freq)+opt('weekly','Once a week',p.freq)+'</select></label>'
+      +(p.freq==='weekly'?'<label>Day<select data-tpf="dow">'+[1,2,3,4,5,6,0].map(function(d){ return opt(d,DAYS[d],p.dow); }).join('')+'</select></label>':'')
+      +'<label>Time<input type="time" data-tpf="time" value="'+esc(p.time)+'"></label>'
+      +'<label class="tp-chk"><input type="checkbox" data-tpf="cloud"'+(p.cloud?' checked':'')+(server()?'':' disabled')+'> Also while Kova is closed'+(server()?'':' (sign in first)')+'</label>'
+      +'<div class="crd-row"><button class="crd-btn tp-sm" data-tp="picksave" data-key="'+esc(key)+'">Save</button><button class="crd-btn ghost tp-sm" data-tp="pickcancel">Cancel</button>'
+      +(v&&v.freq?'<button class="crd-btn ghost tp-sm" data-tp="pickoff" data-key="'+esc(key)+'">Stop repeating</button>':'')+'</div></div>';
+  }
+  function again(j){
+    var k=K(); if(!k||!j||j.state!=='done'||j.brain==='taught'||/^Watch https?:/.test(j.text||'')) return '';
+    var e=k.emp(j.emp); if(!e) return '';
+    var sk=skillsOf(e).filter(function(x){ return x.text===j.text; })[0], key='j:'+j.id;
+    return '<div class="tp-again"><button class="crw-link" data-tp="redo" data-j="'+esc(j.id)+'">Do it again</button>'
+      +(sk?'<span class="tp-saved">Saved as a skill'+(sk.every?' · '+esc(every(sk.every)):'')+'</span>':'<button class="crw-link" data-tp="saveskill" data-j="'+esc(j.id)+'">Save as a skill</button>')
+      +'<button class="crw-link" data-tp="pick" data-key="'+esc(key)+'" aria-expanded="'+(S.pick===key)+'">'+(sk&&sk.every?'Change when it repeats':'Make it a routine')+'</button></div>'
+      +(S.pick===key?pickHtml(key,sk&&sk.every):'');
+  }
+  function skillRows(e,withWho){
+    var k=K();
+    return skillsOf(e).map(function(sk){ var key='s:'+e.id+':'+sk.id;
+      return '<div class="tp-sk"><div class="tp-skt">'+(withWho?k.av(e):'')+'<div><b>'+esc(sk.name)+'</b><span>'+(withWho?esc(e.n)+' · ':'')+esc(every(sk.every))+(sk.last&&sk.every?' · last ran '+esc(ago(sk.last)):'')+'</span></div></div>'
+        +'<div class="tp-ska"><button class="crd-btn tp-sm" data-tp="skrun" data-e="'+esc(e.id)+'" data-k="'+esc(sk.id)+'">Run</button>'
+        +'<button class="crd-btn ghost tp-sm" data-tp="pick" data-key="'+esc(key)+'" aria-expanded="'+(S.pick===key)+'">'+(sk.every?'Change':'Repeat')+'</button>'
+        +'<button class="crw-link" data-tp="skdrop" data-e="'+esc(e.id)+'" data-k="'+esc(sk.id)+'" aria-label="Remove the skill '+esc(sk.name)+'">Remove</button></div>'
+        +(S.pick===key?pickHtml(key,sk.every):'')+'</div>'; }).join('');
+  }
+  /* saved skills on a schedule run here while Kova is open (the server
+     runs the ones marked "also while closed" when it is not) */
+  function tick(){
+    var k=K(); if(!k||!k.slot) return; var now=Date.now();
+    mates().forEach(function(e){ skillsOf(e).forEach(function(sk){
+      var v=sk.every; if(!v||!v.freq) return;
+      var at=k.slot({routine:{freq:v.freq,time:v.time,dow:v.dow,job:sk.text},lastRoutine:+sk.last||0},now);
+      if(at==null||k.busy(e.id)) return;
+      save(e,{skills:skillsOf(k.emp(e.id)).map(function(x){ return x.id===sk.id?Object.assign({},x,{last:now}):x; })});
+      k.start(k.emp(e.id),sk.text,'skill',{skill:sk.id});
+    }); });
+  }
+
+  /* ================= 4. meet your team, ready-made routines ================= */
+  var STARTERS={
+    brief:{tpl:'chief',name:'Morning brief',every:{freq:'daily',time:'07:00'},text:'Morning brief: my meetings today, what is due and what is overdue, what is at risk, and the one thing to do first. Numbers first, five short lines.'},
+    train:{tpl:'training',name:'Today’s training',every:{freq:'daily',time:'07:00'},text:'Tell me what to train today and how hard, from my recovery.'},
+    inbox:{tpl:'inbox',name:'Inbox sweep',every:{freq:'weekdays',time:'09:00'},text:'Inbox sweep: who is waiting on a reply from me and who I am waiting on. Draft the follow-ups for my OK.'},
+    comments:{tpl:'social',name:'Comments roundup',every:{freq:'weekly',dow:1,time:'09:00'},text:'Comments roundup: what people said on my posts this past week (what they loved, asked and complained about) and replies for the top three.'},
+    plan:{tpl:'pm',name:'Plan my week',every:{freq:'weekly',dow:1,time:'08:00'},text:'Plan my week: what is due, what is late, and a realistic order to do it in, with new dates for anything that will slip.'}
+  };
+  var NEEDS=[
+    {k:'train',l:'Training',tpl:'training',first:'What should I train today, and how hard?',st:'train'},
+    {k:'food',l:'Food',tpl:'nutrition',first:'How is my eating today against my target?',st:'own'},
+    {k:'sleep',l:'Sleep',tpl:'sleep',first:'How did I sleep last night, and what is the one thing to do tonight?',st:'own'},
+    {k:'post',l:'Posting',tpl:'social',first:'What should I post this week?',st:'comments'},
+    {k:'inbox',l:'Follow-ups',tpl:'inbox',first:'Who is waiting on a reply from me?',st:'inbox'},
+    {k:'plan',l:'Planning my day',tpl:'chief',first:'Brief me on today.',st:'brief'},
+    {k:'research',l:'Competitors',tpl:'research',first:'What did my competitors post and price this week?',st:'watch'}
+  ];
+  function starterOn(k0){ var st=STARTERS[k0], e=st&&byTpl(st.tpl); if(!e) return false; var sk=skillsOf(e).filter(function(x){ return x.id==='st_'+k0; })[0]; return !!(sk&&sk.every); }
+  function setStarter(k0,on){
+    var st=STARTERS[k0], e=st&&byTpl(st.tpl); if(!e) return false;
+    if(on){ saveSkill(e,st.text,st.name,'starter','st_'+k0); setEvery(K().emp(e.id),'st_'+k0,Object.assign({},st.every,{cloud:server()})); }
+    else dropSkill(e,'st_'+k0);
+    return true;
+  }
+  function needLine(n,e){
+    if(n.st==='own'){ var r=e.routine||{}; return r.freq&&r.freq!=='off'?'Routine: '+K().describeRoutine(e):'Turns on their routine'; }
+    if(n.st==='watch') return 'Then: watch a competitor’s page for changes';
+    var st=STARTERS[n.st]; return st?st.name+': '+every(st.every).replace(', also while Kova is closed',''):'';
+  }
+  function meetShown(){ var k=K(); return !!k&&!lsJ(MKEY,null)&&k.jobsOf().length===0&&mates().length>0; }
+  function meet(){
+    if(!meetShown()) return '';
+    var k=K(), pk=NEEDS.filter(function(n){ return S.sel.indexOf(n.k)>=0&&byTpl(n.tpl); });
+    var seen=[], rows=pk.filter(function(n){ var e=byTpl(n.tpl); if(seen.indexOf(e.id)>=0) return false; seen.push(e.id); return true; });
+    var first=rows[0]&&byTpl(rows[0].tpl);
+    return '<div class="crd-card tp-meet"><div class="crd-chd"><span>Meet your team</span><small>What do you want help with? Kova picks the teammates and gives each one a first job.</small></div>'
+      +'<div class="tp-needs" role="group" aria-label="What you want help with">'+NEEDS.filter(function(n){ return byTpl(n.tpl); }).map(function(n){ var on=S.sel.indexOf(n.k)>=0;
+        return '<button class="crd-pill'+(on?' on':'')+'" data-tp="need" data-k="'+n.k+'" aria-pressed="'+on+'">'+esc(n.l)+'</button>'; }).join('')+'</div>'
+      +(rows.length?'<div class="tp-meetl">'+rows.map(function(n){ var e=byTpl(n.tpl);
+        return '<div class="tp-mrow">'+k.av(e)+'<div><b>'+esc(e.n)+'</b> <span>'+esc(e.title)+'</span><small>First job: “'+esc(n.first)+'”</small><small>'+esc(needLine(n,e))+'</small></div></div>'; }).join('')+'</div>':'')
+      +'<div class="crd-row"><button class="crd-btn" data-tp="meetgo"'+(rows.length?'':' disabled')+'>'+(first?'Start with '+esc(first.n):'Pick one or more')+'</button><button class="crd-btn ghost" data-tp="meetskip">Not now</button></div>'
+      +'<div class="tp-hint">The ready-made routines stay on the Routines page, where you can turn them on or off.</div></div>';
+  }
+  function meetGo(){
+    var k=K(), pk=NEEDS.filter(function(n){ return S.sel.indexOf(n.k)>=0&&byTpl(n.tpl); }); if(!k||!pk.length) return null;
+    pk.forEach(function(n){ var e=byTpl(n.tpl);
+      if(n.st==='own'){ var r=e.routine||{}; if(!r.freq||r.freq==='off') k.setRoutine(e.id,true); }
+      else if(STARTERS[n.st]) setStarter(n.st,true); });
+    lsPut(MKEY,{at:Date.now(),sel:S.sel.slice()}); track('team_meet',{needs:S.sel.length});
+    var n0=pk[0], e0=byTpl(n0.tpl), j=k.start(e0,n0.first,'you');
+    S.sel=[]; k.openMate(e0.id);
+    if(n0.st==='watch') setTimeout(function(){ var w=document.getElementById('tpWatch'); if(w&&w.scrollIntoView) w.scrollIntoView({block:'center'}); },400);
+    return j;
+  }
+  function routinesExtra(){
+    var k=K();
+    var st=Object.keys(STARTERS).map(function(id){ var s=STARTERS[id], e=byTpl(s.tpl); if(!e) return ''; var on=starterOn(id);
+      return '<div class="tp-st"><div class="tp-skt">'+k.av(e)+'<div><b>'+esc(s.name)+'</b><span>'+esc(e.n)+' · '+esc(every(s.every).replace(', also while Kova is closed',''))+(on&&server()?' · also while closed':'')+'</span><small>'+esc(s.text)+'</small></div></div>'
+        +'<button class="crw-tog'+(on?' on':'')+'" data-tp="starter" data-k="'+id+'" role="switch" aria-checked="'+on+'" aria-label="'+esc(s.name)+'"><span></span></button></div>'; }).join('');
+    var rv=byTpl('research');
+    if(rv) st+='<div class="tp-st"><div class="tp-skt">'+k.av(rv)+'<div><b>Watch a page</b><span>'+esc(rv.n)+' · every 6 hours</span><small>A competitor’s prices, a job board, a changelog: you hear only what changed.</small></div></div>'
+      +'<button class="crd-btn ghost tp-sm" data-tp="openwatch" data-e="'+esc(rv.id)+'">'+((rv.watches||[]).length?(rv.watches.length+' watched'):'Set it up')+'</button></div>';
+    var mine=mates().filter(function(e){ return skillsOf(e).some(function(x){ return x.every&&!/^st_/.test(x.id); }); });
+    var sched=mine.map(function(e){ var keep=Object.assign({},e,{skills:skillsOf(e).filter(function(x){ return x.every&&!/^st_/.test(x.id); })}); return skillRows(keep,true); }).join('');
+    return '<div class="crd-card tp-starters"><div class="crd-chd"><span>Ready-made routines</span><small>Switch one on and that teammate does it on schedule'+(server()?', on the Kova server when Kova is closed':'')+'.</small></div>'+st+'</div>'
+      +(sched?'<div class="crd-card"><div class="crd-chd"><span>Your saved skills on a schedule</span><small>From “Make it a routine” on a finished job</small></div>'+sched+'</div>':'');
+  }
+
+  /* ================= 5. watch a page ================= */
+  function host(u){ try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return u; } }
+  function normUrl(u){ u=String(u||'').trim(); if(!u) return ''; if(!/^https?:\/\//i.test(u)) u='https://'+u; try{ var x=new URL(u); return /\./.test(x.hostname)?x.href:''; }catch(e){ return ''; } }
+  function watchCard(e){
+    var L=e.watches||[], ok=server();
+    return '<div class="crd-card tp-watch" id="tpWatch"><div class="crd-chd"><span>Watch a page</span><small>'+esc(e.n)+' reads it every 6 hours on the Kova server and tells you only what changed.</small></div>'
+      +(ok?'':'<div class="crw-note">Watching pages needs you signed in to Kova.</div>')
+      +'<div class="tp-wf"><input id="tpWUrl" type="url" inputmode="url" placeholder="competitor.com/pricing" aria-label="The page to watch"><input id="tpWNote" placeholder="What to watch for, e.g. prices (optional)" aria-label="What to watch for">'
+      +'<button class="crd-btn tp-sm" data-tp="watchadd" data-e="'+esc(e.id)+'"'+(ok?'':' disabled')+'>Watch it</button></div>'
+      +(L.length?'<div class="tp-wl">'+L.map(function(x){ var busy=S.checking===x.id;
+        return '<div class="tp-wr"><div><b>'+esc(host(x.url))+'</b><span>'+(x.note?'For: '+esc(x.note)+' · ':'')+(x.last?'Checked '+esc(ago(x.last)):'Not checked yet')+'</span>'+(x.res?'<small>'+esc(x.res)+'</small>':'')+'</div>'
+          +'<div class="tp-ska"><button class="crd-btn ghost tp-sm" data-tp="watchcheck" data-e="'+esc(e.id)+'" data-w="'+esc(x.id)+'"'+(ok&&!busy?'':' disabled')+'>'+(busy?'Reading…':'Check now')+'</button>'
+          +'<button class="crw-link" data-tp="watchdrop" data-e="'+esc(e.id)+'" data-w="'+esc(x.id)+'" aria-label="Stop watching '+esc(host(x.url))+'">Stop</button></div></div>'; }).join('')+'</div>':'')
+      +'</div>';
+  }
+  function setWatch(e,id,patch){ save(e,{watches:(e.watches||[]).map(function(x){ return x.id===id?Object.assign({},x,patch):x; })}); }
+  function addWatch(e,url,note){
+    var u=normUrl(url); if(!u){ say('That does not look like a web address.'); return null; }
+    var L=(e.watches||[]).slice(); if(L.some(function(x){ return x.url===u; })){ say('Already watching that page.'); return null; }
+    if(L.length>=10){ say('Ten pages at most. Stop one first.'); return null; }
+    var x={id:uid('w'),url:u,note:String(note||'').trim().slice(0,120),at:Date.now()}; L.push(x); save(e,{watches:L});
+    var k=K(); if(k&&k.syncCloud) k.syncCloud();
+    track('team_watch',{});
+    return x;
+  }
+  function checkWatch(e,id){
+    var x=(e.watches||[]).filter(function(w){ return w.id===id; })[0];
+    if(!x) return Promise.resolve(null);
+    if(!(window.KovaLink&&KovaLink.authFetch)||!server()){ setWatch(e,id,{res:'Sign in to Kova to have pages read.'}); repaint(); return Promise.resolve(null); }
+    S.checking=id; repaint();
+    return KovaLink.authFetch('/crew/watch/check',{json:{id:x.id,url:x.url,emp:e.id,note:x.note||''}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok) throw new Error(j.error||'Kova could not read it.'); return j; }); })
+      .then(function(j){
+        var res=j.error?'Could not read it: '+j.error:j.first?'Kova saved how it looks now. You will hear when it changes.':j.changed?'It changed: '+j.added+' new, '+j.removed+' gone. The report is in '+e.n+'’s jobs.':'No change since '+(j.since?ago(j.since):'the last check')+'.';
+        S.checking=null; setWatch(K().emp(e.id),id,{last:Date.now(),res:res}); repaint();
+        if(j.changed&&K().pullCloud) K().pullCloud();
+        return j;
+      },function(err){ S.checking=null; setWatch(K().emp(e.id),id,{res:err.message}); repaint(); return null; });
+  }
+  function mateExtra(e){
+    var sk=skillsOf(e);
+    return (sk.length?'<div class="crd-card"><div class="crd-chd"><span>Saved skills</span><small>Jobs you kept. One tap runs them again.</small></div>'+skillRows(e,false)+'</div>':'')
+      +(e.tpl==='research'||(e.watches||[]).length?watchCard(e):'');
+  }
+
+  /* ================= 6. search ================= */
+  function list(){
+    var k=K(), out=[]; if(!k) return out;
+    k.jobsOf().slice(-50).forEach(function(j){ var e=k.emp(j.emp); if(!e) return; var r=j.report||{};
+      out.push({kind:'job',ref:j.id,t:short(r.title||String(j.text||'').split('\n')[0],80),s:e.n+(r.title?' · report':'')+' · '+ago(j.end||j.at),text:String(j.text||'').split('\n')[0]+' '+(r.title||''),words:(j.say||'')+' '+(r.summary||'')+' '+e.n+' '+e.title,at:j.end||j.at}); });
+    mates().forEach(function(e){
+      skillsOf(e).forEach(function(sk){ out.push({kind:'mate',ref:e.id,t:'Saved skill: '+sk.name,s:e.n+' · '+every(sk.every),text:sk.name,words:sk.text+' '+e.n}); });
+      var r=e.routine||{}; if(r.freq&&r.freq!=='off'&&r.job) out.push({kind:'routine',ref:e.id,t:'Routine: '+short(r.job,70),s:e.n+' · '+k.describeRoutine(e),text:r.job,words:e.n+' routine'});
+      (e.watches||[]).forEach(function(x){ out.push({kind:'watch',ref:e.id,t:'Watching '+host(x.url),s:e.n+(x.last?' · checked '+ago(x.last):''),text:host(x.url)+' '+(x.note||''),words:x.url+' watch page'}); });
+    });
+    return out;
+  }
+  function openJob(id){
+    var k=K(), j=jobOf(id); if(!k||!j) return false;
+    if(window.go) try{ go('workteam'); }catch(x){}
+    setTimeout(function(){
+      k.openMate(j.emp);
+      setTimeout(function(){
+        var el=document.getElementById('job-'+id);
+        if(!el){ k._S.nav='jobs'; k._S.tab='all'; repaint(); el=document.getElementById('job-'+id); }
+        if(el){ if(el.scrollIntoView) el.scrollIntoView({block:'center'}); el.classList.add('tp-flash'); setTimeout(function(){ el.classList.remove('tp-flash'); },1600); }
+      },260);
+    },140);
+    return true;
+  }
+  function open(kind,ref){
+    var k=K(); if(!k) return;
+    if(kind==='job') return openJob(ref);
+    if(window.go) try{ go('workteam'); }catch(x){}
+    setTimeout(function(){ if(kind==='routine'){ k._S.nav='routines'; k._S.view='team'; repaint(); } else { k.openMate(ref); if(kind==='watch') setTimeout(function(){ var w=document.getElementById('tpWatch'); if(w&&w.scrollIntoView) w.scrollIntoView({block:'center'}); },300); } },140);
+  }
+
+  /* ================= 7. share into Kova ================= */
+  var SHARE_CACHE='kova-share';
+  function readShared(){
+    if(!('caches' in window)) return Promise.resolve(null);
+    return caches.open(SHARE_CACHE).then(function(c){
+      return c.match('share-in/meta').then(function(r){ return r?r.json():null; }).then(function(meta){
+        if(!meta) return null;
+        return Promise.all((meta.files||[]).map(function(f,i){ return c.match('share-in/file/'+i).then(function(r){ return r?r.blob():null; }).then(function(b){ return b?new File([b],f.name||('shared-'+(i+1)),{type:f.type||b.type}):null; }); }))
+          .then(function(F){ return {title:meta.title||'',text:meta.text||'',url:meta.url||'',files:F.filter(Boolean),at:meta.at||Date.now()}; });
+      });
+    }).catch(function(){ return null; });
+  }
+  function clearShared(){ if('caches' in window) try{ caches.delete(SHARE_CACHE); }catch(e){} }
+  function shareText(s){ return [s.title,s.text,s.url&&String(s.text||'').indexOf(s.url)<0?s.url:''].filter(Boolean).join('\n').trim(); }
+  function shareSheet(){
+    var s=S.share, k=K(); if(!s||!k) return;
+    var old=document.getElementById('tpShare'); if(old) old.remove();
+    var el=document.createElement('div'); el.id='tpShare'; el.className='tp-sheet'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Shared to Kova');
+    var t=shareText(s);
+    el.innerHTML='<div class="tp-shb crw"><div class="crd-chd"><span>Shared to Kova</span><button class="crw-link" data-tp="shareclose">Close</button></div>'
+      +(t?'<div class="tp-shp">'+esc(short(t,400))+'</div>':'')
+      +(s.files.length?'<div class="tp-pend in">'+s.files.map(function(f){ return '<span class="tp-file"><i>'+IC.doc+'</i><span>'+esc(f.name)+'</span></span>'; }).join('')+'</div>':'')
+      +'<div class="tp-shh">Send it to</div><div class="tp-at"><button class="tp-chip" data-tp="shareto" data-e="chat">Team chat</button>'
+      +mates().map(function(e){ return '<button class="tp-chip" data-tp="shareto" data-e="'+esc(e.id)+'">'+k.av(e)+esc(e.n)+'</button>'; }).join('')+'</div>'
+      +(t?'<div class="crd-row"><button class="crd-btn ghost tp-sm" data-tp="sharetask">Add it as a task</button></div>':'')+'</div>';
+    document.body.appendChild(el);
+    var b=el.querySelector('.tp-chip'); if(b) try{ b.focus(); }catch(e){}
+  }
+  function shareTo(target){
+    var s=S.share, k=K(); if(!s||!k) return;
+    var box=target==='chat'?'tpChat':'crwEmpAsk', t=shareText(s);
+    closeShare();
+    if(window.go) try{ go('workteam'); }catch(x){}
+    setTimeout(function(){
+      if(target==='chat'){ k._S.view='team'; k._S.nav='chat'; repaint(); } else k.openMate(target);
+      var fill=function(){ var ta=document.getElementById(box); if(ta){ ta.value=t; try{ ta.focus({preventScroll:true}); }catch(x){} } };
+      fill();
+      (s.files.length?addFiles(box,s.files):Promise.resolve()).then(fill);
+    },160);
+  }
+  function shareTask(){
+    var s=S.share, w=W(); if(!s||!w) return;
+    var name=short(s.title||s.text||s.url||'Shared item',90);
+    w.create('items',{name:name,status:'Not Started',priority:'Medium',notes:[s.text,s.url].filter(Boolean).join('\n').slice(0,2000),checklist:[]},'user');
+    closeShare(); say('Added as a task: '+name);
+    try{ if(window.__workDraw) __workDraw.refresh(); }catch(x){}
+  }
+  function closeShare(){ var el=document.getElementById('tpShare'); if(el) el.remove(); S.share=null; clearShared(); }
+  function checkShare(){
+    if(!/[?&]shared=1\b/.test(location.search)) return Promise.resolve(null);
+    try{ history.replaceState(null,'',location.pathname+location.hash); }catch(e){}
+    return readShared().then(function(s){ if(!s||(!s.files.length&&!shareText(s))) return null; S.share=s; track('share_in',{files:s.files.length}); shareSheet(); return s; });
+  }
+
+  /* ================= clicks and fields ================= */
+  function onClick(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-tp]'); if(!b||b.disabled) return;
+    var c=b.getAttribute('data-tp'), k=K(); if(!k) return;
+    ev.__crwInside=true;
+    var box=b.getAttribute('data-box'), e=b.getAttribute('data-e')?k.emp(b.getAttribute('data-e')):null, jid=b.getAttribute('data-j'), key=b.getAttribute('data-key');
+    if(c==='attach'){ picker(box); return; }
+    if(c==='unattach'){ (S.pend[box]||[]).splice(+b.getAttribute('data-i'),1); repaint(); return; }
+    if(c==='mic'){ mic(box); return; }
+    if(c==='at'){ var ta=document.getElementById('tpChat'); if(ta){ var tag='@'+b.getAttribute('data-n')+' '; if(ta.value.indexOf(tag.trim())<0) ta.value=(ta.value&&!/\s$/.test(ta.value)?ta.value+' ':ta.value)+tag; try{ ta.focus(); }catch(x){} } return; }
+    if(c==='try'){ var t2=document.getElementById('tpChat'); if(t2){ t2.value=b.getAttribute('data-q'); try{ t2.focus(); }catch(x){} } return; }
+    if(c==='chatsend'){ var t3=document.getElementById('tpChat'); if(!t3||!t3.value.trim()) return; var v=t3.value; if(send(v,'tpChat')){ t3.value=''; k._S.clear={tpChat:1}; repaint(); scrollChat(); } return; }
+    if(c==='chatstop'){ stopRound(); return; }
+    if(c==='chatclear'){ lsPut(CKEY,{msgs:[],round:null}); repaint(); return; }
+    if(c==='openjob'){ openJob(jid); return; }
+    if(c==='redo'){ var j=jobOf(jid), ej=j&&k.emp(j.emp); if(ej){ if(k.busy(ej.id)){ say(ej.n+' is already working.'); return; } k.start(ej,j.text,'you'); k._S.view='team'; k._S.nav='team'; k._S.tab=ej.id; k._S.scroll=true; repaint(); } return; }
+    if(c==='saveskill'){ var j2=jobOf(jid), es=j2&&k.emp(j2.emp); if(es){ var sk=saveSkill(es,j2.text,null,j2.id); say('Saved as '+es.n+'’s skill: '+sk.name); repaint(); } return; }
+    if(c==='pick'){ S.pick=S.pick===key?null:key; if(!S.pick) delete S.pv[key]; repaint(); return; }
+    if(c==='pickcancel'){ if(S.pick) delete S.pv[S.pick]; S.pick=null; repaint(); return; }
+    if(c==='picksave'||c==='pickoff'){
+      var p=S.pv[key]||{}, tgt=target(key); if(!tgt){ S.pick=null; repaint(); return; }
+      var v2=c==='pickoff'?null:{freq:p.freq||'daily',time:/^\d{1,2}:\d{2}$/.test(p.time||'')?p.time:'09:00',dow:p.freq==='weekly'?+p.dow:undefined,cloud:!!p.cloud&&server()};
+      if(v2&&v2.dow===undefined) delete v2.dow;
+      setEvery(k.emp(tgt.e.id),tgt.sk.id,v2); S.pick=null; delete S.pv[key];
+      say(v2?tgt.e.n+' will do it '+every(v2).toLowerCase()+'.':'It no longer repeats.'); repaint(); return;
+    }
+    if(c==='skrun'){ var sk2=skillsOf(e).filter(function(x){ return x.id===b.getAttribute('data-k'); })[0]; runSkill(e,sk2); return; }
+    if(c==='skdrop'){ dropSkill(e,b.getAttribute('data-k')); repaint(); return; }
+    if(c==='need'){ var nk=b.getAttribute('data-k'), i=S.sel.indexOf(nk); if(i>=0) S.sel.splice(i,1); else S.sel.push(nk); repaint(); return; }
+    if(c==='meetgo'){ meetGo(); return; }
+    if(c==='meetskip'){ lsPut(MKEY,{at:Date.now(),skipped:true}); S.sel=[]; repaint(); return; }
+    if(c==='starter'){ var sid=b.getAttribute('data-k'), on=!starterOn(sid); setStarter(sid,on); var st=STARTERS[sid]; say(on?st.name+' is on: '+every(st.every).replace(', also while Kova is closed','').toLowerCase()+'.':st.name+' is off.'); repaint(); return; }
+    if(c==='openwatch'){ if(e){ k.openMate(e.id); setTimeout(function(){ var w=document.getElementById('tpWatch'), u=document.getElementById('tpWUrl'); if(w&&w.scrollIntoView) w.scrollIntoView({block:'center'}); if(u) try{ u.focus({preventScroll:true}); }catch(x){} },300); } return; }
+    if(c==='watchadd'){ var u=document.getElementById('tpWUrl'), n=document.getElementById('tpWNote'); var x=e&&addWatch(e,u&&u.value,n&&n.value); if(x){ k._S.clear={tpWUrl:1,tpWNote:1}; if(u) u.value=''; if(n) n.value=''; repaint(); checkWatch(k.emp(e.id),x.id); } return; }
+    if(c==='watchcheck'){ if(e) checkWatch(e,b.getAttribute('data-w')); return; }
+    if(c==='watchdrop'){ if(e){ save(e,{watches:(e.watches||[]).filter(function(x){ return x.id!==b.getAttribute('data-w'); })}); if(k.syncCloud) k.syncCloud(); repaint(); } return; }
+    if(c==='shareto'){ shareTo(b.getAttribute('data-e')); return; }
+    if(c==='sharetask'){ shareTask(); return; }
+    if(c==='shareclose'){ closeShare(); return; }
+  }
+  /* "j:<job>" (a finished job) or "s:<emp>:<skill>" (a saved skill) */
+  function target(key){
+    var k=K(), m=/^j:(.+)$/.exec(key||''), n=/^s:([^:]+):(.+)$/.exec(key||'');
+    if(m){ var j=jobOf(m[1]), e=j&&k.emp(j.emp); if(!e) return null; return {e:e,sk:saveSkill(e,j.text,null,j.id)}; }
+    if(n){ var e2=k.emp(n[1]), sk=e2&&skillsOf(e2).filter(function(x){ return x.id===n[2]; })[0]; return sk?{e:e2,sk:sk}:null; }
+    return null;
+  }
+  function onField(ev){
+    var f=ev.target&&ev.target.getAttribute&&ev.target.getAttribute('data-tpf'); if(!f) return;
+    var wrap=ev.target.closest('.tp-pick'), key=wrap&&wrap.getAttribute('data-key'); if(!key) return;
+    var p=S.pv[key]=S.pv[key]||{}; p[f]=ev.target.type==='checkbox'?ev.target.checked:ev.target.value;
+    if(f==='freq'&&ev.type==='change') repaint();
+  }
+  function onKey(ev){
+    if(ev.key==='Enter'&&!ev.shiftKey&&ev.target&&ev.target.id==='tpChat'){ ev.preventDefault(); var b=document.querySelector('[data-tp="chatsend"]'); if(b) b.click(); }
+    if(ev.key==='Escape'&&document.getElementById('tpShare')) closeShare();
+  }
+  /* a photo dropped or pasted into a message box goes with it */
+  function onPaste(ev){
+    var t=ev.target, id=t&&t.id; if(!/^(tpChat|crwEmpAsk|crwAsk)$/.test(id||'')) return;
+    var F=[].slice.call((ev.clipboardData&&ev.clipboardData.files)||[]); if(!F.length) return;
+    ev.preventDefault(); addFiles(id,F);
+  }
+
+  function mount(){
+    if(S.mounted) return; S.mounted=true;
+    document.addEventListener('click',onClick);
+    document.addEventListener('change',onField); document.addEventListener('input',onField);
+    document.addEventListener('keydown',onKey); document.addEventListener('paste',onPaste);
+    settleOld();
+    setInterval(tick,60e3); setTimeout(tick,6000);
+    setTimeout(checkShare,900);
+    var k=K(); if(k&&k.paint) setTimeout(repaint,50);
+  }
+  function boot(){ if(window.KovaCrew&&window.WorkOS) mount(); else if((S.tries=(S.tries||0)+1)<60) setTimeout(boot,250); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+
+  return {chatPage:chatPage,again:again,files:files,tools:tools,pend:pend,attach:attach,meet:meet,routinesExtra:routinesExtra,mateExtra:mateExtra,
+    list:list,open:open,openJob:openJob,send:send,next:next,mentions:mentions,chat:chat,stopRound:stopRound,addFiles:addFiles,readFile:readFile,blocks:blocks,
+    saveSkill:saveSkill,setEvery:setEvery,runSkill:runSkill,tick:tick,STARTERS:STARTERS,NEEDS:NEEDS,setStarter:setStarter,starterOn:starterOn,meetGo:meetGo,
+    addWatch:addWatch,checkWatch:checkWatch,normUrl:normUrl,checkShare:checkShare,shareTo:shareTo,shareTask:shareTask,_S:S};
 })();
 
 </script>

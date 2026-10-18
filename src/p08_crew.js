@@ -550,24 +550,31 @@ window.KovaCrew=(function(){
     if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve(false);
     var list=emps().filter(function(e){ var r=e.routine||{}; return e.enabled&&r.cloud&&r.job&&['daily','weekdays','weekly'].indexOf(r.freq)>=0; })
       .map(function(e){ return {id:e.id,freq:e.routine.freq,time:e.routine.time||'09:00',dow:+e.routine.dow||0}; });
-    var key=JSON.stringify(list)+tzName(), had=lsJ('kova.crew.cloud',false);
+    var watches=[];
+    emps().forEach(function(e){ if(!e.enabled) return;
+      (e.skills||[]).forEach(function(k){ var v=k.every; if(k.text&&v&&v.cloud&&['daily','weekdays','weekly'].indexOf(v.freq)>=0) list.push({id:e.id,sk:k.id,freq:v.freq,time:v.time||'09:00',dow:+v.dow||0}); });
+      (e.watches||[]).forEach(function(x){ if(x&&x.url) watches.push({id:x.id,url:x.url,emp:e.id,note:x.note||''}); }); });
+    var key=JSON.stringify(list)+JSON.stringify(watches)+tzName(), had=lsJ('kova.crew.cloud',false);
     if(key===S.cloudKey) return Promise.resolve(true);
     /* only for someone signed in, and only when there is something to say:
        routines to register, or ones registered before that are now off
        (never a sign-in just for this) */
-    if(!serverLikely()||(!list.length&&!had)) return Promise.resolve(false);
-    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list}}).then(function(r){ if(r.ok){ S.cloudKey=key; lsPut('kova.crew.cloud',list.length>0); return true; } return false; },function(){ return false; });
+    if(!serverLikely()||(!list.length&&!watches.length&&!had)) return Promise.resolve(false);
+    return KovaLink.authFetch('/crew/cloud',{json:{tz:tzName(),emps:list,watches:watches}}).then(function(r){ if(r.ok){ S.cloudKey=key; lsPut('kova.crew.cloud',list.length+watches.length>0); return true; } return false; },function(){ return false; });
   }
   function importCloud(it){
     var e=emp(it.emp); if(!e||!it||!it.id||S.jobs['jc_'+it.id]) return null;
     var props=(it.proposals||[]).filter(function(p){ return p&&TOOLS[p.name]; });
     var ak=it.ask||null, AKN={prep:'Prepped tomorrow\u2019s meetings',checkin:'Checked in on you',comments:'Read the comments on your post'};
-    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||e.routine.job||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
+    var job={id:'jc_'+it.id,emp:e.id,text:String(it.text||(ak&&AKN[ak.kind])||(e.routine&&e.routine.job)||''),source:'cloud',meta:null,at:it.at||Date.now(),state:'running',
       steps:[{t:ak?(ak.deliverAt&&ak.deliverAt>(it.at||0)-5*60e3&&ak.kind==='ask'?'Worked on it on the Kova server, ready for '+clock(ak.deliverAt)+' as you asked':(AKN[ak.kind]||'Worked on it on the Kova server')+' while Kova was closed'):'Ran on the Kova server while Kova was closed',k:'info',at:it.at}].concat((it.steps||[]).map(function(x){ return {t:String(x.t||''),k:x.k||'info',at:it.at}; })),
       changes:[],queue:props.map(function(p,i){ return {id:'p'+i,name:p.name,input:p.input||{}}; }),results:[],turns:0,convo:null,brain:'cloud',
       model:it.model||'',say:String(it.say||''),report:it.report||null};
+    if(it.sk||it.watch) job.source=it.sk?'skill':'watch';
     S.jobs[job.id]=job;
-    touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),lastRoutine:Math.max(e.lastRoutine||0,it.at||0)});
+    if(it.sk) touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),skills:(e.skills||[]).map(function(x){ return x.id===it.sk?Object.assign({},x,{last:Math.max(+x.last||0,it.at||0)}):x; })});
+    else if(it.watch) touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now()});
+    else touch(e,{runs:(e.runs||0)+1,lastRun:it.at||Date.now(),lastRoutine:Math.max(e.lastRoutine||0,it.at||0)});
     if(job.queue.length) proceed(job); else finish(job,job.say||'Done.');
     return job;
   }
@@ -784,7 +791,16 @@ window.KovaCrew=(function(){
   function saveJobs(){
     var L=Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).sort(function(a,b){ return b.at-a.at; });
     var keep={}; L.slice(0,50).forEach(function(j){ if(j.state==='done'||j.state==='failed'||j.state==='stopped') j.convo=j.convo&&j.convo.length>2?null:j.convo; keep[j.id]=j; });
-    S.jobs=keep; lsPut(JKEY,keep);
+    S.jobs=keep; lsPut(JKEY,noPhotos(keep));
+  }
+  /* p31: an attached photo travels with the job while it runs, but storage
+     keeps only the words (a photo would fill the browser's space) */
+  function noPhotos(all){
+    var out={};
+    Object.keys(all).forEach(function(k){ var j=all[k];
+      var has=j.convo&&j.convo.some(function(m){ return Array.isArray(m.content)&&m.content.some(function(b){ return b&&b.type==='image'; }); });
+      out[k]=has?Object.assign({},j,{convo:j.convo.map(function(m){ return Array.isArray(m.content)?{role:m.role,content:m.content.map(function(b){ return b&&b.type==='image'?{type:'text',text:'[a photo was attached]'}:b; })}:m; })}):j; });
+    return out;
   }
   function jobsOf(id){ return Object.keys(S.jobs).map(function(k){ return S.jobs[k]; }).filter(function(j){ return !id||j.emp===id; }).sort(function(a,b){ return a.at-b.at; }); }
   function waiting(){ return jobsOf().filter(function(j){ return j.state==='waiting'; }); }
@@ -1702,7 +1718,7 @@ window.KovaCrew=(function(){
   }
 
   /* ---- the pieces of the page ---- */
-  var NAV=[['team','Team'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports'],['usage','Usage']];
+  var NAV=[['team','Team'],['chat','Chat'],['jobs','Jobs'],['approvals','Approvals'],['routines','Routines'],['reports','Reports'],['usage','Usage']];
   function topBar(){
     var nav=S.view==='team'?(S.nav||'team'):'', wt=waiting().length, on=!!(window.KovaListen&&KovaListen.on());
     return '<div class="crd-top">'
@@ -2058,6 +2074,7 @@ window.KovaCrew=(function(){
       +'<div class="crd-mid"><div class="crd-stats">'
         +stat('Finished',a.completed,'✓','Tasks done this week')+stat('Open',a.open,'','Still to do')+stat('Overdue',a.overdue,'!','Past their date')+stat('Team',L.length,'person','AI employees')
       +'</div>'+flow(cur||last)+focusCard(cur)+'</div>'
+      +(window.KovaTeamPlus?KovaTeamPlus.meet():'')
       +roster()
       +'<div class="crd-tiles">'
         +jobsTile(L)
@@ -2086,7 +2103,7 @@ window.KovaCrew=(function(){
       +(m.length?'<div class="crd-mid"><div class="crd-stats">'+m.slice(0,4).map(function(x){ return stat(x.label,x.value,x.unit||'',x.note||''); }).join('')+'</div>'
         +flow(cur||last,e,sn)+(cur?focusCard(cur,e,sn):'')+'</div>':'')
       +'<div class="crd-tiles">'+empTiles(e,sn)+'</div>'
-      +'<div class="crd-below">'+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
+      +'<div class="crd-below">'+(window.KovaTeamPlus?KovaTeamPlus.mateExtra(e):'')+(sn?skillBlock(e,sn):'')+jobBlock(e,true)+teachCard(e)+'</div>'
       +'<div class="crd-sh2">Your team</div>'+tabsRow(e.id);
   }
   function teachCard(e){
@@ -2147,7 +2164,8 @@ window.KovaCrew=(function(){
     var id=e?'crwEmpAsk':'crwAsk', btn=e?'empask':'ask', T=e?tpl(e.tpl):null, sk=e?skillsOf(e)[0]:null;
     var ideas=e?(((T&&T.chips)||[]).concat(sk&&RUN_JOB[sk]?[RUN_JOB[sk]]:[])):['How is the work going?','Triage my overdue tasks','Brief me on today','Plan my week','Draft 3 posts for this week','Chase my late invoices'];
     return '<div class="crd-card crw-hero"><div class="crd-chd"><span>'+(e?'Message '+esc(e.n):'Tell the team what you need')+'</span><small>'+(e?esc(e.n)+' works on it and reports back.':(chief()?esc(chief().n)+' sends it to whoever owns it.':'It goes to whoever owns it.'))+'</small></div>'
-      +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea><button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +'<div class="crw-ask"><textarea id="'+id+'" rows="2" placeholder="'+(e?'e.g. '+esc(ideas[0]||'Analyze my work'):'e.g. Chase everyone who owes me an invoice, then report back')+'" aria-label="The job"></textarea>'+(window.KovaTeamPlus?KovaTeamPlus.tools(id):'')+'<button class="crw-send" data-c="'+btn+'" aria-label="Send">'+svg(IC.send)+'</button></div>'
+      +(window.KovaTeamPlus?KovaTeamPlus.pend(id):'')
       +(window.KovaAsk?KovaAsk.chips():'')
       +sug(e?'ask-'+e.id:'ask','Ideas',[{h:'Try asking',items:ideas.map(function(q){ return {c:e?'empq':'askq',q:q,l:q}; })}])
       +(e?'':listenRow())+'</div>';
@@ -2168,7 +2186,7 @@ window.KovaCrew=(function(){
   function jobsPage(){ var J=jobsOf().slice(-25).reverse(); return head(0,'Jobs',J.length+' job'+(J.length===1?'':'s')+' so far')+'<div class="crw-thread">'+(J.length?J.map(jobCard).join(''):'<div class="crd-card"><div class="crw-empty">No jobs yet. Give the team one on the Team page, or say a name.</div></div>')+'</div>'; }
   function approvalsPage(){ var wt=waiting(); return head(0,'Approvals',wt.length?wt.length+' waiting for your OK':'Nothing waiting')+(wt.length?wt.map(function(j){ return approvalCard(j,true); }).join(''):'<div class="crd-card"><div class="crw-empty">Nothing needs your approval. Anything that leaves Kova, like an email, waits here for you.</div></div>'); }
   function routinesPage(){
-    return head(0,'Routines','They run while Kova is open, and catch up when you open it')+emps().map(function(e){ var T=tpl(e.tpl), on=e.routine&&e.routine.freq!=='off'&&e.routine.job;
+    return head(0,'Routines','They run while Kova is open, and catch up when you open it')+(window.KovaTeamPlus?KovaTeamPlus.routinesExtra():'')+emps().map(function(e){ var T=tpl(e.tpl), on=e.routine&&e.routine.freq!=='off'&&e.routine.job;
       return '<div class="crd-card crd-rt"><div class="crd-rth">'+av(e)+'<div><b>'+esc(e.n)+'</b><span>'+esc(e.title)+'</span></div><span class="crw-st '+(on?'s-done':'s-off')+'">'+(on?esc(describeRoutine(e)):'Off')+'</span></div>'
         +'<div class="crd-rtj">'+esc(on?e.routine.job:(T&&T.routine&&T.routine.job?'Suggested: '+T.routine.job:'No routine yet.'))+'</div><div class="crd-row">'+routineBtn(e,T)+'<button class="crd-btn ghost" data-c="edit" data-id="'+esc(e.id)+'">Change it</button></div></div>'; }).join('');
   }
@@ -2180,7 +2198,7 @@ window.KovaCrew=(function(){
   function dash(){
     if(S.tab&&S.tab!=='all'&&!emp(S.tab)) S.tab='all';
     var nav=S.nav||'team', e=S.tab&&S.tab!=='all'?emp(S.tab):null;
-    var body=nav==='usage'?usagePage():nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
+    var body=nav==='chat'?(window.KovaTeamPlus?KovaTeamPlus.chatPage():head(0,'Team chat','Loading…')):nav==='usage'?usagePage():nav==='jobs'?jobsPage():nav==='approvals'?approvalsPage():nav==='routines'?routinesPage():nav==='reports'?reportsPage():(e?empPage(e):teamPage());
     return '<div class="crd">'+topBar()+body+'</div>';
   }
 
@@ -2188,10 +2206,10 @@ window.KovaCrew=(function(){
   var ICON={read:'◦',write:'✓',send:'✉',handoff:'→',report:'▤',error:'!',blocked:'×',wait:'•',ok:'✓',skip:'–',think:'…',web:'⌕',info:'•'};
   function jobCard(j){
     var e=emp(j.emp)||{n:'?'};
-    var src={routine:'Routine',handoff:'Hand-off',team:'From the team',you:'You',voice:'By voice'}[j.source]||'You';
+    var src={routine:'Routine',handoff:'Hand-off',team:'From the team',you:'You',voice:'By voice',chat:'Team chat',skill:'Saved skill',share:'Shared to Kova',watch:'Watching a page'}[j.source]||'You';
     return '<div class="crw-jobw" id="job-'+esc(j.id)+'">'
-      +(j.source==='routine'||j.source==='handoff'||j.source==='voice'?'<div class="crw-src">'+esc(src)+'</div>':'')
-      +'<div class="crw-you">'+md(j.text)+'</div>'
+      +(/^(routine|handoff|voice|chat|skill|share|watch)$/.test(j.source)?'<div class="crw-src">'+esc(src)+'</div>':'')
+      +'<div class="crw-you">'+md(j.text)+(window.KovaTeamPlus?KovaTeamPlus.files(j):'')+'</div>'
       +'<div class="crw-job s-'+j.state+'">'
         +'<div class="crw-jh">'+av(e)+'<b>'+esc(e.n)+'</b><span>'+({running:'Working',waiting:'Needs you',paused:'Paused, you stepped in',done:'Done',failed:'Could not finish',stopped:'Stopped'}[j.state])+' · '+clock(j.at)+' · '+esc(BRAIN_N[j.brain]||'')+'</span>'
         +(j.state==='running'||j.state==='waiting'||j.state==='paused'?'<button class="crw-link" data-c="stop" data-j="'+esc(j.id)+'">Stop</button>':'')+'</div>'
@@ -2206,6 +2224,7 @@ window.KovaCrew=(function(){
         +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link" data-c="speak" data-j="'+esc(j.id)+'">Read it to me</button>':'')
         +((j.state==='done'||j.state==='stopped'||j.state==='failed')&&j.changes&&j.changes.length?'<button class="crw-link" data-c="undo" data-j="'+esc(j.id)+'">Undo '+j.changes.length+' change'+(j.changes.length>1?'s':'')+'</button>':'')
         +(j.undone?'<div class="crw-note">Undid '+j.undone+' change'+(j.undone>1?'s':'')+'.</div>':'')
+        +(window.KovaTeamPlus?KovaTeamPlus.again(j):'')
       +'</div></div>';
   }
   /* the bot's screen (p15): what it is doing right now, live, with the
@@ -2453,7 +2472,7 @@ window.KovaCrew=(function(){
       S.clear={crwAsk:1}; var ta=document.getElementById('crwAsk'); if(ta) ta.value='';
       /* a time ("at 11"), a link, or a time chip: it runs on the server and comes back to you */
       if(c==='ask'&&window.KovaAsk&&KovaAsk.wants(q)){ KovaAsk.send(r.emp,q).catch(function(){}); paint(); return; }
-      var j=start(r.emp,q,'team'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
+      var j=start(r.emp,q,'team'); if(j&&window.KovaTeamPlus) KovaTeamPlus.attach(j,'crwAsk'); if(j) log(j,(chief()&&chief().id!==r.emp.id?chief().n+' routed this to ':'Routed to ')+r.emp.n+' — '+r.why+(r.matched.length?' ('+r.matched.join(', ')+')':''),'handoff');
       S.view='team'; S.nav='team'; S.tab=r.emp.id; S.scroll=true; paint(); return;
     }
     if(c==='empask'||c==='empq'){
@@ -2462,7 +2481,7 @@ window.KovaCrew=(function(){
       if(!e.enabled){ say(e.n+' is switched off.'); return; }
       var ta2=document.getElementById('crwEmpAsk'); if(ta2) ta2.value=''; S.clear={crwEmpAsk:1};
       if(c==='empask'&&window.KovaAsk&&KovaAsk.wants(t)){ KovaAsk.send(e,t).catch(function(){}); paint(); return; }
-      start(e,t,'you'); S.scroll=true; S.focus=true; paint(); return;
+      var je=start(e,t,'you'); if(je&&window.KovaTeamPlus) KovaTeamPlus.attach(je,'crwEmpAsk'); S.scroll=true; S.focus=true; paint(); return;
     }
     if(c==='listen'){ if(window.KovaListen) KovaListen.set(!KovaListen.on()); return; }
     if(c==='toggle'){ var e2=emp(id); if(e2){ saveEmp(e2,{enabled:!e2.enabled}); paint(); } return; }
@@ -2573,5 +2592,5 @@ window.KovaCrew=(function(){
   return {note:note,migrate:migrate,TPL:TPL,GROUPS:GROUPS,TOOLS:TOOLS,emps:emps,emp:emp,hire:hire,route:route,analyze:analyze,system:system,toolDefs:toolDefs,toolsFor:toolsFor,
     start:start,approve:approve,skip:skip,stop:stop,undo:undo,pause:pauseJob,resume:resume,tell:tell,speak:speak,use:use,pickModel:pickModel,
     teachStart:teachStart,teachDone:teachDone,runTaught:runTaught,pullCloud:pullCloud,syncCloud:syncCloud,importCloud:importCloud,_teach:function(){ return S.teach; },jobs:function(){ return S.jobs; },jobsOf:jobsOf,waiting:waiting,
-    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
+    md:md,brainWhy:brainWhy,health:health,slot:slot,tick:tick,fire:fire,brain:brainName,paint:paint,paintHome:paintHome,SK:SK,snapshot:snapshot,skillsOf:skillsOf,pickSkill:pickSkill,chart:chart,_S:S,_mount:mount,busy:busyWith,tpl:tpl,server:serverLikely,describeRoutine:describeRoutine,log:log,saveJobs:saveJobs,av:av,head:head,reportCard:reportCard,detail:detail,openMate:openMate,setRoutine:setRoutine,onTimeData:onTimeData,RUN_JOB:RUN_JOB};
 })();

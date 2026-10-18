@@ -32,7 +32,7 @@ try {
   firebase.messaging();
 } catch (e) { /* no push on this install; reminders still show while Kova is open */ }
 
-var VERSION = 'kova-v5-115';
+var VERSION = 'kova-v5-116';
 var SHELL   = 'kova-shell-' + VERSION;
 var ASSETS  = 'kova-assets-' + VERSION;
 /* food and recipe photos (Unsplash): kept across versions, at most 80 */
@@ -77,8 +77,26 @@ function isFirebase(url){
   return /firebaseio\.com|googleapis\.com|gstatic\.com\/firebasejs|google-analytics\.com|googletagmanager\.com|firebasestorage/.test(url);
 }
 
+/* p31: Kova in the Android share menu (manifest share_target). What was
+   shared is kept in its own cache and the app opens with ?shared=1; the
+   app (src/p08_teamplus.js) reads it, offers a teammate, the team chat or
+   a task, then deletes it. */
+function shareIn(req){
+  return req.formData().then(function(fd){
+    return caches.delete('kova-share').then(function(){ return caches.open('kova-share'); }).then(function(c){
+      var files = fd.getAll('files').filter(function(f){ return f && typeof f === 'object' && f.size; }).slice(0, 4);
+      var meta = { title: String(fd.get('title') || ''), text: String(fd.get('text') || ''), url: String(fd.get('url') || ''), at: Date.now(),
+        files: files.map(function(f){ return { name: f.name, type: f.type }; }) };
+      return Promise.all([c.put('share-in/meta', new Response(JSON.stringify(meta), { headers: { 'Content-Type': 'application/json' } }))]
+        .concat(files.map(function(f, i){ return c.put('share-in/file/' + i, new Response(f, { headers: { 'Content-Type': f.type || 'application/octet-stream' } })); })));
+    });
+  }).catch(function(){ /* keep going: the app opens either way */ })
+    .then(function(){ return Response.redirect('./index.html?shared=1', 303); });
+}
+
 self.addEventListener('fetch', function(e){
   var req = e.request;
+  if (req.method === 'POST' && /\/share-in$/.test(new URL(req.url).pathname)) { e.respondWith(shareIn(req)); return; }
   if (req.method !== 'GET') return;
 
   var url = req.url;

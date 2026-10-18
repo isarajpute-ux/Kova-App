@@ -38,5 +38,28 @@
       "sizes": "180x180",
       "type": "image/png"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "./share-in",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": [
+            "image/*",
+            "video/*",
+            "application/pdf",
+            "text/plain",
+            "text/csv",
+            "application/json"
+          ]
+        }
+      ]
+    }
+  }
 }

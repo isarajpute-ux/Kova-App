@@ -36,7 +36,8 @@
      POST /crew/cloud  {tz,emps:[{id,freq,time,dow}]}  which routines also run while Kova is closed (Kova Pro) [auth]
      GET  /crew/inbox                              what they did: reports and proposed changes [auth]
      POST /crew/inbox/ack {ids}                    picked up by the app [auth]
-     POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools) [auth]
+     POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools; photos allowed) [auth]
+     POST /crew/watch/check {id,url,emp,note}  read a watched page now and report what changed (Work) [auth]
      POST /ai/ask      {system,messages,max_tokens,temperature}  Kova's own AI for a question or a photo (machine scan, form review, ingredients, voice): text and up to 8 images [auth]
      POST /hashtags     {post words}    hashtag ideas, grouped, with a rough size band [auth]
      POST /assist       {text}          the agent drafts a job: an email, a task, or an answer [auth]
@@ -787,7 +788,21 @@ function cleanCrew(b) {
       name: t.name, description: s(t.description, 800),
       input_schema: t.input_schema && t.input_schema.type === 'object' ? t.input_schema : { type: 'object', properties: {} }
     }));
-  const block = (x) => (x && CREW_BLOCKS.includes(x.type) ? x : null);
+  /* p31: a photo you attach to a message (or stills from a video) goes
+     with the job: base64 JPEG/PNG/WebP/GIF, at most 4 in the job, each
+     under ~1.6 MB, and they do not count toward the job's text length */
+  let imgs = 0, imgChars = 0;
+  const block = (x) => {
+    if (!x || typeof x !== 'object') return null;
+    if (x.type === 'image') {
+      const src = x.source || {};
+      if (imgs >= 4 || src.type !== 'base64' || !AI_IMG.test(String(src.media_type || '')) || typeof src.data !== 'string'
+        || !src.data.length || src.data.length > 2.2e6 || !/^[A-Za-z0-9+/=\s]+$/.test(src.data.slice(0, 200))) return null;
+      imgs++; imgChars += src.data.length;
+      return { type: 'image', source: { type: 'base64', media_type: src.media_type, data: src.data } };
+    }
+    return CREW_BLOCKS.includes(x.type) ? x : null;
+  };
   const messages = (Array.isArray(b.messages) ? b.messages : []).slice(-40)
     .filter((m) => m && (m.role === 'user' || m.role === 'assistant'))
     .map((m) => ({
@@ -797,7 +812,8 @@ function cleanCrew(b) {
     }))
     .filter((m) => (typeof m.content === 'string' ? m.content.trim() : m.content.length));
   if (!messages.length || messages[0].role !== 'user') throw new HttpError(400, 'A job starts with your message.');
-  if (JSON.stringify(messages).length > 240000) throw new HttpError(413, 'This job has grown too long. Start a new one.');
+  if (JSON.stringify(messages).length - imgChars > 240000) throw new HttpError(413, 'This job has grown too long. Start a new one.');
+  if (imgChars > 3.2e6) throw new HttpError(413, 'Those photos are too big together. Send fewer at a time.');
   return { system: s(b.system, 24000), tools, messages, web: b.web === true, model: CREW_MODELS[b.model] ? b.model : '' };
 }
 /* the AI team's model router: each employee asks for haiku, sonnet or
@@ -888,10 +904,27 @@ async function crewCloud(req, res, cfg) {
   await requirePro(u, cfg, 'work');
   const c = require('./crew').cleanCloud(req.body || {});
   const ref = db().ref(`srv/crewCloud/${u.uid}`);
-  if (!Object.keys(c.emps).length) { await ref.remove(); return res.json({ ok: true, routines: 0 }); }
-  const ran = (await ref.child('ran').once('value')).val() || null;
-  await ref.set(Object.assign(c, ran ? { ran } : {}));
-  return res.json({ ok: true, routines: Object.keys(c.emps).length });
+  if (!Object.keys(c.emps).length && !Object.keys(c.watches).length) { await ref.remove(); return res.json({ ok: true, routines: 0, watches: 0 }); }
+  /* what already ran today, and each watched page's last copy, survive a re-register */
+  const keep = {};
+  for (const k of ['ran', 'wchk', 'wsnap']) { const v = (await ref.child(k).once('value')).val(); if (v) keep[k] = v; }
+  await ref.set(Object.assign(c, keep));
+  return res.json({ ok: true, routines: Object.keys(c.emps).length, watches: Object.keys(c.watches).length });
+}
+/* p31: "Check now" on a watched page: read it and compare with the last
+   copy; a change lands in the team inbox like a routine's report */
+async function crewWatchCheck(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`watch_${u.uid}`, 60, 3600e3);
+  const b = req.body || {};
+  const id = String(b.id || '').replace(/[^\w-]/g, '').slice(0, 40);
+  if (!id) throw new HttpError(400, 'Which page?');
+  const crew = require('./crew');
+  const w = crew.cleanWatch({ id, url: b.url, emp: b.emp, note: b.note });
+  if (!w) throw new HttpError(400, 'That address is not a web page Kova can read.');
+  await db().ref(`srv/crewCloud/${u.uid}/watches/${id}`).set(w.v);
+  res.json(await askTry(() => crew.makeCrew({ db: db(), cfg }).watch(u.uid, id)));
 }
 async function crewInbox(req, res) {
   const u = await requireUser(req);
@@ -1346,6 +1379,7 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/crew/step') return await crewStep(req, res, cfg);
     if (M === 'POST' && path === '/ai/ask') return await aiAsk(req, res, cfg);
     if (M === 'POST' && path === '/crew/cloud') return await crewCloud(req, res, cfg);
+    if (M === 'POST' && path === '/crew/watch/check') return await crewWatchCheck(req, res, cfg);
     if (M === 'GET' && path === '/crew/inbox') return await crewInbox(req, res);
     if (M === 'POST' && path === '/crew/inbox/ack') return await crewInboxAck(req, res);
     if (M === 'POST' && path === '/hashtags') return await hashtagsRoute(req, res, cfg);
