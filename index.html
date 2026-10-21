@@ -8553,6 +8553,82 @@ body.light-mode .kxp-body .m.s{fill:var(--acc);fill-opacity:.32}
 body.light-mode .kxp-body .m.p{fill:var(--acc);fill-opacity:.85}
 
 </style>
+<style id="p08-zone2">
+/* ---- KovaZone2 (p33): the run screen, the Workout card, the sheets.
+   Dark, soft light and light glass; the state colours are the same in
+   every look (green in the zone, orange above, blue below). ---- */
+.kz2{position:fixed;inset:0;z-index:9500;display:flex;justify-content:center;overflow:auto;
+  background:radial-gradient(120% 80% at 50% 0%,#2A1B12 0%,#120E0C 55%,#0A0908 100%);color:#F2F0EE;
+  --z-in:#5FD08A;--z-above:#FF7A4D;--z-below:#7FB2FF;--z-none:#A7A7AD;--z-line:rgba(255,255,255,.1);--z-mute:rgba(242,240,238,.62);--z-card:rgba(255,255,255,.05)}
+body.soft-light .kz2{background:radial-gradient(120% 80% at 50% 0%,#5E5650 0%,#45403C 60%,#3A3633 100%)}
+body.light-mode .kz2{background:radial-gradient(120% 80% at 50% 0%,#FFF4EC 0%,#F2EEEA 60%,#E8E4E0 100%);color:#16181D;
+  --z-in:#1E8A55;--z-above:#C9461A;--z-below:#2F64C8;--z-none:#6B6F78;--z-line:rgba(16,20,28,.1);--z-mute:rgba(22,24,29,.6);--z-card:rgba(255,255,255,.7)}
+.kz2-in{width:100%;max-width:480px;padding:calc(18px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px}
+.kz2-top{display:flex;justify-content:space-between;align-items:flex-start}
+.kz2-top b{display:block;font:600 18px Outfit,sans-serif}.kz2-top span{font-size:12.5px;color:var(--z-mute)}
+.kz2-time{font:300 30px/1 Outfit,sans-serif;font-variant-numeric:tabular-nums}
+.kz2-mid{position:relative;width:min(78vw,300px);aspect-ratio:1;margin:0 auto}
+.kz2-ring{width:100%;height:100%}
+.kz2-ring circle{fill:none;stroke-width:12;stroke-linecap:round}
+.kz2-ring .trk{stroke:var(--z-line)}
+.kz2-ring .band{stroke:var(--z-in);opacity:.55}
+.kz2-ring .dot{fill:currentColor;stroke:none}
+.kz2-ring.s-in{color:var(--z-in)}.kz2-ring.s-above{color:var(--z-above)}.kz2-ring.s-below{color:var(--z-below)}.kz2-ring.s-none{color:var(--z-none)}
+.kz2-bpm{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kz2-bpm b{font:200 84px/1 Outfit,sans-serif;font-variant-numeric:tabular-nums}
+.kz2-bpm span{font-size:13px;color:var(--z-mute)}
+.kz2-say{text-align:center;padding:12px 14px;border-radius:18px;background:var(--z-card);border:1px solid var(--z-line)}
+.kz2-say b{display:block;font:600 19px Outfit,sans-serif}
+.kz2-say span{font-size:13px;line-height:1.45;color:var(--z-mute)}
+.kz2-say.s-in b{color:var(--z-in)}.kz2-say.s-above b{color:var(--z-above)}.kz2-say.s-below b{color:var(--z-below)}
+.kz2-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:4px 0}
+.kz2-stats>div{display:flex;flex-direction:column;gap:2px;padding:0 10px;border-left:1px solid var(--z-line,rgba(255,255,255,.1))}
+.kz2-stats>div:first-child{border-left:0;padding-left:2px}
+.kz2-stats span{font-size:11px;color:var(--z-mute,var(--kp-mute))}
+.kz2-stats b{font:300 26px/1.1 Outfit,sans-serif;font-variant-numeric:tabular-nums}
+.kz2-stats i{font-style:normal;font-size:11px;color:var(--z-mute,var(--kp-mute))}
+.kz2-trw{border-radius:14px;background:var(--z-card);border:1px solid var(--z-line);padding:6px 8px}
+.kz2-tr{display:block;width:100%;height:60px}
+.kz2-tr .band{fill:var(--z-in,#5FD08A);opacity:.16}
+.kz2-tr path{fill:none;stroke:var(--acc,#E87A3C);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.kz2-note{font-size:12.5px;color:var(--z-mute);text-align:center}
+.kz2-link{border:0;background:none;padding:0;font:600 12.5px inherit;font-family:inherit;color:var(--acc,#E87A3C)!important;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.kz2-acts{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:4px}
+.kz2-b{height:56px;border-radius:999px;border:0;background:#E87A3C;color:#1A0E06;font:600 16px Outfit,sans-serif;cursor:pointer}
+.kz2-b.ghost{background:transparent;border:1px solid var(--z-line);color:inherit}
+body.light-mode .kz2-b{background:#D9601F;color:#fff}
+body.light-mode .kz2-b.ghost{background:transparent;color:inherit;border-color:rgba(16,20,28,.18)}
+.kz2-foot{font-size:11px;color:var(--z-mute);text-align:center}
+/* the card on Workout */
+.kz2c .kv-h{display:flex;justify-content:space-between;align-items:baseline}
+.kz2c-row{display:flex;gap:14px;align-items:center;margin:10px 0 6px}
+.kz2c-ring{width:72px;height:72px;flex-shrink:0}
+.kz2c-ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.kz2c-ring .trk{stroke:var(--ron-line,rgba(255,255,255,.1))}
+.kz2c-ring .val{stroke:#E87A3C}
+body.light-mode .kz2c-ring .trk{stroke:rgba(16,20,28,.1)}
+body.light-mode .kz2c-ring .val{stroke:#D9601F}
+.kz2c-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kz2c-t>b{font:300 30px/1 Outfit,sans-serif}.kz2c-t>b i{font-style:normal;font-size:13px;color:var(--txt-3,rgba(255,255,255,.5))}
+.kz2c-t span{font-size:12px;color:var(--txt-2,rgba(255,255,255,.7))}
+.kz2c-last{font-size:12.5px;line-height:1.45;color:var(--txt-2,rgba(255,255,255,.7));margin:4px 0}
+.kz2c .kl-acts{margin-top:10px}
+/* sheets */
+.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#E87A3C}
+body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#C8571A}
+.kz2s-hero{display:flex;align-items:baseline;gap:10px;margin:6px 0 10px}
+.kz2s-hero b{font:200 56px/1 Outfit,sans-serif;color:var(--z-in)}
+.kz2s-hero span{font-size:13px;line-height:1.4;color:var(--z-mute)}
+.kz2s-tr{margin-top:8px;padding:8px 10px;border-radius:16px;background:var(--z-card);border:1px solid var(--z-line)}
+.kz2s-tr .kz2-tr{height:80px}.kz2s-tr span{font-size:11px;color:var(--z-mute)}
+.kz2s-wk{margin-top:12px;font-size:13.5px}
+.kz2s-p{font-size:13.5px;line-height:1.5;margin:6px 0}
+.kz2s-s{font-size:12px;color:var(--z-mute)}
+.kz2s-row{display:flex;gap:10px}
+.kz2s-row label{flex:1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--z-mute)}
+.kz2s-row input{height:44px;border-radius:14px;border:1px solid var(--z-line);background:var(--z-card);color:inherit;font:inherit;font-size:16px;padding:0 12px}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -67344,6 +67420,303 @@ window.KovaExPage=(function(){
   window.addEventListener('kova:screen',soon); document.addEventListener('kova:screen',soon);
   soon();
   return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs};
+})();
+
+</script>
+<script id="p08-zone2">
+/* =====================================================================
+   KovaZone2 - Zone 2 running (p33).
+
+   Zone 2 is the easy, conversational effort that builds the aerobic
+   base: most of an endurance athlete's week is spent here (about 80% of
+   training in elite runners, Seiler 2010), and it is the effort the
+   heart, the mitochondria and fat burning adapt to.
+
+   Your range, in order of how personal it is:
+     1. one you set (a lab or field test beats any formula);
+     2. 60-70% of heart-rate reserve (Karvonen), when Kova has your
+        resting heart rate from your watch: rest + 0.6 / 0.7 x (max - rest);
+     3. 60-70% of max heart rate, max from your age (Tanaka: 208 - 0.7 x age)
+        or the max you typed into Live heart rate.
+   The talk test is the check either way: you can say full sentences.
+
+   The run: a full screen with your heart rate against the band (from a
+   Bluetooth strap, see KovaHR), what to do (hold it, ease off, a touch
+   faster) with a voice and a buzz when you drift for 10 seconds, time in
+   the zone, and distance and pace from GPS. The screen stays on (the
+   browser stops GPS when it locks; the app says so). With no strap it
+   is a talk-test run: the minutes count as "by feel", never as measured.
+
+   Afterwards: time in zone, average heart rate, distance, pace, and your
+   aerobic pace (pace while in Zone 2), the number that shows the base
+   growing. Workout gets a Zone 2 card: this week's minutes against your
+   goal (150 by default, the WHO's weekly minimum of moderate activity),
+   the last run, and how your aerobic pace has moved.
+   Runs live in KP 'z2runs' (synced with your profile).
+   ===================================================================== */
+window.KovaZone2=(function(){
+  'use strict';
+  var DAY=864e5;
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function kp(k,d){ try{ var v=window.KP&&KP.get(k); return v==null?d:v; }catch(e){ return d; } }
+  function kps(k,v){ try{ if(window.KP) KP.set(k,v); }catch(e){} }
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+
+  /* ---------- the range ---------- */
+  function age(){ var a=+lsJ('kova.hr.age',0); try{ if(!a&&window.KP){ var me=KP.get('me')||{}; a=+me.age||0; } }catch(e){} return a||0; }
+  function rest(){
+    try{ var H=window.KovaHealth; if(H&&H.has&&H.has('rhr')){ var r=+H.get('rhr'); if(r>=35&&r<=100) return Math.round(r); } }catch(e){}
+    return 0;
+  }
+  function zone(){
+    var own=kp('z2zone',null);
+    var mx=window.KovaHR&&KovaHR.max?KovaHR.max():{v:Math.round(208-0.7*(age()||30)),src:age()?'age':'guess'};
+    var r=rest(), a=age();
+    if(own&&own.lo>60&&own.hi>own.lo) return {lo:+own.lo,hi:+own.hi,max:mx.v,rest:r,src:'own',how:'The range you set'+(own.note?' ('+own.note+')':'')+'.'};
+    var mxText=mx.src==='yours'?'your max of '+mx.v:'a max of '+mx.v+(mx.src==='age'?' estimated from your age':' (add your age for a closer number)');
+    if(r){
+      return {lo:Math.round(r+0.6*(mx.v-r)),hi:Math.round(r+0.7*(mx.v-r)),max:mx.v,rest:r,src:'hrr',maf:a?180-a:0,
+        how:'60–70% of your heart-rate reserve: your resting '+r+' from your watch and '+mxText+'.'};
+    }
+    return {lo:Math.round(0.6*mx.v),hi:Math.round(0.7*mx.v),max:mx.v,rest:0,src:'max',maf:a?180-a:0,
+      how:'60–70% of '+mxText+'. With your resting heart rate from a watch the range gets more personal.'};
+  }
+  function state(b,z){ if(!b) return 'none'; if(b<z.lo) return 'below'; if(b>z.hi) return 'above'; return 'in'; }
+
+  /* ---------- distance and pace ---------- */
+  function hav(a,b){ var R=6371e3, r=Math.PI/180, dl=(b.lat-a.lat)*r, dn=(b.lon-a.lon)*r, x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)*Math.sin(dn/2); return 2*R*Math.asin(Math.min(1,Math.sqrt(x))); }
+  function unit(){ var u=lsJ('kova.z2.unit',''); if(u) return u; var g=lsJ('kova.units',''); return g==='metric'?'km':'mi'; }
+  function per(){ return unit()==='km'?1000:1609.344; }
+  function distText(m){ return m>0?(m/per()).toFixed(2):'0.00'; }
+  function paceText(sPerM){ if(!sPerM||!isFinite(sPerM)) return '–'; var s=Math.round(sPerM*per()); if(s>3600) return '–'; return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+  function mmss(ms){ var s=Math.max(0,Math.round(ms/1000)), h=Math.floor(s/3600), m=Math.floor(s%3600/60); return (h?h+':'+('0'+m).slice(-2):m)+':'+('0'+(s%60)).slice(-2); }
+  /* GPS points: keep the good ones, ignore jumps no runner makes */
+  function addPoint(R,p){
+    if(!p||p.acc>30) return false;
+    var last=R.pts[R.pts.length-1];
+    if(last){
+      var d=hav(last,p), dt=(p.t-last.t)/1000;
+      if(dt<=0) return false;
+      if(d/dt>8) return false;                                          /* faster than 8 m/s: a GPS jump */
+      if(d<Math.max(2,Math.min(p.acc,last.acc)/3)) return false;       /* standing still, or noise */
+      if(!R.paused){ R.dist+=d; if(R.cur==='in') R.zDist+=d; }
+    }
+    R.pts.push(p); if(R.pts.length>2400) R.pts=R.pts.slice(-2400);
+    return true;
+  }
+  function curPace(R){
+    var now=R.pts[R.pts.length-1]; if(!now) return 0;
+    var i=R.pts.length-1, d=0; while(i>0&&now.t-R.pts[i-1].t<=30000){ d+=hav(R.pts[i-1],R.pts[i]); i--; }
+    var dt=(now.t-R.pts[i].t)/1000; return d>15&&dt>5?dt/d:0;
+  }
+
+  /* ---------- the runs ---------- */
+  function runs(){ var L=kp('z2runs',[]); return Array.isArray(L)?L:[]; }
+  function goal(){ return +kp('z2goal',150)||150; }
+  function weekStart(t){ var d=new Date(t||Date.now()); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.getTime(); }
+  function week(t){
+    var s=weekStart(t), e=s+7*DAY, L=runs().filter(function(r){ return r.t>=s&&r.t<e; });
+    return {measured:Math.round(L.reduce(function(a,r){ return a+(r.inZone||0); },0)/60000),feel:Math.round(L.filter(function(r){ return !r.hr; }).reduce(function(a,r){ return a+(r.dur||0); },0)/60000),n:L.length};
+  }
+  function aerobic(){
+    var L=runs().filter(function(r){ return r.hr&&r.zDist>400&&r.inZone>5*60000; });
+    if(!L.length) return null;
+    var last=L[L.length-1], old=L.filter(function(r){ return r.t<=last.t-21*DAY; }).slice(-1)[0];
+    var pace=function(r){ return (r.zMoving||r.inZone)/1000/r.zDist; };
+    return {now:pace(last),then:old?pace(old):0,thenT:old?old.t:0};
+  }
+
+  /* ---------- the live run ---------- */
+  var R=null, iv=0, geo=null, wake=null;
+  function voice(t){ try{ if(window.speechSynthesis&&lsJ('kova.z2.voice',true)){ var u=new SpeechSynthesisUtterance(t); u.rate=1.02; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} try{ if(navigator.vibrate) navigator.vibrate([90,60,90]); }catch(e){} }
+  function lock(){ try{ if(navigator.wakeLock&&navigator.wakeLock.request) navigator.wakeLock.request('screen').then(function(w){ wake=w; },function(){}); }catch(e){} }
+  function onVis(){ if(R&&!document.hidden){ lock(); if(R.hiddenAt){ R.gap=(R.gap||0)+(Date.now()-R.hiddenAt); R.hiddenAt=0; } } else if(R&&document.hidden) R.hiddenAt=Date.now(); }
+  function start(mode){
+    if(R) return R;
+    var z=zone();
+    R={t0:Date.now(),mode:mode||'outdoor',z:z,paused:false,pauseAt:0,pausedMs:0,inZone:0,above:0,below:0,none:0,zMoving:0,dist:0,zDist:0,pts:[],hr:[],cur:'none',since:Date.now(),cued:'',last:Date.now()};
+    lock(); document.addEventListener('visibilitychange',onVis);
+    if(R.mode==='outdoor'&&navigator.geolocation){
+      try{ geo=navigator.geolocation.watchPosition(function(p){ if(!R) return; addPoint(R,{lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy||99,t:p.timestamp||Date.now()}); R.gps='on'; },
+        function(err){ if(R){ R.gps=err&&err.code===1?'denied':'lost'; paint(); } },{enableHighAccuracy:true,maximumAge:1000,timeout:20000}); R.gps='waiting'; }catch(e){ R.gps='none'; }
+    } else R.gps=R.mode==='outdoor'?'none':'indoor';
+    clearInterval(iv); iv=setInterval(tick,1000);
+    track('zone2_start',{mode:R.mode,hr:!!(window.KovaHR&&KovaHR.bpm())});
+    open(); return R;
+  }
+  function tick(){
+    if(!R) return;
+    var now=Date.now(), dt=Math.min(3000,now-R.last); R.last=now;
+    if(R.paused){ paint(); return; }
+    var b=window.KovaHR&&KovaHR.bpm?KovaHR.bpm():0, s=state(b,R.z);
+    R[s==='in'?'inZone':s]+=dt;
+    if(s==='in'&&curPace(R)>0) R.zMoving+=dt;
+    if(b){ if(!R.hr.length||now-R.hr[R.hr.length-1][0]>=5000) R.hr.push([now,b]); R.hasHR=true; }
+    if(s!==R.cur){ R.cur=s; R.since=now; }
+    /* a cue once you have been out of the band (or back in it) for 10 s */
+    if(s!=='none'&&now-R.since>=10000&&R.cued!==s+R.since){
+      R.cued=s+R.since;
+      if(s==='above') voice('Ease off a little. You are above Zone 2.');
+      else if(s==='below'&&now-R.t0>5*60000) voice('You can go a touch faster.');
+      else if(s==='in'&&R.wasOut) voice('Back in Zone 2. Hold this.');
+      R.wasOut=s!=='in';
+    }
+    paint();
+  }
+  function pause(){ if(!R) return; R.paused=!R.paused; if(R.paused) R.pauseAt=Date.now(); else { R.pausedMs+=Date.now()-R.pauseAt; R.last=Date.now(); } paint(); }
+  function stopAll(){ clearInterval(iv); iv=0; if(geo!=null&&navigator.geolocation) try{ navigator.geolocation.clearWatch(geo); }catch(e){} geo=null; try{ if(wake) wake.release(); }catch(e){} wake=null; document.removeEventListener('visibilitychange',onVis); }
+  function finish(keep){
+    if(!R) return null;
+    if(R.paused) pause();
+    stopAll();
+    var end=Date.now(), dur=end-R.t0-R.pausedMs, b=R.hr.map(function(x){ return x[1]; });
+    var run={t:R.t0,dur:dur,mode:R.mode,lo:R.z.lo,hi:R.z.hi,src:R.z.src,hr:!!R.hasHR,inZone:R.hasHR?R.inZone:0,above:R.above,below:R.below,
+      avg:b.length?Math.round(b.reduce(function(a,x){ return a+x; },0)/b.length):0,max:b.length?Math.max.apply(null,b):0,
+      dist:Math.round(R.dist),zDist:Math.round(R.zDist),zMoving:R.zMoving,trace:R.hr.filter(function(x,i){ return i%2===0; }).slice(-360).map(function(x){ return [Math.round((x[0]-R.t0)/1000),x[1]]; })};
+    var done=R; R=null; close();
+    if(!keep||dur<60000){ if(keep) say('Under a minute, so it was not saved.'); return null; }
+    var L=runs(); L.push(run); kps('z2runs',L.slice(-80));
+    track('zone2_done',{mins:Math.round(dur/60000),hr:run.hr});
+    summary(run);
+    return run;
+  }
+
+  /* ---------- the run screen ---------- */
+  var LABEL={in:['In Zone 2','Hold this. You could talk in full sentences.'],above:['Above Zone 2','Ease off: slow down or walk until it settles.'],below:['Below Zone 2','A touch faster, or keep it easy if you are warming up.'],none:['By feel','No heart rate: keep it conversational. If you cannot say a full sentence, slow down.']};
+  function open(){
+    var el=document.getElementById('kz2'); if(!el){ el=document.createElement('div'); el.id='kz2'; el.className='kz2'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Zone 2 run'); document.body.appendChild(el); }
+    paint();
+  }
+  function close(){ var el=document.getElementById('kz2'); if(el) el.remove(); }
+  function ring(b,z,s){
+    var lo=z.lo-25, hi=z.hi+25, f=b?Math.max(0,Math.min(1,(b-lo)/(hi-lo))):0, a0=(z.lo-lo)/(hi-lo), a1=(z.hi-lo)/(hi-lo);
+    var C=2*Math.PI*88, arc=function(x0,x1){ return 'stroke-dasharray="'+(C*0.75*(x1-x0)).toFixed(1)+' '+C.toFixed(1)+'" stroke-dashoffset="'+(-C*0.75*x0).toFixed(1)+'"'; };
+    var ang=135+270*f, rx=100+88*Math.cos(ang*Math.PI/180), ry=100+88*Math.sin(ang*Math.PI/180);
+    return '<svg class="kz2-ring s-'+s+'" viewBox="0 0 200 200" aria-hidden="true"><g transform="rotate(135 100 100)">'
+      +'<circle class="trk" cx="100" cy="100" r="88" '+arc(0,1)+'/><circle class="band" cx="100" cy="100" r="88" '+arc(a0,a1)+'/></g>'
+      +(b?'<circle class="dot" cx="'+rx.toFixed(1)+'" cy="'+ry.toFixed(1)+'" r="8"/>':'')+'</svg>';
+  }
+  function trace(pts,z,w,h){
+    if(!pts||pts.length<2) return '';
+    var t1=pts[pts.length-1][0]||1, lo=Math.min(z.lo-15,Math.min.apply(null,pts.map(function(p){ return p[1]; }))), hi=Math.max(z.hi+15,Math.max.apply(null,pts.map(function(p){ return p[1]; })));
+    var y=function(v){ return (h-4-(v-lo)/(hi-lo)*(h-8)).toFixed(1); }, x=function(t){ return (t/t1*w).toFixed(1); };
+    return '<svg class="kz2-tr" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" role="img" aria-label="Heart rate against your Zone 2 band, chart"><rect class="band" x="0" y="'+y(z.hi)+'" width="'+w+'" height="'+(y(z.lo)-y(z.hi)).toFixed(1)+'"/>'
+      +'<path d="M'+pts.map(function(p){ return x(p[0])+','+y(p[1]); }).join('L')+'"/></svg>';
+  }
+  function paint(){
+    var el=document.getElementById('kz2'); if(!el||!R) return;
+    var b=window.KovaHR&&KovaHR.bpm?KovaHR.bpm():0, s=state(b,R.z), lab=LABEL[s], now=R.paused?R.pauseAt:Date.now(), el2=now-R.t0-R.pausedMs;
+    var hrOk=window.KovaHR&&(KovaHR.supported&&KovaHR.supported()||(window.KovaNative&&KovaNative.hasLiveHR&&KovaNative.hasLiveHR()));
+    var gpsNote=R.mode==='indoor'?'Treadmill: no GPS':R.gps==='denied'?'Location is off for Kova, so no distance':R.gps==='none'?'This browser has no GPS':R.gps==='waiting'?'Finding GPS…':R.gps==='lost'?'GPS lost, trying again':'';
+    var pace=R.mode==='outdoor'?curPace(R):0;
+    el.innerHTML='<div class="kz2-in">'
+      +'<div class="kz2-top"><div><b>Zone 2 run</b><span>'+R.z.lo+'–'+R.z.hi+' bpm'+(R.paused?' · paused':'')+'</span></div><span class="kz2-time" aria-live="off">'+mmss(el2)+'</span></div>'
+      +'<div class="kz2-mid">'+ring(b,R.z,s)+'<div class="kz2-bpm"><b>'+(b||'–')+'</b><span>'+(b?'bpm':'no heart rate')+'</span></div></div>'
+      +'<div class="kz2-say s-'+s+'" aria-live="polite"><b>'+lab[0]+'</b><span>'+lab[1]+'</span></div>'
+      +'<div class="kz2-stats"><div><span>In zone</span><b>'+(R.hasHR?mmss(R.inZone):'–')+'</b></div><div><span>Distance</span><b>'+(R.mode==='outdoor'&&R.pts.length?distText(R.dist):'–')+'</b><i>'+unit()+'</i></div><div><span>Pace</span><b>'+(pace?paceText(pace):'–')+'</b><i>/'+unit()+'</i></div></div>'
+      +(R.hr.length>1?'<div class="kz2-trw">'+trace(R.hr.map(function(x){ return [(x[0]-R.t0)/1000,x[1]]; }),R.z,300,60)+'</div>':'')
+      +((gpsNote||(!b&&hrOk))?'<div class="kz2-note">'+esc(gpsNote)+(gpsNote&&!b&&hrOk?' · ':'')+(!b&&hrOk?'<button type="button" class="kz2-link" data-z2="hr">Connect a heart-rate strap</button>':'')+'</div>':'')
+      +'<div class="kz2-acts"><button type="button" class="kz2-b ghost" data-z2="pause">'+(R.paused?'Resume':'Pause')+'</button><button type="button" class="kz2-b" data-z2="finish">Finish</button></div>'
+      +'<div class="kz2-foot">Keep Kova open: the screen stays on, because phones stop GPS in a locked browser.</div></div>';
+  }
+
+  /* ---------- after a run ---------- */
+  function summary(r){
+    if(!window.openSheet) return;
+    var w=week(r.t), g=goal(), pct=r.hr&&r.dur?Math.round(r.inZone/r.dur*100):0, z={lo:r.lo,hi:r.hi};
+    var aer=r.hr&&r.zDist>400?(r.zMoving||r.inZone)/1000/r.zDist:0;
+    openSheet('<div class="kz2s"><div class="kxp-h"><div><b>Zone 2 run</b><span>'+new Date(r.t).toLocaleString(undefined,{weekday:'long',hour:'numeric',minute:'2-digit'})+'</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +(r.hr?'<div class="kz2s-hero"><b>'+Math.round(r.inZone/60000)+'</b><span>minutes in Zone 2 ('+pct+'% of the run)</span></div>'
+        :'<div class="kz2s-hero"><b>'+Math.round(r.dur/60000)+'</b><span>minutes by feel (no heart rate, so time in the zone was not measured)</span></div>')
+      +'<div class="kz2-stats"><div><span>Time</span><b>'+mmss(r.dur)+'</b></div><div><span>Avg HR</span><b>'+(r.avg||'–')+'</b><i>'+(r.avg?'bpm':'')+'</i></div><div><span>Distance</span><b>'+(r.dist?distText(r.dist):'–')+'</b><i>'+(r.dist?unit():'')+'</i></div></div>'
+      +(r.dist>200?'<div class="kz2-stats"><div><span>Avg pace</span><b>'+paceText(r.dur/1000/r.dist)+'</b><i>/'+unit()+'</i></div><div><span>Aerobic pace</span><b>'+(aer?paceText(aer):'–')+'</b><i>'+(aer?'/'+unit():'')+'</i></div><div><span>Above</span><b>'+(r.hr?Math.round(r.above/60000):'–')+'</b><i>'+(r.hr?'min':'')+'</i></div></div>':'')
+      +(r.trace&&r.trace.length>2?'<div class="kz2s-tr">'+trace(r.trace,z,300,80)+'<span>Heart rate, with your Zone 2 band</span></div>':'')
+      +'<div class="kz2s-wk">This week: <b>'+w.measured+'</b> of '+g+' min measured in Zone 2'+(w.feel?' · '+w.feel+' min by feel':'')+'.</div>'
+      +'<button type="button" class="btn kxp-go" data-kfc="x">Done</button></div>');
+  }
+
+  /* ---------- the card on Workout, and the setup ---------- */
+  function card(){
+    var z=zone(), w=week(), g=goal(), L=runs(), last=L[L.length-1], ae=aerobic();
+    var f=Math.min(1,w.measured/g), C=2*Math.PI*30;
+    var trend=ae&&ae.then?Math.round(ae.then*per()-ae.now*per()):null;
+    return '<div class="kv-card kz2c" id="kz2Card"><div class="kv-h"><span>ZONE 2</span><button type="button" class="kz2-link" data-z2="what">What is Zone 2?</button></div>'
+      +'<div class="kz2c-row"><svg class="kz2c-ring" viewBox="0 0 72 72" aria-hidden="true" focusable="false"><circle cx="36" cy="36" r="30" class="trk"/><circle cx="36" cy="36" r="30" class="val" stroke-dasharray="'+(C*f).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 36 36)"/></svg>'
+      +'<div class="kz2c-t"><b>'+w.measured+'<i> / '+g+' min</i></b><span>this week, measured in Zone 2'+(w.feel?' · '+w.feel+' by feel':'')+'</span><span>Your range: <b>'+z.lo+'–'+z.hi+' bpm</b></span></div></div>'
+      +(last?'<div class="kz2c-last">Last run '+new Date(last.t).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+': '+mmss(last.dur)+(last.hr?', '+Math.round(last.inZone/60000)+' min in zone':' by feel')+(last.dist?', '+distText(last.dist)+' '+unit():'')+'</div>'
+        :'<div class="kz2c-last">No Zone 2 runs yet. Easy, conversational runs build the base every other kind of running sits on.</div>')
+      +(ae&&trend!=null?'<div class="kz2c-last">Aerobic pace '+paceText(ae.now)+'/'+unit()+(trend>0?', '+trend+' s faster':trend<0?', '+(-trend)+' s slower':', same')+' than 3+ weeks ago.</div>':'')
+      +'<div class="kl-acts kz2-acts"><div class="chip on km-cta" data-z2="go" role="button" tabindex="0">Start a Zone 2 run</div><div class="chip" data-z2="setup" role="button" tabindex="0">My range and goal</div></div></div>';
+  }
+  function goSheet(){
+    var hrOk=window.KovaHR&&KovaHR.supported&&KovaHR.supported(), b=window.KovaHR&&KovaHR.bpm?KovaHR.bpm():0, z=zone();
+    if(!window.openSheet) return;
+    openSheet('<div class="kz2s"><div class="kxp-h"><div><b>Start a Zone 2 run</b><span>Your range: '+z.lo+'–'+z.hi+' bpm</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<div class="kz2s-p">'+(b?'Heart rate connected: '+b+' bpm.':hrOk?'Connect a Bluetooth heart-rate strap (Polar, Garmin, Wahoo, COROS) so Kova can keep you in the zone.':'This browser cannot connect a heart-rate strap (iPhone browsers cannot use Bluetooth). Kova will time the run and track the distance; keep it conversational, and the minutes count as by feel.')+'</div>'
+      +(hrOk&&!b?'<button type="button" class="btn ghost kxp-go" data-z2="hr">Connect a heart-rate strap</button>':'')
+      +'<button type="button" class="btn kxp-go" data-z2="startout">Outdoor run (GPS)</button>'
+      +'<button type="button" class="btn ghost kxp-go" data-z2="startin">Treadmill or indoors</button>'
+      +'<div class="kz2s-p kz2s-s">Kova asks for your location for distance and pace. Keep the app open while you run.</div></div>');
+  }
+  function whatSheet(){
+    var z=zone();
+    openSheet('<div class="kz2s"><div class="kxp-h"><div><b>What is Zone 2?</b><span>Easy enough to talk, hard enough to count</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<ul class="kxp-cues"><li>It is the steady, conversational effort: you can speak in full sentences, and you could keep going for a long time.</li>'
+      +'<li>It builds the aerobic base: a stronger heart, more mitochondria, and more fat used for fuel. Faster running sits on top of it.</li>'
+      +'<li>Most of an endurance runner’s week is easy: about 80% in well-trained athletes. Two or three Zone 2 runs a week is a good start.</li>'
+      +'<li>Going too fast is the common mistake. If you cannot say a full sentence, slow down, even to a walk.</li></ul>'
+      +'<div class="kxp-l">Your range</div><div class="kz2s-p"><b>'+z.lo+'–'+z.hi+' bpm.</b> '+esc(z.how)+(z.maf?' Another common rule, 180 minus your age, puts the top at '+z.maf+'.':'')+'</div>'
+      +'<button type="button" class="btn ghost kxp-go" data-z2="setup">Change my range or weekly goal</button></div>');
+  }
+  function setupSheet(){
+    var z=zone(), own=kp('z2zone',null), g=goal(), u=unit();
+    openSheet('<div class="kz2s"><div class="kxp-h"><div><b>My range and goal</b><span>'+esc(z.how)+'</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<div class="kxp-l">Zone 2 range (bpm)</div><div class="kz2s-row"><label>From<input id="kz2Lo" type="number" inputmode="numeric" min="70" max="200" value="'+(own?own.lo:z.lo)+'"></label><label>To<input id="kz2Hi" type="number" inputmode="numeric" min="80" max="210" value="'+(own?own.hi:z.hi)+'"></label></div>'
+      +'<div class="kz2s-p kz2s-s">Only change it if a test gave you a range (a lab test, or your first lactate threshold). Otherwise Kova works it out and keeps it up to date.</div>'
+      +'<div class="kxp-l">Weekly goal</div><div class="kxp-gs">'+[90,120,150,180,240].map(function(m){ return '<button type="button" class="chip'+(m===g?' on':'')+'" data-z2="goal" data-m="'+m+'" aria-pressed="'+(m===g)+'">'+m+' min</button>'; }).join('')+'</div>'
+      +'<div class="kxp-l">Distance in</div><div class="kxp-gs">'+['mi','km'].map(function(x){ return '<button type="button" class="chip'+(x===u?' on':'')+'" data-z2="unit" data-u="'+x+'" aria-pressed="'+(x===u)+'">'+(x==='mi'?'Miles':'Kilometres')+'</button>'; }).join('')+'</div>'
+      +'<button type="button" class="btn kxp-go" data-z2="saveRange">Save my range</button>'+(own?'<button type="button" class="btn ghost kxp-go" data-z2="autoRange">Let Kova work it out</button>':'')+'</div>');
+  }
+  function decorate(){
+    /* right under the Training card's buttons */
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts)'); if(!host) return;
+    var have=document.getElementById('kz2Card');
+    var html=card();
+    if(have){ if(have.__h!==html){ have.outerHTML=html; document.getElementById('kz2Card').__h=html; } return; }
+    /* with no sessions the buttons sit inside the Training card; with sessions, under it */
+    var after=host.closest('.kv-card')||host;
+    after.insertAdjacentHTML('afterend',html); var n=document.getElementById('kz2Card'); if(n) n.__h=html;
+  }
+  var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }
+
+  function onClick(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-z2]'); if(!b) return;
+    var a=b.getAttribute('data-z2');
+    if(a==='go'){ goSheet(); return; }
+    if(a==='what'){ whatSheet(); return; }
+    if(a==='setup'){ setupSheet(); return; }
+    if(a==='hr'){ if(window.KovaHR) KovaHR.connect(); setTimeout(function(){ if(document.querySelector('.kz2s')) goSheet(); },1500); return; }
+    if(a==='startout'||a==='startin'){ if(window.closeSheet) closeSheet(); start(a==='startout'?'outdoor':'indoor'); return; }
+    if(a==='pause'){ pause(); return; }
+    if(a==='finish'){ var el2=R?Date.now()-R.t0-R.pausedMs:0; if(el2<60000&&!confirmShort()) return; finish(true); soon(); return; }
+    if(a==='goal'){ kps('z2goal',+b.getAttribute('data-m')); setupSheet(); soon(); return; }
+    if(a==='unit'){ try{ localStorage.setItem('kova.z2.unit',JSON.stringify(b.getAttribute('data-u'))); }catch(e){} setupSheet(); soon(); return; }
+    if(a==='saveRange'){
+      var lo=+(document.getElementById('kz2Lo')||{}).value, hi=+(document.getElementById('kz2Hi')||{}).value;
+      if(!(lo>=70&&hi<=210&&hi-lo>=5)){ say('That range does not look right: the top should be at least 5 above the bottom.'); return; }
+      kps('z2zone',{lo:lo,hi:hi,at:Date.now()}); say('Saved: Zone 2 is '+lo+'–'+hi+' bpm.'); if(window.closeSheet) closeSheet(); soon(); return;
+    }
+    if(a==='autoRange'){ kps('z2zone',null); if(window.closeSheet) closeSheet(); soon(); return; }
+  }
+  function confirmShort(){ if(R&&!R.askedShort){ R.askedShort=true; say('Under a minute so far: tap Finish again to end it without saving.'); return false; } finish(false); return false; }
+  function onKey(ev){ var b=ev.target.closest&&ev.target.closest('[data-z2][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } }
+  document.addEventListener('click',onClick); document.addEventListener('keydown',onKey);
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kz2Card,#kz2,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  soon();
+  return {zone:zone,state:state,hav:hav,addPoint:addPoint,curPace:curPace,paceText:paceText,distText:distText,runs:runs,week:week,goal:goal,aerobic:aerobic,
+    start:start,tick:tick,pause:pause,finish:finish,card:card,decorate:decorate,_R:function(){ return R; },unit:unit};
 })();
 
 </script>
