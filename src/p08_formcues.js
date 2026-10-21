@@ -124,6 +124,8 @@ window.KovaFormCues=(function(){
     return h;
   }
   function open(name){
+    /* p32: the exercise page (moving picture, muscles, history, stretches) when it has loaded */
+    if(window.KovaExPage&&KovaExPage.open(name)) return;
     if(!window.openSheet) return;
     openSheet(html(name));
     try{ if(window.KovaAnalytics) KovaAnalytics.track('form_cues',{has:!!find(name)}); }catch(e){}

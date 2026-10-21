@@ -76,7 +76,8 @@ const key = (d) => d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) 
   ck('every entry has muscles, 3 to 5 cues and at least 2 mistakes', need.every((n) => { const f = F.find(n); return f[2] && f[4].length >= 3 && f[4].length <= 5 && f[5].length >= 1; }));
   const b = A.doc.createElement('button'); b.setAttribute('data-exinfo', 'Romanian deadlift'); A.doc.body.appendChild(b); b.click(); await wait(20);
   const sh = A.t('sheetIn');
-  ck('the (i) button opens the sheet: muscles, how to do it, mistakes, and Form Check', /Hamstrings, glutes/.test(sh) && /Push the hips back/.test(sh) && /Common mistakes/.test(sh) && /Check my form on video/.test(sh));
+  ck('the (i) button opens the exercise page: the moving picture, muscles, how to do it, mistakes, and Form Check', /Hamstrings/.test(sh) && /Glutes/.test(sh) && /Push the hips back/.test(sh) && /Common mistakes/.test(sh) && /Check my form on video/.test(sh)
+    && !!A.doc.querySelector('#sheetIn .kxp-fig svg'));
   ck('an exercise without cues says so and offers Form Check, nothing made up', /no written cues/.test(F.html('Zercher carry')) && /Open Form Check/.test(F.html('Zercher carry')));
   ck('the (i) sits on every exercise in a workout and in the program, with a spoken name', /class="exinfo" data-exinfo="'\+String\(e\.n\)/.test(html) && /class="exinfo" data-exinfo="'\+String\(e\.e\)/.test(html) && /aria-label="How to do '\+String\(e\.n\)/.test(html));
 
