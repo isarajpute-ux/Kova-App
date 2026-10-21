@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-22',title:'Muscle recovery and Follow along',
+      lines:['See which muscles are fresh and which need rest','Train what\u2019s fresh: today\u2019s workout from ready muscles','Follow along: moving pictures, a voice and a rest timer'],
+      steps:[
+        ['move','Muscle recovery','Your muscles coloured by how recovered they are, from the sets you logged. Tap a muscle for its page.',function(){ return q('#krcCard'); }],
+        ['move','Train what\u2019s fresh','One tap builds today\u2019s workout from the muscles that are ready: 2\u20133 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
+        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-21',title:'Exercise pictures, stretching and Zone 2 running',
       lines:['A moving picture for every exercise','Stretches for every muscle','Zone 2 running, with all five zones','Team chat with your AI teammates'],
       steps:[

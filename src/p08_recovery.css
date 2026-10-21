@@ -1,0 +1,43 @@
+/* ---- KovaRecovery (p35): the Muscle recovery card on Workout and a
+   muscle's page. Kova's card; ready / recovering / needs rest in Kova's
+   good, warm and Workout-orange colours. Dark, soft light, light glass. ---- */
+.krc{margin-top:12px;--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+body.light-mode .krc,body.light-mode .krcs{--r-ready:#2E9E5B;--r-mid:#C9A227;--r-rest:#D9601F}
+.krcs{--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+.krc .kv-h{align-items:center}
+.krc-q{width:30px;height:30px;border-radius:50%;border:.5px solid var(--ron-line);background:none;display:grid;place-items:center;color:var(--ron-txt-2);cursor:pointer;padding:0}
+.krc-q .ic{font-size:15px}
+.krc-row{display:flex;gap:12px;align-items:center;margin:4px 0 6px}
+.krc-fig{flex:1.4;min-width:0}
+.krc-body{display:block;width:100%;max-height:220px}
+/* only the muscles take a tap: the outline shapes drawn over them caught taps on iPhone */
+.krc-body *{pointer-events:none}
+.krc-body .m{fill:rgba(255,255,255,.05);cursor:pointer;pointer-events:visiblePainted;transition:fill .2s}
+body.light-mode .krc-body .m{fill:rgba(18,22,28,.05)}
+.krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.55;stroke:var(--r-ready);stroke-opacity:.7}
+.krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.6;stroke:var(--r-mid);stroke-opacity:.8}
+.krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8;stroke:var(--r-rest);filter:drop-shadow(0 0 4px rgba(232,122,60,.5))}
+body.light-mode .krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.6}
+body.light-mode .krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.65}
+body.light-mode .krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8}
+.krc-body .krc-bt{fill:var(--ron-txt-3)}
+.krc-side{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.krc-num{font-weight:200;font-size:44px;letter-spacing:-.045em;line-height:1;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.krc-num i{font-style:normal;font-size:14px;font-weight:300;letter-spacing:0;color:var(--ron-txt-2);margin-left:4px}
+.krc-cap{font-size:11px;font-weight:300;color:var(--ron-txt-2)}
+.krc-leg{display:flex;flex-direction:column;gap:5px;margin-top:10px;font-size:11px;color:var(--ron-txt-2)}
+.krc-leg span{display:flex;align-items:center;gap:7px}
+.krc-leg i{width:10px;height:10px;border-radius:50%}
+.krc-leg .r-ready{background:var(--r-ready)}.krc-leg .r-mid{background:var(--r-mid)}.krc-leg .r-rest{background:var(--r-rest)}
+.krc-l{font-size:11.5px;font-weight:300;line-height:1.6;color:var(--ron-txt-2);margin:4px 0}
+.krc-m{border:.5px solid var(--ron-line);background:rgba(255,255,255,.05);color:var(--ron-txt);border-radius:100px;padding:3px 10px;margin:2px 4px 2px 0;font:inherit;font-size:11.5px;cursor:pointer}
+body.light-mode .krc-m{background:rgba(255,255,255,.6)}
+.krc .kl-acts{margin-top:10px}
+/* a muscle's page */
+.krcs-top{display:flex;align-items:center;gap:16px;margin:4px 0 8px}
+.krcs-top b{display:block;font-size:15px;font-weight:400}.krcs-top span{display:block;font-size:12px;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:2px}
+.krcs-wk .bar{position:relative;height:8px;border-radius:4px;background:rgba(127,127,127,.18);overflow:visible}
+.krcs-wk .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#E87A3C}
+.krcs-wk .bar b{position:absolute;top:-4px;width:1px;height:16px;background:currentColor;opacity:.4}
+.krcs-wk span{display:block;font-size:12px;line-height:1.5;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:8px}
+.krcs-n{margin-top:16px;font-size:12px}

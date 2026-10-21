@@ -711,7 +711,7 @@ window.KovaExPage=(function(){
       if(r.querySelector('.kxp-th')||!D.find(r.getAttribute('data-n'))||!shown(r)) return;
       var s=document.createElement('span'); s.className='kxp-th kxp-ta'; s.setAttribute('data-kxd-still',r.getAttribute('data-n')); r.insertBefore(s,r.firstChild); mountIn(r);
     });
-    document.querySelectorAll('#s-move .kl-acts:not(.kz2-acts)').forEach(function(row){
+    document.querySelectorAll('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)').forEach(function(row){
       if(row.querySelector('.kxp-act')) return;
       row.insertAdjacentHTML('beforeend','<div class="chip kxp-act" data-kxp="lib" role="button" tabindex="0">Exercises</div><div class="chip kxp-act" data-kxp="str" role="button" tabindex="0">Stretch</div>');
     });

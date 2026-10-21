@@ -8752,6 +8752,97 @@ body.light-mode .kz2s{--z1:rgba(28,26,23,.2);--z3:rgba(28,26,23,.4);--z4:rgba(28
 .kwn-go .ic{font-size:15px;color:currentColor;filter:none}
 
 </style>
+<style id="p08-player">
+/* ---- KovaPlayer (p35): follow along. The Zone 2 page's ground and
+   glass (.kz2p), Kova's cards, round glass buttons and the orange bar. ---- */
+.kpl .kz2p-in{max-width:760px}
+.kpl-prog{height:4px;border-radius:2px;background:rgba(var(--ink),.1);overflow:hidden;margin:2px 0 8px}
+.kpl-prog i{display:block;height:100%;background:var(--acc);box-shadow:0 0 8px var(--acc-glow);transition:width .4s}
+.kpl-where{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ron-txt-2);margin-bottom:12px}
+.kpl-grid{display:grid;gap:12px}
+.kpl-grid>.card{margin-bottom:0;min-width:0}
+@media (min-width:760px){ .kpl-grid{grid-template-columns:1.2fr 1fr} .kpl-stage{grid-row:1 / 3} }
+.kpl-stage{position:relative;padding:8px;overflow:hidden;min-height:280px;display:flex;align-items:center;justify-content:center}
+.kpl-stage::after{content:'';position:absolute;left:10%;right:10%;bottom:-30%;height:60%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
+.kpl-fig{width:100%;height:300px}
+.kpl-tag{position:absolute;top:12px;left:12px}
+.kpl-end{flex-direction:column;gap:10px;text-align:center;padding:30px 20px;min-height:200px}
+.kpl-end span{font-size:13px;font-weight:300;color:var(--ron-txt-2);max-width:340px}
+.kpl-tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpl-st>span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-2);margin-bottom:6px}
+.kpl-sv{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kpl-sv .iconbtn{width:40px;height:40px;font-size:20px;font-weight:300;color:var(--ron-txt);flex-shrink:0}
+.kpl-sv .kz2p-num{font-size:46px;text-align:center;flex:1;min-width:0}
+.kpl-sv .kz2p-num i{font-size:13px;margin-left:3px}
+.kpl-acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.kpl-hint{font-size:11px;font-weight:300;color:var(--ron-txt-3)}
+.kpl-rest{display:flex;flex-direction:column;align-items:center}
+.kpl-rw{position:relative;width:200px;height:200px}
+.kpl-ring{width:100%;height:100%}
+.kpl-ring circle{fill:none;stroke-width:8}
+.kpl-ring .t{stroke:rgba(var(--ink),.1)}
+.kpl-ring .v{stroke:var(--acc);stroke-linecap:round;filter:drop-shadow(0 0 8px var(--acc-glow));transition:stroke-dasharray .25s linear}
+.kpl-rn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kpl-rn b{font-weight:200;font-size:54px;letter-spacing:-.04em;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.kpl-rn span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-2)}
+.kpl-next{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:10px;border-radius:18px;border:.5px solid var(--ron-line);background:rgba(var(--ink),.04)}
+.kpl-next span{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ron-txt-2)}
+.kpl-next b{display:block;font-size:14px;font-weight:400;color:var(--ron-txt);margin-top:2px}
+.kpl-th{width:52px;height:52px;border-radius:14px;flex-shrink:0;background:radial-gradient(120% 100% at 50% 20%,rgba(var(--ink),.10),rgba(var(--ink),.02))}
+.kpl-up .kz2p-k{display:block;margin-bottom:8px}
+.kpl-ur{display:flex;align-items:center;gap:12px;padding:6px 0;border-top:.5px solid var(--ron-line)}
+.kpl-ur:first-of-type{border-top:0}
+.kpl-ur b{display:block;font-size:13.5px;font-weight:400;color:var(--ron-txt)}.kpl-ur span{font-size:11px;font-weight:300;color:var(--ron-txt-2)}
+.kpl .hdr-r .iconbtn.on{border-color:var(--acc-brd);color:var(--acc-ink)}
+.kpl-chip .ic{font-size:12px;vertical-align:-1px}
+
+</style>
+<style id="p08-recovery">
+/* ---- KovaRecovery (p35): the Muscle recovery card on Workout and a
+   muscle's page. Kova's card; ready / recovering / needs rest in Kova's
+   good, warm and Workout-orange colours. Dark, soft light, light glass. ---- */
+.krc{margin-top:12px;--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+body.light-mode .krc,body.light-mode .krcs{--r-ready:#2E9E5B;--r-mid:#C9A227;--r-rest:#D9601F}
+.krcs{--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+.krc .kv-h{align-items:center}
+.krc-q{width:30px;height:30px;border-radius:50%;border:.5px solid var(--ron-line);background:none;display:grid;place-items:center;color:var(--ron-txt-2);cursor:pointer;padding:0}
+.krc-q .ic{font-size:15px}
+.krc-row{display:flex;gap:12px;align-items:center;margin:4px 0 6px}
+.krc-fig{flex:1.4;min-width:0}
+.krc-body{display:block;width:100%;max-height:220px}
+/* only the muscles take a tap: the outline shapes drawn over them caught taps on iPhone */
+.krc-body *{pointer-events:none}
+.krc-body .m{fill:rgba(255,255,255,.05);cursor:pointer;pointer-events:visiblePainted;transition:fill .2s}
+body.light-mode .krc-body .m{fill:rgba(18,22,28,.05)}
+.krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.55;stroke:var(--r-ready);stroke-opacity:.7}
+.krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.6;stroke:var(--r-mid);stroke-opacity:.8}
+.krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8;stroke:var(--r-rest);filter:drop-shadow(0 0 4px rgba(232,122,60,.5))}
+body.light-mode .krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.6}
+body.light-mode .krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.65}
+body.light-mode .krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8}
+.krc-body .krc-bt{fill:var(--ron-txt-3)}
+.krc-side{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.krc-num{font-weight:200;font-size:44px;letter-spacing:-.045em;line-height:1;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.krc-num i{font-style:normal;font-size:14px;font-weight:300;letter-spacing:0;color:var(--ron-txt-2);margin-left:4px}
+.krc-cap{font-size:11px;font-weight:300;color:var(--ron-txt-2)}
+.krc-leg{display:flex;flex-direction:column;gap:5px;margin-top:10px;font-size:11px;color:var(--ron-txt-2)}
+.krc-leg span{display:flex;align-items:center;gap:7px}
+.krc-leg i{width:10px;height:10px;border-radius:50%}
+.krc-leg .r-ready{background:var(--r-ready)}.krc-leg .r-mid{background:var(--r-mid)}.krc-leg .r-rest{background:var(--r-rest)}
+.krc-l{font-size:11.5px;font-weight:300;line-height:1.6;color:var(--ron-txt-2);margin:4px 0}
+.krc-m{border:.5px solid var(--ron-line);background:rgba(255,255,255,.05);color:var(--ron-txt);border-radius:100px;padding:3px 10px;margin:2px 4px 2px 0;font:inherit;font-size:11.5px;cursor:pointer}
+body.light-mode .krc-m{background:rgba(255,255,255,.6)}
+.krc .kl-acts{margin-top:10px}
+/* a muscle's page */
+.krcs-top{display:flex;align-items:center;gap:16px;margin:4px 0 8px}
+.krcs-top b{display:block;font-size:15px;font-weight:400}.krcs-top span{display:block;font-size:12px;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:2px}
+.krcs-wk .bar{position:relative;height:8px;border-radius:4px;background:rgba(127,127,127,.18);overflow:visible}
+.krcs-wk .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#E87A3C}
+.krcs-wk .bar b{position:absolute;top:-4px;width:1px;height:16px;background:currentColor;opacity:.4}
+.krcs-wk span{display:block;font-size:12px;line-height:1.5;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:8px}
+.krcs-n{margin-top:16px;font-size:12px}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -16818,7 +16909,12 @@ var KSESS=(function(){
        rather than keeping a second, differently-behaved copy */
     vol:{setVol:setVol, segVol:segVol, sessVol:sessVol, loadOf:loadOf, bodyW:bodyW},
     load:loadSession, valid:okSess,
-    keys:{s:SKEY,b:BKEY,h:HKEY,l:LKEY}
+    keys:{s:SKEY,b:BKEY,h:HKEY,l:LKEY},
+    /* p35: the workout player and "train what's fresh" use the same set,
+       rest and save logic as this screen */
+    api:{toggle:function(i,j){ toggleSet({i:i,j:j}); },save:save,ph:phFor,firstOpen:firstOpen,restFor:restFor,startRest:startRest,skipRest:skipRest,
+      restLeft:function(){ return restEnd>Date.now()?Math.ceil((restEnd-Date.now())/1000):0; },
+      build:function(list,day){ var t=freshSession(); if(day) t.day=day; t.ex=list.map(function(r){ var x=[]; for(var k=0;k<r[1];k++) x.push(blankSet(k===0?'warm':'work')); return {n:r[0],tgt:{sets:r[1],lo:r[2],hi:r[3]},sets:x,done:0}; }); S=t; prefill(); flush(); render(); return S; }}
   };
 })();
 window.KSESS=KSESS;
@@ -67510,7 +67606,7 @@ window.KovaExPage=(function(){
       if(r.querySelector('.kxp-th')||!D.find(r.getAttribute('data-n'))||!shown(r)) return;
       var s=document.createElement('span'); s.className='kxp-th kxp-ta'; s.setAttribute('data-kxd-still',r.getAttribute('data-n')); r.insertBefore(s,r.firstChild); mountIn(r);
     });
-    document.querySelectorAll('#s-move .kl-acts:not(.kz2-acts)').forEach(function(row){
+    document.querySelectorAll('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)').forEach(function(row){
       if(row.querySelector('.kxp-act')) return;
       row.insertAdjacentHTML('beforeend','<div class="chip kxp-act" data-kxp="lib" role="button" tabindex="0">Exercises</div><div class="chip kxp-act" data-kxp="str" role="button" tabindex="0">Stretch</div>');
     });
@@ -67980,10 +68076,10 @@ window.KovaZone2=(function(){
   }
   function decorate(){
     /* right under the Training card */
-    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts)'); if(!host) return;
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
     var have=document.getElementById('kz2Card'), html=card();
     if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kz2Card'); if(n0) n0.__h=html; } return; }
-    var after=host.closest('.kv-card')||host;
+    var after=document.getElementById('krcCard')||host.closest('.kv-card')||host;
     after.insertAdjacentHTML('afterend',html); var n=document.getElementById('kz2Card'); if(n) n.__h=html;
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }
@@ -68056,6 +68152,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-22',title:'Muscle recovery and Follow along',
+      lines:['See which muscles are fresh and which need rest','Train what\u2019s fresh: today\u2019s workout from ready muscles','Follow along: moving pictures, a voice and a rest timer'],
+      steps:[
+        ['move','Muscle recovery','Your muscles coloured by how recovered they are, from the sets you logged. Tap a muscle for its page.',function(){ return q('#krcCard'); }],
+        ['move','Train what\u2019s fresh','One tap builds today\u2019s workout from the muscles that are ready: 2\u20133 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
+        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-21',title:'Exercise pictures, stretching and Zone 2 running',
       lines:['A moving picture for every exercise','Stretches for every muscle','Zone 2 running, with all five zones','Team chat with your AI teammates'],
       steps:[
@@ -68132,6 +68235,436 @@ window.KovaWhatsNew=(function(){
   });
   setTimeout(check,4500);
   return {REL:REL,start:start,check:check,card:card,steps:steps,returning:returning};
+})();
+
+</script>
+<script id="p08-player">
+/* =====================================================================
+   KovaPlayer - follow along with your workout (p35).
+
+   Press Follow along (in a workout, or on the Muscle recovery card) and
+   the exercise you are on fills the screen: its moving picture, which set
+   of how many, the weight and reps to do (from Auto-Target, adjustable
+   with - and +), and Done set. Then the rest counts down in a ring with
+   what comes next, and a voice says it: "Set two of three. Eight reps at
+   one thirty-five." ... "Rest ninety seconds." ... "Ten seconds. Next:
+   Romanian deadlift." ... "Go." "Count my reps" counts each rep at a
+   steady tempo (two seconds down, one up). Every set goes through the
+   workout's own logic (KSESS.api.toggle), so the workout screen, history,
+   records and the recovery map all see exactly what you did. Finish ends
+   the workout the usual way. Dark, soft light and light glass; the voice
+   can be turned off.
+   ===================================================================== */
+window.KovaPlayer=(function(){
+  'use strict';
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function K(){ return window.KSESS||null; }
+  function A(){ var k=K(); return k&&k.api||null; }
+  function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
+  function lsPut(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function ic(id){ return '<svg class="ic" aria-hidden="true"><use href="#i-'+id+'"/></svg>'; }
+  function mmss(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+  var P={on:false,key:'',w:0,r:0,count:null,cue:{},voice:lsJ('kova.pl.voice',true),iv:0,wasRest:false};
+
+  /* ---------- where you are ---------- */
+  function S(){ var k=K(); return k&&k.state?k.state():null; }
+  function cur(){
+    var s=S(), a=A(); if(!s||!s.ex||!s.ex.length||!a) return null;
+    var i=Math.min(Math.max(0,s.act||0),s.ex.length-1);
+    if(a.firstOpen(s.ex[i])<0){ var n=s.ex.findIndex(function(e){ return a.firstOpen(e)>-1; }); if(n<0) return {done:true,s:s}; i=n; }
+    var e=s.ex[i], j=a.firstOpen(e), set=e.sets[j];
+    var work=e.sets.filter(function(x){ return x.role!=='warm'; }), wi=e.sets.slice(0,j+1).filter(function(x){ return x.role!=='warm'; }).length;
+    return {s:s,i:i,j:j,e:e,set:set,warm:set.role==='warm',wn:wi,wt:work.length,n:s.ex.length};
+  }
+  function nextOf(c){
+    if(!c||c.done) return null;
+    var a=A(), s=c.s;
+    if(c.j+1<c.e.sets.length) return {e:c.e,i:c.i,j:c.j+1,same:true};
+    for(var k=c.i+1;k<s.ex.length;k++) if(a.firstOpen(s.ex[k])>-1) return {e:s.ex[k],i:k,j:a.firstOpen(s.ex[k]),same:false};
+    for(var k2=0;k2<c.i;k2++) if(a.firstOpen(s.ex[k2])>-1) return {e:s.ex[k2],i:k2,j:a.firstOpen(s.ex[k2]),same:false};
+    return null;
+  }
+  function target(c){
+    var a=A(), ph=a.ph(c.e,c.j)||{};
+    return {w:c.set.w!=null?+c.set.w:(+ph.w||0),r:c.set.r!=null?+c.set.r:(+ph.r||c.e.tgt.hi||8)};
+  }
+  function sync(){ var c=cur(); if(!c||c.done) return c; var k=c.i+':'+c.j; if(P.key!==k){ P.key=k; var t=target(c); P.w=t.w; P.r=t.r; stopCount(); } return c; }
+  function progress(){ var k=K(), d=k&&k.setsDone?k.setsDone():[0,0]; return {d:d[0],t:d[1]}; }
+
+  /* ---------- the voice ---------- */
+  function speak(t){ if(!P.voice) return; try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t); u.rate=1.02; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  var WORD=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
+  function num(n){ n=Math.round(n); return n<=20?WORD[n]:String(n); }
+  function setLine(c){
+    var t={w:P.w,r:P.r};
+    return (c.warm?'Warm-up set. ':'Set '+num(c.wn)+' of '+num(c.wt)+'. ')+num(t.r)+' reps'+(t.w?' at '+t.w+(t.w===1?' pound':' pounds'):'')+'.';
+  }
+  function announce(c){ if(!c||c.done) return; speak(c.e.n+'. '+setLine(c)); }
+  function stopCount(){ if(P.count){ clearInterval(P.count.iv); P.count=null; } }
+  /* two seconds down, one up: a number every three seconds */
+  function countReps(){
+    if(P.count){ stopCount(); paint(); return; }
+    var n=P.r, k=0; speak('Ready.');
+    P.count={k:0,n:n,iv:setInterval(function(){ k++; if(!P.count) return; P.count.k=k; if(k<=n) speak(num(k)); if(k>=n){ setTimeout(function(){ speak('Rack it.'); },1200); stopCount(); } paintCount(); },3000)};
+    paint();
+  }
+
+  /* ---------- doing it ---------- */
+  function done(){
+    var c=sync(), a=A(); if(!c||c.done||!a) return;
+    stopCount();
+    c.set.w=P.w; c.set.r=P.r;
+    a.toggle(c.i,c.j);
+    var nx=cur();
+    if(nx&&!nx.done&&!a.restLeft()) a.startRest(a.restFor(c.e.n));
+    var left=a.restLeft();
+    P.cue={};
+    if(nx&&nx.done){ speak('That is the workout. Tap Finish to save it.'); }
+    else if(left) speak('Rest '+(left>=60&&left%60===0?num(left/60)+(left===60?' minute':' minutes'):num(left)+' seconds')+'.');
+    P.wasRest=!!left;
+    track('player_set',{rest:left});
+    paint();
+  }
+  function move(d){
+    var s=S(), a=A(); if(!s||!a) return;
+    var i=sync(); i=i&&!i.done?i.i:s.act||0;
+    for(var k=i+d;k>=0&&k<s.ex.length;k+=d){ if(a.firstOpen(s.ex[k])>-1){ s.act=k; a.skipRest(); a.save(); try{ K().render(); }catch(e){} P.key=''; announce(sync()); paint(); return; } }
+    say(d>0?'That was the last exercise with sets left.':'That was the first one.');
+  }
+  function addRest(sec){ var a=A(); if(!a) return; var l=a.restLeft(); a.startRest(l+sec); paint(); }
+  function finish(){ close(); var k=K(); if(k&&k.finish) k.finish(); }
+
+  /* ---------- the screen ---------- */
+  function thumb(n){ return '<span class="kxp-th kpl-th" data-kxd-still="'+esc(n)+'"></span>'; }
+  function ring(f){ var C=2*Math.PI*86; return '<svg class="kpl-ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="86" class="t"/><circle id="kplArc" cx="100" cy="100" r="86" class="v" stroke-dasharray="'+(C*f).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 100 100)"/></svg>'; }
+  function page(){
+    var c=sync(), a=A(), pr=progress(), s=S();
+    if(!c) return '<div class="kz2p-in"><div class="kxp-none">There is no workout to follow yet. Start one from Workout.</div><button type="button" class="kz2p-go" data-kpl="close">Close</button></div>';
+    var left=a?a.restLeft():0, nx=nextOf(c), resting=left>0&&!c.done;
+    var head='<div class="hdr kz2p-hd"><div class="hdr-l"><button type="button" class="back" data-kpl="close" aria-label="Back to the workout">'+ic('chevron-left')+'</button>'
+      +'<div><div class="kz2p-eye">FOLLOW ALONG · '+esc(String(s.day||'Today').toUpperCase())+'</div><div class="title">'+esc(c.done?'All done':c.e.n)+'</div></div></div>'
+      +'<div class="hdr-r"><button type="button" class="iconbtn kz2p-help" data-kpl="tour" aria-label="Show me around the player">?</button>'
+      +'<button type="button" class="iconbtn'+(P.voice?' on':'')+'" data-kpl="voice" aria-pressed="'+P.voice+'" aria-label="'+(P.voice?'Voice on':'Voice off')+'">'+ic('headphones')+'</button></div></div>';
+    var bar='<div class="kpl-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+pr.t+'" aria-valuenow="'+pr.d+'" aria-label="Sets done"><i style="width:'+(pr.t?pr.d/pr.t*100:0).toFixed(1)+'%"></i></div>'
+      +'<div class="kpl-where">'+(c.done?pr.d+' sets done':'Exercise '+(c.i+1)+' of '+c.n+' · '+(c.warm?'Warm-up set':'Set '+c.wn+' of '+c.wt))+'</div>';
+    if(c.done) return '<div class="kz2p-in">'+head+bar+'<section class="card kpl-stage kpl-end"><div class="kz2p-num">'+pr.d+'<i>sets</i></div><span>Every set is logged. Finish saves the workout, your records and your recovery map.</span></section>'
+      +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
+    var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(c.e.n)+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
+      +(c.warm?'<span class="chip kpl-tag">Warm-up</span>':'')+'</section>';
+    var body;
+    if(resting){
+      var len=Math.max(left,P.restLen||left); P.restLen=len;
+      body='<section class="card kpl-rest" aria-live="polite"><div class="kpl-rw">'+ring(left/len)+'<div class="kpl-rn"><b id="kplLeft">'+mmss(left)+'</b><span>Rest</span></div></div>'
+        +(nx?'<div class="kpl-next">'+thumb(nx.e.n)+'<div><span>Next</span><b>'+esc(nx.same?(nx.e.sets[nx.j].role==='warm'?'Warm-up set':'Set '+(nx.e.sets.slice(0,nx.j+1).filter(function(x){ return x.role!=='warm'; }).length)+' of '+nx.e.sets.filter(function(x){ return x.role!=='warm'; }).length):nx.e.n)+'</b></div></div>':'')
+        +'<div class="kpl-acts"><button type="button" class="chip kz2p-c" data-kpl="more">'+ic('plus')+'<span>30 s</span></button></div></section>';
+    } else {
+      P.restLen=0;
+      body='<section class="card kpl-do"><div class="kpl-tg"><div class="kpl-st"><span>Weight</span><div class="kpl-sv"><button type="button" class="iconbtn" data-kpl="w-" aria-label="Less weight">−</button><div class="kz2p-num">'+P.w+'<i>lb</i></div><button type="button" class="iconbtn" data-kpl="w+" aria-label="More weight">+</button></div></div>'
+        +'<div class="kpl-st"><span>Reps</span><div class="kpl-sv"><button type="button" class="iconbtn" data-kpl="r-" aria-label="One rep fewer">−</button><div class="kz2p-num" id="kplReps">'+(P.count?P.count.k+'<i>/ '+P.r+'</i>':P.r)+'</div><button type="button" class="iconbtn" data-kpl="r+" aria-label="One rep more">+</button></div></div></div>'
+        +'<div class="kpl-acts"><button type="button" class="chip kz2p-c'+(P.count?' on':'')+'" data-kpl="count" aria-pressed="'+!!P.count+'">'+ic('clock')+'<span>'+(P.count?'Stop counting':'Count my reps')+'</span></button><span class="kpl-hint">Tempo: 2 s down, 1 s up</span></div></section>';
+    }
+    var up=[], s2=S(), a2=A();
+    for(var k=c.i+1;k<s2.ex.length&&up.length<2;k++) if(a2.firstOpen(s2.ex[k])>-1) up.push(s2.ex[k]);
+    /* working sets, the warm-up said apart (plans are 2-3 working sets) */
+    function upSets(e){ var w=e.sets.filter(function(x){ return x.role==='warm'; }).length, n=e.sets.length-w; return (w?'Warm-up + ':'')+n+(n===1?' set':' sets'); }
+    var upNext=up.length?'<section class="card kpl-up"><div class="kz2p-k">UP NEXT</div>'+up.map(function(e){ return '<div class="kpl-ur">'+thumb(e.n)+'<div><b>'+esc(e.n)+'</b><span>'+upSets(e)+' · '+e.tgt.lo+'–'+e.tgt.hi+' reps</span></div></div>'; }).join('')+'</section>':'';
+    var ctl='<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="prev" aria-label="Previous exercise">'+ic('chevron-left')+'</button>'
+      +(resting?'<button type="button" class="kz2p-go" data-kpl="skip">'+ic('player-play')+'<span>Skip rest</span></button>':'<button type="button" class="kz2p-go" data-kpl="done">'+ic('check')+'<span>Done set</span></button>')
+      +'<button type="button" class="chip kz2p-c" data-kpl="next" aria-label="Next exercise">'+ic('chevron-right')+'</button></div>';
+    return '<div class="kz2p-in">'+head+bar+'<div class="kpl-grid">'+stage+body+upNext+'</div>'+ctl+'</div>';
+  }
+  function mountFigs(el){
+    var D=window.KovaDemo; if(!D||!el) return;
+    el.querySelectorAll('[data-kpl-fig]').forEach(function(f){ D.mount(f,f.getAttribute('data-kpl-fig')); });
+    el.querySelectorAll('[data-kxd-still]').forEach(function(f){ D.mount(f,f.getAttribute('data-kxd-still'),{still:true,u:1}); });
+  }
+  function paint(){
+    var el=document.getElementById('kpl'); if(!el) return;
+    var act=document.activeElement, key=act&&el.contains(act)?act.getAttribute('data-kpl'):'';
+    el.innerHTML=page(); mountFigs(el);
+    if(key){ var b=el.querySelector('[data-kpl="'+key+'"]'); if(b) try{ b.focus({preventScroll:true}); }catch(e){} }
+  }
+  function paintCount(){ var r=document.getElementById('kplReps'); if(r&&P.count) r.innerHTML=P.count.k+'<i>/ '+P.count.n+'</i>'; }
+  /* the rest ring and the voice, four times a second */
+  function tick(){
+    if(!P.on) return;
+    var a=A(); if(!a) return;
+    var left=a.restLeft(), c=cur();
+    if(left>0){
+      var el=document.getElementById('kplLeft'); if(!el){ paint(); return; }
+      el.textContent=mmss(left);
+      var arc=document.getElementById('kplArc'); if(arc){ var C=2*Math.PI*86; arc.setAttribute('stroke-dasharray',(C*left/Math.max(left,P.restLen||left)).toFixed(1)+' '+C.toFixed(1)); }
+      if(left<=10&&!P.cue.ten){ P.cue.ten=1; var nx=nextOf(c); speak('Ten seconds.'+(nx&&!nx.same?' Next: '+nx.e.n+'.':'')); }
+      P.wasRest=true;
+    } else if(P.wasRest){
+      P.wasRest=false; P.cue={}; P.key=''; var c2=sync(); paint(); if(c2&&!c2.done){ speak('Go. '+setLine(c2)); }
+    }
+  }
+
+  function open(){
+    var k=K(); if(!k||!k.api){ say('The workout is still loading.'); return false; }
+    var el=document.getElementById('kpl');
+    if(!el){ el=document.createElement('div'); el.id='kpl'; el.className='kz2p kpl'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Follow along');
+      (document.getElementById('app')||document.body).appendChild(el); }
+    P.on=true; P.key=''; P.cue={}; P.wasRest=k.api.restLeft()>0;
+    paint(); clearInterval(P.iv); P.iv=setInterval(tick,250);
+    var c=sync(); if(c&&!c.done&&!P.wasRest) announce(c);
+    track('player_open',{});
+    if(window.KovaTour&&KovaTour.canRemember()&&KovaTour.once('playerpage')) setTimeout(tour,700);
+    return true;
+  }
+  function close(){ P.on=false; stopCount(); clearInterval(P.iv); var el=document.getElementById('kpl'); if(el) el.remove(); try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ K().render(); }catch(e){} }
+
+  /* the player's own tour (every new part is shown around) */
+  var TOUR=[['.kpl-stage','The exercise, moving','Watch the start and the finish of the lift while you set up.'],
+    ['.kpl-do','Your target','The weight and reps for this set, from what you lifted last time. Change them with - and + if you did something else.'],
+    ['[data-kpl="count"]','Count my reps','A voice counts each rep at a steady tempo: two seconds down, one up.'],
+    ['[data-kpl="done"]','Done set','Logs the set and starts your rest, with what comes next.'],
+    ['[data-kpl="voice"]','The voice','It tells you each set, the rest and what is next. Turn it off here.']];
+  function tour(){
+    if(!window.KovaTour||!document.getElementById('kpl')) return false;
+    var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
+    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kpl '+t[0]); }}; }),{color:'#E87A3C',screens:sc});
+    var ov=document.getElementById('ksTour'); if(ov) ov.style.zIndex='9700';
+    return true;
+  }
+
+  /* "Follow along" in the workout's own row of chips */
+  function decorate(){
+    /* only while the workout is on screen: looking up addExBtn by id brings a parked screen back (KovaPark), even inside quiet() */
+    var sc=document.getElementById('s-session'); if(!sc||!sc.classList.contains('on')) return;
+    var add=document.getElementById('addExBtn'); if(!add||!add.parentNode||add.parentNode.querySelector('.kpl-chip')) return;
+    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Follow along</div>');
+  }
+  var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-kpl]'); if(!b) return;
+    var a=b.getAttribute('data-kpl');
+    if(a==='open'){ open(); return; }
+    if(a==='close'){ close(); return; }
+    if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice) try{ speechSynthesis.cancel(); }catch(e){} paint(); return; }
+    if(a==='tour'){ tour(); return; }
+    if(a==='done'){ done(); return; }
+    if(a==='skip'){ var ap=A(); if(ap) ap.skipRest(); return; }
+    if(a==='more'){ addRest(30); return; }
+    if(a==='prev'){ move(-1); return; }
+    if(a==='next'){ move(1); return; }
+    if(a==='count'){ countReps(); return; }
+    if(a==='finish'){ finish(); return; }
+    if(a==='w-'||a==='w+'){ P.w=Math.max(0,P.w+(a==='w+'?5:-5)); paint(); return; }
+    if(a==='r-'||a==='r+'){ P.r=Math.max(1,P.r+(a==='r+'?1:-1)); paint(); return; }
+  });
+  document.addEventListener('keydown',function(ev){
+    var b=ev.target.closest&&ev.target.closest('.kpl-chip'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); return; }
+    if(ev.key==='Escape'&&document.getElementById('kpl')&&!document.querySelector('#sheet.on')&&!document.getElementById('ksTour')) close();
+  });
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kpl,#kz2,#krcCard,#kz2Card,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('kova:screen',soon);
+  soon();
+  return {open:open,close:close,done:done,move:move,cur:cur,nextOf:nextOf,countReps:countReps,tour:tour,TOUR:TOUR,decorate:decorate,setLine:setLine,_P:P};
+})();
+
+</script>
+<script id="p08-recovery">
+/* =====================================================================
+   KovaRecovery - which muscles are fresh and which need rest (p35).
+
+   From the sets you logged (KSESS history, plus today's ticked sets),
+   never from sample data. Each hard set loads the muscles it trains: the
+   main ones fully, the helpers half (warm-ups do not count). That load
+   fades the way muscle recovers: big muscles (quads, hamstrings, glutes,
+   back, chest) over about three days, middle ones (shoulders, upper back)
+   over two to three, small ones (arms, calves, abs) over about two
+   (exponential, time constants 30 / 24 / 20 h). A muscle reads:
+     ready        85% and up
+     recovering   55-85%
+     needs rest   under 55%
+   It is an estimate and says so; sleep, food and stress move it too.
+
+   On Workout, under Training: your body figure (the slim one from
+   Customize) coloured by recovery, what is ready and what is resting,
+   "Train what's fresh" (builds today's workout from ready muscles: 2-3
+   working sets each, compound lifts first) and "Follow along" (the
+   workout player). Tap a muscle for its page: recovery, when it is ready,
+   when you last trained it and with what, this week's hard sets against
+   the 10-20 that builds muscle, the exercises and stretches for it.
+   ===================================================================== */
+window.KovaRecovery=(function(){
+  'use strict';
+  var H=36e5, DAY=864e5;
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function K(){ return window.KSESS||null; }
+  function D(){ return window.KovaDemo||null; }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function ic(id){ return '<svg class="ic" aria-hidden="true"><use href="#i-'+id+'"/></svg>'; }
+
+  var NAME={quads:'Quads',hams:'Hamstrings',glutes:'Glutes',calves:'Calves',tibialis:'Shins',adductors:'Inner thighs',hipflex:'Hip flexors',chest:'Chest',
+    lats:'Lats',traps:'Upper back',lowback:'Lower back',abs:'Abs',obliques:'Obliques',delts:'Shoulders',biceps:'Biceps',triceps:'Triceps',forearms:'Forearms'};
+  var TAU={quads:30,hams:30,glutes:30,lats:30,chest:30,lowback:30,adductors:30,traps:24,delts:24,obliques:24,hipflex:24,biceps:20,triceps:20,forearms:20,calves:20,abs:20,tibialis:20};
+  var MAP={quads:['f-quad'],hams:['b-ham'],glutes:['b-glute'],calves:['b-calf'],tibialis:['f-shin'],adductors:['f-add'],hipflex:['f-pelvis'],chest:['f-pec'],
+    lats:['b-lat'],traps:['b-trap','f-trap'],lowback:['b-erector'],abs:['f-abs'],obliques:['f-obl','f-serr'],delts:['f-delt','b-delt'],biceps:['f-bicep'],triceps:['b-tri'],forearms:['f-fore','b-fore']};
+  var GROUP={Quads:['quads'],Hamstrings:['hams'],Glutes:['glutes'],Calves:['calves'],Chest:['chest'],Back:['lats','traps'],Shoulders:['delts'],Biceps:['biceps'],Triceps:['triceps'],Core:['abs']};
+  var COMPOUND={sq:1,hg:1,hp:1,vp:1,hpl:1,vpl:1};
+
+  /* which muscles an exercise trains: the picture's own list, else its group */
+  function musclesOf(name){
+    var d=D()&&D().find(name);
+    if(d&&d.mus) return {p:(d.mus.p||[]).slice(),s:(d.mus.s||[]).slice()};
+    var k=K(), x=k&&k.lib?k.lib(name):null, g=x&&GROUP[x.m];
+    return {p:g?g.slice():[],s:[]};
+  }
+  /* every hard set you logged: history, plus today's ticked sets */
+  function sets(){
+    var k=K(), out=[]; if(!k) return out;
+    var H0=k.hist?k.hist():{};
+    Object.keys(H0).forEach(function(n){ (H0[n]||[]).forEach(function(h){ var c=(h.sets||[]).filter(function(x){ return x.role!=='warm'; }).length; if(c) out.push({n:n,t:h.t,c:c}); }); });
+    var S=k.state&&k.state();
+    if(S&&S.ex&&!S.finished){
+      S.ex.forEach(function(e){ var c=e.sets.filter(function(x){ return x.d&&x.role!=='warm'; }).length; if(c) out.push({n:e.n,t:S.savedAt||Date.now(),c:c,today:1}); });
+    }
+    return out;
+  }
+  function state(now){
+    now=now||Date.now();
+    var M={}; Object.keys(NAME).forEach(function(m){ M[m]={m:m,n:NAME[m],F:0,last:0,week:0,by:{}}; });
+    sets().forEach(function(x){
+      var mu=musclesOf(x.n), age=(now-x.t)/H;
+      if(age<0) age=0;
+      [[mu.p,1],[mu.s,0.5]].forEach(function(L){ L[0].forEach(function(m){ var o=M[m]; if(!o) return;
+        o.F+=x.c*L[1]*Math.exp(-age/TAU[m]);
+        if(x.t>o.last) o.last=x.t;
+        if(now-x.t<7*DAY){ o.week+=x.c*L[1]; o.by[x.n]=(o.by[x.n]||0)+x.c; }
+      }); });
+    });
+    Object.keys(M).forEach(function(m){ var o=M[m];
+      o.pct=Math.round(100*Math.exp(-o.F/4));
+      o.st=o.pct>=85?'ready':o.pct>=55?'mid':'rest';
+      /* hours until it reads 85%: F x e^(-t/tau) = 0.65 */
+      o.readyIn=o.F>0.65?Math.ceil(TAU[m]*Math.log(o.F/0.65)):0;
+    });
+    return M;
+  }
+
+  /* ---------- the body figure, coloured by recovery ---------- */
+  function figure(M){
+    var src=document.getElementById('bodySvg'); if(!src) return '';
+    try{ if(window.KovaBodyShape&&KovaBodyShape.apply&&!src.hasAttribute('data-sex')) KovaBodyShape.apply(); }catch(e){}
+    var c=src.cloneNode(true); c.removeAttribute('id'); c.setAttribute('class','krc-body'); c.setAttribute('role','img');
+    var by={}; Object.keys(MAP).forEach(function(m){ MAP[m].forEach(function(p){ by[p]=m; }); });
+    c.querySelectorAll('[id]').forEach(function(el){
+      var id=el.getAttribute('id'); el.removeAttribute('id'); el.removeAttribute('style');
+      var base=id.replace(/-(l|r)\d?$/,'').replace(/\d$/,''), m=by[base];
+      if(el.classList.contains('m')){ el.classList.remove('p','s','on','sel'); if(m&&M[m]){ el.classList.add('r-'+M[m].st); el.setAttribute('data-krc-m',m); } }
+    });
+    c.querySelectorAll('text').forEach(function(t){ t.setAttribute('class','krc-bt'); });
+    var ready=Object.keys(M).filter(function(m){ return M[m].st==='ready'; }).length;
+    c.setAttribute('aria-label','Muscle recovery: '+ready+' of '+Object.keys(M).length+' muscle groups ready, body chart');
+    return c.outerHTML;
+  }
+  function list(M,st){ return Object.keys(M).filter(function(m){ return M[m].st===st; }).sort(function(a,b){ return M[a].pct-M[b].pct; }); }
+  function when(h){ if(h<=0) return 'now'; if(h<20) return 'in about '+h+' h'; var d=new Date(Date.now()+h*H); return d.toLocaleDateString(undefined,{weekday:'long'}); }
+  function card(){
+    var M=state(), any=sets().length>0, rest=list(M,'rest'), mid=list(M,'mid'), ready=list(M,'ready');
+    var big=['quads','hams','glutes','chest','lats','delts','biceps','triceps','calves','abs'].filter(function(m){ return M[m].st==='ready'; });
+    return '<div class="kv-card krc" id="krcCard"><div class="kv-h"><span>MUSCLE RECOVERY</span><button type="button" class="krc-q" data-krc="about" aria-label="How Kova works this out">'+ic('info-circle')+'</button></div>'
+      +'<div class="krc-row"><div class="krc-fig" data-krc="fig">'+figure(M)+'</div><div class="krc-side">'
+        +'<div class="krc-num">'+ready.length+'<i>/ '+Object.keys(M).length+'</i></div><span class="krc-cap">muscle groups ready</span>'
+        +'<div class="krc-leg"><span><i class="r-ready"></i>Ready</span><span><i class="r-mid"></i>Recovering</span><span><i class="r-rest"></i>Needs rest</span></div></div></div>'
+      +(any?(rest.length||mid.length?'<div class="krc-l">Resting: '+rest.concat(mid).slice(0,4).map(function(m){ return '<button type="button" class="krc-m" data-krc="m" data-m="'+m+'">'+esc(M[m].n)+' '+M[m].pct+'%</button>'; }).join('')+'</div>':'<div class="krc-l">Everything is recovered. A good day for a full workout.</div>')
+          +(big.length?'<div class="krc-l">Ready: '+esc(big.slice(0,5).map(function(m){ return M[m].n; }).join(', '))+'</div>':'')
+        :'<div class="krc-l">No sets logged yet, so every muscle is fresh. Log a workout and this map shows what needs rest.</div>')
+      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0">Follow along</div></div></div>';
+  }
+
+  /* ---------- one muscle ---------- */
+  function muscleSheet(m){
+    var M=state(), o=M[m]; if(!o||!window.openSheet) return;
+    var k=K(), d=D();
+    var ex=(k&&k.XL?k.XL:[]).filter(function(x){ var mu=musclesOf(x.n); return mu.p.indexOf(m)>=0; }).slice(0,6);
+    var st=d&&d.stretchesFor?d.stretchesFor([m]).slice(0,2):[];
+    var by=Object.keys(o.by).sort(function(a,b){ return o.by[b]-o.by[a]; });
+    var wk=Math.round(o.week*10)/10, f=Math.min(1,wk/20);
+    openSheet('<div class="kxp krcs"><div class="kxp-h"><div><b>'+esc(o.n)+'</b><span>'+(o.st==='ready'?'Ready to train':o.st==='mid'?'Recovering':'Needs rest')+'</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<div class="krcs-top"><div class="krc-num">'+o.pct+'<i>%</i></div><div><b>'+(o.readyIn?'Ready '+when(o.readyIn):'Ready now')+'</b><span>'+(o.last?'Last trained '+new Date(o.last).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}):'Not trained yet')+'</span></div></div>'
+      +'<div class="kxp-l">This week</div><div class="krcs-wk"><div class="bar"><i style="width:'+(f*100).toFixed(0)+'%"></i><b style="left:50%"></b></div><span>'+wk+' hard sets'+(by.length?' · '+esc(by.slice(0,3).join(', ')):'')+'. Most people build muscle on 10 to 20 a week.</span></div>'
+      +(ex.length?'<div class="kxp-l">Exercises for it</div><div class="kxp-sts">'+ex.map(function(x){ return '<button type="button" class="kxp-st" data-exinfo="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><span><b>'+esc(x.n)+'</b><small>'+esc(x.m)+'</small></span></button>'; }).join('')+'</div>':'')
+      +(st.length?'<div class="kxp-l">Stretch it</div><div class="kxp-sts">'+st.map(function(s2){ return '<button type="button" class="kxp-st" data-kxp="stretch" data-n="'+esc(s2.n)+'"><span class="kxp-th" data-kxd-still="'+esc(s2.n)+'"></span><span><b>'+esc(s2.n)+'</b><small>'+esc(s2.hold)+'</small></span></button>'; }).join('')+'</div>':'')
+      +'<div class="kxp-none krcs-n">An estimate from the sets you logged: big muscles take about three days to recover, small ones about two. Sleep, food and stress move it too.</div></div>');
+    var sh=document.getElementById('sheet'); if(sh&&D()) sh.querySelectorAll('[data-kxd-still]').forEach(function(el){ D().mount(el,el.getAttribute('data-kxd-still'),{still:true,u:1}); });
+    track('recovery_muscle',{m:m});
+  }
+  function aboutSheet(){
+    if(!window.openSheet) return;
+    openSheet('<div class="kxp krcs"><div class="kxp-h"><div><b>How Kova works this out</b><span>From your logged sets, never sample data</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<ul class="kxp-cues"><li>Every hard set loads the muscles it trains: the main ones fully, the helpers half. Warm-up sets do not count.</li>'
+      +'<li>That load fades the way muscle recovers: big muscles (quads, hamstrings, glutes, back, chest) over about three days, shoulders and upper back over two to three, arms, calves and abs over about two.</li>'
+      +'<li>Ready is 85% and up, recovering 55–85%, needs rest under 55%.</li>'
+      +'<li>It is an estimate. Poor sleep, little food or a hard week slow recovery; train by how you feel too.</li></ul></div>');
+  }
+
+  /* ---------- train what's fresh ---------- */
+  function freshPlan(M){
+    M=M||state();
+    var k=K(); if(!k||!k.XL) return [];
+    var ok=function(m){ return M[m]&&M[m].st==='ready'; }, tired=function(m){ return M[m]&&M[m].st==='rest'; };
+    var cand=k.XL.filter(function(x){ var mu=musclesOf(x.n); return mu.p.length&&mu.p.every(ok)&&!mu.s.some(tired); });
+    /* compound lifts first; then arms and core before the small extras */
+    var PRI={biceps:1,triceps:1,abs:2,obliques:3,delts:3,calves:4,traps:5,forearms:6};
+    cand.sort(function(a,b){ var ca=COMPOUND[a.pat]?1:0, cb=COMPOUND[b.pat]?1:0; if(ca!==cb) return cb-ca; if(ca) return 0;
+      return (PRI[musclesOf(a.n).p[0]]||9)-(PRI[musclesOf(b.n).p[0]]||9); });
+    var used={}, out=[];
+    cand.forEach(function(x){
+      if(out.length>=5) return;
+      var mu=musclesOf(x.n), key=mu.p[0];
+      if(used[key]) return;
+      if(out.filter(function(o){ return COMPOUND[o.pat]; }).length>=3&&COMPOUND[x.pat]) return;
+      used[key]=(used[key]||0)+1; out.push(x);
+    });
+    /* 2-3 working sets (plus one warm-up), compound lifts heavier */
+    return out.map(function(x){ return COMPOUND[x.pat]?[x.n,4,6,10]:[x.n,3,10,15]; });
+  }
+  function trainFresh(){
+    var k=K(); if(!k||!k.api||!k.api.build) return null;
+    var S=k.state&&k.state(), done=S&&S.ex?S.ex.some(function(e){ return e.sets.some(function(x){ return x.d; }); }):false;
+    if(done&&!S.finished){ say('You already logged sets today. Finish that workout first.'); return null; }
+    var L=freshPlan(); if(!L.length){ say('Everything needs rest today. A walk, Zone 2 or stretching would be the thing.'); return null; }
+    k.api.build(L,'Fresh today');
+    track('recovery_fresh',{n:L.length});
+    say('Today’s workout: '+L.length+' exercises for your fresh muscles.');
+    if(typeof window.go==='function') try{ go('session'); }catch(e){}
+    return L;
+  }
+
+  /* ---------- on Workout, under Training ---------- */
+  function decorate(){
+    /* only while Workout is on screen: the figure is a few hundred shapes, kept off the first screen's budget */
+    var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
+    var have=document.getElementById('krcCard'), html=card();
+    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('krcCard'); if(n0) n0.__h=html; } return; }
+    /* Training, then this, then Zone 2 */
+    var z2=document.getElementById('kz2Card');
+    if(z2) z2.insertAdjacentHTML('beforebegin',html); else (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+    var n=document.getElementById('krcCard'); if(n) n.__h=html;
+  }
+  var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-krc],[data-krc-m]'); if(!b) return;
+    var a=b.getAttribute('data-krc');
+    if(b.hasAttribute('data-krc-m')&&!a){ muscleSheet(b.getAttribute('data-krc-m')); return; }
+    if(a==='m'){ muscleSheet(b.getAttribute('data-m')); return; }
+    if(a==='about'){ aboutSheet(); return; }
+    if(a==='fresh'){ trainFresh(); return; }
+    if(a==='play'){ if(window.KovaPlayer) KovaPlayer.open(); return; }
+  });
+  document.addEventListener('keydown',function(ev){ var b=ev.target.closest&&ev.target.closest('.krc [data-krc][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } });
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#krcCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('kova:screen',soon);
+  soon();
+  return {state:state,sets:sets,musclesOf:musclesOf,freshPlan:freshPlan,trainFresh:trainFresh,card:card,decorate:decorate,muscleSheet:muscleSheet,TAU:TAU,NAME:NAME};
 })();
 
 </script>

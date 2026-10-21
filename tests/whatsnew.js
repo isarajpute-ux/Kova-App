@@ -25,14 +25,14 @@ function boot(store) {
   /* someone new: no card, the release counts as seen */
   const a = boot({ kova_mode_v1: 'live' });
   await wait(1500);
-  ck('the What’s new module loaded, with a release first in the list', !!a.KovaWhatsNew && /^new-/.test(a.KovaWhatsNew.REL[0].id) && a.KovaWhatsNew.REL[0].steps.length >= 4);
+  ck('the What’s new module loaded, with a release first in the list', !!a.KovaWhatsNew && /^new-/.test(a.KovaWhatsNew.REL[0].id) && a.KovaWhatsNew.REL[0].steps.length >= 3);
   a.KovaWhatsNew.check();
   ck('someone new is not interrupted (their first-run tours show everything)', !a.document.getElementById('kwn') && a.KovaTour.seen(a.KovaWhatsNew.REL[0].id));
 
   /* someone who has used Kova before */
   const w = boot({ kova_mode_v1: 'live', 'kova.tours.v1': JSON.stringify({ home: 1, move: 1, workteam: 1 }) });
   await wait(1600);
-  const doc = w.document, N = w.KovaWhatsNew, rel = N.REL[0];
+  const doc = w.document, N = w.KovaWhatsNew, rel = N.REL[0], r21 = N.REL.filter((r) => r.id === 'new-2026-10-21')[0];
   ck('someone who has been here before counts as returning', N.returning());
   N.check(); await wait(20);
   const card = doc.getElementById('kwn');
@@ -50,15 +50,24 @@ function boot(store) {
   if (w.KovaExPage) w.KovaExPage.decorate();
   if (w.KovaZone2) w.KovaZone2.decorate();
   await wait(100);
-  const S = rel.steps;
+  const S = r21.steps;
   const moveSteps = S.filter((t) => t[0] === 'move');
   ck('on Workout the steps find Exercises, Stretch and the Zone 2 card', moveSteps.length === 3 && moveSteps.every((t) => !!t[3]()) && /Exercises/.test(moveSteps[0][3]().textContent) && moveSteps[2][3]().id === 'kz2Card');
+  /* the newest release: muscle recovery and Follow along */
+  if (w.KovaRecovery) w.KovaRecovery.decorate();
+  await wait(50);
+  const nm = rel.steps.filter((t) => t[0] === 'move');
+  ck('the newest release (Muscle recovery, Follow along) finds the recovery card and Train what’s fresh', rel.id === 'new-2026-10-22' && nm.length === 2 && nm[0][3]().id === 'krcCard' && nm[1][3]().getAttribute('data-krc') === 'fresh');
+  w.go('session'); await wait(200);
+  if (w.KovaPlayer) w.KovaPlayer.decorate();
+  const fa = rel.steps.filter((t) => t[0] === 'session')[0];
+  ck('…and the Follow along button in the workout', !!fa && !!fa[3]() && /Follow along/.test(fa[3]().textContent));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }
   const chat = S.filter((t) => t[0] === 'workteam')[0];
   ck('in the AI team it finds the Chat pill', !!chat && !!chat[3]() && /Chat/.test(chat[3]().textContent));
   w.go('move'); await wait(100);
-  ck('Show me starts Kova’s own tour with a step for each new thing', N.start() && w.KovaTour.active() && N.steps(rel).length === S.length);
+  ck('Show me starts Kova’s own tour with a step for each new thing', N.start() && w.KovaTour.active() && N.steps(rel).length === rel.steps.length);
   ck('…and it counts as seen', w.KovaTour.seen(rel.id));
   w.KovaTour.end();
   const rows = w.KovaCmd.build('what’s new');
