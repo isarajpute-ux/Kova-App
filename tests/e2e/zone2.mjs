@@ -32,6 +32,10 @@ for (const theme of ['dark', 'soft', 'light']) {
   const card = await p.evaluate(() => { const c = document.getElementById('kz2Card'); return c && { t: c.textContent, inside: !!c.parentNode.closest('.kv-card'), prev: c.previousElementSibling && c.previousElementSibling.className }; });
   ck(theme + ': the Zone 2 card sits under Training, not inside it, with your range (112–131 at 30)', card && /112–131/.test(card.t) && !card.inside && /kv-card|kl-acts/.test(card.prev));
   await p.locator('#kz2Card [data-z2="go"]').click(); await p.waitForTimeout(300);
+  /* the page's own tour plays the first time (p34); close it like a person would */
+  await p.waitForSelector('#ksCoach.on', { timeout: 4000 }).catch(() => {});
+  ck(theme + ': the first time, the Zone 2 page shows you around', await p.locator('#ksCoach .ks-ct').count() === 1);
+  await skip();
   const pg = await p.evaluate(() => { const el = document.getElementById('kz2'); return el && { inApp: !!el.closest('.app'), cards: el.querySelectorAll('.card').length, glass: getComputedStyle(el.querySelector('.card')).backdropFilter || getComputedStyle(el.querySelector('.card')).webkitBackdropFilter || '', font: getComputedStyle(el.querySelector('.title')).fontFamily }; });
   ck(theme + ': Open Zone 2 opens the page inside the app, in Kova\u2019s frosted glass and font', pg && pg.inApp && pg.cards >= 4 && /blur/.test(pg.glass) && /Outfit/.test(pg.font));
   await p.locator('#kz2 [data-z2="start"]').click(); await p.waitForTimeout(400);

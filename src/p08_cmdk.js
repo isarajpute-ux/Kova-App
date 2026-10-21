@@ -175,6 +175,9 @@ window.KovaCmd=(function(){
         var tasky=!!tk.due||/(^|\s)[!#]\w/.test(q)||/^(task|todo|to do|remind me)\b/i.test(q)||TASKV.test(q);
         if(tk.name&&!looksLikeRule(q)&&!(isQuestion(q)&&!tk.due)) add('do',tasky?'Do':'Or make it a task','New task: “'+tk.name+'”',[dueText(tk.due),tk.priority,tk.project?tk.project.name:''].filter(Boolean).join(' · '),'do:task',function(){ makeTask(tk); },tasky?(mate?500:950):1);
       }
+      /* p34: the tour of what is new, any time */
+      if(window.KovaWhatsNew&&/\bwhat['\u2019]?s new\b|\bwhats new\b|\bnew in kova\b|\bupdates?\b|\bnew features?\b|\bwhat changed\b/i.test(q))
+        add('do','Do','What\u2019s new in Kova','a quick tour of the new things','do:whatsnew',function(){ KovaWhatsNew.start(); },960);
       if(window.KovaApps){
         var rec=KovaApps.recommend(q,1)[0];
         if(rec&&/\b(best|tool|app|like|alternative|vs|compare)\b/i.test(q)) add('do','Do','How '+rec.n+' does it','what it does best, and what Kova took','do:app',function(){ KovaApps.open(rec.id); },700);

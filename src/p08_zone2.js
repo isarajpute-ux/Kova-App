@@ -350,16 +350,36 @@ window.KovaZone2=(function(){
     return '<div class="kz2p-in">'
       +'<div class="hdr kz2p-hd"><div class="hdr-l"><button type="button" class="back" data-z2="close" aria-label="'+(R?'Back (the run keeps going)':'Back')+'">'+ic('chevron-left')+'</button>'
         +'<div><div class="kz2p-eye">'+d.toLocaleDateString(undefined,{weekday:'long'}).toUpperCase()+' · '+z.lo+'–'+z.hi+' BPM</div><div class="title">Zone 2 run</div></div></div>'
-        +'<div class="hdr-r"><button type="button" class="iconbtn" data-z2="what" aria-label="What is Zone 2?">'+ic('info-circle')+'</button></div></div>'
+        +'<div class="hdr-r"><button type="button" class="iconbtn kz2p-help" data-z2="tour" aria-label="Show me around Zone 2">?</button><button type="button" class="iconbtn" data-z2="what" aria-label="What is Zone 2?">'+ic('info-circle')+'</button></div></div>'
       +'<div class="kz2p-say s-'+c[2]+'" aria-live="polite"><b>'+esc(c[0])+'</b> '+esc(c[1])+'</div>'
       +'<div class="kz2p-grid">'+hero()+gauge()+splits()+history()+'</div>'
       +bar()+'<div class="kz2p-foot">'+(R?'Keep Kova open: the screen stays on, because phones stop GPS in a locked browser.':'Kova asks for your location on an outdoor run, for distance and pace.')+'</div></div>';
+  }
+  /* the page's own tour (the owner's rule: every new part is shown around),
+     once the first time it opens, and from the ? any time; it sits above
+     the page */
+  var TOUR=[
+    ['.kz2p-hero','Your run, live','Your heart rate, your time in Zone 2, this week and your trend. The tabs switch between them.'],
+    ['.kz2p-pills','Five zones, four ways','Funnel, Bar, Pie or Line: time in each of the five heart-rate zones, or your heart rate over the run.'],
+    ['.kz2p-gauge','Heart rate against Zone 2','The orange arc is your Zone 2 band. The pencil changes your range, if a test gave you one.'],
+    ['.kz2p-splits','Your splits','Pace for every kilometre or mile, the fastest lit. The pencil switches between the two.'],
+    ['.kz2p-hist','Past runs','Every run with its Zone 2 minutes. The pencil lists them all.'],
+    ['.kz2p-bar','Start here','Outdoor uses GPS for distance and pace; Treadmill does not. Then Start. Pause and Finish appear while you run.']
+  ];
+  function tour(){
+    if(!window.KovaTour||!document.getElementById('kz2')) return false;
+    var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
+    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kz2 '+t[0]); }}; }),{color:'#E87A3C',screens:sc});
+    var ov=document.getElementById('ksTour'); if(ov) ov.style.zIndex='9700';
+    track('zone2_tour',{});
+    return true;
   }
   /* inside the app, so Kova's glass, fonts, icons and three looks all apply */
   function open(){
     var el=document.getElementById('kz2');
     if(!el){ el=document.createElement('div'); el.id='kz2'; el.className='kz2p'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Zone 2 run');
-      (document.getElementById('app')||document.body).appendChild(el); }
+      (document.getElementById('app')||document.body).appendChild(el);
+      if(!R&&window.KovaTour&&KovaTour.canRemember()&&KovaTour.once('zone2page')) setTimeout(tour,700); }
     paint();
   }
   function close(){ var el=document.getElementById('kz2'); if(el) el.remove(); }
@@ -427,6 +447,7 @@ window.KovaZone2=(function(){
     if(a==='new'){ P.last=null; P.tab='week'; paint(); return; }
     if(a==='close'){ close(); soon(); return; }
     if(a==='what'){ whatSheet(); return; }
+    if(a==='tour'){ tour(); return; }
     if(a==='setup'){ setupSheet(); return; }
     if(a==='all'){ allSheet(); return; }
     if(a==='unit'){ try{ localStorage.setItem('kova.z2.unit',JSON.stringify(unit()==='km'?'mi':'km')); }catch(e){} paint(); soon(); return; }
@@ -453,5 +474,5 @@ window.KovaZone2=(function(){
   setInterval(function(){ if(R&&document.getElementById('kz2Card')) soon(); },15000);
   soon();
   return {zone:zone,zones:zones,zi:zi,state:state,hav:hav,addPoint:addPoint,curPace:curPace,paceText:paceText,distText:distText,runs:runs,week:week,goal:goal,aerobic:aerobic,
-    start:start,tick:tick,pause:pause,finish:finish,card:card,decorate:decorate,open:open,close:close,paint:paint,_R:function(){ return R; },_P:P,unit:unit,splitCheck:splitCheck};
+    start:start,tick:tick,pause:pause,finish:finish,card:card,decorate:decorate,open:open,close:close,paint:paint,tour:tour,TOUR:TOUR,_R:function(){ return R; },_P:P,unit:unit,splitCheck:splitCheck};
 })();
