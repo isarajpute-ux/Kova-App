@@ -90,3 +90,6 @@ body.light-mode .kn-dash i.loud{box-shadow:none}
 .kn-ab button{flex:1;min-width:90px;height:38px;border-radius:19px;border:1px solid var(--n-line);background:transparent;color:var(--n-ink);font:500 12.5px 'Outfit',sans-serif;cursor:pointer}
 .kn-ab button:first-child{background:var(--n-btn);color:var(--n-btnInk);border-color:transparent}
 @media (prefers-reduced-motion:reduce){.kn-card.danger,.kn-live{animation:none}.kn-alert{transition:none}}
+
+/* p39: the first read's last line */
+.kn-af{font-size:11px;opacity:.75;margin-top:4px}

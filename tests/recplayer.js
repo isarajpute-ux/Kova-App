@@ -54,7 +54,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   if (!host) { doc.getElementById('s-move').insertAdjacentHTML('afterbegin', '<div class="kv-card" id="fakeT"></div><div class="kl-acts"><div class="chip">Check my form</div></div>'); host = doc.querySelector('#s-move .kl-acts'); }
   RC.decorate(); w.KovaZone2.decorate(); RC.decorate(); await wait(20);
   const card = doc.getElementById('krcCard'), z2 = doc.getElementById('kz2Card');
-  ck('the Muscle recovery card sits under Training, then Stretch, then Zone 2', !!card && card.nextElementSibling === doc.getElementById('krsCard') && doc.getElementById('krsCard').nextElementSibling === z2 && card.previousElementSibling === (host.closest('.kv-card') || host));
+  ck('the Muscle recovery card sits under Training (and Dream physique), then Stretch, then Zone 2', !!card && card.nextElementSibling === doc.getElementById('krsCard') && doc.getElementById('krsCard').nextElementSibling === z2 && [host.closest('.kv-card') || host, doc.getElementById('kdpCard')].includes(card.previousElementSibling));
   ck('…your body figure coloured by recovery, without copying its ids', card.querySelectorAll('.krc-body .m.r-rest').length >= 2 && card.querySelectorAll('.krc-body .m.r-ready').length >= 6 && !card.querySelector('.krc-body [id]'));
   ck('…what is resting with its %, and the two buttons', /Quads \d+%/.test(card.textContent) && !!card.querySelector('[data-krc="fresh"]') && !!card.querySelector('[data-krc="play"]'));
   /* p36: Stretch, right next to recovery */

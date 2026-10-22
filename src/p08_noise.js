@@ -64,7 +64,7 @@ window.KovaNoise=(function(){
       S.buf=new Float32Array(S.an.frequencyBinCount); S.w=new Float32Array(S.an.frequencyBinCount);
       for(var i=1;i<S.w.length;i++) S.w[i]=aWeight(i*S.ctx.sampleRate/S.an.fftSize);
       if(S.ctx.state==='suspended'&&S.ctx.resume) S.ctx.resume().catch(function(){});
-      S.on=true; S.why=why||''; S.db=null; S.peak=0; S.secs=[]; S.loudFrom=0;
+      S.on=true; S.why=why||''; S.db=null; S.peak=0; S.secs=[]; S.loudFrom=0; S.firstDone=false;
       var acc=[], last=Date.now();
       S.timer=setInterval(function(){
         var v=level(); if(v==null) return;
@@ -92,6 +92,8 @@ window.KovaNoise=(function(){
   function tick(db,secs){
     var T=today(), now=Date.now(), m=new Date(now), mk=('0'+m.getHours()).slice(-2)+':'+('0'+m.getMinutes()).slice(-2);
     S.secs.push({t:now,db:db}); if(S.secs.length>900) S.secs.shift();
+    /* six seconds in: how loud it is here, and what that does to you */
+    if(!S.firstDone&&S.secs.length>=6){ S.firstDone=true; var a6=S.secs.slice(-6).reduce(function(x,y){ return x+y.db; },0)/6; alert(a6,true); }
     S.peak=Math.max(S.peak,db); T.max=Math.max(T.max||0,Math.round(db));
     if(db>=80) T.dose+=secs/60/safeMins(db)*100;
     if(db>=85) T.loudS=(T.loudS||0)+secs;
@@ -129,8 +131,16 @@ window.KovaNoise=(function(){
     var raw=S.db-(D.cal!=null?D.cal:CAL0); D.cal=Math.round((v-raw)*10)/10; S.db=v; save(); paintAll(); say('Calibrated. Readings now match your meter.'); return true;
   }
 
+  /* what this level does to you, said plainly: the good and the bad */
+  function impact(db){
+    var c=cat(db), sm=safeMins(db);
+    if(c==='quiet') return {good:true,t:'Quiet here',p:'Good for you: easy on your ears, and quiet helps you focus, talk and sleep. Fine all day.'};
+    if(c==='busy') return {good:true,t:'Busy, but safe',p:'Like a restaurant or a busy street. Safe for your hearing all day, but steady noise at this level raises stress and makes it harder to focus or wind down.'};
+    if(c==='loud') return {good:false,t:'Loud here',p:'Like a packed gym class, a bar or traffic up close. Safe for about '+hm(sm)+' a day. After that it wears down your hearing for good, and ringing ears afterwards is the warning sign. Earplugs or a spot away from the speakers help.'};
+    return {good:false,t:'Very loud here',p:'Like a concert, a club or fireworks. Safe for only about '+hm(sm)+'. Wear earplugs (music still sounds clear, just safer), stay away from the speakers, and step outside for breaks.'};
+  }
   /* ---- the alert: a glass card over the screen ---- */
-  function alert(db){
+  function alert(db,first){
     try{ if(navigator.vibrate) navigator.vibrate([120,80,120]); }catch(e){}
     try{ if(window.KovaChime) KovaChime.play(); }catch(e){}
     var el=document.getElementById('knAlert');
@@ -140,11 +150,18 @@ window.KovaNoise=(function(){
         if(n==='stop') stop();
         if(n==='more'){ try{ go('vitals'); }catch(x){} setTimeout(focus,120); }
         hideAlert(); }); }
-    var c=cat(db), sm=safeMins(db);
+    var c=cat(db), sm=safeMins(db), I=impact(db);
     el.className='kn-alert on '+c;
-    el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+(c==='danger'?'Very loud here':'Loud here')+'</b><button data-n="x" aria-label="Close">×</button></div>'
+    if(first){
+      el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+I.t+'</b><button data-n="x" aria-label="Close">×</button></div>'
+        +'<div class="kn-a3"><div><small>Now:</small><b>~'+Math.round(db)+' dB</b></div><div><small>Safe for:</small><b>'+(db<80?'All day':hm(sm))+'</b></div><div><small>For you:</small><b>'+(I.good?'Good':'Bad')+'</b></div></div>'
+        +'<p>'+I.p+'</p><p class="kn-af">Kova keeps listening and warns you if it gets louder. Nothing is recorded.</p>'
+        +'<div class="kn-ab"><button data-n="x">Keep listening</button><button data-n="stop">Stop listening</button></div>';
+      return;
+    }
+    el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+I.t+'</b><button data-n="x" aria-label="Close">×</button></div>'
       +'<div class="kn-a3"><div><small>Now:</small><b>~'+Math.round(db)+' dB</b></div><div><small>Safe for:</small><b>'+hm(sm)+'</b></div><div><small>Today:</small><b>'+Math.round(today().dose)+'%</b></div></div>'
-      +'<p>'+(db>=100?'Minutes at this level can damage hearing for good. Put in earplugs or step outside now.':'Above 85 dB, long sessions wear down hearing for good. Earplugs, a step outside, or a spot away from the speakers all help.')+'</p>'
+      +'<p>'+I.p+'</p>'
       +'<div class="kn-ab"><button data-n="more">See today</button><button data-n="mute">Quiet for 1 h</button><button data-n="stop">Stop listening</button></div>';
   }
   function hideAlert(){ var el=document.getElementById('knAlert'); if(el) el.classList.remove('on'); }
@@ -216,13 +233,12 @@ window.KovaNoise=(function(){
     return S.on&&S.db!=null?'<span class="kn-dot '+cat(S.db)+'"></span><b>~'+Math.round(S.db)+' dB</b><span>'+CAT_N[cat(S.db)]+(S.db>=80?' · safe for '+hm(safeMins(S.db)):'')+'</span><button data-n="stop">Stop</button>'
       :'<span class="kn-dot"></span><b>Noise</b><span>Is the gym too loud? Kova can listen and warn you.</span><button data-n="start">Listen</button>';
   }
-  function paintSession(){
-    var slot=document.getElementById('hrSlot'); if(!slot) return;
-    var chip=document.getElementById('knChip');
-    if(!chip){ chip=document.createElement('div'); chip.id='knChip'; chip.className='kn-chip'; slot.parentNode.insertBefore(chip,slot.nextSibling);
-      chip.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; if(b.getAttribute('data-n')==='start') start('workout'); else stop(); }); }
-    chip.innerHTML=chipHTML();
-  }
+  /* p39 (the owner: "I don't want this on the screen, only as an alert"):
+     nothing on the workout screen. Listening starts from Vitals > Hearing &
+     noise (or with each workout, if you switched that on), and Kova speaks
+     up only through its alert: once a few seconds in, with what this level
+     does to you, good or bad, and again whenever it gets loud. */
+  function paintSession(){ var chip=document.getElementById('knChip'); if(chip) chip.remove(); }
   function paintAll(){ paint(); paintSession(); }
   function focus(){
     var el=host(); if(!el) return; paint();
@@ -243,6 +259,6 @@ window.KovaNoise=(function(){
     window.addEventListener('pagehide',function(){ if(S.on){ closeSpell(); save(); } });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start0,400); }); else setTimeout(start0,400);
-  return {start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
+  return {impact:impact,start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
     _tick:tick,_alert:alert,_S:S,_D:function(){ return D; }};
 })();

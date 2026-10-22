@@ -1,0 +1,143 @@
+/* Dream physique (p38): the card on Workout and its page, built on the
+   Zone 2 page styles (.kz2p) in Kova's glass, dark / soft light / light */
+.kdp-card .kdp-k{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--acc)}
+.kdp-row{display:flex;align-items:center;gap:12px;margin:6px 0 4px}
+.kdp-th{width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid var(--ron-line,rgba(255,255,255,.12));flex-shrink:0}
+.kdp-mini{display:flex;align-items:center;gap:12px}
+.kdp-mini div{display:flex;flex-direction:column}
+.kdp-mini b{font-size:26px;font-weight:200;line-height:1}
+.kdp-mini span{font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+.kdp-ar .ic{font-size:16px;color:var(--acc)}
+.kdp .kdp-in img{display:block;max-width:100%;max-height:260px;margin:8px auto 4px;border-radius:16px;object-fit:contain}
+.kdp .kdp-in .kdp-me{max-height:200px}
+.kdp-ways{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 2px}
+.kdp-ways .chip{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font:inherit;font-size:12px}
+.kdp-ways .ic{font-size:14px}
+.kdp-you{font-size:12px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.78));margin:12px 0 4px}
+.kdp-link{background:none;border:0;padding:0;color:var(--acc-ink,var(--acc));font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.kdp .kdp-go{width:100%;margin-top:12px;justify-content:center}
+.kdp .kdp-go[disabled]{opacity:.45;cursor:default}
+.kdp-err{margin-top:10px;font-size:12px;line-height:1.5;color:var(--bad,#E8798E)}
+.kdp-err .chip{margin-left:6px;cursor:pointer;font:inherit;font-size:11.5px}
+/* p38d: after a compare, the pictures in are one small row */
+.kdp-tbs{display:flex;align-items:center;gap:8px}
+.kdp-tb{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;color:var(--ron-txt-2);font-size:10.5px}
+.kdp .kdp-in .kdp-tb img,.kdp-tb i{display:grid;place-items:center;width:46px;height:56px;margin:0;border-radius:12px;object-fit:cover;border:.5px solid var(--ron-line)}
+.kdp-tb i{background:linear-gradient(143deg,rgba(var(--ink),.08),rgba(var(--ink),.02));color:var(--acc-ink)}
+.kdp-tb i .ic{font-size:16px;color:var(--acc-ink)}
+.kdp .kdp-in-s .kdp-go{width:auto;flex:1;margin:0 0 18px 4px;padding:12px 14px}
+.kdp-in-s .kdp-you{margin-top:10px}
+
+/* 1. what to build, on you: the photo with the muscles lit in Kova's orange */
+.kdp-pf{margin:10px 0 0}
+.kdp-pw{position:relative;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.25)}
+.kdp-pw img{display:block;width:100%;height:auto;max-height:none}
+.kdp-pw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kdp-mk{stroke:rgba(255,255,255,.7);stroke-width:1;vector-effect:non-scaling-stroke;animation:kdpGlow 2.6s ease-in-out infinite}
+.kdp-ln{stroke:rgba(255,255,255,.75);stroke-width:.8;vector-effect:non-scaling-stroke}
+.kdp-dot{fill:#fff;stroke:#E87A3C;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.kdp-ml{position:absolute;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:100px;white-space:nowrap;pointer-events:none;
+  font:400 11.5px/1 'Outfit',sans-serif;color:#F4F1EE;background:rgba(14,12,12,.58);border:.5px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3)}
+.kdp-ml i{width:6px;height:6px;border-radius:50%;background:#E87A3C;box-shadow:0 0 6px rgba(232,122,60,.9)}
+body.light-mode .kdp-ml{color:#1C1A17;background:rgba(255,255,255,.8);border-color:rgba(255,255,255,.95)}
+@keyframes kdpGlow{0%,100%{opacity:.78}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.kdp-mk{animation:none}}
+.kdp-sw{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:8px 12px 8px 8px;border-radius:16px;border:.5px solid var(--ron-line);text-align:left;color:var(--ron-txt);
+  background:linear-gradient(143deg,rgba(var(--ink),.07),rgba(var(--ink),.02))}
+.kdp-sw img,.kdp-sw>i{width:36px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.kdp-sw>i{display:grid;place-items:center;background:var(--acc-bg)}
+.kdp-sw>i .ic{color:var(--acc-ink)}
+.kdp-sw span{flex:1;display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--ron-txt-2)}
+.kdp-sw b{font-size:13px;font-weight:400;color:var(--ron-txt)}
+.kdp-sw>.ic{font-size:15px;color:var(--ron-txt-3)}
+.kdp-mus{list-style:none;margin:14px 0 2px;padding:0;display:flex;flex-direction:column;gap:9px;counter-reset:m}
+.kdp-mus li{display:grid;grid-template-columns:22px 1fr;column-gap:8px;counter-increment:m}
+.kdp-mus li::before{content:counter(m);grid-row:1 / 3;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:var(--acc-ink);background:var(--acc-bg);border:.5px solid var(--acc-brd)}
+.kdp-mus b{font-size:13.5px;font-weight:400}
+.kdp-mus span{font-size:12px;line-height:1.45;color:var(--ron-txt-2)}
+.kdp-conf{margin-top:10px;font-size:11px;line-height:1.5;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+
+/* 2. your change: the owner's reference (pills, dashed tracks, the dream as
+   the orange tick, a floating card with the big number) in Kova's glass */
+.kdp-pills{display:flex;gap:8px;margin:12px 0 4px}
+.kdp-pills button{flex:1;padding:10px 6px;border-radius:100px;border:1px solid rgba(var(--ink),.16);background:none;color:var(--ron-txt-2);font-size:13px;font-weight:300;white-space:nowrap}
+.kdp-pills button.on{border-color:rgba(var(--ink),.85);color:var(--ron-txt);font-weight:400}
+.kdp-ch{position:relative;height:236px;margin-top:10px}
+.kdp-ax{position:absolute;left:0;top:4px;bottom:24px;width:40px;display:flex;flex-direction:column;justify-content:space-between;font-size:10.5px;font-weight:300;color:var(--ron-txt-3)}
+.kdp-ax span{transform:translateY(-50%)}
+.kdp-ax span:first-child{color:var(--acc-ink)}
+.kdp-ax span:last-child{transform:translateY(50%)}
+.kdp-cols{position:absolute;left:40px;right:0;top:0;bottom:0;display:grid;grid-template-columns:repeat(7,1fr)}
+.kdp-col{position:relative;border:0;background:none;padding:0;color:var(--ron-txt-3)}
+.kdp-trk{position:absolute;left:0;right:0;top:4px;bottom:24px}
+.kdp-trk::before{content:'';position:absolute;left:50%;top:0;bottom:0;border-left:1px dashed rgba(var(--ink),.16)}
+.kdp-tg{position:absolute;left:24%;right:24%;top:-2px;height:4px;border-radius:2px;background:var(--acc);box-shadow:0 0 8px var(--acc-glow)}
+.kdp-bar{position:absolute;left:14%;right:14%;height:4px;margin-bottom:-2px;border-radius:2px;background:rgba(var(--ink),.34);transition:bottom .4s ease}
+.kdp-col.on .kdp-bar{background:var(--ron-txt);height:5px;box-shadow:0 0 10px rgba(var(--ink),.35)}
+.kdp-col.done .kdp-bar{background:var(--acc)}
+.kdp-xl{position:absolute;left:0;right:0;bottom:0;font-size:10px;font-weight:300;text-align:center;white-space:nowrap}
+.kdp-col.on .kdp-xl{color:var(--ron-txt)}
+.kdp-fc{position:absolute;top:18px;left:50px;max-width:60%;padding:11px 14px 11px;border-radius:20px;pointer-events:none;
+  background:linear-gradient(143deg,rgba(var(--ink),.11),rgba(var(--ink),.04));border:.5px solid var(--ron-line);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.kdp-fc.br{top:auto;left:auto;right:4px;bottom:30px}
+body.light-mode .kdp-fc{background:linear-gradient(143deg,rgba(255,255,255,.82),rgba(255,255,255,.55));border-color:rgba(255,255,255,.95);box-shadow:0 14px 30px rgba(60,50,40,.12)}
+.kdp-fn{display:flex;align-items:baseline;gap:8px;font-size:38px;font-weight:300;letter-spacing:-.04em;line-height:1;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.kdp-fn small{font-size:20px;font-weight:300;margin-left:-6px}
+.kdp-fn em{font-style:normal;font-size:12px;font-weight:300;letter-spacing:0;color:var(--ron-txt-2);white-space:nowrap}
+.kdp-fl{margin-top:4px;font-size:12px;font-weight:300;line-height:1.35;color:var(--ron-txt-2)}
+.kdp-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 6px}
+.kdp-nums div{display:flex;flex-direction:column;gap:3px}
+.kdp-nums b{font-size:21px;font-weight:200;line-height:1.1;white-space:nowrap}
+.kdp-nums span{font-size:10.5px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+.kdp-all{font-size:11.5px;line-height:1.5;color:var(--ron-txt-3)}
+@media (max-width:380px){ .kdp-fn{font-size:34px} .kdp-pills button{font-size:12px} .kdp-nums b{font-size:18px} }
+
+/* 3. the plan: Train / Eat / Steps */
+.kdp-q{width:100%;resize:vertical;min-height:52px;margin-top:6px;font:inherit;font-size:13px;line-height:1.45}
+.kdp-aq{font-size:12.5px;color:var(--ron-txt-3);margin-top:8px}
+.kdp-aa{font-size:14px;font-weight:300;line-height:1.5;margin:4px 0 2px}
+.kdp-tab{margin-top:10px}
+.kdp-ah{font-size:12px;color:var(--ron-txt-2);margin:4px 0 8px}
+.kdp-rows{display:flex;flex-direction:column;border-top:.5px solid var(--ron-line)}
+.kdp-row2{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;padding:11px 2px;border:0;border-bottom:.5px solid var(--ron-line);background:none;text-align:left;color:var(--ron-txt);font-size:13px}
+.kdp-row2 b{font-weight:400;white-space:nowrap}
+.kdp-row2 span{min-width:0;font-size:12px;color:var(--ron-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kdp-row2 em{font-style:normal;font-size:11px;color:var(--ron-txt-3);white-space:nowrap}
+.kdp-row2 .ic{font-size:14px;color:var(--ron-txt-3)}
+div.kdp-row2{grid-template-columns:auto 1fr auto}
+.kdp .kdp-ans .kz2p-go{width:100%;margin-top:12px;justify-content:center}
+.kdp-more{margin-top:10px;font-size:11.5px;line-height:1.5;color:var(--ron-txt-3)}
+.kdp-ph{font-size:12.5px;color:var(--acc-ink)}
+.kdp-mac{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:18px;margin:10px 0 4px}
+.kdp-kc{display:flex;flex-direction:column}
+.kdp-kc b{font-size:42px;font-weight:200;letter-spacing:-.04em;line-height:1}
+.kdp-kc span{font-size:10.5px;color:var(--ron-txt-3);margin-top:4px}
+.kdp-mb{display:flex;flex-direction:column;gap:7px}
+.kdp-mb div{display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:8px;font-size:11.5px;color:var(--ron-txt-2)}
+.kdp-mb i{height:4px;border-radius:2px;background:rgba(var(--ink),.12);overflow:hidden}
+.kdp-mb u{display:block;height:100%;border-radius:2px;background:var(--acc)}
+.kdp-mb div:not(:first-child) u{background:rgba(var(--ink),.5)}
+.kdp-mb b{font-weight:400;text-align:right;color:var(--ron-txt)}
+.kdp-meals{list-style:none;margin:12px 0 0;padding:0;border-top:.5px solid var(--ron-line)}
+.kdp-meals li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 2px;border-bottom:.5px solid var(--ron-line)}
+.kdp-meals b{font-size:13px;font-weight:400}
+.kdp-meals em{font-style:normal;font-size:11px;color:var(--ron-txt-3);white-space:nowrap}
+.kdp-meals span{grid-column:1 / -1;font-size:11.5px;line-height:1.4;color:var(--ron-txt-2)}
+.kdp-tot{margin-top:8px;font-size:11.5px;color:var(--good,#5FD08A)}
+.kdp-tot.off{color:var(--warn,#F4E18E)}
+body.light-mode .kdp-tot{color:#1E7A45}
+body.light-mode .kdp-tot.off{color:#8A6A10}
+.kdp-steps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:300;line-height:1.45}
+.kdp-steps li::marker{color:var(--acc-ink)}
+.kdp-tips{margin:12px 0 0;padding-left:16px;font-size:12px;line-height:1.5;color:var(--ron-txt-2)}
+.kdp-ask{margin-top:16px;padding-top:12px;border-top:.5px solid var(--ron-line)}
+.kdp-ask .sub{font-size:12px;line-height:1.5}
+.kdp-exs{list-style:none;margin:0;padding:0}
+.kdp-exs li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-bottom:.5px solid var(--line,rgba(255,255,255,.1))}
+.kdp-exs b{font-weight:400;font-size:14px}
+.kdp-exs em{font-style:normal;font-size:12.5px;opacity:.75}
+.kdp-exs span{grid-column:1 / -1;font-size:11.5px;opacity:.6}
+
+/* 4. good to know */
+.kdp-honest p{margin:6px 0 0;font-size:11.5px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kdp-honest .kdp-looks b{font-weight:500;color:var(--ron-txt)}

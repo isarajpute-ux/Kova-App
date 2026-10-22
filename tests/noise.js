@@ -31,9 +31,9 @@ const errors = [];
   ck('A-weighting: 0 at 1 kHz, about -19 dB at 100 Hz, about -2.5 dB at 10 kHz', Math.abs(N.aWeight(1000)) < 0.1 && Math.abs(N.aWeight(100) + 19.1) < 0.3 && Math.abs(N.aWeight(10000) + 2.5) < 0.3);
 
   // a minute and a half at 91 dB
-  N._S.on = true;
+  N._S.on = true; N._S.firstDone = true;   /* the first read (6 s) is checked below; this is the loud warning */
   for (let i = 0; i < 59; i++) N._tick(91, 1);
-  ck('no alert in the first minute', !d.querySelector('#knAlert.on'));
+  ck('no loud warning in the first minute', !d.querySelector('#knAlert.on'));
   for (let i = 0; i < 31; i++) N._tick(91, 1);
   const al = d.getElementById('knAlert');
   ck('after a minute at 85 dB or more, an alert: how loud, safe for how long, what to do', !!al && al.classList.contains('on') && /~91 dB/.test(al.textContent) && /Safe for:2 h/.test(al.textContent.replace(/\s+/g, ' ')) && /Earplugs/.test(al.textContent));
@@ -57,7 +57,16 @@ const errors = [];
   // a workout
   w.go('session'); await wait(80);
   d.body.dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(80);
-  ck('in a workout, a chip under the heart rate offers to listen', !!d.getElementById('knChip'));
+  ck('p39: nothing about noise on the workout screen (alerts only)', !d.getElementById('knChip') && !/Is the gym too loud/.test(d.getElementById('s-session').textContent));
+  /* the first read, a few seconds in: how loud, and what it does to you, good or bad */
+  N._S.on = true; N._S.firstDone = false; N._S.secs = [];
+  for (let i = 0; i < 6; i++) N._tick(102, 1);
+  const al1 = d.getElementById('knAlert');
+  ck('six seconds in, an alert says how loud it is and the impact (a concert level: bad, earplugs, safe for minutes)', al1 && al1.classList.contains('on') && /Very loud here/.test(al1.textContent) && /concert/.test(al1.textContent) && /Bad/.test(al1.textContent) && /earplugs/i.test(al1.textContent) && /Keep listening/.test(al1.textContent));
+  ck('…a quiet place is called good for you', N.impact(55).good && /Good for you/.test(N.impact(55).p) && !N.impact(95).good && N.impact(75).good && /stress/.test(N.impact(75).p));
+  al1.querySelector('[data-n="x"]').click();
+  ck('…Keep listening closes it and Kova keeps going', !al1.classList.contains('on') && N._S.on);
+  N._S.on = false;
 
   // no microphone in this browser
   N.stop(); await N.start('manual'); N.paint();

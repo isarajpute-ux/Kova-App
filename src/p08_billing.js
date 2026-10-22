@@ -277,14 +277,14 @@ window.KovaBilling=(function(){
   function paywall2(feature,need){
     setTimeout(function(){ decorate(); note(feature==='chat'?'Real answers from the assistant come with any plan. The on-device guide stays free.'
       :need==='work'?'Get your hours back: Work OS and your AI team are ticked below.'
-      :need==='train'?'Get stronger every week: Training is ticked below.':'This comes with a Kova plan.'); },120);
+      :need==='train'?'Build your dream body: Training is ticked below.':'This comes with a Kova plan.'); },120);
   }
 
   /* ---------------- when a part is not in the plan ----------------
      Payments on, and Workout or Work OS opened without it: the screen
      still shows, with one card at the top saying what adding it costs. */
   var LOCKS={
-    train:{screens:['s-move','s-session','s-customize'],t:'Get stronger every week',d:'Add Training and walk in knowing exactly what to do, then watch the numbers climb.'},
+    train:{screens:['s-move','s-session','s-customize'],t:'Build your dream body, at your pace',d:'Add Training: your week written for you, your dream physique broken down into what to train and eat, and every rep shown.'},
     work:{screens:['s-work','s-workspace','s-worktoday','s-worktasks','s-workprojects','s-workgoals','s-workauto','s-workteam','s-workstudio','s-workcompose'],t:'Get your hours back',d:'Add Work OS and an AI team that researches, posts and reports back while you live your life.'}
   };
   function addPrice(part){

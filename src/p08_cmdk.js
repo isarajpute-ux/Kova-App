@@ -54,7 +54,7 @@ window.KovaCmd=(function(){
     formcheck:'form technique posture clip video squat deadlift',
     machine:'machine equipment scan',
     sleep:'tired insomnia bedtime dream wake asleep',
-    vitals:'heart pulse bpm readiness oxygen spo2 temperature',
+    vitals:'heart pulse bpm readiness oxygen spo2 temperature noise loud loudness hearing ears decibel db concert club',
     stress:'anxious anxiety calm breathe breathing meditation meditate relax',
     maint:'scale bmi measurement photo progress',
     zone2:'walk walking run running jog steps cardio',

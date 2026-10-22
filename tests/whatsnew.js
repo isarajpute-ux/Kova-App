@@ -25,14 +25,14 @@ function boot(store) {
   /* someone new: no card, the release counts as seen */
   const a = boot({ kova_mode_v1: 'live' });
   await wait(1500);
-  ck('the What’s new module loaded, with a release first in the list', !!a.KovaWhatsNew && /^new-/.test(a.KovaWhatsNew.REL[0].id) && a.KovaWhatsNew.REL[0].steps.length >= 3);
+  ck('the What’s new module loaded, with a release first in the list', !!a.KovaWhatsNew && /^new-/.test(a.KovaWhatsNew.REL[0].id) && a.KovaWhatsNew.REL[0].steps.length >= 1);
   a.KovaWhatsNew.check();
   ck('someone new is not interrupted (their first-run tours show everything)', !a.document.getElementById('kwn') && a.KovaTour.seen(a.KovaWhatsNew.REL[0].id));
 
   /* someone who has used Kova before */
   const w = boot({ kova_mode_v1: 'live', 'kova.tours.v1': JSON.stringify({ home: 1, move: 1, workteam: 1 }) });
   await wait(1600);
-  const doc = w.document, N = w.KovaWhatsNew, rel = N.REL[0], r21 = N.REL.filter((r) => r.id === 'new-2026-10-21')[0], r22 = N.REL.filter((r) => r.id === 'new-2026-10-22')[0];
+  const doc = w.document, N = w.KovaWhatsNew, rel = N.REL[0], r21 = N.REL.filter((r) => r.id === 'new-2026-10-21')[0], r22 = N.REL.filter((r) => r.id === 'new-2026-10-22')[0], r23 = N.REL.filter((r) => r.id === 'new-2026-10-23')[0];
   ck('someone who has been here before counts as returning', N.returning());
   N.check(); await wait(20);
   const card = doc.getElementById('kwn');
@@ -54,9 +54,12 @@ function boot(store) {
   const moveSteps = S.filter((t) => t[0] === 'move');
   ck('on Workout the steps find Exercises, Stretch and the Zone 2 card', moveSteps.length === 3 && moveSteps.every((t) => !!t[3]()) && /Exercises/.test(moveSteps[0][3]().textContent) && moveSteps[2][3]().id === 'kz2Card');
   /* p37, the newest release: attachments, plain words, easier how-to */
-  ck('the newest release is p37 with a step for attachments, the muscles list and the how-to', rel.id === 'new-2026-10-23' && rel.steps.map((t) => t[0]).join() === 'session,customize,move');
+  ck('the newest release is p38, Dream physique, pointing at its card on Workout', rel.id === 'new-2026-10-24' && rel.steps.length === 1 && rel.steps[0][0] === 'move');
+  if (w.KovaDream) w.KovaDream.decorate(); await wait(20);
+  ck('…it finds the Dream physique card', rel.steps[0][3]() && rel.steps[0][3]().id === 'kdpCard');
+  ck('the p37 release has a step for attachments, the muscles list and the how-to', r23.steps.map((t) => t[0]).join() === 'session,customize,move');
   w.go('customize'); await wait(150);
-  ck('…it finds the muscles list', rel.steps[1][3]() && rel.steps[1][3]().id === 'volList');
+  ck('…it finds the muscles list', r23.steps[1][3]() && r23.steps[1][3]().id === 'volList');
   w.go('move'); await wait(150);
   /* the release before: muscle recovery and Follow along */
   if (w.KovaRecovery) w.KovaRecovery.decorate();
@@ -73,7 +76,7 @@ function boot(store) {
   if (w.KovaPlayer) w.KovaPlayer.decorate();
   const fa = r22.steps.filter((t) => t[0] === 'session')[0];
   ck('…and the Follow along button in the workout', !!fa && !!fa[3]() && /Follow along/.test(fa[3]().textContent));
-  ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!rel.steps[0][3]() && /katt-chip|addExBtn/.test(rel.steps[0][3]().className + ' ' + rel.steps[0][3]().id));
+  ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }
   const chat = S.filter((t) => t[0] === 'workteam')[0];

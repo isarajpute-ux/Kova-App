@@ -1,8 +1,7 @@
 /* p34 in a real browser, phone size, live mode, dark / soft light / light
    glass (and iPhone's engine with ENGINE=webkit): a returning user gets
    the "New in Kova" card; Show me walks the light to the newest things
-   (p37: the attachment button in the workout, your muscles this week in
-   plain words, the easier how-to on Workout); the Zone 2 page tour plays
+   (p38: the Dream physique card on Workout); the Zone 2 page tour plays
    above the page the first time it opens.
      node tests/e2e/whatsnew.mjs          (after npm run build) */
 import { chromium, webkit } from 'playwright';
@@ -29,18 +28,11 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#kwn [data-kwn="show"]').click();
   await p.waitForSelector('#ksCoach.on', { timeout: 8000 }).catch(() => {});
   const c1 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Show me goes to the workout and lights up the attachment button (or + Exercise when it is empty) first', c1.t === 'Attachments' && c1.scr === 's-session');
+  ck(theme + ': Show me goes to Workout and lights up the Dream physique card', c1.t === 'Dream physique' && c1.scr === 's-move');
   const spot = async (sel) => p.evaluate((sel) => { const s = document.getElementById('ksSpot').getBoundingClientRect(), k = document.querySelector(sel).getBoundingClientRect(); return s.left <= k.left + 2 && s.right >= k.right - 2 && s.top <= k.top + 2; }, sel);
   await p.waitForTimeout(900);                                  /* the light slides into place */
-  ck(theme + ': …with the light around it', await spot('#s-session .katt-chip') || await spot('#addExBtn'));
+  ck(theme + ': …with the light around it', await spot('#kdpCard'));
   await p.screenshot({ path: join(shots, `whatsnew-step1-${theme}.png`) });
-  await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1300);
-  const c2 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Next goes to your muscles this week, in plain words', c2.t === 'Your muscles this week' && c2.scr === 's-customize' && await spot('#volList'));
-  await p.screenshot({ path: join(shots, `whatsnew-muscles-${theme}.png`) });
-  await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1300);
-  const c3 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': then the easier how-to on Workout', c3.t === 'Easier how-to' && c3.scr === 's-move');
   await p.locator('#ksCoach [data-t="skip"]').click(); await p.waitForTimeout(400);
   ck(theme + ': Skip ends it, and the card does not come back', await p.locator('#ksTour').count() === 0 && await p.locator('#kwn').count() === 0);
   await p.evaluate(() => go('move')); await p.waitForTimeout(500);

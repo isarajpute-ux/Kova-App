@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-24',title:'Dream physique',
+      lines:['Send a photo or video of the body you want','The muscles to build, lit on your own photo','Your change at 3 months, 6 months and a year, with a split and meals'],
+      steps:[
+        ['move','Dream physique','Send a photo, a video or a link of the body you want, and one of you. Kova lights up what to build on your own body, maps your change, and writes your split and meals.',function(){ return q('#kdpCard'); }]
+      ]},
     {id:'new-2026-10-23',title:'Attachments, plain words and easier how-to',
       lines:['Save the attachment you use (rope, bar, handle) on any exercise','Your muscles this week in one word: weak, mild, needs work, stronger, sore','How to do each exercise in a few easy words'],
       steps:[

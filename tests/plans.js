@@ -79,7 +79,11 @@ function boot(opts) {
   ck('plan: Health opens to say exactly what is inside, in short lines: scan, barcode, recipes, sleep, watch, Ask Kova', !A.doc.getElementById('plnDrop-health').hidden && /barcode/.test(hd) && /Recipes/.test(hd) && /sleep score/i.test(hd) && /HRV/.test(hd) && /bloated/.test(hd) && A.doc.querySelectorAll('#plnDrop-health li b').length >= 6);
   A.doc.querySelector('[data-more="work"]').click();
   ck('plan: Work OS names its AI team, Maya posting, meeting prep and the booking link', /AI team/.test(A.doc.getElementById('plnDrop-work').textContent) && /Maya/.test(A.doc.getElementById('plnDrop-work').textContent) && /booking link/i.test(A.doc.getElementById('plnDrop-work').textContent) && A.doc.querySelector('[data-more="work"]').getAttribute('aria-expanded') === 'true');
-  ck('plan: each line is short (no paragraphs)', [...A.doc.querySelectorAll('.pln-drop li')].every((li) => li.textContent.length <= 90));
+  /* p38: the owner asked for real depth: each line has a short title and a few sentences on how it works */
+  ck('plan: each line has a short title and says how it works (one paragraph at most)', [...A.doc.querySelectorAll('.pln-drop li')].every((li) => li.querySelector('b').textContent.length <= 60 && li.querySelector('span').textContent.length <= 520));
+  ck('plan: the barcode explains what it does for your body and your split; sleep talks about the phone at night', /brain fog/.test(hd) && /split/.test(hd) && /phone in bed/.test(hd));
+  A.doc.querySelector('[data-more="train"]').click();
+  ck('plan: Training sells the dream body (not just strength) and names Dream physique and any video becoming a workout', /dream body/i.test(A.doc.querySelector('.pln-row:nth-child(2), .pln').textContent) && /Dream physique/.test(A.doc.getElementById('plnDrop-train').textContent) && /becomes a workout/.test(A.doc.getElementById('plnDrop-train').textContent));
   ck('plan: no feature list and no price talk, an arc of where you will be instead', /Where you will be/.test(A.doc.getElementById('planBody').textContent) && !/What each part gives you|One person, one price/.test(A.doc.getElementById('planBody').textContent));
   ck('without payments switched on, every part is open and nothing is locked', A.w.KovaBilling.has('train') && A.w.KovaBilling.has('work') && !A.doc.querySelector('.kbl'));
 
@@ -101,7 +105,7 @@ function boot(opts) {
   ck('a Health plan has Health, not Training or Work', B.w.KovaBilling.has('health') && !B.w.KovaBilling.has('train') && !B.w.KovaBilling.has('work') && B.w.KovaBilling.planName() === 'Health');
   B.w.go('move'); await wait(60);
   const lock = B.doc.querySelector('#s-move .kbl[data-part="train"]');
-  ck('Workout still opens, with one card about the outcome (get stronger) and what adding it costs', !!lock && /Get stronger every week/.test(lock.textContent) && /\$4\.00 a month/.test(lock.textContent));
+  ck('Workout still opens, with one card about the outcome (your dream body) and what adding it costs', !!lock && /Build your dream body/.test(lock.textContent) && /\$4\.00 a month/.test(lock.textContent));
   const start = B.doc.getElementById('startBtn');
   if (start) start.click(); await wait(200);
   ck('starting a workout without Training opens the plans with Training ticked and Work not', B.doc.getElementById('s-plan').classList.contains('on')

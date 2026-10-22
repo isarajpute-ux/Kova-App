@@ -42,23 +42,27 @@
      person you become, with a small arrow that opens what changes; the
      price is there, quietly, never the headline. */
   /* The headline sells where you end up; the arrow opens exactly what
-     is inside, one short line each, so nobody has to read an article. */
+     is inside. p38: the owner asked for real depth here, so each line
+     says how it works and what it does for you (honest claims only). */
   var PARTS={
     health:{t:'Wake up rested and in control of your energy', tag:'Health', sub:'Fuel, Sleep, Vitals, Recipes and Ask Kova',
-      out:[['Snap a plate or scan a barcode','calories, protein and carbs in seconds'],
-           ['Recipes for your goal','every macro counted for you'],
-           ['Spots what you are missing','protein, vitamins and water, before you feel it'],
-           ['A sleep score each morning','and the bedtime that fixes a bad night'],
-           ['Heart rate, HRV and stress from your watch','flagged the moment they leave your normal'],
-           ['Ask Kova anything','"why am I bloated?" answered from your own food log'],
-           ['Cycle and GLP-1 modes','your targets change with your body']]},
-    train:{t:'Get stronger every week, and proud of the mirror', tag:'Training', sub:'Workouts, Form Check and progress',
-      out:[['Today\u2019s workout, ready in one tap','built for your goal, your days and your time'],
-           ['Log a set in one tap','"Same" repeats your last set'],
-           ['Form Check','film a set and see what to fix'],
-           ['Every muscle covered','a weekly balance, with easier weeks built in'],
-           ['Records and progress','watch each lift climb'],
-           ['Push or go easy','your recovery score decides, not a guess']]},
+      out:[['Scan a barcode or snap your plate','Kova reads the label for you: calories, protein, carbs, fat and every ingredient. It flags what works against you, like added sugar, refined carbs and a lot of salt. Day after day those mean blood sugar spikes and the insulin that follows, cravings, energy crashes, brain fog and water retention: the puffy face and the bloated stomach. Then it fits the food to your day: your training split sets your protein and carbs, so a heavy leg day and a rest day get different targets.'],
+           ['Recipes for your goal','Meals built to your calories and protein for the day, every macro counted, so eating right never means doing maths.'],
+           ['Spots what you are missing','Protein, fibre, iron, vitamin D, magnesium and water add up through the day. Kova shows what is low before you feel it as tiredness, cramps or cravings.'],
+           ['A sleep score each morning, and how to fix tonight','From your watch: how long you slept, how deep, how often you woke and your heart rate overnight. A bright phone in bed keeps your brain switched on and pushes your sleep later, so you wake up tired, hungrier and more stressed, and short sleep throws off the hormones that control hunger. Kova gives you a wind-down time, a bedtime that fits when you have to get up, and tells you when to put the phone down.'],
+           ['Heart rate, HRV and stress from your watch','Kova learns your normal over a few weeks. When your resting heart rate climbs or your HRV drops, it is often stress, short sleep, alcohol or getting sick. It tells you the moment it happens and what to do: train easier, sleep earlier, drink water.'],
+           ['Alerts on your phone','Sleep is low, it has been days since a workout, it is time for bed: Kova tells you from your own data, even with the app closed.'],
+           ['Ask Kova anything','"Why am I bloated?", "why am I always tired?", "what should I eat before training?" Answered from your own food, sleep and training, not a generic article.'],
+           ['Cycle and GLP-1 modes','Your calories, training and recovery shift with your cycle. On GLP-1 medication, Kova keeps your protein high so you lose fat, not muscle, and helps you eat enough on low-appetite days.']]},
+    train:{t:'Build your dream body, at your pace', tag:'Training', sub:'Workouts, Dream physique, Form Check and progress',
+      out:[['Dream physique','Send a photo or video of the body you want: an actor, an athlete, anyone. Kova puts it next to yours, tells you what to gain and what to lose, which muscles to train more, and the calories and macros to get there, for women and men.'],
+           ['Any photo, video or link becomes a workout','Saw an exercise online, or a machine you do not know? Send it. Kova names it, shows how to do it with a moving picture and the muscles it works, and adds it to your split in one tap.'],
+           ['A whole week built around you','Your goal, the days you can train, the time you have and your equipment. Kova writes your split, 2 to 3 hard sets per exercise, and moves it when life gets busy.'],
+           ['Muscle recovery','A body map of what is fresh and what is sore, from the sets you logged. One tap builds today’s workout from the muscles that are ready.'],
+           ['Form Check','Film your set. Kova counts the reps, names the exercise and tells you what to fix, like knees caving in or a rounded back.'],
+           ['Follow along','Your workout one exercise at a time: the moving picture, your target, a rest timer and a voice.'],
+           ['Log a set in one tap','"Same" repeats your last set. Records, history and a chart for every lift.'],
+           ['And that is the tip of it','Zone 2 running from your heart rate, stretching for every muscle, attachments remembered, and your food and sleep tuned to the body you are building.']]},
     work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team', sub:'An AI team, tasks, meetings and posting',
       out:[['An AI team that works while you don\u2019t','research, social media and reports'],
            ['Text them like a person','"Ravi, find three venues by 5pm" and the answer arrives'],

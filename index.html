@@ -6898,6 +6898,9 @@ body.light-mode .kn-dash i.loud{box-shadow:none}
 .kn-ab button:first-child{background:var(--n-btn);color:var(--n-btnInk);border-color:transparent}
 @media (prefers-reduced-motion:reduce){.kn-card.danger,.kn-live{animation:none}.kn-alert{transition:none}}
 
+/* p39: the first read's last line */
+.kn-af{font-size:11px;opacity:.75;margin-top:4px}
+
 </style>
 <style id="p08-impact">
 /* KovaImpact in the scanner (p14): one row per body area with a verdict,
@@ -8933,6 +8936,152 @@ body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
 .kfr-x{border:0;background:none;color:inherit;font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;opacity:.7}
 
 </style>
+<style id="p08-dream">
+/* Dream physique (p38): the card on Workout and its page, built on the
+   Zone 2 page styles (.kz2p) in Kova's glass, dark / soft light / light */
+.kdp-card .kdp-k{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--acc)}
+.kdp-row{display:flex;align-items:center;gap:12px;margin:6px 0 4px}
+.kdp-th{width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid var(--ron-line,rgba(255,255,255,.12));flex-shrink:0}
+.kdp-mini{display:flex;align-items:center;gap:12px}
+.kdp-mini div{display:flex;flex-direction:column}
+.kdp-mini b{font-size:26px;font-weight:200;line-height:1}
+.kdp-mini span{font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+.kdp-ar .ic{font-size:16px;color:var(--acc)}
+.kdp .kdp-in img{display:block;max-width:100%;max-height:260px;margin:8px auto 4px;border-radius:16px;object-fit:contain}
+.kdp .kdp-in .kdp-me{max-height:200px}
+.kdp-ways{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 2px}
+.kdp-ways .chip{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font:inherit;font-size:12px}
+.kdp-ways .ic{font-size:14px}
+.kdp-you{font-size:12px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.78));margin:12px 0 4px}
+.kdp-link{background:none;border:0;padding:0;color:var(--acc-ink,var(--acc));font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.kdp .kdp-go{width:100%;margin-top:12px;justify-content:center}
+.kdp .kdp-go[disabled]{opacity:.45;cursor:default}
+.kdp-err{margin-top:10px;font-size:12px;line-height:1.5;color:var(--bad,#E8798E)}
+.kdp-err .chip{margin-left:6px;cursor:pointer;font:inherit;font-size:11.5px}
+/* p38d: after a compare, the pictures in are one small row */
+.kdp-tbs{display:flex;align-items:center;gap:8px}
+.kdp-tb{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;color:var(--ron-txt-2);font-size:10.5px}
+.kdp .kdp-in .kdp-tb img,.kdp-tb i{display:grid;place-items:center;width:46px;height:56px;margin:0;border-radius:12px;object-fit:cover;border:.5px solid var(--ron-line)}
+.kdp-tb i{background:linear-gradient(143deg,rgba(var(--ink),.08),rgba(var(--ink),.02));color:var(--acc-ink)}
+.kdp-tb i .ic{font-size:16px;color:var(--acc-ink)}
+.kdp .kdp-in-s .kdp-go{width:auto;flex:1;margin:0 0 18px 4px;padding:12px 14px}
+.kdp-in-s .kdp-you{margin-top:10px}
+
+/* 1. what to build, on you: the photo with the muscles lit in Kova's orange */
+.kdp-pf{margin:10px 0 0}
+.kdp-pw{position:relative;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.25)}
+.kdp-pw img{display:block;width:100%;height:auto;max-height:none}
+.kdp-pw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kdp-mk{stroke:rgba(255,255,255,.7);stroke-width:1;vector-effect:non-scaling-stroke;animation:kdpGlow 2.6s ease-in-out infinite}
+.kdp-ln{stroke:rgba(255,255,255,.75);stroke-width:.8;vector-effect:non-scaling-stroke}
+.kdp-dot{fill:#fff;stroke:#E87A3C;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.kdp-ml{position:absolute;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:100px;white-space:nowrap;pointer-events:none;
+  font:400 11.5px/1 'Outfit',sans-serif;color:#F4F1EE;background:rgba(14,12,12,.58);border:.5px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3)}
+.kdp-ml i{width:6px;height:6px;border-radius:50%;background:#E87A3C;box-shadow:0 0 6px rgba(232,122,60,.9)}
+body.light-mode .kdp-ml{color:#1C1A17;background:rgba(255,255,255,.8);border-color:rgba(255,255,255,.95)}
+@keyframes kdpGlow{0%,100%{opacity:.78}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.kdp-mk{animation:none}}
+.kdp-sw{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:8px 12px 8px 8px;border-radius:16px;border:.5px solid var(--ron-line);text-align:left;color:var(--ron-txt);
+  background:linear-gradient(143deg,rgba(var(--ink),.07),rgba(var(--ink),.02))}
+.kdp-sw img,.kdp-sw>i{width:36px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.kdp-sw>i{display:grid;place-items:center;background:var(--acc-bg)}
+.kdp-sw>i .ic{color:var(--acc-ink)}
+.kdp-sw span{flex:1;display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--ron-txt-2)}
+.kdp-sw b{font-size:13px;font-weight:400;color:var(--ron-txt)}
+.kdp-sw>.ic{font-size:15px;color:var(--ron-txt-3)}
+.kdp-mus{list-style:none;margin:14px 0 2px;padding:0;display:flex;flex-direction:column;gap:9px;counter-reset:m}
+.kdp-mus li{display:grid;grid-template-columns:22px 1fr;column-gap:8px;counter-increment:m}
+.kdp-mus li::before{content:counter(m);grid-row:1 / 3;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:var(--acc-ink);background:var(--acc-bg);border:.5px solid var(--acc-brd)}
+.kdp-mus b{font-size:13.5px;font-weight:400}
+.kdp-mus span{font-size:12px;line-height:1.45;color:var(--ron-txt-2)}
+.kdp-conf{margin-top:10px;font-size:11px;line-height:1.5;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+
+/* 2. your change: the owner's reference (pills, dashed tracks, the dream as
+   the orange tick, a floating card with the big number) in Kova's glass */
+.kdp-pills{display:flex;gap:8px;margin:12px 0 4px}
+.kdp-pills button{flex:1;padding:10px 6px;border-radius:100px;border:1px solid rgba(var(--ink),.16);background:none;color:var(--ron-txt-2);font-size:13px;font-weight:300;white-space:nowrap}
+.kdp-pills button.on{border-color:rgba(var(--ink),.85);color:var(--ron-txt);font-weight:400}
+.kdp-ch{position:relative;height:236px;margin-top:10px}
+.kdp-ax{position:absolute;left:0;top:4px;bottom:24px;width:40px;display:flex;flex-direction:column;justify-content:space-between;font-size:10.5px;font-weight:300;color:var(--ron-txt-3)}
+.kdp-ax span{transform:translateY(-50%)}
+.kdp-ax span:first-child{color:var(--acc-ink)}
+.kdp-ax span:last-child{transform:translateY(50%)}
+.kdp-cols{position:absolute;left:40px;right:0;top:0;bottom:0;display:grid;grid-template-columns:repeat(7,1fr)}
+.kdp-col{position:relative;border:0;background:none;padding:0;color:var(--ron-txt-3)}
+.kdp-trk{position:absolute;left:0;right:0;top:4px;bottom:24px}
+.kdp-trk::before{content:'';position:absolute;left:50%;top:0;bottom:0;border-left:1px dashed rgba(var(--ink),.16)}
+.kdp-tg{position:absolute;left:24%;right:24%;top:-2px;height:4px;border-radius:2px;background:var(--acc);box-shadow:0 0 8px var(--acc-glow)}
+.kdp-bar{position:absolute;left:14%;right:14%;height:4px;margin-bottom:-2px;border-radius:2px;background:rgba(var(--ink),.34);transition:bottom .4s ease}
+.kdp-col.on .kdp-bar{background:var(--ron-txt);height:5px;box-shadow:0 0 10px rgba(var(--ink),.35)}
+.kdp-col.done .kdp-bar{background:var(--acc)}
+.kdp-xl{position:absolute;left:0;right:0;bottom:0;font-size:10px;font-weight:300;text-align:center;white-space:nowrap}
+.kdp-col.on .kdp-xl{color:var(--ron-txt)}
+.kdp-fc{position:absolute;top:18px;left:50px;max-width:60%;padding:11px 14px 11px;border-radius:20px;pointer-events:none;
+  background:linear-gradient(143deg,rgba(var(--ink),.11),rgba(var(--ink),.04));border:.5px solid var(--ron-line);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.kdp-fc.br{top:auto;left:auto;right:4px;bottom:30px}
+body.light-mode .kdp-fc{background:linear-gradient(143deg,rgba(255,255,255,.82),rgba(255,255,255,.55));border-color:rgba(255,255,255,.95);box-shadow:0 14px 30px rgba(60,50,40,.12)}
+.kdp-fn{display:flex;align-items:baseline;gap:8px;font-size:38px;font-weight:300;letter-spacing:-.04em;line-height:1;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.kdp-fn small{font-size:20px;font-weight:300;margin-left:-6px}
+.kdp-fn em{font-style:normal;font-size:12px;font-weight:300;letter-spacing:0;color:var(--ron-txt-2);white-space:nowrap}
+.kdp-fl{margin-top:4px;font-size:12px;font-weight:300;line-height:1.35;color:var(--ron-txt-2)}
+.kdp-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 6px}
+.kdp-nums div{display:flex;flex-direction:column;gap:3px}
+.kdp-nums b{font-size:21px;font-weight:200;line-height:1.1;white-space:nowrap}
+.kdp-nums span{font-size:10.5px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.55))}
+.kdp-all{font-size:11.5px;line-height:1.5;color:var(--ron-txt-3)}
+@media (max-width:380px){ .kdp-fn{font-size:34px} .kdp-pills button{font-size:12px} .kdp-nums b{font-size:18px} }
+
+/* 3. the plan: Train / Eat / Steps */
+.kdp-q{width:100%;resize:vertical;min-height:52px;margin-top:6px;font:inherit;font-size:13px;line-height:1.45}
+.kdp-aq{font-size:12.5px;color:var(--ron-txt-3);margin-top:8px}
+.kdp-aa{font-size:14px;font-weight:300;line-height:1.5;margin:4px 0 2px}
+.kdp-tab{margin-top:10px}
+.kdp-ah{font-size:12px;color:var(--ron-txt-2);margin:4px 0 8px}
+.kdp-rows{display:flex;flex-direction:column;border-top:.5px solid var(--ron-line)}
+.kdp-row2{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;padding:11px 2px;border:0;border-bottom:.5px solid var(--ron-line);background:none;text-align:left;color:var(--ron-txt);font-size:13px}
+.kdp-row2 b{font-weight:400;white-space:nowrap}
+.kdp-row2 span{min-width:0;font-size:12px;color:var(--ron-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kdp-row2 em{font-style:normal;font-size:11px;color:var(--ron-txt-3);white-space:nowrap}
+.kdp-row2 .ic{font-size:14px;color:var(--ron-txt-3)}
+div.kdp-row2{grid-template-columns:auto 1fr auto}
+.kdp .kdp-ans .kz2p-go{width:100%;margin-top:12px;justify-content:center}
+.kdp-more{margin-top:10px;font-size:11.5px;line-height:1.5;color:var(--ron-txt-3)}
+.kdp-ph{font-size:12.5px;color:var(--acc-ink)}
+.kdp-mac{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:18px;margin:10px 0 4px}
+.kdp-kc{display:flex;flex-direction:column}
+.kdp-kc b{font-size:42px;font-weight:200;letter-spacing:-.04em;line-height:1}
+.kdp-kc span{font-size:10.5px;color:var(--ron-txt-3);margin-top:4px}
+.kdp-mb{display:flex;flex-direction:column;gap:7px}
+.kdp-mb div{display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:8px;font-size:11.5px;color:var(--ron-txt-2)}
+.kdp-mb i{height:4px;border-radius:2px;background:rgba(var(--ink),.12);overflow:hidden}
+.kdp-mb u{display:block;height:100%;border-radius:2px;background:var(--acc)}
+.kdp-mb div:not(:first-child) u{background:rgba(var(--ink),.5)}
+.kdp-mb b{font-weight:400;text-align:right;color:var(--ron-txt)}
+.kdp-meals{list-style:none;margin:12px 0 0;padding:0;border-top:.5px solid var(--ron-line)}
+.kdp-meals li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 2px;border-bottom:.5px solid var(--ron-line)}
+.kdp-meals b{font-size:13px;font-weight:400}
+.kdp-meals em{font-style:normal;font-size:11px;color:var(--ron-txt-3);white-space:nowrap}
+.kdp-meals span{grid-column:1 / -1;font-size:11.5px;line-height:1.4;color:var(--ron-txt-2)}
+.kdp-tot{margin-top:8px;font-size:11.5px;color:var(--good,#5FD08A)}
+.kdp-tot.off{color:var(--warn,#F4E18E)}
+body.light-mode .kdp-tot{color:#1E7A45}
+body.light-mode .kdp-tot.off{color:#8A6A10}
+.kdp-steps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:300;line-height:1.45}
+.kdp-steps li::marker{color:var(--acc-ink)}
+.kdp-tips{margin:12px 0 0;padding-left:16px;font-size:12px;line-height:1.5;color:var(--ron-txt-2)}
+.kdp-ask{margin-top:16px;padding-top:12px;border-top:.5px solid var(--ron-line)}
+.kdp-ask .sub{font-size:12px;line-height:1.5}
+.kdp-exs{list-style:none;margin:0;padding:0}
+.kdp-exs li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-bottom:.5px solid var(--line,rgba(255,255,255,.1))}
+.kdp-exs b{font-weight:400;font-size:14px}
+.kdp-exs em{font-style:normal;font-size:12.5px;opacity:.75}
+.kdp-exs span{grid-column:1 / -1;font-size:11.5px;opacity:.6}
+
+/* 4. good to know */
+.kdp-honest p{margin:6px 0 0;font-size:11.5px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kdp-honest .kdp-looks b{font-weight:500;color:var(--ron-txt)}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -9506,6 +9655,7 @@ body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
   </div>
 
   <div id="stList"></div>
+  <style>.stunits{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.stunits .chip{cursor:pointer}</style>
 
   <div class="card kova"><div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA</div></div>
   <div class="kova-txt" id="stInsight"></div></div>
@@ -25218,7 +25368,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
 
   function anchorE1(m){
     var v=ST[m]; if(!v) return 0;
-    var w=+v.w, r=+v.r; if(!(w>0&&r>0)) return 0;
+    var L=LIFTS.filter(function(x){ return x.m===m; })[0], w=weightOf(v.n||(L&&L.n)||'',v), r=repsOf(v.r); if(!(w>0&&r>0)) return 0;
     return e1(w,r);
   }
 
@@ -25323,6 +25473,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     }
 
     var filled=Object.keys(DERIV).filter(function(m){return anchorE1(m)>0}).length;
+    var nMoves=Object.keys(groups).reduce(function(a,g){ return a+groups[g].length; },0)+bwOut.length;
     h+='<div class="card" style="padding:11px 13px"><div class="sub" style="line-height:1.5">'
       +'Worked out from the '+filled+' lift'+(filled>1?'s':'')+' you entered, using published '
       +'strength ratios. These are starting weights for about 8&ndash;12 reps, not maxes, and '
@@ -25331,15 +25482,32 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
       +(bodyW()?'':' Add your bodyweight in your profile and the bodyweight movements fill in too.')
       +'</div></div>';
 
-    host.innerHTML=h;
+    /* p39 (the owner: "too much info at the bottom"): one line here, the
+       full list in a pop-up behind it */
+    if(head) head.style.display='none';
+    host.innerHTML='<div class="card" style="padding:12px 13px;display:flex;align-items:center;gap:10px">'
+      +'<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:700">Starting weights for '+nMoves+' exercises</div>'
+      +'<div class="sub" style="margin-top:2px">Worked out from the '+filled+' lift'+(filled>1?'s':'')+' you entered.</div></div>'
+      +'<div class="chip" id="stDerivOpen" role="button" tabindex="0" style="flex-shrink:0">See them</div></div>';
+    var ob=document.getElementById('stDerivOpen');
+    if(ob) ob.onclick=function(){ if(window.openSheet) openSheet('<div class="grab"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="title-s" style="font-size:18px">Your starting weights</div><div class="iconbtn" onclick="closeSheet()" role="button" aria-label="Close" style="border-radius:50%;width:28px;height:28px"><svg class="ic"><use href="#i-x"/></svg></div></div>'+h); };
   }
 
   function pick(m){ var v=ST[m]; return v||{n:null,w:'',r:''}; }
+  /* p39 (the owner): numbers only; "6-8" is a range (7), not 68; and the
+     weight says what it is: each dumbbell or both, the total or the plates
+     on each side (a barbell adds its 45 lb bar). */
+  function repsOf(r){ var m=String(r||'').match(/^(\d+(?:\.\d+)?)\s*[-\u2013]\s*(\d+(?:\.\d+)?)$/); if(m) return (+m[1]+ +m[2])/2; return +r||0; }
+  function kindW(name){ return /dumbbell/i.test(name)?'db':/leg press|curl$|pulldown|pushdown|crunch|seated calf|machine|cable/i.test(name)&&!/barbell curl/i.test(name)?'mc':/leg raise|bridge$/i.test(name)?'bw':'bb'; }
+  var UNITS={db:[['each','Each dumbbell'],['both','Both together']],bb:[['total','Total (bar + plates)'],['side','Plates each side']],mc:[['total','Total'],['side','Each side']],bw:[['total','Added weight']]};
+  function unitOf(name,v){ var k=kindW(name), u=v&&v.u, L=UNITS[k]; return L.some(function(x){ return x[0]===u; })?u:L[0][0]; }
+  /* what goes into the estimate: per dumbbell for dumbbells, the whole load otherwise */
+  function weightOf(name,v){ var w=+v.w||0, k=kindW(name), u=unitOf(name,v); if(!w) return 0; if(k==='db') return u==='both'?w/2:w; if(u==='side') return k==='bb'?w*2+45:w*2; return w; }
 
   function draw(){
     host.innerHTML=LIFTS.map(function(L){
       var v=pick(L.m), name=v.n||L.n;
-      var e=e1(+v.w,+v.r);
+      var e=e1(weightOf(name,v),repsOf(v.r)), U=UNITS[kindW(name)], u=unitOf(name,v);
       var rr=ratio(name,e);
       var band=rr==null?'':(rr>=1.15?'ahead':(rr<=0.8?'behind':'even'));
       return '<div class="card stcard" data-m="'+L.m+'" style="padding:12px">'
@@ -25354,12 +25522,13 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
         +'</div>'
         +'<div class="strow">'
         +'<div class="stfield"><div class="lbl">WEIGHT</div>'
-        +'<input class="stin" inputmode="numeric" data-f="w" data-m="'+L.m+'" value="'+esc(v.w)+'" placeholder="lb"/></div>'
+        +'<input class="stin" type="text" inputmode="decimal" pattern="[0-9]*[.]?[0-9]*" data-f="w" data-m="'+L.m+'" value="'+esc(v.w)+'" placeholder="'+(u==='each'?'lb each':u==='side'?'lb per side':'lb')+'" aria-label="Weight in pounds"/></div>'
         +'<div class="stfield"><div class="lbl">REPS</div>'
-        +'<input class="stin" inputmode="numeric" data-f="r" data-m="'+L.m+'" value="'+esc(v.r)+'" placeholder="reps"/></div>'
+        +'<input class="stin" type="text" inputmode="numeric" data-f="r" data-m="'+L.m+'" value="'+esc(v.r)+'" placeholder="8 or 6-8" aria-label="Reps, a number or a range"/></div>'
         +'<div class="chip stclear" data-m="'+L.m+'" style="font-size:10px;align-self:flex-end">Skip</div>'
         +'</div>'
-        +(v.r>12?'<div class="sub" style="margin-top:8px;line-height:1.45">Above twelve reps the '
+        +(U.length>1?'<div class="stunits" role="group" aria-label="What the weight is">'+U.map(function(x){ return '<div class="chip stu'+(u===x[0]?' on':'')+'" data-m="'+L.m+'" data-u="'+x[0]+'" role="button" tabindex="0" aria-pressed="'+(u===x[0])+'" style="font-size:10px">'+x[1]+'</div>'; }).join('')+'</div>':'')
+        +(repsOf(v.r)>12?'<div class="sub" style="margin-top:8px;line-height:1.45">Above twelve reps the '
           +'one-rep-max estimate drifts high. Kova will use it, but it will trust a '
           +'heavier set more once you log one.</div>':'')
         +'</div>';
@@ -25379,10 +25548,15 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
         var m=el.dataset.m, v=pick(m);
         var L=LIFTS.filter(function(x){return x.m===m})[0];
         var next={n:v.n||L.n,w:v.w,r:v.r};
-        next[el.dataset.f]=el.value.replace(/[^0-9.]/g,'');
+        var clean=el.dataset.f==='r'?el.value.replace(/[^0-9-\u2013]/g,'').replace(/[-\u2013]+/g,'-').replace(/^-/,'').replace(/(-\d*)-.*/,'$1'):el.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');
+        if(el.value!==clean) el.value=clean;
+        next[el.dataset.f]=clean; next.u=v.u;
         ST[m]=next; wr(ST); cover(); head(m);
       }
       el.oninput=put; el.onchange=put;
+    });
+    host.querySelectorAll('.stu').forEach(function(b){
+      b.onclick=function(){ var m=b.dataset.m, v=pick(m), L=LIFTS.filter(function(x){return x.m===m})[0]; ST[m]={n:v.n||L.n,w:v.w,r:v.r,u:b.dataset.u}; wr(ST); draw(); };
     });
     host.querySelectorAll('.stclear').forEach(function(b){
       b.onclick=function(){ delete ST[b.dataset.m]; wr(ST); draw(); };
@@ -25394,7 +25568,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   function head(m){
     var card=host.querySelector('.stcard[data-m="'+m+'"]');
     if(!card) return;
-    var v=pick(m), e=e1(+v.w,+v.r), rr=ratio(v.n,e);
+    var v=pick(m), e=e1(weightOf(v.n||'',v),repsOf(v.r)), rr=ratio(v.n,e);
     var band=rr==null?'':(rr>=1.15?'ahead':(rr<=0.8?'behind':'even'));
     var lbl=card.querySelector('.lbl:last-of-type')||card.querySelectorAll('.lbl')[0];
     var hd=card.querySelectorAll('.lbl')[0];
@@ -25404,7 +25578,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   }
 
   function entered(){ return LIFTS.filter(function(L){
-    var v=ST[L.m]; return v&&+v.w>0&&+v.r>0; }); }
+    var v=ST[L.m]; return v&&+v.w>0&&repsOf(v.r)>0; }); }
 
   function cover(){
     var done=entered().length, pct=Math.round(done/LIFTS.length*100);
@@ -25425,7 +25599,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   function balance(){
     var out=[];
     entered().forEach(function(L){
-      var v=ST[L.m], e=e1(+v.w,+v.r), rr=ratio(v.n,e);
+      var v=ST[L.m], e=e1(weightOf(v.n||L.n,v),repsOf(v.r)), rr=ratio(v.n,e);
       if(rr!=null) out.push({m:L.m,n:v.n,e:e,r:rr});
     });
     out.sort(function(a,b){ return b.r-a.r; });
@@ -25468,7 +25642,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     try{ H=JSON.parse(localStorage.getItem(HK)||'{}'); }catch(e){ H={}; }
     var wrote=0;
     E.forEach(function(L){
-      var v=ST[L.m], w=+v.w, r=+v.r, name=v.n||L.n;
+      var v=ST[L.m], name=v.n||L.n, w=Math.round(weightOf(name,v)*10)/10, r=Math.round(repsOf(v.r));
       (H[name]=H[name]||[]).push({
         t:Date.now(), src:'baseline',
         sets:[{w:w,r:r},{w:w,r:r},{w:w,r:r}],
@@ -55359,14 +55533,14 @@ window.KovaBilling=(function(){
   function paywall2(feature,need){
     setTimeout(function(){ decorate(); note(feature==='chat'?'Real answers from the assistant come with any plan. The on-device guide stays free.'
       :need==='work'?'Get your hours back: Work OS and your AI team are ticked below.'
-      :need==='train'?'Get stronger every week: Training is ticked below.':'This comes with a Kova plan.'); },120);
+      :need==='train'?'Build your dream body: Training is ticked below.':'This comes with a Kova plan.'); },120);
   }
 
   /* ---------------- when a part is not in the plan ----------------
      Payments on, and Workout or Work OS opened without it: the screen
      still shows, with one card at the top saying what adding it costs. */
   var LOCKS={
-    train:{screens:['s-move','s-session','s-customize'],t:'Get stronger every week',d:'Add Training and walk in knowing exactly what to do, then watch the numbers climb.'},
+    train:{screens:['s-move','s-session','s-customize'],t:'Build your dream body, at your pace',d:'Add Training: your week written for you, your dream physique broken down into what to train and eat, and every rep shown.'},
     work:{screens:['s-work','s-workspace','s-worktoday','s-worktasks','s-workprojects','s-workgoals','s-workauto','s-workteam','s-workstudio','s-workcompose'],t:'Get your hours back',d:'Add Work OS and an AI team that researches, posts and reports back while you live your life.'}
   };
   function addPrice(part){
@@ -58411,7 +58585,7 @@ window.KovaNoise=(function(){
       S.buf=new Float32Array(S.an.frequencyBinCount); S.w=new Float32Array(S.an.frequencyBinCount);
       for(var i=1;i<S.w.length;i++) S.w[i]=aWeight(i*S.ctx.sampleRate/S.an.fftSize);
       if(S.ctx.state==='suspended'&&S.ctx.resume) S.ctx.resume().catch(function(){});
-      S.on=true; S.why=why||''; S.db=null; S.peak=0; S.secs=[]; S.loudFrom=0;
+      S.on=true; S.why=why||''; S.db=null; S.peak=0; S.secs=[]; S.loudFrom=0; S.firstDone=false;
       var acc=[], last=Date.now();
       S.timer=setInterval(function(){
         var v=level(); if(v==null) return;
@@ -58439,6 +58613,8 @@ window.KovaNoise=(function(){
   function tick(db,secs){
     var T=today(), now=Date.now(), m=new Date(now), mk=('0'+m.getHours()).slice(-2)+':'+('0'+m.getMinutes()).slice(-2);
     S.secs.push({t:now,db:db}); if(S.secs.length>900) S.secs.shift();
+    /* six seconds in: how loud it is here, and what that does to you */
+    if(!S.firstDone&&S.secs.length>=6){ S.firstDone=true; var a6=S.secs.slice(-6).reduce(function(x,y){ return x+y.db; },0)/6; alert(a6,true); }
     S.peak=Math.max(S.peak,db); T.max=Math.max(T.max||0,Math.round(db));
     if(db>=80) T.dose+=secs/60/safeMins(db)*100;
     if(db>=85) T.loudS=(T.loudS||0)+secs;
@@ -58476,8 +58652,16 @@ window.KovaNoise=(function(){
     var raw=S.db-(D.cal!=null?D.cal:CAL0); D.cal=Math.round((v-raw)*10)/10; S.db=v; save(); paintAll(); say('Calibrated. Readings now match your meter.'); return true;
   }
 
+  /* what this level does to you, said plainly: the good and the bad */
+  function impact(db){
+    var c=cat(db), sm=safeMins(db);
+    if(c==='quiet') return {good:true,t:'Quiet here',p:'Good for you: easy on your ears, and quiet helps you focus, talk and sleep. Fine all day.'};
+    if(c==='busy') return {good:true,t:'Busy, but safe',p:'Like a restaurant or a busy street. Safe for your hearing all day, but steady noise at this level raises stress and makes it harder to focus or wind down.'};
+    if(c==='loud') return {good:false,t:'Loud here',p:'Like a packed gym class, a bar or traffic up close. Safe for about '+hm(sm)+' a day. After that it wears down your hearing for good, and ringing ears afterwards is the warning sign. Earplugs or a spot away from the speakers help.'};
+    return {good:false,t:'Very loud here',p:'Like a concert, a club or fireworks. Safe for only about '+hm(sm)+'. Wear earplugs (music still sounds clear, just safer), stay away from the speakers, and step outside for breaks.'};
+  }
   /* ---- the alert: a glass card over the screen ---- */
-  function alert(db){
+  function alert(db,first){
     try{ if(navigator.vibrate) navigator.vibrate([120,80,120]); }catch(e){}
     try{ if(window.KovaChime) KovaChime.play(); }catch(e){}
     var el=document.getElementById('knAlert');
@@ -58487,11 +58671,18 @@ window.KovaNoise=(function(){
         if(n==='stop') stop();
         if(n==='more'){ try{ go('vitals'); }catch(x){} setTimeout(focus,120); }
         hideAlert(); }); }
-    var c=cat(db), sm=safeMins(db);
+    var c=cat(db), sm=safeMins(db), I=impact(db);
     el.className='kn-alert on '+c;
-    el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+(c==='danger'?'Very loud here':'Loud here')+'</b><button data-n="x" aria-label="Close">×</button></div>'
+    if(first){
+      el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+I.t+'</b><button data-n="x" aria-label="Close">×</button></div>'
+        +'<div class="kn-a3"><div><small>Now:</small><b>~'+Math.round(db)+' dB</b></div><div><small>Safe for:</small><b>'+(db<80?'All day':hm(sm))+'</b></div><div><small>For you:</small><b>'+(I.good?'Good':'Bad')+'</b></div></div>'
+        +'<p>'+I.p+'</p><p class="kn-af">Kova keeps listening and warns you if it gets louder. Nothing is recorded.</p>'
+        +'<div class="kn-ab"><button data-n="x">Keep listening</button><button data-n="stop">Stop listening</button></div>';
+      return;
+    }
+    el.innerHTML='<div class="kn-ah"><span class="kn-dot '+c+'"></span><b>'+I.t+'</b><button data-n="x" aria-label="Close">×</button></div>'
       +'<div class="kn-a3"><div><small>Now:</small><b>~'+Math.round(db)+' dB</b></div><div><small>Safe for:</small><b>'+hm(sm)+'</b></div><div><small>Today:</small><b>'+Math.round(today().dose)+'%</b></div></div>'
-      +'<p>'+(db>=100?'Minutes at this level can damage hearing for good. Put in earplugs or step outside now.':'Above 85 dB, long sessions wear down hearing for good. Earplugs, a step outside, or a spot away from the speakers all help.')+'</p>'
+      +'<p>'+I.p+'</p>'
       +'<div class="kn-ab"><button data-n="more">See today</button><button data-n="mute">Quiet for 1 h</button><button data-n="stop">Stop listening</button></div>';
   }
   function hideAlert(){ var el=document.getElementById('knAlert'); if(el) el.classList.remove('on'); }
@@ -58563,13 +58754,12 @@ window.KovaNoise=(function(){
     return S.on&&S.db!=null?'<span class="kn-dot '+cat(S.db)+'"></span><b>~'+Math.round(S.db)+' dB</b><span>'+CAT_N[cat(S.db)]+(S.db>=80?' · safe for '+hm(safeMins(S.db)):'')+'</span><button data-n="stop">Stop</button>'
       :'<span class="kn-dot"></span><b>Noise</b><span>Is the gym too loud? Kova can listen and warn you.</span><button data-n="start">Listen</button>';
   }
-  function paintSession(){
-    var slot=document.getElementById('hrSlot'); if(!slot) return;
-    var chip=document.getElementById('knChip');
-    if(!chip){ chip=document.createElement('div'); chip.id='knChip'; chip.className='kn-chip'; slot.parentNode.insertBefore(chip,slot.nextSibling);
-      chip.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; if(b.getAttribute('data-n')==='start') start('workout'); else stop(); }); }
-    chip.innerHTML=chipHTML();
-  }
+  /* p39 (the owner: "I don't want this on the screen, only as an alert"):
+     nothing on the workout screen. Listening starts from Vitals > Hearing &
+     noise (or with each workout, if you switched that on), and Kova speaks
+     up only through its alert: once a few seconds in, with what this level
+     does to you, good or bad, and again whenever it gets loud. */
+  function paintSession(){ var chip=document.getElementById('knChip'); if(chip) chip.remove(); }
   function paintAll(){ paint(); paintSession(); }
   function focus(){
     var el=host(); if(!el) return; paint();
@@ -58590,7 +58780,7 @@ window.KovaNoise=(function(){
     window.addEventListener('pagehide',function(){ if(S.on){ closeSpell(); save(); } });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start0,400); }); else setTimeout(start0,400);
-  return {start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
+  return {impact:impact,start:start,stop:stop,on:function(){ return S.on; },level:function(){ return S.db; },summary:summary,calibrate:calibrate,safeMins:safeMins,aWeight:aWeight,focus:focus,paint:paintAll,
     _tick:tick,_alert:alert,_S:S,_D:function(){ return D; }};
 })();
 
@@ -60569,23 +60759,27 @@ window.KovaSignIn=(function(){
      person you become, with a small arrow that opens what changes; the
      price is there, quietly, never the headline. */
   /* The headline sells where you end up; the arrow opens exactly what
-     is inside, one short line each, so nobody has to read an article. */
+     is inside. p38: the owner asked for real depth here, so each line
+     says how it works and what it does for you (honest claims only). */
   var PARTS={
     health:{t:'Wake up rested and in control of your energy', tag:'Health', sub:'Fuel, Sleep, Vitals, Recipes and Ask Kova',
-      out:[['Snap a plate or scan a barcode','calories, protein and carbs in seconds'],
-           ['Recipes for your goal','every macro counted for you'],
-           ['Spots what you are missing','protein, vitamins and water, before you feel it'],
-           ['A sleep score each morning','and the bedtime that fixes a bad night'],
-           ['Heart rate, HRV and stress from your watch','flagged the moment they leave your normal'],
-           ['Ask Kova anything','"why am I bloated?" answered from your own food log'],
-           ['Cycle and GLP-1 modes','your targets change with your body']]},
-    train:{t:'Get stronger every week, and proud of the mirror', tag:'Training', sub:'Workouts, Form Check and progress',
-      out:[['Today\u2019s workout, ready in one tap','built for your goal, your days and your time'],
-           ['Log a set in one tap','"Same" repeats your last set'],
-           ['Form Check','film a set and see what to fix'],
-           ['Every muscle covered','a weekly balance, with easier weeks built in'],
-           ['Records and progress','watch each lift climb'],
-           ['Push or go easy','your recovery score decides, not a guess']]},
+      out:[['Scan a barcode or snap your plate','Kova reads the label for you: calories, protein, carbs, fat and every ingredient. It flags what works against you, like added sugar, refined carbs and a lot of salt. Day after day those mean blood sugar spikes and the insulin that follows, cravings, energy crashes, brain fog and water retention: the puffy face and the bloated stomach. Then it fits the food to your day: your training split sets your protein and carbs, so a heavy leg day and a rest day get different targets.'],
+           ['Recipes for your goal','Meals built to your calories and protein for the day, every macro counted, so eating right never means doing maths.'],
+           ['Spots what you are missing','Protein, fibre, iron, vitamin D, magnesium and water add up through the day. Kova shows what is low before you feel it as tiredness, cramps or cravings.'],
+           ['A sleep score each morning, and how to fix tonight','From your watch: how long you slept, how deep, how often you woke and your heart rate overnight. A bright phone in bed keeps your brain switched on and pushes your sleep later, so you wake up tired, hungrier and more stressed, and short sleep throws off the hormones that control hunger. Kova gives you a wind-down time, a bedtime that fits when you have to get up, and tells you when to put the phone down.'],
+           ['Heart rate, HRV and stress from your watch','Kova learns your normal over a few weeks. When your resting heart rate climbs or your HRV drops, it is often stress, short sleep, alcohol or getting sick. It tells you the moment it happens and what to do: train easier, sleep earlier, drink water.'],
+           ['Alerts on your phone','Sleep is low, it has been days since a workout, it is time for bed: Kova tells you from your own data, even with the app closed.'],
+           ['Ask Kova anything','"Why am I bloated?", "why am I always tired?", "what should I eat before training?" Answered from your own food, sleep and training, not a generic article.'],
+           ['Cycle and GLP-1 modes','Your calories, training and recovery shift with your cycle. On GLP-1 medication, Kova keeps your protein high so you lose fat, not muscle, and helps you eat enough on low-appetite days.']]},
+    train:{t:'Build your dream body, at your pace', tag:'Training', sub:'Workouts, Dream physique, Form Check and progress',
+      out:[['Dream physique','Send a photo or video of the body you want: an actor, an athlete, anyone. Kova puts it next to yours, tells you what to gain and what to lose, which muscles to train more, and the calories and macros to get there, for women and men.'],
+           ['Any photo, video or link becomes a workout','Saw an exercise online, or a machine you do not know? Send it. Kova names it, shows how to do it with a moving picture and the muscles it works, and adds it to your split in one tap.'],
+           ['A whole week built around you','Your goal, the days you can train, the time you have and your equipment. Kova writes your split, 2 to 3 hard sets per exercise, and moves it when life gets busy.'],
+           ['Muscle recovery','A body map of what is fresh and what is sore, from the sets you logged. One tap builds today’s workout from the muscles that are ready.'],
+           ['Form Check','Film your set. Kova counts the reps, names the exercise and tells you what to fix, like knees caving in or a rounded back.'],
+           ['Follow along','Your workout one exercise at a time: the moving picture, your target, a rest timer and a voice.'],
+           ['Log a set in one tap','"Same" repeats your last set. Records, history and a chart for every lift.'],
+           ['And that is the tip of it','Zone 2 running from your heart rate, stretching for every muscle, attachments remembered, and your food and sleep tuned to the body you are building.']]},
     work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team', sub:'An AI team, tasks, meetings and posting',
       out:[['An AI team that works while you don\u2019t','research, social media and reports'],
            ['Text them like a person','"Ravi, find three venues by 5pm" and the answer arrives'],
@@ -61447,7 +61641,7 @@ window.KovaCmd=(function(){
     formcheck:'form technique posture clip video squat deadlift',
     machine:'machine equipment scan',
     sleep:'tired insomnia bedtime dream wake asleep',
-    vitals:'heart pulse bpm readiness oxygen spo2 temperature',
+    vitals:'heart pulse bpm readiness oxygen spo2 temperature noise loud loudness hearing ears decibel db concert club',
     stress:'anxious anxiety calm breathe breathing meditation meditate relax',
     maint:'scale bmi measurement photo progress',
     zone2:'walk walking run running jog steps cardio',
@@ -67802,6 +67996,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-24',title:'Dream physique',
+      lines:['Send a photo or video of the body you want','The muscles to build, lit on your own photo','Your change at 3 months, 6 months and a year, with a split and meals'],
+      steps:[
+        ['move','Dream physique','Send a photo, a video or a link of the body you want, and one of you. Kova lights up what to build on your own body, maps your change, and writes your split and meals.',function(){ return q('#kdpCard'); }]
+      ]},
     {id:'new-2026-10-23',title:'Attachments, plain words and easier how-to',
       lines:['Save the attachment you use (rope, bar, handle) on any exercise','Your muscles this week in one word: weak, mild, needs work, stronger, sore','How to do each exercise in a few easy words'],
       steps:[
@@ -69346,6 +69545,582 @@ window.KovaFresh=(function(){
   });
   setInterval(function(){ if(!document.hidden) check().then(function(v){ if(v) offer(); }); },30*60000);
   return API;
+})();
+
+</script>
+<script id="p08-dream">
+/* =====================================================================
+   KovaDream - Dream physique (p38).
+
+   The owner: "a tab on the workout metric: send a video/image of a
+   physique - your dream physique from any actor or influencer - it tells
+   you what to train more on exactly and gives you a macros plan to get
+   there, female and male, accurate and fast; show your body right now and
+   the dream physique, and transform into it; your height and weight now and
+   what the person looks like; tell you what to gain or take off."
+
+   How it works, honestly:
+     - the picture of the body you want (a photo, a video's frames, or a
+       link's picture) and, if you add one, a photo of you now go to Kova's
+       AI once. It reads the physique only: it never says who the person is
+       (Kova does not identify people) and never comments on faces. It
+       answers with a body-fat range, the build, the muscles that stand out
+       and the ones you need to build more.
+     - everything with a number after that is Kova's own maths, the same
+       engine as Fuel (KovaMaint): your body fat now (from your photo, or
+       your height, weight and age), the weight that look is on your frame,
+       the fat to lose and the muscle to add (realistic rates for a woman
+       or a man), calories and macros for the phase you are in, and how
+       long it takes.
+     - p38d (the owner: no yellow labels, no body diagram, show it on the
+       real person): the muscles to build glow on your own photo in Kova's
+       orange with small glass labels (on the goal photo without yours);
+       "Your change" is the owner's chart reference (3 months / 6 months /
+       1 year, the dream as the orange tick, a floating card with the big
+       number), from the same maths and pace as the time estimate; the plan
+       is one compact card (Train / Eat / Steps, a split day opens in a
+       pop-up) that the Ask Kova answer fills in.
+     - "Use this plan" switches Fuel to it; "Add to my plan" puts one
+       exercise per focus muscle into your split.
+   Floors: a goal leaner than 8% (men) or 16% (women) is aimed at those
+   instead and says why; under 18, no calorie deficit.
+   ===================================================================== */
+window.KovaDream=(function(){
+  'use strict';
+  var KEY='dream';
+  var LIST=['chest','delts','lats','traps','biceps','triceps','forearms','abs','obliques','lowback','glutes','quads','hams','calves','adductors'];
+  var NAME={chest:'Chest',delts:'Shoulders',lats:'Lats (back width)',traps:'Traps',biceps:'Biceps',triceps:'Triceps',forearms:'Forearms',abs:'Abs',obliques:'Obliques (waist)',lowback:'Lower back',glutes:'Glutes',quads:'Quads',hams:'Hamstrings',calves:'Calves',adductors:'Inner thighs'};
+  /* one exercise per focus muscle, for "Add to my plan" */
+  var MOVE={chest:'Incline dumbbell press',delts:'Lateral raise',lats:'Lat pulldown',traps:'Shrug',biceps:'Dumbbell curl',triceps:'Rope pushdown',forearms:'Farmer carry',abs:'Hanging leg raise',obliques:'Pallof press',lowback:'Back extension',glutes:'Hip thrust',quads:'Leg press',hams:'Romanian deadlift',calves:'Standing calf raise',adductors:'Sumo deadlift'};
+  var S={want:null,wantKind:'',hint:'',me:null,wantAR:1.25,meAR:1.25,q:'',busy:false,coaching:false,ans:null,ansErr:'',res:null,err:'',open:false};
+
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function kp(k){ try{ return window.KP?KP.get(k):null; }catch(e){ return null; } }
+  function kset(k,v){ try{ if(window.KP) KP.set(k,v); }catch(e){} }
+  function ic(n){ return '<svg class="ic" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function track(n,p){ try{ if(window.KovaAnalytics) KovaAnalytics.track(n,p||{}); }catch(e){} }
+  function cl(x,a,b){ return Math.max(a,Math.min(b,x)); }
+  function r1(x){ return Math.round(x*10)/10; }
+  var LB=0.45359237;
+
+  /* ---------- you, from your profile (Fuel > Find my maintenance) ---------- */
+  function you(){
+    var M=window.KovaMaint, p=null;
+    try{ p=M&&(M.prof()||M.draft()); }catch(e){}
+    p=p||{};
+    var bs=null; try{ bs=window.KovaBodyShape?KovaBodyShape.profile():null; }catch(e){}
+    var sex=p.sex||(bs&&bs.known?(bs.f?'f':'m'):'m');
+    var kg=p.kg||(bs&&bs.kg)||null, bf=p.bf||null, how='';
+    if(bf) how='the body fat you entered';
+    else if(kg&&p.hcm&&p.age&&M&&M.bfEst){ bf=M.bfEst(p,kg); how='your height, weight and age'; }
+    else if(bs&&bs.bf){ bf=bs.bf; how=bs.how||'your profile'; }
+    return {p:p,sex:sex==='f'?'f':'m',kg:kg,hcm:p.hcm||null,age:p.age||null,bf:bf,how:how,unit:p.unit||'lb'};
+  }
+  function wt(kg,unit){ return unit==='kg'?Math.round(kg)+' kg':Math.round(kg/LB)+' lb'; }
+  function ht(cm,unit){ if(!cm) return ''; if(unit==='kg') return Math.round(cm)+' cm'; var i=Math.round(cm/2.54); return Math.floor(i/12)+'′'+(i%12)+'″'; }
+
+  /* ---------- Kova's maths after the AI read ---------- */
+  var LEVEL={none:0,some:1,'a lot':2};
+  var BUILD={slim:0,lean:0,average:0,curvy:0,heavier:0,athletic:1,muscular:2,'very muscular':2};
+  function plan(r,Y){
+    Y=Y||you();
+    var t=r.target||{}, mid=function(a){ if(!Array.isArray(a)||a.length!==2) return null; var x=+a[0], y=+a[1]; if(!(x>=2&&y>=2&&x<=60&&y<=60)) return null; return (Math.min(x,y)+Math.max(x,y))/2; };
+    var tbf=mid(t.bodyfat), sexT=t.sex==='female'?'f':t.sex==='male'?'m':Y.sex, note=[];
+    if(tbf==null) return null;
+    /* the same look on your body: women carry about 9 points more essential fat */
+    if(sexT!==Y.sex){ tbf+=Y.sex==='f'?9:-9; note.push('That body is a '+(sexT==='f'?'woman':'man')+'’s; Kova has worked out the same look on '+(Y.sex==='f'?'a woman':'a man')+'.'); }
+    var floor=Y.sex==='f'?16:8;
+    if(tbf<floor){ note.push('That is stage-lean, usually held for a shoot or a show. Kova aims for '+floor+'%, lean and something you can keep.'); tbf=floor; }
+    var mineBf=(r.you&&mid(r.you.bodyfat))||Y.bf, src=r.you&&mid(r.you.bodyfat)?'your photo':Y.how;
+    var out={tbf:Math.round(tbf),sexT:sexT,note:note,build:t.build||'',looks:t.looks||'',caveat:t.caveat||''};
+    /* only the halves that are in the pictures are compared */
+    var vT=t.visible||{upper:true,lower:true}, vY=r.you&&r.you.visible?r.you.visible:{upper:true,lower:true};
+    var up=vT.upper!==false&&vY.upper!==false, low=vT.lower!==false&&vY.lower!==false;
+    var seen=function(m){ return UP.indexOf(m)>=0?up:LOW.indexOf(m)>=0?low:true; };
+    out.visible={upper:vT.upper!==false,lower:vT.lower!==false};
+    if(!out.visible.lower) note.push('Only the upper body is in the picture of your goal, so Kova compared chest, shoulders, arms, back and abs. Add a full-body picture to compare the legs and glutes too.');
+    else if(!out.visible.upper) note.push('Only the lower body is in the picture of your goal, so Kova compared glutes and legs, and the body fat is a rougher read. Add a full-body picture for the upper body.');
+    if(r.you&&r.you.visible&&(r.you.visible.upper===false||r.you.visible.lower===false)) note.push('Your photo shows only the '+(r.you.visible.upper===false?'lower':'upper')+' body, so that half is the one compared.');
+    out.confidence=t.confidence==='low'||(r.you&&r.you.confidence==='low')?'low':t.confidence==='high'?'high':'medium';
+    if(out.confidence==='low') note.push('The picture made this a rough read. A clear, front-on photo in good light makes it exact.');
+    out.cues=(Array.isArray(t.cues)?t.cues:[]).map(String).slice(0,4);
+    out.youCues=r.you&&Array.isArray(r.you.cues)?r.you.cues.map(String).slice(0,4):[];
+    out.focus=(r.focus||[]).filter(function(f){ return f&&LIST.indexOf(f.m)>=0&&seen(f.m); }).slice(0,4);
+    var fm=out.focus.map(function(f){ return f.m; }), n01=function(v){ v=+v; return v>=0&&v<=1; };
+    var sz=function(v){ v=+v; return v>0.012&&v<0.75; };
+    out.marks=(Array.isArray(r.marks)?r.marks:[]).map(function(k){
+      if(!k||!(k.img===1||k.img===2||k.img==='1'||k.img==='2')||fm.indexOf(k.m)<0||!n01(k.x)||!n01(k.y)) return null;
+      var len=k.len!=null?+k.len:+k.h, wid=k.wid!=null?+k.wid:+k.w, a=k.a!=null?+k.a:0;
+      if(!sz(len)||!sz(wid)||!(a>=-180&&a<=180)) return null;
+      return {img:+k.img,m:k.m,x:+k.x,y:+k.y,len:len,wid:wid,a:a};
+    }).filter(Boolean).slice(0,16);
+    if(t.clothed) note.push('Kova read the goal body through clothing, so it is a closer guess than a shirtless photo.');
+    if(r.you&&r.you.clothed) note.push('Kova read your body through clothing; a fitted top or shirtless photo makes your side more exact.');
+    out.standout=(t.standout||[]).filter(function(m){ return LIST.indexOf(m)>=0&&seen(m); }).slice(0,5);
+    if(mineBf==null||!Y.kg){ out.need='numbers'; return out; }
+    out.bf=Math.round(mineBf); out.bfFrom=src; out.kg=Y.kg;
+    var mine=r.you?(r.you.muscle in LEVEL?LEVEL[r.you.muscle]:(BUILD[r.you.build]||0)):0;
+    if(!r.you&&(LEVEL[t.muscle]||0)>0) note.push('Without your photo Kova assumed an untrained build; add one and the muscle to build is exact for you.');
+    var gap=Math.max(0,(LEVEL[t.muscle]||0)-mine);
+    var per=Y.sex==='f'?2:3.5, mus=gap*per;                          /* kg of muscle, mid estimate */
+    var lean=Y.kg*(1-mineBf/100), goalKg=(lean+mus)/(1-tbf/100);
+    var fatNow=Y.kg*mineBf/100, fatGoal=goalKg*tbf/100;
+    out.muscle=[r1(mus*0.7),r1(mus*1.3)]; out.musMid=mus;
+    out.fat=r1(fatNow-fatGoal);                                      /* positive: fat to lose */
+    out.goalKg=goalKg;
+    /* the phase you are in now */
+    var minor=Y.age&&Y.age<18;
+    out.phase=minor?'maint':(mineBf-tbf>6?'cut':mineBf-tbf>2?'lean':mus>0?'leanbulk':'maint');
+    if(minor) note.push('Under 18 Kova does not cut calories: eat to grow, train well, and the look follows.');
+    /* calories and macros from the same engine as Fuel */
+    var M=window.KovaMaint, P=null, q=null;
+    if(M&&M.plan&&Y.hcm&&Y.age){
+      q=JSON.parse(JSON.stringify(Y.p)); q.kg=Y.kg; q.sex=Y.sex; q.goal=out.phase;
+      var G=(M.GOALS||[]).filter(function(g){ return g.id===out.phase; })[0];
+      q.rate=G?G.def:0; q.tgtKg=out.phase==='maint'?null:Math.round(goalKg*10)/10;
+      if(!q.bf) q.bf=Math.round(mineBf);
+      try{ P=M.plan(q); }catch(e){ P=null; }
+    }
+    if(P){ out.kcal=P.kcal; out.p=P.p; out.c=P.c; out.f=P.f; out.maint=P.maint; out.q=q; }
+    /* how long: fat at the phase's weekly rate, muscle at a realistic pace */
+    var G2=M&&M.GOALS?(M.GOALS.filter(function(g){ return g.id===(out.phase==='maint'?'lean':out.phase); })[0]):null;
+    var lossPerWk=Y.kg*((G2&&G2.def)||0.5)/100*0.85, wCut=out.fat>0.5?out.fat/Math.max(0.2,lossPerWk):0;
+    var wMus=mus>0?mus/(Y.sex==='f'?0.1:0.2):0;                      /* about 0.4 or 0.8 kg a month */
+    out.weeks=Math.round(wCut+wMus); out.lossWk=Math.max(0.2,lossPerWk); out.musWk=Y.sex==='f'?0.1:0.2;
+    return out;
+  }
+
+  /* ---------- the AI read (one call) ---------- */
+  var UP=['chest','delts','lats','traps','biceps','triceps','forearms','abs','obliques','lowback'], LOW=['glutes','quads','hams','calves','adductors'];
+  var SYS='You read physique photos for a fitness app. Describe only the visible body. Never say or guess who the person is, even if they look famous, and never comment on a face or attractiveness. Reply with JSON only, no prose:\n'
+    +'{"ok":true,"why_not":"","target":{"sex":"male|female","visible":{"upper":true,"lower":true},"cues":["up to 4 short visible cues"],"bodyfat":[low,high],"confidence":"high|medium|low","build":"slim|lean|athletic|muscular|very muscular|curvy|heavier","muscle":"none|some|a lot","standout":["up to 5 muscles"],"looks":"one plain sentence on the physique","caveat":"one plain sentence (lighting, pump, posing, angle)"},'
+    +'"you":null or {"visible":{"upper":true,"lower":true},"clothed":false,"cues":["..."],"bodyfat":[low,high],"confidence":"high|medium|low","build":"...","muscle":"none|some|a lot"},"focus":[{"m":"muscle","why":"8 to 14 plain words"}],'
+    +'"marks":[{"img":1,"m":"muscle","x":0.5,"y":0.3,"len":0.12,"wid":0.06,"a":0}]}\n'
+    +'In "target", also give "clothed": true when clothes cover the muscles.\n'
+    +'Muscles, only from this list: '+LIST.join(', ')+'. Upper body is chest, shoulders, arms, back and abs; lower body is glutes and legs.\n'
+    +'Image 1 is the body the user wants. If a second image is given it is the user now: fill "you" from it, else "you" is null.\n'
+    +'"visible": which halves of the body are actually in the picture. A shot may show only the upper body, only the lower body, or both: judge only what is visible.\n'
+    +'Body fat, read from what you can see, as an honest range 3 points wide. Men: deep six-pack, veins on the abs and striations about 6-9; clear six-pack and visible obliques 10-12; upper abs showing, little definition below 13-15; flat but no abs 16-19; soft waist 20-24; clear fat around the waist and chest 25+. Women: clear abs and obliques 14-17; abs lines and a defined waist 18-21; flat and toned, no abs 22-25; soft 26-30; 31+. With only the lower body visible, read it from the legs and glutes and set confidence low.\n'
+    +'Clothes: people may wear a shirt, a hoodie, trousers or leggings. Read the body under them from how the fabric fits (tight or loose over the chest, shoulders, arms and waist; how it hangs from the shoulders), shoulder width against the waist, the forearms, hands, neck, jaw and face, and the shape of the glutes and legs through trousers or leggings. Clothes make the read less certain: set confidence to medium or low, but still give your best honest range, and still mark where each muscle is under the clothes.\n'
+    +'"cues": the visible signs you used (for example "clear six-pack", "veins on the forearms", "rounded shoulders", "soft lower belly").\n'
+    +'"muscle" is compared with an average untrained person of the same sex.\n'
+    +'"focus": up to 4 muscles the user must build MORE to look like image 1, biggest difference first, only from halves visible in image 1 (and in image 2 when given). Without image 2, compare with an average untrained build of the user\'s sex.\n'
+    +'"marks": where each focus muscle is in each picture, so the app can draw it on the photo the way an anatomy overlay does: one mark per muscle per side of the body (left and right arm are separate marks). x and y: the centre of the muscle, as fractions of the image width and height (0 to 1 from the top left). len: the length of the muscle along its long axis, wid: its width, both as fractions of the image width. a: the angle of its long axis in degrees, 0 = pointing straight up, 90 = pointing right, -90 = pointing left (an upper arm hanging down is about 0; a chest muscle is about 70 or -70). Follow the muscle on the actual body in that picture, under clothes too. Mark image 1, and image 2 when given; up to 8 marks per image.\n'
+    +'If image 1 shows no human body clearly, set ok to false and say why in why_not.';
+  function ask(imgs,facts){
+    var K=window.KovaModel; if(!K||!K.connected()) return Promise.reject(Object.assign(new Error('signin'),{signin:true}));
+    var c=K.cfg(), P=K.providers[c.p];
+    var text='The user: '+facts+(S.hint?' '+S.hint:'');
+    var content=c.p==='anthropic'
+      ? imgs.map(function(d){ return {type:'image',source:{type:'base64',media_type:K.mime(d),data:d.slice(d.indexOf(',')+1)}}; }).concat([{type:'text',text:text}])
+      : [{type:'text',text:text}].concat(imgs.map(function(d){ return {type:'image_url',image_url:{url:d}}; }));
+    var req=P.build(c.key,c.model,SYS,[{role:'user',content:content}],{temperature:0,max_tokens:700});
+    /* never a spinner forever: 45 seconds, then it says so */
+    var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },45000):0;
+    return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){
+      clearTimeout(tm);
+      if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); });
+      return r.json();
+    }).then(function(d){
+      var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
+      if(a<0||z<a) throw new Error('The answer came back in a form Kova could not read. Try again.');
+      return JSON.parse(raw.slice(a,z+1));
+    });
+  }
+  function fit(d){ var K=window.KovaModel; return K&&K.fit&&/^data:image\//.test(d)?K.fit(d).catch(function(){ return d; }):Promise.resolve(d); }
+  function compare(){
+    if(!S.want||S.busy) return;
+    var Y=you();
+    var facts=(Y.sex==='f'?'woman':'man')+(Y.age?', '+Y.age+' years':'')+(Y.hcm?', '+Math.round(Y.hcm)+' cm':'')+(Y.kg?', '+Math.round(Y.kg)+' kg':'')+(Y.bf?', about '+Math.round(Y.bf)+'% body fat ('+Y.how+')':'')+'.';
+    if(!(window.KovaModel&&KovaModel.connected())){ S.err='Sign in and Kova\u2019s AI reads the picture for you, free.'; paint(); return; }
+    S.busy=true; S.err=''; paint();
+    var once=function(){ return Promise.all([fit(S.want)].concat(S.me?[fit(S.me)]:[])).then(function(imgs){ return ask(imgs,facts); }); };
+    once().catch(function(e){ if(e&&!e.signin&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+      .then(function(r){
+        S.busy=false;
+        if(!r||r.ok===false){ S.err=(r&&r.why_not)||'Kova could not see a body clearly in that picture. Try one where the whole body or torso is in view.'; paint(); return; }
+        S.res=r; var out=plan(r,Y);
+        if(!out){ S.err='Kova could not read a body fat from that picture. Try a clearer one, front-on, in good light.'; paint(); return; }
+        S.out=out; S.ans=null; S.mMe=S.me; S.mWant=S.want; S.col=-1; S.span=0; S.flip=false; S.tab='train'; save(); track('dream_compare',{phase:out.phase||'',focus:(out.focus||[]).length,me:!!S.me});
+        paint(); var hh=document.querySelector('#kdp .kdp-photos'); if(hh&&hh.scrollIntoView) hh.scrollIntoView({behavior:'smooth',block:'start'});
+        if(String(S.q||'').trim()) coach(S.q);
+      })
+      .catch(function(e){
+        S.busy=false;
+        S.err=e&&e.signin?'Sign in and Kova’s AI reads the picture for you, free.':/^4\d\d /.test(String(e&&e.message))?'That picture could not be used. Try another photo or a short video.':e&&e.name==='AbortError'?'Kova\u2019s AI took too long. Try again.':'The connection dropped. Try again.';
+        paint();
+      });
+  }
+  /* ---------- Ask Kova: your question, answered with your split, workouts and meals ----------
+     A second call, text only: the question, what the pictures showed, and
+     Kova's own numbers (phase, calories, macros, days). The meals are added
+     up here and shown against the target, so nothing is taken on trust. */
+  var COACH='You are Kova, a strength and nutrition coach in a fitness app. Answer the user\'s question about getting the physique they want, using only the facts given. Plain words a 12-year-old understands, no hype, no drugs, no supplements beyond protein powder and creatine. Reply with JSON only:\n'
+    +'{"answer":"2 to 4 sentences that answer the question directly","steps":["up to 5 specific things to do, each one line"],'
+    +'"split":[{"day":"Day 1","focus":"what this day trains","ex":[{"n":"exercise name","sets":3,"reps":"8-12","note":"one short cue or empty"}]}],'
+    +'"meals":[{"meal":"Breakfast","food":"foods with grams or cups","kcal":0,"p":0,"c":0,"f":0}],"tips":["up to 3 short tips"]}\n'
+    +'Rules: the split has exactly the number of training days given; train the muscles the user asks about (or the focus muscles) 2 to 3 times a week; 4 to 6 exercises a day; every exercise is 2 or 3 working sets (never more); common gym exercises; for glutes use hip thrusts, Romanian deadlifts, Bulgarian split squats, cable kickbacks and similar; for chest and arms use presses, flyes, curls and triceps work and similar. The meals are one full day (3 to 5 meals) that add up to the calories, protein, carbs and fat given, within 5%; give each meal\'s numbers honestly. Under 18: no calorie deficit. Never say who anyone in a photo is.';
+  function coach(q){
+    var o=S.out, K=window.KovaModel; q=String(q||'').trim();
+    if(!o||!q) return;
+    if(!(K&&K.connected())){ S.ansErr='Sign in and Kova answers you.'; paint(); return; }
+    var Y=you(), days=(Y.p&&Y.p.train&&Y.p.train.days)||((kp('plan')||{}).days||[]).length||4;
+    var facts='The user: '+(Y.sex==='f'?'woman':'man')+(Y.age?', '+Y.age:'')+(Y.hcm?', '+Math.round(Y.hcm)+' cm':'')+(Y.kg?', '+Math.round(Y.kg)+' kg':'')+(o.bf!=null?', about '+o.bf+'% body fat':'')+'. Trains '+days+' days a week.\n'
+      +'The body they want: '+(o.looks||'')+' About '+o.tbf+'% body fat'+(o.build?', '+o.build:'')+'. Stands out: '+(o.standout||[]).join(', ')+'.\n'
+      +'Muscles to build more: '+(o.focus||[]).map(function(f){ return f.m+' ('+f.why+')'; }).join('; ')+'.\n'
+      +(o.kcal?'Kova\'s numbers for them: phase '+o.phase+', '+o.kcal+' calories, '+o.p+' g protein, '+o.c+' g carbs, '+o.f+' g fat a day'+(o.fat>0.5?', about '+o.fat+' kg of fat to lose':'')+(o.musMid>0?', about '+o.musMid+' kg of muscle to build':'')+', about '+o.weeks+' weeks.':'No calorie numbers yet (height, weight or age missing): give the meals as portions without totals.')+'\n'
+      +'Their question: '+q.slice(0,400);
+    S.coaching=true; S.ansErr=''; S.lastQ=q; paint();
+    var c=K.cfg(), P=K.providers[c.p];
+    var req=P.build(c.key,c.model,COACH,[{role:'user',content:facts}],{temperature:0.2,max_tokens:1800});
+    var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },60000):0;
+    var once=function(){ return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){ if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); }); return r.json(); }); };
+    once().catch(function(e){ if(e&&e.name!=='AbortError'&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+      .then(function(d){
+        clearTimeout(tm); S.coaching=false;
+        var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
+        var j=null; try{ j=JSON.parse(raw.slice(a,z+1)); }catch(x){}
+        if(!j||!j.answer){ S.ansErr='Kova’s answer came back in a form it could not read. Ask again.'; paint(); return; }
+        S.ans=cleanAns(j,q,days); keepAns(); track('dream_ask',{days:S.ans.split.length,meals:S.ans.meals.length});
+        paint(); var el=document.querySelector('#kdp .kdp-ans'); if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
+      })
+      .catch(function(e){ clearTimeout(tm); S.coaching=false; S.ansErr=e&&e.name==='AbortError'?'Kova took too long to answer. Ask again.':'The connection dropped. Ask again.'; paint(); });
+  }
+  /* what came back, checked: real days, 2-3 working sets, meals added up here */
+  function cleanAns(j,q,days){
+    var str=function(v,n){ return String(v==null?'':v).slice(0,n||200); };
+    var split=(Array.isArray(j.split)?j.split:[]).slice(0,7).map(function(d){
+      return {day:str(d.day,30),focus:str(d.focus,80),ex:(Array.isArray(d.ex)?d.ex:[]).slice(0,7).map(function(x){ var n=+x.sets; return {n:str(x.n,60),sets:n>=2&&n<=3?n:(n>3?3:2),reps:str(x.reps,12)||'8-12',note:str(x.note,80)}; }).filter(function(x){ return x.n; })};
+    }).filter(function(d){ return d.ex.length; });
+    var meals=(Array.isArray(j.meals)?j.meals:[]).slice(0,6).map(function(m){ var n=function(v){ v=Math.round(+v); return v>=0&&v<5000?v:0; }; return {meal:str(m.meal,30),food:str(m.food,240),kcal:n(m.kcal),p:n(m.p),c:n(m.c),f:n(m.f)}; }).filter(function(m){ return m.food; });
+    var tot={kcal:0,p:0,c:0,f:0}; meals.forEach(function(m){ tot.kcal+=m.kcal; tot.p+=m.p; tot.c+=m.c; tot.f+=m.f; });
+    return {q:q,answer:str(j.answer,900),steps:(Array.isArray(j.steps)?j.steps:[]).slice(0,5).map(function(x){ return str(x,200); }),split:split,meals:meals,tot:tot,tips:(Array.isArray(j.tips)?j.tips:[]).slice(0,3).map(function(x){ return str(x,200); }),days:days};
+  }
+  function keepAns(){ var k=kp(KEY); if(k){ k.ans=S.ans; kset(KEY,k); } }
+  function thumb(d){
+    return new Promise(function(ok){ setTimeout(function(){ ok(''); },2500); try{ var im=new Image(); im.onload=function(){ var s=140/Math.max(im.width,im.height), c=document.createElement('canvas'); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); c.getContext('2d').drawImage(im,0,0,c.width,c.height); ok(c.toDataURL('image/jpeg',0.7)); }; im.onerror=function(){ ok(''); }; im.src=d; }catch(e){ ok(''); } });
+  }
+  function save(){
+    var o=S.out; if(!o) return;
+    var keep={at:Date.now(),out:o,res:S.res};
+    thumb(S.want).then(function(t){ keep.thumb=t; keep.ans=S.ans||null; kset(KEY,keep); decorate(); });
+  }
+
+  /* ---------- the card on Workout ---------- */
+  function card(){
+    var k=kp(KEY), o=k&&k.out, Y=you();
+    var h='<div class="kv-card kdp-card" id="kdpCard"><div class="kv-h"><span>DREAM PHYSIQUE</span>'+(o?'<span class="kdp-k">'+esc(o.phase==='cut'?'Cut first':o.phase==='lean'?'Lean out':o.phase==='leanbulk'?'Build':'Recomp')+'</span>':'')+'</div>';
+    if(o&&o.bf!=null){
+      h+='<div class="kdp-row">'+(k.thumb?'<img class="kdp-th" src="'+esc(k.thumb)+'" alt="The body you want"/>':'')
+        +'<div class="kdp-mini"><div><b>'+o.bf+'%</b><span>you now</span></div><span class="kdp-ar">'+ic('arrow-right')+'</span><div><b>'+o.tbf+'%</b><span>your goal</span></div></div></div>'
+        +'<div class="krc-l">'+esc(lineOf(o,Y))+'</div>';
+    } else if(o){
+      h+='<div class="krc-l">Your goal is saved. Add your height, weight and age so Kova can work out what to gain, lose and eat.</div>';
+    } else {
+      h+='<div class="krc-l">Send a photo or video of the body you want, from an actor, an athlete or anyone. Add one of you and Kova lights up what to build on your own body, maps your change and writes your split and meals.</div>';
+    }
+    return h+'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-kdp="open" role="button" tabindex="0">'+(o?'Open my dream physique':'Find my dream physique')+'</div></div></div>';
+  }
+  function lineOf(o,Y){
+    var bits=[];
+    if(o.fat>0.5) bits.push('Lose about '+wt(o.fat,Y.unit)+' of fat');
+    if(o.musMid>0) bits.push((bits.length?'build ':'Build ')+'about '+wt(o.musMid,Y.unit)+' of muscle');
+    if(o.focus&&o.focus.length) bits.push((bits.length?'focus on ':'Focus on ')+o.focus.slice(0,2).map(function(f){ return NAME[f.m].replace(/ \(.*\)/,'').toLowerCase(); }).join(' and '));
+    return (bits.join(', ')||'You are close: keep training and eating as you are')+'.';
+  }
+  function decorate(){
+    var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
+    var have=document.getElementById('kdpCard'), html=card();
+    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kdpCard'); if(n0) n0.__h=html; } return; }
+    /* right under Training, above Muscle recovery */
+    (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+    var n=document.getElementById('kdpCard'); if(n) n.__h=html;
+  }
+
+  /* ---------- the page ---------- */
+  function page(){
+    var Y=you(), k=kp(KEY), o=S.out||(k&&k.out), r=S.res||(k&&k.res);
+    var want=S.want||(k&&k.thumb)||'';
+    var h='<div class="kz2p-wrap"><div class="kz2p-top"><button type="button" class="back" data-kdp="close" aria-label="Back">'+ic('chevron-left')+'</button>'
+      +'<div class="kz2p-tt"><div class="kz2p-k">WORKOUT</div><div class="title">Dream physique</div></div>'
+      +'<button type="button" class="iconbtn kz2p-q" data-kdp="tour" aria-label="Show me around Dream physique">?</button></div>';
+    var err=S.err?'<div class="kdp-err" role="alert">'+esc(S.err)+(/Sign in/.test(S.err)?' <button type="button" class="chip" data-kdp="signin">Sign in</button>':'')+'</div>':'';
+    if(o){
+      /* after a compare the pictures in are one small row; the result is the page */
+      h+='<section class="card kdp-in kdp-in-s"><div class="kdp-tbs">'
+        +'<button type="button" class="kdp-tb" data-kdp="want">'+(want?'<img class="kdp-want" src="'+esc(want)+'" alt="The body you want"/>':'<i>'+ic('video')+'</i>')+'<span>Goal</span></button>'
+        +'<button type="button" class="kdp-tb" data-kdp="me">'+(S.me?'<img class="kdp-me" src="'+esc(S.me)+'" alt="You now"/>':'<i>'+ic('plus')+'</i>')+'<span>'+(S.me?'You':'Add you')+'</span></button>'
+        +'<button type="button" class="kdp-tb" data-kdp="link"><i>'+ic('arrow-up-right')+'</i><span>Link</span></button>'
+        +'<button type="button" class="kz2p-go kdp-go" data-kdp="compare"'+(S.want&&!S.busy?'':' disabled')+'>'+ic('sparkles')+'<span>'+(S.busy?'Reading…':'Compare again')+'</span></button></div>'
+        +'<div class="kdp-you">'+youLine(Y)+'</div>'+err+'</section>';
+      return h+results(o,Y,r)+'</div>';
+    }
+    /* the two pictures in */
+    h+='<section class="card kdp-in"><div class="kz2p-k">THE BODY YOU WANT</div>'
+      +(want?'<img class="kdp-want" src="'+esc(want)+'" alt="The body you want"/>':'<div class="sub">A photo or a short video of the body you want: an actor, an athlete, an influencer, anyone. Kova reads the body, never who it is.</div>')
+      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="want">'+ic('video')+(want?'Change it':'Photo or video')+'</button><button type="button" class="chip" data-kdp="link">'+ic('arrow-up-right')+'Paste a link</button></div>'
+      +'<div class="kz2p-k" style="margin-top:14px">YOU NOW, OPTIONAL</div>'
+      +(S.me?'<img class="kdp-me" src="'+esc(S.me)+'" alt="You now"/>':'<div class="sub">A photo of you, front-on, and Kova marks what to build on your own body. Without it Kova uses your height, weight and age.</div>')
+      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="me">'+ic('video')+(S.me?'Change my photo':'Add my photo')+'</button></div>'
+      +'<div class="kdp-you">'+youLine(Y)+'</div>'
+      +'<label class="kz2p-k kdp-ql" for="kdpQ" style="display:block;margin-top:14px">WHAT DO YOU WANT? OPTIONAL</label>'
+      +'<textarea id="kdpQ" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(Y.sex==='f'?'How do I make my glutes bigger like her?':'How do I get my chest and arms bigger like him?')+'">'+esc(S.q||'')+'</textarea>'
+      +'<button type="button" class="kz2p-go kdp-go" data-kdp="compare"'+(S.want&&!S.busy?'':' disabled')+'>'+ic('sparkles')+'<span>'+(S.busy?'Reading the pictures…':'Compare')+'</span></button>'
+      +err+'</section>';
+    return h+'</div>';
+  }
+  function youLine(Y){
+    if(!Y.kg||!Y.hcm||!Y.age) return 'Your numbers: '+(Y.kg?wt(Y.kg,Y.unit):'weight not set')+(Y.hcm?', '+ht(Y.hcm,Y.unit):'')+'. <button type="button" class="kdp-link" data-kdp="maint">Add height, weight and age</button>';
+    return 'You: '+(Y.sex==='f'?'woman':'man')+', '+Y.age+', '+ht(Y.hcm,Y.unit)+', '+wt(Y.kg,Y.unit)+(Y.bf?', about '+Math.round(Y.bf)+'% body fat':'')+'. <button type="button" class="kdp-link" data-kdp="maint">Change</button>';
+  }
+  function nm(m){ return NAME[m].replace(/ \(.*\)/,''); }
+  /* a photo with the focus muscles lit on it in Kova's look: a soft orange
+     glow shaped and angled along each muscle with a fine light edge, a thin
+     line out to a small glass label (the owner: "use the real person's body
+     and highlight what they need to fix", in Kova's design) */
+  var GID=0;
+  function marked(src,marks,label,cls,ar){
+    ar=ar>0.2&&ar<5?ar:1.25;
+    var H=100*ar, g='kdpg'+(++GID), shapes='', lines='', tags='', by={}, order=[], side={L:[],R:[]};
+    marks.forEach(function(k){
+      var cx=k.x*100, cy=k.y*H, rx=Math.max(1.2,k.wid*50), ry=Math.max(1.6,k.len*50);
+      shapes+='<ellipse class="kdp-mk" data-m="'+k.m+'" cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" rx="'+rx.toFixed(1)+'" ry="'+ry.toFixed(1)+'" transform="rotate('+(+k.a||0).toFixed(0)+' '+cx.toFixed(1)+' '+cy.toFixed(1)+')" fill="url(#'+g+')"/>';
+      if(!by[k.m]){ by[k.m]=[]; order.push(k.m); } by[k.m].push({k:k,cx:cx,cy:cy});
+    });
+    /* one label per muscle, sides taken in turn (the mark on that side), a
+       short line out from the muscle, labels at least 8% apart */
+    order.forEach(function(m){
+      var sd=side.L.length<=side.R.length?'L':'R', L=by[m].slice().sort(function(a,b){ return sd==='L'?a.cx-b.cx:b.cx-a.cx; });
+      side[sd].push(L[0]);
+    });
+    ['L','R'].forEach(function(sd){
+      var L=side[sd].sort(function(a,b){ return a.cy-b.cy; }), last=-99;
+      L.forEach(function(t){
+        var y=Math.max(t.cy,last+H*0.08,H*0.04); y=Math.min(y,H*0.96); last=y;
+        var lx=sd==='L'?Math.max(28,Math.min(t.cx-6,t.cx-22<28?28:t.cx-22)):Math.min(72,Math.max(t.cx+6,t.cx+22>72?72:t.cx+22));   /* room for the label's words */
+        lines+='<line class="kdp-ln" x1="'+t.cx.toFixed(1)+'" y1="'+t.cy.toFixed(1)+'" x2="'+lx.toFixed(1)+'" y2="'+y.toFixed(1)+'"/><circle class="kdp-dot" cx="'+t.cx.toFixed(1)+'" cy="'+t.cy.toFixed(1)+'" r="1.1"/>';
+        tags+='<span class="kdp-ml kdp-ml-'+sd+'" style="top:'+(y/H*100).toFixed(1)+'%;'+(sd==='L'?'right:'+(100-lx).toFixed(1)+'%':'left:'+lx.toFixed(1)+'%')+'"><i></i>'+esc(nm(t.k.m))+'</span>';
+      });
+    });
+    return '<figure class="kdp-pf '+(cls||'')+'"><div class="kdp-pw"><img src="'+esc(src)+'" alt="'+esc(label)+'"/>'
+      +'<svg viewBox="0 0 100 '+H.toFixed(1)+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><radialGradient id="'+g+'"><stop offset="0" stop-color="#FFA36B" stop-opacity=".9"/><stop offset=".55" stop-color="#E87A3C" stop-opacity=".5"/><stop offset="1" stop-color="#E87A3C" stop-opacity=".08"/></radialGradient></defs>'+shapes+lines+'</svg>'+tags+'</div></figure>';
+  }
+  function results(o,Y,r){
+    return hero(o,Y)+timeline(o,Y)+planCard(o,Y)+honest(o);
+  }
+  /* 1. what to build, on you: your own photo when you added one */
+  function hero(o,Y){
+    var mk=o.marks||[], mY=S.me&&S.me===S.mMe?mk.filter(function(k){ return k.img===2; }):[], mT=S.want&&S.want===S.mWant?mk.filter(function(k){ return k.img===1; }):[];
+    var onYou=mY.length&&!(S.flip&&mT.length), onGoal=!onYou&&mT.length, h='<section class="card kdp-photos"><div class="kz2p-k">'+(onYou?'WHAT TO BUILD, ON YOU':onGoal?'WHAT TO BUILD, ON YOUR GOAL':'WHAT TO BUILD')+'</div>';
+    if(onYou) h+=marked(S.me,mY,'You now','kdp-you-p',S.meAR);
+    else if(onGoal) h+=marked(S.want,mT,'Your goal','kdp-goal-p',S.wantAR);
+    if(onYou&&mT.length) h+='<button type="button" class="kdp-sw" data-kdp="flip"><img src="'+esc(S.want)+'" alt=""/><span><b>Your goal</b>See what to build marked on it</span>'+ic('chevron-right')+'</button>';
+    else if(onGoal&&mY.length) h+='<button type="button" class="kdp-sw" data-kdp="flip"><img src="'+esc(S.me)+'" alt=""/><span><b>You now</b>Back to it marked on you</span>'+ic('chevron-right')+'</button>';
+    else if(!mY.length) h+='<button type="button" class="kdp-sw kdp-sw-add" data-kdp="me"><i>'+ic('plus')+'</i><span><b>Add a photo of you</b>Kova marks what to build on your own body</span>'+ic('chevron-right')+'</button>';
+    if(o.focus&&o.focus.length) h+='<ol class="kdp-mus">'+o.focus.map(function(x){ return '<li><b>'+esc(nm(x.m))+'</b><span>'+esc(x.why||'')+'</span></li>'; }).join('')+'</ol>';
+    else h+='<div class="sub">Nothing stands out to build more: you are close in muscle.</div>';
+    return h+'<div class="kdp-conf">'+(o.confidence==='high'?'A clear read.':o.confidence==='low'?'A rough read.':'A fair read.')+(o.visible&&!(o.visible.upper&&o.visible.lower)?' '+(o.visible.upper?'Upper body only.':'Lower body only.'):'')+(mY.length?' Your photo stays on this phone for now and is not saved.':'')+'</div></section>';
+  }
+  /* 2. your change over time, after the owner's reference: 3 month / 6 month
+     / 1 year pills, a dashed track for each point in time, the dream as the
+     orange tick at the top, where you will be as the bar, and a floating
+     card with the big number. Kova's maths at the same pace as the time
+     estimate: the fat first, then the muscle. */
+  var SPAN={3:{wk:13,n:'3 months',l:['Now','2 wk','4 wk','6 wk','8 wk','10 wk','3 mo']},6:{wk:26,n:'6 months',l:['Now','1 mo','2 mo','3 mo','4 mo','5 mo','6 mo']},12:{wk:52,n:'1 year',l:['Now','2 mo','4 mo','6 mo','8 mo','10 mo','1 yr']}};
+  function at(o,wk){
+    var fat=o.fat>0.5?o.fat:0, gain=o.fat<0?-o.fat:0, mus=o.musMid||0, lw=o.lossWk||0.3, mw=o.musWk||0.2;
+    var lost=Math.min(fat,lw*wk), wCut=fat?fat/lw:0, built=wk>wCut?Math.min(mus,mw*(wk-wCut)):0;
+    var add=mus>0?gain*built/mus:0, kg=o.kg-lost+built+add, all=fat+mus;
+    return {pct:all>0?Math.min(100,Math.round((lost+built)/all*100)):100,kg:kg,bf:(o.kg*o.bf/100-lost+add)/kg*100,lost:lost,built:built};
+  }
+  function w1(kg,unit){ var v=unit==='kg'?kg:kg/LB; return (v<10?Math.round(v*10)/10:Math.round(v))+(unit==='kg'?' kg':' lb'); }
+  function timeline(o,Y){
+    var h='<section class="card kdp-tl"><div class="kz2p-k">YOUR CHANGE</div>';
+    if(o.bf==null) return h+'<div class="sub">Add your height, weight and age and Kova maps out your change: 3 months, 6 months and a year from now.</div><button type="button" class="chip" data-kdp="maint">Add them</button></section>';
+    var sp=SPAN[S.span]?S.span:o.weeks<=13?3:o.weeks<=26?6:12, D=SPAN[sp], pts=[], i;
+    for(i=0;i<7;i++) pts.push(at(o,D.wk*i/6));
+    var sel=S.col>=0&&S.col<7?S.col:6, P=pts[sel], dk=P.kg-o.kg, br=P.pct>50;   /* the card never covers the picked bar: above a low one, below a high one */
+    h+='<div class="kdp-pills" role="group" aria-label="How far ahead">'+[3,6,12].map(function(s){ return '<button type="button" class="'+(s===sp?'on':'')+'" aria-pressed="'+(s===sp)+'" data-kdp="span" data-s="'+s+'">'+SPAN[s].n+'</button>'; }).join('')+'</div>'
+      +'<div class="kdp-ch"><div class="kdp-ax"><span>Dream</span><span>50%</span><span>Now</span></div><div class="kdp-cols">'
+      +pts.map(function(p,i){ return '<button type="button" class="kdp-col'+(i===sel?' on':'')+(p.pct>=100?' done':'')+'" data-kdp="col" data-i="'+i+'" aria-label="'+esc(D.l[i]+': '+p.pct+'% of the way')+'"><span class="kdp-trk"><i class="kdp-tg"></i><i class="kdp-bar" style="bottom:'+p.pct+'%"></i></span><span class="kdp-xl">'+esc(D.l[i])+'</span></button>'; }).join('')
+      +'</div><div class="kdp-fc'+(br?' br':'')+'" aria-live="polite"><div class="kdp-fn">'+P.pct+'<small>%</small><em>'+(Math.abs(dk)<0.25?'same weight':(dk<0?'−':'+')+w1(Math.abs(dk),Y.unit)+' '+(dk<0?'↘':'↗'))+'</em></div>'
+      +'<div class="kdp-fl">'+(sel?'of the way to your dream body, '+(P.pct>=100?'there by ':'at ')+esc(D.l[sel].replace('wk','weeks').replace('mo','months').replace('1 months','1 month').replace('1 yr','1 year')):'where you start')+'</div></div></div>'
+      +'<div class="kdp-nums"><div><b>'+o.bf+'→'+Math.round(P.bf)+'%</b><span>body fat</span></div><div><b>'+(P.lost>0.05?'−'+w1(P.lost,Y.unit):'0')+'</b><span>fat lost</span></div><div><b>'+(P.built>0.05?'+'+w1(P.built,Y.unit):'0')+'</b><span>muscle built</span></div></div>'
+      +'<div class="kdp-all">In all: '+(o.fat>0.5?wt(o.fat,Y.unit):'no')+' fat to lose, '+(o.musMid>0?wt(o.musMid,Y.unit)+' muscle to build ('+wt(o.muscle[0],Y.unit)+'–'+wt(o.muscle[1],Y.unit)+')':'no muscle to build')+', about '+(o.weeks>=8?Math.round(o.weeks/4.3)+' months':o.weeks+' weeks')+' at a steady pace. An estimate if you follow the plan: the fat first, then about '+w1((o.musWk||0.2)*4.33,Y.unit)+' of muscle a month.</div>';
+    return h+'</section>';
+  }
+  /* 3. the plan: Train / Eat / Steps, Kova's own until you ask, then the answer */
+  function planCard(o,Y){
+    var A=S.ans, tab=S.tab||'train', h='<section class="card kdp-ans"><div class="kz2p-k">YOUR PLAN</div>';
+    if(A) h+='<div class="kdp-aq">“'+esc(A.q)+'”</div><p class="kdp-aa">'+esc(A.answer)+'</p>';
+    h+='<div class="kdp-pills" role="tablist">'+[['train','Train'],['eat','Eat'],['do','Steps']].map(function(t){ return '<button type="button" role="tab" class="'+(t[0]===tab?'on':'')+'" aria-selected="'+(t[0]===tab)+'" data-kdp="tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>';
+    h+='<div class="kdp-tab">'+(tab==='eat'?eatTab(o,Y,A):tab==='do'?stepsTab(o,Y,A):trainTab(o,Y,A))+'</div>';
+    h+='<div class="kdp-ask">'+(A?'':'<div class="sub">Ask what you want, like “'+esc(Y.sex==='f'?'how do I make my glutes bigger like her?':'how do I get my chest and arms bigger like him?')+'”, and Kova writes your split and a day of meals.</div>')
+      +'<textarea id="kdpAsk" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(A?'Ask something else':'What do you want to know?')+'"></textarea>'
+      +'<button type="button" class="kz2p-go" data-kdp="ask"'+(S.coaching?' disabled':'')+'>'+ic('sparkles')+'<span>'+(S.coaching?'Kova is writing your plan…':'Ask Kova')+'</span></button>'
+      +(S.ansErr?'<div class="kdp-err" role="alert">'+esc(S.ansErr)+'</div>':'')+'</div>';
+    return h+'</section>';
+  }
+  function trainTab(o,Y,A){
+    var fo=o.focus||[], h='';
+    if(A&&A.split.length){
+      h+='<div class="kdp-ah">Your split, '+A.split.length+' days</div><div class="kdp-rows">'+A.split.map(function(d,i){ return '<button type="button" class="kdp-row2" data-kdp="day" data-i="'+i+'"><b>'+esc(d.day)+'</b><span>'+esc(d.focus)+'</span><em>'+d.ex.length+' exercise'+(d.ex.length===1?'':'s')+'</em>'+ic('chevron-right')+'</button>'; }).join('')+'</div>'
+        +'<button type="button" class="kz2p-go" data-kdp="addsplit">'+ic('plus')+'<span>Add these exercises to my plan</span></button>';
+      if(fo.length) h+='<div class="kdp-more">One move for each muscle to build: '+esc(fo.map(function(x){ return MOVE[x.m]; }).join(', '))+'. <button type="button" class="kdp-link" data-kdp="addplan">Add them too</button></div>';
+      return h;
+    }
+    if(!fo.length) return '<div class="sub">Nothing to add: keep your training as it is, or ask Kova below for a split.</div>';
+    return '<div class="kdp-rows">'+fo.map(function(x){ return '<div class="kdp-row2"><b>'+esc(MOVE[x.m])+'</b><span>'+esc(nm(x.m))+'</span><em>3 × 8-12, twice a week</em></div>'; }).join('')+'</div>'
+      +'<button type="button" class="kz2p-go" data-kdp="addplan">'+ic('plus')+'<span>Add to my plan</span></button>';
+  }
+  function eatTab(o,Y,A){
+    if(!o.kcal) return '<div class="sub">Add your height, weight and age and Kova works out your calories and macros for this goal.</div><button type="button" class="chip" data-kdp="maint">Add them</button>';
+    var PH={cut:'Cut first: lose the fat, keep the muscle',lean:'Lean out slowly, get defined',leanbulk:'Build: a small surplus for muscle',maint:'Recomp: hold your weight, build as you go'};
+    var h='<div class="kdp-ph">'+esc(PH[o.phase])+'</div><div class="kdp-mac"><div class="kdp-kc"><b>'+o.kcal+'</b><span>calories a day</span></div><div class="kdp-mb">'
+      +[['Protein',o.p,4],['Carbs',o.c,4],['Fat',o.f,9]].map(function(m){ var s=Math.round(m[1]*m[2]/o.kcal*100); return '<div><span>'+m[0]+'</span><i><u style="width:'+cl(s,2,100)+'%"></u></i><b>'+m[1]+' g</b></div>'; }).join('')+'</div></div>';
+    if(A&&A.meals.length){
+      var ok=Math.abs(A.tot.kcal-o.kcal)<=o.kcal*0.08&&Math.abs(A.tot.p-o.p)<=o.p*0.12;
+      h+='<ul class="kdp-meals">'+A.meals.map(function(m){ return '<li><b>'+esc(m.meal)+'</b><em>'+(m.kcal?m.kcal+' cal · '+m.p+' g protein':'')+'</em><span>'+esc(m.food)+'</span></li>'; }).join('')+'</ul>'
+        +(A.tot.kcal?'<div class="kdp-tot'+(ok?'':' off')+'">Adds up to '+A.tot.kcal+' calories and '+A.tot.p+' g protein'+(ok?', on your target ('+o.kcal+' and '+o.p+' g).':'. Your target is '+o.kcal+' and '+o.p+' g: adjust the portions to match.')+'</div>':'');
+    }
+    return h+'<div class="kdp-more">Worked out like Fuel: your maintenance is about '+o.maint+' calories.</div><button type="button" class="kz2p-go" data-kdp="useplan">'+ic('check')+'<span>Use this plan in Fuel</span></button>';
+  }
+  function stepsTab(o,Y,A){
+    var st=A&&A.steps.length?A.steps:[];
+    if(!st.length){
+      if(o.kcal) st.push('Eat about '+o.kcal+' calories with '+o.p+' g of protein a day.');
+      if(o.focus&&o.focus.length) st.push('Train '+o.focus.slice(0,3).map(function(x){ return nm(x.m).toLowerCase(); }).join(', ')+' twice a week, 2 to 3 hard sets each.');
+      if(o.fat>0.5) st.push('Lose about '+wt(o.fat,Y.unit)+' of fat first'+(o.musMid>0?', then build about '+wt(o.musMid,Y.unit)+' of muscle':'')+'.');
+      else if(o.musMid>0) st.push('Build about '+wt(o.musMid,Y.unit)+' of muscle with a small surplus.');
+      st.push('Add a rep or a little weight each week, and sleep 7 to 9 hours.');
+    }
+    return '<ol class="kdp-steps">'+st.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ol>'
+      +(A&&A.tips.length?'<ul class="kdp-tips">'+A.tips.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul>':'');
+  }
+  function daySheet(i){
+    var A=S.ans, d=A&&A.split[i]; if(!d||!window.openSheet) return;
+    openSheet('<div class="kdp-sh"><div class="title-s" style="font-size:17px">'+esc(d.day)+'</div><div class="sub" style="margin:2px 0 10px">'+esc(d.focus)+'</div><ul class="kdp-exs">'
+      +d.ex.map(function(x){ return '<li><b>'+esc(x.n)+'</b><em>'+x.sets+' × '+esc(x.reps)+'</em>'+(x.note?'<span>'+esc(x.note)+'</span>':'')+'</li>'; }).join('')+'</ul></div>');
+  }
+  /* 4. what Kova saw and how sure it is */
+  function honest(o){
+    var notes=(o.note||[]).concat(o.caveat?[o.caveat]:[]).concat(['A body fat read from a photo is an estimate, within about 3 points. Lighting, a pump and posing change how a body looks.']);
+    return '<section class="card kdp-honest"><div class="kz2p-k">GOOD TO KNOW</div><p class="kdp-looks"><b>Your goal:</b> '+esc(o.looks||'')+' About '+o.tbf+'% body fat'+(o.build?', '+esc(o.build)+' build':'')+'.'
+      +(o.standout&&o.standout.length?' What stands out: '+esc(o.standout.map(function(m){ return nm(m).toLowerCase(); }).join(', '))+'.':'')+'</p>'
+      +(o.cues&&o.cues.length?'<p>Kova saw: '+esc(o.cues.join(', '))+(o.youCues&&o.youCues.length?'. In your photo: '+esc(o.youCues.join(', ')):'')+'.</p>':'')
+      +notes.map(function(n){ return '<p>'+esc(n)+'</p>'; }).join('')+'</section>';
+  }
+  function addSplit(){
+    var A=S.ans, G=window.KovaGoal; if(!A||!G||!G.addToPlan) return;
+    var added=[], why='';
+    A.split.forEach(function(d){ d.ex.forEach(function(x){ var r=G.addToPlan(x.n,x.sets,x.reps); if(r&&r.ok) added.push(x.n); else if(r&&r.msg&&!why) why=r.msg; }); });
+    track('dream_addsplit',{n:added.length});
+    say(added.length?'Added '+added.length+' exercise'+(added.length===1?'':'s')+' to your plan.':(why||'They are already in your plan.'));
+  }
+  function paint(){ var el=document.getElementById('kdp'); if(!el) return; var y=el.scrollTop; el.innerHTML=page(); el.scrollTop=y; }
+  function open(){
+    var el=document.getElementById('kdp');
+    if(!el){ el=document.createElement('div'); el.id='kdp'; el.className='kz2p kdp'; el.setAttribute('role','dialog'); el.setAttribute('aria-label','Dream physique'); (document.getElementById('app')||document.body).appendChild(el); }
+    var k=kp(KEY); if(!S.out&&k&&k.out){ S.out=k.out; S.res=k.res; S.ans=k.ans||null; }
+    paint(); S.open=true; track('dream_open',{});
+    if(window.KovaTour&&KovaTour.once&&KovaTour.once('dreampage')) setTimeout(tour,500);
+  }
+  function close(){ var el=document.getElementById('kdp'); if(el) el.remove(); S.open=false; decorate(); }
+
+  /* ---------- pictures in ---------- */
+  var file=null;
+  function pick(which){
+    if(!file){ file=document.createElement('input'); file.type='file'; file.accept='image/*,video/*'; file.style.display='none'; document.body.appendChild(file); }
+    file.value=''; file.onchange=function(){ var f=file.files&&file.files[0]; if(f) take(f,which); };
+    file.click();
+  }
+  function take(f,which){
+    var set=function(d){ if(!d){ S.err='Kova could not open that file. Try a photo.'; paint(); return; } if(which==='me') S.me=d; else { S.want=d; S.hint=''; } S.err=''; paint(); arOf(d,which); if(S.out&&!S.busy) compare(); };
+    if(/^video\//.test(f.type)){
+      var g=window.KovaLook&&KovaLook.videoStills?KovaLook.videoStills(f):Promise.resolve([]);
+      g.then(function(st){ set(st&&st.length?st[Math.min(1,st.length-1)]:''); });
+      return;
+    }
+    var fr=new FileReader(); fr.onload=function(){ set(String(fr.result)); }; fr.readAsDataURL(f);
+  }
+  /* the shape of each picture, so the drawn muscles sit exactly on it */
+  function arOf(d,which){ try{ var im=new Image(); im.onload=function(){ var w=im.naturalWidth||im.width, h=im.naturalHeight||im.height; if(w&&h){ if(which==='me') S.meAR=h/w; else S.wantAR=h/w; } }; im.src=d; }catch(e){} }
+  function linkSheet(){
+    if(!window.openSheet) return;
+    openSheet('<div class="mc-link"><div class="title-s" style="font-size:17px">Paste a link</div><div class="sub" style="margin:4px 0 10px;line-height:1.5">A YouTube, TikTok or Instagram video, or any page with a picture of the body you want.</div>'
+      +'<input class="srch" id="kdpUrl" inputmode="url" autocomplete="off" placeholder="https://..." style="width:100%"/><button class="btn" id="kdpUrlGo" style="margin-top:10px;width:100%">Use this link</button><div class="sub" id="kdpUrlMsg" style="margin-top:8px"></div></div>');
+    var inp=document.getElementById('kdpUrl'), go2=document.getElementById('kdpUrlGo'), msg=document.getElementById('kdpUrlMsg');
+    go2.onclick=function(){
+      var u=String(inp.value||'').trim(); if(!/^https?:\/\/\S+\.\S+/.test(u)){ msg.textContent='That does not look like a link. It starts with https://'; return; }
+      if(!(window.KovaLink&&KovaLink.authFetch)||!(window.KovaModel&&KovaModel.connected())){ msg.textContent='Sign in first: reading a link uses Kova’s AI.'; return; }
+      go2.disabled=true; msg.textContent='Reading the link…';
+      KovaLink.authFetch('/scan/link',{json:{url:u}}).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j&&j.error||'That link could not be read.'); return j; }); })
+        .then(function(j){ if(!j.image) throw new Error('That link has no picture Kova can read. Try a screenshot.'); if(window.closeSheet) closeSheet(); S.want=j.image; arOf(j.image,'want'); S.hint=j.title?'The picture comes from a video or page titled "'+String(j.title).slice(0,120)+'" (do not identify anyone).':''; S.err=''; paint(); })
+        .catch(function(e){ go2.disabled=false; msg.textContent=String(e&&e.message||e).slice(0,160); });
+    };
+  }
+
+  /* ---------- acting on it ---------- */
+  function addPlan(){
+    var o=S.out||(kp(KEY)||{}).out; if(!o||!o.focus) return;
+    var G=window.KovaGoal; if(!G||!G.addToPlan){ say('Open Workout once, then try again.'); return; }
+    var added=[], why='';
+    o.focus.forEach(function(x){ var r=G.addToPlan(MOVE[x.m],3,'8-12'); if(r&&r.ok) added.push(MOVE[x.m]); else if(r&&r.msg&&!why) why=r.msg; });
+    track('dream_addplan',{n:added.length});
+    say(added.length?'Added to your split: '+added.join(', ')+'.':(why||'Already in your plan.'));
+  }
+  function usePlan(){
+    var o=S.out||(kp(KEY)||{}).out, M=window.KovaMaint; if(!o||!o.q||!M||!M.save) return;
+    var q=JSON.parse(JSON.stringify(o.q)); q.applied=true; q.v=1;
+    try{ M.save(q); }catch(e){ kset('maint',q); }
+    track('dream_useplan',{phase:o.phase});
+    say('Fuel now uses this plan: '+o.kcal+' calories, '+o.p+' g protein a day.');
+  }
+
+  /* ---------- its own tour (the owner's rule: every new page shows you around) ---------- */
+  var TOUR=[['.kdp-in','The body you want','A photo, a video or a link. Add a photo of you too and your side is exact.'],
+    ['.kdp-go','Compare','Kova reads the body (never who it is) and works out the rest itself: what to lose, what to build, how to eat.'],
+    ['.kdp-in .kdp-you','Your numbers','Your height, weight and age set the calories and the weight that look is on your frame.']];
+  function tour(){
+    if(!window.KovaTour||!KovaTour.run) return;
+    var el=document.getElementById('kdp'); if(!el) return;
+    var steps=TOUR.concat(S.out?[['.kdp-photos','What to build','The glowing areas are the muscles to build more, on your own photo when you add one.'],['.kdp-tl','Your change','3 months, 6 months or a year: where you will be if you follow the plan. Tap a point in time.'],['.kdp-ans','Your plan','Train, Eat and Steps. Ask Kova anything and it writes your split and meals.']]:[])
+      .filter(function(t){ return el.querySelector(t[0]); })
+      .map(function(t){ return {t:t[1],d:t[2],el:function(){ return el.querySelector(t[0]); }}; });
+    KovaTour.run(steps,{color:'#E87A3C'});
+    var tt=document.getElementById('ksTour'); if(tt) tt.style.zIndex='9700';
+  }
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-kdp]'); if(!b) return;
+    var a=b.getAttribute('data-kdp');
+    if(a==='open'){ open(); return; }
+    if(a==='close'){ close(); return; }
+    if(a==='tour'){ tour(); return; }
+    if(a==='want'){ pick('want'); return; }
+    if(a==='me'){ pick('me'); return; }
+    if(a==='link'){ linkSheet(); return; }
+    if(a==='compare'){ var qi=document.getElementById('kdpQ'); if(qi) S.q=qi.value; compare(); return; }
+    if(a==='ask'){ var ai=document.getElementById('kdpAsk'), v=ai&&ai.value.trim(); if(!v){ if(ai) ai.focus(); return; } S.q=v; coach(v); return; }
+    if(a==='addsplit'){ addSplit(); return; }
+    if(a==='span'){ S.span=+b.getAttribute('data-s'); S.col=-1; paint(); return; }
+    if(a==='col'){ S.col=+b.getAttribute('data-i'); paint(); return; }
+    if(a==='tab'){ S.tab=b.getAttribute('data-t'); paint(); return; }
+    if(a==='day'){ daySheet(+b.getAttribute('data-i')); return; }
+    if(a==='flip'){ S.flip=!S.flip; paint(); return; }
+    if(a==='addplan'){ addPlan(); return; }
+    if(a==='useplan'){ usePlan(); return; }
+    if(a==='maint'){ close(); if(typeof go==='function') go('maint'); return; }
+    if(a==='signin'){ close(); if(typeof go==='function') go('settings'); return; }
+  });
+  document.addEventListener('input',function(e){ if(e.target&&e.target.id==='kdpQ') S.q=e.target.value; });
+  document.addEventListener('keydown',function(e){ var b=e.target.closest&&e.target.closest('.kdp-card [data-kdp][role="button"]'); if(b&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); b.click(); } });
+  var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },100); }
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kdpCard,#kdp,#krcCard,#krsCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('kova:screen',soon);
+  return {open:open,close:close,plan:plan,you:you,card:card,decorate:decorate,at:at,compare:compare,coach:coach,cleanAns:cleanAns,take:take,addPlan:addPlan,addSplit:addSplit,usePlan:usePlan,TOUR:TOUR,SYS:SYS,COACH:COACH,_S:S,LIST:LIST,MOVE:MOVE};
 })();
 
 </script>
