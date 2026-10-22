@@ -24,10 +24,10 @@ window.KovaWhatsNew=(function(){
   /* newest first */
   var REL=[
     {id:'new-2026-10-23',title:'Attachments, plain words and easier how-to',
-      lines:['Save the attachment you use (rope, bar, handle) on any exercise','Your muscles this week in plain words: on track, needs work, sore','How to do each exercise in a few easy words'],
+      lines:['Save the attachment you use (rope, bar, handle) on any exercise','Your muscles this week in one word: weak, mild, needs work, stronger, sore','How to do each exercise in a few easy words'],
       steps:[
         ['session','Attachments','Tap the button under an exercise to save the rope, bar or handle you use. Kova remembers it next time.',function(){ return first('#s-session .katt-chip')||q('#addExBtn'); }],
-        ['customize','Your muscles this week','No more numbers like 5/16: each muscle says how it is doing, and when it is sore.',function(){ return q('#volList'); }],
+        ['customize','Your muscles this week','No more numbers like 5/16: each muscle says weak, mild, needs work, stronger or sore.',function(){ return q('#volList'); }],
         ['move','Easier how-to','Every exercise explains the moves in a few simple words.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }]
       ]},
     {id:'new-2026-10-22',title:'Recovery, stretching, clearer pictures and smarter scans',

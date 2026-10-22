@@ -131,9 +131,9 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   doc.querySelector('#modeList .mopt[data-id="bodybuilding"]') || doc.getElementById('modePill').click(); await wait(20);
   doc.querySelector('#modeList .mopt[data-id="bodybuilding"]').click(); await wait(150);
   const quads = [...doc.querySelectorAll('#volList .volrow')].find((r) => /Quads/.test(r.textContent));
-  ck('the Muscles tab counts the sets you logged this week (3 work sets of quads, warm-up left out), said in plain words, not "3/16"', quads && /3 hard sets this week/.test(quads.getAttribute('title')) && /Do more/.test(quads.textContent) && !/\d+\/\d+/.test(quads.textContent));
+  ck('the Muscles tab counts the sets you logged this week (3 work sets of quads, warm-up left out), said in plain words, not "3/16"', quads && /3 hard sets this week/.test(quads.getAttribute('title')) && /Needs work/.test(quads.textContent) && !/\d+\/\d+/.test(quads.textContent));
   const volWords = [...doc.querySelectorAll('#volList .volrow')].map((r) => r.querySelector('.volval').textContent);
-  ck('…muscles not trained yet say so', volWords.some((t) => t === 'Not trained yet'));
+  ck('…muscles not trained this week say Weak', volWords.some((t) => t === 'Weak'));
   ck('and the tip names the muscle that needs the most work', /Quads needs the most work this week/.test(doc.getElementById('cInsight').textContent) || /needs the most work/.test(doc.getElementById('cInsight').textContent));
 
   // ---- the quiz

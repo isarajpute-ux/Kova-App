@@ -39,7 +39,7 @@ for (const theme of ['dark', 'soft', 'light']) {
   /* the muscles list in plain words */
   await p.evaluate(() => go('customize')); await p.waitForTimeout(800);
   const vol = await p.evaluate(() => [...document.querySelectorAll('#volList .volval')].map((x) => x.textContent));
-  ck(theme + ': the muscles list says how each muscle is doing, no numbers like 5/16', vol.length >= 4 && vol.every((t) => !/\d+\/\d+/.test(t)) && vol.every((t) => /Not trained yet|Do more|Getting there|On track|Sore|Plenty/.test(t)));
+  ck(theme + ': the muscles list says how each muscle is doing, no numbers like 5/16', vol.length >= 4 && vol.every((t) => !/\d+\/\d+/.test(t)) && vol.every((t) => /^(Weak|Mild|Needs work|Stronger|Sore)$/.test(t)));
   await p.evaluate(() => { const c = document.getElementById('volList'); if (c) c.scrollIntoView({ block: 'center' }); }); await p.waitForTimeout(300);
   await p.screenshot({ path: join(shots, `attach-muscles-${theme}.png`) });
   ck(theme + ': no page errors', !errs.length || (console.error(errs.slice(0, 3)), false));
