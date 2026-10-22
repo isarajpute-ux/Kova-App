@@ -74,9 +74,12 @@ const key = (d) => d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) 
   ck('names match the right lift: Romanian deadlift is not a deadlift, front squat is not a squat, chin-up is not a pull-up',
     F.find('Single leg Romanian deadlift')[1] === 'Romanian deadlift' && F.find('Front squat')[1] === 'Front squat' && F.find('Chin-up')[1] === 'Chin-up' && F.find('Seated cable row')[1] === 'Seated cable row' && F.find('Leg curl')[1] === 'Leg curl');
   ck('every entry has muscles, 3 to 5 cues and at least 2 mistakes', need.every((n) => { const f = F.find(n); return f[2] && f[4].length >= 3 && f[4].length <= 5 && f[5].length >= 1; }));
+  /* p37: written so a child could follow it: short lines, everyday words */
+  const allLines = need.flatMap((n) => { const f = F.find(n); return f[4].concat(f[5]); });
+  ck('every cue and mistake is short and plain (at most 10 words, no gym words like "hinge" or "scapula")', allLines.every((l) => l.split(/\s+/).length <= 10 && !/hinge|scapula|retract|depress|neutral spine|degrees/i.test(l)) || (console.error(allLines.filter((l) => l.split(/\s+/).length > 10 || /hinge|scapula|retract|depress|neutral spine|degrees/i.test(l))), false));
   const b = A.doc.createElement('button'); b.setAttribute('data-exinfo', 'Romanian deadlift'); A.doc.body.appendChild(b); b.click(); await wait(20);
   const sh = A.t('sheetIn');
-  ck('the (i) button opens the exercise page: the moving picture, muscles, how to do it, mistakes, and Form Check', /Hamstrings/.test(sh) && /Glutes/.test(sh) && /Push the hips back/.test(sh) && /Common mistakes/.test(sh) && /Check my form on video/.test(sh)
+  ck('the (i) button opens the exercise page: the moving picture, muscles, how to do it, mistakes, and Form Check', /Hamstrings/.test(sh) && /Glutes/.test(sh) && /Push your butt back/.test(sh) && /Common mistakes/.test(sh) && /Check my form on video/.test(sh)
     && !!A.doc.querySelector('#sheetIn .kxp-fig svg'));
   ck('an exercise without cues says so and offers Form Check, nothing made up', /no written cues/.test(F.html('Zercher carry')) && /Open Form Check/.test(F.html('Zercher carry')));
   ck('the (i) sits on every exercise in a workout and in the program, with a spoken name', /class="exinfo" data-exinfo="'\+String\(e\.n\)/.test(html) && /class="exinfo" data-exinfo="'\+String\(e\.e\)/.test(html) && /aria-label="How to do '\+String\(e\.n\)/.test(html));

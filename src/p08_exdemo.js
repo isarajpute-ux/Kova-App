@@ -604,39 +604,39 @@ window.KovaDemo=(function(){
   /* ---------- stretches: one or more for every muscle group (hold, breathe, ease deeper) ---------- */
   var STR=[];
   function sadd(id,name,groups,hold,cues,d){ d.stretch=true; d.hold=hold; d.cues=cues; d.groups=groups; d.dur=d.dur||5200; d.id=id; d.n=name; add(name,d); STR.push(d); }
-  sadd('quad','Standing quad stretch',['quads','hipflex'],'30 s each leg',['Stand tall and hold something for balance','Pull one heel to your glute, knees together','Push the hip forward a little until the front of the thigh stretches'],
+  sadd('quad','Standing quad stretch',['quads','hipflex'],'30 s each leg',['Stand tall and hold on to something','Pull one heel up to your butt','Push your hip forward a little'],
     {K:[st({aN:{at:'aN',d:[0,0],s:1},aF:{ua:60,fa:70},lN:{ta:-2,sa:-40,f:40}}),st({aF:{ua:70,fa:80},lN:{ta:-12,sa:-150,f:-40},aN:{at:'aN',d:[0,0],s:1}})],mus:m(['quads'],['hipflex'])});
-  sadd('ham','Standing hamstring stretch',['hams','calves'],'30 s each leg',['Heel on the floor in front, toes up, leg straight','Hands on the other thigh','Push the hips back with a flat back until the back of the leg stretches'],
+  sadd('ham','Standing hamstring stretch',['hams','calves'],'30 s each leg',['Put one heel in front, toes up, leg straight','Hands on your other leg','Push your butt back until the back of your leg stretches'],
     {K:[st({lN:{a:[128,182],f:-20},aN:{ua:30,fa:30},aF:{ua:30,fa:30}}),st({hip:[86,112],t:48,lN:{a:[132,182],f:-42},lF:{a:[96,GY]},aN:{ua:20,fa:10},aF:{ua:20,fa:10}})],mus:m(['hams'],['calves'])});
-  sadd('hipflex','Half-kneeling hip flexor stretch',['hipflex','quads'],'30 s each side',['Back knee on the floor, front foot flat ahead','Squeeze the glute of the back leg','Shift the hips forward with the chest tall'],
+  sadd('hipflex','Half-kneeling hip flexor stretch',['hipflex','quads'],'30 s each side',['Back knee down, front foot flat ahead','Squeeze your back butt cheek','Slide your hips forward, chest tall'],
     {K:[{hip:[96,140],t:0,lN:{a:[124,GY]},lF:{k:[74,178],a:[46,180],f:170,back:1},aN:{ua:20,fa:20},aF:{ua:20,fa:20}},{hip:[106,144],t:-6,lN:{a:[128,GY]},lF:{k:[74,178],a:[46,180],f:170,back:1},aN:{ua:178,fa:180},aF:{ua:176,fa:178}}],mus:m(['hipflex'],['quads','abs'])});
-  sadd('glute','Lying figure-four stretch',['glutes'],'30 s each side',['Lie on your back, cross one ankle over the other knee','Pull the bottom thigh towards your chest','Keep the head and shoulders relaxed on the floor'],
+  sadd('glute','Lying figure-four stretch',['glutes'],'30 s each side',['Lie on your back, cross one ankle over your knee','Pull your bottom leg toward your chest','Keep your head relaxed on the floor'],
     {K:[{hip:[104,176],sh:[60,176],lN:{ta:150,sa:96,f:0},lF:{ta:178,sa:82,f:0},aN:{at:'kF',d:[0,0],s:-1},aF:{at:'kF',d:[0,0],s:-1}},{hip:[104,176],sh:[60,176],lN:{ta:170,sa:110,f:0},lF:{ta:200,sa:96,f:0},aN:{at:'kF',d:[0,0],s:-1},aF:{at:'kF',d:[0,0],s:-1}}],mus:m(['glutes'],['hams'])});
-  sadd('calf','Wall calf stretch',['calves'],'30 s each leg',['Hands on the wall, one foot well behind','Back leg straight, heel pressed down','Lean in until the calf stretches; bend the back knee to reach lower down'],
+  sadd('calf','Wall calf stretch',['calves'],'30 s each leg',['Hands on the wall, one foot far back','Back leg straight, heel down','Lean in until your calf stretches'],
     {K:[st({hip:[110,106],t:16,lN:{a:[120,GY]},lF:{a:[80,GY]},aN:{W:[150,62]},aF:{W:[148,62]}}),st({hip:[118,110],t:26,lN:{a:[124,GY]},lF:{a:[74,GY]},aN:{W:[152,66]},aF:{W:[150,66]}})],eq:[{k:'wall',x:156}],mus:m(['calves'])});
-  sadd('chest','Doorway chest stretch',['chest','delts'],'30 s each side',['Forearm on the door frame, elbow at shoulder height','Step through with the near foot','Turn the chest away until the front of the shoulder stretches'],
+  sadd('chest','Doorway chest stretch',['chest','delts'],'30 s each side',['Arm on the door frame at shoulder height','Step through with one foot','Turn your chest away until it stretches'],
     {K:[st({aN:{e:[-6,-24],w:[-8,-50]},aF:{ua:4,fa:4}}),st({hip:[110,106],t:6,lN:{a:[128,GY]},lF:{a:[96,GY]},aN:{e:[-20,-16],w:[-22,-42]},aF:{ua:4,fa:4}})],eq:[{k:'rail',x1:86,y1:20,x2:86,y2:GY}],mus:m(['chest'],['delts','biceps'])});
-  sadd('lat','Overhead side reach',['lats','obliques'],'20 s each side',['Stand tall, feet hip width','Reach one arm up and over','Lean away until the side of the back stretches; keep the hips still'],
+  sadd('lat','Overhead side reach',['lats','obliques'],'20 s each side',['Stand tall, feet apart','Reach one arm up and over','Lean away, hips stay still'],
     {K:[fr({aL:{ua:178,fa:178},aR:{ua:178,fa:178}}),fr({t:-16,aL:{ua:150,fa:150},aR:{ua:190,fa:196}})],mus:m(['lats','obliques'])});
-  sadd('delt','Cross-body shoulder stretch',['delts','traps'],'30 s each side',['Bring one straight arm across the chest','Hold it above the elbow with the other hand','Pull it closer and keep the shoulder down'],
+  sadd('delt','Cross-body shoulder stretch',['delts','traps'],'30 s each side',['Bring one straight arm across your chest','Hold it with your other hand','Pull it close, shoulder down'],
     {K:[fr({aR:{e:[4,28],w:[6,54]},aL:{ua:6,fa:6}}),fr({aR:{e:[-22,10],w:[-48,6]},aL:{e:[-10,22],w:[-30,10]}})],mus:m(['delts'],['traps'])});
-  sadd('tri','Overhead triceps stretch',['triceps','lats'],'30 s each arm',['Raise one arm, bend it so the hand drops behind the head','Hold the elbow with the other hand','Gently pull the elbow back and in'],
+  sadd('tri','Overhead triceps stretch',['triceps','lats'],'30 s each arm',['Raise one arm, drop your hand behind your head','Hold that elbow with your other hand','Gently pull the elbow back'],
     {K:[fr({aR:{e:[6,-28],w:[10,-54]},aL:{ua:6,fa:6}}),fr({aR:{e:[4,-28],w:[-10,-6]},aL:{e:[-12,-20],w:[-22,-34]}})],mus:m(['triceps'],['lats'])});
-  sadd('bicep','Hands-behind chest opener',['biceps','chest','delts'],'30 s',['Clasp the hands behind your back','Straighten the arms','Lift the hands away from the body and open the chest'],
+  sadd('bicep','Hands-behind chest opener',['biceps','chest','delts'],'30 s',['Hold your hands together behind your back','Straighten your arms','Lift your hands up and open your chest'],
     {K:[st({aN:{ua:-10,fa:-10},aF:{ua:-10,fa:-10}}),st({t:-4,aN:{ua:-40,fa:-40},aF:{ua:-40,fa:-40}})],mus:m(['biceps','chest'],['delts'])});
-  sadd('child',"Child's pose",['lats','lowback','traps'],'45 s',['Kneel and sit back on your heels','Walk the hands forward and rest the forehead down','Breathe into the back; reach further to feel the lats'],
+  sadd('child',"Child's pose",['lats','lowback','traps'],'45 s',['Kneel and sit back on your heels','Walk your hands forward, head down','Breathe slowly into your back'],
     {K:[{hip:[70,150],t:60,lN:{k:[104,178],a:[64,180],f:170,back:1},lF:{k:[102,178],a:[62,180],f:170,back:1},aN:{ua:110,fa:100},aF:{ua:110,fa:100}},{hip:[68,158],t:96,lN:{k:[104,178],a:[64,180],f:170,back:1},lF:{k:[102,178],a:[62,180],f:170,back:1},aN:{ua:94,fa:92},aF:{ua:94,fa:92}}],mus:m(['lats','lowback'],['traps'])});
-  sadd('knees','Knees to chest',['lowback','glutes'],'30 s',['Lie on your back','Hug both knees in towards the chest','Let the lower back sink into the floor'],
+  sadd('knees','Knees to chest',['lowback','glutes'],'30 s',['Lie on your back','Hug both knees to your chest','Let your lower back relax'],
     {K:[{hip:[104,176],sh:[60,176],lN:{ta:150,sa:96,f:0},lF:{ta:148,sa:94,f:0},aN:{at:'kN',d:[0,6],s:-1},aF:{at:'kF',d:[0,6],s:-1}},{hip:[104,174],sh:[62,176],lN:{ta:196,sa:104,f:0},lF:{ta:194,sa:102,f:0},aN:{at:'kN',d:[0,6],s:-1},aF:{at:'kF',d:[0,6],s:-1}}],mus:m(['lowback'],['glutes'])});
-  sadd('neck','Side neck stretch',['traps','neck'],'20 s each side',['Sit or stand tall, shoulders down','Tilt one ear towards the shoulder','Rest the hand on the head; no pulling'],
+  sadd('neck','Side neck stretch',['traps','neck'],'20 s each side',['Sit tall, shoulders down','Tip one ear toward your shoulder','Rest your hand on your head, no pulling'],
     {K:[fr({ht:0,aR:{ua:6,fa:6}}),fr({ht:-26,aR:{e:[14,-14],w:[-2,-40]}})],mus:m(['traps'],['neck'])});
-  sadd('butterfly','Butterfly stretch',['adductors'],'30 s',['Sit tall with the soles of the feet together','Hold the feet','Let the knees fall out; lean forward a little for more'],
+  sadd('butterfly','Butterfly stretch',['adductors'],'30 s',['Sit tall, bottoms of your feet together','Hold your feet','Let your knees drop toward the floor'],
     {K:[fr({hip:[100,160],tl:0.92,lL:{k:[64,166],a:[94,178]},lR:{k:[136,166],a:[106,178]},aL:{W:[94,174]},aR:{W:[106,174]}}),fr({hip:[100,160],tl:0.8,lL:{k:[60,174],a:[94,178]},lR:{k:[140,174],a:[106,178]},aL:{W:[94,174]},aR:{W:[106,174]}})],mus:m(['adductors'])});
-  sadd('cobra','Cobra stretch',['abs','hipflex'],'20 s',['Lie face down, hands under the shoulders','Press the chest up, hips stay down','Shoulders away from the ears'],
+  sadd('cobra','Cobra stretch',['abs','hipflex'],'20 s',['Lie on your belly, hands under your shoulders','Push your chest up, hips stay down','Keep your shoulders away from your ears'],
     {K:[{hip:[96,176],sh:[142,176],hd:0,lN:{ta:-90,sa:-90,f:180},lF:{ta:-90,sa:-90,f:180},aN:{W:[148,182],s:-1},aF:{W:[146,182],s:-1}},{hip:[98,174],sh:[140,132],hd:-20,lN:{ta:-90,sa:-90,f:180},lF:{ta:-90,sa:-90,f:180},aN:{W:[148,182],s:-1},aF:{W:[146,182],s:-1}}],mus:m(['abs'],['hipflex'])});
-  sadd('wrist','Wrist flexor stretch',['forearms'],'20 s each arm',['Hold one arm straight out, palm up','Pull the fingers back and down with the other hand','Keep the elbow straight'],
+  sadd('wrist','Wrist flexor stretch',['forearms'],'20 s each arm',['Hold one arm out straight, palm up','Pull your fingers back with your other hand','Keep your elbow straight'],
     {K:[st({aN:{ua:90,fa:90},aF:{ua:30,fa:40}}),st({aN:{ua:90,fa:92},aF:{ua:60,fa:84}})],mus:m(['forearms'])});
-  sadd('shin','Kneeling shin stretch',['tibialis','quads'],'30 s',['Kneel with the tops of the feet flat','Sit back towards the heels','Lean back a little to feel the front of the shins'],
+  sadd('shin','Kneeling shin stretch',['tibialis','quads'],'30 s',['Kneel with the tops of your feet flat','Sit back toward your heels','Lean back a little'],
     {K:[{hip:[100,140],t:0,lN:{k:[110,178],a:[74,180],f:170,back:1},lF:{k:[108,178],a:[72,180],f:170,back:1},aN:{ua:10,fa:10},aF:{ua:10,fa:10}},{hip:[82,166],t:-10,lN:{k:[110,178],a:[74,180],f:170,back:1},lF:{k:[108,178],a:[72,180],f:170,back:1},aN:{W:[66,182]},aF:{W:[64,182]}}],mus:m(['tibialis'],['quads'])});
   /* which stretches suit which muscles (first is best) */
   var STRETCH_FOR={quads:['quad','hipflex','shin'],hipflex:['hipflex','cobra'],hams:['ham'],glutes:['glute','knees'],calves:['calf'],tibialis:['shin'],adductors:['butterfly'],

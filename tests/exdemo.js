@@ -69,7 +69,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const lit = [...sh.querySelectorAll('.kxp-body .m.p')].length, soft = [...sh.querySelectorAll('.kxp-body .m.s')].length;
   ck('the muscles worked light up on the body figure (main ones strong, helpers softer)', lit >= 4 && soft >= 2 && /Quads/.test(sh.textContent) && /Glutes/.test(sh.textContent));
   ck('the body figure is a copy, so the Customize figure keeps its ids', !sh.querySelector('.kxp-body [id]') && !!doc.getElementById('bodySvg'));
-  ck('how to do it and the common mistakes are there', /Push the knees out/.test(sh.textContent) && /Knees caving in/.test(sh.textContent));
+  ck('how to do it and the common mistakes are there, in plain words', /Knees point the same way as your toes/.test(sh.textContent) && /Knees falling inward/.test(sh.textContent));
   ck('with no sets logged it says so, nothing made up', /No sets logged for this yet/.test(sh.textContent) && !sh.querySelector('.kxp-rec'));
   ck('it suggests the stretches for those muscles', sh.querySelectorAll('.kxp-st').length >= 2 && /quad stretch/i.test(sh.textContent));
   const now = Date.now(), DAY = 864e5;

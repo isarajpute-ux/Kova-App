@@ -822,7 +822,8 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .bar-fill.low{background:linear-gradient(90deg,rgba(214,158,90,.35),rgba(214,158,90,.85))}
 .volrow{display:flex;align-items:center;gap:9px;margin-bottom:7px}
 .volname{font-size:10.5px;font-weight:500;color:var(--txt);min-width:66px;flex-shrink:0}
-.volval{font-size:10.5px;font-weight:500;color:var(--acc);min-width:38px;text-align:right;flex-shrink:0}
+.volval{font-size:10.5px;font-weight:500;color:var(--acc);min-width:96px;text-align:right;flex-shrink:0;white-space:nowrap}
+.volval.sore{color:#E87A3C}
 .volval.low{color:rgba(224,175,110,.95)}
 .volnote{font-size:9px;color:var(--txt-2);min-width:50px;text-align:right;flex-shrink:0}
 
@@ -3177,6 +3178,7 @@ window.KOVA_API = window.KOVA_API || '';
    Web Push certificates > "Key pair". Public by design. Until it is set,
    reminders on the website only show while Kova is open. */
 window.KOVA_FB_VAPID = window.KOVA_FB_VAPID || '';
+window.KOVA_BUILD = window.KOVA_BUILD || '';   /* set by the build (build/site.mjs); version.json says the newest */
 /* Payments: RevenueCat's PUBLIC SDK keys (Project settings > API keys),
    one per platform. The secret key goes only on the server
    (REVENUECAT_SECRET_KEY). Empty = payments off, nothing charged. */
@@ -8906,6 +8908,31 @@ body.light-mode .mc-alt{background:rgba(255,255,255,.55)}
 .mc-alt small{font-size:10px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.6));display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 </style>
+<style id="p08-attach">
+/* KovaAttach (p37): the attachment button and its picker, in all three looks */
+.katt-chip,.katt-add{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:4px 10px;border-radius:12px;border:1px dashed var(--ron-line,rgba(255,255,255,.22));background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.75));font:500 10.5px 'Outfit',sans-serif;cursor:pointer;min-height:26px}
+.katt-chip.set{border-style:solid;border-color:var(--acc-brd);color:var(--acc);background:var(--acc-bg)}
+.katt-add{margin:0 8px 0 0;flex-shrink:0}
+body.light-mode .katt-chip,body.light-mode .katt-add{border-color:rgba(18,22,28,.22);color:rgba(18,22,28,.7)}
+.katt-p{padding:10px 4px 12px}
+#sheet .exadd+.katt-p{margin:-2px 0 8px;padding:10px 12px;border-radius:16px;border:1px solid var(--ron-line,rgba(255,255,255,.12));background:rgba(255,255,255,.03)}
+body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
+.katt-pl{font-size:14px;font-weight:600;margin-bottom:8px}
+.katt-opts{display:flex;flex-wrap:wrap;gap:6px}
+.katt-opts .chip{font:inherit;font-size:11.5px;cursor:pointer}
+.katt-own{display:flex;gap:6px;margin-top:10px}
+.katt-own .srch{flex:1;margin:0}
+.katt-own .chip{cursor:pointer;font:inherit;font-size:11.5px}
+.katt-n{font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.55));margin-top:8px}
+
+</style>
+<style id="p08-fresh">
+/* KovaFresh (p37): "Kova was updated" */
+.kfr{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:9600;display:flex;align-items:center;gap:10px;padding:10px 10px 10px 16px!important;border-radius:22px;font-size:12.5px;max-width:calc(100% - 32px)}
+.kfr .chip{cursor:pointer;font:inherit;font-size:12px}
+.kfr-x{border:0;background:none;color:inherit;font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;opacity:.7}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -9428,10 +9455,10 @@ body.light-mode .mc-alt{background:rgba(255,255,255,.55)}
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px">
-      <div style="font-size:12px;font-weight:700">Sets this week</div>
-      <div class="lbl">DONE · GOAL</div>
+      <div style="font-size:12px;font-weight:700">Your muscles this week</div>
+      <div class="lbl">HOW EACH IS DOING</div>
     </div>
-    <div class="sub" style="margin-bottom:8px">Most muscles grow best with 10 to 20 hard sets a week, counting every session.</div>
+    <div class="sub" style="margin-bottom:8px">A muscle grows best with 10 to 20 hard sets a week. The bar fills as you train it.</div>
     <div id="volNote" style="font-size:10px;color:var(--ink-1,rgba(255,255,255,.95));margin-bottom:10px"></div>
     <div id="volList"></div>
   </div>
@@ -15237,11 +15264,16 @@ window.KovaSport=(function(){
       });
     }); }catch(e){}
     var worst=null,gapMax=-99,h='';
+    /* p37: plain words, not "5/16": how the muscle is doing this week, and
+       "sore" from the recovery map when it still needs rest */
+    var RID={Quads:'quads',Hamstrings:'hams',Glutes:'glutes',Calves:'calves',Chest:'chest',Back:'lats',Shoulders:'delts',Biceps:'biceps',Triceps:'triceps',Core:'abs'}, RS=null;
+    try{ RS=window.KovaRecovery?KovaRecovery.state():null; }catch(e){}
     (GM[grp]||GM.lower).forEach(function(m){
       var t=Math.max(2,BIGM.indexOf(m)>=0?pg.sets.big:pg.sets.small), d=done[m]||0, pct=Math.min(100,Math.round(d/t*100)), gap=t-d;
       if(gap>gapMax){gapMax=gap;worst=m}
-      var low=pct<75;
-      h+='<div class="volrow"><div class="volname">'+m+'</div><div class="bar-track"><div class="bar-fill'+(low?' low':'')+'" style="width:'+pct+'%"></div></div><div class="volval'+(low?' low':'')+'">'+d+'/'+t+'</div></div>';
+      var sore=RS&&RS[RID[m]]&&RS[RID[m]].st==='rest', w=!d?'Not trained yet':sore?'Sore, let it rest':d>t*1.3?'Plenty, rest it':pct>=80?'On track':pct>=40?'Getting there':'Needs more work';
+      var low=!sore&&pct<80;
+      h+='<div class="volrow" title="'+m+': '+d+' hard set'+(d===1?'':'s')+' this week"><div class="volname">'+m+'</div><div class="bar-track"><div class="bar-fill'+(low?' low':'')+'" style="width:'+pct+'%"></div></div><div class="volval'+(low?' low':'')+(sore?' sore':'')+'">'+w+'</div></div>';
     });
     document.getElementById('volList').innerHTML=h;
     document.getElementById('volNote').textContent=mode.note;
@@ -15249,7 +15281,7 @@ window.KovaSport=(function(){
       ? 'No sets logged yet this week. Follow your week and these fill in as you train.'
       : gapMax<=0
       ? 'Every muscle here has had enough work this week. Push a little heavier rather than adding sets.'
-      : worst+' could use '+gapMax+' more set'+(gapMax===1?'':'s')+' this week. Your '+fmt(mins)+' sessions have room for them.';
+      : worst+' needs the most work this week. Your '+fmt(mins)+' sessions have room for a few more sets.';
   }
   function listHtml(){
     return modes.map(function(m){
@@ -15315,6 +15347,8 @@ window.KovaSport=(function(){
   }
   sl.addEventListener('input',upd);
   rx();upd();
+  /* p37: the muscles list counts this week's sets each time the screen opens (it used to wait for a goal change) */
+  document.addEventListener('kova:screen',function(e){ if(e&&e.detail==='customize') try{ render(); }catch(x){} });
 })();
 
 /* ---------- session engine v3 ----------
@@ -16718,7 +16752,7 @@ var KSESS=(function(){
         return {n:e.n, m:lib(e.n).m,
           sets:e.sets.filter(function(s){return s.d}).map(function(s){
             var o={w:s.w||0,r:s.r||0,role:s.role,tech:s.tech,segs:s.segs||[]}; if(s.hr) o.hr=s.hr; return o;
-          }), ss:e.ss?1:0};
+          }), ss:e.ss?1:0, att:e.att||undefined};
       }),
       hr:(window.KovaHR&&KovaHR.summary)?KovaHR.summary(Date.now()-elapsed()*1000):null,
       noise:(window.KovaNoise&&KovaNoise.summary)?KovaNoise.summary(Date.now()-elapsed()*1000):null
@@ -63184,101 +63218,101 @@ window.KovaFormCues=(function(){
   /* [match, name, primary, also, cues, mistakes] */
   var L=[
     [/romanian|\brdl\b/i,'Romanian deadlift','Hamstrings, glutes','Lower back, grip',
-      ['Soft bend in the knees, then keep it fixed','Push the hips back, as if closing a car door with them','Bar stays close, sliding down the thighs','Stop when the hamstrings stop stretching, usually just below the knee','Squeeze the glutes to stand tall'],
-      ['Rounding the lower back to reach lower','Bending the knees more as you go, which turns it into a squat','Letting the bar drift away from the legs']],
+      ['Bend your knees a little, then keep them still','Push your butt back, like closing a door with it','Slide the bar down your legs','Stop when the backs of your legs feel stretched','Squeeze your butt to stand up'],
+      ['Rounding your back','Bending your knees more and more','Letting the bar float away from your legs']],
     [/bulgarian|split squat/i,'Bulgarian split squat','Quads, glutes','Adductors, core',
-      ['Back foot laces-down on the bench','Front foot far enough forward that the heel stays down','Drop the back knee straight down','Drive through the whole front foot to stand'],
-      ['Standing too close to the bench, so the knee pushes far forward and the heel lifts','Wobbling knee: slow down and keep it over the toes']],
+      ['Back foot on the bench, laces down','Step your front foot far out','Go straight down until your back knee almost touches','Push through your front heel to stand'],
+      ['Standing too close to the bench','Leaning way forward','Pushing off with your back foot']],
     [/hack squat/i,'Hack squat','Quads','Glutes',
-      ['Back and hips flat on the pad','Feet shoulder width, mid-platform','Lower under control until thighs are at least parallel','Push through the mid-foot without locking the knees hard'],
-      ['Heels lifting off the platform','Cutting the depth short when the weight goes up']],
+      ['Back flat on the pad','Feet shoulder width on the plate','Sit down slowly until your thighs are flat','Push the plate away to stand'],
+      ['Heels coming up','Only going half way down','Locking your knees hard at the top']],
     [/front squat/i,'Front squat','Quads, glutes','Upper back, core',
-      ['Bar on the front of the shoulders, elbows high','Big breath and brace before you go down','Sit straight down between the heels','Keep the elbows up as you stand'],
-      ['Elbows dropping, so the bar rolls forward','Rounding the upper back']],
+      ['Rest the bar on the front of your shoulders','Keep your elbows up high','Big breath, then sit straight down','Stand up with your chest tall'],
+      ['Elbows dropping down','Rounding your upper back']],
     [/squat/i,'Squat','Quads, glutes','Adductors, lower back, core',
-      ['Brace before you go down: big breath into the belly','Push the knees out in line with the toes','Hips and knees bend together','Keep the weight over the middle of the foot','Stand up by pushing the floor away'],
-      ['Knees caving in','Heels lifting off the floor','Chest folding forward out of the bottom']],
+      ['Big breath, tight belly','Sit back and down, like into a chair','Knees point the same way as your toes','Push the floor away to stand up'],
+      ['Knees falling inward','Heels coming up','Chest falling forward']],
     [/good morning/i,'Good morning','Hamstrings, lower back','Glutes',
-      ['Bar on the upper back, like a squat','Soft knees, then push the hips back','Keep the back flat the whole way','Go only as low as you can keep it flat'],
-      ['Rounding the back','Using a weight that is too heavy: this one is for control']],
+      ['Bar on your upper back','Knees a little bent','Push your butt back and tip forward','Squeeze your butt to stand up'],
+      ['Rounding your back','Going too heavy']],
     [/hip thrust|glute bridge/i,'Hip thrust','Glutes','Hamstrings, quads',
-      ['Shoulder blades on the bench edge, bar over the hip crease (use a pad)','Feet flat, shins vertical at the top','Chin tucked, ribs down','Drive the hips up until they are in line with the knees and shoulders, squeeze for a second'],
-      ['Arching the lower back at the top instead of squeezing the glutes','Feet too far out, so the hamstrings take over']],
+      ['Upper back on the bench, bar on your hips','Feet flat, knees bent','Push your hips up to the sky','Squeeze your butt hard at the top'],
+      ['Arching your lower back at the top','Pushing up through your toes']],
     [/deadlift/i,'Deadlift','Hamstrings, glutes, back','Grip, lats, quads',
-      ['Bar over the middle of the foot','Grip just outside the legs, shins touch the bar','Pull the slack out of the bar before it leaves the floor','Push the floor away; hips and shoulders rise together','Stand tall, do not lean back'],
-      ['Rounding the lower back','Hips shooting up first','Bar drifting away from the legs']],
+      ['Bar over the middle of your feet','Grab it just outside your legs','Flat back, chest up, big breath','Push the floor away and stand tall'],
+      ['Rounding your back','Hips shooting up first','Bar moving away from your legs']],
     [/incline.*(press|bench)/i,'Incline press','Upper chest, front shoulders','Triceps',
-      ['Bench at 30 to 45 degrees','Shoulder blades pulled back and down','Lower to the upper chest, elbows about 45 degrees from the body','Press up and slightly back'],
-      ['Bench set too steep, so it becomes a shoulder press','Elbows flared straight out to the sides']],
+      ['Tilt the bench up a little','Squeeze your shoulder blades together','Lower the weight to your upper chest','Push it straight up'],
+      ['Bench tilted too high','Bouncing the weight off your chest']],
     [/bench press|chest press/i,'Bench press','Chest','Front shoulders, triceps',
-      ['Eyes under the bar, shoulder blades pinched back and down','Feet planted, slight arch in the upper back','Lower to the lower chest, elbows about 45 degrees from the body','Press up and slightly back over the shoulders'],
-      ['Bouncing the bar off the chest','Elbows flared straight out, which strains the shoulders','Hips lifting off the bench']],
+      ['Eyes under the bar','Squeeze your shoulder blades back','Lower the bar to your chest','Push it up, feet flat on the floor'],
+      ['Bouncing the bar off your chest','Elbows sticking straight out','Lifting your butt off the bench']],
     [/arnold/i,'Arnold press','Shoulders','Triceps, upper chest',
-      ['Start with palms facing you at chin height','Rotate the palms forward as you press up','Finish with the weights over the shoulders','Reverse the turn on the way down'],
-      ['Arching the lower back to finish the rep','Rushing the turn']],
+      ['Start with palms facing you at your chin','Turn your hands as you push up','Finish with palms facing forward','Turn them back on the way down'],
+      ['Arching your back','Going too fast']],
     [/overhead press|shoulder press|military/i,'Overhead press','Shoulders','Triceps, upper chest, core',
-      ['Squeeze glutes and abs so the ribs stay down','Bar starts on the front of the shoulders','Move the head back slightly, then forward as the bar passes','Finish with the arms by the ears'],
-      ['Leaning back and turning it into a standing incline press','Pressing the bar out in front instead of straight up']],
+      ['Squeeze your butt and belly','Push the bar straight up past your face','Lock your arms over your head','Lower it back to your shoulders'],
+      ['Leaning way back','Pushing the bar out in front']],
     [/chin.?up/i,'Chin-up','Lats, biceps','Upper back',
-      ['Palms facing you, hands shoulder width','Start from a dead hang with the shoulders engaged','Pull the elbows down to the ribs','Chin over the bar, then lower all the way'],
-      ['Half reps that never reach a full hang','Swinging to get up']],
+      ['Palms facing you, hands shoulder width','Start hanging with straight arms','Pull your chest up to the bar','Go all the way down each time'],
+      ['Only going half way','Swinging to get up']],
     [/pull.?up/i,'Pull-up','Lats','Biceps, upper back, grip',
-      ['Hands just outside the shoulders, palms away','Start each rep from a dead hang','Pull the elbows down and back toward the hips','Chest toward the bar; lower under control'],
-      ['Kicking or swinging for momentum','Shrugging the shoulders up to the ears']],
+      ['Hands a bit wider than your shoulders, palms away','Start hanging with straight arms','Pull your elbows down to your sides','Chin over the bar, then lower slowly'],
+      ['Kicking or swinging','Shrugging your shoulders up']],
     [/lat pull.?down|pulldown/i,'Lat pulldown','Lats','Biceps, upper back',
-      ['Thighs locked under the pads','Lean back slightly','Pull the bar to the upper chest, elbows down to the sides','Let it rise under control until the arms are straight'],
-      ['Leaning far back and rowing the weight down','Pulling behind the neck']],
+      ['Lock your legs under the pads','Lean back just a little','Pull the bar to your upper chest','Let it go up slowly'],
+      ['Leaning way back','Pulling with only your arms','Letting the bar fly up']],
     [/dumbbell row|one.?arm row|db row/i,'Dumbbell row','Lats, upper back','Rear shoulders, biceps',
-      ['Hand and knee on the bench, back flat','Let the weight hang straight down','Pull the elbow toward the hip','Pause at the top, lower slowly'],
-      ['Twisting the torso to lift it','Pulling with the hand instead of the elbow']],
+      ['Hand and knee on the bench, back flat','Let the weight hang down','Pull it to your hip','Lower it slowly'],
+      ['Twisting your body','Pulling with just your hand']],
     [/cable row|seated row/i,'Seated cable row','Upper back, lats','Rear shoulders, biceps',
-      ['Sit tall, chest up, slight bend in the knees','Pull the handle to the lower ribs','Squeeze the shoulder blades together at the end','Let the arms straighten without rounding forward'],
-      ['Rocking the torso back and forth to move the weight','Shrugging the shoulders up']],
+      ['Sit tall with your chest up','Pull the handle to your belly','Squeeze your shoulder blades','Let your arms go straight again'],
+      ['Rocking back and forth','Rounding your back']],
     [/barbell row|bent.?over row|pendlay|\brow\b/i,'Barbell row','Upper back, lats','Rear shoulders, biceps, lower back',
-      ['Hinge until the torso is about 45 degrees, back flat','Grip a little wider than the shoulders','Pull the bar to the lower ribs','Lower under control; keep the torso still'],
-      ['Standing up as you pull, so the hips do the work','Rounding the back']],
+      ['Bend forward with a flat back','Let the bar hang from straight arms','Pull it to your belly button','Lower it slowly'],
+      ['Standing up as you pull','Rounding your back']],
     [/face pull/i,'Face pull','Rear shoulders, upper back','Rotator cuff',
-      ['Rope at face height, thumbs toward you','Pull toward the eyes, hands apart','Finish with the elbows high and the hands beside the ears','Squeeze for a second'],
-      ['Too heavy, so you lean back and row it','Elbows dropping below the hands']],
+      ['Rope at face height','Pull it toward your eyes','Pull the rope apart at the end','Keep your elbows high'],
+      ['So heavy you lean back','Elbows dropping down']],
     [/lateral raise|side raise/i,'Lateral raise','Side shoulders','Upper traps',
-      ['Slight bend in the elbows, fixed','Raise out to the sides, leading with the elbows','Stop at shoulder height','Lower slowly, about 2 seconds'],
-      ['Swinging the body to move the weight','Shrugging the shoulders up']],
+      ['Elbows a little bent','Lift your arms out to the sides','Stop at shoulder height','Lower slowly'],
+      ['Swinging your body','Shrugging your shoulders up']],
     [/leg press/i,'Leg press','Quads, glutes','Hamstrings',
-      ['Back and hips flat on the seat','Feet shoulder width, mid-platform','Lower until the knees are near 90 degrees, hips still down','Push through the whole foot without locking the knees hard'],
-      ['Lower back lifting off the pad at the bottom','Knees caving in']],
+      ['Back and butt flat on the seat','Feet shoulder width on the plate','Lower until your knees bend a lot','Push the plate away, knees soft at the top'],
+      ['Butt lifting off the seat','Locking your knees','Knees falling inward']],
     [/leg curl|hamstring curl/i,'Leg curl','Hamstrings','Calves',
-      ['Knees in line with the machine pivot','Pad just above the heels','Curl all the way, squeeze for a second','Lower slowly'],
-      ['Hips lifting off the pad','Letting the weight drop on the way back']],
+      ['Line your knees up with the machine','Pad just above your heels','Curl your heels toward your butt','Let it down slowly'],
+      ['Hips lifting up','Letting the weight drop']],
     [/leg extension/i,'Leg extension','Quads','',
-      ['Knee in line with the machine pivot','Pad on the lower shin','Straighten fully and squeeze the thighs','Lower slowly over 2 to 3 seconds'],
-      ['Kicking the weight up with momentum','Lifting the hips off the seat']],
+      ['Line your knee up with the machine','Pad on your lower shins','Kick your legs out straight','Lower slowly'],
+      ['Kicking it up fast','Lifting your butt off the seat']],
     [/lunge/i,'Lunge','Quads, glutes','Adductors, hamstrings',
-      ['Step far enough that both knees bend to about 90 degrees','Drop the back knee straight down','Front heel stays down','Push through the front foot to come back'],
-      ['Front knee caving in','Short steps that put all the strain on the front knee']],
+      ['Take a big step','Drop your back knee toward the floor','Keep your chest tall','Push through your front foot to stand'],
+      ['Front knee falling inward','Steps that are too short']],
     [/tricep|skull ?crusher|pushdown|french press/i,'Triceps extension','Triceps','',
-      ['Keep the upper arms still','Lower until the elbows are fully bent','Straighten fully and squeeze','Control the way down'],
-      ['Elbows flaring out','Swinging the upper arms to move the weight']],
+      ['Keep your upper arms still','Bend only at the elbows','Straighten your arms all the way','Come back slowly'],
+      ['Elbows flaring out','Swinging your arms']],
     [/curl/i,'Biceps curl','Biceps','Forearms',
-      ['Elbows pinned to your sides','Curl up without moving the shoulders','Squeeze at the top','Lower all the way, slowly'],
-      ['Swinging the body to lift the weight','Half reps that never straighten the arm']],
+      ['Elbows stuck to your sides','Curl the weight up','Squeeze at the top','Lower it slowly, all the way'],
+      ['Swinging your body','Only going half way']],
     [/fly|flye|pec deck/i,'Cable fly','Chest','Front shoulders',
-      ['Slight fixed bend in the elbows','Open wide until you feel a stretch across the chest','Bring the hands together in an arc, as if hugging a tree','Squeeze for a second'],
-      ['Bending the elbows and turning it into a press','Going so wide the shoulders strain']],
+      ['Elbows a little bent, and keep them that way','Open your arms wide','Bring them together like hugging a tree','Go back slowly'],
+      ['Bending your elbows into a push','Opening too wide']],
     [/box jump/i,'Box jump','Quads, glutes, calves','Hamstrings',
-      ['Stand close, feet hip width','Swing the arms back, then up as you jump','Land softly with both feet, knees bent','Step down; do not jump down'],
-      ['A box so high you land in a deep squat','Knees caving on landing']],
+      ['Stand close, feet apart','Swing your arms and jump up','Land softly on the box','Step down, do not jump down'],
+      ['A box that is too high','Knees falling inward when you land']],
     [/kettlebell swing|kb swing/i,'Kettlebell swing','Glutes, hamstrings','Core, grip, shoulders',
-      ['It is a hinge, not a squat: push the hips back','Hike the bell back between the legs','Snap the hips forward to float the bell to chest height','Let it fall and hinge again'],
-      ['Lifting with the arms','Squatting it instead of hinging','Leaning back at the top']],
+      ['Push your butt back, not down','Hike the bell between your legs','Snap your hips forward','Let the bell float to chest height'],
+      ['Lifting with your arms','Squatting instead of pushing your hips back']],
     [/plank/i,'Plank','Core','Shoulders, glutes',
-      ['Elbows under the shoulders','Squeeze the glutes and pull the ribs down','Body in one straight line from head to heels','Breathe slowly; stop when the form goes'],
-      ['Hips sagging toward the floor','Hips piked high']],
+      ['Elbows under your shoulders','Squeeze your butt and belly','Body straight like a board','Breathe slowly'],
+      ['Hips sagging down','Butt up too high']],
     [/push.?up|press.?up/i,'Push-up','Chest, triceps','Front shoulders, core',
-      ['Hands just wider than the shoulders','Body in one line, glutes and abs tight','Lower until the chest is near the floor, elbows about 45 degrees','Push the floor away'],
-      ['Hips sagging','Elbows flared straight out','Half reps']],
+      ['Hands a bit wider than your shoulders','Body straight like a board','Lower your chest to the floor','Push back up'],
+      ['Hips sagging','Elbows sticking straight out','Only going half way']],
     [/\bdips?\b/i,'Dip','Chest, triceps','Front shoulders',
-      ['Lock the arms at the top, shoulders down','Lean slightly forward for more chest, upright for more triceps','Lower until the upper arms are about level with the floor','Push back up to straight arms'],
-      ['Going so deep the shoulders roll forward and hurt','Shrugging the shoulders up']]
+      ['Arms straight at the top, shoulders down','Lean forward a little','Go down until your elbows make a corner','Push back up'],
+      ['Going too deep','Shoulders shrugging up']]
   ];
   function find(name){ name=String(name||''); for(var i=0;i<L.length;i++) if(L[i][0].test(name)) return L[i]; return null; }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -66921,39 +66955,39 @@ window.KovaDemo=(function(){
   /* ---------- stretches: one or more for every muscle group (hold, breathe, ease deeper) ---------- */
   var STR=[];
   function sadd(id,name,groups,hold,cues,d){ d.stretch=true; d.hold=hold; d.cues=cues; d.groups=groups; d.dur=d.dur||5200; d.id=id; d.n=name; add(name,d); STR.push(d); }
-  sadd('quad','Standing quad stretch',['quads','hipflex'],'30 s each leg',['Stand tall and hold something for balance','Pull one heel to your glute, knees together','Push the hip forward a little until the front of the thigh stretches'],
+  sadd('quad','Standing quad stretch',['quads','hipflex'],'30 s each leg',['Stand tall and hold on to something','Pull one heel up to your butt','Push your hip forward a little'],
     {K:[st({aN:{at:'aN',d:[0,0],s:1},aF:{ua:60,fa:70},lN:{ta:-2,sa:-40,f:40}}),st({aF:{ua:70,fa:80},lN:{ta:-12,sa:-150,f:-40},aN:{at:'aN',d:[0,0],s:1}})],mus:m(['quads'],['hipflex'])});
-  sadd('ham','Standing hamstring stretch',['hams','calves'],'30 s each leg',['Heel on the floor in front, toes up, leg straight','Hands on the other thigh','Push the hips back with a flat back until the back of the leg stretches'],
+  sadd('ham','Standing hamstring stretch',['hams','calves'],'30 s each leg',['Put one heel in front, toes up, leg straight','Hands on your other leg','Push your butt back until the back of your leg stretches'],
     {K:[st({lN:{a:[128,182],f:-20},aN:{ua:30,fa:30},aF:{ua:30,fa:30}}),st({hip:[86,112],t:48,lN:{a:[132,182],f:-42},lF:{a:[96,GY]},aN:{ua:20,fa:10},aF:{ua:20,fa:10}})],mus:m(['hams'],['calves'])});
-  sadd('hipflex','Half-kneeling hip flexor stretch',['hipflex','quads'],'30 s each side',['Back knee on the floor, front foot flat ahead','Squeeze the glute of the back leg','Shift the hips forward with the chest tall'],
+  sadd('hipflex','Half-kneeling hip flexor stretch',['hipflex','quads'],'30 s each side',['Back knee down, front foot flat ahead','Squeeze your back butt cheek','Slide your hips forward, chest tall'],
     {K:[{hip:[96,140],t:0,lN:{a:[124,GY]},lF:{k:[74,178],a:[46,180],f:170,back:1},aN:{ua:20,fa:20},aF:{ua:20,fa:20}},{hip:[106,144],t:-6,lN:{a:[128,GY]},lF:{k:[74,178],a:[46,180],f:170,back:1},aN:{ua:178,fa:180},aF:{ua:176,fa:178}}],mus:m(['hipflex'],['quads','abs'])});
-  sadd('glute','Lying figure-four stretch',['glutes'],'30 s each side',['Lie on your back, cross one ankle over the other knee','Pull the bottom thigh towards your chest','Keep the head and shoulders relaxed on the floor'],
+  sadd('glute','Lying figure-four stretch',['glutes'],'30 s each side',['Lie on your back, cross one ankle over your knee','Pull your bottom leg toward your chest','Keep your head relaxed on the floor'],
     {K:[{hip:[104,176],sh:[60,176],lN:{ta:150,sa:96,f:0},lF:{ta:178,sa:82,f:0},aN:{at:'kF',d:[0,0],s:-1},aF:{at:'kF',d:[0,0],s:-1}},{hip:[104,176],sh:[60,176],lN:{ta:170,sa:110,f:0},lF:{ta:200,sa:96,f:0},aN:{at:'kF',d:[0,0],s:-1},aF:{at:'kF',d:[0,0],s:-1}}],mus:m(['glutes'],['hams'])});
-  sadd('calf','Wall calf stretch',['calves'],'30 s each leg',['Hands on the wall, one foot well behind','Back leg straight, heel pressed down','Lean in until the calf stretches; bend the back knee to reach lower down'],
+  sadd('calf','Wall calf stretch',['calves'],'30 s each leg',['Hands on the wall, one foot far back','Back leg straight, heel down','Lean in until your calf stretches'],
     {K:[st({hip:[110,106],t:16,lN:{a:[120,GY]},lF:{a:[80,GY]},aN:{W:[150,62]},aF:{W:[148,62]}}),st({hip:[118,110],t:26,lN:{a:[124,GY]},lF:{a:[74,GY]},aN:{W:[152,66]},aF:{W:[150,66]}})],eq:[{k:'wall',x:156}],mus:m(['calves'])});
-  sadd('chest','Doorway chest stretch',['chest','delts'],'30 s each side',['Forearm on the door frame, elbow at shoulder height','Step through with the near foot','Turn the chest away until the front of the shoulder stretches'],
+  sadd('chest','Doorway chest stretch',['chest','delts'],'30 s each side',['Arm on the door frame at shoulder height','Step through with one foot','Turn your chest away until it stretches'],
     {K:[st({aN:{e:[-6,-24],w:[-8,-50]},aF:{ua:4,fa:4}}),st({hip:[110,106],t:6,lN:{a:[128,GY]},lF:{a:[96,GY]},aN:{e:[-20,-16],w:[-22,-42]},aF:{ua:4,fa:4}})],eq:[{k:'rail',x1:86,y1:20,x2:86,y2:GY}],mus:m(['chest'],['delts','biceps'])});
-  sadd('lat','Overhead side reach',['lats','obliques'],'20 s each side',['Stand tall, feet hip width','Reach one arm up and over','Lean away until the side of the back stretches; keep the hips still'],
+  sadd('lat','Overhead side reach',['lats','obliques'],'20 s each side',['Stand tall, feet apart','Reach one arm up and over','Lean away, hips stay still'],
     {K:[fr({aL:{ua:178,fa:178},aR:{ua:178,fa:178}}),fr({t:-16,aL:{ua:150,fa:150},aR:{ua:190,fa:196}})],mus:m(['lats','obliques'])});
-  sadd('delt','Cross-body shoulder stretch',['delts','traps'],'30 s each side',['Bring one straight arm across the chest','Hold it above the elbow with the other hand','Pull it closer and keep the shoulder down'],
+  sadd('delt','Cross-body shoulder stretch',['delts','traps'],'30 s each side',['Bring one straight arm across your chest','Hold it with your other hand','Pull it close, shoulder down'],
     {K:[fr({aR:{e:[4,28],w:[6,54]},aL:{ua:6,fa:6}}),fr({aR:{e:[-22,10],w:[-48,6]},aL:{e:[-10,22],w:[-30,10]}})],mus:m(['delts'],['traps'])});
-  sadd('tri','Overhead triceps stretch',['triceps','lats'],'30 s each arm',['Raise one arm, bend it so the hand drops behind the head','Hold the elbow with the other hand','Gently pull the elbow back and in'],
+  sadd('tri','Overhead triceps stretch',['triceps','lats'],'30 s each arm',['Raise one arm, drop your hand behind your head','Hold that elbow with your other hand','Gently pull the elbow back'],
     {K:[fr({aR:{e:[6,-28],w:[10,-54]},aL:{ua:6,fa:6}}),fr({aR:{e:[4,-28],w:[-10,-6]},aL:{e:[-12,-20],w:[-22,-34]}})],mus:m(['triceps'],['lats'])});
-  sadd('bicep','Hands-behind chest opener',['biceps','chest','delts'],'30 s',['Clasp the hands behind your back','Straighten the arms','Lift the hands away from the body and open the chest'],
+  sadd('bicep','Hands-behind chest opener',['biceps','chest','delts'],'30 s',['Hold your hands together behind your back','Straighten your arms','Lift your hands up and open your chest'],
     {K:[st({aN:{ua:-10,fa:-10},aF:{ua:-10,fa:-10}}),st({t:-4,aN:{ua:-40,fa:-40},aF:{ua:-40,fa:-40}})],mus:m(['biceps','chest'],['delts'])});
-  sadd('child',"Child's pose",['lats','lowback','traps'],'45 s',['Kneel and sit back on your heels','Walk the hands forward and rest the forehead down','Breathe into the back; reach further to feel the lats'],
+  sadd('child',"Child's pose",['lats','lowback','traps'],'45 s',['Kneel and sit back on your heels','Walk your hands forward, head down','Breathe slowly into your back'],
     {K:[{hip:[70,150],t:60,lN:{k:[104,178],a:[64,180],f:170,back:1},lF:{k:[102,178],a:[62,180],f:170,back:1},aN:{ua:110,fa:100},aF:{ua:110,fa:100}},{hip:[68,158],t:96,lN:{k:[104,178],a:[64,180],f:170,back:1},lF:{k:[102,178],a:[62,180],f:170,back:1},aN:{ua:94,fa:92},aF:{ua:94,fa:92}}],mus:m(['lats','lowback'],['traps'])});
-  sadd('knees','Knees to chest',['lowback','glutes'],'30 s',['Lie on your back','Hug both knees in towards the chest','Let the lower back sink into the floor'],
+  sadd('knees','Knees to chest',['lowback','glutes'],'30 s',['Lie on your back','Hug both knees to your chest','Let your lower back relax'],
     {K:[{hip:[104,176],sh:[60,176],lN:{ta:150,sa:96,f:0},lF:{ta:148,sa:94,f:0},aN:{at:'kN',d:[0,6],s:-1},aF:{at:'kF',d:[0,6],s:-1}},{hip:[104,174],sh:[62,176],lN:{ta:196,sa:104,f:0},lF:{ta:194,sa:102,f:0},aN:{at:'kN',d:[0,6],s:-1},aF:{at:'kF',d:[0,6],s:-1}}],mus:m(['lowback'],['glutes'])});
-  sadd('neck','Side neck stretch',['traps','neck'],'20 s each side',['Sit or stand tall, shoulders down','Tilt one ear towards the shoulder','Rest the hand on the head; no pulling'],
+  sadd('neck','Side neck stretch',['traps','neck'],'20 s each side',['Sit tall, shoulders down','Tip one ear toward your shoulder','Rest your hand on your head, no pulling'],
     {K:[fr({ht:0,aR:{ua:6,fa:6}}),fr({ht:-26,aR:{e:[14,-14],w:[-2,-40]}})],mus:m(['traps'],['neck'])});
-  sadd('butterfly','Butterfly stretch',['adductors'],'30 s',['Sit tall with the soles of the feet together','Hold the feet','Let the knees fall out; lean forward a little for more'],
+  sadd('butterfly','Butterfly stretch',['adductors'],'30 s',['Sit tall, bottoms of your feet together','Hold your feet','Let your knees drop toward the floor'],
     {K:[fr({hip:[100,160],tl:0.92,lL:{k:[64,166],a:[94,178]},lR:{k:[136,166],a:[106,178]},aL:{W:[94,174]},aR:{W:[106,174]}}),fr({hip:[100,160],tl:0.8,lL:{k:[60,174],a:[94,178]},lR:{k:[140,174],a:[106,178]},aL:{W:[94,174]},aR:{W:[106,174]}})],mus:m(['adductors'])});
-  sadd('cobra','Cobra stretch',['abs','hipflex'],'20 s',['Lie face down, hands under the shoulders','Press the chest up, hips stay down','Shoulders away from the ears'],
+  sadd('cobra','Cobra stretch',['abs','hipflex'],'20 s',['Lie on your belly, hands under your shoulders','Push your chest up, hips stay down','Keep your shoulders away from your ears'],
     {K:[{hip:[96,176],sh:[142,176],hd:0,lN:{ta:-90,sa:-90,f:180},lF:{ta:-90,sa:-90,f:180},aN:{W:[148,182],s:-1},aF:{W:[146,182],s:-1}},{hip:[98,174],sh:[140,132],hd:-20,lN:{ta:-90,sa:-90,f:180},lF:{ta:-90,sa:-90,f:180},aN:{W:[148,182],s:-1},aF:{W:[146,182],s:-1}}],mus:m(['abs'],['hipflex'])});
-  sadd('wrist','Wrist flexor stretch',['forearms'],'20 s each arm',['Hold one arm straight out, palm up','Pull the fingers back and down with the other hand','Keep the elbow straight'],
+  sadd('wrist','Wrist flexor stretch',['forearms'],'20 s each arm',['Hold one arm out straight, palm up','Pull your fingers back with your other hand','Keep your elbow straight'],
     {K:[st({aN:{ua:90,fa:90},aF:{ua:30,fa:40}}),st({aN:{ua:90,fa:92},aF:{ua:60,fa:84}})],mus:m(['forearms'])});
-  sadd('shin','Kneeling shin stretch',['tibialis','quads'],'30 s',['Kneel with the tops of the feet flat','Sit back towards the heels','Lean back a little to feel the front of the shins'],
+  sadd('shin','Kneeling shin stretch',['tibialis','quads'],'30 s',['Kneel with the tops of your feet flat','Sit back toward your heels','Lean back a little'],
     {K:[{hip:[100,140],t:0,lN:{k:[110,178],a:[74,180],f:170,back:1},lF:{k:[108,178],a:[72,180],f:170,back:1},aN:{ua:10,fa:10},aF:{ua:10,fa:10}},{hip:[82,166],t:-10,lN:{k:[110,178],a:[74,180],f:170,back:1},lF:{k:[108,178],a:[72,180],f:170,back:1},aN:{W:[66,182]},aF:{W:[64,182]}}],mus:m(['tibialis'],['quads'])});
   /* which stretches suit which muscles (first is best) */
   var STRETCH_FOR={quads:['quad','hipflex','shin'],hipflex:['hipflex','cobra'],hams:['ham'],glutes:['glute','knees'],calves:['calf'],tibialis:['shin'],adductors:['butterfly'],
@@ -67768,6 +67802,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-23',title:'Attachments, plain words and easier how-to',
+      lines:['Save the attachment you use (rope, bar, handle) on any exercise','Your muscles this week in plain words: on track, needs work, sore','How to do each exercise in a few easy words'],
+      steps:[
+        ['session','Attachments','Tap the button under an exercise to save the rope, bar or handle you use. Kova remembers it next time.',function(){ return first('#s-session .katt-chip')||q('#addExBtn'); }],
+        ['customize','Your muscles this week','No more numbers like 5/16: each muscle says how it is doing, and when it is sore.',function(){ return q('#volList'); }],
+        ['move','Easier how-to','Every exercise explains the moves in a few simple words.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }]
+      ]},
     {id:'new-2026-10-22',title:'Recovery, stretching, clearer pictures and smarter scans',
       lines:['Muscle recovery: what is fresh and what needs rest','Stretch right beside it, with a timer','Exercise pictures that light up the muscle working','Scan a machine from a photo, a video or a link','Alerts on your phone when sleep is low or it has been a while'],
       steps:[
@@ -69119,6 +69160,192 @@ window.KovaRecovery=(function(){
 
   paint();
   window.__mcPaint=paint;
+})();
+
+</script>
+<script id="p08-attach">
+/* =====================================================================
+   KovaAttach - the attachment you use, remembered (p37).
+
+   The owner: "on the add exercises make sure you have an option button to
+   add an attachment so going forward you can save it and they don't have
+   to tell you again". Every exercise in today's workout, and every one in
+   "Add to today", gets a small button: + Attachment, or the one you use
+   (Rope, Straight bar, V-bar...). The choice is kept per exercise (KP
+   'attach', so it follows your account), put on the exercise when it is
+   added again, and saved with the sets in your log.
+   ===================================================================== */
+window.KovaAttach=(function(){
+  'use strict';
+  var KEY='attach';
+  var OPT={
+    cable:['Rope','Straight bar','V-bar','EZ bar','Single handle','Wide lat bar','Ankle strap'],
+    barbell:['Straight bar','EZ bar','Trap bar','Safety squat bar','Smith machine'],
+    dumbbell:['Dumbbells','Kettlebell','Cable instead'],
+    machine:['Machine handles','Wide grip','Close grip','Neutral grip'],
+    bodyweight:['Bodyweight','Dip belt','Weight vest','Band to help'],
+    any:['Rope','Straight bar','V-bar','EZ bar','Single handle','Dumbbells','Machine handles','Band']
+  };
+  var EXTRA=['Belt','Straps'];
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function all(){ try{ var v=window.KP?KP.get(KEY):JSON.parse(localStorage.getItem('kova.attach')||'null'); return v&&typeof v==='object'?v:{}; }catch(e){ return {}; } }
+  function get(n){ return all()[String(n||'')]||''; }
+  function set(n,v){
+    var a=all(); v=String(v||'').trim().slice(0,40);
+    if(v) a[n]=v; else delete a[n];
+    try{ if(window.KP) KP.set(KEY,a); else localStorage.setItem('kova.attach',JSON.stringify(a)); }catch(e){}
+    try{ if(window.KovaAnalytics) KovaAnalytics.track('attachment_set',{n:n,v:v||'none'}); }catch(e){}
+    return v;
+  }
+  function K(){ return window.KSESS||null; }
+  /* what kind of exercise: the workout list's equipment, its short code, or the name */
+  var CODE={bb:'barbell',db:'dumbbell',kb:'dumbbell',cb:'cable',cable:'cable',mc:'machine',machine:'machine',bw:'bodyweight',barbell:'barbell',dumbbell:'dumbbell',bodyweight:'bodyweight'};
+  function kind(n){
+    var k=K(), x=null, e='';
+    try{ var X=(k&&k.XL||[]).filter(function(r){ return r.n===n; })[0]; e=X&&X.e||''; }catch(err){}
+    if(!OPT[e]){ try{ x=k&&k.lib?k.lib(n):null; }catch(err){} e=CODE[x&&(x.e||x.eq)]||''; }
+    if(OPT[e]) return e;
+    if(/cable|pushdown|pulldown|face pull|crossover|fly/i.test(n)) return 'cable';
+    if(/machine|leg press|leg curl|leg extension|pec deck|hack squat/i.test(n)) return 'machine';
+    if(/dumbbell|\bdb\b|goblet|kettlebell/i.test(n)) return 'dumbbell';
+    if(/barbell|\bez\b|skull|close grip bench|deadlift|squat|bench press|\brow\b|curl/i.test(n)) return 'barbell';
+    if(/pull.?up|chin.?up|\bdips?\b|push.?up/i.test(n)) return 'bodyweight';
+    return 'any';
+  }
+  function options(n){ return OPT[kind(n)].concat(EXTRA); }
+  function label(v){ return v?esc(v):'+ Attachment'; }
+
+  /* ---------- the picker ---------- */
+  function pickHtml(n,cur,where){
+    return '<div class="katt-p" data-katt-for="'+esc(n)+'" data-katt-where="'+where+'">'
+      +'<div class="katt-pl">Attachment for '+esc(n)+'</div>'
+      +'<div class="katt-opts">'+options(n).map(function(o){ return '<button type="button" class="chip'+(o===cur?' on':'')+'" data-katt-v="'+esc(o)+'" aria-pressed="'+(o===cur)+'">'+esc(o)+'</button>'; }).join('')
+      +'<button type="button" class="chip" data-katt-v="">None</button></div>'
+      +'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>'
+      +'<div class="katt-n">Kova remembers it for next time.</div></div>';
+  }
+  function sessionSheet(i){
+    var k=K(); if(!k||!window.openSheet) return;
+    var e=k.state().ex[i]; if(!e) return;
+    openSheet('<div class="grab"></div>'+pickHtml(e.n,e.att||get(e.n),'s'+i));
+  }
+  function choose(box,v){
+    var n=box.getAttribute('data-katt-for'), where=box.getAttribute('data-katt-where');
+    v=set(n,v);
+    var k=K();
+    if(k&&where.charAt(0)==='s'){
+      var e=k.state().ex[+where.slice(1)]; if(e&&e.n===n){ e.att=v||undefined; try{ k.api&&k.api.save&&k.api.save(); }catch(x){} }
+      if(window.closeSheet) closeSheet();
+      if(window.toast) toast(v?n+': '+v+'. Kova remembers it.':'No attachment for '+n+'.');
+      decorate(); return;
+    }
+    /* in "Add to today": update the row's button and fold the picker away */
+    var row=box.previousElementSibling, b=row&&row.querySelector('.katt-add'); if(b) b.innerHTML=label(v);
+    box.remove();
+  }
+
+  /* ---------- the buttons ---------- */
+  function on(id){ var s=document.getElementById(id); return !!(s&&s.classList.contains('on')); }
+  function decorate(){
+    var k=K();
+    /* today's workout */
+    if(k&&on('s-session')){
+      var ex=k.state().ex||[];
+      document.querySelectorAll('#s-session .exwrap[data-ex]').forEach(function(w){
+        var i=+w.getAttribute('data-ex'), e=ex[i], head=w.querySelector('.exhead .exmeta'); if(!e||!head) return;
+        if(e.att==null&&get(e.n)){ e.att=get(e.n); try{ k.api&&k.api.save&&k.api.save(); }catch(x){} }
+        var b=w.querySelector('.katt-chip'), txt=label(e.att);
+        if(b){ if(b.__t!==txt){ b.innerHTML=txt; b.__t=txt; b.classList.toggle('set',!!e.att); } return; }
+        head.insertAdjacentHTML('afterend','<button type="button" class="katt-chip'+(e.att?' set':'')+'" data-katt="'+i+'" aria-label="Attachment for '+esc(e.n)+'">'+txt+'</button>');
+        var nb=w.querySelector('.katt-chip'); if(nb) nb.__t=txt;
+      });
+    }
+    /* "Add to today" */
+    document.querySelectorAll('#sheet .exadd[data-n]').forEach(function(r){
+      if(r.querySelector('.katt-add')) return;
+      var n=r.getAttribute('data-n'), plus=r.querySelector('svg.ic');
+      var html='<button type="button" class="katt-add" data-katt-n="'+esc(n)+'" aria-label="Attachment for '+esc(n)+'">'+label(get(n))+'</button>';
+      if(plus) plus.insertAdjacentHTML('beforebegin',html); else r.insertAdjacentHTML('beforeend',html);
+    });
+  }
+
+  /* taps: in the capture phase, so the row under the button does not also add or open */
+  document.addEventListener('click',function(ev){
+    var t=ev.target; if(!t||!t.closest) return;
+    var b=t.closest('[data-katt]');
+    if(b){ ev.preventDefault(); ev.stopPropagation(); sessionSheet(+b.getAttribute('data-katt')); return; }
+    var a=t.closest('.katt-add');
+    if(a){ ev.preventDefault(); ev.stopPropagation();
+      var row=a.closest('.exadd'), n=a.getAttribute('data-katt-n'), nx=row&&row.nextElementSibling;
+      if(nx&&nx.classList.contains('katt-p')){ nx.remove(); return; }
+      document.querySelectorAll('#sheet .katt-p').forEach(function(x){ x.remove(); });
+      if(row) row.insertAdjacentHTML('afterend',pickHtml(n,get(n),'a'));
+      return; }
+    var v=t.closest('[data-katt-v]');
+    if(v){ ev.preventDefault(); ev.stopPropagation(); choose(v.closest('.katt-p'),v.getAttribute('data-katt-v')); return; }
+    var own=t.closest('[data-katt-own]');
+    if(own){ ev.preventDefault(); ev.stopPropagation(); var box=own.closest('.katt-p'), inp=box.querySelector('input'); if(inp&&inp.value.trim()) choose(box,inp.value); return; }
+    /* an exercise added from the list takes the attachment you use with it */
+    var add=t.closest('#sheet .exadd[data-n]');
+    if(add&&K()){ var name=add.getAttribute('data-n'), at=get(name);
+      if(at) setTimeout(function(){ var k=K(), ex=k.state().ex||[]; for(var j=ex.length-1;j>=0;j--){ if(ex[j].n===name&&ex[j].att==null){ ex[j].att=at; try{ k.api&&k.api.save&&k.api.save(); }catch(x){} break; } } decorate(); },0); }
+  },true);
+  document.addEventListener('keydown',function(ev){
+    if(ev.key!=='Enter') return; var inp=ev.target; if(!inp||!inp.closest||!inp.closest('.katt-own')) return;
+    ev.preventDefault(); var box=inp.closest('.katt-p'); if(inp.value.trim()) choose(box,inp.value);
+  });
+  var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('.katt-chip,.katt-add,.katt-p,[data-kxd],[data-kxd-still],#kpl,#kz2'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('kova:screen',soon);
+  return {get:get,set:set,options:options,kind:kind,decorate:decorate,all:all};
+})();
+
+</script>
+<script id="p08-fresh">
+/* =====================================================================
+   KovaFresh - an open Kova picks up a new version by itself (p37).
+
+   A phone keeps an app open for days. After an update it went on showing
+   the old one (the owner saw yesterday's figures). The build stamps its
+   id into the page (KOVA_BUILD) and into version.json; when you come back
+   to Kova, and every half hour while it is open, this asks which version
+   is newest. Back after a minute or more away and nothing in progress (no
+   sheet, no workout player, no typing, no tour): it reloads. Otherwise a
+   small card offers Refresh. Your data is saved as you go, so nothing is
+   lost either way.
+   ===================================================================== */
+window.KovaFresh=(function(){
+  'use strict';
+  var cur=String(window.KOVA_BUILD||''), away=0, asking=false, newest='';
+  var API={check:check,safe:safe,offer:offer,reload:function(){ try{ navigator.serviceWorker&&navigator.serviceWorker.getRegistration&&navigator.serviceWorker.getRegistration().then(function(r){ if(r) r.update(); }); }catch(e){} location.reload(); }};
+  function check(){
+    if(!cur||asking||typeof fetch!=='function') return Promise.resolve('');
+    asking=true;
+    return fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){ return r.ok?r.json():null; })
+      .then(function(j){ asking=false; newest=j&&j.v&&j.v!==cur?String(j.v):''; return newest; },function(){ asking=false; return ''; });
+  }
+  function safe(){
+    var a=document.activeElement;
+    return !(document.querySelector('#sheet.on')||document.getElementById('kpl')||document.getElementById('kz2')||document.getElementById('ksTour')
+      ||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||(window.KovaTour&&KovaTour.active&&KovaTour.active()));
+  }
+  function offer(){
+    if(document.getElementById('kfr')) return;
+    var el=document.createElement('div'); el.id='kfr'; el.className='card kfr'; el.setAttribute('role','status');
+    el.innerHTML='<span>Kova was updated.</span><button type="button" class="chip on" data-kfr="go">Refresh</button><button type="button" class="kfr-x" data-kfr="x" aria-label="Later">×</button>';
+    (document.getElementById('app')||document.body).appendChild(el);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-kfr]'); if(!b) return;
+    if(b.getAttribute('data-kfr')==='go') API.reload(); else { var el=document.getElementById('kfr'); if(el) el.remove(); }
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){ away=Date.now(); return; }
+    var gone=away?Date.now()-away:0; away=0;
+    check().then(function(v){ if(!v) return; if(gone>=60000&&safe()) API.reload(); else offer(); });
+  });
+  setInterval(function(){ if(!document.hidden) check().then(function(v){ if(v) offer(); }); },30*60000);
+  return API;
 })();
 
 </script>

@@ -109,6 +109,8 @@ self.addEventListener('fetch', function(e){
   /* /__/ is Google sign-in coming back (Firebase's pages, proxied by vercel.json):
      never cached, and never saved as the app */
   if (/\/api\/|\/__\/|\/\.netlify\/|\/privacy(\.html)?$|\/book(\.html|\/)/.test(new URL(url).pathname)) return;
+  /* p37: which version is newest - always asked fresh */
+  if (/\/version\.json$/.test(new URL(url).pathname)) return;
 
   /* Navigations and the shell: network-first, cache as fallback. */
   if (req.mode === 'navigate' || /\/index\.html$/.test(url) || url.endsWith('/')) {

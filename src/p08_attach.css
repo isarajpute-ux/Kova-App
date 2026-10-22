@@ -1,0 +1,15 @@
+/* KovaAttach (p37): the attachment button and its picker, in all three looks */
+.katt-chip,.katt-add{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:4px 10px;border-radius:12px;border:1px dashed var(--ron-line,rgba(255,255,255,.22));background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.75));font:500 10.5px 'Outfit',sans-serif;cursor:pointer;min-height:26px}
+.katt-chip.set{border-style:solid;border-color:var(--acc-brd);color:var(--acc);background:var(--acc-bg)}
+.katt-add{margin:0 8px 0 0;flex-shrink:0}
+body.light-mode .katt-chip,body.light-mode .katt-add{border-color:rgba(18,22,28,.22);color:rgba(18,22,28,.7)}
+.katt-p{padding:10px 4px 12px}
+#sheet .exadd+.katt-p{margin:-2px 0 8px;padding:10px 12px;border-radius:16px;border:1px solid var(--ron-line,rgba(255,255,255,.12));background:rgba(255,255,255,.03)}
+body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
+.katt-pl{font-size:14px;font-weight:600;margin-bottom:8px}
+.katt-opts{display:flex;flex-wrap:wrap;gap:6px}
+.katt-opts .chip{font:inherit;font-size:11.5px;cursor:pointer}
+.katt-own{display:flex;gap:6px;margin-top:10px}
+.katt-own .srch{flex:1;margin:0}
+.katt-own .chip{cursor:pointer;font:inherit;font-size:11.5px}
+.katt-n{font-size:10.5px;color:var(--ron-txt-3,rgba(255,255,255,.55));margin-top:8px}
