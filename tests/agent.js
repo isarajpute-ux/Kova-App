@@ -214,6 +214,32 @@ function scriptedSdk(realTool, opts) {
   r = await agent.run('u1');
   ck('with no API key it goes straight to the rules', r.source === 'rules');
 
+  // =================================================== the alerts reach the phone (p36)
+  const sent = [];
+  const fakePush = { send: async (uid, note) => { sent.push(Object.assign({ uid }, note)); return { sent: 1 }; } };
+  Object.keys(get('users/u1/agent/alerts') || {}).forEach((k) => set(`users/u1/agent/alerts/${k}`, null));
+  agent = makeAgent({ db: fakeDb, cfg: { model: 'm' }, now: () => NOW, push: fakePush });
+  r = await agent.run('u1', { window: 'night' });
+  ck('new alerts also go to the phone: at most two a check, the most urgent first', sent.length >= 1 && sent.length <= 2 && sent.every((n) => n.uid === 'u1'));
+  const sl = sent.find((n) => /^Sleep is low/.test(n.title)) || sent.find((n) => /sleep/i.test(n.title));
+  ck('…in plain words with the number ("Sleep is low: 5h 50m last night"), opening the right screen', sent.every((n) => n.title && n.body && n.screen) && (!sl || sl.screen === 'sleep'));
+  ck('sleep and missed workouts come first', sent.map((n) => n.id).join() === 'agent_sleep,agent_training');
+  const ids1 = sent.map((n) => n.id);
+  await agent.run('u1', { window: 'night' });
+  ck('…each is marked as sent, so the same alert never comes twice (the next ones follow at the next check)', r.alerts.filter((a) => a.pushed).length === 2 && sent.length <= 4 && sent.slice(2).every((n) => !ids1.includes(n.id)));
+  const W2 = require(path.join(FN, 'wellness.js'));
+  ck('the bedtime one names a time from your own nights ("Be in bed by 10:45 pm")', W2.bedBy({ metrics: [{ id: 'bedtime', avg_bedtime: '23:30' }] }).by === '10:45 pm'
+    && W2.rulesAlerts({ window: 'night', metrics: [{ id: 'sleep', status: 'fix', flags: ['x'] }, { id: 'bedtime', status: 'ok', flags: [], avg_bedtime: '23:30' }] })[0].action.includes('10:45 pm'));
+  const { phoneNote } = require(path.join(FN, 'agent.js'));
+  ck('"N days since your last workout" opens Workout', /^6 days since your last workout$/.test(phoneNote({ metric: 'training', wrong: '6 days since the last workout.', action: 'Go.' }, { metrics: [{ id: 'training', days_since_last: 6 }] }).title)
+    && phoneNote({ metric: 'training' }, { metrics: [] }).screen === 'move');
+  sent.length = 0;
+  Object.keys(get('users/u1/agent/alerts') || {}).forEach((k) => set(`users/u1/agent/alerts/${k}`, null));
+  set('srv/reminders/u1', { tz: 'UTC', quiet: { from: '00:00', to: '23:59' }, items: {} });
+  await agent.run('u1', { window: 'night' });
+  ck('quiet hours hold everything but sleep and bedtime', sent.every((n) => n.screen === 'sleep'));
+  set('srv/reminders/u1', null);
+
   // =================================================== the schedule
   set('srv/agentUsers/u2', { on: true, tz: TZ, ran: {} });
   set('srv/agentUsers/u3', { on: false, tz: TZ });

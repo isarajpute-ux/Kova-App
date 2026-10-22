@@ -33,6 +33,7 @@ function boot(opts) {
     const u = String(url);
     if (/\/api\/meal\/read$/.test(u)) {
       reads.push(JSON.parse(o.body));
+      if (opts.failOnce && reads.length === 1) return Promise.resolve({ ok: false, status: 503, json: () => Promise.resolve({ error: 'busy' }) });
       if (opts.status) return Promise.resolve({ ok: false, status: opts.status, json: () => Promise.resolve({ error: 'x' }) });
       return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ items: PLATE }) });
     }
@@ -145,6 +146,13 @@ function boot(opts) {
   await wait(600);
   D.doc.getElementById('scanBtn').click(); D.cam.onShot('data:image/jpeg;base64,' + 'D'.repeat(600)); await wait(3000);
   ck('without Pro it says so plainly and offers search', /part of Kova Pro/.test(D.doc.querySelector('#sheetIn .kq').textContent) && !!D.doc.querySelector('#sheetIn [data-kq="search"]'));
+
+  // ---------- p36: a busy server gets one quiet retry ----------
+  const E = boot({ failOnce: true });
+  await wait(600);
+  E.doc.getElementById('scanBtn').click(); E.cam.onShot('data:image/jpeg;base64,' + 'E'.repeat(600));
+  for (let i = 0; i < 120 && !/kcal/.test((E.doc.querySelector('#sheetIn .kq') || {}).textContent || ''); i++) await wait(100);
+  ck('a busy server is retried once by itself, and the plate is read', E.reads.length === 2 && /kcal/.test(E.doc.querySelector('#sheetIn .kq').textContent) && !/Could not read/.test(E.doc.querySelector('#sheetIn .kq').textContent));
 
   // ---------- the old photo sheet no longer wipes the meal list ----------
   ck('the scan sheet updates its own button, not the Fuel meal list', !/getElementById\('mealLog'\)\.textContent/.test(html) && /KovaFuel\.add\(\{src:'photo'/.test(html));

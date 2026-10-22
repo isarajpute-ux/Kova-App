@@ -54,9 +54,19 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   if (!host) { doc.getElementById('s-move').insertAdjacentHTML('afterbegin', '<div class="kv-card" id="fakeT"></div><div class="kl-acts"><div class="chip">Check my form</div></div>'); host = doc.querySelector('#s-move .kl-acts'); }
   RC.decorate(); w.KovaZone2.decorate(); RC.decorate(); await wait(20);
   const card = doc.getElementById('krcCard'), z2 = doc.getElementById('kz2Card');
-  ck('the Muscle recovery card sits under Training, before Zone 2', !!card && card.nextElementSibling === z2 && card.previousElementSibling === (host.closest('.kv-card') || host));
+  ck('the Muscle recovery card sits under Training, then Stretch, then Zone 2', !!card && card.nextElementSibling === doc.getElementById('krsCard') && doc.getElementById('krsCard').nextElementSibling === z2 && card.previousElementSibling === (host.closest('.kv-card') || host));
   ck('…your body figure coloured by recovery, without copying its ids', card.querySelectorAll('.krc-body .m.r-rest').length >= 2 && card.querySelectorAll('.krc-body .m.r-ready').length >= 6 && !card.querySelector('.krc-body [id]'));
   ck('…what is resting with its %, and the two buttons', /Quads \d+%/.test(card.textContent) && !!card.querySelector('[data-krc="fresh"]') && !!card.querySelector('[data-krc="play"]'));
+  /* p36: Stretch, right next to recovery */
+  const sc = doc.getElementById('krsCard');
+  ck('the Stretch card sits right after Muscle recovery, for what is resting, with pictures', !!sc && card.nextElementSibling === sc && /For what is resting: Quads/.test(sc.textContent) && sc.querySelectorAll('.krs-c').length === 3 && sc.querySelectorAll('.krs-c svg').length === 3);
+  ck('…with how long it takes and Stretch with me / All stretches', /stretches · about \d+ min/.test(sc.textContent) && !!sc.querySelector('[data-krs="with"]') && !!sc.querySelector('[data-krs="all"]'));
+  sc.querySelector('[data-krs="with"]').click(); await wait(30);
+  ck('Stretch with me walks through them with the hold timer', /1 of \d/.test(doc.getElementById('sheetIn').textContent) && !!doc.getElementById('kxpTimer'));
+  w.KovaExPage.stopTimer(); w.closeSheet(); await wait(10);
+  sc.querySelector('[data-krs="all"]').click(); await wait(30);
+  ck('All stretches opens every stretch by body part', /Legs and hips/.test(doc.getElementById('sheetIn').textContent) && /Chest and shoulders/.test(doc.getElementById('sheetIn').textContent));
+  w.closeSheet();
   card.querySelector('.krc-body .m.r-rest').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);
   const sh = doc.getElementById('sheetIn').textContent;
   ck('tapping a muscle opens its page: %, when it is ready, this week, exercises, stretches', /Needs rest|Recovering/.test(sh) && /Ready (in about|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/.test(sh) && /hard sets/.test(sh) && /Exercises for it/.test(sh) && /Stretch it/.test(sh));

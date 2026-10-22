@@ -1,5 +1,6 @@
 /* ---- KovaDemo (p32): the glass figure. Graphite with a light edge, like
-   the Kova orb; the working muscles glow in the screen's colour. Dark,
+   the Kova orb. p36b: a small version of the Workout body map, the working
+   muscles glowing with the rep, and the way it moves as a dashed path. Dark,
    soft light and light glass. ---- */
 .kxd-svg{display:block;width:100%;height:100%;overflow:hidden;
   --kx-l0:#F1F3F7;--kx-l1:#8F949D;--kx-l2:#25282E;--kx-rim:rgba(255,255,255,.22);--kx-hot:#FF8A45;
@@ -9,7 +10,24 @@ body.light-mode .kxd-svg{--kx-hot:#F26A1F;--kx-l0:#FFFFFF;--kx-l1:#B7BCC6;--kx-l
   --kx-eq:rgba(16,20,28,.32);--kx-eqf:rgba(16,20,28,.06);--kx-plate:#2A2D33;--kx-floor:rgba(16,20,28,.1);--kx-shadow:rgba(16,20,28,.22)}
 .kxd-svg .g0{stop-color:var(--kx-l0)}.kxd-svg .g1{stop-color:var(--kx-l1)}.kxd-svg .g2{stop-color:var(--kx-l2)}
 .kxd-svg .seg{stroke:var(--kx-rim);stroke-width:.5}
-.kxd-svg .far{opacity:.5}
+/* p36b: a small version of Workout's body map - the silhouette in the
+   map's colours, its muscles drawn on it, the working ones glowing */
+.kxd-svg{--kx-base:#222328;--kx-base-far:#17181C;--kx-ol:rgba(255,255,255,.34);--kx-ol-far:rgba(255,255,255,.2);--kx-mline:rgba(242,236,240,.14);--kx-mfill:rgba(255,255,255,.07)}
+body.soft-light .kxd-svg{--kx-base:#35373B;--kx-base-far:#2B2D31}
+body.light-mode .kxd-svg{--kx-base:#F5F6F8;--kx-base-far:#E2E4E8;--kx-ol:rgba(18,22,28,.34);--kx-ol-far:rgba(18,22,28,.2);--kx-mline:rgba(18,22,28,.1);--kx-mfill:rgba(255,255,255,.75)}
+.kxd-svg .bo{fill:none;stroke:var(--kx-ol);stroke-width:2.2;stroke-linejoin:round}
+.kxd-svg .bf{fill:var(--kx-base);stroke:none}
+/* the far arm and leg: solid and a shade darker, not see-through */
+.kxd-svg .bg.far{opacity:1}
+.kxd-svg .bg.far .bf{fill:var(--kx-base-far)}
+.kxd-svg .bg.far .bo{stroke:var(--kx-ol-far)}
+.kxd-svg .bg.far .mm:not(.mp):not(.ms){display:none}
+.kxd-svg .mm{fill:var(--kx-mfill);stroke:var(--kx-mline);stroke-width:.5;stroke-linejoin:round}
+.kxd-svg .mm.mp{fill:var(--kx-hot);stroke:var(--kx-hot);stroke-opacity:.9}
+.kxd-svg .mm.ms{fill:var(--kx-hot);stroke:var(--kx-hot);stroke-opacity:.5}
+.kxd-svg .trk-l{fill:none;stroke:var(--kx-hot);stroke-width:1.5;stroke-dasharray:3 3;stroke-linecap:round;opacity:.7}
+.kxd-svg .trk-s{fill:none;stroke:var(--kx-hot);stroke-width:1.2;opacity:.7}
+.kxd-svg .trk-a{fill:var(--kx-hot);opacity:.85}
 .kxd-svg .hand{fill:var(--kx-l1);stroke:var(--kx-rim);stroke-width:.5}
 .kxd-svg .head{stroke:var(--kx-rim);stroke-width:.5}
 .kxd-svg .h0{stop-color:#FFD2A8;stop-opacity:.95}.kxd-svg .h1{stop-color:var(--kx-hot);stop-opacity:.8}.kxd-svg .h2{stop-color:var(--kx-hot);stop-opacity:0}

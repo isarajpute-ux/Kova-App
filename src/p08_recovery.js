@@ -109,6 +109,29 @@ window.KovaRecovery=(function(){
       +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0">Follow along</div></div></div>';
   }
 
+  /* ---------- Stretch, right next to recovery ----------
+     The stretches for what is resting (lowest first), else for today's
+     workout, else a short full-body set. Stretch with me walks through them
+     with the hold timer; All stretches opens every one by body part. */
+  var FULL=['quad','ham','hipflex','chest','lat'];
+  function stretchList(M){
+    var d=D(); if(!d||!d.stretchesFor) return {why:'',L:[]};
+    var sore=list(M,'rest').concat(list(M,'mid'));
+    if(sets().length&&sore.length) return {why:'For what is resting: '+sore.slice(0,3).map(function(m){ return M[m].n; }).join(', '),L:d.stretchesFor(sore).slice(0,5)};
+    var td=window.KovaExPage&&KovaExPage.todays?KovaExPage.todays():[];
+    if(td.length) return {why:'For today’s workout',L:td.slice(0,5)};
+    return {why:'A five-minute full-body set',L:FULL.map(function(id){ return d.STR.filter(function(x){ return x.id===id; })[0]; }).filter(Boolean)};
+  }
+  function stretchCard(M){
+    var S=stretchList(M||state()); if(!S.L.length) return '';
+    var mins=Math.max(1,Math.round(S.L.reduce(function(a,x){ var m=/(\d+)\s*s/.exec(x.hold||''), n=m?+m[1]:30; return a+(/each|side|leg|arm/.test(x.hold||'')?2*n:n); },0)/60));
+    return '<div class="kv-card krs" id="krsCard"><div class="kv-h"><span>STRETCH</span><span class="krs-t">'+S.L.length+' stretches · about '+mins+' min</span></div>'
+      +'<div class="krc-l">'+esc(S.why)+'</div>'
+      +'<div class="krs-row">'+S.L.slice(0,3).map(function(x){ return '<button type="button" class="krs-c" data-kxp="stretch" data-n="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b><small>'+esc(x.hold)+'</small></button>'; }).join('')+'</div>'
+      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krs="with" role="button" tabindex="0">'+ic('player-play')+' Stretch with me</div><div class="chip" data-krs="all" role="button" tabindex="0">All stretches</div></div></div>';
+  }
+  function mountStills(el){ var d=D(); if(!el||!d) return; el.querySelectorAll('[data-kxd-still]').forEach(function(f){ if(!f.__kxd){ f.__kxd=1; d.mount(f,f.getAttribute('data-kxd-still'),{still:true,u:1}); } }); }
+
   /* ---------- one muscle ---------- */
   function muscleSheet(m){
     var M=state(), o=M[m]; if(!o||!window.openSheet) return;
@@ -174,11 +197,19 @@ window.KovaRecovery=(function(){
     var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
     var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
     var have=document.getElementById('krcCard'), html=card();
-    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('krcCard'); if(n0) n0.__h=html; } return; }
-    /* Training, then this, then Zone 2 */
-    var z2=document.getElementById('kz2Card');
-    if(z2) z2.insertAdjacentHTML('beforebegin',html); else (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
-    var n=document.getElementById('krcCard'); if(n) n.__h=html;
+    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('krcCard'); if(n0) n0.__h=html; } }
+    else{
+      /* Training, then this, then Stretch, then Zone 2 */
+      var z2=document.getElementById('kz2Card');
+      if(z2) z2.insertAdjacentHTML('beforebegin',html); else (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+      var n=document.getElementById('krcCard'); if(n) n.__h=html;
+    }
+    var rc=document.getElementById('krcCard'); if(!rc) return;
+    var sh=stretchCard(), hs=document.getElementById('krsCard');
+    if(hs&&hs.__h===sh&&hs.previousElementSibling===rc) return;
+    if(hs) hs.remove();
+    if(!sh) return;
+    rc.insertAdjacentHTML('afterend',sh); hs=document.getElementById('krsCard'); hs.__h=sh; mountStills(hs);
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
   document.addEventListener('click',function(ev){
@@ -190,9 +221,15 @@ window.KovaRecovery=(function(){
     if(a==='fresh'){ trainFresh(); return; }
     if(a==='play'){ if(window.KovaPlayer) KovaPlayer.open(); return; }
   });
-  document.addEventListener('keydown',function(ev){ var b=ev.target.closest&&ev.target.closest('.krc [data-krc][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } });
-  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#krcCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-krs]'); if(!b||!window.KovaExPage) return;
+    var a=b.getAttribute('data-krs');
+    if(a==='with'){ var S=stretchList(state()); KovaExPage.routine(S.L); track('stretch_with',{n:S.L.length,from:'card'}); return; }
+    if(a==='all'){ KovaExPage.openStretch(); return; }
+  });
+  document.addEventListener('keydown',function(ev){ var b=ev.target.closest&&ev.target.closest('.krc [data-krc][role="button"],.krs [data-krs][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } });
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#krcCard,#krsCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
   soon();
-  return {state:state,sets:sets,musclesOf:musclesOf,freshPlan:freshPlan,trainFresh:trainFresh,card:card,decorate:decorate,muscleSheet:muscleSheet,TAU:TAU,NAME:NAME};
+  return {state:state,sets:sets,musclesOf:musclesOf,freshPlan:freshPlan,trainFresh:trainFresh,card:card,stretchCard:stretchCard,stretchList:stretchList,decorate:decorate,muscleSheet:muscleSheet,TAU:TAU,NAME:NAME};
 })();

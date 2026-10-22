@@ -41,3 +41,13 @@ body.light-mode .krc-m{background:rgba(255,255,255,.6)}
 .krcs-wk .bar b{position:absolute;top:-4px;width:1px;height:16px;background:currentColor;opacity:.4}
 .krcs-wk span{display:block;font-size:12px;line-height:1.5;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:8px}
 .krcs-n{margin-top:16px;font-size:12px}
+
+/* Stretch, right next to recovery (p36) */
+.krs .kv-h .krs-t{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--ron-txt-3)}
+.krs-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 4px}
+.krs-c{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px 9px;border-radius:16px;border:1px solid var(--ron-line);background:rgba(255,255,255,.04);color:var(--ron-txt);font:inherit;text-align:center;cursor:pointer;min-width:0}
+body.light-mode .krs-c{background:rgba(255,255,255,.55)}
+.krs-c .kxp-th{width:64px;height:64px;border-radius:12px}
+.krs-c b{font-size:11px;font-weight:500;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.krs-c small{font-size:10px;color:var(--ron-txt-3)}
+.krs .chip .ic{font-size:13px;margin-right:4px;vertical-align:-2px}

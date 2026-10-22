@@ -125,3 +125,17 @@ body.light-mode .pln-tog .plan-opt-p,body.light-mode .pln-t b{color:#1C1A17!impo
 body.light-mode .pln-drop li b{color:#1C1A17}
 body.light-mode .pln-sub{color:rgba(28,26,23,.66)}
 body.light-mode .pln-both{color:color-mix(in srgb,var(--acc) 70%,#000)}
+
+/* p36: Settings and the subscription page in Work OS's colours (the owner:
+   "I don't know why it's brown"). The plan page used to fall back to
+   Workout's warm accent; it now belongs to Settings, and Settings wears
+   Work OS's cool graphite, its accent and its dot grid. */
+.app[data-pillar="settings"]{--acc:#DCE3EC;--acc-2:#AEB8C6;--acc-dim:rgba(220,227,236,.14);--acc-brd:rgba(220,227,236,.34);--acc-glow:rgba(220,227,236,.26);--acc-bg:rgba(220,227,236,.07)}
+.app[data-pillar="settings"],body.dark-mode .app[data-pillar="settings"]{background:radial-gradient(ellipse 135% 100% at 50% -8%,#16181C 0%,#101215 74%,#08090B 100%)}
+body.soft-light .app[data-pillar="settings"]{background:radial-gradient(ellipse 135% 100% at 50% -8%,#54565C 0%,#46484D 40%,#3C3E42 74%,#353639 100%)}
+body.light-mode .app[data-pillar="settings"]{background:radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
+.app[data-pillar="settings"]::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.115) 1.15px,transparent 1.15px);background-size:20px 20px;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)}
+.app[data-pillar="settings"] .screen{position:relative;z-index:1}
+body.light-mode .app[data-pillar="settings"]::before{background-image:radial-gradient(rgba(20,24,32,.18) 1.15px,transparent 1.15px)}

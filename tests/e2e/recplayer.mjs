@@ -32,9 +32,14 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.waitForSelector('#krcCard', { timeout: 8000 }).catch(() => {});
   const card = await p.evaluate(() => { const c = document.getElementById('krcCard'); if (!c) return null; c.scrollIntoView({ block: 'center' });
     const f = (cl) => { const m = c.querySelector('.krc-body .m.' + cl); return m ? getComputedStyle(m).fill : ''; };
-    return { t: c.textContent, inside: !!c.parentNode.closest('.kv-card'), next: c.nextElementSibling && c.nextElementSibling.id, ready: f('r-ready'), rest: f('r-rest'), glass: getComputedStyle(c).backdropFilter || getComputedStyle(c).webkitBackdropFilter || '' }; });
+    return { t: c.textContent, inside: !!c.parentNode.closest('.kv-card'), next: c.nextElementSibling && c.nextElementSibling.nextElementSibling && c.nextElementSibling.nextElementSibling.id, ready: f('r-ready'), rest: f('r-rest'), glass: getComputedStyle(c).backdropFilter || getComputedStyle(c).webkitBackdropFilter || '' }; });
   ck(theme + ': the Muscle recovery card sits under Training, before Zone 2, in Kova’s glass', card && !card.inside && card.next === 'kz2Card' && /blur/.test(card.glass));
   ck(theme + ': legs trained 20 h ago show as resting, the rest as ready, in two different colours', card && /Quads \d+%/.test(card.t) && /Ready:/.test(card.t) && card.ready && card.rest && card.ready !== card.rest);
+  const st = await p.evaluate(() => { const c = document.getElementById('krsCard'); return c && { after: c.previousElementSibling && c.previousElementSibling.id, pics: c.querySelectorAll('.krs-c svg').length, t: c.textContent }; });
+  ck(theme + ': the Stretch card sits right after recovery, with three pictures', st && st.after === 'krcCard' && st.pics === 3 && /Stretch with me/.test(st.t));
+  await p.locator('#krsCard [data-krs="with"]').click(); await p.waitForTimeout(500);
+  ck(theme + ': Stretch with me opens the first stretch with its timer', await p.locator('#kxpTimer').count() === 1);
+  await p.evaluate(() => { KovaExPage.stopTimer(); closeSheet(); }); await p.waitForTimeout(400);
   await p.locator('#krcCard .krc-body .m.r-rest').first().click({ force: true }); await p.waitForTimeout(500);
   const sh = await p.locator('#sheetIn').textContent();
   ck(theme + ': tapping a resting muscle opens its page (when it is ready, exercises, stretches)', /Ready (in about|Mon|Tue|Wed|Thu|Fri|Sat|Sun)/.test(sh) && /Exercises for it/.test(sh) && /Stretch it/.test(sh));

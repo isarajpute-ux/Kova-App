@@ -34,6 +34,12 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.waitForTimeout(700);
   const f2 = await p.evaluate(() => document.querySelector('#sheetIn .kxp-fig').innerHTML);
   ck(theme + ': the exercise page picture moves', f1 !== f2 && /<svg/.test(f2));
+  /* p36c: smooth on a phone - after the first loop every frame comes from memory, at most 30 a second */
+  await p.waitForTimeout(6000);
+  const pf = await p.evaluate(() => new Promise((ok) => { const d0 = KovaDemo.stats.draws; let n = 0, ch = 0; const el = document.querySelector('#sheetIn .kxp-fig');
+    const mo = new MutationObserver(() => ch++); mo.observe(el, { childList: true });
+    const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else { mo.disconnect(); ok({ draws: KovaDemo.stats.draws - d0, frames: n, changes: ch }); } }; requestAnimationFrame(f); }));
+  ck(theme + ': the moving picture plays almost entirely from memory after its first loops, 30 changes a second at most, the page stays smooth', pf.draws <= 8 && pf.changes <= 64 && pf.changes >= 20 && pf.frames >= 50 || (console.error(theme, pf), false));
   const lit = await p.evaluate(() => [...document.querySelectorAll('#sheetIn .kxp-body .m.p')].map((m) => getComputedStyle(m).fill));
   const acc = theme === 'light' ? 'rgb(200, 87, 26)' : 'rgb(232, 122, 60)';
   ck(theme + ': the hamstrings and glutes light up in the Workout colour', lit.length >= 4 && lit.every((c) => c === acc) || (console.error(theme, lit.slice(0, 3)), false));

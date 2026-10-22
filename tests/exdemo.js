@@ -40,7 +40,21 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('in a Romanian deadlift the bar stays close to the legs (over the foot)', Math.abs(rdl.wN[0] - rdl.aN[0]) < 16);
   const ids = (D.svg('Barbell back squat', 0.3) + D.svg('Barbell back squat', 0.3)).match(/id="([^"]+)"/g);
   ck('two pictures on one screen never share a colour id', ids && new Set(ids).size === ids.length);
-  ck('the muscles that work glow (the squat lights up the legs, not the arms)', /class="gl"/.test(D.svg('Barbell back squat', 1)) && sq.mus.p.indexOf('quads') >= 0 && sq.mus.p.indexOf('biceps') < 0);
+  /* p36b: a small version of Workout's body map, the working muscles glowing with the rep */
+  const sqs = D.svg('Barbell back squat', 1);
+  const litM = (svg) => [...svg.matchAll(/class="mm mp" data-m="([a-z]+)"/g)].map((m) => m[1]);
+  const glowAt = (n, u) => { const m = /class="mm mp"[^>]*style="fill-opacity:([\d.]+)/.exec(D.svg(n, u)); return m ? +m[1] : 0; };
+  ck('each picture is a human body like the body map: one smooth silhouette per part (head, trunk, arms with hands, legs with feet) with its muscles on it, no hair or robot joints', (sqs.match(/class="bo"/g) || []).length >= 11 && (sqs.match(/class="mm/g) || []).length >= 20 && !/class="(eye|jt|hair)/.test(sqs) && /C/.test((/class="bo" d="([^"]+)"/.exec(sqs) || [])[1] || ''));
+  const fem = D.svg('Barbell curl', 1, { sex: 'f' }), mal = D.svg('Barbell curl', 1, { sex: 'm' });
+  ck('…a woman or a man, like you (a different build, not just a label)', fem !== mal && (fem.match(/class="bo"/g) || []).length === (mal.match(/class="bo"/g) || []).length);
+  ck('the working muscles glow and the rest stay as they are: an RDL lights the hamstrings, a squat the quads, a curl the biceps', litM(D.svg('Romanian deadlift', 1)).includes('hams') && !litM(D.svg('Romanian deadlift', 1)).includes('biceps')
+    && litM(sqs).includes('quads') && litM(D.svg('Barbell curl', 1)).includes('biceps') && !litM(D.svg('Barbell curl', 1)).includes('quads'));
+  ck('…brighter as the rep goes (down and up)', glowAt('Romanian deadlift', 1) > glowAt('Romanian deadlift', 0) + 0.4);
+  ck('…the old glow spots only when asked (opts.glow)', !/class="gl/.test(sqs) && /class="gl"/.test(D.svg('Barbell back squat', 1, { glow: true })));
+  const trk = (n) => { const m = /class="trk-l" d="M([^"]+)"/.exec(D.svg(n, 0.5)); return m ? m[1].split('L').map((p) => p.split(',').map(Number)) : null; };
+  const sqT = trk('Barbell back squat'), cuT = trk('Barbell curl'), plT = trk('Plank');
+  ck('a dashed path with an arrow shows the way it moves: the squat\u2019s path goes down, the curl\u2019s hands come up', sqT && sqT[sqT.length - 1][1] > sqT[0][1] + 15 && cuT && cuT[cuT.length - 1][1] < cuT[0][1] - 15 && /class="trk-a"/.test(D.svg('Barbell curl', 0.5)));
+  ck('…and none on a hold that does not move (plank) or a stretch', !plT && !/trk-l/.test(D.svg('Standing quad stretch', 1)));
 
   /* stretches */
   ck('17 stretches, each with a hold time and 3 cues', D.STR.length >= 17 && D.STR.every((d) => /\d+ s/.test(d.hold) && d.cues.length >= 3));

@@ -7623,6 +7623,20 @@ body.light-mode .pln-drop li b{color:#1C1A17}
 body.light-mode .pln-sub{color:rgba(28,26,23,.66)}
 body.light-mode .pln-both{color:color-mix(in srgb,var(--acc) 70%,#000)}
 
+/* p36: Settings and the subscription page in Work OS's colours (the owner:
+   "I don't know why it's brown"). The plan page used to fall back to
+   Workout's warm accent; it now belongs to Settings, and Settings wears
+   Work OS's cool graphite, its accent and its dot grid. */
+.app[data-pillar="settings"]{--acc:#DCE3EC;--acc-2:#AEB8C6;--acc-dim:rgba(220,227,236,.14);--acc-brd:rgba(220,227,236,.34);--acc-glow:rgba(220,227,236,.26);--acc-bg:rgba(220,227,236,.07)}
+.app[data-pillar="settings"],body.dark-mode .app[data-pillar="settings"]{background:radial-gradient(ellipse 135% 100% at 50% -8%,#16181C 0%,#101215 74%,#08090B 100%)}
+body.soft-light .app[data-pillar="settings"]{background:radial-gradient(ellipse 135% 100% at 50% -8%,#54565C 0%,#46484D 40%,#3C3E42 74%,#353639 100%)}
+body.light-mode .app[data-pillar="settings"]{background:radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
+.app[data-pillar="settings"]::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.115) 1.15px,transparent 1.15px);background-size:20px 20px;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)}
+.app[data-pillar="settings"] .screen{position:relative;z-index:1}
+body.light-mode .app[data-pillar="settings"]::before{background-image:radial-gradient(rgba(20,24,32,.18) 1.15px,transparent 1.15px)}
+
 </style>
 <style id="p08-asks">
 /* KovaAsk (p20): "Tell me" times under the team box, what the team is on,
@@ -8446,7 +8460,8 @@ body.light-mode .tp-shb{background:#FFFFFF;border-color:rgba(17,19,24,.1);box-sh
 </style>
 <style id="p08-exdemo">
 /* ---- KovaDemo (p32): the glass figure. Graphite with a light edge, like
-   the Kova orb; the working muscles glow in the screen's colour. Dark,
+   the Kova orb. p36b: a small version of the Workout body map, the working
+   muscles glowing with the rep, and the way it moves as a dashed path. Dark,
    soft light and light glass. ---- */
 .kxd-svg{display:block;width:100%;height:100%;overflow:hidden;
   --kx-l0:#F1F3F7;--kx-l1:#8F949D;--kx-l2:#25282E;--kx-rim:rgba(255,255,255,.22);--kx-hot:#FF8A45;
@@ -8456,7 +8471,24 @@ body.light-mode .kxd-svg{--kx-hot:#F26A1F;--kx-l0:#FFFFFF;--kx-l1:#B7BCC6;--kx-l
   --kx-eq:rgba(16,20,28,.32);--kx-eqf:rgba(16,20,28,.06);--kx-plate:#2A2D33;--kx-floor:rgba(16,20,28,.1);--kx-shadow:rgba(16,20,28,.22)}
 .kxd-svg .g0{stop-color:var(--kx-l0)}.kxd-svg .g1{stop-color:var(--kx-l1)}.kxd-svg .g2{stop-color:var(--kx-l2)}
 .kxd-svg .seg{stroke:var(--kx-rim);stroke-width:.5}
-.kxd-svg .far{opacity:.5}
+/* p36b: a small version of Workout's body map - the silhouette in the
+   map's colours, its muscles drawn on it, the working ones glowing */
+.kxd-svg{--kx-base:#222328;--kx-base-far:#17181C;--kx-ol:rgba(255,255,255,.34);--kx-ol-far:rgba(255,255,255,.2);--kx-mline:rgba(242,236,240,.14);--kx-mfill:rgba(255,255,255,.07)}
+body.soft-light .kxd-svg{--kx-base:#35373B;--kx-base-far:#2B2D31}
+body.light-mode .kxd-svg{--kx-base:#F5F6F8;--kx-base-far:#E2E4E8;--kx-ol:rgba(18,22,28,.34);--kx-ol-far:rgba(18,22,28,.2);--kx-mline:rgba(18,22,28,.1);--kx-mfill:rgba(255,255,255,.75)}
+.kxd-svg .bo{fill:none;stroke:var(--kx-ol);stroke-width:2.2;stroke-linejoin:round}
+.kxd-svg .bf{fill:var(--kx-base);stroke:none}
+/* the far arm and leg: solid and a shade darker, not see-through */
+.kxd-svg .bg.far{opacity:1}
+.kxd-svg .bg.far .bf{fill:var(--kx-base-far)}
+.kxd-svg .bg.far .bo{stroke:var(--kx-ol-far)}
+.kxd-svg .bg.far .mm:not(.mp):not(.ms){display:none}
+.kxd-svg .mm{fill:var(--kx-mfill);stroke:var(--kx-mline);stroke-width:.5;stroke-linejoin:round}
+.kxd-svg .mm.mp{fill:var(--kx-hot);stroke:var(--kx-hot);stroke-opacity:.9}
+.kxd-svg .mm.ms{fill:var(--kx-hot);stroke:var(--kx-hot);stroke-opacity:.5}
+.kxd-svg .trk-l{fill:none;stroke:var(--kx-hot);stroke-width:1.5;stroke-dasharray:3 3;stroke-linecap:round;opacity:.7}
+.kxd-svg .trk-s{fill:none;stroke:var(--kx-hot);stroke-width:1.2;opacity:.7}
+.kxd-svg .trk-a{fill:var(--kx-hot);opacity:.85}
 .kxd-svg .hand{fill:var(--kx-l1);stroke:var(--kx-rim);stroke-width:.5}
 .kxd-svg .head{stroke:var(--kx-rim);stroke-width:.5}
 .kxd-svg .h0{stop-color:#FFD2A8;stop-opacity:.95}.kxd-svg .h1{stop-color:var(--kx-hot);stop-opacity:.8}.kxd-svg .h2{stop-color:var(--kx-hot);stop-opacity:0}
@@ -8841,6 +8873,37 @@ body.light-mode .krc-m{background:rgba(255,255,255,.6)}
 .krcs-wk .bar b{position:absolute;top:-4px;width:1px;height:16px;background:currentColor;opacity:.4}
 .krcs-wk span{display:block;font-size:12px;line-height:1.5;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:8px}
 .krcs-n{margin-top:16px;font-size:12px}
+
+/* Stretch, right next to recovery (p36) */
+.krs .kv-h .krs-t{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--ron-txt-3)}
+.krs-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 4px}
+.krs-c{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px 9px;border-radius:16px;border:1px solid var(--ron-line);background:rgba(255,255,255,.04);color:var(--ron-txt);font:inherit;text-align:center;cursor:pointer;min-width:0}
+body.light-mode .krs-c{background:rgba(255,255,255,.55)}
+.krs-c .kxp-th{width:64px;height:64px;border-radius:12px}
+.krs-c b{font-size:11px;font-weight:500;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.krs-c small{font-size:10px;color:var(--ron-txt-3)}
+.krs .chip .ic{font-size:13px;margin-right:4px;vertical-align:-2px}
+
+</style>
+<style id="p08-machine">
+/* Scan a machine (p36): ways in, best guesses as pictures, a picture list */
+.mc-ways{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+.mc-ways .chip{display:inline-flex;align-items:center;gap:6px;border-radius:16px;font:inherit;cursor:pointer}
+.mc-ways .ic{font-size:14px}
+.mc-pic{display:block;flex-shrink:0;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--ron-line,rgba(255,255,255,.08));overflow:hidden}
+body.light-mode .mc-pic{background:rgba(18,22,28,.04)}
+.mc-pic.mc-none{display:flex;align-items:center;justify-content:center;color:var(--ron-txt-3,rgba(255,255,255,.5))}
+.mc-pic.mc-none .ic{font-size:18px}
+.mc-pic.mc-big{width:84px;height:84px;border-radius:18px}
+.mc-top{display:flex;gap:12px;align-items:center;margin-top:4px}
+.mcopt{display:flex;gap:11px;align-items:center}
+.mc-look{opacity:.9;margin-bottom:2px}
+.mc-alts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.mc-alt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 6px 10px;border-radius:16px;border:1px solid var(--ron-line,rgba(255,255,255,.1));background:rgba(255,255,255,.04);color:inherit;font:inherit;text-align:center;cursor:pointer;min-width:0}
+body.light-mode .mc-alt{background:rgba(255,255,255,.55)}
+.mc-alt .mc-pic{width:64px;height:64px}
+.mc-alt b{font-size:11.5px;font-weight:600;line-height:1.25}
+.mc-alt small{font-size:10px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.6));display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 </style>
 </head>
@@ -9251,7 +9314,7 @@ body.light-mode .krc-m{background:rgba(255,255,255,.6)}
     <div><div class="eyebrow">POINT AND LEARN</div><div class="title-s">Scan machine</div></div></div>
   </div>
 
-  <div class="sub" style="margin-bottom:14px;line-height:1.5">Photograph any equipment. Kova identifies it, then shows what it trains and how to use it.</div>
+  <div class="sub" style="margin-bottom:14px;line-height:1.5">Take a photo, add a video, or paste a YouTube link. Kova names the equipment, then shows what it trains and how to use it.</div>
 
   <div class="card card-lg" id="mcDrop" style="padding:0;overflow:hidden;border-color:var(--acc-brd);cursor:pointer">
     <div id="mcEmpty" style="padding:26px 18px;text-align:center">
@@ -9268,9 +9331,9 @@ body.light-mode .krc-m{background:rgba(255,255,255,.6)}
   <input type="file" id="mcFile" accept="image/*" capture="environment" style="display:none"/>
 
   <div id="mcPick" style="display:none">
-    <div class="sec-h">What is it?</div>
-    <div class="sub" style="margin-bottom:9px">Search or scroll to find it.</div>
-    <input class="srch" id="mcSearch" placeholder="Search machines" style="margin-bottom:9px"/>
+    <div class="sec-h">Find it by how it looks</div>
+    <div class="sub" style="margin-bottom:9px">Each one has a picture of what you do on it.</div>
+    <input class="srch" id="mcSearch" placeholder="Search: seat, cable, pad, bar..." style="margin-bottom:9px"/>
     <div id="mcList"></div>
   </div>
 
@@ -14292,7 +14355,7 @@ window.KW_TODAY=function(){return window.KOVA_WEEK[4]};
    in learn-module.html. */
 var KOVA_LEARN_ENABLED = false;
 
-var PILLAR={maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
+var PILLAR={maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',plan:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
 
 /* ---------- KOVA PROFILE STORE ---------- */
 var KP=(function(){
@@ -21394,10 +21457,10 @@ function openLibrary(title,rec,onPick){
 
       if(!window.KovaModel||!KovaModel.connected()){
         out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">'
-          +'Photo saved, but nothing read it</div>'
-          +'<div class="sub" style="line-height:1.5">Estimating a meal from a picture needs a vision model, '
-          +'and none is connected. Add one in Settings, or search the food below and log it by hand — '
-          +'which is more accurate anyway.</div></div>';
+          +'Photo saved. Sign in and Kova reads the plate</div>'
+          +'<div class="sub" style="line-height:1.5">Signed in, Kova\u2019s AI reads every meal photo for you, free. '
+          +'Until then, search the food below and log it by hand.</div>'
+          +'<button class="btn" style="margin-top:10px" onclick="go(\'settings\')">Sign in</button></div>';
         return;
       }
 
@@ -26302,666 +26365,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
   window.__paintHealth();
 })();
 
-/* ---------- machine scanner: photo -> muscles worked + how to do it ---------- */
-(function(){
-  var drop=document.getElementById('mcDrop');
-  if(!drop) return;
-  var file=document.getElementById('mcFile');
-
-  // Muscle attributions and setup steps follow standard resistance-training
-  // references. They describe the machine, not the photo.
-  var M=[
-    {n:'Leg press',k:'leg press sled 45 plate',kind:'fixed',
-     pri:['Quadriceps','Gluteus maximus'],sec:['Adductors','Hamstrings'],
-     set:['Sit with your whole back and hips flat against the pad','Feet mid-platform, shoulder width, toes slightly out','Release the safety handles only once your feet are set'],
-     how:['Lower until your knees reach about 90 degrees, controlled, roughly 2 seconds','Stop before your hips start to curl off the pad','Press through the whole foot, not just the toes','Leave a slight bend at the top, never snap the knees straight'],
-     miss:[['Letting the low back round at the bottom','This is where leg press injuries happen. Shorten the range.'],['Locking the knees out hard','Dumps the load onto the joint instead of the muscle.'],['Feet too low on the platform','Turns it into a knee-dominant grind and lifts the heels.']],
-     rx:{s:3,r:'10-15',rest:'2 min'}},
-
-    {n:'Lat pulldown',k:'lat pulldown cable overhead',kind:'fixed',
-     pri:['Latissimus dorsi'],sec:['Biceps','Rear delts','Mid traps','Rhomboids'],
-     set:['Set the thigh pad snug so you do not lift off the seat','Grip slightly wider than shoulder width','Sit tall, lean back no more than about 15 degrees and hold it'],
-     how:['Pull the bar to your upper chest, not behind your neck','Drive the elbows down and back, hands are just hooks','Squeeze the shoulder blades down at the bottom','Let the bar rise all the way until you feel the lats stretch'],
-     miss:[['Leaning further back each rep','Turns it into a row. Pick a lighter stack.'],['Pulling behind the neck','No extra benefit, and it puts the shoulder in a bad spot.'],['Yanking with the arms','Biceps take over. Think elbows, not hands.']],
-     rx:{s:3,r:'8-12',rest:'1.5 min'}},
-
-    {n:'Chest press machine',k:'chest press seated machine push',kind:'fixed',
-     pri:['Pectoralis major'],sec:['Front delts','Triceps'],
-     set:['Set the seat so the handles sit level with mid chest','Shoulder blades pinned back and down against the pad','Feet flat on the floor'],
-     how:['Press forward and slightly together, elbows about 45 degrees from the torso','Stop just short of locking the elbows','Return under control until you feel the chest stretch','Keep the shoulders back the entire set'],
-     miss:[['Seat too high','Presses upward, loads the shoulder instead of the chest.'],['Shoulders rolling forward at the end','Losing the set position. Lighter and stricter.'],['Bouncing out of the bottom','Skips the part that builds the chest.']],
-     rx:{s:3,r:'8-12',rest:'1.5 min'}},
-
-    {n:'Seated cable row',k:'cable row seated horizontal pull',kind:'fixed',
-     pri:['Mid traps','Rhomboids','Latissimus dorsi'],sec:['Biceps','Rear delts','Spinal erectors'],
-     set:['Feet braced, slight knee bend','Sit tall with a neutral spine, chest up','Start with arms extended and let the shoulder blades reach forward'],
-     how:['Pull the handle to your belly button, elbows close to the body','Squeeze the shoulder blades together and hold a beat','Return slowly, letting the blades separate at the front','Torso stays still, do not rock back and forth'],
-     miss:[['Rowing with the whole body','Momentum, not muscle. Cut the weight.'],['Shrugging at the top','Upper traps take over. Keep the shoulders down.'],['Rounding forward on the stretch','Let the blades move, not the spine.']],
-     rx:{s:3,r:'10-12',rest:'1.5 min'}},
-
-    {n:'Leg extension',k:'leg extension quad knee',kind:'fixed',
-     pri:['Quadriceps'],sec:[],
-     set:['Knee joint lined up with the machine pivot','Pad on the lower shin, just above the ankle','Hold the handles and keep your hips down'],
-     how:['Extend smoothly until just short of full lockout','Pause and squeeze at the top for a count','Lower over about 3 seconds, do not let the stack drop','Keep your back against the pad throughout'],
-     miss:[['Swinging the weight up','Loads the knee, not the quad.'],['Pivot misaligned','The single most common setup error here. Fix it before you load.'],['Slamming the stack down','You lose the best half of the rep.']],
-     rx:{s:3,r:'12-15',rest:'1–1.5 min'}},
-
-    {n:'Lying or seated leg curl',k:'leg curl hamstring',kind:'fixed',
-     pri:['Hamstrings'],sec:['Calves'],
-     set:['Knee pivot aligned with the machine axis','Pad just above the heels','Hips pressed down into the pad'],
-     how:['Curl smoothly, squeeze at the peak','Do not let the hips lift off the bench','Lower over about 3 seconds under control','Keep the toes relaxed, not pointed hard'],
-     miss:[['Hips lifting to help','Cuts the hamstring out. Lighter stack.'],['Half reps at the top','Most of the growth is in the full range.'],['Rushing the negative','Hamstrings respond well to slow lowering.']],
-     rx:{s:3,r:'10-15',rest:'1.5 min'}},
-
-    {n:'Shoulder press machine',k:'shoulder press overhead machine delt',kind:'fixed',
-     pri:['Front delts'],sec:['Side delts','Triceps','Upper chest'],
-     set:['Seat set so handles start at about shoulder height','Back flat against the pad','Core braced, ribs down'],
-     how:['Press up and slightly in, elbows finishing under the wrists','Stop just short of lockout','Lower until the handles reach shoulder level','Do not arch the low back to push through a hard rep'],
-     miss:[['Arching the low back','Turns it into an incline press and strains the spine.'],['Starting too low','Overstretches the shoulder. Raise the seat.'],['Flaring the elbows straight out','Keep them slightly forward of the torso.']],
-     rx:{s:3,r:'8-12',rest:'1.5 min'}},
-
-    {n:'Pec deck / chest fly',k:'pec deck fly machine chest',kind:'fixed',
-     pri:['Pectoralis major'],sec:['Front delts'],
-     set:['Seat height so the handles are at chest level','Small bend in the elbows and keep it fixed','Shoulder blades back and down'],
-     how:['Bring the handles together in an arc, not a press','Squeeze for a beat where they meet','Open slowly until you feel a stretch, do not go past comfortable','Elbow angle never changes through the set'],
-     miss:[['Bending and straightening the arms','That is a press. Fix the elbow angle.'],['Opening too far','Puts the shoulder capsule at risk for no extra gain.'],['Shrugging at the squeeze','Keep the shoulders down and back.']],
-     rx:{s:3,r:'12-15',rest:'1–1.5 min'}},
-
-    {n:'Cable machine (adjustable pulley)',k:'cable crossover functional trainer pulley',
-     kind:'open',eq:'cable',
-     pri:[],sec:[],
-     set:['Set the pulley height for the movement, not out of habit','Stand where the cable stays under tension at the start','Split stance if you are pulling or pressing hard'],
-     how:['Keep constant tension, never let the stack rest mid-set','Control the return as much as the pull','Line your body up with the cable path','Brace the core so the torso does not twist'],
-     miss:[['Standing too close to the stack','Loses tension at the start of the rep.'],['Letting the weight slam between reps','Kills the tension the cable is there to give.'],['Twisting the torso','Cable work rewards a still trunk.']],
-     rx:{s:3,r:'10-15',rest:'1–1.5 min'}},
-
-    {n:'Smith machine',k:'smith machine fixed bar guided',
-     kind:'open',eq:'barbell',
-     pri:[],sec:[],
-     set:['Set the safeties at the lowest point you plan to reach','Foot position shifts because the bar path is fixed','Learn the twist that unhooks and re-racks the bar before loading'],
-     how:['Let the fixed path guide you, do not fight it sideways','Because the bar cannot drift, foot placement sets the muscle worked','Use the safeties, it is the main advantage of this machine','Do not chase free-barbell numbers here, the loading is not comparable'],
-     miss:[['Copying free-barbell foot position','The fixed path changes the mechanics.'],['Not setting the safeties','You lose the one real benefit.'],['Assuming the weight matches a barbell','Counterbalancing differs by machine.']],
-     rx:{s:3,r:'8-12',rest:'2 min'}},
-
-    {n:'Hip abduction / adduction machine',k:'hip abduction adduction inner outer thigh',kind:'fixed',
-     pri:['Gluteus medius (abduction)','Adductors (adduction)'],sec:['Gluteus minimus'],
-     set:['Sit fully back so the low back is supported','Pads against the outside or inside of the knees','Start from a comfortable range, not the extreme'],
-     how:['Push out or squeeze in smoothly, pause at the end','Return slowly rather than letting the pads snap back','Keep the torso still and upright','Full but comfortable range, never forced'],
-     miss:[['Slamming through reps','Very common on this machine and pointless.'],['Leaning the torso to help','Take the pin down a plate.'],['Setting the start range too wide','Overstretches the groin.']],
-     rx:{s:3,r:'12-20',rest:'1 min'}},
-
-    {n:'Treadmill',k:'treadmill run walk cardio',kind:'fixed',
-     pri:['Quadriceps','Hamstrings','Calves','Glutes'],sec:['Cardiovascular system'],
-     set:['Clip the safety key to your clothing every time','Start it slow and step on once it is moving','Set incline before speed'],
-     how:['Run tall, look ahead, not down at the console','Avoid holding the rails, it changes your gait and inflates the numbers','Land under your hips, not out in front','Build incline before you chase speed if joints are an issue'],
-     miss:[['Holding the handrails','Makes the effort reading meaningless.'],['Stepping on while it is stopped','Jolts you when it starts.'],['Skipping the safety key','It exists for a reason.']],
-     rx:{s:1,r:'20-40 min',rest:'n/a'}},
-
-    {n:'Not sure / not listed',k:'unknown other',
-     kind:'fixed',pri:['Identify it to get this'],sec:[],
-     set:['Read the placard on the frame, most machines have one with a diagram','Set every adjustment before you load it','Do one light set to learn the path'],
-     how:['If a joint hurts rather than a muscle burning, stop','Start at the lowest useful weight and learn the movement','Ask staff to check your setup once, it is quicker than guessing'],
-     miss:[['Loading before adjusting','Setup drives which muscle actually works.'],['Copying whoever used it last','Their seat height is not yours.'],['Pushing through joint pain','Muscle burn is fine, joint pain is not.']],
-     rx:{s:2,r:'10-15',rest:'1.5 min'}},
-
-    /* ---- open equipment: a tool, not a movement ----
-       These deliberately carry no muscle list. A dumbbell trains whatever
-       you do with it, and printing 'quadriceps' under a photo of two
-       dumbbells is the bug this section exists to prevent. */
-    {n:'Dumbbells',k:'dumbbell dumbbells free weight hex adjustable',
-     kind:'open',eq:'dumbbell',pri:[],sec:[],
-     set:['Pick a weight you can control for the full range, not the first rep only','Clear enough space to press and swing without hitting anything','If they are adjustable, check the collars are locked before every set'],
-     how:['The movement decides the muscle, so choose it before you choose the weight','Both arms together is easier to load, one at a time exposes side-to-side differences','Control the lowering, it is where most of the work happens'],
-     miss:[['Going heavier than you can lower slowly','If it drops on the way down, it is not training the muscle.'],['Only ever pressing','Dumbbells row, hinge, squat and carry just as well.'],['Ignoring the weaker side','Single-arm sets even it out. Match the weaker side.']],
-     rx:{s:3,r:'8-15',rest:'1–1.5 min'}},
-
-    {n:'Barbell and plates',k:'barbell bar plates olympic free weight',
-     kind:'open',eq:'barbell',pri:[],sec:[],
-     set:['Load evenly and use collars, every set','Set safety pins at the lowest point you plan to reach','Know how you will bail before you start a heavy set'],
-     how:['The lift decides the muscle. Same bar, entirely different training','Heavy compound work needs longer rest than machine work','Add weight in small steps, the bar rewards patience'],
-     miss:[['Skipping collars','Plates shift, the bar tips, and it happens fast.'],['No safeties on squats or bench','The one mistake that turns a missed rep into an injury.'],['Adding weight before the movement is clean','Load a pattern you can already do well.']],
-     rx:{s:3,r:'5-10',rest:'2–3 min'}},
-
-    {n:'Kettlebell',k:'kettlebell bell swing',
-     kind:'open',eq:'dumbbell',pri:[],sec:[],
-     set:['Clear a wide space, swings travel further than people expect','Grip the handle where it is comfortable, not clamped','Stand with the bell slightly in front of you to start a swing'],
-     how:['Ballistic work like swings is a hinge, driven by the hips, not a squat','Grinds like presses and goblet squats are slow and controlled','The offset weight is the point, it makes the grip and core work harder'],
-     miss:[['Squatting the swing','It is a hinge. The bell travels because the hips snap.'],['Rounding the back at the bottom','Shorten the backswing and keep the chest proud.'],['Muscling it up with the arms','Arms are ropes. The hips do the work.']],
-     rx:{s:3,r:'10-20',rest:'1–1.5 min'}},
-
-    {n:'Resistance bands',k:'band bands resistance loop tube',
-     kind:'open',eq:'cable',pri:[],sec:[],
-     set:['Check for nicks or tears before every session, bands fail suddenly','Anchor to something that will not move','Stand where there is already slight tension at the start'],
-     how:['Resistance rises as the band stretches, so it is hardest at the end of the rep','Control the return, letting it snap back wastes most of the set','Step further away to make it harder rather than reaching for a thicker band'],
-     miss:[['Anchoring to something that can come loose','Bands under tension travel at speed.'],['Letting it recoil freely','The lowering is half the training.'],['Judging effort by the band colour','Distance from the anchor changes the load more than the colour does.']],
-     rx:{s:3,r:'12-20',rest:'0.75–1 min'}},
-
-    {n:'Adjustable bench',k:'bench flat incline decline adjustable',
-     kind:'open',eq:'dumbbell',pri:[],sec:[],
-     set:['Set the angle before you pick up the weight','Flat, incline and decline shift the emphasis without changing the lift','Feet planted, shoulder blades pulled back into the pad'],
-     how:['It supports the movement rather than being one, so the exercise decides the muscle','Higher incline moves more of the work to the front of the shoulder','Sitting on it upright turns most pressing into a shoulder movement'],
-     miss:[['Leaving the incline where the last person left it','The angle is the whole variable.'],['Feet up on the bench','Costs you the base you press against.'],['Shoulders rolling forward','Set the blades before the first rep and hold them there.']],
-     rx:{s:3,r:'8-12',rest:'1.5 min'}},
-
-    {n:'Squat rack or power cage',k:'rack cage squat power stand',
-     kind:'open',eq:'barbell',pri:[],sec:[],
-     set:['Set the hooks just below shoulder height so you are not on tiptoe','Safety arms slightly below your lowest good rep','Walk out and back in the same path every time'],
-     how:['The rack holds the bar, the lift you choose decides what gets trained','Set safeties for the lift you are doing, not the last one','Two steps out is enough, do not wander into the middle of the floor'],
-     miss:[['Hooks set too high','You end up on your toes to rack a heavy bar.'],['No safeties on squats','This is the equipment whose whole point is catching a failed rep.'],['Walking the bar too far out','Costs energy and makes re-racking harder when tired.']],
-     rx:{s:3,r:'5-10',rest:'2–3 min'}},
-
-    {n:'Pull up bar',k:'pull up bar chin bodyweight hang',
-     kind:'open',eq:'bodyweight',pri:[],sec:[],
-     set:['Check it is secure before you hang your whole weight on it','Full grip, thumb around the bar','Start from a dead hang with the shoulders active, not slack'],
-     how:['Grip and body position decide the emphasis, so the variation is the choice that matters','If you cannot do one yet, use a band or lower yourself slowly','Chin over the bar with the chest, not the neck'],
-     miss:[['Kipping to hit a number','Fine in a conditioning workout, useless for building the back.'],['Half reps from a bent hang','Start each rep from straight arms.'],['Hanging slack at the bottom','Keep tension in the shoulders between reps.']],
-     rx:{s:3,r:'as many as clean',rest:'1.5 min'}}
-  ];
-
-  var picked=-1, q='', lastShot=null, ident=null;
-  window.__kovaMachines=M;   /* p29: KovaGoal adds the cardio machines */
-
-  /* A machine the model described because it is not one of the curated
-     entries. Held here rather than pushed into M on purpose: M is also the
-     manual picker list, and a one-off generated entry appearing in that list
-     would imply it has the same standing as the vetted ones. It does not. */
-  var gen=null;
-
-  /* muscle grouping for the movement list, from the shared library */
-  var REGION={Chest:'Push',Shoulders:'Push',Triceps:'Push',
-              Back:'Pull',Lats:'Pull',Biceps:'Pull',Traps:'Pull',Forearms:'Pull',
-              Quads:'Legs',Hamstrings:'Legs',Glutes:'Legs',Calves:'Legs',
-              Core:'Core',Abs:'Core',Obliques:'Core'};
-  function movesFor(eq){
-    if(!window.LIB) return [];
-    return LIB.filter(function(x){ return x.e===eq; });
-  }
-
-  /* the framing viewfinder, not the photo library */
-  drop.onclick=function(){
-    if(window.KovaCam){
-      KovaCam.open({
-        title:'Scan equipment',
-        hint:'Fit the whole machine or the weights inside the square.',
-        onShot:function(dataUrl){ accept(dataUrl); }
-      });
-      return;
-    }
-    file.click();
-  };
-
-  file.onchange=function(){
-    var f=this.files&&this.files[0]; if(!f) return;
-    var fr=new FileReader();
-    fr.onload=function(){ accept(String(fr.result)); };
-    fr.readAsDataURL(f);
-  };
-
-  function accept(dataUrl){
-    lastShot=dataUrl; ident=null; picked=-1;
-    document.getElementById('mcImg').src=dataUrl;
-    document.getElementById('mcEmpty').style.display='none';
-    document.getElementById('mcPreview').style.display='block';
-    document.getElementById('mcResult').style.display='none';
-    document.getElementById('mcPick').style.display='block';
-    identifyShot(dataUrl);
-    /* Wired here rather than on the file input so the live-camera path
-       gets backed up too - both routes land in accept(). */
-    try{ if(window.KovaMedia) KovaMedia.attach('machine', dataUrl,
-      { name:'machine-scan.jpg', ref:'machine' }); }catch(e){}
-  }
-
-  document.getElementById('mcSearch').oninput=function(){ q=this.value.toLowerCase(); paint(); };
-
-  /* ---------- identification ---------- */
-  function bannerEl(){
-    var pick=document.getElementById('mcPick');
-    var b=document.getElementById('mcIdent');
-    if(!b){
-      b=document.createElement('div');
-      b.id='mcIdent';
-      pick.insertBefore(b,pick.firstChild);
-    }
-    return b;
-  }
-
-  function identifyShot(dataUrl,fitted){
-    /* p28: shrunk to a real JPEG first (server limit, and the label matches) */
-    if(!fitted&&window.KovaModel&&KovaModel.fit&&/^data:image\//.test(dataUrl||'')){ KovaModel.fit(dataUrl).then(function(d){ identifyShot(d,true); }); return; }
-    var b=bannerEl();
-
-    if(!window.KovaModel||!KovaModel.connected()){
-      /* the one action that fixes this, made impossible to miss */
-      b.innerHTML='<div class="card" style="margin-top:0;border-color:var(--acc-brd);'
-        +'background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
-        +'<div class="lbl" style="color:var(--acc)">PHOTO SAVED \u00b7 NOT READ</div>'
-        +'<div style="font-size:14px;font-weight:600;margin-top:5px">Kova cannot see this yet</div>'
-        +'<div class="sub" style="margin-top:5px;line-height:1.5">Reading a photo needs a vision model. '
-        +'Connect one and Kova names the equipment for you every time. It takes a minute and it is '
-        +'your own key.</div>'
-        +'<button class="btn" id="mcConnect" style="margin-top:12px">Connect a model</button>'
-        +'<button class="btn ghost" id="mcManual" style="margin-top:8px">Pick it myself</button></div>';
-      var listEl=document.getElementById('mcList');
-      var srch=document.getElementById('mcSearch');
-      if(listEl) listEl.style.display='none';
-      if(srch) srch.style.display='none';
-      paint();
-      document.getElementById('mcConnect').onclick=function(){ go('settings'); };
-      document.getElementById('mcManual').onclick=function(){
-        if(listEl) listEl.style.display='';
-        if(srch) srch.style.display='';
-        this.style.display='none';
-      };
-      return;
-    }
-
-    b.innerHTML='<div class="card" style="margin-top:0"><div class="sub">Reading the photo\u2026</div></div>';
-    paint();
-
-    /* ---- the contract -------------------------------------------------
-       Two jobs in one call. First, try to match the photo against the
-       curated catalogue — those entries carry muscle attributions and
-       execution cues written against standard references, which is better
-       data than anything generated per request, so a match always wins.
-       Second, when nothing matches, describe the machine from scratch so
-       the long tail stops dead-ending at "not listed".
-
-       confidence and the "not sure" path are load-bearing, not decoration.
-       Without them, a model that cannot tell what it is looking at is still
-       forced to name a machine and assign muscles to it — and this output
-       feeds injury-avoidance cues.                                      */
-    var names=M.map(function(m){return m.n});
-    var sys='You identify gym equipment from a photo. You are precise and factual. '
-      +'Reply with JSON only, no prose, no markdown fences.\n'
-      +'{"match":"<one allowed name, or NONE>","machine_name":"<exact name>",'
-      +'"brand_detected":"<brand or Unknown>","confidence":0-100,'
-      +'"seen":"<six words on what is visible>",'
-      +'"primary_muscles":[],"secondary_muscles":[],'
-      +'"setup_steps":[],"execution_cues":[],"common_mistakes":[["what","why it matters"]]}\n'
-      +'Allowed names: '+names.join(' | ')+'\n'
-      +'RULES\n'
-      +'1. If the equipment is one of the allowed names, set match to that exact name and '
-      +'leave the muscle, setup, cue and mistake arrays EMPTY. Those are already written.\n'
-      +'2. If it is real equipment but not on the list, set match to "NONE", give the exact '
-      +'machine name (for example "Plate-Loaded Linear Leg Press", "Selectorized Lying Leg '
-      +'Curl"), and fill every array: 2-3 primary muscles, 2-4 secondary or stabilising '
-      +'muscles, exactly 3 setup steps (seat or pad setting, then hand or foot placement and '
-      +'bracing, then the movement path), 3-4 execution cues, and 2-3 common mistakes as '
-      +'[what, why it matters].\n'
-      +'2b. common_mistakes is never empty on a generated entry. If you are answering in a '
-      +'shorter format that folds execution into the setup steps, still return the mistakes '
-      +'array. Each entry names what goes wrong and the consequence, either as '
-      +'[what, why it matters] or as one string joined by an em dash.\n'
-      +'3. Read the brand only from a logo or badge actually visible in the photo. If you '
-      +'cannot read one, use "Unknown". Never infer a brand from shape or colour.\n'
-      +'4. If the machine supports several exercises (a functional trainer, a rack), describe '
-      +'the configuration its attachments are currently set up for.\n'
-      +'5. If it is free weights, match the tool (Dumbbells, Barbell and plates, Kettlebell), '
-      +'never a machine. Weight plates or a loaded bar alone is "Barbell and plates". A number '
-      +'display or weight stack belongs to whatever machine it sits on.\n'
-      +'6. If you cannot tell what it is, set match to "NONE", machine_name to '
-      +'"Not sure / not listed", confidence below 40, and leave the arrays empty. Do not guess '
-      +'at a machine you cannot see clearly.\n'
-      +'7. Be objective. No motivational language, no general fitness advice.';
-
-    var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
-    var b64=dataUrl.slice(dataUrl.indexOf(',')+1);
-    var content = c.p==='anthropic'
-      ? [{type:'image',source:{type:'base64',media_type:KovaModel.mime(dataUrl),data:b64}},
-         {type:'text',text:'What equipment is this?'}]
-      : [{type:'text',text:'What equipment is this?'},
-         {type:'image_url',image_url:{url:dataUrl}}];
-
-    /* same reasoning as the meal read: picking one name off a fixed list is
-       a classification task. Token budget stays at 900 — the reply is one
-       small object. */
-    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],
-                    {temperature:0});
-    fetch(P.url,{method:'POST',headers:req.headers,body:req.body})
-      .then(function(r){
-        if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+t.slice(0,120)); });
-        return r.json();
-      })
-      .then(function(data){
-        var raw=(P.read(data)||'').replace(/```json|```/g,'').trim();
-        var open=raw.indexOf('{'); if(open>0) raw=raw.slice(open);
-        var parsed=JSON.parse(raw);
-
-        var conf=+parsed.confidence||0;
-        var brand=String(parsed.brand_detected||'').trim();
-        if(/^unknown$/i.test(brand)) brand='';
-        var match=String(parsed.match||'').trim();
-
-        /* --- path 1: it is one of the curated entries. Vetted data wins. */
-        var ix=-1;
-        M.forEach(function(m,k){ if(m.n===match) ix=k; });
-        if(ix>=0){
-          gen=null;
-          ident={i:ix,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:false};
-          renderIdent();
-          return;
-        }
-
-        /* --- path 2: not on the list. Only render a generated entry if the
-           model actually supplied the parts. A half-filled response is the
-           "not sure" case wearing a machine name, and rendering it would put
-           unvetted setup cues on screen with nothing marking them as such. */
-        var g=buildGenerated(parsed);
-        if(g){
-          gen=g;
-          ident={i:-1,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:true,
-                 name:g.n};
-          renderIdent();
-          return;
-        }
-
-        /* --- path 3: genuinely unidentified. Fall through to the curated
-           "Not sure / not listed" entry, which carries generic safe advice. */
-        var ns=-1;
-        M.forEach(function(m,k){ if(m.n==='Not sure / not listed') ns=k; });
-        gen=null;
-        ident={i:ns,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:false};
-        renderIdent();
-      })
-      .catch(function(e){
-        bannerEl().innerHTML='<div class="card" style="margin-top:0">'
-          +'<div style="font-size:12px;font-weight:700;margin-bottom:4px">Could not read the photo</div>'
-          +'<div class="sub" style="line-height:1.5">'+String(e.message||e).slice(0,120)
-          +'. Pick it from the list instead.</div></div>';
-        paint();
-      });
-  }
-
-  /* Turns a model response into an entry show() can render, or null if the
-     response does not carry enough to be worth showing. Returning null is
-     the right answer far more often than it feels like it should be: a
-     generated entry with two setup steps and no muscles is not a thinner
-     version of a catalogue entry, it is a guess. */
-  function buildGenerated(p){
-    function strs(v,max){
-      if(!Array.isArray(v)) return [];
-      return v.map(function(x){
-                /* Prompts that show "Step 1: ..." in their template get it
-                   back verbatim, and steps() already draws its own numbered
-                   circles — without this you render "1  Step 1: Adjust...". */
-                return String(x||'').trim()
-                        .replace(/^step\s*\d+\s*[:.)-]\s*/i,'')
-                        .replace(/^\d+\s*[:.)]\s*/,'')
-                        .trim();
-              })
-              .filter(function(x){ return x.length>2 && x.length<220; })
-              .slice(0,max);
-    }
-    var name=String(p.machine_name||'').trim();
-    if(!name || /^not sure/i.test(name)) return null;
-
-    var pri=strs(p.primary_muscles,4);
-    var sec=strs(p.secondary_muscles,5);
-    var set=strs(p.setup_steps,4);
-    var how=strs(p.execution_cues,5);
-
-    /* The compact contract folds execution into the third setup step —
-       adjust, then place and brace, then move. When a response arrives in
-       that shape there are no execution cues to read, so split the last
-       step off rather than rejecting an otherwise complete identification.
-       Both contract shapes now land the same way. */
-    if(!how.length && set.length>=3){
-      how=set.slice(-1);
-      set=set.slice(0,-1);
-    }
-
-    /* the floor: a name, what it trains, and how to set it up. Without all
-       three there is nothing useful to draw. */
-    if(!pri.length || set.length<2 || !how.length) return null;
-
-    /* Mistakes arrive in whichever shape the contract that produced them
-       used. The pair form is the documented one, but the compact 3-step
-       contract emits plain strings, and some replies come back as objects.
-       All three carry the same two facts - what goes wrong and why it
-       matters - so all three are read rather than only the pair form.
-       Anything that yields only a 'what' is dropped: a mistake with no
-       consequence attached is a scold, not a cue. */
-    function pair(row){
-      if(Array.isArray(row)){
-        var a=String(row[0]||'').trim(), b=String(row[1]||'').trim();
-        return (a&&b)?[a,b]:null;
-      }
-      if(row && typeof row==='object'){
-        var w=String(row.what||row.mistake||row.error||'').trim();
-        var y=String(row.why||row.why_it_matters||row.reason||row.matters||'').trim();
-        return (w&&y)?[w,y]:null;
-      }
-      var t=String(row||'').trim();
-      if(t.length<6) return null;
-      /* split on the first em/en dash, colon or ' - ' that has text on both
-         sides. Ordinary hyphens inside words (lock-out, mid-rep) are left
-         alone by requiring the surrounding spaces. */
-      var m=t.match(/^(.{4,}?)\s*(?:\u2014|\u2013|:|\s-\s)\s*(.{4,})$/);
-      if(m) return [m[1].trim().replace(/[.,;]$/,''), m[2].trim()];
-      return null;
-    }
-    var miss=[];
-    if(Array.isArray(p.common_mistakes)){
-      p.common_mistakes.forEach(function(row){
-        var pr=pair(row);
-        if(pr) miss.push(pr);
-      });
-      miss=miss.slice(0,4);
-    }
-
-    return {n:name, kind:'fixed', pri:pri, sec:sec, set:set, how:how,
-            miss:miss, gen:true};
-  }
-
-  function toBase64(f){
-    return new Promise(function(res,rej){
-      var fr=new FileReader();
-      fr.onload=function(){
-        var s=String(fr.result);
-        res({mime:f.type||'image/jpeg', b64:s.slice(s.indexOf(',')+1)});
-      };
-      fr.onerror=rej;
-      fr.readAsDataURL(f);
-    });
-  }
-
-  function renderIdent(){
-    var m = ident.gen ? gen : M[ident.i], sure=ident.conf>=70;
-    bannerEl().innerHTML='<div class="card" style="margin-top:0;border-color:var(--acc-brd)">'
-      +'<div class="lbl" style="color:var(--acc)">'+(sure?'IDENTIFIED':'BEST GUESS')+'</div>'
-      +'<div class="title-s" style="font-size:18px;margin-top:3px">'+m.n+'</div>'
-      +(ident.brand?'<div class="sub" style="margin-top:3px">Brand: '+ident.brand+'</div>':'')
-      +(ident.seen?'<div class="sub" style="margin-top:3px">Saw: '+ident.seen+'</div>':'')
-      +'<div class="sub" style="margin-top:6px;font-size:10.5px">Confidence '+ident.conf+'%.'
-      +(sure?'':' Low enough that it is worth checking against the list.')+'</div>'
-      +'<button class="btn" id="mcConfirm" style="margin-top:12px">'
-      +(sure?'Yes, that is it':'Use this anyway')+'</button></div>';
-    paint();
-    document.getElementById('mcConfirm').onclick=function(){ picked=ident.i; show(); };
-    /* a confident read should not make you tap twice */
-    if(sure){ picked=ident.i; show(); }
-  }
-
-  function paint(){
-    var rows=M.map(function(m,i){return {m:m,i:i}}).filter(function(r){
-      if(!q) return true;
-      return (r.m.n+' '+r.m.k).toLowerCase().indexOf(q)>-1;
-    });
-    document.getElementById('mcList').innerHTML = rows.length? rows.map(function(r){
-      var sub = r.m.kind==='open'
-        ? 'Trains what you do with it'
-        : (r.m.pri.join(', ')||'\u2014');
-      return '<div class="qopt mcopt" data-i="'+r.i+'">'
-        +'<div class="li-ico" style="width:30px;height:30px;flex-shrink:0"><svg class="ic" style="font-size:15px;color:var(--ink-2,rgba(255,255,255,.85))"><use href="#i-barbell"/></svg></div>'
-        +'<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+r.m.n+'</div>'
-        +'<div class="li-sub">'+sub+'</div></div></div>';
-    }).join('') : '<div class="sub" style="padding:6px 2px">No match. Pick "Not sure / not listed".</div>';
-    document.getElementById('mcList').querySelectorAll('.mcopt').forEach(function(e){
-      e.onclick=function(){ gen=null; picked=+e.dataset.i; show(); };
-    });
-  }
-
-  /* ---------- result ---------- */
-  function steps(list,accent){
-    return list.map(function(c,i){
-      return '<div style="display:flex;gap:9px;padding:7px 0;border-top:'+(i?'.5px solid rgba(255,255,255,.08)':'none')+'">'
-        +'<div style="width:19px;height:19px;border-radius:50%;background:'+(accent?'var(--acc-dim)':'rgba(255,255,255,.12)')
-        +';color:'+(accent?'var(--acc)':'#FFFFFF')+';font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</div>'
-        +'<div style="font-size:11.5px;line-height:1.4;color:var(--txt,#FFFFFF)">'+c+'</div></div>';
-    }).join('');
-  }
-  function mistakes(list){
-    return list.map(function(f,i){
-      return '<div style="padding:9px 0;border-top:'+(i?'.5px solid rgba(255,255,255,.08)':'none')+'">'
-        +'<div style="display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:50%;background:var(--warn)"></span>'
-        +'<span style="font-size:12px;font-weight:600;color:var(--txt,#FFFFFF)">'+f[0]+'</span></div>'
-        +'<div style="font-size:10.5px;color:var(--ink-2,rgba(255,255,255,.85));line-height:1.4;margin-top:4px;padding-left:13px">'+f[1]+'</div></div>';
-    }).join('');
-  }
-  function startCard(rx){
-    return '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:9px">Where to start</div>'
-      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'
-      +[['SETS',rx.s],['REPS',rx.r],['REST',rx.rest]].map(function(x){
-        return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div><div style="font-size:13px;font-weight:600;color:var(--acc);margin-top:3px">'+x[1]+'</div></div>';
-      }).join('')+'</div>'
-      +'<div class="sub" style="margin-top:10px;padding-top:9px;border-top:.5px solid rgba(255,255,255,.10);line-height:1.45">Pick a weight you can finish the full rep range with. If your form breaks before the last rep, it is too heavy.</div></div>';
-  }
-  function foldCard(title,inner){
-    var id='fold'+Math.random().toString(36).slice(2,7);
-    return '<div class="card" style="padding:0;overflow:hidden">'
-      +'<div class="exp-btn foldhd" data-t="'+id+'" style="margin:0;border:0;background:none">'
-      +'<div style="flex:1"><div class="li-name">'+title+'</div></div>'
-      +'<svg class="ic exp-chev" style="font-size:15px;transition:transform .2s"><use href="#i-chevron-down"/></svg></div>'
-      +'<div class="exp-body" id="'+id+'"><div style="padding:0 16px 14px">'+inner+'</div></div></div>';
-  }
-  function bindFolds(root){
-    root.querySelectorAll('.foldhd').forEach(function(b){
-      b.onclick=function(){
-        var body=document.getElementById(b.dataset.t);
-        var open=!body.classList.contains('open');
-        body.classList.toggle('open',open);
-        b.classList.toggle('open',open);
-      };
-    });
-  }
-
-  function show(){
-    var m = gen || M[picked];
-    var GM=(window.KovaGoal&&KovaGoal.id())?KovaGoal.machine(m,ident):'';
-    var h='<div class="card card-lg" style="border-color:var(--acc-brd);background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
-      +'<div class="lbl" style="color:var(--acc)">'+(m.kind==='open'?'EQUIPMENT':'MACHINE')+'</div>'
-      +'<div class="title-s" style="font-size:20px;margin-top:3px">'+m.n+'</div>'
-      +((m.gen&&ident&&ident.brand)?'<div class="sub" style="margin-top:3px">'+ident.brand+'</div>':'')
-      +'<div class="sub" style="margin-top:4px">'
-      +(m.kind==='open'
-        ? 'A tool, not a movement. What it trains depends on what you do with it.'
-        : 'Fixed path, so it trains the same muscles every time.')
-      +'</div></div>';
-
-    /* The one piece of UI that separates this from the curated entries.
-       Everything below on a generated card was written by a vision model
-       from one photo, and it is about how to load a joint — so it says so,
-       above the content rather than buried under it. */
-    if(m.gen){
-      h+='<div class="card" style="border-color:var(--warn-brd,rgba(244,225,142,.3));'
-        +'background:rgba(244,225,142,.06)">'
-        +'<div class="lbl" style="color:var(--warn)">READ BY A MODEL &middot; NOT VETTED</div>'
-        +'<div class="sub" style="margin-top:5px;line-height:1.5">This machine is not one of '
-        +'the '+M.length+' Kova has written up, so the muscles and cues below were generated '
-        +'from your photo rather than checked against a reference. Treat them as a starting '
-        +'point, and check the placard on the frame before you load it.</div></div>';
-    }
-
-    if(m.kind==='open'){
-      var moves=movesFor(m.eq);
-      var groups={};
-      moves.forEach(function(x){
-        var g=REGION[x.m]||'Other';
-        (groups[g]=groups[g]||[]).push(x);
-      });
-      var keys=Object.keys(groups);
-      var CAP=5;
-
-      h+='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:3px">What it can train</div>'
-        +'<div class="sub" style="margin-bottom:10px">Pick a movement to see the muscles it works.</div>'
-        +(keys.length
-          ? keys.map(function(g){
-              var all=groups[g], head=all.slice(0,CAP), rest=all.slice(CAP);
-              return '<div class="lbl" style="margin:10px 0 6px">'+g.toUpperCase()+'</div>'
-                +'<div style="display:flex;flex-wrap:wrap;gap:6px" data-g="'+g+'">'
-                + head.concat(rest).map(function(x,ix){
-                    return '<div class="chip mcMove'+(ix>=CAP?' mcHide':'')+'" data-n="'+x.n+'" data-m="'+x.m
-                      +'" style="font-size:10.5px'+(ix>=CAP?';display:none':'')+'">'+x.n+'</div>';
-                  }).join('')
-                + (rest.length
-                    ? '<div class="chip mcMore" data-g="'+g+'" style="font-size:10.5px;opacity:.7">+'
-                      +rest.length+' more</div>'
-                    : '')
-                +'</div>';
-            }).join('')
-          : '<div class="sub">No movements listed for this yet.</div>')
-        +'</div>'
-        +'<div id="mcMoveOut"></div>';
-    }else{
-      h+='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:9px">Muscles it works</div>'
-        +'<div class="lbl" style="margin-bottom:5px">PRIMARY</div>'
-        +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:'+(m.sec.length?'10px':'0')+'">'
-        +m.pri.map(function(x){return '<div class="chip on" style="background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600">'+x+'</div>'}).join('')
-        +'</div>'
-        +(m.sec.length?'<div class="lbl" style="margin-bottom:5px">ALSO WORKING</div>'
-          +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
-          +m.sec.map(function(x){return '<div class="chip">'+x+'</div>'}).join('')+'</div>':'')
-        +'</div>';
-    }
-
-    h+=foldCard('Set it up first', steps(m.set,false))
-      +foldCard('How to use it', steps(m.how,true))
-      +((m.miss&&m.miss.length)?foldCard('Common mistakes', mistakes(m.miss)):'')
-      /* No sets/reps prescription on a generated entry. The curated rx
-         values are programming decisions per machine; inventing one from a
-         photo would be the least grounded thing on the card. */
-      /* p29: sets, reps and rest follow your goal (src/p08_goal.js) */
-      +(GM||((m.gen
-        ? '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">Where to start</div>'
-          +'<div class="sub" style="line-height:1.5">No set and rep guidance for this one, '
-          +'since Kova has not verified the machine. Start light enough to complete every rep '
-          +'with the form above, and stop if a joint hurts rather than a muscle burning.</div></div>'
-        : startCard(m.rx))+(window.KovaGoal?KovaGoal.machine(m,ident):'')))
-      +(m.cardio?'':'<button class="btn" id="mcAdd" style="margin-top:4px"><svg class="ic"><use href="#i-plus"/></svg>Add to my program</button>');
-
-    var R=document.getElementById('mcResult');
-    R.innerHTML=h; R.style.display='block';
-    bindFolds(R);
-
-    R.querySelectorAll('.mcMore').forEach(function(e){
-      e.onclick=function(){
-        e.parentElement.querySelectorAll('.mcHide').forEach(function(x){ x.style.display=''; });
-        e.remove();
-      };
-    });
-
-    R.querySelectorAll('.mcMove').forEach(function(e){
-      e.onclick=function(){
-        R.querySelectorAll('.mcMove').forEach(function(x){x.classList.remove('on')});
-        e.classList.add('on');
-        document.getElementById('mcMoveOut').innerHTML=
-          '<div class="card" style="border-color:var(--acc-brd)">'
-          +'<div class="lbl" style="color:var(--acc)">'+e.dataset.n.toUpperCase()+'</div>'
-          +'<div style="font-size:12px;font-weight:700;margin:6px 0 8px">Works your '+e.dataset.m.toLowerCase()+'</div>'
-          +'<div class="sub" style="line-height:1.5">Same '+m.n.toLowerCase()+', different movement, different muscle. '
-          +'That is why the tool on its own does not have an answer.</div></div>';
-      };
-    });
-
-    /* p29: it really adds it to the right day of your plan (it used to only say so) */
-    var mcAdd=document.getElementById('mcAdd');
-    if(mcAdd) mcAdd.onclick=function(){ if(window.KovaGoal) KovaGoal.machineAdd(m); else toast('Still loading. Try again in a second.'); };
-    R.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-
-  paint();
-  window.__mcPaint=paint;
-})();
+/* machine scanner: src/p08_machine.js (p36, loads after the first screen) */
 
 /* ==========================================================
    KOVA MOTION ENGINE
@@ -49788,8 +49192,19 @@ const ADVICE = {
                evening: 'Two more glasses before 8pm, then taper so sleep is not broken.',
                night:   'Small sips only now; start tomorrow with a full glass.' }
 };
+/* "be in bed by 10:30 pm": 45 minutes before your own usual bedtime */
+function bedBy(audit) {
+  const b = (audit.metrics || []).find((m) => m.id === 'bedtime');
+  const m = b && /^(\d{2}):(\d{2})$/.exec(b.avg_bedtime || '');
+  if (!m) return null;
+  const clock = (x) => { x = ((x % 1440) + 1440) % 1440; const h = Math.floor(x / 60), mm = String(x % 60).padStart(2, '0'); return `${h % 12 || 12}:${mm} ${h < 12 ? 'am' : 'pm'}`; };
+  const usual = +m[1] * 60 + +m[2];
+  return { by: clock(usual - 45), usual: clock(usual) };
+}
+
 function rulesAlerts(audit) {
   const win = audit.window;
+  const bed = bedBy(audit);
   return audit.metrics.filter((m) => m.status === 'fix' || (m.status === 'neglect' && ['rhr', 'sleep', 'food'].includes(m.id)))
     .map((m) => ({
       metric: m.id, category: m.category, window: win,
@@ -49797,12 +49212,12 @@ function rulesAlerts(audit) {
       title: m.status === 'neglect' ? `${m.name}: no recent data` : `${m.name} needs attention`,
       wrong: m.flags[0] || '',
       action: m.status === 'neglect' ? (m.id === 'food' ? 'Log your meals today - even a rough entry helps Kova coach you.' : 'Wear your watch tonight and let it sync in the morning.')
-                                     : ADVICE[m.id][win],
+                                     : (m.id === 'sleep' && win !== 'morning' && bed ? `Be in bed by ${bed.by} tonight, 45 minutes before your usual ${bed.usual}.` : ADVICE[m.id][win]),
       source: 'rules'
     }));
 }
 
-module.exports = { METRICS, IDS, WINDOWS, local, dayOf, windowOf, cyclePhase, gather, metrics, rulesAlerts, targets, toMins, bedMins, ADVICE };
+module.exports = { METRICS, IDS, WINDOWS, local, dayOf, windowOf, cyclePhase, gather, metrics, rulesAlerts, targets, toMins, bedMins, ADVICE, bedBy };
 
 window.KovaWellness=module.exports;
 })();
@@ -55537,7 +54952,8 @@ window.KovaPush=(function(){
     var q=S.quiet;
     var line=S.on
       ?'<b>On:</b> reminders arrive on this '+(native()?'phone':'device')+' even when Kova is closed. They follow your time zone ('+esc(tz())+').'
-      :(supported()?'<b>Right now:</b> reminders only show while Kova is open. Switch one on and Kova offers to send them with the app closed.'
+        +' Kova also tells you, from your own data, when sleep is low, when it has been days since a workout, and what time to be in bed.'
+      :(supported()?'<b>Right now:</b> reminders only show while Kova is open. Switch one on and Kova offers to send them with the app closed, along with alerts from your own data: sleep is low, days since a workout, when to be in bed.'
         :'<b>Right now:</b> this browser cannot receive notifications, so reminders only show while Kova is open. In the Kova app they arrive with it closed.');
     note.innerHTML='<div style="display:flex;gap:9px"><svg class="ic" style="font-size:15px;color:'+(S.on?'var(--good)':'var(--warn)')+';flex-shrink:0;margin-top:1px"><use href="#i-info-circle"/></svg>'
       +'<div style="flex:1;font-size:11px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9))">'+line
@@ -56085,9 +55501,15 @@ window.KovaQuick=(function(){
   }
   function read(dataUrl,note){
     return shrink(dataUrl).then(function(small){
-      return viaServer(small,note).catch(function(e){
+      var once=function(){ return viaServer(small,note).catch(function(e){
         if(!e.soft) throw e;
         return viaOwnKey(small).catch(function(){ throw e; });
+      }); };
+      /* p36: a dropped connection or a busy server gets one quiet retry */
+      return once().catch(function(e){
+        var again=(e&&(e.status>=500||e.message==='offline'))&&navigator.onLine!==false;
+        if(!again) throw e;
+        return new Promise(function(ok){ setTimeout(ok,1200); }).then(once);
       });
     });
   }
@@ -67062,21 +66484,175 @@ window.KovaDemo=(function(){
   }
 
   var BEHIND={bench:1,box:1,seat:1,back:1,rail:1,wall:1,tower:1,hbar:1,pbar:1,tpad:1,plat:1};
+  /* a woman or a man, like you (KovaBodyShape, from your profile); looked up
+     at most every few seconds, since figures are drawn many times */
+  var SX={f:false,t:0};
+  function sexF(){ var n=Date.now(); if(n-SX.t>3000){ SX.t=n; try{ SX.f=!!(window.KovaBodyShape&&KovaBodyShape.profile().f===1); }catch(e){ SX.f=false; } } return SX.f; }
+  var STATS={draws:0};
   function draw(D,u,opts){
-    opts=opts||{};
+    opts=opts||{}; STATS.draws++;
     var P=pose(D,u), J=joints(P), defs=[], body=[], fr=J.v==='front';
     gid=0; pre='k'+(++seq).toString(36)+'_';
     defs.push('<radialGradient id="'+pre+'h" cx=".36" cy=".3" r=".8"><stop offset="0" class="g0"/><stop offset=".5" class="g1"/><stop offset="1" class="g2"/></radialGradient>'
       +'<radialGradient id="'+pre+'g"><stop offset="0" class="h0"/><stop offset=".45" class="h1"/><stop offset="1" class="h2"/></radialGradient>'
       +'<radialGradient id="'+pre+'s"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></radialGradient>');
-    var R={tor:[12.5,10],ua:[5.4,4.6],fa:[4.4,3.4],th:[8.6,6.2],sh:[6,4.2],ft:[3.4,2.6]};
-    function arm(k,cls){ return limb(J['s'+k],J['e'+k],R.ua[0],R.ua[1],cls,defs)+limb(J['e'+k],J['w'+k],R.fa[0],R.fa[1],cls,defs)+'<circle class="hand '+cls+'" cx="'+f1(J['w'+k][0])+'" cy="'+f1(J['w'+k][1])+'" r="3.6"/>'; }
-    function leg(k,cls){ return limb(J['h'+k],J['k'+k],R.th[0],R.th[1],cls,defs)+limb(J['k'+k],J['a'+k],R.sh[0],R.sh[1],cls,defs)+limb(J['a'+k],J['t'+k],R.ft[0],R.ft[1],cls,defs); }
+    /* p36d: a real human body, after the owner's reference (a body-activity
+       map): one smooth silhouette per group - an oval head with a jaw, a
+       neck, sloped shoulders, arms that taper to hands, a waist, glutes,
+       thighs, knees, calves and feet - with the muscles as soft rounded
+       shapes on it. Kova's look: graphite with a white outline, and the
+       muscles doing the work glow in Workout's orange, brighter as the rep
+       goes. A woman or a man, like you (KovaBodyShape). Every edge is a
+       width profile along the bone, joined into one curve (Catmull-Rom). */
+    var FEM=opts.sex!=null?opts.sex==='f':sexF();
+    var mus=D.mus||{p:[],s:[]}, P1=mus.p||[], S1=mus.s||[];
+    var eff=opts.effort!=null?opts.effort:(D.K&&D.K.length>2?0.8:Math.max(0,Math.min(1,u)));
+    function pr(T,k){ return function(t){ k=k||1; if(t<=T[0][0]) return T[0][1]*k; for(var q=1;q<T.length;q++) if(t<=T[q][0]){ var a=T[q-1], b=T[q]; return (a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0]))*k; } return T[T.length-1][1]*k; }; }
+    function cr(P,closed){
+      var n=P.length; if(n<3) return '';
+      var d='M'+pp(P[0]), N=closed?n:n-1;
+      for(var q=0;q<N;q++){
+        var p0=closed?P[(q-1+n)%n]:P[Math.max(q-1,0)], p1=P[q], p2=P[(q+1)%n], p3=closed?P[(q+2)%n]:P[Math.min(q+2,n-1)];
+        d+='C'+pp([p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6])+' '+pp([p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6])+' '+pp(p2);
+      }
+      return d+(closed?'Z':'');
+    }
+    function perp(a,b){ var d=[b[0]-a[0],b[1]-a[1]], L=Math.hypot(d[0],d[1])||1; return [-d[1]/L,d[0]/L]; }
+    function unit(a,b){ var d=[b[0]-a[0],b[1]-a[1]], L=Math.hypot(d[0],d[1])||1; return [d[0]/L,d[1]/L]; }
+    var face=fr?[0,0]:(J.nf&&J.nf[0]<0?[-1,0]:[1,0]);
+    function sideOf(a,b,p){ var n=perp(a,b); return ((p[0]-a[0])*n[0]+(p[1]-a[1])*n[1])>=0?1:-1; }
+    function bent(a,b,c){ var n=perp(a,b); return Math.abs((c[0]-a[0])*n[0]+(c[1]-a[1])*n[1])>3; }
+    /* which side of a part is its front: the elbow and knee fold toward the
+       biceps and away from the quads; straight, it is the way the person faces */
+    function frontN(a,b,fold,foldFront){
+      var n=perp(a,b);
+      if(fold&&bent(a,b,fold)){ var sd=sideOf(a,b,fold); return S(n,foldFront?sd:-sd); }
+      return (n[0]*face[0]+n[1]*face[1])>=0?n:S(n,-1);
+    }
+    /* a part along a bone: the front edge and the back edge from their own
+       width profiles, rounded at both ends */
+    function part(a,b,n,F,Bk,steps){
+      steps=steps||8; var d=unit(a,b), fe=[], be=[];
+      for(var q=0;q<=steps;q++){ var t=q/steps, c=mixp(a,b,t); fe.push(A(c,S(n,F(t)))); be.push(A(c,S(n,-Bk(t)))); }
+      var rA=(F(0)+Bk(0))/2, rB=(F(1)+Bk(1))/2;
+      var eB=A(A(b,S(d,rB*0.92)),S(n,(F(1)-Bk(1))/2)), eA=A(A(a,S(d,-rA*0.92)),S(n,(F(0)-Bk(0))/2));
+      return cr(fe.concat([eB],be.reverse(),[eA]),true);
+    }
+    /* a muscle: a soft rounded shape on one side of a part (s = 1 front,
+       -1 back, 0 across the middle), inside the edge */
+    function leaf(a,b,n,F,Bk,s,t0,t1,inset,inner){
+      var K=7, out=[], inn=[]; inset=inset==null?1:inset; inner=inner==null?0.4:inner;
+      for(var q=0;q<=K;q++){
+        var tau=q/K, t=t0+(t1-t0)*tau, c=mixp(a,b,t), sh=Math.pow(Math.sin(Math.PI*tau),0.6);
+        if(s){ var w=(s>0?F(t):Bk(t))-inset; out.push(A(c,S(n,s*(inner+(w-inner)*sh)))); if(q>0&&q<K) inn.push(A(c,S(n,s*(inner+(w-inner)*sh*0.12)))); }
+        else { out.push(A(c,S(n,(F(t)-inset)*0.8*sh))); if(q>0&&q<K) inn.push(A(c,S(n,-(Bk(t)-inset)*0.8*sh))); }
+      }
+      return cr(out.concat(inn.reverse()),true);
+    }
+    /* a shape from points drawn in the part's own frame (x along d, y along q) */
+    function local(o,d,q,pts,k){ k=k||1; return cr(pts.map(function(v){ return A(o,A(S(d,v[0]*k),S(q,v[1]*k))); }),true); }
+    function mcls(m){ return P1.indexOf(m)>=0?'mm mp':(S1.indexOf(m)>=0?'mm ms':'mm'); }
+    /* the glow is the fill and a soft edge, no filter: cheap enough to play
+       every exercise smoothly on a phone */
+    function mpath(m,d){
+      var c=mcls(m), st='';
+      if(c==='mm mp') st=' style="fill-opacity:'+(0.34+0.62*eff).toFixed(2)+';stroke-width:'+(0.6+1.8*eff).toFixed(1)+';stroke-opacity:'+(0.3+0.55*eff).toFixed(2)+'"';
+      else if(c==='mm ms') st=' style="fill-opacity:'+(0.16+0.26*eff).toFixed(2)+'"';
+      return '<path class="'+c+'" data-m="'+m+'" d="'+d+'"'+st+'/>';
+    }
+    /* one group, one silhouette: every outline first, then every fill, so
+       where parts meet (a knee, a shoulder) there is no seam */
+    function group(shapes,mm,cls){
+      return '<g class="bg'+(cls?' '+cls:'')+'">'+shapes.map(function(d){ return '<path class="bo" d="'+d+'"/>'; }).join('')
+        +shapes.map(function(d){ return '<path class="bf" d="'+d+'"/>'; }).join('')+mm+'</g>';
+    }
+    var g=FEM?0.88:1;
+    /* width profiles, side view (front edge, back edge) */
+    var UA=FEM?[pr([[0,4.3],[0.12,4.3],[0.4,3.9],[0.75,3.2],[1,2.8]]),pr([[0,4.6],[0.15,4.5],[0.45,4.0],[0.8,3.1],[1,2.8]])]
+              :[pr([[0,4.8],[0.12,5.0],[0.4,4.6],[0.72,3.9],[0.9,3.2],[1,3.0]]),pr([[0,5.2],[0.15,5.2],[0.45,4.6],[0.78,3.7],[1,3.1]])];
+    var FA=FEM?[pr([[0,2.8],[0.18,3.1],[0.45,2.8],[0.8,2.1],[1,1.9]]),pr([[0,3.0],[0.2,3.2],[0.5,2.7],[0.85,2.0],[1,1.8]])]
+              :[pr([[0,3.1],[0.16,3.6],[0.42,3.3],[0.78,2.5],[1,2.1]]),pr([[0,3.4],[0.2,3.8],[0.5,3.1],[0.84,2.3],[1,2.0]])];
+    var TH=FEM?[pr([[0,6.6],[0.15,7.2],[0.45,6.7],[0.75,5.3],[1,4.3]]),pr([[0,8.2],[0.12,8.0],[0.45,6.5],[0.78,4.9],[1,4.3]])]
+              :[pr([[0,6.4],[0.12,7.3],[0.42,7.1],[0.72,5.9],[0.9,4.9],[1,4.6]]),pr([[0,7.6],[0.1,7.7],[0.42,6.7],[0.78,5.1],[1,4.6]])];
+    var SH=FEM?[pr([[0,4.2],[0.15,3.7],[0.5,3.1],[0.85,2.5],[1,2.3]]),pr([[0,4.3],[0.15,5.2],[0.32,5.6],[0.55,4.6],[0.8,3.1],[1,2.5]])]
+              :[pr([[0,4.6],[0.15,4.1],[0.5,3.5],[0.85,2.8],[1,2.6]]),pr([[0,4.6],[0.15,5.7],[0.32,6.3],[0.55,5.1],[0.8,3.4],[1,2.8]])];
+    var TF=FEM?pr([[-0.1,5.6],[0,7.0],[0.16,6.6],[0.32,6.1],[0.5,7.0],[0.62,9.2],[0.71,10.4],[0.79,9.4],[0.88,7.2],[1.0,5.0],[1.07,3.0],[1.2,2.9]])
+              :pr([[-0.1,5.8],[0,7.2],[0.18,7.0],[0.36,7.2],[0.55,8.6],[0.68,9.8],[0.8,9.4],[0.92,7.4],[1.0,5.4],[1.07,3.5],[1.2,3.3]]);
+    var TB=FEM?pr([[-0.22,6.4],[-0.12,10.4],[0.02,11.4],[0.14,9.8],[0.3,6.9],[0.45,6.8],[0.62,7.6],[0.78,7.8],[0.92,7.0],[1.0,5.6],[1.07,3.5],[1.2,3.2]])
+              :pr([[-0.22,6.2],[-0.12,9.4],[0.02,10.2],[0.14,8.9],[0.3,7.3],[0.45,7.6],[0.62,8.7],[0.78,9.0],[0.92,8.0],[1.0,6.6],[1.07,4.1],[1.2,3.7]]);
+    /* front view: the trunk's half width, the limbs' outer and inner edges */
+    var TW=FEM?pr([[-0.14,9.4],[0,12.4],[0.15,11.2],[0.34,8.8],[0.52,9.6],[0.72,11.2],[0.88,12.2],[0.97,11.6],[1.02,8],[1.07,3.2],[1.2,3.0]])
+              :pr([[-0.14,8.6],[0,10.8],[0.15,10.2],[0.34,9.6],[0.52,10.8],[0.72,12.6],[0.88,14.4],[0.97,14.2],[1.02,9.4],[1.07,3.8],[1.2,3.5]]);
+    function arm(k,cls){
+      var s0=J['s'+k], e=J['e'+k], w=J['w'+k], sh=[], mm='', na, nb, dF=unit(e,w);
+      if(fr){ na=perp(s0,e); nb=perp(e,w); var ou=pr([[0,5.0],[0.18,5.0],[0.55,4.1],[1,3.1]],g), fo=pr([[0,3.5],[0.3,3.5],[1,2.1]],g);
+        sh.push(part(s0,e,na,ou,ou),part(e,w,nb,fo,fo));
+        mm+=mpath('delts',leaf(s0,e,na,ou,ou,0,-0.14,0.32,0.9))+mpath('biceps',leaf(s0,e,na,ou,ou,0,0.32,0.86,1.1))+mpath('forearms',leaf(e,w,nb,fo,fo,0,0.06,0.6,0.8));
+      } else {
+        na=frontN(s0,e,w,true); nb=bent(s0,e,w)?S(perp(e,w),sideOf(e,w,s0)):frontN(e,w,null,true);
+        sh.push(part(s0,e,na,UA[0],UA[1]),part(e,w,nb,FA[0],FA[1]));
+        mm+=mpath('delts',leaf(s0,e,na,UA[0],UA[1],0,-0.16,0.3,0.6))+mpath('biceps',leaf(s0,e,na,UA[0],UA[1],1,0.28,0.88,0.9))+mpath('triceps',leaf(s0,e,na,UA[0],UA[1],-1,0.16,0.86,0.9))
+          +mpath('forearms',leaf(e,w,nb,FA[0],FA[1],0,0.06,0.62,0.7));
+      }
+      /* the hand: palm and fingers past the wrist, the thumb on the front */
+      var qn=fr?perp(e,w):nb;
+      sh.push(local(A(w,S(dF,-3.6*g)),dF,qn,[[-1,-2.2],[2,-2.5],[5.2,-2.5],[7.8,-1.9],[9.0,-0.5],[8.7,1.0],[7.0,2.1],[4.6,2.4],[3.6,3.5],[2.1,3.6],[0.6,2.6],[-1,2.1]],g));
+      return group(sh,mm,cls);
+    }
+    function leg(k,cls){
+      var h=J['h'+k], kn=J['k'+k], an=J['a'+k], to=J['t'+k], sh=[], mm='';
+      if(fr){
+        var o=k==='L'?-1:1, nt=perp(h,kn), ns=perp(kn,an); if(nt[0]*o<0) nt=S(nt,-1); if(ns[0]*o<0) ns=S(ns,-1);
+        var tO=pr([[0,7.6],[0.15,7.8],[0.5,6.4],[0.85,4.8],[1,4.6]],g), tI=pr([[0,5.6],[0.2,6.4],[0.5,5.6],[0.85,4.4],[1,4.4]],g);
+        var sO=pr([[0,4.6],[0.3,5.4],[0.6,4.4],[1,2.8]],g), sI=pr([[0,4.4],[0.3,5.0],[0.6,4.0],[1,2.6]],g);
+        sh.push(part(h,kn,nt,tO,tI),part(kn,an,ns,sO,sI));
+        sh.push(local(an,[0,1],[o,0],[[-1.6,-2.6],[-2.6,0.4],[-2.2,3.2],[0,4.4],[2.6,4.2],[4.2,2.6],[3.8,-0.6],[1.4,-2.4]],g));
+        mm+=mpath('quads',leaf(h,kn,nt,tO,tI,0,0.12,0.86,1.2))+mpath('adductors',leaf(h,kn,nt,tO,tI,-1,0.04,0.46,1.0,1.2))
+          +mpath('calves',leaf(kn,an,ns,sO,sI,0,0.12,0.6,1))+mpath('hipflex',leaf(h,kn,nt,tO,tI,1,-0.02,0.18,1.2,1.6));
+      } else {
+        var nT=frontN(h,kn,an,false), nS=perp(kn,an), td=unit(an,to);
+        nS=((to[0]-an[0])*nS[0]+(to[1]-an[1])*nS[1])>=0?nS:S(nS,-1);
+        sh.push(part(h,kn,nT,TH[0],TH[1]),part(kn,an,nS,SH[0],SH[1]));
+        /* the foot: heel, sole, toes and the top of the foot up to the ankle */
+        var up=S(perp(an,to),((kn[0]-an[0])*perp(an,to)[0]+(kn[1]-an[1])*perp(an,to)[1])>=0?1:-1);
+        sh.push(local(an,td,S(up,-1),[[-3.4,1.0],[-3.1,2.7],[-0.8,3.3],[4,3.3],[9,3.0],[12.4,2.6],[14.3,1.6],[13.9,0.2],[10.8,-0.6],[6,-1.6],[2,-3.0],[0,-3.3],[-2.2,-2.4]],g));
+        mm+=mpath('quads',leaf(h,kn,nT,TH[0],TH[1],1,0.1,0.88,0.9))+mpath('hams',leaf(h,kn,nT,TH[0],TH[1],-1,0.12,0.86,0.9))
+          +mpath('hipflex',leaf(h,kn,nT,TH[0],TH[1],1,-0.04,0.2,0.9,2.4))
+          +mpath('calves',leaf(kn,an,nS,SH[0],SH[1],-1,0.1,0.64,0.8))+mpath('tibialis',leaf(kn,an,nS,SH[0],SH[1],1,0.14,0.68,0.7,0.8));
+      }
+      return group(sh,mm,cls);
+    }
     function torso(){
-      /* chest wider than the waist; a front view is broader still */
-      var top=fr?mixp(J.hip,J.sh,1.02):mixp(J.hip,J.sh,1.04);
-      return limb(J.hip,top,fr?11:R.tor[1],fr?17:R.tor[0],'tor',defs)+limb(J.sh,J.neck,3.6,3.6,'nk',defs)
-        +'<circle class="head" fill="url(#'+pre+'h)" cx="'+f1(J.head[0])+'" cy="'+f1(J.head[1])+'" r="'+LEN.HR+'"/>';
+      var hip=J.hip, shp=J.sh, hd=J.head, u0=unit(hip,shp), L=Math.hypot(shp[0]-hip[0],shp[1]-hip[1]), at=function(t){ return A(hip,S(u0,L*t)); };
+      var hu=unit(shp,hd), R0=LEN.HR*(FEM?0.86:0.9), sh=[], mm='';
+      if(fr){
+        var n0=[u0[1],-u0[0]], re=[], le=[];
+        for(var q=-14;q<=120;q+=6){ var t=q/100; re.push(A(at(t),S(n0,TW(t)))); le.push(A(at(t),S(n0,-TW(t)))); }
+        sh.push(cr(re.concat([A(at(1.22),S(n0,2.4)),A(at(1.22),S(n0,-2.4))],le.reverse(),[at(-0.2)]),true));
+        /* the head from the front: an oval with a jaw */
+        sh.push(local(hd,n0,S(hu,-1),[[-0.86,-0.2],[-0.8,-0.78],[-0.4,-1.12],[0,-1.18],[0.4,-1.12],[0.8,-0.78],[0.86,-0.2],[0.78,0.4],[0.5,0.86],[0,1.02],[-0.5,0.86],[-0.78,0.4]].map(function(v){ return [v[0]*R0,v[1]*R0]; })));
+        var cw=function(t){ return TW(t)-1.4; };
+        mm+=mpath('chest',leaf(at(0.6),at(0.92),n0,cw,cw,1,0,1,1.2,1.0))+mpath('chest',leaf(at(0.6),at(0.92),n0,cw,cw,-1,0,1,1.2,1.0))
+          +mpath('obliques',leaf(at(0.08),at(0.5),n0,TW,TW,1,0,1,1.4,TW(0.3)*0.55))+mpath('obliques',leaf(at(0.08),at(0.5),n0,TW,TW,-1,0,1,1.4,TW(0.3)*0.55))
+          +mpath('traps',leaf(at(0.92),at(1.1),n0,TW,TW,0,0,1,4));
+        /* the abs: three rows of two, like the map */
+        [0.16,0.29,0.42].forEach(function(t){ [-1,1].forEach(function(sd){ var c=A(at(t),S(n0,sd*2.5)), P=[];
+          for(var a2=0;a2<8;a2++){ var th=a2/8*Math.PI*2; P.push(A(c,A(S(n0,Math.cos(th)*2.1),S(u0,Math.sin(th)*2.6)))); }
+          mm+=mpath('abs',cr(P,true)); }); });
+      } else {
+        var nf=J.nf, fe=[], be=[];
+        for(var q2=-12;q2<=120;q2+=6){ var t2=q2/100; fe.push(A(at(t2),S(nf,TF(t2)))); }
+        for(var q3=120;q3>=-22;q3-=6){ var t3=q3/100; be.push(A(at(t3),S(nf,-TB(t3)))); }
+        sh.push(cr(fe.concat([A(at(1.24),S(nf,1))],be,[A(at(-0.2),S(nf,1))]),true));
+        /* the head from the side: skull, brow, nose, lips, chin and jaw */
+        sh.push(local(hd,nf,S(hu,-1),[[-1.0,-0.1],[-0.86,-0.72],[-0.3,-1.1],[0.35,-1.04],[0.78,-0.66],[0.92,-0.2],[1.06,0.06],[0.92,0.28],[0.96,0.48],[0.84,0.8],[0.46,0.96],[0.02,0.8],[-0.42,0.74],[-0.86,0.42]].map(function(v){ return [v[0]*R0,v[1]*R0]; })));
+        var a=at(0), b=at(1);
+        mm+=mpath('chest',leaf(a,b,nf,TF,TB,1,0.58,0.88,0.9))+mpath('abs',leaf(a,b,nf,TF,TB,1,0.1,0.52,0.9))
+          +mpath('lats',leaf(a,b,nf,TF,TB,-1,0.4,0.82,0.9))+mpath('lowback',leaf(a,b,nf,TF,TB,-1,0.12,0.42,0.9))
+          +mpath('obliques',leaf(a,b,nf,TF,TB,0,0.18,0.5,2.2))+mpath('traps',leaf(a,b,nf,TF,TB,-1,0.84,1.04,0.9,1.4))
+          +mpath('glutes',leaf(a,b,nf,TF,TB,-1,-0.17,0.2,0.8,1.2));
+      }
+      return group(sh,mm,'');
     }
     var eq=(D.eq||[]).filter(function(q){ return BEHIND[q.k]; }).map(function(q){ return eqHtml(q,J); }).join('');
     var held=(D.eq||[]).filter(function(q){ return !BEHIND[q.k]; });
@@ -67088,9 +66664,12 @@ window.KovaDemo=(function(){
       body.push(arm('F','far'),leg('F','far'),torso(),leg('N',''),arm('N',''));
     }
     var front2=held.filter(function(q){ return fr||q.at!=='wF'; }).map(function(q){ return eqHtml(q,J); }).join('');
-    var mus=D.mus||{p:[],s:[]}, gl='';
-    (mus.s||[]).forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],2); }); });
-    (mus.p||[]).forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],1); }); });
+    var gl='';
+    if(opts.glow){
+      S1.forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],2); }); });
+      P1.forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],1); }); });
+    }
+    var trk=opts.track===false?'':track(D);
     var feetX=fr?J.hip[0]:(J.aN[0]+J.aF[0])/2;
     var vb=opts.box||'0 0 200 200';
     /* the picture is named by what holds it (the page's figure, or the button); the svg itself is decoration */
@@ -67098,9 +66677,32 @@ window.KovaDemo=(function(){
       +'<defs>'+defs.join('')+'</defs>'
       +'<ellipse class="shadow" fill="url(#'+pre+'s)" cx="'+f1(feetX)+'" cy="'+(GY+2)+'" rx="58" ry="7"/><path class="floor" d="M8,'+(GY+0.5)+'H192"/>'
       +eq+'<g class="fig">'+body.join('')+'</g>'
-      +'<g class="glows">'+gl+'</g>'+front2+'</svg>';
+      +(gl?'<g class="glows">'+gl+'</g>':'')+front2+trk+'</svg>';
   }
 
+  /* the way it moves: a dashed path beside the part that travels (the hips
+     on a squat or a pull-up, the hands on a press, a row or a curl), with an
+     arrow at the finish, so a still picture reads "from here to there".
+     Worked out once per exercise. */
+  function track(D){
+    if(D.__trk!=null) return D.__trk;
+    var j0=joints(pose(D,0)), j1=joints(pose(D,1)), fr=j0.v==='front';
+    var keys=fr?['hip','wL','sh','aL','kL']:['hip','wN','sh','aN','kN'], dist={}, far=0, best=null;
+    keys.forEach(function(k){ if(!j0[k]||!j1[k]) return; dist[k]=Math.hypot(j1[k][0]-j0[k][0],j1[k][1]-j0[k][1]); far=Math.max(far,dist[k]); });
+    if(far<12||D.stretch) return (D.__trk='');
+    keys.some(function(k){ if(dist[k]>=far*0.6){ best=k; return true; } return false; });
+    var pts=[], mid=null; for(var i=0;i<=12;i++){ var J=joints(pose(D,i/12)); pts.push(J[best]); if(i===6) mid=mixp(J.hip,J.sh,.5); }
+    /* set the path beside the body, on the side away from the trunk */
+    var v=[pts[12][0]-pts[0][0],pts[12][1]-pts[0][1]], Lv=Math.hypot(v[0],v[1])||1, n=[-v[1]/Lv,v[0]/Lv], c=pts[6];
+    if(best!=='hip'&&best!=='sh'){ if((c[0]+n[0]-mid[0])*n[0]+(c[1]+n[1]-mid[1])*n[1]<0) n=S(n,-1); }
+    else if(n[0]<0) n=S(n,-1);
+    var off=best==='wN'||best==='wL'?20:24;
+    pts=pts.map(function(q){ return A(q,S(n,off)); });
+    var e=pts[12], q=pts[10], d=[e[0]-q[0],e[1]-q[1]], L=Math.hypot(d[0],d[1])||1; d=[d[0]/L,d[1]/L];
+    var tip=A(e,S(d,6)), m=[-d[1],d[0]], b1=A(A(tip,S(d,-7)),S(m,4.2)), b2=A(A(tip,S(d,-7)),S(m,-4.2));
+    return (D.__trk='<g class="trk" aria-hidden="true"><path class="trk-l" d="M'+pts.map(pp).join('L')+'"/>'
+      +'<circle class="trk-s" cx="'+f1(pts[0][0])+'" cy="'+f1(pts[0][1])+'" r="2.2"/><path class="trk-a" d="M'+pp(tip)+'L'+pp(b1)+'L'+pp(b2)+'Z"/></g>');
+  }
   /* ---------- timing: hold the start, move, hold the finish, come back ---------- */
   function ease(x){ return 0.5-0.5*Math.cos(Math.PI*Math.max(0,Math.min(1,x))); }
   function pose(D,u){
@@ -67390,9 +66992,22 @@ window.KovaDemo=(function(){
   /* ---------- moving pictures on screen ---------- */
   var live=[], raf=0, RM=false;
   try{ RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  /* p36c: smooth on every phone. Each moving picture keeps its frames
+     (48 steps a loop, each drawn once), shows at most 30 a second, and
+     rests while it is off screen or hidden. */
+  var STEPS=48;
   function loop(ms){
     live=live.filter(function(x){ return x.el.isConnected; });
-    live.forEach(function(x){ if(x.el.offsetParent===null) return; x.el.innerHTML=draw(x.D,phase(x.D,ms+x.off),x.o); });
+    var vh=window.innerHeight||800;
+    live.forEach(function(x){
+      if(x.el.offsetParent===null||ms-(x.last||0)<32) return;
+      var r=x.el.getBoundingClientRect(); if(r.bottom<0||r.top>vh) return;
+      var k=Math.round(phase(x.D,ms+x.off)*STEPS); if(k===x.k) return;
+      x.k=k; x.last=ms;
+      var c=x.cache||(x.cache={}), sx=sexF()?'f':'m';
+      if(x.sx!==sx){ x.cache=c={}; x.sx=sx; }
+      x.el.innerHTML=c[k]||(c[k]=draw(x.D,k/STEPS,x.o));
+    });
     raf=live.length?requestAnimationFrame(loop):0;
   }
   function mount(el,name,o){
@@ -67405,7 +67020,7 @@ window.KovaDemo=(function(){
     if(!raf) raf=requestAnimationFrame(loop);
     return true;
   }
-  return {find:find,svg:svg,draw:draw,mount:mount,box:box,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
+  return {stats:STATS,find:find,svg:svg,draw:draw,mount:mount,box:box,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
 })();
 
 /* =====================================================================
@@ -67641,7 +67256,8 @@ window.KovaExPage=(function(){
   }).observe(document.body,{childList:true,subtree:true});
   window.addEventListener('kova:screen',soon); document.addEventListener('kova:screen',soon);
   soon();
-  return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs};
+  return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs,
+    routine:function(list){ if(list&&list.length) routine(list,0); },openStretch:function(){ sheet(strHtml()); track('stretch_open',{from:'card'}); }};
 })();
 
 </script>
@@ -68079,7 +67695,7 @@ window.KovaZone2=(function(){
     var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
     var have=document.getElementById('kz2Card'), html=card();
     if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kz2Card'); if(n0) n0.__h=html; } return; }
-    var after=document.getElementById('krcCard')||host.closest('.kv-card')||host;
+    var after=document.getElementById('krsCard')||document.getElementById('krcCard')||host.closest('.kv-card')||host;
     after.insertAdjacentHTML('afterend',html); var n=document.getElementById('kz2Card'); if(n) n.__h=html;
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }
@@ -68152,12 +67768,16 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
-    {id:'new-2026-10-22',title:'Muscle recovery and Follow along',
-      lines:['See which muscles are fresh and which need rest','Train what\u2019s fresh: today\u2019s workout from ready muscles','Follow along: moving pictures, a voice and a rest timer'],
+    {id:'new-2026-10-22',title:'Recovery, stretching, clearer pictures and smarter scans',
+      lines:['Muscle recovery: what is fresh and what needs rest','Stretch right beside it, with a timer','Exercise pictures that light up the muscle working','Scan a machine from a photo, a video or a link','Alerts on your phone when sleep is low or it has been a while'],
       steps:[
         ['move','Muscle recovery','Your muscles coloured by how recovered they are, from the sets you logged. Tap a muscle for its page.',function(){ return q('#krcCard'); }],
-        ['move','Train what\u2019s fresh','One tap builds today\u2019s workout from the muscles that are ready: 2\u20133 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
-        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }]
+        ['move','Train what’s fresh','One tap builds today’s workout from the muscles that are ready: 2–3 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
+        ['move','Stretch','The stretches for what is resting, right here. Stretch with me times each hold.',function(){ return q('#krsCard'); }],
+        ['move','Pictures that show the work','Every exercise is a small body map now: the muscle doing the work glows as the rep goes.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
+        ['machine','Scan any machine','A photo, a video or a YouTube link. Not sure? Kova shows its best guesses as pictures, and every machine below has one.',function(){ return first('#s-machine .mc-ways'); }],
+        ['settings','Alerts on your phone','Kova tells you when sleep is low, when it has been days since a workout, and what time to be in bed.',function(){ return q('#kpuNote')||first('#s-settings .sec-h'); }]
       ]},
     {id:'new-2026-10-21',title:'Exercise pictures, stretching and Zone 2 running',
       lines:['A moving picture for every exercise','Stretches for every muscle','Zone 2 running, with all five zones','Team chat with your AI teammates'],
@@ -68579,6 +68199,29 @@ window.KovaRecovery=(function(){
       +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0">Follow along</div></div></div>';
   }
 
+  /* ---------- Stretch, right next to recovery ----------
+     The stretches for what is resting (lowest first), else for today's
+     workout, else a short full-body set. Stretch with me walks through them
+     with the hold timer; All stretches opens every one by body part. */
+  var FULL=['quad','ham','hipflex','chest','lat'];
+  function stretchList(M){
+    var d=D(); if(!d||!d.stretchesFor) return {why:'',L:[]};
+    var sore=list(M,'rest').concat(list(M,'mid'));
+    if(sets().length&&sore.length) return {why:'For what is resting: '+sore.slice(0,3).map(function(m){ return M[m].n; }).join(', '),L:d.stretchesFor(sore).slice(0,5)};
+    var td=window.KovaExPage&&KovaExPage.todays?KovaExPage.todays():[];
+    if(td.length) return {why:'For today’s workout',L:td.slice(0,5)};
+    return {why:'A five-minute full-body set',L:FULL.map(function(id){ return d.STR.filter(function(x){ return x.id===id; })[0]; }).filter(Boolean)};
+  }
+  function stretchCard(M){
+    var S=stretchList(M||state()); if(!S.L.length) return '';
+    var mins=Math.max(1,Math.round(S.L.reduce(function(a,x){ var m=/(\d+)\s*s/.exec(x.hold||''), n=m?+m[1]:30; return a+(/each|side|leg|arm/.test(x.hold||'')?2*n:n); },0)/60));
+    return '<div class="kv-card krs" id="krsCard"><div class="kv-h"><span>STRETCH</span><span class="krs-t">'+S.L.length+' stretches · about '+mins+' min</span></div>'
+      +'<div class="krc-l">'+esc(S.why)+'</div>'
+      +'<div class="krs-row">'+S.L.slice(0,3).map(function(x){ return '<button type="button" class="krs-c" data-kxp="stretch" data-n="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b><small>'+esc(x.hold)+'</small></button>'; }).join('')+'</div>'
+      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krs="with" role="button" tabindex="0">'+ic('player-play')+' Stretch with me</div><div class="chip" data-krs="all" role="button" tabindex="0">All stretches</div></div></div>';
+  }
+  function mountStills(el){ var d=D(); if(!el||!d) return; el.querySelectorAll('[data-kxd-still]').forEach(function(f){ if(!f.__kxd){ f.__kxd=1; d.mount(f,f.getAttribute('data-kxd-still'),{still:true,u:1}); } }); }
+
   /* ---------- one muscle ---------- */
   function muscleSheet(m){
     var M=state(), o=M[m]; if(!o||!window.openSheet) return;
@@ -68644,11 +68287,19 @@ window.KovaRecovery=(function(){
     var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
     var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
     var have=document.getElementById('krcCard'), html=card();
-    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('krcCard'); if(n0) n0.__h=html; } return; }
-    /* Training, then this, then Zone 2 */
-    var z2=document.getElementById('kz2Card');
-    if(z2) z2.insertAdjacentHTML('beforebegin',html); else (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
-    var n=document.getElementById('krcCard'); if(n) n.__h=html;
+    if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('krcCard'); if(n0) n0.__h=html; } }
+    else{
+      /* Training, then this, then Stretch, then Zone 2 */
+      var z2=document.getElementById('kz2Card');
+      if(z2) z2.insertAdjacentHTML('beforebegin',html); else (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+      var n=document.getElementById('krcCard'); if(n) n.__h=html;
+    }
+    var rc=document.getElementById('krcCard'); if(!rc) return;
+    var sh=stretchCard(), hs=document.getElementById('krsCard');
+    if(hs&&hs.__h===sh&&hs.previousElementSibling===rc) return;
+    if(hs) hs.remove();
+    if(!sh) return;
+    rc.insertAdjacentHTML('afterend',sh); hs=document.getElementById('krsCard'); hs.__h=sh; mountStills(hs);
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
   document.addEventListener('click',function(ev){
@@ -68660,11 +68311,814 @@ window.KovaRecovery=(function(){
     if(a==='fresh'){ trainFresh(); return; }
     if(a==='play'){ if(window.KovaPlayer) KovaPlayer.open(); return; }
   });
-  document.addEventListener('keydown',function(ev){ var b=ev.target.closest&&ev.target.closest('.krc [data-krc][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } });
-  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#krcCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('click',function(ev){
+    var b=ev.target.closest&&ev.target.closest('[data-krs]'); if(!b||!window.KovaExPage) return;
+    var a=b.getAttribute('data-krs');
+    if(a==='with'){ var S=stretchList(state()); KovaExPage.routine(S.L); track('stretch_with',{n:S.L.length,from:'card'}); return; }
+    if(a==='all'){ KovaExPage.openStretch(); return; }
+  });
+  document.addEventListener('keydown',function(ev){ var b=ev.target.closest&&ev.target.closest('.krc [data-krc][role="button"],.krs [data-krs][role="button"]'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); } });
+  if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#krcCard,#krsCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
   soon();
-  return {state:state,sets:sets,musclesOf:musclesOf,freshPlan:freshPlan,trainFresh:trainFresh,card:card,decorate:decorate,muscleSheet:muscleSheet,TAU:TAU,NAME:NAME};
+  return {state:state,sets:sets,musclesOf:musclesOf,freshPlan:freshPlan,trainFresh:trainFresh,card:card,stretchCard:stretchCard,stretchList:stretchList,decorate:decorate,muscleSheet:muscleSheet,TAU:TAU,NAME:NAME};
+})();
+
+</script>
+<script id="p08-machine">
+/* =====================================================================
+   KovaMachine - Scan a machine (moved out of the first screen, p36).
+
+   Photo, video or link in; Kova names the equipment, what it trains and
+   how to use it. When it is not sure it says its best guesses with a
+   picture of each, and the full list below shows a picture and what each
+   machine looks like, so nobody is left at "I don't know".
+   ===================================================================== */
+/* ---------- machine scanner: photo -> muscles worked + how to do it ---------- */
+(function(){
+  var drop=document.getElementById('mcDrop');
+  if(!drop) return;
+  var file=document.getElementById('mcFile');
+
+  // Muscle attributions and setup steps follow standard resistance-training
+  // references. They describe the machine, not the photo.
+  var M=[
+    {n:'Leg press',k:'leg press sled 45 plate',kind:'fixed',
+     pri:['Quadriceps','Gluteus maximus'],sec:['Adductors','Hamstrings'],
+     set:['Sit with your whole back and hips flat against the pad','Feet mid-platform, shoulder width, toes slightly out','Release the safety handles only once your feet are set'],
+     how:['Lower until your knees reach about 90 degrees, controlled, roughly 2 seconds','Stop before your hips start to curl off the pad','Press through the whole foot, not just the toes','Leave a slight bend at the top, never snap the knees straight'],
+     miss:[['Letting the low back round at the bottom','This is where leg press injuries happen. Shorten the range.'],['Locking the knees out hard','Dumps the load onto the joint instead of the muscle.'],['Feet too low on the platform','Turns it into a knee-dominant grind and lifts the heels.']],
+     rx:{s:3,r:'10-15',rest:'2 min'}},
+
+    {n:'Lat pulldown',k:'lat pulldown cable overhead',kind:'fixed',
+     pri:['Latissimus dorsi'],sec:['Biceps','Rear delts','Mid traps','Rhomboids'],
+     set:['Set the thigh pad snug so you do not lift off the seat','Grip slightly wider than shoulder width','Sit tall, lean back no more than about 15 degrees and hold it'],
+     how:['Pull the bar to your upper chest, not behind your neck','Drive the elbows down and back, hands are just hooks','Squeeze the shoulder blades down at the bottom','Let the bar rise all the way until you feel the lats stretch'],
+     miss:[['Leaning further back each rep','Turns it into a row. Pick a lighter stack.'],['Pulling behind the neck','No extra benefit, and it puts the shoulder in a bad spot.'],['Yanking with the arms','Biceps take over. Think elbows, not hands.']],
+     rx:{s:3,r:'8-12',rest:'1.5 min'}},
+
+    {n:'Chest press machine',k:'chest press seated machine push',kind:'fixed',
+     pri:['Pectoralis major'],sec:['Front delts','Triceps'],
+     set:['Set the seat so the handles sit level with mid chest','Shoulder blades pinned back and down against the pad','Feet flat on the floor'],
+     how:['Press forward and slightly together, elbows about 45 degrees from the torso','Stop just short of locking the elbows','Return under control until you feel the chest stretch','Keep the shoulders back the entire set'],
+     miss:[['Seat too high','Presses upward, loads the shoulder instead of the chest.'],['Shoulders rolling forward at the end','Losing the set position. Lighter and stricter.'],['Bouncing out of the bottom','Skips the part that builds the chest.']],
+     rx:{s:3,r:'8-12',rest:'1.5 min'}},
+
+    {n:'Seated cable row',k:'cable row seated horizontal pull',kind:'fixed',
+     pri:['Mid traps','Rhomboids','Latissimus dorsi'],sec:['Biceps','Rear delts','Spinal erectors'],
+     set:['Feet braced, slight knee bend','Sit tall with a neutral spine, chest up','Start with arms extended and let the shoulder blades reach forward'],
+     how:['Pull the handle to your belly button, elbows close to the body','Squeeze the shoulder blades together and hold a beat','Return slowly, letting the blades separate at the front','Torso stays still, do not rock back and forth'],
+     miss:[['Rowing with the whole body','Momentum, not muscle. Cut the weight.'],['Shrugging at the top','Upper traps take over. Keep the shoulders down.'],['Rounding forward on the stretch','Let the blades move, not the spine.']],
+     rx:{s:3,r:'10-12',rest:'1.5 min'}},
+
+    {n:'Leg extension',k:'leg extension quad knee',kind:'fixed',
+     pri:['Quadriceps'],sec:[],
+     set:['Knee joint lined up with the machine pivot','Pad on the lower shin, just above the ankle','Hold the handles and keep your hips down'],
+     how:['Extend smoothly until just short of full lockout','Pause and squeeze at the top for a count','Lower over about 3 seconds, do not let the stack drop','Keep your back against the pad throughout'],
+     miss:[['Swinging the weight up','Loads the knee, not the quad.'],['Pivot misaligned','The single most common setup error here. Fix it before you load.'],['Slamming the stack down','You lose the best half of the rep.']],
+     rx:{s:3,r:'12-15',rest:'1–1.5 min'}},
+
+    {n:'Lying or seated leg curl',k:'leg curl hamstring',kind:'fixed',
+     pri:['Hamstrings'],sec:['Calves'],
+     set:['Knee pivot aligned with the machine axis','Pad just above the heels','Hips pressed down into the pad'],
+     how:['Curl smoothly, squeeze at the peak','Do not let the hips lift off the bench','Lower over about 3 seconds under control','Keep the toes relaxed, not pointed hard'],
+     miss:[['Hips lifting to help','Cuts the hamstring out. Lighter stack.'],['Half reps at the top','Most of the growth is in the full range.'],['Rushing the negative','Hamstrings respond well to slow lowering.']],
+     rx:{s:3,r:'10-15',rest:'1.5 min'}},
+
+    {n:'Shoulder press machine',k:'shoulder press overhead machine delt',kind:'fixed',
+     pri:['Front delts'],sec:['Side delts','Triceps','Upper chest'],
+     set:['Seat set so handles start at about shoulder height','Back flat against the pad','Core braced, ribs down'],
+     how:['Press up and slightly in, elbows finishing under the wrists','Stop just short of lockout','Lower until the handles reach shoulder level','Do not arch the low back to push through a hard rep'],
+     miss:[['Arching the low back','Turns it into an incline press and strains the spine.'],['Starting too low','Overstretches the shoulder. Raise the seat.'],['Flaring the elbows straight out','Keep them slightly forward of the torso.']],
+     rx:{s:3,r:'8-12',rest:'1.5 min'}},
+
+    {n:'Pec deck / chest fly',k:'pec deck fly machine chest',kind:'fixed',
+     pri:['Pectoralis major'],sec:['Front delts'],
+     set:['Seat height so the handles are at chest level','Small bend in the elbows and keep it fixed','Shoulder blades back and down'],
+     how:['Bring the handles together in an arc, not a press','Squeeze for a beat where they meet','Open slowly until you feel a stretch, do not go past comfortable','Elbow angle never changes through the set'],
+     miss:[['Bending and straightening the arms','That is a press. Fix the elbow angle.'],['Opening too far','Puts the shoulder capsule at risk for no extra gain.'],['Shrugging at the squeeze','Keep the shoulders down and back.']],
+     rx:{s:3,r:'12-15',rest:'1–1.5 min'}},
+
+    {n:'Cable machine (adjustable pulley)',k:'cable crossover functional trainer pulley',
+     kind:'open',eq:'cable',
+     pri:[],sec:[],
+     set:['Set the pulley height for the movement, not out of habit','Stand where the cable stays under tension at the start','Split stance if you are pulling or pressing hard'],
+     how:['Keep constant tension, never let the stack rest mid-set','Control the return as much as the pull','Line your body up with the cable path','Brace the core so the torso does not twist'],
+     miss:[['Standing too close to the stack','Loses tension at the start of the rep.'],['Letting the weight slam between reps','Kills the tension the cable is there to give.'],['Twisting the torso','Cable work rewards a still trunk.']],
+     rx:{s:3,r:'10-15',rest:'1–1.5 min'}},
+
+    {n:'Smith machine',k:'smith machine fixed bar guided',
+     kind:'open',eq:'barbell',
+     pri:[],sec:[],
+     set:['Set the safeties at the lowest point you plan to reach','Foot position shifts because the bar path is fixed','Learn the twist that unhooks and re-racks the bar before loading'],
+     how:['Let the fixed path guide you, do not fight it sideways','Because the bar cannot drift, foot placement sets the muscle worked','Use the safeties, it is the main advantage of this machine','Do not chase free-barbell numbers here, the loading is not comparable'],
+     miss:[['Copying free-barbell foot position','The fixed path changes the mechanics.'],['Not setting the safeties','You lose the one real benefit.'],['Assuming the weight matches a barbell','Counterbalancing differs by machine.']],
+     rx:{s:3,r:'8-12',rest:'2 min'}},
+
+    {n:'Hip abduction / adduction machine',k:'hip abduction adduction inner outer thigh',kind:'fixed',
+     pri:['Gluteus medius (abduction)','Adductors (adduction)'],sec:['Gluteus minimus'],
+     set:['Sit fully back so the low back is supported','Pads against the outside or inside of the knees','Start from a comfortable range, not the extreme'],
+     how:['Push out or squeeze in smoothly, pause at the end','Return slowly rather than letting the pads snap back','Keep the torso still and upright','Full but comfortable range, never forced'],
+     miss:[['Slamming through reps','Very common on this machine and pointless.'],['Leaning the torso to help','Take the pin down a plate.'],['Setting the start range too wide','Overstretches the groin.']],
+     rx:{s:3,r:'12-20',rest:'1 min'}},
+
+    {n:'Treadmill',k:'treadmill run walk cardio',kind:'fixed',
+     pri:['Quadriceps','Hamstrings','Calves','Glutes'],sec:['Cardiovascular system'],
+     set:['Clip the safety key to your clothing every time','Start it slow and step on once it is moving','Set incline before speed'],
+     how:['Run tall, look ahead, not down at the console','Avoid holding the rails, it changes your gait and inflates the numbers','Land under your hips, not out in front','Build incline before you chase speed if joints are an issue'],
+     miss:[['Holding the handrails','Makes the effort reading meaningless.'],['Stepping on while it is stopped','Jolts you when it starts.'],['Skipping the safety key','It exists for a reason.']],
+     rx:{s:1,r:'20-40 min',rest:'n/a'}},
+
+    {n:'Not sure / not listed',k:'unknown other',
+     kind:'fixed',pri:['Identify it to get this'],sec:[],
+     set:['Read the placard on the frame, most machines have one with a diagram','Set every adjustment before you load it','Do one light set to learn the path'],
+     how:['If a joint hurts rather than a muscle burning, stop','Start at the lowest useful weight and learn the movement','Ask staff to check your setup once, it is quicker than guessing'],
+     miss:[['Loading before adjusting','Setup drives which muscle actually works.'],['Copying whoever used it last','Their seat height is not yours.'],['Pushing through joint pain','Muscle burn is fine, joint pain is not.']],
+     rx:{s:2,r:'10-15',rest:'1.5 min'}},
+
+    /* ---- open equipment: a tool, not a movement ----
+       These deliberately carry no muscle list. A dumbbell trains whatever
+       you do with it, and printing 'quadriceps' under a photo of two
+       dumbbells is the bug this section exists to prevent. */
+    {n:'Dumbbells',k:'dumbbell dumbbells free weight hex adjustable',
+     kind:'open',eq:'dumbbell',pri:[],sec:[],
+     set:['Pick a weight you can control for the full range, not the first rep only','Clear enough space to press and swing without hitting anything','If they are adjustable, check the collars are locked before every set'],
+     how:['The movement decides the muscle, so choose it before you choose the weight','Both arms together is easier to load, one at a time exposes side-to-side differences','Control the lowering, it is where most of the work happens'],
+     miss:[['Going heavier than you can lower slowly','If it drops on the way down, it is not training the muscle.'],['Only ever pressing','Dumbbells row, hinge, squat and carry just as well.'],['Ignoring the weaker side','Single-arm sets even it out. Match the weaker side.']],
+     rx:{s:3,r:'8-15',rest:'1–1.5 min'}},
+
+    {n:'Barbell and plates',k:'barbell bar plates olympic free weight',
+     kind:'open',eq:'barbell',pri:[],sec:[],
+     set:['Load evenly and use collars, every set','Set safety pins at the lowest point you plan to reach','Know how you will bail before you start a heavy set'],
+     how:['The lift decides the muscle. Same bar, entirely different training','Heavy compound work needs longer rest than machine work','Add weight in small steps, the bar rewards patience'],
+     miss:[['Skipping collars','Plates shift, the bar tips, and it happens fast.'],['No safeties on squats or bench','The one mistake that turns a missed rep into an injury.'],['Adding weight before the movement is clean','Load a pattern you can already do well.']],
+     rx:{s:3,r:'5-10',rest:'2–3 min'}},
+
+    {n:'Kettlebell',k:'kettlebell bell swing',
+     kind:'open',eq:'dumbbell',pri:[],sec:[],
+     set:['Clear a wide space, swings travel further than people expect','Grip the handle where it is comfortable, not clamped','Stand with the bell slightly in front of you to start a swing'],
+     how:['Ballistic work like swings is a hinge, driven by the hips, not a squat','Grinds like presses and goblet squats are slow and controlled','The offset weight is the point, it makes the grip and core work harder'],
+     miss:[['Squatting the swing','It is a hinge. The bell travels because the hips snap.'],['Rounding the back at the bottom','Shorten the backswing and keep the chest proud.'],['Muscling it up with the arms','Arms are ropes. The hips do the work.']],
+     rx:{s:3,r:'10-20',rest:'1–1.5 min'}},
+
+    {n:'Resistance bands',k:'band bands resistance loop tube',
+     kind:'open',eq:'cable',pri:[],sec:[],
+     set:['Check for nicks or tears before every session, bands fail suddenly','Anchor to something that will not move','Stand where there is already slight tension at the start'],
+     how:['Resistance rises as the band stretches, so it is hardest at the end of the rep','Control the return, letting it snap back wastes most of the set','Step further away to make it harder rather than reaching for a thicker band'],
+     miss:[['Anchoring to something that can come loose','Bands under tension travel at speed.'],['Letting it recoil freely','The lowering is half the training.'],['Judging effort by the band colour','Distance from the anchor changes the load more than the colour does.']],
+     rx:{s:3,r:'12-20',rest:'0.75–1 min'}},
+
+    {n:'Adjustable bench',k:'bench flat incline decline adjustable',
+     kind:'open',eq:'dumbbell',pri:[],sec:[],
+     set:['Set the angle before you pick up the weight','Flat, incline and decline shift the emphasis without changing the lift','Feet planted, shoulder blades pulled back into the pad'],
+     how:['It supports the movement rather than being one, so the exercise decides the muscle','Higher incline moves more of the work to the front of the shoulder','Sitting on it upright turns most pressing into a shoulder movement'],
+     miss:[['Leaving the incline where the last person left it','The angle is the whole variable.'],['Feet up on the bench','Costs you the base you press against.'],['Shoulders rolling forward','Set the blades before the first rep and hold them there.']],
+     rx:{s:3,r:'8-12',rest:'1.5 min'}},
+
+    {n:'Squat rack or power cage',k:'rack cage squat power stand',
+     kind:'open',eq:'barbell',pri:[],sec:[],
+     set:['Set the hooks just below shoulder height so you are not on tiptoe','Safety arms slightly below your lowest good rep','Walk out and back in the same path every time'],
+     how:['The rack holds the bar, the lift you choose decides what gets trained','Set safeties for the lift you are doing, not the last one','Two steps out is enough, do not wander into the middle of the floor'],
+     miss:[['Hooks set too high','You end up on your toes to rack a heavy bar.'],['No safeties on squats','This is the equipment whose whole point is catching a failed rep.'],['Walking the bar too far out','Costs energy and makes re-racking harder when tired.']],
+     rx:{s:3,r:'5-10',rest:'2–3 min'}},
+
+    {n:'Pull up bar',k:'pull up bar chin bodyweight hang',
+     kind:'open',eq:'bodyweight',pri:[],sec:[],
+     set:['Check it is secure before you hang your whole weight on it','Full grip, thumb around the bar','Start from a dead hang with the shoulders active, not slack'],
+     how:['Grip and body position decide the emphasis, so the variation is the choice that matters','If you cannot do one yet, use a band or lower yourself slowly','Chin over the bar with the chest, not the neck'],
+     miss:[['Kipping to hit a number','Fine in a conditioning workout, useless for building the back.'],['Half reps from a bent hang','Start each rep from straight arms.'],['Hanging slack at the bottom','Keep tension in the shoulders between reps.']],
+     rx:{s:3,r:'as many as clean',rest:'1.5 min'}}
+  ];
+
+  var picked=-1, q='', lastShot=null, ident=null, hint='';
+  window.__kovaMachines=M;   /* p29: KovaGoal adds the cardio machines */
+
+  /* p36: what each one looks like, in plain words, and the moving picture
+     of what you do on it - so someone who does not know the name can find
+     it by sight */
+  var LOOK={
+    'Leg press':['You sit back and push a heavy sled or plate away with your feet.','Leg press'],
+    'Lat pulldown':['You sit with your knees under pads and pull a wide bar down from above.','Lat pulldown'],
+    'Chest press machine':['You sit upright and push two handles straight out from your chest.','Bench press'],
+    'Seated cable row':['You sit with your feet on a plate and pull a handle in to your stomach.','Seated cable row'],
+    'Leg extension':['You sit with a padded bar on your shins and kick your legs out straight.','Leg extension'],
+    'Lying or seated leg curl':['A pad sits behind your ankles and you bend your knees against it.','Seated leg curl'],
+    'Shoulder press machine':['You sit and press two handles up from your shoulders.','Seated shoulder press'],
+    'Pec deck / chest fly':['You sit and bring two padded arms or handles together in front of your chest.','Pec deck'],
+    'Cable machine (adjustable pulley)':['A tall frame with weight stacks and pulleys that slide up and down, with a rope or handle.','Tricep pushdown'],
+    'Smith machine':['A barbell fixed on two rails, so it only moves straight up and down.','Barbell back squat'],
+    'Hip abduction / adduction machine':['You sit with pads on the sides of your knees and push them out, or squeeze them in.',''],
+    'Treadmill':['A moving belt you walk or run on.',''],
+    'Not sure / not listed':['None of these? Pick this and Kova gives safe general advice.',''],
+    'Dumbbells':['Short handles with a weight on each end, one in each hand.','Dumbbell curl'],
+    'Barbell and plates':['A long bar with round weight plates on the ends.','Deadlift'],
+    'Kettlebell':['A round iron ball with a handle on top.','Kettlebell swing'],
+    'Resistance bands':['Stretchy loops or tubes, often with handles.','Face pull'],
+    'Adjustable bench':['A padded bench whose back tilts up for incline work.','Incline dumbbell press'],
+    'Squat rack or power cage':['A tall steel frame with hooks and safety bars that holds a barbell.','Barbell back squat'],
+    'Pull up bar':['A bar above your head that you hang from.','Pull up'],
+    'Stationary bike':['A bike that stays in one place, with a screen on the handlebars.',''],
+    'Rowing machine':['A long rail with a sliding seat and a handle on a chain or strap.',''],
+    'Stair climber':['Moving steps like an escalator that you keep climbing.',''],
+    'Elliptical':['Foot plates that glide in an oval, with handles that swing.','']
+  };
+  function look(m){ return (LOOK[m.n]||[])[0]||''; }
+  function pic(m,cls){
+    var n=(LOOK[m.n]||[])[1]; if(!n||!window.KovaDemo||!KovaDemo.find(n)) return '<span class="mc-pic mc-none '+(cls||'')+'"><svg class="ic"><use href="#i-barbell"/></svg></span>';
+    return '<span class="mc-pic '+(cls||'')+'" data-mc-pic="'+n+'"></span>';
+  }
+  function mountPics(root){
+    if(!window.KovaDemo||!root) return;
+    root.querySelectorAll('[data-mc-pic]').forEach(function(el){ if(!el.__kxd){ el.__kxd=1; KovaDemo.mount(el,el.getAttribute('data-mc-pic'),{still:true,u:1}); } });
+  }
+  function byName(n){ var k=-1; M.forEach(function(m,i){ if(m.n===n) k=i; }); return k; }
+
+  /* A machine the model described because it is not one of the curated
+     entries. Held here rather than pushed into M on purpose: M is also the
+     manual picker list, and a one-off generated entry appearing in that list
+     would imply it has the same standing as the vetted ones. It does not. */
+  var gen=null;
+
+  /* muscle grouping for the movement list, from the shared library */
+  var REGION={Chest:'Push',Shoulders:'Push',Triceps:'Push',
+              Back:'Pull',Lats:'Pull',Biceps:'Pull',Traps:'Pull',Forearms:'Pull',
+              Quads:'Legs',Hamstrings:'Legs',Glutes:'Legs',Calves:'Legs',
+              Core:'Core',Abs:'Core',Obliques:'Core'};
+  function movesFor(eq){
+    if(!window.LIB) return [];
+    return LIB.filter(function(x){ return x.e===eq; });
+  }
+
+  /* the framing viewfinder, not the photo library */
+  drop.onclick=function(){
+    if(window.KovaCam){
+      KovaCam.open({
+        title:'Scan equipment',
+        hint:'Fit the whole machine or the weights inside the square.',
+        onShot:function(dataUrl){ accept(dataUrl); }
+      });
+      return;
+    }
+    file.click();
+  };
+
+  file.onchange=function(){
+    var f=this.files&&this.files[0]; if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){ accept(String(fr.result)); };
+    fr.readAsDataURL(f);
+  };
+
+  function accept(dataUrl,ctx){
+    lastShot=dataUrl; ident=null; picked=-1; hint=ctx||'';
+    document.getElementById('mcImg').src=dataUrl;
+    document.getElementById('mcEmpty').style.display='none';
+    document.getElementById('mcPreview').style.display='block';
+    document.getElementById('mcResult').style.display='none';
+    document.getElementById('mcPick').style.display='block';
+    identifyShot(dataUrl);
+    /* Wired here rather than on the file input so the live-camera path
+       gets backed up too - both routes land in accept(). */
+    try{ if(window.KovaMedia) KovaMedia.attach('machine', dataUrl,
+      { name:'machine-scan.jpg', ref:'machine' }); }catch(e){}
+  }
+
+  document.getElementById('mcSearch').oninput=function(){ q=this.value.toLowerCase(); paint(); };
+
+  /* ---------- identification ---------- */
+  function bannerEl(){
+    var pick=document.getElementById('mcPick');
+    var b=document.getElementById('mcIdent');
+    if(!b){
+      b=document.createElement('div');
+      b.id='mcIdent';
+      pick.insertBefore(b,pick.firstChild);
+    }
+    return b;
+  }
+
+  function identifyShot(dataUrl,fitted){
+    /* p28: shrunk to a real JPEG first (server limit, and the label matches) */
+    if(!fitted&&window.KovaModel&&KovaModel.fit&&/^data:image\//.test(dataUrl||'')){ KovaModel.fit(dataUrl).then(function(d){ identifyShot(d,true); }); return; }
+    var b=bannerEl();
+
+    if(!window.KovaModel||!KovaModel.connected()){
+      /* the one action that fixes this, made impossible to miss */
+      b.innerHTML='<div class="card" style="margin-top:0;border-color:var(--acc-brd);'
+        +'background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
+        +'<div class="lbl" style="color:var(--acc)">PHOTO SAVED \u00b7 NOT READ</div>'
+        +'<div style="font-size:14px;font-weight:600;margin-top:5px">Sign in and Kova reads it for you</div>'
+        +'<div class="sub" style="margin-top:5px;line-height:1.5">Signed in, Kova\u2019s AI names the equipment in every photo, video or link, free. '
+        +'Until then, find it below: each one has a picture and what it looks like.</div>'
+        +'<button class="btn" id="mcConnect" style="margin-top:12px">Sign in</button></div>';
+      paint();
+      document.getElementById('mcConnect').onclick=function(){ go('settings'); };
+      return;
+    }
+
+    b.innerHTML='<div class="card" style="margin-top:0"><div class="sub">Reading the photo\u2026</div></div>';
+    paint();
+
+    /* ---- the contract -------------------------------------------------
+       Two jobs in one call. First, try to match the photo against the
+       curated catalogue — those entries carry muscle attributions and
+       execution cues written against standard references, which is better
+       data than anything generated per request, so a match always wins.
+       Second, when nothing matches, describe the machine from scratch so
+       the long tail stops dead-ending at "not listed".
+
+       confidence and the "not sure" path are load-bearing, not decoration.
+       Without them, a model that cannot tell what it is looking at is still
+       forced to name a machine and assign muscles to it — and this output
+       feeds injury-avoidance cues.                                      */
+    var names=M.map(function(m){return m.n});
+    var sys='You identify gym equipment from a photo. You are precise and factual. '
+      +'Reply with JSON only, no prose, no markdown fences.\n'
+      +'{"match":"<one allowed name, or NONE>","machine_name":"<exact name>",'
+      +'"brand_detected":"<brand or Unknown>","confidence":0-100,'
+      +'"seen":"<six words on what is visible>",'
+      +'"alternatives":["<up to 3 other allowed names it could be, most likely first>"],'
+      +'"primary_muscles":[],"secondary_muscles":[],'
+      +'"setup_steps":[],"execution_cues":[],"common_mistakes":[["what","why it matters"]]}\n'
+      +'Allowed names: '+names.join(' | ')+'\n'
+      +'RULES\n'
+      +'1. If the equipment is one of the allowed names, set match to that exact name and '
+      +'leave the muscle, setup, cue and mistake arrays EMPTY. Those are already written.\n'
+      +'2. If it is real equipment but not on the list, set match to "NONE", give the exact '
+      +'machine name (for example "Plate-Loaded Linear Leg Press", "Selectorized Lying Leg '
+      +'Curl"), and fill every array: 2-3 primary muscles, 2-4 secondary or stabilising '
+      +'muscles, exactly 3 setup steps (seat or pad setting, then hand or foot placement and '
+      +'bracing, then the movement path), 3-4 execution cues, and 2-3 common mistakes as '
+      +'[what, why it matters].\n'
+      +'2b. common_mistakes is never empty on a generated entry. If you are answering in a '
+      +'shorter format that folds execution into the setup steps, still return the mistakes '
+      +'array. Each entry names what goes wrong and the consequence, either as '
+      +'[what, why it matters] or as one string joined by an em dash.\n'
+      +'3. Read the brand only from a logo or badge actually visible in the photo. If you '
+      +'cannot read one, use "Unknown". Never infer a brand from shape or colour.\n'
+      +'4. If the machine supports several exercises (a functional trainer, a rack), describe '
+      +'the configuration its attachments are currently set up for.\n'
+      +'5. If it is free weights, match the tool (Dumbbells, Barbell and plates, Kettlebell), '
+      +'never a machine. Weight plates or a loaded bar alone is "Barbell and plates". A number '
+      +'display or weight stack belongs to whatever machine it sits on.\n'
+      +'6. If you cannot tell exactly, still put your best allowed name in match with an honest '
+      +'confidence, and list the next most likely allowed names in alternatives (always fill it '
+      +'when confidence is under 70). Only when there is no gym equipment in the picture at all, '
+      +'set match to "NONE", machine_name to "Not sure / not listed", confidence below 40 and '
+      +'leave the arrays empty.\n'
+      +'6b. The picture may be a 2x2 grid of four moments from one video, a video thumbnail or '
+      +'a screenshot, and a person may be using the equipment: name the equipment they use. A '
+      +'title or caption given with it is strong evidence.\n'
+      +'7. Be objective. No motivational language, no general fitness advice.';
+
+    var c=KovaModel.cfg(), P=KovaModel.providers[c.p];
+    var b64=dataUrl.slice(dataUrl.indexOf(',')+1);
+    var content = c.p==='anthropic'
+      ? [{type:'image',source:{type:'base64',media_type:KovaModel.mime(dataUrl),data:b64}},
+         {type:'text',text:'What equipment is this?'+(hint?' '+hint:'')}]
+      : [{type:'text',text:'What equipment is this?'+(hint?' '+hint:'')},
+         {type:'image_url',image_url:{url:dataUrl}}];
+
+    /* same reasoning as the meal read: picking one name off a fixed list is
+       a classification task. Token budget stays at 900 — the reply is one
+       small object. */
+    var req=P.build(c.key,c.model,sys,[{role:'user',content:content}],
+                    {temperature:0});
+    fetch(P.url,{method:'POST',headers:req.headers,body:req.body})
+      .then(function(r){
+        if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+t.slice(0,120)); });
+        return r.json();
+      })
+      .then(function(data){
+        identifyShot.__retry=0;
+        var raw=(P.read(data)||'').replace(/```json|```/g,'').trim();
+        var open=raw.indexOf('{'); if(open>0) raw=raw.slice(open);
+        var parsed=JSON.parse(raw);
+
+        var conf=+parsed.confidence||0;
+        var brand=String(parsed.brand_detected||'').trim();
+        if(/^unknown$/i.test(brand)) brand='';
+        var match=String(parsed.match||'').trim();
+
+        /* --- path 1: it is one of the curated entries. Vetted data wins. */
+        var ix=-1;
+        M.forEach(function(m,k){ if(m.n===match) ix=k; });
+        /* p36: the next most likely, shown as pictures to tap */
+        var alts=(Array.isArray(parsed.alternatives)?parsed.alternatives:[]).map(function(x){ return byName(String(x||'').trim()); })
+          .filter(function(k,i,A){ return k>=0&&k!==ix&&A.indexOf(k)===i&&M[k].n!=='Not sure / not listed'; }).slice(0,3);
+        if(ix>=0){
+          gen=null;
+          ident={i:ix,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:false,alts:alts};
+          renderIdent();
+          return;
+        }
+
+        /* --- path 2: not on the list. Only render a generated entry if the
+           model actually supplied the parts. A half-filled response is the
+           "not sure" case wearing a machine name, and rendering it would put
+           unvetted setup cues on screen with nothing marking them as such. */
+        var g=buildGenerated(parsed);
+        if(g){
+          gen=g;
+          ident={i:-1,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:true,alts:alts,
+                 name:g.n};
+          renderIdent();
+          return;
+        }
+
+        /* --- path 3: genuinely unidentified. Fall through to the curated
+           "Not sure / not listed" entry, which carries generic safe advice. */
+        var ns=-1;
+        M.forEach(function(m,k){ if(m.n==='Not sure / not listed') ns=k; });
+        gen=null;
+        /* p36: never a dead end - the most likely one first, the others as pictures */
+        if(alts.length) ident={i:alts[0],conf:Math.min(conf,60),seen:String(parsed.seen||''),brand:brand,gen:false,alts:alts.slice(1)};
+        else ident={i:ns,conf:conf,seen:String(parsed.seen||''),brand:brand,gen:false,alts:[]};
+        renderIdent();
+      })
+      .catch(function(e){
+        /* one quiet retry for a dropped connection or a busy server */
+        if(!identifyShot.__retry&&!/^4\d\d /.test(String(e&&e.message))){ identifyShot.__retry=1; setTimeout(function(){ identifyShot(dataUrl,true); },1200); return; }
+        identifyShot.__retry=0;
+        bannerEl().innerHTML='<div class="card mc-id" style="margin-top:0">'
+          +'<div class="lbl" style="color:var(--acc)">NOT READ</div>'
+          +'<div style="font-size:14px;font-weight:600;margin-top:4px">Kova could not read this one just now</div>'
+          +'<div class="sub" style="line-height:1.5;margin-top:4px">'+(/^4\d\d /.test(String(e&&e.message))?'The picture could not be used. Try another photo, a short video or a link.':'The connection dropped. Try again, or find it below by how it looks.')+'</div>'
+          +'<button class="btn" data-mc="retry" style="margin-top:10px">Try again</button></div>';
+        paint();
+      });
+  }
+
+  /* Turns a model response into an entry show() can render, or null if the
+     response does not carry enough to be worth showing. Returning null is
+     the right answer far more often than it feels like it should be: a
+     generated entry with two setup steps and no muscles is not a thinner
+     version of a catalogue entry, it is a guess. */
+  function buildGenerated(p){
+    function strs(v,max){
+      if(!Array.isArray(v)) return [];
+      return v.map(function(x){
+                /* Prompts that show "Step 1: ..." in their template get it
+                   back verbatim, and steps() already draws its own numbered
+                   circles — without this you render "1  Step 1: Adjust...". */
+                return String(x||'').trim()
+                        .replace(/^step\s*\d+\s*[:.)-]\s*/i,'')
+                        .replace(/^\d+\s*[:.)]\s*/,'')
+                        .trim();
+              })
+              .filter(function(x){ return x.length>2 && x.length<220; })
+              .slice(0,max);
+    }
+    var name=String(p.machine_name||'').trim();
+    if(!name || /^not sure/i.test(name)) return null;
+
+    var pri=strs(p.primary_muscles,4);
+    var sec=strs(p.secondary_muscles,5);
+    var set=strs(p.setup_steps,4);
+    var how=strs(p.execution_cues,5);
+
+    /* The compact contract folds execution into the third setup step —
+       adjust, then place and brace, then move. When a response arrives in
+       that shape there are no execution cues to read, so split the last
+       step off rather than rejecting an otherwise complete identification.
+       Both contract shapes now land the same way. */
+    if(!how.length && set.length>=3){
+      how=set.slice(-1);
+      set=set.slice(0,-1);
+    }
+
+    /* the floor: a name, what it trains, and how to set it up. Without all
+       three there is nothing useful to draw. */
+    if(!pri.length || set.length<2 || !how.length) return null;
+
+    /* Mistakes arrive in whichever shape the contract that produced them
+       used. The pair form is the documented one, but the compact 3-step
+       contract emits plain strings, and some replies come back as objects.
+       All three carry the same two facts - what goes wrong and why it
+       matters - so all three are read rather than only the pair form.
+       Anything that yields only a 'what' is dropped: a mistake with no
+       consequence attached is a scold, not a cue. */
+    function pair(row){
+      if(Array.isArray(row)){
+        var a=String(row[0]||'').trim(), b=String(row[1]||'').trim();
+        return (a&&b)?[a,b]:null;
+      }
+      if(row && typeof row==='object'){
+        var w=String(row.what||row.mistake||row.error||'').trim();
+        var y=String(row.why||row.why_it_matters||row.reason||row.matters||'').trim();
+        return (w&&y)?[w,y]:null;
+      }
+      var t=String(row||'').trim();
+      if(t.length<6) return null;
+      /* split on the first em/en dash, colon or ' - ' that has text on both
+         sides. Ordinary hyphens inside words (lock-out, mid-rep) are left
+         alone by requiring the surrounding spaces. */
+      var m=t.match(/^(.{4,}?)\s*(?:\u2014|\u2013|:|\s-\s)\s*(.{4,})$/);
+      if(m) return [m[1].trim().replace(/[.,;]$/,''), m[2].trim()];
+      return null;
+    }
+    var miss=[];
+    if(Array.isArray(p.common_mistakes)){
+      p.common_mistakes.forEach(function(row){
+        var pr=pair(row);
+        if(pr) miss.push(pr);
+      });
+      miss=miss.slice(0,4);
+    }
+
+    return {n:name, kind:'fixed', pri:pri, sec:sec, set:set, how:how,
+            miss:miss, gen:true};
+  }
+
+  function toBase64(f){
+    return new Promise(function(res,rej){
+      var fr=new FileReader();
+      fr.onload=function(){
+        var s=String(fr.result);
+        res({mime:f.type||'image/jpeg', b64:s.slice(s.indexOf(',')+1)});
+      };
+      fr.onerror=rej;
+      fr.readAsDataURL(f);
+    });
+  }
+
+  function renderIdent(){
+    var m = ident.gen ? gen : M[ident.i], sure=ident.conf>=70, alts=(ident.alts||[]).filter(function(k){ return k!==ident.i; });
+    var none=!ident.gen&&m&&m.n==='Not sure / not listed';
+    var h='<div class="card mc-id" style="margin-top:0;border-color:var(--acc-brd)">';
+    if(none){
+      h+='<div class="lbl" style="color:var(--acc)">NOT SURE YET</div>'
+        +'<div class="title-s" style="font-size:17px;margin-top:3px">Kova could not tell from this picture</div>'
+        +(ident.seen?'<div class="sub" style="margin-top:3px">Saw: '+ident.seen+'</div>':'')
+        +'<div class="sub" style="margin-top:6px;line-height:1.5">Step back so the whole machine is in, from the side, with the seat and handles showing. Or find it below: each one has a picture.</div>'
+        +'<button class="btn" data-mc="again" style="margin-top:12px">Take another photo</button>';
+    } else {
+      h+='<div class="lbl" style="color:var(--acc)">'+(sure?'IDENTIFIED':'BEST GUESS')+'</div>'
+        +'<div class="mc-top">'+(ident.gen?'':pic(m,'mc-big'))+'<div style="min-width:0"><div class="title-s" style="font-size:18px;margin-top:3px">'+m.n+'</div>'
+        +(look(m)?'<div class="sub" style="margin-top:3px;line-height:1.45">'+look(m)+'</div>':'')+'</div></div>'
+        +(ident.brand?'<div class="sub" style="margin-top:6px">Brand: '+ident.brand+'</div>':'')
+        +(ident.seen?'<div class="sub" style="margin-top:3px">Saw: '+ident.seen+'</div>':'')
+        +'<div class="sub" style="margin-top:6px;font-size:10.5px">Confidence '+ident.conf+'%.'
+        +(sure?'':' Check it against the pictures'+(alts.length?' here':' below')+'.')+'</div>'
+        +'<button class="btn" id="mcConfirm" style="margin-top:12px">'+(sure?'Yes, that is it':'Yes, it is this one')+'</button>';
+    }
+    if(alts.length){
+      h+='<div class="lbl" style="margin-top:14px">'+(none?'IT MIGHT BE':'OR IT COULD BE')+'</div><div class="mc-alts">'
+        +alts.map(function(k){ var a=M[k]; return '<button type="button" class="mc-alt" data-mc="alt" data-i="'+k+'">'+pic(a)+'<b>'+a.n+'</b><small>'+look(a)+'</small></button>'; }).join('')+'</div>';
+    }
+    h+='</div>';
+    var b=bannerEl(); b.innerHTML=h; mountPics(b);
+    paint();
+    var c=document.getElementById('mcConfirm'); if(c) c.onclick=function(){ picked=ident.i; show(); };
+    /* a confident read with nothing close should not make you tap twice */
+    if(sure&&!alts.length){ picked=ident.i; show(); }
+  }
+
+  function paint(){
+    var rows=M.map(function(m,i){return {m:m,i:i}}).filter(function(r){
+      if(!q) return true;
+      return (r.m.n+' '+r.m.k+' '+look(r.m)).toLowerCase().indexOf(q)>-1;
+    });
+    var L=document.getElementById('mcList');
+    L.innerHTML = rows.length? rows.map(function(r){
+      var sub = r.m.kind==='open'
+        ? 'Trains what you do with it'
+        : (r.m.pri.join(', ')||'—');
+      return '<div class="qopt mcopt" data-i="'+r.i+'" role="button" tabindex="0">'+pic(r.m)
+        +'<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+r.m.n+'</div>'
+        +(look(r.m)?'<div class="li-sub mc-look">'+look(r.m)+'</div>':'')
+        +'<div class="li-sub">'+sub+'</div></div></div>';
+    }).join('') : '<div class="sub" style="padding:6px 2px">No match. Pick "Not sure / not listed".</div>';
+    mountPics(L);
+    L.querySelectorAll('.mcopt').forEach(function(e){
+      e.onclick=function(){ gen=null; picked=+e.dataset.i; show(); };
+    });
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('#s-machine [data-mc]'); if(!b) return;
+    var a=b.getAttribute('data-mc');
+    if(a==='alt'){ gen=null; picked=+b.getAttribute('data-i'); show(); return; }
+    if(a==='again'){ drop.click(); return; }
+    if(a==='retry'){ if(lastShot){ identifyShot.__retry=0; identifyShot(lastShot,true); } return; }
+    if(a==='upload'){ up.click(); return; }
+    if(a==='link'){ linkSheet(); return; }
+  });
+
+  /* ---------- p36: a photo or a video from the phone, or a link ---------- */
+  var up=document.createElement('input'); up.type='file'; up.accept='image/*,video/*'; up.style.display='none'; up.id='mcUp';
+  drop.parentNode.insertBefore(up,drop.nextSibling);
+  var ways=document.createElement('div'); ways.className='mc-ways';
+  ways.innerHTML='<button type="button" class="chip" data-mc="upload"><svg class="ic"><use href="#i-video"/></svg>Photo or video</button>'
+    +'<button type="button" class="chip" data-mc="link"><svg class="ic"><use href="#i-arrow-up-right"/></svg>Paste a link</button>';
+  drop.parentNode.insertBefore(ways,up);
+  up.onchange=function(){
+    var f=this.files&&this.files[0]; this.value=''; if(!f) return;
+    if(/^video\//.test(f.type)){ fromVideo(f); return; }
+    var fr=new FileReader(); fr.onload=function(){ accept(String(fr.result)); }; fr.readAsDataURL(f);
+  };
+  /* four moments of the clip in one picture (2 x 2), so the model sees the movement */
+  function sheet4(stills){
+    return Promise.all(stills.slice(0,4).map(function(u){ return new Promise(function(ok){ var im=new Image(); im.onload=function(){ ok(im); }; im.onerror=function(){ ok(null); }; im.src=u; }); }))
+      .then(function(ims){
+        ims=ims.filter(Boolean); if(!ims.length) return null;
+        var S=384, c=document.createElement('canvas'); c.width=S*2; c.height=S*2;
+        var x=c.getContext('2d'); x.fillStyle='#000'; x.fillRect(0,0,c.width,c.height);
+        ims.forEach(function(im,i){ var k=Math.min(S/im.width,S/im.height), w=im.width*k, h=im.height*k; x.drawImage(im,(i%2)*S+(S-w)/2,Math.floor(i/2)*S+(S-h)/2,w,h); });
+        return c.toDataURL('image/jpeg',0.82);
+      });
+  }
+  function fromVideo(f){
+    var b=bannerEl(); document.getElementById('mcPick').style.display='block';
+    b.innerHTML='<div class="card" style="margin-top:0"><div class="sub">Taking four moments from the video…</div></div>';
+    var grab=window.KovaLook&&KovaLook.videoStills?KovaLook.videoStills(f):Promise.resolve([]);
+    grab.then(function(st){ return st&&st.length?sheet4(st):null; }).then(function(img){
+      if(!img){ b.innerHTML='<div class="card mc-id" style="margin-top:0"><div class="sub" style="line-height:1.5">Kova could not open that video on this phone. Try a photo, or a screenshot from the video.</div></div>'; return; }
+      accept(img,'This is a 2x2 grid of four moments from one video.');
+    });
+  }
+  function linkSheet(){
+    if(!window.openSheet) return;
+    openSheet('<div class="mc-link"><div class="title-s" style="font-size:17px">Paste a link</div>'
+      +'<div class="sub" style="margin:4px 0 10px;line-height:1.5">A YouTube, TikTok or Instagram video, or any page with a picture of the machine. Kova reads its picture and title.</div>'
+      +'<input class="srch" id="mcUrl" inputmode="url" autocomplete="off" placeholder="https://youtube.com/..." style="width:100%"/>'
+      +'<button class="btn" id="mcUrlGo" style="margin-top:10px;width:100%">Read this link</button><div class="sub" id="mcUrlMsg" style="margin-top:8px"></div></div>');
+    var inp=document.getElementById('mcUrl'), go2=document.getElementById('mcUrlGo'), msg=document.getElementById('mcUrlMsg');
+    try{ inp.focus(); }catch(e){}
+    go2.onclick=function(){
+      var u=String(inp.value||'').trim(); if(!/^https?:\/\/\S+\.\S+/.test(u)){ msg.textContent='That does not look like a link. It starts with https://'; return; }
+      if(!(window.KovaLink&&KovaLink.authFetch)||!(window.KovaModel&&KovaModel.connected())){ msg.textContent='Sign in first: reading a link uses Kova’s AI.'; return; }
+      go2.disabled=true; msg.textContent='Reading the link…';
+      KovaLink.authFetch('/scan/link',{json:{url:u}}).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j&&j.error||'That link could not be read.'); return j; }); })
+        .then(function(j){
+          if(!j.image){ throw new Error('That link has no picture Kova can read. Try a screenshot of the video.'); }
+          if(window.closeSheet) closeSheet();
+          document.getElementById('mcImg').src=j.image;
+          accept(j.image,(j.title?'It comes from '+(j.site||'a page')+' titled "'+String(j.title).slice(0,140)+'".':'')+(j.text?' Description: '+String(j.text).slice(0,200):''));
+        })
+        .catch(function(e){ go2.disabled=false; msg.textContent=String(e&&e.message||e).slice(0,160); });
+    };
+  }
+
+  /* ---------- result ---------- */
+  function steps(list,accent){
+    return list.map(function(c,i){
+      return '<div style="display:flex;gap:9px;padding:7px 0;border-top:'+(i?'.5px solid rgba(255,255,255,.08)':'none')+'">'
+        +'<div style="width:19px;height:19px;border-radius:50%;background:'+(accent?'var(--acc-dim)':'rgba(255,255,255,.12)')
+        +';color:'+(accent?'var(--acc)':'#FFFFFF')+';font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</div>'
+        +'<div style="font-size:11.5px;line-height:1.4;color:var(--txt,#FFFFFF)">'+c+'</div></div>';
+    }).join('');
+  }
+  function mistakes(list){
+    return list.map(function(f,i){
+      return '<div style="padding:9px 0;border-top:'+(i?'.5px solid rgba(255,255,255,.08)':'none')+'">'
+        +'<div style="display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:50%;background:var(--warn)"></span>'
+        +'<span style="font-size:12px;font-weight:600;color:var(--txt,#FFFFFF)">'+f[0]+'</span></div>'
+        +'<div style="font-size:10.5px;color:var(--ink-2,rgba(255,255,255,.85));line-height:1.4;margin-top:4px;padding-left:13px">'+f[1]+'</div></div>';
+    }).join('');
+  }
+  function startCard(rx){
+    return '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:9px">Where to start</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'
+      +[['SETS',rx.s],['REPS',rx.r],['REST',rx.rest]].map(function(x){
+        return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div><div style="font-size:13px;font-weight:600;color:var(--acc);margin-top:3px">'+x[1]+'</div></div>';
+      }).join('')+'</div>'
+      +'<div class="sub" style="margin-top:10px;padding-top:9px;border-top:.5px solid rgba(255,255,255,.10);line-height:1.45">Pick a weight you can finish the full rep range with. If your form breaks before the last rep, it is too heavy.</div></div>';
+  }
+  function foldCard(title,inner){
+    var id='fold'+Math.random().toString(36).slice(2,7);
+    return '<div class="card" style="padding:0;overflow:hidden">'
+      +'<div class="exp-btn foldhd" data-t="'+id+'" style="margin:0;border:0;background:none">'
+      +'<div style="flex:1"><div class="li-name">'+title+'</div></div>'
+      +'<svg class="ic exp-chev" style="font-size:15px;transition:transform .2s"><use href="#i-chevron-down"/></svg></div>'
+      +'<div class="exp-body" id="'+id+'"><div style="padding:0 16px 14px">'+inner+'</div></div></div>';
+  }
+  function bindFolds(root){
+    root.querySelectorAll('.foldhd').forEach(function(b){
+      b.onclick=function(){
+        var body=document.getElementById(b.dataset.t);
+        var open=!body.classList.contains('open');
+        body.classList.toggle('open',open);
+        b.classList.toggle('open',open);
+      };
+    });
+  }
+
+  function show(){
+    var m = gen || M[picked];
+    var GM=(window.KovaGoal&&KovaGoal.id())?KovaGoal.machine(m,ident):'';
+    var h='<div class="card card-lg" style="border-color:var(--acc-brd);background:linear-gradient(150deg,var(--acc-bg),rgba(255,255,255,.03))">'
+      +'<div class="lbl" style="color:var(--acc)">'+(m.kind==='open'?'EQUIPMENT':'MACHINE')+'</div>'
+      +'<div class="title-s" style="font-size:20px;margin-top:3px">'+m.n+'</div>'
+      +((m.gen&&ident&&ident.brand)?'<div class="sub" style="margin-top:3px">'+ident.brand+'</div>':'')
+      +'<div class="sub" style="margin-top:4px">'
+      +(m.kind==='open'
+        ? 'A tool, not a movement. What it trains depends on what you do with it.'
+        : 'Fixed path, so it trains the same muscles every time.')
+      +'</div></div>';
+
+    /* The one piece of UI that separates this from the curated entries.
+       Everything below on a generated card was written by a vision model
+       from one photo, and it is about how to load a joint — so it says so,
+       above the content rather than buried under it. */
+    if(m.gen){
+      h+='<div class="card" style="border-color:var(--warn-brd,rgba(244,225,142,.3));'
+        +'background:rgba(244,225,142,.06)">'
+        +'<div class="lbl" style="color:var(--warn)">READ BY A MODEL &middot; NOT VETTED</div>'
+        +'<div class="sub" style="margin-top:5px;line-height:1.5">This machine is not one of '
+        +'the '+M.length+' Kova has written up, so the muscles and cues below were generated '
+        +'from your photo rather than checked against a reference. Treat them as a starting '
+        +'point, and check the placard on the frame before you load it.</div></div>';
+    }
+
+    if(m.kind==='open'){
+      var moves=movesFor(m.eq);
+      var groups={};
+      moves.forEach(function(x){
+        var g=REGION[x.m]||'Other';
+        (groups[g]=groups[g]||[]).push(x);
+      });
+      var keys=Object.keys(groups);
+      var CAP=5;
+
+      h+='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:3px">What it can train</div>'
+        +'<div class="sub" style="margin-bottom:10px">Pick a movement to see the muscles it works.</div>'
+        +(keys.length
+          ? keys.map(function(g){
+              var all=groups[g], head=all.slice(0,CAP), rest=all.slice(CAP);
+              return '<div class="lbl" style="margin:10px 0 6px">'+g.toUpperCase()+'</div>'
+                +'<div style="display:flex;flex-wrap:wrap;gap:6px" data-g="'+g+'">'
+                + head.concat(rest).map(function(x,ix){
+                    return '<div class="chip mcMove'+(ix>=CAP?' mcHide':'')+'" data-n="'+x.n+'" data-m="'+x.m
+                      +'" style="font-size:10.5px'+(ix>=CAP?';display:none':'')+'">'+x.n+'</div>';
+                  }).join('')
+                + (rest.length
+                    ? '<div class="chip mcMore" data-g="'+g+'" style="font-size:10.5px;opacity:.7">+'
+                      +rest.length+' more</div>'
+                    : '')
+                +'</div>';
+            }).join('')
+          : '<div class="sub">No movements listed for this yet.</div>')
+        +'</div>'
+        +'<div id="mcMoveOut"></div>';
+    }else{
+      h+='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:9px">Muscles it works</div>'
+        +'<div class="lbl" style="margin-bottom:5px">PRIMARY</div>'
+        +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:'+(m.sec.length?'10px':'0')+'">'
+        +m.pri.map(function(x){return '<div class="chip on" style="background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600">'+x+'</div>'}).join('')
+        +'</div>'
+        +(m.sec.length?'<div class="lbl" style="margin-bottom:5px">ALSO WORKING</div>'
+          +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+          +m.sec.map(function(x){return '<div class="chip">'+x+'</div>'}).join('')+'</div>':'')
+        +'</div>';
+    }
+
+    h+=foldCard('Set it up first', steps(m.set,false))
+      +foldCard('How to use it', steps(m.how,true))
+      +((m.miss&&m.miss.length)?foldCard('Common mistakes', mistakes(m.miss)):'')
+      /* No sets/reps prescription on a generated entry. The curated rx
+         values are programming decisions per machine; inventing one from a
+         photo would be the least grounded thing on the card. */
+      /* p29: sets, reps and rest follow your goal (src/p08_goal.js) */
+      +(GM||((m.gen
+        ? '<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">Where to start</div>'
+          +'<div class="sub" style="line-height:1.5">No set and rep guidance for this one, '
+          +'since Kova has not verified the machine. Start light enough to complete every rep '
+          +'with the form above, and stop if a joint hurts rather than a muscle burning.</div></div>'
+        : startCard(m.rx))+(window.KovaGoal?KovaGoal.machine(m,ident):'')))
+      +(m.cardio?'':'<button class="btn" id="mcAdd" style="margin-top:4px"><svg class="ic"><use href="#i-plus"/></svg>Add to my program</button>');
+
+    var R=document.getElementById('mcResult');
+    R.innerHTML=h; R.style.display='block';
+    bindFolds(R);
+
+    R.querySelectorAll('.mcMore').forEach(function(e){
+      e.onclick=function(){
+        e.parentElement.querySelectorAll('.mcHide').forEach(function(x){ x.style.display=''; });
+        e.remove();
+      };
+    });
+
+    R.querySelectorAll('.mcMove').forEach(function(e){
+      e.onclick=function(){
+        R.querySelectorAll('.mcMove').forEach(function(x){x.classList.remove('on')});
+        e.classList.add('on');
+        document.getElementById('mcMoveOut').innerHTML=
+          '<div class="card" style="border-color:var(--acc-brd)">'
+          +'<div class="lbl" style="color:var(--acc)">'+e.dataset.n.toUpperCase()+'</div>'
+          +'<div style="font-size:12px;font-weight:700;margin:6px 0 8px">Works your '+e.dataset.m.toLowerCase()+'</div>'
+          +'<div class="sub" style="line-height:1.5">Same '+m.n.toLowerCase()+', different movement, different muscle. '
+          +'That is why the tool on its own does not have an answer.</div></div>';
+      };
+    });
+
+    /* p29: it really adds it to the right day of your plan (it used to only say so) */
+    var mcAdd=document.getElementById('mcAdd');
+    if(mcAdd) mcAdd.onclick=function(){ if(window.KovaGoal) KovaGoal.machineAdd(m); else toast('Still loading. Try again in a second.'); };
+    R.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  paint();
+  window.__mcPaint=paint;
 })();
 
 </script>

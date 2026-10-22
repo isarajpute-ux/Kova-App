@@ -105,9 +105,15 @@ window.KovaQuick=(function(){
   }
   function read(dataUrl,note){
     return shrink(dataUrl).then(function(small){
-      return viaServer(small,note).catch(function(e){
+      var once=function(){ return viaServer(small,note).catch(function(e){
         if(!e.soft) throw e;
         return viaOwnKey(small).catch(function(){ throw e; });
+      }); };
+      /* p36: a dropped connection or a busy server gets one quiet retry */
+      return once().catch(function(e){
+        var again=(e&&(e.status>=500||e.message==='offline'))&&navigator.onLine!==false;
+        if(!again) throw e;
+        return new Promise(function(ok){ setTimeout(ok,1200); }).then(once);
       });
     });
   }

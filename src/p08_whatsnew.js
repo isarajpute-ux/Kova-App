@@ -23,12 +23,16 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
-    {id:'new-2026-10-22',title:'Muscle recovery and Follow along',
-      lines:['See which muscles are fresh and which need rest','Train what\u2019s fresh: today\u2019s workout from ready muscles','Follow along: moving pictures, a voice and a rest timer'],
+    {id:'new-2026-10-22',title:'Recovery, stretching, clearer pictures and smarter scans',
+      lines:['Muscle recovery: what is fresh and what needs rest','Stretch right beside it, with a timer','Exercise pictures that light up the muscle working','Scan a machine from a photo, a video or a link','Alerts on your phone when sleep is low or it has been a while'],
       steps:[
         ['move','Muscle recovery','Your muscles coloured by how recovered they are, from the sets you logged. Tap a muscle for its page.',function(){ return q('#krcCard'); }],
-        ['move','Train what\u2019s fresh','One tap builds today\u2019s workout from the muscles that are ready: 2\u20133 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
-        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }]
+        ['move','Train what’s fresh','One tap builds today’s workout from the muscles that are ready: 2–3 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
+        ['move','Stretch','The stretches for what is resting, right here. Stretch with me times each hold.',function(){ return q('#krsCard'); }],
+        ['move','Pictures that show the work','Every exercise is a small body map now: the muscle doing the work glows as the rep goes.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
+        ['machine','Scan any machine','A photo, a video or a YouTube link. Not sure? Kova shows its best guesses as pictures, and every machine below has one.',function(){ return first('#s-machine .mc-ways'); }],
+        ['settings','Alerts on your phone','Kova tells you when sleep is low, when it has been days since a workout, and what time to be in bed.',function(){ return q('#kpuNote')||first('#s-settings .sec-h'); }]
       ]},
     {id:'new-2026-10-21',title:'Exercise pictures, stretching and Zone 2 running',
       lines:['A moving picture for every exercise','Stretches for every muscle','Zone 2 running, with all five zones','Team chat with your AI teammates'],

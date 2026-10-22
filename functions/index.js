@@ -191,7 +191,9 @@ exports.wellnessWorker = onValueCreated(
     const job = event.data.val() || {};
     const db = seal.database(admin.database());
     try {
-      await makeAgent({ db, cfg: cfg() }).run(uid, { window: job.window });
+      const c = cfg();
+      const push = require('./push').makePush({ db, messaging: admin.messaging(), cfg: c });
+      await makeAgent({ db, cfg: c, push }).run(uid, { window: job.window });
     } finally {
       await db.ref(`srv/agentQueue/${uid}`).remove();
     }

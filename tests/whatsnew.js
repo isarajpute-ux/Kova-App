@@ -57,7 +57,13 @@ function boot(store) {
   if (w.KovaRecovery) w.KovaRecovery.decorate();
   await wait(50);
   const nm = rel.steps.filter((t) => t[0] === 'move');
-  ck('the newest release (Muscle recovery, Follow along) finds the recovery card and Train what’s fresh', rel.id === 'new-2026-10-22' && nm.length === 2 && nm[0][3]().id === 'krcCard' && nm[1][3]().getAttribute('data-krc') === 'fresh');
+  ck('the newest release finds, on Workout, the recovery card, Train what’s fresh, the Stretch card and Exercises', rel.id === 'new-2026-10-22' && nm.length === 4 && nm[0][3]().id === 'krcCard'
+    && nm[1][3]().getAttribute('data-krc') === 'fresh' && nm[2][3]().id === 'krsCard' && /Exercises/.test(nm[3][3]().textContent));
+  const mc = rel.steps.filter((t) => t[0] === 'machine')[0], st = rel.steps.filter((t) => t[0] === 'settings')[0];
+  w.go('machine'); await wait(150);
+  ck('…the new ways in on Scan a machine (photo or video, a link)', !!mc && !!mc[3]() && /Paste a link/.test(mc[3]().textContent));
+  w.go('settings'); await wait(200);
+  ck('…and the phone alerts note in Settings', !!st && !!st[3]());
   w.go('session'); await wait(200);
   if (w.KovaPlayer) w.KovaPlayer.decorate();
   const fa = rel.steps.filter((t) => t[0] === 'session')[0];

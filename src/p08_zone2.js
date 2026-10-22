@@ -431,7 +431,7 @@ window.KovaZone2=(function(){
     var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
     var have=document.getElementById('kz2Card'), html=card();
     if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kz2Card'); if(n0) n0.__h=html; } return; }
-    var after=document.getElementById('krcCard')||host.closest('.kv-card')||host;
+    var after=document.getElementById('krsCard')||document.getElementById('krcCard')||host.closest('.kv-card')||host;
     after.insertAdjacentHTML('afterend',html); var n=document.getElementById('kz2Card'); if(n) n.__h=html;
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }

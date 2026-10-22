@@ -304,8 +304,19 @@ const ADVICE = {
                evening: 'Two more glasses before 8pm, then taper so sleep is not broken.',
                night:   'Small sips only now; start tomorrow with a full glass.' }
 };
+/* "be in bed by 10:30 pm": 45 minutes before your own usual bedtime */
+function bedBy(audit) {
+  const b = (audit.metrics || []).find((m) => m.id === 'bedtime');
+  const m = b && /^(\d{2}):(\d{2})$/.exec(b.avg_bedtime || '');
+  if (!m) return null;
+  const clock = (x) => { x = ((x % 1440) + 1440) % 1440; const h = Math.floor(x / 60), mm = String(x % 60).padStart(2, '0'); return `${h % 12 || 12}:${mm} ${h < 12 ? 'am' : 'pm'}`; };
+  const usual = +m[1] * 60 + +m[2];
+  return { by: clock(usual - 45), usual: clock(usual) };
+}
+
 function rulesAlerts(audit) {
   const win = audit.window;
+  const bed = bedBy(audit);
   return audit.metrics.filter((m) => m.status === 'fix' || (m.status === 'neglect' && ['rhr', 'sleep', 'food'].includes(m.id)))
     .map((m) => ({
       metric: m.id, category: m.category, window: win,
@@ -313,9 +324,9 @@ function rulesAlerts(audit) {
       title: m.status === 'neglect' ? `${m.name}: no recent data` : `${m.name} needs attention`,
       wrong: m.flags[0] || '',
       action: m.status === 'neglect' ? (m.id === 'food' ? 'Log your meals today - even a rough entry helps Kova coach you.' : 'Wear your watch tonight and let it sync in the morning.')
-                                     : ADVICE[m.id][win],
+                                     : (m.id === 'sleep' && win !== 'morning' && bed ? `Be in bed by ${bed.by} tonight, 45 minutes before your usual ${bed.usual}.` : ADVICE[m.id][win]),
       source: 'rules'
     }));
 }
 
-module.exports = { METRICS, IDS, WINDOWS, local, dayOf, windowOf, cyclePhase, gather, metrics, rulesAlerts, targets, toMins, bedMins, ADVICE };
+module.exports = { METRICS, IDS, WINDOWS, local, dayOf, windowOf, cyclePhase, gather, metrics, rulesAlerts, targets, toMins, bedMins, ADVICE, bedBy };

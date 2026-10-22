@@ -139,7 +139,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   if (!host) { doc.getElementById('s-move').insertAdjacentHTML('afterbegin', '<div class="kv-card" id="fakeTraining"></div><div class="kl-acts"><div class="chip">Check my form</div></div>'); host = doc.querySelector('#s-move .kl-acts'); }
   Z.decorate(); await wait(20);
   const cardEl = doc.getElementById('kz2Card');
-  ck('it sits right under the Training card on Workout, never inside it', !!cardEl && cardEl.previousElementSibling === (host.closest('.kv-card') || host) && !cardEl.parentNode.closest('.kv-card') && cardEl.classList.contains('kv-card'));
+  ck('it sits under the Training card on Workout (after Muscle recovery and Stretch when they show), never inside it', !!cardEl && [host.closest('.kv-card') || host, doc.getElementById('krsCard'), doc.getElementById('krcCard')].includes(cardEl.previousElementSibling) && !cardEl.parentNode.closest('.kv-card') && cardEl.classList.contains('kv-card'));
   ck('…and Exercises and Stretch are not added to it', !cardEl.querySelector('.kxp-act'));
   doc.querySelector('#kz2Card [data-z2="go"]').click(); await wait(20);
   ck('Open Zone 2 opens the page, with the history table', !!page() && page().querySelectorAll('.kz2p-tb .tr').length === 3);

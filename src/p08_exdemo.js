@@ -167,21 +167,175 @@ window.KovaDemo=(function(){
   }
 
   var BEHIND={bench:1,box:1,seat:1,back:1,rail:1,wall:1,tower:1,hbar:1,pbar:1,tpad:1,plat:1};
+  /* a woman or a man, like you (KovaBodyShape, from your profile); looked up
+     at most every few seconds, since figures are drawn many times */
+  var SX={f:false,t:0};
+  function sexF(){ var n=Date.now(); if(n-SX.t>3000){ SX.t=n; try{ SX.f=!!(window.KovaBodyShape&&KovaBodyShape.profile().f===1); }catch(e){ SX.f=false; } } return SX.f; }
+  var STATS={draws:0};
   function draw(D,u,opts){
-    opts=opts||{};
+    opts=opts||{}; STATS.draws++;
     var P=pose(D,u), J=joints(P), defs=[], body=[], fr=J.v==='front';
     gid=0; pre='k'+(++seq).toString(36)+'_';
     defs.push('<radialGradient id="'+pre+'h" cx=".36" cy=".3" r=".8"><stop offset="0" class="g0"/><stop offset=".5" class="g1"/><stop offset="1" class="g2"/></radialGradient>'
       +'<radialGradient id="'+pre+'g"><stop offset="0" class="h0"/><stop offset=".45" class="h1"/><stop offset="1" class="h2"/></radialGradient>'
       +'<radialGradient id="'+pre+'s"><stop offset="0" class="s0"/><stop offset="1" class="s1"/></radialGradient>');
-    var R={tor:[12.5,10],ua:[5.4,4.6],fa:[4.4,3.4],th:[8.6,6.2],sh:[6,4.2],ft:[3.4,2.6]};
-    function arm(k,cls){ return limb(J['s'+k],J['e'+k],R.ua[0],R.ua[1],cls,defs)+limb(J['e'+k],J['w'+k],R.fa[0],R.fa[1],cls,defs)+'<circle class="hand '+cls+'" cx="'+f1(J['w'+k][0])+'" cy="'+f1(J['w'+k][1])+'" r="3.6"/>'; }
-    function leg(k,cls){ return limb(J['h'+k],J['k'+k],R.th[0],R.th[1],cls,defs)+limb(J['k'+k],J['a'+k],R.sh[0],R.sh[1],cls,defs)+limb(J['a'+k],J['t'+k],R.ft[0],R.ft[1],cls,defs); }
+    /* p36d: a real human body, after the owner's reference (a body-activity
+       map): one smooth silhouette per group - an oval head with a jaw, a
+       neck, sloped shoulders, arms that taper to hands, a waist, glutes,
+       thighs, knees, calves and feet - with the muscles as soft rounded
+       shapes on it. Kova's look: graphite with a white outline, and the
+       muscles doing the work glow in Workout's orange, brighter as the rep
+       goes. A woman or a man, like you (KovaBodyShape). Every edge is a
+       width profile along the bone, joined into one curve (Catmull-Rom). */
+    var FEM=opts.sex!=null?opts.sex==='f':sexF();
+    var mus=D.mus||{p:[],s:[]}, P1=mus.p||[], S1=mus.s||[];
+    var eff=opts.effort!=null?opts.effort:(D.K&&D.K.length>2?0.8:Math.max(0,Math.min(1,u)));
+    function pr(T,k){ return function(t){ k=k||1; if(t<=T[0][0]) return T[0][1]*k; for(var q=1;q<T.length;q++) if(t<=T[q][0]){ var a=T[q-1], b=T[q]; return (a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0]))*k; } return T[T.length-1][1]*k; }; }
+    function cr(P,closed){
+      var n=P.length; if(n<3) return '';
+      var d='M'+pp(P[0]), N=closed?n:n-1;
+      for(var q=0;q<N;q++){
+        var p0=closed?P[(q-1+n)%n]:P[Math.max(q-1,0)], p1=P[q], p2=P[(q+1)%n], p3=closed?P[(q+2)%n]:P[Math.min(q+2,n-1)];
+        d+='C'+pp([p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6])+' '+pp([p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6])+' '+pp(p2);
+      }
+      return d+(closed?'Z':'');
+    }
+    function perp(a,b){ var d=[b[0]-a[0],b[1]-a[1]], L=Math.hypot(d[0],d[1])||1; return [-d[1]/L,d[0]/L]; }
+    function unit(a,b){ var d=[b[0]-a[0],b[1]-a[1]], L=Math.hypot(d[0],d[1])||1; return [d[0]/L,d[1]/L]; }
+    var face=fr?[0,0]:(J.nf&&J.nf[0]<0?[-1,0]:[1,0]);
+    function sideOf(a,b,p){ var n=perp(a,b); return ((p[0]-a[0])*n[0]+(p[1]-a[1])*n[1])>=0?1:-1; }
+    function bent(a,b,c){ var n=perp(a,b); return Math.abs((c[0]-a[0])*n[0]+(c[1]-a[1])*n[1])>3; }
+    /* which side of a part is its front: the elbow and knee fold toward the
+       biceps and away from the quads; straight, it is the way the person faces */
+    function frontN(a,b,fold,foldFront){
+      var n=perp(a,b);
+      if(fold&&bent(a,b,fold)){ var sd=sideOf(a,b,fold); return S(n,foldFront?sd:-sd); }
+      return (n[0]*face[0]+n[1]*face[1])>=0?n:S(n,-1);
+    }
+    /* a part along a bone: the front edge and the back edge from their own
+       width profiles, rounded at both ends */
+    function part(a,b,n,F,Bk,steps){
+      steps=steps||8; var d=unit(a,b), fe=[], be=[];
+      for(var q=0;q<=steps;q++){ var t=q/steps, c=mixp(a,b,t); fe.push(A(c,S(n,F(t)))); be.push(A(c,S(n,-Bk(t)))); }
+      var rA=(F(0)+Bk(0))/2, rB=(F(1)+Bk(1))/2;
+      var eB=A(A(b,S(d,rB*0.92)),S(n,(F(1)-Bk(1))/2)), eA=A(A(a,S(d,-rA*0.92)),S(n,(F(0)-Bk(0))/2));
+      return cr(fe.concat([eB],be.reverse(),[eA]),true);
+    }
+    /* a muscle: a soft rounded shape on one side of a part (s = 1 front,
+       -1 back, 0 across the middle), inside the edge */
+    function leaf(a,b,n,F,Bk,s,t0,t1,inset,inner){
+      var K=7, out=[], inn=[]; inset=inset==null?1:inset; inner=inner==null?0.4:inner;
+      for(var q=0;q<=K;q++){
+        var tau=q/K, t=t0+(t1-t0)*tau, c=mixp(a,b,t), sh=Math.pow(Math.sin(Math.PI*tau),0.6);
+        if(s){ var w=(s>0?F(t):Bk(t))-inset; out.push(A(c,S(n,s*(inner+(w-inner)*sh)))); if(q>0&&q<K) inn.push(A(c,S(n,s*(inner+(w-inner)*sh*0.12)))); }
+        else { out.push(A(c,S(n,(F(t)-inset)*0.8*sh))); if(q>0&&q<K) inn.push(A(c,S(n,-(Bk(t)-inset)*0.8*sh))); }
+      }
+      return cr(out.concat(inn.reverse()),true);
+    }
+    /* a shape from points drawn in the part's own frame (x along d, y along q) */
+    function local(o,d,q,pts,k){ k=k||1; return cr(pts.map(function(v){ return A(o,A(S(d,v[0]*k),S(q,v[1]*k))); }),true); }
+    function mcls(m){ return P1.indexOf(m)>=0?'mm mp':(S1.indexOf(m)>=0?'mm ms':'mm'); }
+    /* the glow is the fill and a soft edge, no filter: cheap enough to play
+       every exercise smoothly on a phone */
+    function mpath(m,d){
+      var c=mcls(m), st='';
+      if(c==='mm mp') st=' style="fill-opacity:'+(0.34+0.62*eff).toFixed(2)+';stroke-width:'+(0.6+1.8*eff).toFixed(1)+';stroke-opacity:'+(0.3+0.55*eff).toFixed(2)+'"';
+      else if(c==='mm ms') st=' style="fill-opacity:'+(0.16+0.26*eff).toFixed(2)+'"';
+      return '<path class="'+c+'" data-m="'+m+'" d="'+d+'"'+st+'/>';
+    }
+    /* one group, one silhouette: every outline first, then every fill, so
+       where parts meet (a knee, a shoulder) there is no seam */
+    function group(shapes,mm,cls){
+      return '<g class="bg'+(cls?' '+cls:'')+'">'+shapes.map(function(d){ return '<path class="bo" d="'+d+'"/>'; }).join('')
+        +shapes.map(function(d){ return '<path class="bf" d="'+d+'"/>'; }).join('')+mm+'</g>';
+    }
+    var g=FEM?0.88:1;
+    /* width profiles, side view (front edge, back edge) */
+    var UA=FEM?[pr([[0,4.3],[0.12,4.3],[0.4,3.9],[0.75,3.2],[1,2.8]]),pr([[0,4.6],[0.15,4.5],[0.45,4.0],[0.8,3.1],[1,2.8]])]
+              :[pr([[0,4.8],[0.12,5.0],[0.4,4.6],[0.72,3.9],[0.9,3.2],[1,3.0]]),pr([[0,5.2],[0.15,5.2],[0.45,4.6],[0.78,3.7],[1,3.1]])];
+    var FA=FEM?[pr([[0,2.8],[0.18,3.1],[0.45,2.8],[0.8,2.1],[1,1.9]]),pr([[0,3.0],[0.2,3.2],[0.5,2.7],[0.85,2.0],[1,1.8]])]
+              :[pr([[0,3.1],[0.16,3.6],[0.42,3.3],[0.78,2.5],[1,2.1]]),pr([[0,3.4],[0.2,3.8],[0.5,3.1],[0.84,2.3],[1,2.0]])];
+    var TH=FEM?[pr([[0,6.6],[0.15,7.2],[0.45,6.7],[0.75,5.3],[1,4.3]]),pr([[0,8.2],[0.12,8.0],[0.45,6.5],[0.78,4.9],[1,4.3]])]
+              :[pr([[0,6.4],[0.12,7.3],[0.42,7.1],[0.72,5.9],[0.9,4.9],[1,4.6]]),pr([[0,7.6],[0.1,7.7],[0.42,6.7],[0.78,5.1],[1,4.6]])];
+    var SH=FEM?[pr([[0,4.2],[0.15,3.7],[0.5,3.1],[0.85,2.5],[1,2.3]]),pr([[0,4.3],[0.15,5.2],[0.32,5.6],[0.55,4.6],[0.8,3.1],[1,2.5]])]
+              :[pr([[0,4.6],[0.15,4.1],[0.5,3.5],[0.85,2.8],[1,2.6]]),pr([[0,4.6],[0.15,5.7],[0.32,6.3],[0.55,5.1],[0.8,3.4],[1,2.8]])];
+    var TF=FEM?pr([[-0.1,5.6],[0,7.0],[0.16,6.6],[0.32,6.1],[0.5,7.0],[0.62,9.2],[0.71,10.4],[0.79,9.4],[0.88,7.2],[1.0,5.0],[1.07,3.0],[1.2,2.9]])
+              :pr([[-0.1,5.8],[0,7.2],[0.18,7.0],[0.36,7.2],[0.55,8.6],[0.68,9.8],[0.8,9.4],[0.92,7.4],[1.0,5.4],[1.07,3.5],[1.2,3.3]]);
+    var TB=FEM?pr([[-0.22,6.4],[-0.12,10.4],[0.02,11.4],[0.14,9.8],[0.3,6.9],[0.45,6.8],[0.62,7.6],[0.78,7.8],[0.92,7.0],[1.0,5.6],[1.07,3.5],[1.2,3.2]])
+              :pr([[-0.22,6.2],[-0.12,9.4],[0.02,10.2],[0.14,8.9],[0.3,7.3],[0.45,7.6],[0.62,8.7],[0.78,9.0],[0.92,8.0],[1.0,6.6],[1.07,4.1],[1.2,3.7]]);
+    /* front view: the trunk's half width, the limbs' outer and inner edges */
+    var TW=FEM?pr([[-0.14,9.4],[0,12.4],[0.15,11.2],[0.34,8.8],[0.52,9.6],[0.72,11.2],[0.88,12.2],[0.97,11.6],[1.02,8],[1.07,3.2],[1.2,3.0]])
+              :pr([[-0.14,8.6],[0,10.8],[0.15,10.2],[0.34,9.6],[0.52,10.8],[0.72,12.6],[0.88,14.4],[0.97,14.2],[1.02,9.4],[1.07,3.8],[1.2,3.5]]);
+    function arm(k,cls){
+      var s0=J['s'+k], e=J['e'+k], w=J['w'+k], sh=[], mm='', na, nb, dF=unit(e,w);
+      if(fr){ na=perp(s0,e); nb=perp(e,w); var ou=pr([[0,5.0],[0.18,5.0],[0.55,4.1],[1,3.1]],g), fo=pr([[0,3.5],[0.3,3.5],[1,2.1]],g);
+        sh.push(part(s0,e,na,ou,ou),part(e,w,nb,fo,fo));
+        mm+=mpath('delts',leaf(s0,e,na,ou,ou,0,-0.14,0.32,0.9))+mpath('biceps',leaf(s0,e,na,ou,ou,0,0.32,0.86,1.1))+mpath('forearms',leaf(e,w,nb,fo,fo,0,0.06,0.6,0.8));
+      } else {
+        na=frontN(s0,e,w,true); nb=bent(s0,e,w)?S(perp(e,w),sideOf(e,w,s0)):frontN(e,w,null,true);
+        sh.push(part(s0,e,na,UA[0],UA[1]),part(e,w,nb,FA[0],FA[1]));
+        mm+=mpath('delts',leaf(s0,e,na,UA[0],UA[1],0,-0.16,0.3,0.6))+mpath('biceps',leaf(s0,e,na,UA[0],UA[1],1,0.28,0.88,0.9))+mpath('triceps',leaf(s0,e,na,UA[0],UA[1],-1,0.16,0.86,0.9))
+          +mpath('forearms',leaf(e,w,nb,FA[0],FA[1],0,0.06,0.62,0.7));
+      }
+      /* the hand: palm and fingers past the wrist, the thumb on the front */
+      var qn=fr?perp(e,w):nb;
+      sh.push(local(A(w,S(dF,-3.6*g)),dF,qn,[[-1,-2.2],[2,-2.5],[5.2,-2.5],[7.8,-1.9],[9.0,-0.5],[8.7,1.0],[7.0,2.1],[4.6,2.4],[3.6,3.5],[2.1,3.6],[0.6,2.6],[-1,2.1]],g));
+      return group(sh,mm,cls);
+    }
+    function leg(k,cls){
+      var h=J['h'+k], kn=J['k'+k], an=J['a'+k], to=J['t'+k], sh=[], mm='';
+      if(fr){
+        var o=k==='L'?-1:1, nt=perp(h,kn), ns=perp(kn,an); if(nt[0]*o<0) nt=S(nt,-1); if(ns[0]*o<0) ns=S(ns,-1);
+        var tO=pr([[0,7.6],[0.15,7.8],[0.5,6.4],[0.85,4.8],[1,4.6]],g), tI=pr([[0,5.6],[0.2,6.4],[0.5,5.6],[0.85,4.4],[1,4.4]],g);
+        var sO=pr([[0,4.6],[0.3,5.4],[0.6,4.4],[1,2.8]],g), sI=pr([[0,4.4],[0.3,5.0],[0.6,4.0],[1,2.6]],g);
+        sh.push(part(h,kn,nt,tO,tI),part(kn,an,ns,sO,sI));
+        sh.push(local(an,[0,1],[o,0],[[-1.6,-2.6],[-2.6,0.4],[-2.2,3.2],[0,4.4],[2.6,4.2],[4.2,2.6],[3.8,-0.6],[1.4,-2.4]],g));
+        mm+=mpath('quads',leaf(h,kn,nt,tO,tI,0,0.12,0.86,1.2))+mpath('adductors',leaf(h,kn,nt,tO,tI,-1,0.04,0.46,1.0,1.2))
+          +mpath('calves',leaf(kn,an,ns,sO,sI,0,0.12,0.6,1))+mpath('hipflex',leaf(h,kn,nt,tO,tI,1,-0.02,0.18,1.2,1.6));
+      } else {
+        var nT=frontN(h,kn,an,false), nS=perp(kn,an), td=unit(an,to);
+        nS=((to[0]-an[0])*nS[0]+(to[1]-an[1])*nS[1])>=0?nS:S(nS,-1);
+        sh.push(part(h,kn,nT,TH[0],TH[1]),part(kn,an,nS,SH[0],SH[1]));
+        /* the foot: heel, sole, toes and the top of the foot up to the ankle */
+        var up=S(perp(an,to),((kn[0]-an[0])*perp(an,to)[0]+(kn[1]-an[1])*perp(an,to)[1])>=0?1:-1);
+        sh.push(local(an,td,S(up,-1),[[-3.4,1.0],[-3.1,2.7],[-0.8,3.3],[4,3.3],[9,3.0],[12.4,2.6],[14.3,1.6],[13.9,0.2],[10.8,-0.6],[6,-1.6],[2,-3.0],[0,-3.3],[-2.2,-2.4]],g));
+        mm+=mpath('quads',leaf(h,kn,nT,TH[0],TH[1],1,0.1,0.88,0.9))+mpath('hams',leaf(h,kn,nT,TH[0],TH[1],-1,0.12,0.86,0.9))
+          +mpath('hipflex',leaf(h,kn,nT,TH[0],TH[1],1,-0.04,0.2,0.9,2.4))
+          +mpath('calves',leaf(kn,an,nS,SH[0],SH[1],-1,0.1,0.64,0.8))+mpath('tibialis',leaf(kn,an,nS,SH[0],SH[1],1,0.14,0.68,0.7,0.8));
+      }
+      return group(sh,mm,cls);
+    }
     function torso(){
-      /* chest wider than the waist; a front view is broader still */
-      var top=fr?mixp(J.hip,J.sh,1.02):mixp(J.hip,J.sh,1.04);
-      return limb(J.hip,top,fr?11:R.tor[1],fr?17:R.tor[0],'tor',defs)+limb(J.sh,J.neck,3.6,3.6,'nk',defs)
-        +'<circle class="head" fill="url(#'+pre+'h)" cx="'+f1(J.head[0])+'" cy="'+f1(J.head[1])+'" r="'+LEN.HR+'"/>';
+      var hip=J.hip, shp=J.sh, hd=J.head, u0=unit(hip,shp), L=Math.hypot(shp[0]-hip[0],shp[1]-hip[1]), at=function(t){ return A(hip,S(u0,L*t)); };
+      var hu=unit(shp,hd), R0=LEN.HR*(FEM?0.86:0.9), sh=[], mm='';
+      if(fr){
+        var n0=[u0[1],-u0[0]], re=[], le=[];
+        for(var q=-14;q<=120;q+=6){ var t=q/100; re.push(A(at(t),S(n0,TW(t)))); le.push(A(at(t),S(n0,-TW(t)))); }
+        sh.push(cr(re.concat([A(at(1.22),S(n0,2.4)),A(at(1.22),S(n0,-2.4))],le.reverse(),[at(-0.2)]),true));
+        /* the head from the front: an oval with a jaw */
+        sh.push(local(hd,n0,S(hu,-1),[[-0.86,-0.2],[-0.8,-0.78],[-0.4,-1.12],[0,-1.18],[0.4,-1.12],[0.8,-0.78],[0.86,-0.2],[0.78,0.4],[0.5,0.86],[0,1.02],[-0.5,0.86],[-0.78,0.4]].map(function(v){ return [v[0]*R0,v[1]*R0]; })));
+        var cw=function(t){ return TW(t)-1.4; };
+        mm+=mpath('chest',leaf(at(0.6),at(0.92),n0,cw,cw,1,0,1,1.2,1.0))+mpath('chest',leaf(at(0.6),at(0.92),n0,cw,cw,-1,0,1,1.2,1.0))
+          +mpath('obliques',leaf(at(0.08),at(0.5),n0,TW,TW,1,0,1,1.4,TW(0.3)*0.55))+mpath('obliques',leaf(at(0.08),at(0.5),n0,TW,TW,-1,0,1,1.4,TW(0.3)*0.55))
+          +mpath('traps',leaf(at(0.92),at(1.1),n0,TW,TW,0,0,1,4));
+        /* the abs: three rows of two, like the map */
+        [0.16,0.29,0.42].forEach(function(t){ [-1,1].forEach(function(sd){ var c=A(at(t),S(n0,sd*2.5)), P=[];
+          for(var a2=0;a2<8;a2++){ var th=a2/8*Math.PI*2; P.push(A(c,A(S(n0,Math.cos(th)*2.1),S(u0,Math.sin(th)*2.6)))); }
+          mm+=mpath('abs',cr(P,true)); }); });
+      } else {
+        var nf=J.nf, fe=[], be=[];
+        for(var q2=-12;q2<=120;q2+=6){ var t2=q2/100; fe.push(A(at(t2),S(nf,TF(t2)))); }
+        for(var q3=120;q3>=-22;q3-=6){ var t3=q3/100; be.push(A(at(t3),S(nf,-TB(t3)))); }
+        sh.push(cr(fe.concat([A(at(1.24),S(nf,1))],be,[A(at(-0.2),S(nf,1))]),true));
+        /* the head from the side: skull, brow, nose, lips, chin and jaw */
+        sh.push(local(hd,nf,S(hu,-1),[[-1.0,-0.1],[-0.86,-0.72],[-0.3,-1.1],[0.35,-1.04],[0.78,-0.66],[0.92,-0.2],[1.06,0.06],[0.92,0.28],[0.96,0.48],[0.84,0.8],[0.46,0.96],[0.02,0.8],[-0.42,0.74],[-0.86,0.42]].map(function(v){ return [v[0]*R0,v[1]*R0]; })));
+        var a=at(0), b=at(1);
+        mm+=mpath('chest',leaf(a,b,nf,TF,TB,1,0.58,0.88,0.9))+mpath('abs',leaf(a,b,nf,TF,TB,1,0.1,0.52,0.9))
+          +mpath('lats',leaf(a,b,nf,TF,TB,-1,0.4,0.82,0.9))+mpath('lowback',leaf(a,b,nf,TF,TB,-1,0.12,0.42,0.9))
+          +mpath('obliques',leaf(a,b,nf,TF,TB,0,0.18,0.5,2.2))+mpath('traps',leaf(a,b,nf,TF,TB,-1,0.84,1.04,0.9,1.4))
+          +mpath('glutes',leaf(a,b,nf,TF,TB,-1,-0.17,0.2,0.8,1.2));
+      }
+      return group(sh,mm,'');
     }
     var eq=(D.eq||[]).filter(function(q){ return BEHIND[q.k]; }).map(function(q){ return eqHtml(q,J); }).join('');
     var held=(D.eq||[]).filter(function(q){ return !BEHIND[q.k]; });
@@ -193,9 +347,12 @@ window.KovaDemo=(function(){
       body.push(arm('F','far'),leg('F','far'),torso(),leg('N',''),arm('N',''));
     }
     var front2=held.filter(function(q){ return fr||q.at!=='wF'; }).map(function(q){ return eqHtml(q,J); }).join('');
-    var mus=D.mus||{p:[],s:[]}, gl='';
-    (mus.s||[]).forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],2); }); });
-    (mus.p||[]).forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],1); }); });
+    var gl='';
+    if(opts.glow){
+      S1.forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],2); }); });
+      P1.forEach(function(m){ spots(J,m).forEach(function(s){ gl+=glow(s[0],s[1],1); }); });
+    }
+    var trk=opts.track===false?'':track(D);
     var feetX=fr?J.hip[0]:(J.aN[0]+J.aF[0])/2;
     var vb=opts.box||'0 0 200 200';
     /* the picture is named by what holds it (the page's figure, or the button); the svg itself is decoration */
@@ -203,9 +360,32 @@ window.KovaDemo=(function(){
       +'<defs>'+defs.join('')+'</defs>'
       +'<ellipse class="shadow" fill="url(#'+pre+'s)" cx="'+f1(feetX)+'" cy="'+(GY+2)+'" rx="58" ry="7"/><path class="floor" d="M8,'+(GY+0.5)+'H192"/>'
       +eq+'<g class="fig">'+body.join('')+'</g>'
-      +'<g class="glows">'+gl+'</g>'+front2+'</svg>';
+      +(gl?'<g class="glows">'+gl+'</g>':'')+front2+trk+'</svg>';
   }
 
+  /* the way it moves: a dashed path beside the part that travels (the hips
+     on a squat or a pull-up, the hands on a press, a row or a curl), with an
+     arrow at the finish, so a still picture reads "from here to there".
+     Worked out once per exercise. */
+  function track(D){
+    if(D.__trk!=null) return D.__trk;
+    var j0=joints(pose(D,0)), j1=joints(pose(D,1)), fr=j0.v==='front';
+    var keys=fr?['hip','wL','sh','aL','kL']:['hip','wN','sh','aN','kN'], dist={}, far=0, best=null;
+    keys.forEach(function(k){ if(!j0[k]||!j1[k]) return; dist[k]=Math.hypot(j1[k][0]-j0[k][0],j1[k][1]-j0[k][1]); far=Math.max(far,dist[k]); });
+    if(far<12||D.stretch) return (D.__trk='');
+    keys.some(function(k){ if(dist[k]>=far*0.6){ best=k; return true; } return false; });
+    var pts=[], mid=null; for(var i=0;i<=12;i++){ var J=joints(pose(D,i/12)); pts.push(J[best]); if(i===6) mid=mixp(J.hip,J.sh,.5); }
+    /* set the path beside the body, on the side away from the trunk */
+    var v=[pts[12][0]-pts[0][0],pts[12][1]-pts[0][1]], Lv=Math.hypot(v[0],v[1])||1, n=[-v[1]/Lv,v[0]/Lv], c=pts[6];
+    if(best!=='hip'&&best!=='sh'){ if((c[0]+n[0]-mid[0])*n[0]+(c[1]+n[1]-mid[1])*n[1]<0) n=S(n,-1); }
+    else if(n[0]<0) n=S(n,-1);
+    var off=best==='wN'||best==='wL'?20:24;
+    pts=pts.map(function(q){ return A(q,S(n,off)); });
+    var e=pts[12], q=pts[10], d=[e[0]-q[0],e[1]-q[1]], L=Math.hypot(d[0],d[1])||1; d=[d[0]/L,d[1]/L];
+    var tip=A(e,S(d,6)), m=[-d[1],d[0]], b1=A(A(tip,S(d,-7)),S(m,4.2)), b2=A(A(tip,S(d,-7)),S(m,-4.2));
+    return (D.__trk='<g class="trk" aria-hidden="true"><path class="trk-l" d="M'+pts.map(pp).join('L')+'"/>'
+      +'<circle class="trk-s" cx="'+f1(pts[0][0])+'" cy="'+f1(pts[0][1])+'" r="2.2"/><path class="trk-a" d="M'+pp(tip)+'L'+pp(b1)+'L'+pp(b2)+'Z"/></g>');
+  }
   /* ---------- timing: hold the start, move, hold the finish, come back ---------- */
   function ease(x){ return 0.5-0.5*Math.cos(Math.PI*Math.max(0,Math.min(1,x))); }
   function pose(D,u){
@@ -495,9 +675,22 @@ window.KovaDemo=(function(){
   /* ---------- moving pictures on screen ---------- */
   var live=[], raf=0, RM=false;
   try{ RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  /* p36c: smooth on every phone. Each moving picture keeps its frames
+     (48 steps a loop, each drawn once), shows at most 30 a second, and
+     rests while it is off screen or hidden. */
+  var STEPS=48;
   function loop(ms){
     live=live.filter(function(x){ return x.el.isConnected; });
-    live.forEach(function(x){ if(x.el.offsetParent===null) return; x.el.innerHTML=draw(x.D,phase(x.D,ms+x.off),x.o); });
+    var vh=window.innerHeight||800;
+    live.forEach(function(x){
+      if(x.el.offsetParent===null||ms-(x.last||0)<32) return;
+      var r=x.el.getBoundingClientRect(); if(r.bottom<0||r.top>vh) return;
+      var k=Math.round(phase(x.D,ms+x.off)*STEPS); if(k===x.k) return;
+      x.k=k; x.last=ms;
+      var c=x.cache||(x.cache={}), sx=sexF()?'f':'m';
+      if(x.sx!==sx){ x.cache=c={}; x.sx=sx; }
+      x.el.innerHTML=c[k]||(c[k]=draw(x.D,k/STEPS,x.o));
+    });
     raf=live.length?requestAnimationFrame(loop):0;
   }
   function mount(el,name,o){
@@ -510,7 +703,7 @@ window.KovaDemo=(function(){
     if(!raf) raf=requestAnimationFrame(loop);
     return true;
   }
-  return {find:find,svg:svg,draw:draw,mount:mount,box:box,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
+  return {stats:STATS,find:find,svg:svg,draw:draw,mount:mount,box:box,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
 })();
 
 /* =====================================================================
@@ -746,5 +939,6 @@ window.KovaExPage=(function(){
   }).observe(document.body,{childList:true,subtree:true});
   window.addEventListener('kova:screen',soon); document.addEventListener('kova:screen',soon);
   soon();
-  return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs};
+  return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs,
+    routine:function(list){ if(list&&list.length) routine(list,0); },openStretch:function(){ sheet(strHtml()); track('stretch_open',{from:'card'}); }};
 })();

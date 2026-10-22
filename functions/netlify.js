@@ -194,7 +194,7 @@ function makeJobs(deps) {
       const p = `srv/agentQueue/${uid}`;
       const job = await claim(db, p, now());
       if (!job) continue;
-      try { await mods.agent({ db, cfg }).run(uid, { window: job.window }); n++; }
+      try { await mods.agent({ db, cfg, push: mods.push({ db, messaging: admin.messaging ? admin.messaging() : null, cfg }) }).run(uid, { window: job.window }); n++; }
       catch (e) { console.error('audit', uid, e.message); }
       finally { await db.ref(p).remove(); }
     }

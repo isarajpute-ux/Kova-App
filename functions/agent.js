@@ -52,6 +52,7 @@ Rules:
 
 function makeAgent(deps) {
   const { db, cfg } = deps;
+  const push = deps.push || null;                 // functions/push.js: the alerts also reach the phone
   const now = deps.now || Date.now;
   const loadSdk = deps.sdk || (() => import('@anthropic-ai/claude-agent-sdk'));
   const loadZod = deps.zod || (() => import('zod'));
@@ -249,19 +250,58 @@ function makeAgent(deps) {
       if (prev && prev.state === 'done') continue;               // already fixed today
       const rec = { id, at: t, day, window: a.window || audit.window, metric: a.metric, category: meta ? meta.catN : '',
                     severity: a.severity || 'soon', title: a.title || '', wrong: a.wrong || '', action: a.action || '',
-                    source: a.source || source, state: prev && prev.state === 'seen' && prev.action === a.action ? 'seen' : 'new' };
+                    source: a.source || source, state: prev && prev.state === 'seen' && prev.action === a.action ? 'seen' : 'new',
+                    pushed: !!(prev && prev.pushed) };
       upd[`alerts/${id}`] = rec; made.push(rec);
     }
     // alerts older than a week go
     Object.keys(open).forEach((k) => { if ((open[k].at || 0) < t - 7 * 864e5) upd[`alerts/${k}`] = null; });
     upd.last = { at: t, window: audit.window, local: audit.local.text, source, summary: out.summary || summaryOf(audit),
                  findings: out.findings, cost: Math.round((out.cost || 0) * 10000) / 10000, error: err || null };
+    /* the phone: new urgent or soon alerts, once each, at most two a check,
+       outside quiet hours (sleep and bedtime still come through at night) */
+    const toPush = push ? await phoneAlerts(uid, made, audit, t) : [];
+    toPush.forEach((r) => { upd[`alerts/${r.id}/pushed`] = true; r.pushed = true; });
     await ref.update(upd);
     await db.ref(`srv/agentUsers/${uid}/ran/${audit.window}`).set(day);
+    for (const r of toPush) {
+      try { await push.send(uid, Object.assign({ id: 'agent_' + r.metric, kind: 'custom' }, phoneNote(r, audit))); }
+      catch (e) { console.error('agent push', uid, r.id, e.message); }
+    }
     return { source, window: audit.window, alerts: made, findings: out.findings, summary: upd.last.summary };
   }
 
-  return { run, viaAgent, viaApi };
+  async function phoneAlerts(uid, made, audit, t) {
+    const rem = (await db.ref(`srv/reminders/${uid}`).once('value')).val() || {};
+    const L = W.local(t, rem.tz || audit.tz || 'UTC');
+    const quiet = P.inQuiet(rem.quiet || null, L.mins);
+    const rank = { urgent: 0, soon: 1 };
+    const first = ['sleep', 'training', 'rhr', 'hrv', 'bedtime', 'food', 'hydration'];   // what people asked to hear about first
+    const ord = (m) => (first.indexOf(m) + 1) || 99;
+    return made.filter((r) => !r.pushed && r.state === 'new' && r.severity in rank && (!quiet || r.metric === 'sleep' || r.metric === 'bedtime'))
+      .sort((a, b) => rank[a.severity] - rank[b.severity] || ord(a.metric) - ord(b.metric)).slice(0, 2);
+  }
+
+  return { run, viaAgent, viaApi, phoneAlerts };
+}
+
+/* what the phone shows: a plain headline from the finding's own numbers,
+   then what is wrong and the one thing to do */
+const P = require('./push');
+const SCREEN = { rhr: 'vitals', hrv: 'vitals', training: 'move', sleep: 'sleep', bedtime: 'sleep', food: 'fuel', hydration: 'fuel' };
+function phoneNote(r, audit) {
+  const m = (audit.metrics || []).find((x) => x.id === r.metric) || {};
+  const hm = (x) => `${Math.floor(x / 60)}h ${String(Math.round(x % 60)).padStart(2, '0')}m`;
+  let title = r.title || 'Kova';
+  if (r.metric === 'sleep') title = m.status === 'neglect' ? 'No sleep data' : (m.value != null ? `Sleep is low: ${hm(m.value)} last night` : 'Sleep is low');
+  else if (r.metric === 'training') title = m.days_since_last ? `${m.days_since_last} days since your last workout` : 'Time for a workout';
+  else if (r.metric === 'bedtime') title = 'Bedtime is all over the place';
+  else if (r.metric === 'rhr') title = 'Resting heart rate is up';
+  else if (r.metric === 'hrv') title = 'HRV is down today';
+  else if (r.metric === 'food') title = m.status === 'neglect' ? 'Nothing logged to eat' : 'Protein is low';
+  else if (r.metric === 'hydration') title = 'Drink some water';
+  const body = [r.wrong, r.action].filter(Boolean).join(' ');
+  return { title: title.slice(0, 60), body: body.slice(0, 160), screen: SCREEN[r.metric] || 'home' };
 }
 
 function summaryOf(audit) {
@@ -289,4 +329,4 @@ async function due(db, t) {
   return out;
 }
 
-module.exports = { makeAgent, due, SYSTEM, CHECK };
+module.exports = { makeAgent, due, SYSTEM, CHECK, phoneNote };

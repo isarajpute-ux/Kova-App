@@ -168,7 +168,8 @@ window.KovaPush=(function(){
     var q=S.quiet;
     var line=S.on
       ?'<b>On:</b> reminders arrive on this '+(native()?'phone':'device')+' even when Kova is closed. They follow your time zone ('+esc(tz())+').'
-      :(supported()?'<b>Right now:</b> reminders only show while Kova is open. Switch one on and Kova offers to send them with the app closed.'
+        +' Kova also tells you, from your own data, when sleep is low, when it has been days since a workout, and what time to be in bed.'
+      :(supported()?'<b>Right now:</b> reminders only show while Kova is open. Switch one on and Kova offers to send them with the app closed, along with alerts from your own data: sleep is low, days since a workout, when to be in bed.'
         :'<b>Right now:</b> this browser cannot receive notifications, so reminders only show while Kova is open. In the Kova app they arrive with it closed.');
     note.innerHTML='<div style="display:flex;gap:9px"><svg class="ic" style="font-size:15px;color:'+(S.on?'var(--good)':'var(--warn)')+';flex-shrink:0;margin-top:1px"><use href="#i-info-circle"/></svg>'
       +'<div style="flex:1;font-size:11px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9))">'+line

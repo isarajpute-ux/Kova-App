@@ -69,6 +69,7 @@
      GET  /crew/plan    -> {prep,checkin}  meeting prep and check-in times   [auth]
      POST /crew/plan    {tz,prep:{on,time,emp},checkin:{on,time,emp}}  set them (Work)   [auth]
      POST /crew/fetch   {url}  -> {title,text,links}  read one public web page for a teammate (Work)   [auth]
+     POST /scan/link    {url}  -> {site,title,text,image}  a link's picture and title, for Scan a machine (YouTube, TikTok, any page)   [auth]
      POST /crew/caption {title,notes,dur,shape,platforms}  -> {heading,caption,tags}  a post in your voice (Work)   [auth]
      POST /meal/read    {image,mime,note}  -> {items}  read a plate from a photo (Pro)   [auth]
      POST /body/estimate {image,mime,prev?,days?,sex,age,cm,kg}  -> {lo,hi,conf,notes,change}  body-fat range from a progress photo (Pro)   [auth]
@@ -118,7 +119,7 @@ const { makeBilling } = require('./billing');
 const meal = require('./meal');
 const bodyEst = require('./body');
 const asksMod = require('./asks');
-const { fetchPage } = require('./webpage');
+const { fetchPage, linkPreview } = require('./webpage');
 const labs = require('./labs');
 const { makeCalendar, CalError } = require('./calendar');
 const { makeBooking, BookError } = require('./booking');
@@ -1220,6 +1221,15 @@ async function crewFetch(req, res, cfg) {
   await rateLimit(`fetch_${u.uid}`, 120, 3600e3);
   res.json(await askTry(() => fetchPage((req.body || {}).url)));
 }
+/* Scan a machine from a link (p36): the same signed-in rule as Kova's AI,
+   since the picture goes on to it */
+async function scanLink(req, res, cfg) {
+  const u = await requireUser(req);
+  if (u.firebase && u.firebase.sign_in_provider === 'anonymous') throw new HttpError(403, 'Sign in with your email or Google to read a link.');
+  await requirePro(u, cfg, 'any');
+  await rateLimit(`scanlink_${u.uid}`, 60, 24 * 3600e3);
+  res.json(await askTry(() => linkPreview((req.body || {}).url)));
+}
 async function crewCaption(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg, 'work');
@@ -1404,6 +1414,7 @@ async function handle(req, res, cfg) {
     if (M === 'GET' && path === '/crew/plan') return await crewPlanRoute(req, res, cfg, false);
     if (M === 'POST' && path === '/crew/plan') return await crewPlanRoute(req, res, cfg, true);
     if (M === 'POST' && path === '/crew/fetch') return await crewFetch(req, res, cfg);
+    if (M === 'POST' && path === '/scan/link') return await scanLink(req, res, cfg);
     if (M === 'POST' && path === '/crew/caption') return await crewCaption(req, res, cfg);
     if (M === 'POST' && path === '/body/estimate') return await bodyEstimate(req, res, cfg);
     if (M === 'POST' && path === '/meal/read') return await mealRead(req, res, cfg);

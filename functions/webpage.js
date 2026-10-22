@@ -77,6 +77,7 @@ function readable(html, base) {
   const meta = (name) => { const m = html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${name}["'][^>]*content=["']([^"']*)["']`, 'i')) || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]*(?:name|property)=["']${name}["']`, 'i')); return m ? decode(m[1]).trim() : ''; };
   const title = decode(((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || meta('og:title')).replace(/\s+/g, ' ')).trim().slice(0, 200);
   const description = (meta('description') || meta('og:description')).slice(0, 400);
+  const image = (() => { const v = meta('og:image') || meta('og:image:url') || meta('twitter:image'); try { return v ? new URL(decode(v), base).href : ''; } catch (e) { return ''; } })();
   let body = html.replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<(script|style|noscript|svg|template|iframe|canvas|form)[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<(nav|footer|header|aside)[\s\S]*?<\/\1>/gi, ' ');
@@ -90,7 +91,7 @@ function readable(html, base) {
   });
   const text = decode(body.replace(/<(br|\/p|\/div|\/li|\/h[1-6]|\/tr|\/section)[^>]*>/gi, '\n').replace(/<li[^>]*>/gi, '\n- ').replace(/<[^>]+>/g, ' '))
     .replace(/[ \t\f\v]+/g, ' ').replace(/ *\n */g, '\n').replace(/\n{3,}/g, '\n\n').trim();
-  return { title, description, text, links };
+  return { title, description, text, links, image };
 }
 
 async function fetchPage(raw, deps) {
@@ -130,7 +131,59 @@ async function fetchPage(raw, deps) {
   const raw2 = buf.toString('utf8');
   const html = /html|xml/.test(type) || /^\s*</.test(raw2);
   const out = html ? readable(raw2, u.href) : { title: '', description: '', text: raw2.replace(/\s+\n/g, '\n').trim(), links: [] };
-  return { url: u.href, title: out.title, description: out.description, text: out.text.slice(0, MAX_TEXT), truncated: out.text.length > MAX_TEXT, links: out.links };
+  return { url: u.href, title: out.title, description: out.description, text: out.text.slice(0, MAX_TEXT), truncated: out.text.length > MAX_TEXT, links: out.links, image: out.image || '' };
 }
 
-module.exports = { fetchPage, readable, checkUrl, privateIp, PageError };
+/* ---------- p36: a link's picture and title, for Scan a machine ----------
+   YouTube and TikTok answer with their own oEmbed (title and thumbnail);
+   any other page gives its og:image and title. The picture comes back as
+   a data URL (image only, at most 2 MB), fetched with the same public-web
+   checks as a page. */
+const IMG_MAX = 2 * 1024 * 1024;
+async function fetchImage(raw, deps) {
+  deps = deps || {};
+  const f = deps.fetch || ((...a) => global.fetch(...a));
+  const lookup = deps.lookup || dns.lookup;
+  let u = checkUrl(raw), r = null;
+  for (let hop = 0; hop <= 3; hop++) {
+    if (!(await publicHost(u.hostname.replace(/^\[|\]$/g, ''), lookup))) throw new PageError(400, 'That picture is not on the public web.');
+    r = await f(u.href, { method: 'GET', redirect: 'manual', headers: { 'user-agent': 'KovaBot/1.0 (+https://kova.app)', accept: 'image/*' } })
+      .catch(() => { throw new PageError(504, 'That picture could not be reached.'); });
+    if (r.status >= 300 && r.status < 400 && r.headers.get('location')) { u = checkUrl(new URL(r.headers.get('location'), u).href); continue; }
+    break;
+  }
+  if (!r.ok) throw new PageError(502, `That picture answered ${r.status}.`);
+  const type = String(r.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (!/^image\/(jpeg|jpg|png|webp|gif)$/.test(type)) throw new PageError(415, 'That address is not a picture.');
+  const buf = Buffer.from(await r.arrayBuffer());
+  if (buf.length > IMG_MAX) throw new PageError(413, 'That picture is too large.');
+  return `data:${type === 'image/jpg' ? 'image/jpeg' : type};base64,${buf.toString('base64')}`;
+}
+function youTubeId(href) {
+  const m = /(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/.exec(href);
+  return m ? m[1] : '';
+}
+async function linkPreview(raw, deps) {
+  deps = deps || {};
+  const f = deps.fetch || ((...a) => global.fetch(...a));
+  const u = checkUrl(raw);
+  const host = u.hostname.replace(/^www\.|^m\./, '');
+  const oembed = async (api) => { const r = await f(api, { headers: { accept: 'application/json' } }); if (!r.ok) return null; try { return JSON.parse(await r.text()); } catch (e) { return null; } };
+  const yt = youTubeId(u.href);
+  if (yt) {
+    const o = await oembed('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + yt)).catch(() => null);
+    let image = null;
+    for (const q of ['hqdefault', 'mqdefault']) { try { image = await fetchImage(`https://i.ytimg.com/vi/${yt}/${q}.jpg`, deps); break; } catch (e) { /* next */ } }
+    return { site: 'YouTube', title: (o && o.title || '').slice(0, 200), text: (o && o.author_name ? 'By ' + o.author_name : ''), image };
+  }
+  if (/(^|\.)tiktok\.com$/.test(host)) {
+    const o = await oembed('https://www.tiktok.com/oembed?url=' + encodeURIComponent(u.href)).catch(() => null);
+    let image = null; if (o && o.thumbnail_url) { try { image = await fetchImage(o.thumbnail_url, deps); } catch (e) { /* none */ } }
+    return { site: 'TikTok', title: (o && o.title || '').slice(0, 200), text: '', image };
+  }
+  const page = await fetchPage(u.href, deps);
+  let image = null; if (page.image) { try { image = await fetchImage(page.image, deps); } catch (e) { /* none */ } }
+  return { site: host, title: page.title || '', text: (page.description || page.text || '').slice(0, 300), image };
+}
+
+module.exports = { fetchPage, readable, checkUrl, privateIp, PageError, fetchImage, linkPreview, youTubeId };
