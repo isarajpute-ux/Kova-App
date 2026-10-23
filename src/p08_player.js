@@ -153,7 +153,7 @@ window.KovaPlayer=(function(){
     var bar='<div class="kpl-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+pr.t+'" aria-valuenow="'+pr.d+'" aria-label="Sets done"><i style="width:'+(pr.t?pr.d/pr.t*100:0).toFixed(1)+'%"></i></div>'
       +'<div class="kpl-where">'+(c.done?pr.d+' sets done':'Exercise '+(c.i+1)+' of '+c.n+' · '+(c.warm?'Warm-up set':'Set '+c.wn+' of '+c.wt))+'</div>';
     if(c.done) return '<div class="kz2p-in">'+head+bar+'<section class="card kpl-stage kpl-end"><div class="kz2p-num">'+pr.d+'<i>sets</i></div><span>Every set is logged. Finish saves the workout, your records and your recovery map.</span></section>'
-      +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
+      +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="chip kz2p-c" data-kpl="stretch">'+ic('yoga')+'<span>Stretch now</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
     var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(c.e.n)+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
       +(c.warm?'<span class="chip kpl-tag">Warm-up</span><div class="kpl-wu">A light set to get ready. Not counted.</div>':'')+'</section>';
     var body;
@@ -240,7 +240,9 @@ window.KovaPlayer=(function(){
     /* only while the workout is on screen: looking up addExBtn by id brings a parked screen back (KovaPark), even inside quiet() */
     var sc=document.getElementById('s-session'); if(!sc||!sc.classList.contains('on')) return;
     var add=document.getElementById('addExBtn'); if(!add||!add.parentNode||add.parentNode.querySelector('.kpl-chip')) return;
-    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Coach me</div>');
+    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Coach me</div>'
+      /* p41: stretching inside the workout too (the owner could not find it): today's muscles first */
+      +'<div class="chip kpl-str" data-kpl="stretch" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">Stretch</div>');
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
   document.addEventListener('click',function(ev){
@@ -248,6 +250,7 @@ window.KovaPlayer=(function(){
     var a=b.getAttribute('data-kpl');
     if(a==='open'){ open(); return; }
     if(a==='close'){ close(); return; }
+    if(a==='stretch'){ var X=window.KovaExPage; if(!X) return; var on=!!document.getElementById('kpl'), td=X.todays?X.todays():[]; if(on) close(); if(on&&td.length&&X.routine) X.routine(td); else if(X.openStretch) X.openStretch(); track('player_stretch',{from:on?'coach':'workout'}); return; }
     if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice){ V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} } paint(); return; }
     if(a==='tour'){ tour(); return; }
     if(a==='done'){ done(); return; }
@@ -261,7 +264,7 @@ window.KovaPlayer=(function(){
     if(a==='r-'||a==='r+'){ P.r=Math.max(1,P.r+(a==='r+'?1:-1)); paint(); return; }
   });
   document.addEventListener('keydown',function(ev){
-    var b=ev.target.closest&&ev.target.closest('.kpl-chip'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); return; }
+    var b=ev.target.closest&&ev.target.closest('.kpl-chip,.kpl-str'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); return; }
     if(ev.key==='Escape'&&document.getElementById('kpl')&&!document.querySelector('#sheet.on')&&!document.getElementById('ksTour')) close();
   });
   if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kpl,#kz2,#krcCard,#kz2Card,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});

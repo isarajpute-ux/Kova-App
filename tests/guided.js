@@ -34,6 +34,11 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   /* the name */
   w.go('session'); await wait(200); PL.decorate(); await wait(10);
   ck('the button in the workout says what it does: Coach me (not "Guided", the workout\u2019s own mode)', /Coach me/.test((doc.querySelector('.kpl-chip') || {}).textContent || '') && !/Follow along/.test(doc.getElementById('s-session').textContent));
+  /* stretching inside the workout (the owner could not find it) */
+  let opened = 0; const X = w.KovaExPage, o1 = X.openStretch; X.openStretch = () => { opened++; };
+  doc.querySelector('.kpl-str').click();
+  ck('the workout has a Stretch button next to Coach me, and it opens the stretches (today\u2019s muscles first)', /Stretch/.test(doc.querySelector('.kpl-str').textContent) && opened === 1);
+  X.openStretch = o1;
   /* the warm-up */
   const S = K.state(), i = S.ex.findIndex((e) => /Romanian deadlift/.test(e.n));
   let e = S.ex[i];
@@ -65,7 +70,13 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('no natural voice on the server: it falls back to the phone’s best voice at once', spoken.slice(n0).some((x) => x.t === 'Go.' && x.v === 'Ava (Premium)'));
   PL.voice.speak('Rest ninety seconds.'); await wait(30);
   ck('…and stops asking the server', tts.length === 2 && spoken.some((x) => x.t === 'Rest ninety seconds.'));
-  PL.close();
+  /* the end of Coach me offers the stretches for what you trained */
+  let routed = null; const rt0 = X.routine; X.routine = (l) => { routed = l; };
+  S.ex.forEach((x) => x.sets.forEach((st) => { st.d = 1; })); PL.close(); PL.open(); await wait(60);
+  ck('when the workout is done, Coach me offers Stretch now', /Stretch now/.test(pg().textContent));
+  pg().querySelector('[data-kpl="stretch"]').click(); await wait(20);
+  ck('…which closes Coach me and walks through the stretches for today\u2019s muscles', !doc.getElementById('kpl') && Array.isArray(routed) && routed.length > 0);
+  X.routine = rt0;
   /* the server half */
   const voice = require('../functions/voice.js');
   let req = null;

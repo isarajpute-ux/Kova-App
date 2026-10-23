@@ -77,7 +77,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   w.localStorage.setItem('kova.pl.voice', 'true'); PL._P.voice = true;
   w.go('session'); await wait(200);
   PL.decorate(); await wait(10);
-  ck('the workout has a Follow along button next to + Exercise', !!doc.querySelector('.kpl-chip') && doc.querySelector('.kpl-chip').nextElementSibling.id === 'addExBtn');
+  ck('the workout has a Coach me button (it was Follow along) and Stretch, next to + Exercise', !!doc.querySelector('.kpl-chip') && doc.querySelector('.kpl-chip').nextElementSibling.classList.contains('kpl-str') && doc.querySelector('.kpl-str').nextElementSibling.id === 'addExBtn');
   const S = K.state();
   PL.open(); await wait(50);
   const pg = () => doc.getElementById('kpl');
