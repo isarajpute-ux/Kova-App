@@ -160,7 +160,11 @@ window.KovaDemo=(function(){
       case 'wheel': { var p5=pt(); return '<circle class="plate" cx="'+f1(p5[0])+'" cy="'+f1(p5[1]+4)+'" r="9"/><circle class="hub" cx="'+f1(p5[0])+'" cy="'+f1(p5[1]+4)+'" r="2.5"/>'; }
       case 'pad': { var p6=pt(); return '<circle class="eqf" cx="'+f1(p6[0])+'" cy="'+f1(p6[1])+'" r="'+(q.r||6)+'"/>'; }
       case 'bar': { var p7=pt(); return '<circle class="eqf" cx="'+f1(p7[0])+'" cy="'+f1(p7[1])+'" r="3"/>'; }
-      case 'plat': { var p8=at(q.at)||[0,0], an=rad(q.ang||0), d=[Math.cos(an),Math.sin(an)], c=A(p8,S([d[1],-d[0]],-4)); return '<path class="eqf eqb" d="M'+pp(A(c,S(d,-16)))+'L'+pp(A(c,S(d,18)))+'"/>'; }
+      case 'plat': { var p8=at(q.at)||[0,0], an=rad(q.ang||0), d=[Math.cos(an),Math.sin(an)], c=A(A(p8,S([d[1],-d[0]],-4)),S(d,-(q.o||0))); return '<path class="eqf eqb" d="M'+pp(A(c,S(d,-16)))+'L'+pp(A(c,S(d,18)))+'"/>'; }
+      /* p42: a landmine bar from its pivot on the floor, past the hands, the plate on its end */
+      case 'lm': { var t9=at(q.to)||[0,0], v9=[t9[0]-q.from[0],t9[1]-q.from[1]], L9=Math.hypot(v9[0],v9[1])||1, e9=A(t9,S(v9,(q.ext||8)/L9)); return '<path class="eq lmb" d="M'+q.from[0]+','+q.from[1]+'L'+pp(e9)+'"/><circle class="eqf" cx="'+q.from[0]+'" cy="'+q.from[1]+'" r="3"/><circle class="plate" cx="'+f1(e9[0])+'" cy="'+f1(e9[1])+'" r="'+(q.r||12)+'"/><circle class="hub" cx="'+f1(e9[0])+'" cy="'+f1(e9[1])+'" r="3"/>'; }
+      /* p42: a barbell seen from the front, between the hands, plates on edge */
+      case 'bb': { var l9=at('wL')||[0,0], r9=at('wR')||[0,0], cy=(l9[1]+r9[1])/2, cx=(l9[0]+r9[0])/2, hw=(q.w||60)/2; return '<path class="eq" d="M'+f1(cx-hw)+','+f1(cy)+'H'+f1(cx+hw)+'"/><rect class="plate" x="'+f1(cx-hw-3)+'" y="'+f1(cy-11)+'" width="6" height="22" rx="2"/><rect class="plate" x="'+f1(cx+hw-3)+'" y="'+f1(cy-11)+'" width="6" height="22" rx="2"/>'; }
       case 'tpad': { var o=q.side==='front'?17:-17, b1=A(J.hip,S(J.nf,o)), b2=A(J.sh,S(J.nf,o)); return '<path class="eqf eqb" d="M'+pp(mixp(b1,b2,-0.05))+'L'+pp(mixp(b1,b2,1.1))+'"/>'+(q.side==='front'?'<path class="eq" d="M'+pp(mixp(b1,b2,0.3))+'L'+f1(mixp(b1,b2,0.3)[0])+','+GY+'"/>':''); }
     }
     return '';
@@ -534,7 +538,7 @@ window.KovaDemo=(function(){
   var ROWB={hip:[70,112],t:70};
   add('Barbell row|Bent over row|Pendlay row',{K:[st(Object.assign({},ROWB,{aN:{e:[0,28],w:[0,55]},aF:{e:[0,28],w:[0,55]}})),st(Object.assign({},ROWB,{aN:{e:[-20,-6],w:[-14,20]},aF:{e:[-20,-6],w:[-14,20]}}))],
     eq:[PL],mus:m(['lats','traps'],['biceps','delts','lowback'])});
-  add('Chest supported row',{K:[{hip:[80,140],t:52,lN:{a:[94,GY]},lF:{a:[91,GY]},aN:{e:[0,28],w:[0,55]},aF:{e:[0,28],w:[0,55]}},{hip:[80,140],t:52,lN:{a:[94,GY]},lF:{a:[91,GY]},aN:{e:[-20,-4],w:[-12,22]},aF:{e:[-20,-4],w:[-12,22]}}],
+  add('Chest supported row',{K:[{hip:[78,120],t:50,lN:{a:[96,GY]},lF:{a:[93,GY]},aN:{e:[0,28],w:[0,55]},aF:{e:[0,28],w:[0,55]}},{hip:[78,120],t:50,lN:{a:[96,GY]},lF:{a:[93,GY]},aN:{e:[-20,-4],w:[-12,22]},aF:{e:[-20,-4],w:[-12,22]}}],
     eq:[{k:'tpad',side:'front'},DB],mus:m(['lats','traps'],['biceps','delts'])});
   add('Lat pulldown|Pulldown',{K:[{hip:[96,142],t:-10,lN:{ta:92,sa:6},lF:{ta:92,sa:6},aN:{e:[6,-29],w:[10,-56]},aF:{e:[5,-29],w:[9,-56]}},
       {hip:[96,142],t:-14,lN:{ta:92,sa:6},lF:{ta:92,sa:6},aN:{e:[-8,22],w:[10,2]},aF:{e:[-9,22],w:[9,2]}}],
@@ -606,6 +610,171 @@ window.KovaDemo=(function(){
       st({hip:[82,146],t:30,lN:{a:[104,GY]},lF:{ta:94,sa:92,f:-20},aN:{ua:88,fa:90},aF:{ua:88,fa:90}})],mus:m(['quads','glutes'],['abs','adductors']),dur:3000});
   add('Front lever|Tuck front lever|Advanced tuck|Straddle front lever|Full front lever',{K:[{sh:[88,78],hip:[138,84],hd:0,lN:{ta:96,sa:98,f:0},lF:{ta:94,sa:96,f:0},aN:{W:[104,28],s:1},aF:{W:[102,28],s:1}},
       {sh:[88,78],hip:[138,78],hd:0,lN:{ta:90,sa:90,f:0},lF:{ta:88,sa:88,f:0},aN:{W:[104,28],s:1},aF:{W:[102,28],s:1}}],eq:[{k:'hbar',x:104,y:28}],mus:m(['lats','abs'],['delts']),dur:3000});
+
+
+  /* ---------- p42: the bigger library (the owner: "a whole library of all
+     the workouts... the popular ones, and the different ones people still
+     do"). Picked from what lifters post and argue about (TikTok, Reddit,
+     YouTube coaches): the staples, the machine settings that change what
+     works, and the odd-looking ones that work. ---------- */
+  function dup(from,o){ var D=LIB[from.toLowerCase()]; return Object.assign({K:D.K,eq:D.eq,mus:D.mus,dur:D.dur},o||{}); }
+  /* the leg press: where the feet sit on the plate (higher or lower on it shows
+     from the side; wider or narrower shows on the plate drawing) */
+  function lp(sh,o){
+    var u=[-0.643,-0.766], P=function(a){ return [a[0]+u[0]*sh,a[1]+u[1]*sh]; };
+    return Object.assign({K:[{hip:[74,142],t:-55,lN:{a:P([117,106]),f:-130},lF:{a:P([114,106]),f:-130},aN:{W:[67,141]},aF:{W:[65,141]}},
+      {hip:[74,142],t:-55,lN:{a:P([134,91]),f:-130},lF:{a:P([131,91]),f:-130},aN:{W:[67,141]},aF:{W:[65,141]}}],
+      eq:[{k:'back',x1:70,y1:151,x2:22,y2:116},{k:'seat',x:62,y:150,w:40},{k:'plat',at:'aN',ang:-130,o:sh}]},o);
+  }
+  add('Leg press (feet high)',lp(12,{mus:m(['glutes','hams'],['quads','adductors'])}));
+  add('Leg press (feet low)',lp(-12,{mus:m(['quads'],['glutes'])}));
+  add('Leg press (feet wide)',lp(0,{mus:m(['adductors','glutes'],['quads','hams'])}));
+  add('Leg press (feet narrow)',lp(0,{mus:m(['quads'],['glutes'])}));
+  add('Single leg press|Single-leg leg press',(function(){ var d=lp(0,{mus:m(['quads','glutes'],['hams','adductors'])}); d.K.forEach(function(P){ P.lF={a:[100,122],f:-100}; }); return d; })());
+
+  /* legs */
+  add('Sissy squat',{K:[st({lN:{a:[104,182],f:24},lF:{a:[101,182],f:24},aN:{ua:84,fa:84},aF:{ua:82,fa:82}}),
+      {hip:[124,146],t:-34,lN:{a:[104,182],f:40},lF:{a:[101,182],f:40},aN:{ua:84,fa:84},aF:{ua:82,fa:82}}],mus:m(['quads'],['abs','hipflex']),dur:3000});
+  add('Belt squat',{K:[st({hip:[100,98],t:2,lN:{a:[103,176]},lF:{a:[99,176]},aN:{ua:40,fa:62},aF:{ua:40,fa:62}}),st({hip:[86,134],t:12,lN:{a:[103,176]},lF:{a:[99,176]},aN:{ua:52,fa:72},aF:{ua:52,fa:72}})],
+    eq:[{k:'box',x:72,y:178,w:48,h:6},{k:'plate',at:'hip',dy:26,r:12}],mus:m(['quads','glutes'],['adductors'])});
+  add('Smith machine squat|Smith squat',{K:[st(Object.assign({hip:[98,104],t:6,lN:{a:[110,GY]},lF:{a:[106,GY]}},arms({r:1,e:[-9,14],w:[-12,0]}))),st(Object.assign({hip:[80,136],t:26,lN:{a:[110,GY]},lF:{a:[106,GY]}},arms({r:1,e:[-9,14],w:[-12,0]})))],
+    eq:[{k:'rail',x1:94,y1:14,x2:94,y2:GY},{k:'rail',x1:102,y1:14,x2:102,y2:GY},{k:'plate',at:'nape',r:17}],mus:m(['quads','glutes'],['adductors'])});
+  add('Zercher squat',{K:[st({hip:[99,104],t:4,aN:{r:1,e:[14,24],w:[26,6]},aF:{r:1,e:[13,24],w:[25,6]}}),st({hip:[80,138],t:22,aN:{r:1,e:[14,24],w:[26,6]},aF:{r:1,e:[13,24],w:[25,6]}})],
+    eq:[{k:'plate',at:'eN',dx:3,r:15}],mus:m(['quads','glutes'],['abs','lowback','biceps'])});
+  add('Sumo squat|Goblet sumo squat|Wide stance squat',{K:[fr({hip:[100,106],lL:{a:[74,GY]},lR:{a:[126,GY]},aL:{W:[96,82]},aR:{W:[104,82]}}),
+      fr({hip:[100,138],lL:{k:[54,150],a:[74,GY]},lR:{k:[146,150],a:[126,GY]},aL:{W:[96,114]},aR:{W:[104,114]}})],
+    eq:[{k:'db',at:'mid',dy:4}],mus:m(['glutes','adductors'],['quads'])});
+  function sf(kx,o){ return seatedF(Object.assign({lL:{k:[100-kx,140],a:[98-kx,180]},lR:{k:[100+kx,140],a:[102+kx,180]},aL:{W:[74,136]},aR:{W:[126,136]}},o)); }
+  add('Hip abduction machine|Hip abduction',{K:[sf(12),sf(32)],eq:[{k:'seat',x:72,y:132,w:56},{k:'pad',at:'kL',dx:-6,r:5},{k:'pad',at:'kR',dx:6,r:5}],mus:m(['glutes'],['abs'])});
+  add('Hip adduction machine|Hip adduction',{K:[sf(32),sf(12)],eq:[{k:'seat',x:72,y:132,w:56},{k:'pad',at:'kL',dx:6,r:5},{k:'pad',at:'kR',dx:-6,r:5}],mus:m(['adductors'])});
+  add('Cable pull-through|Pull through',{K:[st({hip:[86,112],t:70,lN:{a:[110,GY]},lF:{a:[106,GY]},aN:{W:[94,152]},aF:{W:[92,152]}}),st({hip:[100,104],t:-4,lN:{a:[110,GY]},lF:{a:[106,GY]},aN:{W:[106,148]},aF:{W:[104,148]}})],
+    eq:[{k:'tower',x:16,top:120},{k:'cable',from:[20,176],to:'wN'}],mus:m(['glutes','hams'],['lowback'])});
+  add('Single leg hip thrust|Single-leg hip thrust',{K:[{hip:[92,168],sh:[62,138],hd:30,lN:{a:[134,GY],s:1},lF:{ta:116,sa:116,f:-50},aN:{at:'hip',d:[0,-12],s:-1},aF:{at:'hip',d:[-2,-12],s:-1}},
+      {hip:[104,138],sh:[62,138],hd:40,lN:{a:[134,GY],s:1},lF:{ta:100,sa:100,f:-60},aN:{at:'hip',d:[0,-12],s:-1},aF:{at:'hip',d:[-2,-12],s:-1}}],
+    eq:[{k:'bench',x:16,y:142,w:50}],mus:m(['glutes'],['hams','quads'])});
+  add('Donkey calf raise',{K:[{hip:[86,104],t:84,lN:{a:[88,182],f:8},lF:{a:[85,182],f:8},aN:{W:[140,124]},aF:{W:[138,124]}},{hip:[86,94],t:84,lN:{a:[88,172],f:62},lF:{a:[85,172],f:62},aN:{W:[140,124]},aF:{W:[138,124]}}],
+    eq:[{k:'bench',x:122,y:126,w:44}],mus:m(['calves']),dur:1800});
+  add('Reverse Nordic|Reverse nordic curl',{K:[{hip:[100,138],t:0,lN:{k:[100,178],a:[70,180],f:170,back:1},lF:{k:[98,178],a:[68,180],f:170,back:1},aN:{ua:70,fa:90},aF:{ua:70,fa:90}},
+      {hip:[72,150],t:-45,lN:{k:[100,178],a:[70,180],f:170,back:1},lF:{k:[98,178],a:[68,180],f:170,back:1},aN:{ua:110,fa:120},aF:{ua:110,fa:120}}],mus:m(['quads'],['hipflex','abs']),dur:3000});
+  add('Spanish squat',{K:[st({t:2,aN:{ua:60,fa:60},aF:{ua:60,fa:60}}),st({hip:[70,140],t:14,lN:{a:[108,GY]},lF:{a:[104,GY]},aN:{ua:80,fa:80},aF:{ua:80,fa:80}})],
+    eq:[{k:'rail',x1:176,y1:30,x2:176,y2:GY},{k:'cable',from:[176,146],to:'kN'}],mus:m(['quads'],['glutes'])});
+
+  /* back */
+  add('T-bar row|Landmine row',{K:[st(Object.assign({},ROWB,{aN:{e:[0,28],w:[0,55]},aF:{e:[0,28],w:[0,55]}})),st(Object.assign({},ROWB,{aN:{e:[-20,-6],w:[-14,20]},aF:{e:[-20,-6],w:[-14,20]}}))],
+    eq:[{k:'lm',from:[14,182],to:'wN',ext:8}],mus:m(['lats','traps'],['biceps','delts','lowback'])});
+  add('Meadows row',{K:[{hip:[84,118],t:68,lN:{a:[122,GY]},lF:{a:[58,GY]},aN:{e:[0,28],w:[0,55]},aF:{at:'kN',d:[0,-4],s:-1}},{hip:[84,118],t:68,lN:{a:[122,GY]},lF:{a:[58,GY]},aN:{e:[-22,-6],w:[-14,20]},aF:{at:'kN',d:[0,-4],s:-1}}],
+    eq:[{k:'lm',from:[186,182],to:'wN',ext:8}],mus:m(['lats'],['traps','biceps','delts'])});
+  add('Seal row',{K:[{hip:[74,112],sh:[122,114],hd:10,lN:{ta:-88,sa:-90,f:180},lF:{ta:-88,sa:-90,f:180},aN:{e:[0,28],w:[0,55]},aF:{e:[0,28],w:[0,55]}},
+      {hip:[74,112],sh:[122,114],hd:10,lN:{ta:-88,sa:-90,f:180},lF:{ta:-88,sa:-90,f:180},aN:{e:[-24,-14],w:[-24,13]},aF:{e:[-24,-14],w:[-24,13]}}],
+    eq:[{k:'bench',x:36,y:120,w:110},DB],mus:m(['lats','traps'],['biceps','delts'])});
+  add('Rack pull',{K:[{hip:[88,124],t:36,lN:{a:[103,GY]},lF:{a:[99,GY]},aN:HANG,aF:HANG},st({t:-2,aN:{ua:-2,fa:-2},aF:{ua:-2,fa:-2}})],
+    eq:[{k:'rail',x1:144,y1:24,x2:144,y2:GY},{k:'box',x:100,y:162,w:50,h:5},{k:'plate',at:'wN',dy:5,r:16}],mus:m(['glutes','lowback','traps'],['hams','forearms'])});
+  add('Dumbbell pullover|Pullover',{K:[lying({ua:178,fa:180}),lying({ua:248,fa:250})],eq:[BENCH,{k:'db',at:'wN'}],mus:m(['lats','chest'],['triceps'])});
+  add('Inverted row|Australian pull-up|Body row',{K:[{sh:[124,154],hip:[75,165],hd:0,lN:{a:[-2,182],f:-70},lF:{a:[-4,182],f:-70},aN:{W:[126,100],s:1},aF:{W:[124,100],s:1}},
+      {sh:[110,114],hip:[67,140],hd:0,lN:{a:[-2,182],f:-70},lF:{a:[-4,182],f:-70},aN:{W:[126,100],s:1},aF:{W:[124,100],s:1}}],
+    eq:[{k:'hbar',x:126,y:100}],mus:m(['lats','traps'],['biceps','delts'])});
+  add('Single arm cable row|One arm cable row',{K:[st({t:10,lN:{a:[118,GY]},lF:{a:[84,GY]},aN:{e:[28,4],w:[55,6]},aF:HANG}),st({t:6,lN:{a:[118,GY]},lF:{a:[84,GY]},aN:{e:[-18,20],w:[8,22]},aF:HANG})],
+    eq:[{k:'tower',x:180,top:40},{k:'cable',from:[176,104],to:'wN'}],mus:m(['lats'],['traps','biceps','delts'])});
+  add('Jefferson curl',{K:[st({hip:[100,80],lN:{a:[103,160]},lF:{a:[99,160]},aN:HANG,aF:HANG}),{hip:[94,84],t:150,hd:20,lN:{a:[103,160]},lF:{a:[99,160]},aN:HANG,aF:HANG}],
+    eq:[{k:'box',x:74,y:160,w:54,h:24},{k:'db',at:'wN'}],mus:m(['hams','lowback'],['glutes']),dur:3600});
+  add('Reverse hyper|Reverse hyperextension',{K:[{sh:[148,118],hip:[100,120],hd:0,lN:{ta:6,sa:6,f:90},lF:{ta:4,sa:4,f:90},aN:{W:[164,142]},aF:{W:[162,142]}},
+      {sh:[148,118],hip:[100,120],hd:0,lN:{ta:-86,sa:-86,f:180},lF:{ta:-88,sa:-88,f:180},aN:{W:[164,142]},aF:{W:[162,142]}}],
+    eq:[{k:'bench',x:100,y:124,w:62}],mus:m(['glutes','hams'],['lowback'])});
+
+  /* chest and shoulders */
+  add('Decline bench press|Decline press',{K:[{hip:[114,136],sh:[66,152],hd:0,lN:{a:[150,166],s:-1},lF:{a:[147,166],s:-1},aN:{ua:72,fa:180},aF:{ua:72,fa:180}},
+      {hip:[114,136],sh:[66,152],hd:0,lN:{a:[150,166],s:-1},lF:{a:[147,166],s:-1},aN:{ua:176,fa:180},aF:{ua:176,fa:180}}],
+    eq:[{k:'back',x1:44,y1:164,x2:126,y2:146},{k:'rail',x1:80,y1:160,x2:80,y2:GY},{k:'pad',x:150,y:174,r:6},PL],mus:m(['chest'],['triceps','delts'])});
+  add('Landmine press',{K:[st({t:8,lN:{a:[116,GY]},lF:{a:[84,GY]},aN:{W:[114,64]},aF:HANG}),st({t:12,lN:{a:[116,GY]},lF:{a:[84,GY]},aN:{W:[150,40]},aF:HANG})],
+    eq:[{k:'lm',from:[198,182],to:'wN',ext:8}],mus:m(['delts','chest'],['triceps','abs'])});
+  add('Z press',{K:[{hip:[80,176],t:0,lN:{ta:90,sa:90,f:-80},lF:{ta:90,sa:90,f:-80},aN:{ua:28,fa:180},aF:{ua:26,fa:180}},{hip:[80,176],t:0,lN:{ta:90,sa:90,f:-80},lF:{ta:90,sa:90,f:-80},aN:{ua:178,fa:180},aF:{ua:176,fa:180}}],
+    eq:[PL],mus:m(['delts'],['triceps','abs','traps'])});
+  add('Push press',{K:[st({t:-2,aN:{ua:28,fa:180},aF:{ua:26,fa:180}}),st({hip:[96,116],t:2,lN:{a:[106,GY]},lF:{a:[102,GY]},aN:{ua:28,fa:180},aF:{ua:26,fa:180}}),
+      st({t:0,lN:{a:[100,180],f:30},lF:{a:[97,180],f:30},aN:{ua:178,fa:180},aF:{ua:176,fa:180}}),st({t:-2,aN:{ua:28,fa:180},aF:{ua:26,fa:180}})],eq:[PL],mus:m(['delts','triceps'],['quads','glutes','traps']),dur:2600});
+  add('Upright row',{K:[fr({aL:{e:[3,28],w:[2,55]},aR:{e:[3,28],w:[2,55]}}),fr({aL:{e:[27,-6],w:[7,4]},aR:{e:[27,-6],w:[7,4]}})],eq:[{k:'bb',w:56}],mus:m(['delts','traps'],['biceps'])});
+  add('Lu raise',{K:[fr({aL:{e:[5,28],w:[8,55]},aR:{e:[5,28],w:[8,55]}}),fr({aL:{e:[28,4],w:[54,4]},aR:{e:[28,4],w:[54,4]}}),fr({aL:{e:[8,-28],w:[12,-55]},aR:{e:[8,-28],w:[12,-55]}}),
+      fr({aL:{e:[28,4],w:[54,4]},aR:{e:[28,4],w:[54,4]}}),fr({aL:{e:[5,28],w:[8,55]},aR:{e:[5,28],w:[8,55]}})],eq:[{k:'db',at:'wL'},{k:'db',at:'wR'}],mus:m(['delts'],['traps']),dur:3800});
+  add('Machine chest press|Chest press machine',{K:[{hip:[84,146],t:-4,lN:{ta:88,sa:4},lF:{ta:88,sa:4},aN:{e:[-8,22],w:[16,18]},aF:{e:[-9,22],w:[15,18]}},{hip:[84,146],t:-4,lN:{ta:88,sa:4},lF:{ta:88,sa:4},aN:{e:[28,6],w:[55,8]},aF:{e:[27,6],w:[54,8]}}],
+    eq:[{k:'seat',x:66,y:150,w:40},{k:'back',x1:76,y1:148,x2:72,y2:88},{k:'bar',at:'wN'}],mus:m(['chest'],['triceps','delts'])});
+  add('Floor press',{K:[{hip:[116,178],sh:[66,176],hd:0,lN:{a:[150,GY],s:1},lF:{a:[147,GY],s:1},aN:{e:[4,4],w:[4,-22]},aF:{e:[3,4],w:[3,-22]}},
+      {hip:[116,178],sh:[66,176],hd:0,lN:{a:[150,GY],s:1},lF:{a:[147,GY],s:1},aN:{e:[0,-29],w:[0,-56]},aF:{e:[-1,-29],w:[-1,-56]}}],eq:[PL],mus:m(['chest','triceps'],['delts'])});
+  add('Svend press|Plate press',{K:[st({aN:{e:[-2,26],w:[16,12]},aF:{e:[-3,26],w:[15,12]}}),st({aN:{e:[28,2],w:[55,2]},aF:{e:[27,2],w:[54,2]}})],eq:[{k:'plate',at:'wN',r:12}],mus:m(['chest'],['delts','triceps'])});
+
+  /* arms */
+  add('Bayesian curl|Bayesian cable curl',{K:[st({t:6,lN:{a:[118,GY]},lF:{a:[84,GY]},aN:{ua:-30,fa:-30},aF:HANG}),st({t:6,lN:{a:[118,GY]},lF:{a:[84,GY]},aN:{ua:-26,fa:128},aF:HANG})],
+    eq:[{k:'tower',x:18,top:40},{k:'cable',from:[22,168],to:'wN'}],mus:m(['biceps'],['forearms'])});
+  add('Spider curl',{K:[{hip:[78,120],t:50,lN:{a:[96,GY]},lF:{a:[93,GY]},aN:{ua:0,fa:0},aF:{ua:0,fa:0}},{hip:[78,120],t:50,lN:{a:[96,GY]},lF:{a:[93,GY]},aN:{ua:0,fa:140},aF:{ua:0,fa:140}}],
+    eq:[{k:'tpad',side:'front'},DB],mus:m(['biceps'])});
+  add('Concentration curl',{K:[{hip:[84,146],t:40,lN:{a:[124,GY]},lF:{a:[120,GY]},aN:{ua:-2,fa:-2},aF:{at:'kF',d:[0,-4],s:-1}},{hip:[84,146],t:40,lN:{a:[124,GY]},lF:{a:[120,GY]},aN:{ua:-2,fa:140},aF:{at:'kF',d:[0,-4],s:-1}}],
+    eq:[{k:'bench',x:46,y:150,w:62},DB],mus:m(['biceps'])});
+  add('Reverse curl|Reverse barbell curl',dup('Barbell curl',{mus:m(['forearms','biceps'])}));
+  add('Zottman curl',dup('Dumbbell curl',{mus:m(['biceps','forearms'])}));
+  add('Drag curl',{K:[st({aN:{e:[0,29],w:[0,56]},aF:{e:[-1,29],w:[-1,56]}}),st({aN:{e:[-22,18],w:[6,20]},aF:{e:[-23,18],w:[5,20]}})],eq:[PL],mus:m(['biceps'],['forearms'])});
+  add('JM press',{K:[lying({ua:178,fa:180}),lying({ua:140,fa:234})],eq:[BENCH,PL],mus:m(['triceps'],['chest'])});
+  add('Diamond push-up|Close grip push-up',dup('Push up',{mus:m(['triceps','chest'],['delts','abs'])}));
+  add('Bench dip|Bench dips',{K:[{sh:[80,78],hip:[86,126],hd:0,lN:{a:[140,180],f:-50},lF:{a:[137,180],f:-50},aN:{W:[80,132],s:-1},aF:{W:[78,132],s:-1}},
+      {sh:[78,100],hip:[84,148],hd:0,lN:{a:[140,180],f:-50},lF:{a:[137,180],f:-50},aN:{W:[80,132],s:-1},aF:{W:[78,132],s:-1}}],
+    eq:[{k:'bench',x:34,y:132,w:48}],mus:m(['triceps'],['chest','delts'])});
+  add('Kroc row',dup('Single arm dumbbell row',{mus:m(['lats','traps'],['biceps','forearms'])}));
+
+  /* core */
+  add('Dragon flag',{K:[{sh:[70,146],hip:[79,97],hd:90,lN:{ta:170,sa:170,f:-80},lF:{ta:170,sa:170,f:-80},aN:{W:[50,150]},aF:{W:[48,150]}},
+      {sh:[70,146],hip:[118,133],hd:-15,lN:{ta:105,sa:105,f:-20},lF:{ta:105,sa:105,f:-20},aN:{W:[50,150]},aF:{W:[48,150]}}],
+    eq:[{k:'bench',x:24,y:152,w:96}],mus:m(['abs'],['hipflex','lats']),dur:3200});
+  add('Hollow hold|Hollow body hold',{K:[{hip:[106,180],sh:[58,168],hd:0,lN:{ta:108,sa:108,f:-30},lF:{ta:108,sa:108,f:-30},aN:{ua:250,fa:250},aF:{ua:250,fa:250}},
+      {hip:[106,180],sh:[58,166],hd:0,lN:{ta:110,sa:110,f:-30},lF:{ta:110,sa:110,f:-30},aN:{ua:252,fa:252},aF:{ua:252,fa:252}}],mus:m(['abs'],['hipflex']),dur:3200});
+  add('Bird dog',{K:[{sh:[140,140],hip:[92,142],hd:0,lN:{ta:0,sa:-90,f:180},lF:{ta:0,sa:-90,f:180},aN:{ua:0,fa:0},aF:{ua:0,fa:0}},
+      {sh:[140,140],hip:[92,142],hd:0,lN:{ta:-88,sa:-88,f:180},lF:{ta:0,sa:-90,f:180},aN:{ua:0,fa:0},aF:{ua:92,fa:92}}],mus:m(['abs','glutes'],['lowback','delts']),dur:3000});
+  add('V-up|V up',{K:[{hip:[100,178],sh:[52,176],hd:0,lN:{ta:90,sa:90,f:-10},lF:{ta:90,sa:90,f:-10},aN:{ua:262,fa:262},aF:{ua:262,fa:262}},
+      {hip:[100,178],sh:[65,142],hd:0,lN:{ta:135,sa:135,f:-60},lF:{ta:135,sa:135,f:-60},aN:{ua:140,fa:138},aF:{ua:140,fa:138}}],mus:m(['abs'],['hipflex'])});
+  add('Copenhagen plank',{K:[{sh:[142,150],hip:[96,162],hd:-6,lN:{a:[22,150],f:30},lF:{a:[64,182],f:30},aN:{ua:178,fa:180},aF:{e:[0,30],w:[24,32]}},
+      {sh:[142,148],hip:[96,152],hd:-6,lN:{a:[22,150],f:30},lF:{a:[64,180],f:30},aN:{ua:178,fa:180},aF:{e:[0,30],w:[24,32]}}],
+    eq:[{k:'bench',x:4,y:154,w:36}],mus:m(['adductors','obliques'],['abs']),dur:3200});
+  add('Cable woodchopper|Woodchopper|Wood chop',{K:[fr({t:-10,lL:{a:[78,GY]},lR:{a:[122,GY]},aL:{W:[54,42]},aR:{W:[60,46]}}),fr({t:10,lL:{a:[78,GY]},lR:{a:[122,GY]},aL:{W:[140,148]},aR:{W:[146,144]}})],
+    eq:[{k:'tower',x:14,top:26},{k:'cable',from:[18,36],to:'wL'}],mus:m(['obliques','abs'],['delts'])});
+  add('Mountain climber|Mountain climbers',{K:[pushup(true),pushup(true,{lN:{a:[100,172],f:40}}),pushup(true),pushup(true,{lF:{a:[98,172],f:40}}),pushup(true)],mus:m(['abs','hipflex'],['delts','quads']),dur:1800});
+
+  /* power and conditioning */
+  add('Sled push|Prowler push',{K:[{hip:[96,120],t:54,lN:{a:[116,GY]},lF:{a:[52,GY]},aN:{W:[154,104]},aF:{W:[152,104]}},{hip:[100,120],t:54,lN:{a:[56,GY]},lF:{a:[118,GY]},aN:{W:[154,104]},aF:{W:[152,104]}},{hip:[96,120],t:54,lN:{a:[116,GY]},lF:{a:[52,GY]},aN:{W:[154,104]},aF:{W:[152,104]}}],
+    eq:[{k:'box',x:156,y:152,w:40,h:32},{k:'rail',x1:158,y1:152,x2:158,y2:100}],mus:m(['quads','glutes'],['calves','abs']),dur:1600});
+  add('Battle ropes',{K:[st({hip:[90,128],t:22,lN:{a:[104,GY]},lF:{a:[100,GY]},aN:{ua:66,fa:70},aF:{ua:40,fa:44}}),st({hip:[90,128],t:22,lN:{a:[104,GY]},lF:{a:[100,GY]},aN:{ua:40,fa:44},aF:{ua:66,fa:70}})],
+    eq:[{k:'cable',from:[198,180],to:'wN'}],mus:m(['delts','abs'],['forearms','quads']),dur:900});
+  var RACK={ua:80,fa:200};
+  add('Power clean|Clean',{K:[{hip:[80,140],t:50,lN:{a:[103,GY]},lF:{a:[99,GY]},aN:HANG,aF:HANG},st({t:-4,lN:{a:[100,180],f:30},lF:{a:[97,180],f:30},aN:{ua:-2,fa:-2},aF:{ua:-2,fa:-2}}),
+      st({hip:[92,124],t:8,lN:{a:[106,GY]},lF:{a:[102,GY]},aN:RACK,aF:RACK}),st({t:3,aN:RACK,aF:RACK}),{hip:[80,140],t:50,lN:{a:[103,GY]},lF:{a:[99,GY]},aN:HANG,aF:HANG}],
+    eq:[PL],mus:m(['glutes','hams','traps'],['quads','delts','lowback']),dur:3400});
+  add('Thruster',{K:[st({hip:[80,138],t:16,aN:RACK,aF:RACK}),st({t:0,aN:{ua:178,fa:180},aF:{ua:176,fa:180}})],eq:[PL],mus:m(['quads','delts'],['glutes','triceps']),dur:2200});
+  add('Burpee|Burpees',{K:[{hip:[100,104],sh:[100,54],hd:0,lN:{a:[103,GY]},lF:{a:[99,GY]},aN:{W:[102,110]},aF:{W:[100,110]}},
+      {hip:[88,150],sh:[118,112],hd:0,lN:{a:[104,GY]},lF:{a:[100,GY]},aN:{W:[128,182]},aF:{W:[126,182]}},
+      {hip:[104,143],sh:[150,124],hd:-14,lN:{a:[30,174],f:72},lF:{a:[28,174],f:72},aN:{W:[152,182]},aF:{W:[150,182]}},
+      {hip:[88,150],sh:[118,112],hd:0,lN:{a:[104,GY]},lF:{a:[100,GY]},aN:{W:[128,182]},aF:{W:[126,182]}},
+      {hip:[100,90],sh:[100,40],hd:0,lN:{a:[103,170],f:60},lF:{a:[99,170],f:60},aN:{W:[104,-14]},aF:{W:[102,-14]}},
+      {hip:[100,104],sh:[100,54],hd:0,lN:{a:[103,GY]},lF:{a:[99,GY]},aN:{W:[102,110]},aF:{W:[100,110]}}],mus:m(['quads','chest'],['abs','delts']),dur:3600});
+  add('Bear crawl',{K:[{sh:[140,142],hip:[96,140],hd:0,lN:{a:[72,182],f:30},lF:{a:[66,182],f:30},aN:{W:[142,182]},aF:{W:[136,182]}},
+      {sh:[146,142],hip:[102,140],hd:0,lN:{a:[72,182],f:30},lF:{a:[84,180],f:30},aN:{W:[160,180]},aF:{W:[136,182]}},
+      {sh:[152,142],hip:[108,140],hd:0,lN:{a:[90,180],f:30},lF:{a:[84,182],f:30},aN:{W:[160,182]},aF:{W:[154,180]}}],mus:m(['abs','delts'],['quads','glutes']),dur:2000});
+
+  /* the new ones join the workout's list, so they can be added to today with a start weight
+     (row: name|muscle|start lb|pattern|equipment|one or both sides|free or supported|load on the spine|range) */
+  var MORE=['Leg press (feet high)|Glutes|250|sq|mach|bi|supp|lo|stretch','Leg press (feet low)|Quads|230|sq|mach|bi|supp|lo|stretch','Leg press (feet wide)|Adductors|250|sq|mach|bi|supp|lo|stretch',
+    'Leg press (feet narrow)|Quads|230|sq|mach|bi|supp|lo|stretch','Single leg press|Quads|110|sq|mach|uni|supp|lo|stretch','Sissy squat|Quads|0|sq|bw|bi|free|lo|stretch','Belt squat|Quads|135|sq|mach|bi|supp|lo|stretch',
+    'Smith machine squat|Quads|135|sq|mach|bi|supp|md|stretch','Zercher squat|Quads|115|sq|bb|bi|free|hi|stretch','Sumo squat|Adductors|50|sq|db|bi|free|md|stretch','Hip abduction machine|Glutes|90|iso|mach|bi|supp|lo|contract',
+    'Hip adduction machine|Adductors|90|iso|mach|bi|supp|lo|stretch','Cable pull-through|Glutes|50|hg|cable|bi|free|lo|stretch','Single leg hip thrust|Glutes|0|hg|bw|uni|supp|lo|contract','Donkey calf raise|Calves|0|iso|bw|bi|supp|lo|stretch',
+    'Reverse Nordic|Quads|0|iso|bw|bi|free|lo|stretch','Spanish squat|Quads|0|sq|bw|bi|free|lo|mid','T-bar row|Back|90|hpl|bb|bi|free|md|mid','Meadows row|Back|60|hpl|bb|uni|free|md|stretch','Seal row|Back|50|hpl|db|bi|supp|lo|mid',
+    'Rack pull|Back|225|hg|bb|bi|free|hi|contract','Dumbbell pullover|Back|40|iso|db|bi|supp|lo|stretch','Inverted row|Back|0|hpl|bw|bi|free|lo|mid','Single arm cable row|Back|50|hpl|cable|uni|free|lo|stretch',
+    'Jefferson curl|Hamstrings|25|hg|db|bi|free|lo|stretch','Reverse hyper|Glutes|0|hg|mach|bi|supp|lo|contract','Kroc row|Back|80|hpl|db|uni|supp|md|stretch','Decline bench press|Chest|135|hp|bb|bi|supp|md|mid',
+    'Landmine press|Shoulders|45|vp|bb|uni|free|lo|mid','Z press|Shoulders|65|vp|bb|bi|free|md|mid','Push press|Shoulders|95|vp|bb|bi|free|hi|mid','Upright row|Shoulders|55|iso|bb|bi|free|lo|contract',
+    'Lu raise|Shoulders|10|iso|db|bi|free|lo|contract','Machine chest press|Chest|100|hp|mach|bi|supp|lo|mid','Floor press|Chest|135|hp|bb|bi|free|md|contract','Svend press|Chest|25|iso|db|bi|free|lo|contract',
+    'Bayesian curl|Biceps|20|iso|cable|uni|free|lo|stretch','Spider curl|Biceps|20|iso|db|bi|supp|lo|contract','Concentration curl|Biceps|25|iso|db|uni|supp|lo|contract','Reverse curl|Forearms|45|iso|bb|bi|free|lo|mid',
+    'Zottman curl|Biceps|20|iso|db|bi|free|lo|mid','Drag curl|Biceps|55|iso|bb|bi|free|lo|contract','JM press|Triceps|85|hp|bb|bi|supp|lo|mid','Diamond push-up|Triceps|0|hp|bw|bi|free|lo|mid','Bench dip|Triceps|0|iso|bw|bi|supp|lo|stretch',
+    'Dragon flag|Core|0|iso|bw|bi|supp|lo|stretch','Hollow hold|Core|0|iso|bw|bi|free|lo|mid','Bird dog|Core|0|iso|bw|bi|free|lo|mid','V-up|Core|0|iso|bw|bi|free|lo|contract','Copenhagen plank|Adductors|0|iso|bw|bi|supp|lo|mid',
+    'Cable woodchopper|Core|30|iso|cable|bi|free|lo|mid','Mountain climber|Core|0|pw|bw|bi|free|lo|mid','Sled push|Quads|90|pw|mach|bi|free|md|mid','Battle ropes|Shoulders|0|pw|bw|bi|free|lo|mid',
+    'Power clean|Glutes|95|pw|bb|bi|free|hi|mid','Thruster|Quads|65|pw|bb|bi|free|hi|mid','Burpee|Core|0|pw|bw|bi|free|lo|mid','Bear crawl|Core|0|pw|bw|bi|free|lo|mid'];
+  /* the different ones: odd-looking, less common, and they work */
+  var DIFF=['Sissy squat','Belt squat','Zercher squat','Reverse Nordic','Spanish squat','Cable pull-through','Donkey calf raise','Meadows row','Seal row','Jefferson curl','Reverse hyper','Landmine press','Z press','Lu raise',
+    'Svend press','Bayesian curl','Spider curl','Drag curl','JM press','Dragon flag','Copenhagen plank','Bear crawl','Kroc row','Sled push','Nordic curl','Tibialis raise','Front lever','Eccentric step down','Single leg press'];
+  function joinList(){ try{ if(window.KSESS&&KSESS.more) KSESS.more(MORE); }catch(e){} }
+  joinList();
 
   /* ---------- stretches: one or more for every muscle group (hold, breathe, ease deeper) ---------- */
   var STR=[];
@@ -709,7 +878,7 @@ window.KovaDemo=(function(){
     if(!raf) raf=requestAnimationFrame(loop);
     return true;
   }
-  return {stats:STATS,find:find,svg:svg,draw:draw,mount:mount,box:box,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
+  return {stats:STATS,find:find,svg:svg,draw:draw,mount:mount,box:box,MORE:MORE,DIFF:DIFF,STR:STR,STRETCH_FOR:STRETCH_FOR,stretchesFor:stretchesFor,joints:joints,LIB:LIB,names:function(){ return Object.keys(LIB); },reduced:function(){ return RM; }};
 })();
 
 /* =====================================================================
@@ -852,22 +1021,28 @@ window.KovaExPage=(function(){
   /* ---------- Exercises and Stretch, from the Training card ---------- */
   var GROUPS=[['all','All'],['Quads','Legs'],['Glutes','Glutes'],['Hamstrings','Hamstrings'],['Chest','Chest'],['Back','Back'],['Shoulders','Shoulders'],['Arms','Arms'],['Core','Core'],['skill','Calisthenics']];
   var SKILLS=['Push up','Pike push-up','Handstand push-up','Dips','Pull up','Muscle-up','L-sit','Pistol squat','Front lever','Dead hang','Hanging leg raise'];
-  var LS={g:'all',q:''};
+  var LS={g:'all',q:'',e:'all',d:false};
+  var EQ=[['all','Any equipment'],['bb','Barbell'],['db','Dumbbell'],['cable','Cable'],['mach','Machine'],['bw','Bodyweight']];
+  var EQN={bb:'Barbell',db:'Dumbbell',cable:'Cable',mach:'Machine',bw:'Bodyweight'};
   function allEx(){
-    var k=K(), L=(k&&k.XL?k.XL:[]).map(function(x){ return {n:x.n,m:x.m}; });
-    SKILLS.forEach(function(n){ if(!L.some(function(x){ return x.n===n; })) L.push({n:n,m:'skill'}); });
+    var k=K(), L=(k&&k.XL?k.XL:[]).map(function(x){ return {n:x.n,m:x.m,eq:x.eq}; });
+    SKILLS.forEach(function(n){ if(!L.some(function(x){ return x.n===n; })) L.push({n:n,m:'skill',eq:'bw'}); });
     return L.filter(function(x){ return D.find(x.n); });
   }
   function libHtml(){
     var L=allEx().filter(function(x){
-      var g=LS.g, ok=g==='all'||x.m===g||(g==='Arms'&&/Biceps|Triceps|Forearms/.test(x.m))||(g==='Quads'&&/Quads|Calves/.test(x.m))||(g==='skill'&&(x.m==='skill'||SKILLS.indexOf(x.n)>=0));
+      var g=LS.g, ok=g==='all'||x.m===g||(g==='Arms'&&/Biceps|Triceps|Forearms/.test(x.m))||(g==='Quads'&&/Quads|Calves|Adductors/.test(x.m))||(g==='skill'&&(x.m==='skill'||SKILLS.indexOf(x.n)>=0));
+      ok=ok&&(LS.e==='all'||x.eq===LS.e||(LS.e==='db'&&x.eq==='kb'))&&(!LS.d||D.DIFF.indexOf(x.n)>=0);
       return ok&&(!LS.q||x.n.toLowerCase().indexOf(LS.q.toLowerCase())>=0);
     });
-    return '<div class="kxp"><div class="kxp-h"><div><b>Exercises</b><span>'+allEx().length+' with a moving picture. Tap one to see how.</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+    var all=allEx().length;
+    return '<div class="kxp"><div class="kxp-h"><div><b>Exercises</b><span>'+all+' with a moving picture'+(L.length!==all?', '+L.length+' shown':'')+'. Tap one to see how.</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
       +'<input class="kxp-q" id="kxpQ" type="search" placeholder="Search exercises" aria-label="Search exercises" value="'+esc(LS.q)+'">'
       +'<div class="kxp-gs" role="group" aria-label="Muscle">'+GROUPS.map(function(g){ return '<button type="button" class="chip'+(LS.g===g[0]?' on':'')+'" data-kxp="g" data-g="'+g[0]+'" aria-pressed="'+(LS.g===g[0])+'">'+g[1]+'</button>'; }).join('')+'</div>'
-      +'<div class="kxp-grid">'+(L.length?L.map(function(x){ return '<button type="button" class="kxp-cell" data-exinfo="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b><small>'+esc(x.m==='skill'?'Calisthenics':x.m)+'</small></button>'; }).join('')
-        :'<div class="kxp-none">Nothing by that name. Try a shorter word, like "press" or "curl".</div>')+'</div></div>';
+      +'<div class="kxp-gs" role="group" aria-label="Equipment"><button type="button" class="chip kxp-dc'+(LS.d?' on':'')+'" data-kxp="d" aria-pressed="'+LS.d+'">The different ones</button>'
+        +EQ.map(function(g){ return '<button type="button" class="chip'+(LS.e===g[0]?' on':'')+'" data-kxp="e" data-e="'+g[0]+'" aria-pressed="'+(LS.e===g[0])+'">'+g[1]+'</button>'; }).join('')+'</div>'
+      +'<div class="kxp-grid">'+(L.length?L.map(function(x){ var dif=D.DIFF.indexOf(x.n)>=0; return '<button type="button" class="kxp-cell" data-exinfo="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b><small>'+esc((x.m==='skill'?'Calisthenics':x.m)+(EQN[x.eq]?' · '+EQN[x.eq]:''))+'</small>'+(dif?'<i class="kxp-dif">Different</i>':'')+'</button>'; }).join('')
+        :'<div class="kxp-none">Nothing matches. Try another muscle or equipment, or a shorter word, like "press" or "curl".</div>')+'</div></div>';
   }
   var SG=[['legs','Legs and hips',['quad','ham','hipflex','glute','calf','shin','butterfly']],['back','Back',['child','knees','lat']],['upper','Chest and shoulders',['chest','delt','neck']],['arms','Arms',['tri','bicep','wrist']],['core','Core',['cobra','lat']]];
   function todays(){
@@ -922,9 +1097,11 @@ window.KovaExPage=(function(){
   function onClick(ev){
     var b=ev.target.closest&&ev.target.closest('[data-kxp]'); if(!b) return;
     var a=b.getAttribute('data-kxp');
-    if(a==='lib'){ LS={g:'all',q:''}; sheet(libHtml()); track('exercise_library',{}); return; }
+    if(a==='lib'){ LS={g:'all',q:'',e:'all',d:false}; sheet(libHtml()); track('exercise_library',{}); return; }
     if(a==='str'){ sheet(strHtml()); track('stretch_open',{}); return; }
     if(a==='g'){ LS.g=b.getAttribute('data-g'); sheet(libHtml()); return; }
+    if(a==='e'){ LS.e=b.getAttribute('data-e'); sheet(libHtml()); return; }
+    if(a==='d'){ LS.d=!LS.d; sheet(libHtml()); return; }
     if(a==='stretch'){ var d=D.find(b.getAttribute('data-n')); if(d){ FROM=b.closest('.kxp')&&/^Stretch$/.test((b.closest('.kxp').querySelector('.kxp-h b')||{}).textContent||'')?'str':null; stopTimer(); sheet(stretchHtml(d).replace('<div class="kxp">','<div class="kxp">'+back())); } return; }
     if(a==='back'){ stopTimer(); var f=FROM; FROM=null; sheet(f==='lib'?libHtml():strHtml()); return; }
     if(a==='hold'){ var d2=D.find(b.getAttribute('data-n')); if(d2){ b.textContent='Restart the timer'; startTimer(d2); } return; }

@@ -140,6 +140,8 @@ window.KovaPlayer=(function(){
   function finish(){ close(); var k=K(); if(k&&k.finish) k.finish(); }
 
   /* ---------- the screen ---------- */
+  function att(c){ var A=window.KovaAttach; return c.e.att||(A?A.get(c.e.n):'')||''; }
+  function fig(n){ var A=window.KovaAttach; return A&&A.figure?A.figure(n):n; }
   function thumb(n){ return '<span class="kxp-th kpl-th" data-kxd-still="'+esc(n)+'"></span>'; }
   function ring(f){ var C=2*Math.PI*86; return '<svg class="kpl-ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="86" class="t"/><circle id="kplArc" cx="100" cy="100" r="86" class="v" stroke-dasharray="'+(C*f).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 100 100)"/></svg>'; }
   function page(){
@@ -151,10 +153,12 @@ window.KovaPlayer=(function(){
       +'<div class="hdr-r"><button type="button" class="iconbtn kz2p-help" data-kpl="tour" aria-label="Show me around the player">?</button>'
       +'<button type="button" class="iconbtn'+(P.voice?' on':'')+'" data-kpl="voice" aria-pressed="'+P.voice+'" aria-label="'+(P.voice?'Voice on':'Voice off')+'">'+ic('headphones')+'</button></div></div>';
     var bar='<div class="kpl-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+pr.t+'" aria-valuenow="'+pr.d+'" aria-label="Sets done"><i style="width:'+(pr.t?pr.d/pr.t*100:0).toFixed(1)+'%"></i></div>'
-      +'<div class="kpl-where">'+(c.done?pr.d+' sets done':'Exercise '+(c.i+1)+' of '+c.n+' · '+(c.warm?'Warm-up set':'Set '+c.wn+' of '+c.wt))+'</div>';
+      +'<div class="kpl-wh"><div class="kpl-where">'+(c.done?pr.d+' sets done':'Exercise '+(c.i+1)+' of '+c.n+' · '+(c.warm?'Warm-up set':'Set '+c.wn+' of '+c.wt))+'</div>'
+      /* p42 (the owner: "a little section on the top right: what attachment, and it pops up"): the attachment or, on a leg press, where your feet go */
+      +(c.done||!window.KovaAttach?'':'<button type="button" class="chip kpl-att'+(att(c)?' on':'')+'" data-kpl="att" aria-label="'+esc((KovaAttach.isLP(c.e.n)?'Feet and gear for ':'Attachment for ')+c.e.n)+'">'+esc(att(c)||(KovaAttach.isLP(c.e.n)?'+ Feet':'+ Attachment'))+'</button>')+'</div>';
     if(c.done) return '<div class="kz2p-in">'+head+bar+'<section class="card kpl-stage kpl-end"><div class="kz2p-num">'+pr.d+'<i>sets</i></div><span>Every set is logged. Finish saves the workout, your records and your recovery map.</span></section>'
       +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="chip kz2p-c" data-kpl="stretch">'+ic('yoga')+'<span>Stretch now</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
-    var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(c.e.n)+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
+    var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(fig(c.e.n))+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
       +(c.warm?'<span class="chip kpl-tag">Warm-up</span><div class="kpl-wu">A light set to get ready. Not counted.</div>':'')+'</section>';
     var body;
     if(resting){
@@ -250,6 +254,7 @@ window.KovaPlayer=(function(){
     var a=b.getAttribute('data-kpl');
     if(a==='open'){ open(); return; }
     if(a==='close'){ close(); return; }
+    if(a==='att'){ var cc=sync(), A2=window.KovaAttach; if(cc&&!cc.done&&A2&&A2.pickSheet) A2.pickSheet(cc.e.n,function(){ paint(); }); return; }
     if(a==='stretch'){ var X=window.KovaExPage; if(!X) return; var on=!!document.getElementById('kpl'), td=X.todays?X.todays():[]; if(on) close(); if(on&&td.length&&X.routine) X.routine(td); else if(X.openStretch) X.openStretch(); track('player_stretch',{from:on?'coach':'workout'}); return; }
     if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice){ V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} } paint(); return; }
     if(a==='tour'){ tour(); return; }

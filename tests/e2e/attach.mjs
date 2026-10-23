@@ -24,7 +24,7 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.waitForSelector('#s-session .katt-chip', { timeout: 5000 }).catch(() => {});
   ck(theme + ': each exercise in the workout has an attachment button', await p.locator('#s-session .katt-chip').count() === 2);
   await p.locator('#s-session .katt-chip').first().click(); await p.waitForTimeout(400);
-  await p.locator('#sheetIn [data-katt-v="Rope"]').click(); await p.waitForTimeout(500);
+  await p.locator('#sheetIn [data-katt-v="Rope"]').first().click(); await p.waitForTimeout(500);
   ck(theme + ': choosing Rope puts it on the button and remembers it', /Rope/.test(await p.locator('#s-session .katt-chip').first().textContent()) && await p.evaluate(() => KovaAttach.get('Rope pushdown') === 'Rope'));
   await p.screenshot({ path: join(shots, `attach-session-${theme}.png`) });
   const n0 = await p.evaluate(() => KSESS.state().ex.length);
@@ -33,7 +33,7 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#sheet .exadd[data-n="Skull crusher"] .katt-add').click(); await p.waitForTimeout(300);
   ck(theme + ': in "Add to today" the button opens the choices and does not add the exercise', await p.evaluate(() => KSESS.state().ex.length) === n0 && await p.locator('#sheet .katt-p').count() === 1);
   await p.screenshot({ path: join(shots, `attach-add-${theme}.png`) });
-  await p.locator('#sheet .katt-p [data-katt-v="EZ bar"]').click(); await p.waitForTimeout(300);
+  await p.locator('#sheet .katt-p [data-katt-v="EZ bar"]').first().click(); await p.waitForTimeout(300);
   await p.locator('#sheet .exadd[data-n="Skull crusher"]').click(); await p.waitForTimeout(600);
   ck(theme + ': an exercise added afterwards comes with the attachment you chose', await p.evaluate(() => { const e = KSESS.state().ex; return e[e.length - 1].n === 'Skull crusher' && e[e.length - 1].att === 'EZ bar'; }));
   /* the muscles list in plain words */

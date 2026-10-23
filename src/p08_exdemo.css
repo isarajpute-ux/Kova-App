@@ -122,3 +122,7 @@ body.light-mode .kxp-tb{background:radial-gradient(120% 100% at 50% 20%,#FFFFFF,
 body.light-mode .exadd .kxp-ta{background:radial-gradient(120% 100% at 50% 20%,#FFFFFF,#E6E8EC)}
 body.light-mode .kxp-body .m.s{fill:var(--acc);fill-opacity:.32}
 body.light-mode .kxp-body .m.p{fill:var(--acc);fill-opacity:.85}
+/* p42: the library's "Different" tag and its filter */
+.kxp-cell{position:relative}
+.kxp-dif{position:absolute;top:8px;right:8px;font-style:normal;font-size:9.5px;letter-spacing:.04em;padding:2px 7px;border-radius:100px;color:var(--acc-ink,#F0945C);background:var(--acc-bg,rgba(232,122,60,.12));border:.5px solid var(--acc-brd,rgba(232,122,60,.4))}
+.kxp-dc{border-style:dashed}

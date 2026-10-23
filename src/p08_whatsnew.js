@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-26',title:'A bigger exercise library, and every attachment',
+      lines:['Over 130 moving pictures: by muscle, by equipment, and the different ones that work','Every gym attachment, drawn, by body area','On a leg press, pick where your feet go and see what it works'],
+      steps:[
+        ['move','A bigger exercise library','Tap Exercises: filter by muscle or equipment, or see the different ones people swear by.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','Every attachment','Tap the attachment button on any exercise, or at the top right of Coach me. On a leg press, it shows where your feet go.',function(){ return first('#s-session .katt-chip')||q('#addExBtn'); }]
+      ]},
     {id:'new-2026-10-25',title:'A better Ask Kova, tours for every card, and Coach me',
       lines:['Ask Kova: clear buttons under each answer, and a way to sign in for the full AI','Tap ? on any screen: the tour now walks every card','Coach me (it was Follow along): Kova talks you through it in a more natural voice','A correct leg press picture'],
       steps:[

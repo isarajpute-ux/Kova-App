@@ -25,7 +25,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const missing = lib.filter((n) => !D.find(n));
   ck('every one of Kova’s ' + lib.length + ' exercises has a moving picture (' + (missing.join(', ') || 'none missing') + ')', !missing.length);
   ck('calisthenics moves from the skill ladders have one too', ['Pike push-up', 'Handstand push-up', 'Muscle-up', 'L-sit', 'Pistol squat', 'Front lever', 'Weighted pull-ups', 'Straight-bar dips'].every((n) => D.find(n)));
-  ck('a name Kova does not know gets the nearest drawing, or none (never a wrong guess)', D.find('Smith machine squat') === D.find('Barbell back squat') && D.find('Zercher carry') === D.find('Farmer carry') && D.find('Underwater basket weaving') === null && D.find('Medicine ball chest throw') !== D.find('Barbell row') && D.find('Arrow lunge') === D.find('Walking lunge'));
+  ck('a name Kova does not know gets the nearest drawing, or none (never a wrong guess)', D.find('Landmine squat') === D.find('Barbell back squat') && D.find('Smith machine squat') !== D.find('Barbell back squat') && D.find('Zercher carry') === D.find('Farmer carry') && D.find('Underwater basket weaving') === null && D.find('Medicine ball chest throw') !== D.find('Barbell row') && D.find('Arrow lunge') === D.find('Walking lunge'));
 
   /* the geometry: no broken numbers, limbs keep their length, knees bend forward */
   let bad = [];
