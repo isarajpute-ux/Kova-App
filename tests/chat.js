@@ -12,6 +12,7 @@ function boot(signedIn,callImpl,opts){
   let user=signedIn?{uid:'u1',email:'a@b.c',getIdToken:()=>Promise.resolve('tok')}:null;
   const calls=[];
   const authObj={get currentUser(){return user},onAuthStateChanged(cb){cb(user)},signOut:()=>Promise.resolve()};
+  if(opts.anonOff){ authObj.tries=0; authObj.signInAnonymously=()=>{ authObj.tries++; return Promise.reject({code:'auth/admin-restricted-operation'}); }; }
   if(opts.anon) authObj.signInAnonymously=()=>{user={uid:'anon1',isAnonymous:true,getIdToken:()=>Promise.resolve('tok')};return Promise.resolve({user});};
   w.firebase={initializeApp(){},apps:[{}],
     auth:()=>authObj,
@@ -28,13 +29,13 @@ function boot(signedIn,callImpl,opts){
     calls.push({name:'chat',url:String(url),auth:(o.headers||{}).Authorization,data});
     return callImpl(data).then(
       (r)=>({ok:true,status:200,json:()=>Promise.resolve(r.data)}),
-      (e)=>({ok:false,status:STATUS[e&&e.code]||500,json:()=>Promise.resolve({error:'x'})}));
+      (e)=>({ok:false,status:STATUS[e&&e.code]||500,json:()=>Promise.resolve({error:(e&&e.message)||''})}));
   };
   /* sample mode keeps the demo week so the snapshot has something to carry;
      live mode (the default on a real https host) is checked separately */
   w.localStorage.setItem('kova_mode_v1',opts.mode||'sample');
   w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n;\n'));
-  return {w,doc:w.document,calls};
+  return {w,doc:w.document,calls,auth:authObj};
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 
@@ -136,7 +137,28 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   B.w.KovaChat.open(); B.w.KovaChat.send('what is sleep efficiency'); await wait(250);
   const ba=B.doc.querySelector('.kc-a');
   ck('undeployed function falls back to on-device',ba&&/Offline answer/.test(ba.textContent));
-  ck('footer says it was answered offline',/answered offline/i.test(B.doc.getElementById('kcFoot').textContent));
+  ck('footer says it was answered from the on-device guide',/answered from the on-device guide/i.test(B.doc.getElementById('kcFoot').textContent));
+
+  // ---------- p40: the server's own reason, in plain words ----------
+  const E=boot(true,()=>Promise.reject({code:'unavailable',message:'The assistant is not configured on the server yet.'}));
+  await wait(500);
+  E.w.KovaChat.open(); E.w.KovaChat.send('what is sleep efficiency'); await wait(250);
+  ck('when Kova\u2019s AI fails, the footer says why in the server\u2019s words',/not configured on the server yet/.test(E.doc.getElementById('kcFoot').textContent));
+
+  // ---------- p40: guest sessions switched off: honest, with a way in ----------
+  const G=boot(false,()=>Promise.resolve({data:{text:'x'}}),{anonOff:true});
+  await wait(500);
+  let opened=null; G.w.KovaCloudAuth={open:(o)=>{ opened=o; }};
+  G.w.KovaChat.open(); G.w.KovaChat.send('how much protein do I need'); await wait(700);
+  const ga=G.doc.querySelector('.kc-a');
+  ck('guest sessions refused: a quick answer from the on-device guide, not "offline"',ga&&/Quick answer from the on-device guide/.test(ga.textContent)&&!/Offline/.test(G.doc.getElementById('kcFoot').textContent)&&/sign in for Kova\u2019s full AI/.test(G.doc.getElementById('kcFoot').textContent));
+  ck('…with a Sign in button that opens sign-in',!!G.doc.querySelector('.kc-act[data-act="signin"]')&&(G.doc.querySelector('.kc-act[data-act="signin"]').click(),opened&&opened.mode==='in'));
+  G.w.KovaChat.open(); G.w.KovaChat.send('and carbs'); await wait(700);
+  ck('…and it does not knock again on every message',G.auth.tries===1&&G.calls.length===0&&G.doc.querySelectorAll('.kc-a').length===2);
+
+  // ---------- p40: the actions and key points look like buttons and a card ----------
+  ck('the actions under a reply and the key points have styles (they were plain text)',/\.kc-act\{[^}]*border-radius/.test(html)&&/\.kc-acts\{/.test(html)&&/\.kc-vis-item\{/.test(html)&&/\.kc-visual\{/.test(html));
+  ck('the message box hint fits on one line',/id="kcIn"[^>]*placeholder="Ask Kova anything"/.test(html));
 
   // ---------- signed out: a guest session gets the real assistant ----------
   const C=boot(false,()=>Promise.resolve({data:{text:'Real answer'}}),{anon:true});

@@ -14,7 +14,7 @@ const shots = join(root, 'tests', 'e2e', 'shots'); mkdirSync(shots, { recursive:
 const R = []; const ck = (n, c) => R.push([n, !!c]);
 const engine = process.env.ENGINE === 'webkit' ? webkit : chromium;
 const b = await engine.launch(); const site = await serve(join(root, 'dist'));
-const seen = { home: 1, today: 1, move: 1, workteam: 1, session: 1, customize: 1 };
+const seen = { home: 1, today: 1, move: 1, workteam: 1, session: 1, customize: 1, 'new-2026-10-24': 1 };
 for (const theme of ['dark', 'soft', 'light']) {
   const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), kova_mode_v1: 'live', 'kova.tours.v1': JSON.stringify(seen),
     kova_profile_v2: JSON.stringify({ theme, tourSeen: true, tours: seen }) });
@@ -28,10 +28,12 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#kwn [data-kwn="show"]').click();
   await p.waitForSelector('#ksCoach.on', { timeout: 8000 }).catch(() => {});
   const c1 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Show me goes to Workout and lights up the Dream physique card', c1.t === 'Dream physique' && c1.scr === 's-move');
+  ck(theme + ': Show me goes to Workout and lights up Kova in the sidebar (Ask Kova)', c1.t === 'Ask Kova' && c1.scr === 's-move');
   const spot = async (sel) => p.evaluate((sel) => { const s = document.getElementById('ksSpot').getBoundingClientRect(), k = document.querySelector(sel).getBoundingClientRect(); return s.left <= k.left + 2 && s.right >= k.right - 2 && s.top <= k.top + 2; }, sel);
   await p.waitForTimeout(900);                                  /* the light slides into place */
-  ck(theme + ': …with the light around it', await spot('#kdpCard'));
+  ck(theme + ': …with the light around it', await spot('#kgOrb'));
+  await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1100);
+  ck(theme + ': …then the ? beside Workout\u2019s title (tours for every card)', (await p.evaluate(() => (document.querySelector('#ksCoach .ks-ct') || {}).textContent)) === 'Tours for every card' && await spot('#s-move .kt-help'));
   await p.screenshot({ path: join(shots, `whatsnew-step1-${theme}.png`) });
   await p.locator('#ksCoach [data-t="skip"]').click(); await p.waitForTimeout(400);
   ck(theme + ': Skip ends it, and the card does not come back', await p.locator('#ksTour').count() === 0 && await p.locator('#kwn').count() === 0);

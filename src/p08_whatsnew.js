@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-25',title:'A better Ask Kova, tours for every card, and Coach me',
+      lines:['Ask Kova: clear buttons under each answer, and a way to sign in for the full AI','Tap ? on any screen: the tour now walks every card','Coach me (it was Follow along): Kova talks you through it in a more natural voice','A correct leg press picture'],
+      steps:[
+        ['move','Ask Kova','Tap Kova in the sidebar to chat. Under each answer: Break it down, Visualize and Go deeper.',function(){ return q('#kgOrb'); }],
+        ['move','Tours for every card','Tap ? next to a title. The Workout tour now covers everything, from Check my form to Zone 2.',function(){ return first('#s-move .kt-help'); }],
+        ['session','Coach me','Kova talks you through your workout: one exercise at a time, a rest timer and a natural voice. It used to be called Follow along.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-24',title:'Dream physique',
       lines:['Send a photo or video of the body you want','The muscles to build, lit on your own photo','Your change at 3 months, 6 months and a year, with a split and meals'],
       steps:[
@@ -42,7 +49,7 @@ window.KovaWhatsNew=(function(){
         ['move','Train what’s fresh','One tap builds today’s workout from the muscles that are ready: 2–3 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
         ['move','Stretch','The stretches for what is resting, right here. Stretch with me times each hold.',function(){ return q('#krsCard'); }],
         ['move','Pictures that show the work','Every exercise is a small body map now: the muscle doing the work glows as the rep goes.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
-        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
+        ['session','Coach me','Kova talks you through your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
         ['machine','Scan any machine','A photo, a video or a YouTube link. Not sure? Kova shows its best guesses as pictures, and every machine below has one.',function(){ return first('#s-machine .mc-ways'); }],
         ['settings','Alerts on your phone','Kova tells you when sleep is low, when it has been days since a workout, and what time to be in bed.',function(){ return q('#kpuNote')||first('#s-settings .sec-h'); }]
       ]},

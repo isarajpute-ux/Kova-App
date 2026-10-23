@@ -323,6 +323,18 @@ body{font-family:'Outfit','Inter',-apple-system,BlinkMacSystemFont,sans-serif;ba
 .kc-send:active{transform:scale(.92)}
 .kc-send.off{opacity:.4;pointer-events:none}
 .kc-foot{font-size:10px;font-weight:300;color:var(--kc-ink3);text-align:center;margin-top:8px;min-height:13px}
+/* p40: the actions under Kova's last reply and Break it down's key points
+   had no styles at all, so they read as plain lines of text */
+.kc-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.kc-act{display:inline-flex;align-items:center;padding:7px 13px;border-radius:999px;cursor:pointer;font-size:12px;font-weight:400;
+  color:var(--kc-ink);background:var(--kc-glass);border:.5px solid var(--kc-glass-b);transition:transform .14s}
+.kc-act:active{transform:scale(.95)}
+.kc-act.kc-in-btn{background:var(--kc-bub);color:var(--kc-bub-ink);border-color:transparent}
+.kc-visual{margin-top:12px;padding:12px 14px;border-radius:18px;background:var(--kc-glass);border:.5px solid var(--kc-glass-b)}
+.kc-vis-h{font-size:9.5px;letter-spacing:.16em;color:var(--kc-ink3);margin-bottom:8px}
+.kc-vis-list{display:flex;flex-direction:column;gap:8px}
+.kc-vis-item{display:grid;grid-template-columns:20px 1fr;gap:9px;font-size:13px;line-height:1.45}
+.kc-vis-num{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;border:.5px solid var(--kc-glass-b);color:var(--kc-ink)}
 
 /* ---- soft light: same hues, the core lifted to smoke and the rim
    desaturated, so it sits on the grey ground instead of punching a
@@ -346,7 +358,7 @@ body.light-mode .kchat[data-pillar="vitals"]{--kc-mid:#F4DCE8;--kc-edge:#E7A5C4;
 body.light-mode .kchat[data-pillar="sleep"]{--kc-mid:#DDE6F7;--kc-edge:#9FB9EE;--kc-rim:rgba(110,150,236,.42);--kc-bloom:rgba(150,136,238,.40)}
 body.light-mode .kchat[data-pillar="move"]{--kc-mid:#F0E6DB;--kc-edge:#D6B996;--kc-rim:rgba(206,160,110,.40);--kc-bloom:rgba(201,162,126,.40)}
 body.light-mode .kchat[data-pillar="fuel"]{--kc-mid:#F7E9D4;--kc-edge:#EDBB76;--kc-rim:rgba(250,168,72,.40);--kc-bloom:rgba(250,165,61,.40)}
-body.light-mode .kc-back,body.light-mode .kc-chip,body.light-mode .kc-a,body.light-mode .kc-bar{
+body.light-mode .kc-back,body.light-mode .kc-chip,body.light-mode .kc-a,body.light-mode .kc-bar,body.light-mode .kc-act{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 22px -12px rgba(30,40,60,.25)}
 
 /* ---------- p105: config card (Analytic Configuration reference) --
@@ -8803,6 +8815,10 @@ body.light-mode .kz2s{--z1:rgba(28,26,23,.2);--z3:rgba(28,26,23,.4);--z4:rgba(28
 .kpl-stage::after{content:'';position:absolute;left:10%;right:10%;bottom:-30%;height:60%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
 .kpl-fig{width:100%;height:300px}
 .kpl-tag{position:absolute;top:12px;left:12px}
+/* p41: what a warm-up set is, in plain words */
+.kpl-wu{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);padding:5px 12px;border-radius:100px;font-size:11.5px;font-weight:300;line-height:1.4;color:var(--ron-txt-2);text-align:center;
+  background:rgba(10,10,12,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+body.light-mode .kpl-wu{background:rgba(255,255,255,.72)}
 .kpl-end{flex-direction:column;gap:10px;text-align:center;padding:30px 20px;min-height:200px}
 .kpl-end span{font-size:13px;font-weight:300;color:var(--ron-txt-2);max-width:340px}
 .kpl-tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -11450,6 +11466,8 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 /* ----- guided tour: a moving spotlight and one short line ----- */
 .ks-world.ks-glide{transition:transform .7s cubic-bezier(.33,.7,.2,1)}
 .ks-tour{position:fixed;inset:0;z-index:400;pointer-events:auto;--kd:rgba(4,4,6,.66)}
+/* p40: a tour has the screen to itself: pop-ups that float over the app wait */
+body.ks-touring .kwn.card,body.ks-touring .kg-pop,body.ks-touring .kg-veil,body.ks-touring .kfr,body.ks-touring .kn-alert,body.ks-touring .kt-pop,body.ks-touring .kh-tag,body.ks-touring .kc-spot-tag,body.ks-touring .kso-undo{visibility:hidden!important}
 @keyframes ks-in{from{opacity:0}to{opacity:1}}
 /* p28: four flat panels and four rounded corners dim the page around the
    lit box; they and the outline only move with transform (smooth on phones) */
@@ -13572,7 +13590,7 @@ body.ks-on #kovaFab{display:none!important}
     </div>
 
     <div class="kc-bar">
-      <textarea id="kcIn" rows="1" placeholder="Ask about sleep, training, food, anything"
+      <textarea id="kcIn" rows="1" placeholder="Ask Kova anything"
         aria-label="Message"></textarea>
       <div class="kc-send" id="kcSend" role="button" tabindex="0" aria-label="Send">
         <svg class="ic"><use href="#i-arrow-up"/></svg></div>
@@ -16450,7 +16468,7 @@ var KSESS=(function(){
   function phFor(e,j){
     var at=autoTarget(e.n,e.tgt), L=lastOf(e.n), s=e.sets[j];
     if(s.role==='warm'){
-      return {w:at.w?Math.round(at.w*0.55/5)*5:0, r:Math.min(12,at.r+3)};
+      return {w:at.w?Math.round(at.w*0.5/5)*5:0, r:8};   /* p41: a light set, about half the weight, 8 reps (it was your reps + 3: "11 reps at 100 lb" read as a working set) */
     }
     var workIdx=0;
     for(var i=0;i<j;i++) if(e.sets[i].role!=='warm') workIdx++;
@@ -31613,7 +31631,7 @@ window.KovaChat=(function(){
   var logEl=document.getElementById('kcLog'), scr=document.getElementById('kcScroll'),
       inp=document.getElementById('kcIn'), sendB=document.getElementById('kcSend'),
       foot=document.getElementById('kcFoot');
-  var busy=false;
+  var busy=false, guestNo=false;
 
   var PN={sleep:'Sleep',move:'Workout',fuel:'Fuel',vitals:'Vitals',work:'Work OS',
           home:'Home',settings:'Settings',healthspan:'Vitals',learn:'Home'};
@@ -31713,6 +31731,7 @@ window.KovaChat=(function(){
       }
       if(m.showViz&&m.viz&&window.KovaViz) extra+=KovaViz.render(m.viz);
       if(m.points) extra+=m.points;
+      if(m.signin&&last) extra+='<div class="kc-acts"><div class="kc-act kc-in-btn" data-act="signin">Sign in for Kova\u2019s full AI</div></div>';
       if(last&&!m.err&&!busy){
         extra+='<div class="kc-acts">'
           +'<div class="kc-act" data-act="detail">Break it down</div>'
@@ -31721,7 +31740,7 @@ window.KovaChat=(function(){
           +'</div>';
       }
       return '<div class="kc-a'+(m.err?' err':'')+'">'+md(m.content)+extra
-        +(m.local?'<div class="kc-src">Offline answer</div>':'')+'</div>';
+        +(m.local?'<div class="kc-src">'+(m.signin?'Quick answer from the on-device guide':'Offline answer')+'</div>':'')+'</div>';
     }).join('');
     if(busy) logEl.insertAdjacentHTML('beforeend','<div class="kc-typing"><i></i><i></i><i></i></div>');
     scrollEnd();
@@ -31733,9 +31752,9 @@ window.KovaChat=(function(){
     });
     logEl.querySelectorAll('.kc-act').forEach(function(b){
       b.onclick=function(){
-        var h2=hist(), m=h2[h2.length-1];
+        var h2=hist(), m=h2[h2.length-1], act=b.dataset.act;
+        if(act==='signin'){ close(); if(window.KovaOrb&&KovaOrb.close) try{ KovaOrb.close(); }catch(e){} if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); return; }
         if(!m||m.role!=='assistant') return;
-        var act=b.dataset.act;
         if(act==='visual'){ m.showViz=!m.showViz; save(h2); render(); return; }
         if(act==='detail'){ breakdown(h2,m); return; }
         if(act==='deeper') deeper(m);
@@ -31871,14 +31890,26 @@ window.KovaChat=(function(){
          they make a real one later. Only a genuinely unreachable backend
          (offline, CDN blocked) falls through to the offline engine. */
       var FB=window.KOVA_FB;
+      if(guestNo){ guest(); return; }
       if(FB&&FB.ok&&FB.auth&&!FB.auth.currentUser&&typeof FB.auth.signInAnonymously==='function'&&window.KovaLink&&navigator.onLine!==false){
-        FB.auth.signInAnonymously().then(function(){ ask(); }, function(){ offline(); });
+        /* p40: guest sessions switched off in Firebase (or refused) is not
+           "offline": the person is online and only needs to sign in */
+        FB.auth.signInAnonymously().then(function(){ ask(); }, function(){ guestNo=true; guest(); });
         return;
       }
       offline();
       return;
     }
     ask();
+
+    function guest(){
+      foot.textContent='Quick answer from the on-device guide \u00b7 sign in for Kova\u2019s full AI';
+      setTimeout(function(){
+        var r=localAnswer(text);
+        if(r&&typeof r==='object') done(r.text,{links:r.links,viz:r.viz,q:r.q,depth:r.depth,local:true,signin:true});
+        else done(r,{local:true,signin:true});
+      },450);
+    }
 
     function offline(){
       foot.textContent='Offline mode \u00b7 answers from the on-device guide';
@@ -31905,10 +31936,12 @@ window.KovaChat=(function(){
              loc?{links:loc.links,viz:loc.ok?loc.viz:null,q:text}:{});
       })
       .catch(function(e){
-        var code=(e&&e.code)||'';
-        /* not deployed / unreachable: fall back rather than dead-end */
+        var code=(e&&e.code)||'', why=e&&e.message&&!/^(HTTP \d+|network)$/.test(e.message)?String(e.message).replace(/\.$/,''):'';
+        /* not deployed / unreachable: fall back rather than dead-end, and
+           say why in the server's own words (p40: "not configured on the
+           server yet" is something the owner can act on) */
         if(/not-found|unavailable|internal|deadline/.test(code)){
-          foot.textContent='Assistant unreachable \u00b7 answered offline';
+          foot.textContent=(why||'Kova\u2019s AI could not answer')+' \u00b7 answered from the on-device guide';
           doneR(localAnswer(text));
         } else if(/payment-required/.test(code)){
           /* Kova Pro: the on-device guide answers, and the plan screen says why */
@@ -31926,13 +31959,13 @@ window.KovaChat=(function(){
     }
   }
 
-  function autosize(){ inp.style.height='auto'; inp.style.height=Math.min(120,inp.scrollHeight)+'px'; }
+  function autosize(){ inp.style.height='auto'; inp.style.height=Math.min(120,inp.scrollHeight)+'px'; inp.style.overflowY=inp.scrollHeight>120?'auto':'hidden'; }
 
   function open(q){
     var p=pillarNow();
     panel.setAttribute('data-pillar',p);
     document.getElementById('kcCtx').textContent=(PN[p]||'Home');
-    greet(); render();
+    greet(); render(); autosize();
     foot.textContent = (backend()||(window.KOVA_FB&&KOVA_FB.ok)) ? '' : 'Offline mode \u00b7 answers from the on-device guide';
     panel.classList.add('on'); panel.setAttribute('aria-hidden','false');
     /* go('chat') returns early into this panel, before the router's
@@ -46691,10 +46724,15 @@ window.KovaTour=(function(){
   }
   function end(why){
     var o=$('#ksTour'); if(o) o.remove();
+    document.body.classList.remove('ks-touring');
     var s=st; st=null;
     if(s&&s.o.done) try{ s.o.done(why==='left'?'left':''); }catch(e){}
   }
   var headless=/jsdom/i.test((navigator&&navigator.userAgent)||'');
+  /* p40: the app never slides sideways. #app and #main only scroll up and
+     down; something that scrolled one sideways (a tour step, a focus while
+     a panel slid in) pushed the left rail off a phone screen mid-tour. */
+  document.addEventListener('scroll',function(e){ var t=e.target; if(t&&(t.id==='app'||t.id==='main')&&t.scrollLeft) t.scrollLeft=0; },true);
 
   /* ---- seen once, remembered everywhere --------------------------------
      A tour is marked seen the moment it starts (not when it ends, so
@@ -46823,6 +46861,9 @@ window.KovaTour=(function(){
       +'<div class="ks-spot" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';
     ov.style.setProperty('--kr',RAD+'px');
     document.body.appendChild(ov);
+    /* p40: the tour has the screen to itself; pop-ups that float over the
+       app (the New in Kova card, an alert, Kova was updated) wait */
+    document.body.classList.add('ks-touring');
     ov.__p={dim:[].slice.call(ov.querySelectorAll('.ks-dim')),cn:[].slice.call(ov.querySelectorAll('.ks-cn')),ring:ov.querySelector('#ksSpot')};
     /* the whole page dims first, the light opens from the middle */
     last=''; cur=null;
@@ -46838,7 +46879,7 @@ window.KovaTour=(function(){
     requestAnimationFrame(follow);
     go(0);
   }
-  return {run:run,end:end,back:back,next:function(){ if(st) go(st.i+1); },step:function(){ return st?st.i:-1; },active:function(){ return !!st; },once:once,seen:seen,mark:mark,canRemember:canRemember};
+  return {run:run,end:end,back:back,next:function(){ if(st) go(st.i+1); },step:function(){ return st?st.i:-1; },active:function(){ return !!st; },titles:function(){ return st?st.steps.map(function(x){ return x.t; }):[]; },once:once,seen:seen,mark:mark,canRemember:canRemember};
 })();
 
 /* ---------------------------------------------------------------------
@@ -46915,6 +46956,19 @@ window.KovaScreenTour=(function(){
     return hid;
   }; }
   function rail(){ var r=q('.rail'); if(r&&r.getClientRects().length) return r; return q('.tabbar')||q('nav'); }
+  function inMove(sel){ return function(){ return q('#s-move '+sel); }; }
+  /* p40: Workout's newer parts (they sit on the own-data screen), so its
+     tour covers the whole screen (5th field 1: built a moment after the
+     screen opens, so the tour waits for it) */
+  var MOVE_MORE=[
+    ['Check my form','Film a set. Kova names the exercise and checks how you move.',inMove('[data-act="formcheck"]')],
+    ['Scan a machine','A photo, video or link of any gym machine: what it is and how to use it.',inMove('[data-act="machine"]')],
+    ['Exercises and stretches','Every exercise with a moving picture, and stretches with a timer.',inMove('.kxp-act')],
+    ['Dream physique','Send a photo of the body you want. Kova marks what to build on you and writes your plan.','#kdpCard',null,1],
+    ['Muscle recovery','Which muscles are ready, from the sets you log. Train what\u2019s fresh builds today\u2019s workout.','#krcCard',null,1],
+    ['Stretch','Stretches for what you trained, with a timer.','#krsCard',null,1],
+    ['Zone 2','Easy runs in your fat-burning zone, with your heart rate live.','#kz2Card',null,1]
+  ];
   var TOURS={
     home:[
       ['Morning brief','What matters today, from your night, training and food.','#s-home .card.kova'],
@@ -46965,12 +47019,16 @@ window.KovaScreenTour=(function(){
     ],
     fuel:[
       ['Calories left','What is left today, with protein, carbs and fat.','#s-fuel .card.card-lg'],
-      ['Scan or log','Snap a meal or log it by hand.',function(){ var b=document.getElementById('scanBtn'); return b&&b.parentElement; }],
+      ['Scan or log','Snap a meal, scan a barcode or log it by hand.',function(){ var b=document.getElementById('scanBtn'); return b&&b.parentElement; }],
+      ['Energy balance','What you ate against what you burned.','#fuelBal .kv-card',null,1],
+      ['For your goal','What your training goal asks you to eat.','#goalFuel .card',null,1],
+      ['Your nutrition coach','Sage checks in on your week from your own logs.','#kciSlot .card',null,1],
       ['Today’s log','Everything you ate today.',up('mealLog')],
       ['Water','Tap a drop for each glass.',up('waterDots')],
       ['Energy','How meal timing lines up with your energy.','#nrgCard'],
       ['Micronutrients','Vitamins and minerals you are short on.','#microGrid'],
-      ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')]
+      ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')],
+      ['GLP-1 mode','On a GLP-1 medicine? Kova guards your muscle and protein.','#kg1Off',null,1]
     ]
   };
   /* p28: with your own data (live mode) Today, Vitals, Sleep and Workout
@@ -46997,13 +47055,16 @@ window.KovaScreenTour=(function(){
       ['Connect your watch','Set up the sync once. Each night shows up the morning after.',P('sleep','.kl-act[data-act="watch"]')],
       ['How syncing works','What your watch sends, and how often.',P('sleep','.kl-act[data-act="help"]')],
       ['Two weeks in','Sleep score, stage trends and what moves it need two weeks of nights.',P('sleep','.kl-note')],
+      ['For your goal','What your goal asks of your sleep, and how your nights compare.','#goalSleep .card',1],
       ['Energy while you slept','What your body burned overnight, from your resting metabolism.','#slpBurn']
     ],
     move:[
-      ['Training','Your sessions this week and your last one, from what you log.',P('move','.kv-card')],
-      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')],
-      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card']
-    ]
+      ['Training','Your plan and your sessions this week, from what you log.',P('move','.kv-card')],
+      ['Start workout','One tap. Kova logs your sets as you go.',P('move','[data-act="session"]')],
+      ['Your plan','Your goal, days and session length. Change any of it here.',P('move','[data-act="customize"]')]
+    ].concat(MOVE_MORE.map(function(x){ return [x[0],x[1],x[2],x[4]]; })).concat([
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card',1]
+    ])
   };
   /* finish every live tour the same way: getting around, and Kova itself */
   var END={home:[['Move around','Every area is one tap away here.',rail],['Kova, one tap away','Chat, your seven health checks and your AI team. Kova sits in the sidebar, like the other areas.','#kgOrb']],
@@ -47011,13 +47072,16 @@ window.KovaScreenTour=(function(){
   function gated(scr){ var e=document.getElementById('s-'+scr); return !!(e&&e.classList.contains('kl-gated')); }
   /* the stops to play: a gated screen's stops become its live card's */
   function list(id){
-    var out=[], done={};
+    var out=[], done={}, own=!!(LIVE[id]&&gated(id));
     (TOURS[id]||[]).forEach(function(t){
       var where=t[3]||id;
+      /* p40: with your own data a screen's tour stays on that screen; its
+         stops already cover it, and Customize has its own tour */
+      if(own&&where!==id) return;
       if(LIVE[where]&&gated(where)){
         if(done[where]) return; done[where]=1;
         /* the card is drawn at once, so a stop it lacks is simply not there (5th field) */
-        LIVE[where].concat(END[where]||[]).forEach(function(x){ out.push([x[0],x[1],x[2],where===id?undefined:where,null,1]); });
+        LIVE[where].concat(END[where]||[]).forEach(function(x){ out.push([x[0],x[1],x[2],where===id?undefined:where,null,x[3]?0:1]); });
         return;
       }
       out.push(t);
@@ -47035,6 +47099,7 @@ window.KovaScreenTour=(function(){
     }
     return false;
   }
+  var shownAt=0; document.addEventListener('kova:screen',function(){ shownAt=Date.now(); });
   var NAME={home:'Today',move:'Workout',vitals:'Vitals',sleep:'Sleep',fuel:'Fuel',customize:'Customize workout'};
   function onScreen(){ var s=document.querySelector('.screen.on'); return s?s.id.replace(/^s-/,''):''; }
   function colour(){
@@ -47047,11 +47112,11 @@ window.KovaScreenTour=(function(){
     return list(id).map(function(t){
       var get=typeof t[2]==='function'?t[2]:function(){ return q(t[2]); };
       var where=t[3]||id;
-      return {t:t[0],d:t[1],el:get,now:!t[4],sure:!!t[5],move:function(){
+      return {t:t[0],d:t[1],el:get,now:!t[4],sure:!!t[5],late:t[4]===1||t[5]===0,where:where,move:function(){
         /* a step on another screen goes there first; the engine waits for it */
         var moved=false;
         if(onScreen()!==where&&typeof window.go==='function'){ if(W&&W.reset) W.reset(); window.go(where); moved=true; }
-        if(t[4]){ try{ t[4](); }catch(e){} moved=true; }
+        if(t[4]){ if(typeof t[4]==='function') try{ t[4](); }catch(e){} moved=true; }   /* a function to open it, or 1: built a moment later, wait for it */
         return moved;
       }};
     }).filter(function(s){
@@ -47070,12 +47135,24 @@ window.KovaScreenTour=(function(){
     var home=id, where=[id], S=steps(id);
     list(id).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
     if(!S.length) return false;
-    KovaTour.run(S,{color:colour(),screens:where,done:function(why){
-      if(window.KovaWorkTour) KovaWorkTour.reset();
-      if(why==='left') return;                       /* you went elsewhere: stay there */
-      if(onScreen()!==home&&typeof window.go==='function') window.go(home);
-      var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
-    }});
+    /* p40: a card built a moment after the screen opens (Dream physique,
+       recovery, a coach's check-in) gets that moment, up to 1.2 s; one
+       still missing is dropped, so the count never has gaps */
+    function missing(x){ if(!x.late||x.where!==onScreen()) return false; var el=null; try{ el=x.el(); }catch(e){} return !el||hiddenForGood(el); }
+    function begin(){
+      S=S.filter(function(x){ return !missing(x); });
+      if(!S.length) return;
+      KovaTour.run(S,{color:colour(),screens:where,done:function(why){
+        if(window.KovaWorkTour) KovaWorkTour.reset();
+        if(why==='left') return;                       /* you went elsewhere: stay there */
+        if(onScreen()!==home&&typeof window.go==='function') window.go(home);
+        var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
+      }});
+    }
+    /* only a screen that has just opened is still building: on one open
+       for a while, what is missing is not coming */
+    var until=shownAt+1200, jsd=/jsdom/i.test((navigator&&navigator.userAgent)||'');
+    (function wait(){ if(jsd||!S.some(missing)||Date.now()>until) return begin(); setTimeout(wait,100); })();
     return true;
   }
   /* the "?" beside each title */
@@ -60777,7 +60854,7 @@ window.KovaSignIn=(function(){
            ['A whole week built around you','Your goal, the days you can train, the time you have and your equipment. Kova writes your split, 2 to 3 hard sets per exercise, and moves it when life gets busy.'],
            ['Muscle recovery','A body map of what is fresh and what is sore, from the sets you logged. One tap builds today’s workout from the muscles that are ready.'],
            ['Form Check','Film your set. Kova counts the reps, names the exercise and tells you what to fix, like knees caving in or a rounded back.'],
-           ['Follow along','Your workout one exercise at a time: the moving picture, your target, a rest timer and a voice.'],
+           ['Coach me','Kova talks you through your workout one exercise at a time: the moving picture, your target, a rest timer and a natural voice.'],
            ['Log a set in one tap','"Same" repeats your last set. Records, history and a chart for every lift.'],
            ['And that is the tip of it','Zone 2 running from your heart rate, stretching for every muscle, attachments remembered, and your food and sleep tuned to the body you are building.']]},
     work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team', sub:'An AI team, tasks, meetings and posting',
@@ -66972,9 +67049,15 @@ window.KovaDemo=(function(){
   add('Hack squat',{K:[st({hip:[104,98],t:-18,lN:{a:[126,176],f:-12},lF:{a:[123,176],f:-12},aN:{r:1,e:[8,16],w:[12,2]},aF:{r:1,e:[8,16],w:[12,2]}}),
       st({hip:[92,128],t:-18,lN:{a:[126,176],f:-12},lF:{a:[123,176],f:-12},aN:{r:1,e:[8,16],w:[12,2]},aF:{r:1,e:[8,16],w:[12,2]}})],
     eq:[{k:'rail',x1:118,y1:184,x2:62,y2:20},{k:'tpad',side:'back'},{k:'rail',x1:112,y1:184,x2:150,y2:168}],mus:m(['quads'],['glutes'])});
-  add('Leg press',{K:[{hip:[72,142],t:-62,lN:{a:[104,104],f:-50,s:1},lF:{a:[101,104],f:-50,s:1},aN:{e:[22,20],w:[44,26]},aF:{e:[21,20],w:[43,26]}},
-      {hip:[72,142],t:-62,lN:{a:[138,80],f:-50,s:1},lF:{a:[135,80],f:-50,s:1},aN:{e:[22,20],w:[44,26]},aF:{e:[21,20],w:[43,26]}}],
-    eq:[{k:'back',x1:62,y1:150,x2:14,y2:120},{k:'seat',x:60,y:150,w:40},{k:'plat',at:'aN',ang:-45}],mus:m(['quads','glutes'],['hams'])});
+  /* p41 (the owner: "the leg press movement is completely wrong"): a 40-degree
+     sled. Seated, reclined; the feet travel in a straight line up the sled,
+     flat on a plate across it (it was drawn along the sled); at the bottom
+     the knees come toward the chest at about 90 degrees (they bent down and
+     away, like a leg raise); the knees stay soft at the top; the hands hold
+     the handles by the seat. */
+  add('Leg press',{K:[{hip:[74,142],t:-55,lN:{a:[117,106],f:-130},lF:{a:[114,106],f:-130},aN:{W:[67,141]},aF:{W:[65,141]}},
+      {hip:[74,142],t:-55,lN:{a:[134,91],f:-130},lF:{a:[131,91],f:-130},aN:{W:[67,141]},aF:{W:[65,141]}}],
+    eq:[{k:'back',x1:70,y1:151,x2:22,y2:116},{k:'seat',x:62,y:150,w:40},{k:'plat',at:'aN',ang:-130}],mus:m(['quads','glutes'],['hams'])});
   add('Bulgarian split squat',{K:[st({hip:[100,106],t:6,lN:{a:[128,GY]},lF:{a:[58,142],f:165,s:1},aN:HANG,aF:HANG}),
       st({hip:[94,136],t:10,lN:{a:[128,GY]},lF:{a:[58,142],f:165,s:1},aN:HANG,aF:HANG})],
     eq:[{k:'bench',x:22,y:146,w:48},DB,DBF],mus:m(['quads','glutes'],['adductors','hams'])});
@@ -67996,6 +68079,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-25',title:'A better Ask Kova, tours for every card, and Coach me',
+      lines:['Ask Kova: clear buttons under each answer, and a way to sign in for the full AI','Tap ? on any screen: the tour now walks every card','Coach me (it was Follow along): Kova talks you through it in a more natural voice','A correct leg press picture'],
+      steps:[
+        ['move','Ask Kova','Tap Kova in the sidebar to chat. Under each answer: Break it down, Visualize and Go deeper.',function(){ return q('#kgOrb'); }],
+        ['move','Tours for every card','Tap ? next to a title. The Workout tour now covers everything, from Check my form to Zone 2.',function(){ return first('#s-move .kt-help'); }],
+        ['session','Coach me','Kova talks you through your workout: one exercise at a time, a rest timer and a natural voice. It used to be called Follow along.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-24',title:'Dream physique',
       lines:['Send a photo or video of the body you want','The muscles to build, lit on your own photo','Your change at 3 months, 6 months and a year, with a split and meals'],
       steps:[
@@ -68015,7 +68105,7 @@ window.KovaWhatsNew=(function(){
         ['move','Train what’s fresh','One tap builds today’s workout from the muscles that are ready: 2–3 working sets each.',function(){ return first('#krcCard [data-krc="fresh"]'); }],
         ['move','Stretch','The stretches for what is resting, right here. Stretch with me times each hold.',function(){ return q('#krsCard'); }],
         ['move','Pictures that show the work','Every exercise is a small body map now: the muscle doing the work glows as the rep goes.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
-        ['session','Follow along','Your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
+        ['session','Coach me','Kova talks you through your workout one exercise at a time: the moving picture, your target, the rest timer and a voice.',function(){ return first('.kpl-chip'); }],
         ['machine','Scan any machine','A photo, a video or a YouTube link. Not sure? Kova shows its best guesses as pictures, and every machine below has one.',function(){ return first('#s-machine .mc-ways'); }],
         ['settings','Alerts on your phone','Kova tells you when sleep is low, when it has been days since a workout, and what time to be in bed.',function(){ return q('#kpuNote')||first('#s-settings .sec-h'); }]
       ]},
@@ -68100,9 +68190,11 @@ window.KovaWhatsNew=(function(){
 </script>
 <script id="p08-player">
 /* =====================================================================
-   KovaPlayer - follow along with your workout (p35).
+   KovaPlayer - Coach me (p35; "Follow along" until p41, when the owner
+   asked what it meant: it is now "Coach me", Kova talking you through the
+   workout; not "Guided", which is already the workout's own mode).
 
-   Press Follow along (in a workout, or on the Muscle recovery card) and
+   Press Coach me (in a workout, or on the Muscle recovery card) and
    the exercise you are on fills the screen: its moving picture, which set
    of how many, the weight and reps to do (from Auto-Target, adjustable
    with - and +), and Done set. Then the rest counts down in a ring with
@@ -68153,13 +68245,55 @@ window.KovaPlayer=(function(){
   function sync(){ var c=cur(); if(!c||c.done) return c; var k=c.i+':'+c.j; if(P.key!==k){ P.key=k; var t=target(c); P.w=t.w; P.r=t.r; stopCount(); } return c; }
   function progress(){ var k=K(), d=k&&k.setsDone?k.setsDone():[0,0]; return {d:d[0],t:d[1]}; }
 
-  /* ---------- the voice ---------- */
-  function speak(t){ if(!P.voice) return; try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t); u.rate=1.02; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  /* ---------- the voice ----------
+     p41 (the owner: "a more natural voice, like ElevenLabs"): signed in,
+     Kova's natural voice comes from the server (ElevenLabs, its key in
+     Vercel), each line fetched once and kept; the newest line wins, as
+     before. Without it, or if it fails, the best voice this phone has: a
+     Premium, Enhanced or natural one before the robotic default, and
+     never the novelty voices. */
+  var V={ok:null,cache:{},n:0,au:null,best:null};
+  var SILENT='data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';   /* a twentieth of a second of silence (WAV plays everywhere) */
+  function score(v){
+    var n=v.name||'', l=String(v.lang||'').toLowerCase().replace('_','-'), s=0;
+    if(l.indexOf('en')!==0) return -99;
+    if(/compact|novelty|whisper|bad news|bells|boing|bubbles|cellos|jester|organ|trinoids|zarvox|albert|fred|junior|ralph|kathy|bahh|superstar|wobble|grandma|grandpa|rocko|shelley|flo|eddy|reed|sandy/i.test(n)) return -50;
+    if(/premium/i.test(n)) s+=6; if(/enhanced|neural|natural/i.test(n)) s+=5; if(/siri/i.test(n)) s+=4; if(/^google/i.test(n)) s+=3;
+    if(/\b(ava|zoe|evan|nathan|noelle|samantha|allison|susan|tom|serena|daniel|karen|moira|aria|jenny|guy|libby|sonia|tessa)\b/i.test(n)) s+=1;
+    if(l===String(navigator.language||'en-US').toLowerCase()) s+=2;
+    return s;
+  }
+  function best(){
+    if(V.best) return V.best;
+    var L=[]; try{ L=window.speechSynthesis?speechSynthesis.getVoices()||[]:[]; }catch(e){}
+    var top=-1; L.forEach(function(v){ var x=score(v); if(x>top){ top=x; V.best=v; } });
+    return V.best;
+  }
+  try{ if(window.speechSynthesis&&speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged',function(){ V.best=null; }); }catch(e){}
+  function deviceSay(t){ try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  function cloud(){ try{ return V.ok!==false&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
+  function line(t){
+    if(V.cache[t]) return Promise.resolve(V.cache[t]);
+    return KovaLink.authFetch('/tts',{json:{text:t}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
+      if(!r.ok||!j.audio){ if(r.status===503||r.status===404||r.status===401||r.status===403) V.ok=false; throw new Error(j.error||('HTTP '+r.status)); }
+      V.ok=true; return (V.cache[t]='data:'+(j.type||'audio/mpeg')+';base64,'+j.audio);
+    }); });
+  }
+  function play(u){ try{ if(window.speechSynthesis) speechSynthesis.cancel(); var a=V.au||(V.au=new Audio()); a.src=u; var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+  /* phones only play sound after a tap: the tap that opens the player unlocks it */
+  function unlock(){ try{ if(!V.au&&typeof Audio!=='undefined'){ V.au=new Audio(); V.au.src=SILENT; var p=V.au.play(); if(p&&p.catch) p.catch(function(){}); } }catch(e){} }
+  function speak(t){
+    if(!P.voice) return;
+    var my=++V.n;
+    if(cloud()){ line(t).then(function(u){ if(my===V.n) play(u); }).catch(function(){ if(my===V.n) deviceSay(t); }); return; }
+    try{ if(V.au) V.au.pause(); }catch(e){}
+    deviceSay(t);
+  }
   var WORD=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
   function num(n){ n=Math.round(n); return n<=20?WORD[n]:String(n); }
   function setLine(c){
     var t={w:P.w,r:P.r};
-    return (c.warm?'Warm-up set. ':'Set '+num(c.wn)+' of '+num(c.wt)+'. ')+num(t.r)+' reps'+(t.w?' at '+t.w+(t.w===1?' pound':' pounds'):'')+'.';
+    return (c.warm?'Warm-up set, light, to get ready. ':'Set '+num(c.wn)+' of '+num(c.wt)+'. ')+num(t.r)+' reps'+(t.w?' at '+t.w+(t.w===1?' pound':' pounds'):'')+'.';
   }
   function announce(c){ if(!c||c.done) return; speak(c.e.n+'. '+setLine(c)); }
   function stopCount(){ if(P.count){ clearInterval(P.count.iv); P.count=null; } }
@@ -68204,7 +68338,7 @@ window.KovaPlayer=(function(){
     if(!c) return '<div class="kz2p-in"><div class="kxp-none">There is no workout to follow yet. Start one from Workout.</div><button type="button" class="kz2p-go" data-kpl="close">Close</button></div>';
     var left=a?a.restLeft():0, nx=nextOf(c), resting=left>0&&!c.done;
     var head='<div class="hdr kz2p-hd"><div class="hdr-l"><button type="button" class="back" data-kpl="close" aria-label="Back to the workout">'+ic('chevron-left')+'</button>'
-      +'<div><div class="kz2p-eye">FOLLOW ALONG · '+esc(String(s.day||'Today').toUpperCase())+'</div><div class="title">'+esc(c.done?'All done':c.e.n)+'</div></div></div>'
+      +'<div><div class="kz2p-eye">COACH · '+esc(String(s.day||'Today').toUpperCase())+'</div><div class="title">'+esc(c.done?'All done':c.e.n)+'</div></div></div>'
       +'<div class="hdr-r"><button type="button" class="iconbtn kz2p-help" data-kpl="tour" aria-label="Show me around the player">?</button>'
       +'<button type="button" class="iconbtn'+(P.voice?' on':'')+'" data-kpl="voice" aria-pressed="'+P.voice+'" aria-label="'+(P.voice?'Voice on':'Voice off')+'">'+ic('headphones')+'</button></div></div>';
     var bar='<div class="kpl-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+pr.t+'" aria-valuenow="'+pr.d+'" aria-label="Sets done"><i style="width:'+(pr.t?pr.d/pr.t*100:0).toFixed(1)+'%"></i></div>'
@@ -68212,7 +68346,7 @@ window.KovaPlayer=(function(){
     if(c.done) return '<div class="kz2p-in">'+head+bar+'<section class="card kpl-stage kpl-end"><div class="kz2p-num">'+pr.d+'<i>sets</i></div><span>Every set is logged. Finish saves the workout, your records and your recovery map.</span></section>'
       +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
     var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(c.e.n)+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
-      +(c.warm?'<span class="chip kpl-tag">Warm-up</span>':'')+'</section>';
+      +(c.warm?'<span class="chip kpl-tag">Warm-up</span><div class="kpl-wu">A light set to get ready. Not counted.</div>':'')+'</section>';
     var body;
     if(resting){
       var len=Math.max(left,P.restLen||left); P.restLen=len;
@@ -68266,23 +68400,24 @@ window.KovaPlayer=(function(){
   function open(){
     var k=K(); if(!k||!k.api){ say('The workout is still loading.'); return false; }
     var el=document.getElementById('kpl');
-    if(!el){ el=document.createElement('div'); el.id='kpl'; el.className='kz2p kpl'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Follow along');
+    if(!el){ el=document.createElement('div'); el.id='kpl'; el.className='kz2p kpl'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Coach me');
       (document.getElementById('app')||document.body).appendChild(el); }
     P.on=true; P.key=''; P.cue={}; P.wasRest=k.api.restLeft()>0;
+    unlock();
     paint(); clearInterval(P.iv); P.iv=setInterval(tick,250);
     var c=sync(); if(c&&!c.done&&!P.wasRest) announce(c);
     track('player_open',{});
     if(window.KovaTour&&KovaTour.canRemember()&&KovaTour.once('playerpage')) setTimeout(tour,700);
     return true;
   }
-  function close(){ P.on=false; stopCount(); clearInterval(P.iv); var el=document.getElementById('kpl'); if(el) el.remove(); try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ K().render(); }catch(e){} }
+  function close(){ P.on=false; stopCount(); clearInterval(P.iv); var el=document.getElementById('kpl'); if(el) el.remove(); V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ K().render(); }catch(e){} }
 
   /* the player's own tour (every new part is shown around) */
   var TOUR=[['.kpl-stage','The exercise, moving','Watch the start and the finish of the lift while you set up.'],
     ['.kpl-do','Your target','The weight and reps for this set, from what you lifted last time. Change them with - and + if you did something else.'],
     ['[data-kpl="count"]','Count my reps','A voice counts each rep at a steady tempo: two seconds down, one up.'],
     ['[data-kpl="done"]','Done set','Logs the set and starts your rest, with what comes next.'],
-    ['[data-kpl="voice"]','The voice','It tells you each set, the rest and what is next. Turn it off here.']];
+    ['[data-kpl="voice"]','The voice','A natural voice tells you each set, the rest and what is next. Turn it off here.']];
   function tour(){
     if(!window.KovaTour||!document.getElementById('kpl')) return false;
     var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
@@ -68291,12 +68426,12 @@ window.KovaPlayer=(function(){
     return true;
   }
 
-  /* "Follow along" in the workout's own row of chips */
+  /* "Coach me" in the workout's own row of chips */
   function decorate(){
     /* only while the workout is on screen: looking up addExBtn by id brings a parked screen back (KovaPark), even inside quiet() */
     var sc=document.getElementById('s-session'); if(!sc||!sc.classList.contains('on')) return;
     var add=document.getElementById('addExBtn'); if(!add||!add.parentNode||add.parentNode.querySelector('.kpl-chip')) return;
-    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Follow along</div>');
+    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Coach me</div>');
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
   document.addEventListener('click',function(ev){
@@ -68304,7 +68439,7 @@ window.KovaPlayer=(function(){
     var a=b.getAttribute('data-kpl');
     if(a==='open'){ open(); return; }
     if(a==='close'){ close(); return; }
-    if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice) try{ speechSynthesis.cancel(); }catch(e){} paint(); return; }
+    if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice){ V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} } paint(); return; }
     if(a==='tour'){ tour(); return; }
     if(a==='done'){ done(); return; }
     if(a==='skip'){ var ap=A(); if(ap) ap.skipRest(); return; }
@@ -68323,7 +68458,7 @@ window.KovaPlayer=(function(){
   if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kpl,#kz2,#krcCard,#kz2Card,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
   soon();
-  return {open:open,close:close,done:done,move:move,cur:cur,nextOf:nextOf,countReps:countReps,tour:tour,TOUR:TOUR,decorate:decorate,setLine:setLine,_P:P};
+  return {open:open,close:close,done:done,move:move,cur:cur,nextOf:nextOf,countReps:countReps,tour:tour,TOUR:TOUR,decorate:decorate,setLine:setLine,_P:P,voice:{score:score,best:best,speak:speak,state:V}};
 })();
 
 </script>
@@ -68346,7 +68481,7 @@ window.KovaPlayer=(function(){
    On Workout, under Training: your body figure (the slim one from
    Customize) coloured by recovery, what is ready and what is resting,
    "Train what's fresh" (builds today's workout from ready muscles: 2-3
-   working sets each, compound lifts first) and "Follow along" (the
+   working sets each, compound lifts first) and "Coach me" (the
    workout player). Tap a muscle for its page: recovery, when it is ready,
    when you last trained it and with what, this week's hard sets against
    the 10-20 that builds muscle, the exercises and stretches for it.
@@ -68436,7 +68571,7 @@ window.KovaRecovery=(function(){
       +(any?(rest.length||mid.length?'<div class="krc-l">Resting: '+rest.concat(mid).slice(0,4).map(function(m){ return '<button type="button" class="krc-m" data-krc="m" data-m="'+m+'">'+esc(M[m].n)+' '+M[m].pct+'%</button>'; }).join('')+'</div>':'<div class="krc-l">Everything is recovered. A good day for a full workout.</div>')
           +(big.length?'<div class="krc-l">Ready: '+esc(big.slice(0,5).map(function(m){ return M[m].n; }).join(', '))+'</div>':'')
         :'<div class="krc-l">No sets logged yet, so every muscle is fresh. Log a workout and this map shows what needs rest.</div>')
-      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0">Follow along</div></div></div>';
+      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0" title="Kova talks you through it: one exercise at a time, a rest timer and a voice">Coach me</div></div></div>';
   }
 
   /* ---------- Stretch, right next to recovery ----------

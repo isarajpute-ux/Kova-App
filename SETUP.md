@@ -67,6 +67,7 @@ Vercel's Hobby plan is for personal, non-commercial projects. It is fine while y
 |---|---|
 | `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` | From the Firebase service account (section 1) |
 | `ANTHROPIC_API_KEY` | Section 3 |
+| `ELEVENLABS_API_KEY` | Section 3b (optional: Coach me's natural voice) |
 | `SUPABASE_URL` | The Supabase Project URL |
 | `SUPABASE_SECRET_KEY` | The Supabase secret key |
 | `CRON_SECRET` | Any long random value (`openssl rand -hex 32`). Vercel's daily timer sends it, and so does the GitHub timer below |
@@ -92,6 +93,17 @@ Work OS › Meetings › **Your booking link** sets up `https://<your site>/book
 | `KOVA_MODEL`, `KOVA_AGENT_MODEL` | Optional | Default `claude-sonnet-5-5` |
 | `KOVA_MEAL_MODEL` | Optional | The model that reads meal photos. Default `claude-haiku-4-5-20251001` (fast: about 2-3 s a plate). A bigger model is a little more accurate and slower. |
 | `KOVA_CHAT_DAILY`, `KOVA_GLOBAL_DAILY_LIMIT`, `KOVA_AGENT_BUDGET_USD` | Optional spending caps | Defaults 150 chats per person per day, 5,000 in total, $0.40 per audit |
+
+## 3b. Coach me's natural voice (ElevenLabs, optional)
+
+Coach me (Kova talking you through a workout) speaks each set, the rest and what is next. Without this key it uses the best voice the phone has (on iPhone: Settings › Accessibility › Spoken Content › Voices › English, download an "Enhanced" or "Premium" voice, and Kova picks it). With it, everyone signed in hears a natural ElevenLabs voice.
+
+| Key | Where | Without it |
+|---|---|---|
+| `ELEVENLABS_API_KEY` | elevenlabs.io › sign up (free plan) › Developers › API keys › Create (Text to Speech access) | The phone's own voice |
+| `ELEVENLABS_VOICE_ID` (optional) | elevenlabs.io › Voices › a voice › Copy voice ID | Rachel, a calm, clear voice |
+
+Put them in Vercel › the kovactive project › Settings › Environment Variables, then redeploy. The free plan covers about 10,000 characters a month; Kova asks for each short line once and keeps it.
 
 ## 4. Payments (RevenueCat, with Stripe on the web and the App Store / Google Play in the app)
 

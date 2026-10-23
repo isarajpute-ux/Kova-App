@@ -575,6 +575,8 @@ select.ks-in option{background:#1D1D1F;color:#fff}
 /* ----- guided tour: a moving spotlight and one short line ----- */
 .ks-world.ks-glide{transition:transform .7s cubic-bezier(.33,.7,.2,1)}
 .ks-tour{position:fixed;inset:0;z-index:400;pointer-events:auto;--kd:rgba(4,4,6,.66)}
+/* p40: a tour has the screen to itself: pop-ups that float over the app wait */
+body.ks-touring .kwn.card,body.ks-touring .kg-pop,body.ks-touring .kg-veil,body.ks-touring .kfr,body.ks-touring .kn-alert,body.ks-touring .kt-pop,body.ks-touring .kh-tag,body.ks-touring .kc-spot-tag,body.ks-touring .kso-undo{visibility:hidden!important}
 @keyframes ks-in{from{opacity:0}to{opacity:1}}
 /* p28: four flat panels and four rounded corners dim the page around the
    lit box; they and the outline only move with transform (smooth on phones) */

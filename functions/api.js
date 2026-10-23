@@ -50,6 +50,7 @@
      POST /agent/run    {window?}       queue an audit now ("Check now")              [auth]
      POST /agent/alerts/:id {state}     seen / done                                    [auth]
      POST /chat         {messages,pillar,snapshot}  -> {text}  the chat (was the kovaChat callable) [auth]
+     POST /tts          {text}                      -> {audio,type}  Coach me's natural voice (ElevenLabs) [auth]
      GET  /account/export               everything the server holds about you, no secrets [auth]
      POST /account/delete {confirm:"DELETE"}  delete the account and every record of it [auth]
      POST /media/upload?kind&id&ext&i&n&type   one 3 MB part of a file (Netlify Blobs or Supabase Storage)   [auth]
@@ -113,6 +114,7 @@ const { dayOf, WINDOWS } = require('./wellness');
 const { makeTraction } = require('./traction');
 const { makeCard } = require('./card');
 const chat = require('./chat');
+const voiceMod = require('./voice');
 const { makeAccount } = require('./account');
 const { makePush } = require('./push');
 const { makeBilling } = require('./billing');
@@ -1230,6 +1232,13 @@ async function scanLink(req, res, cfg) {
   await rateLimit(`scanlink_${u.uid}`, 60, 24 * 3600e3);
   res.json(await askTry(() => linkPreview((req.body || {}).url)));
 }
+/* Coach me's natural voice (p41): a short line -> speech */
+async function voiceRoute(req, res, cfg) {
+  const u = await requireUser(req);
+  await rateLimit(`voice_${u.uid}`, 600, 24 * 3600e3);
+  try { res.json(await voiceMod.say({ cfg, text: (req.body || {}).text })); }
+  catch (e) { if (e instanceof voiceMod.VoiceError) throw new HttpError(e.status, e.message); throw e; }
+}
 async function crewCaption(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg, 'work');
@@ -1415,6 +1424,7 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/crew/plan') return await crewPlanRoute(req, res, cfg, true);
     if (M === 'POST' && path === '/crew/fetch') return await crewFetch(req, res, cfg);
     if (M === 'POST' && path === '/scan/link') return await scanLink(req, res, cfg);
+    if (M === 'POST' && path === '/tts') return await voiceRoute(req, res, cfg);
     if (M === 'POST' && path === '/crew/caption') return await crewCaption(req, res, cfg);
     if (M === 'POST' && path === '/body/estimate') return await bodyEstimate(req, res, cfg);
     if (M === 'POST' && path === '/meal/read') return await mealRead(req, res, cfg);

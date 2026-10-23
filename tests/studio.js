@@ -409,7 +409,8 @@ function boot() {
   // the tours on Home, Vitals, Workout, Sleep and Fuel
   const ST = w.KovaScreenTour;
   /* the separate sport card is gone: marathon, swimming, hiking and the rest live in the split, so Customize is six steps */
-  ck('five more tours: seven steps on Home, Sleep and Fuel, eleven on Vitals (it walks the dock), six on Customize', ['home', 'sleep', 'fuel'].every((id) => ST.steps(id).length === 7) && ST.steps('vitals').length === 11 && ST.steps('customize').length === 6);
+  /* p40: Fuel's tour also covers Energy balance, For your goal, the coach's check-in and GLP-1 mode (eleven) */
+  ck('five more tours: seven steps on Home and Sleep, eleven on Fuel and on Vitals (it walks the dock), six on Customize', ['home', 'sleep'].every((id) => ST.steps(id).length === 7) && ST.steps('fuel').length === 11 && ST.steps('vitals').length === 11 && ST.steps('customize').length === 6);
   /* p29: plus "Built around your goal" */
   ck('the Workout tour shows your goal and reaches into Customize: training for, rules, your week, balance, muscles', ST.steps('move').length === 10
     && ['Built around your goal', 'Training for', 'The rules', 'Your week', 'Balance', 'Target muscles'].every((t) => ST.steps('move').some((x) => x.t === t)));

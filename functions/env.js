@@ -60,6 +60,10 @@ function fromEnv(env) {
     tumblrId: str(env, 'TUMBLR_CLIENT_ID'),
     tumblrSecret: str(env, 'TUMBLR_CLIENT_SECRET'),
     fdcKey: str(env, 'FDC_API_KEY', 'DEMO_KEY'),
+    /* Coach me's natural voice (ElevenLabs, p41); Rachel by default */
+    elevenKey: str(env, 'ELEVENLABS_API_KEY'),
+    elevenVoice: str(env, 'ELEVENLABS_VOICE_ID', '21m00Tcm4TlvDq8ikWAM'),
+    elevenModel: str(env, 'ELEVENLABS_MODEL', 'eleven_flash_v2_5'),
     model,
     agentModel: str(env, 'KOVA_AGENT_MODEL', model),
     mealModel: str(env, 'KOVA_MEAL_MODEL', MEAL_MODEL_DEFAULT),
@@ -90,6 +94,7 @@ function capabilities(env) {
   return {
     firebaseAdmin: admin,                        // database, delete, push sending all need it
     ai: !!str(env, 'ANTHROPIC_API_KEY'),
+    voice: !!str(env, 'ELEVENLABS_API_KEY'),
     email: !!str(env, 'RESEND_API_KEY'),
     revenuecat: !!str(env, 'REVENUECAT_SECRET_KEY'),
     revenuecatWebhook: !!str(env, 'REVENUECAT_WEBHOOK_AUTH'),

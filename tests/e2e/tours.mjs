@@ -36,6 +36,9 @@ for (const id of ALL) {
     const T = KovaScreenTour.TOURS[id]; if (!T) return null;
     KovaScreenTour.run(id); return { n: T.length, names: T.map((t) => t[0]) };
   }, id);
+  /* p40: a tour may wait a moment for cards that build late, and drops the
+     ones that never come; the stops it plans are the ones it must show */
+  if (start && start.n > 0) { await page.waitForFunction(() => KovaTour.active(), null, { timeout: 3000 }).catch(() => {}); Object.assign(start, await page.evaluate(() => { const n = KovaTour.titles(); return { n: n.length, names: n }; })); }
   if (!start) { report.push({ id, missing: true }); continue; }
   const stops = []; let guard = 0;
   while (guard++ < 20) {
@@ -93,14 +96,17 @@ await context.close(); await b.close();
   await pg.goto(site.url + '/index.html', { waitUntil: 'load' });
   await pg.waitForFunction(() => window.__kovaLazyDone && window.KovaVDock, null, { timeout: 30000 });
   await pg.waitForTimeout(800);
-  const want = { home: 5, vitals: 4, sleep: 4, fuel: 5, move: 9 };   /* p29: Workout adds "Built around your goal". Fuel's vitamins card counts your real log, so it is a stop too */
+  /* p29: Workout adds "Built around your goal". Fuel's vitamins card counts your real log, so it is a stop too.
+     p40: Workout covers its whole screen (form check, machine scan, exercises, Dream physique, recovery, stretch, Zone 2) */
+  const want = { home: 5, vitals: 4, sleep: 4, fuel: 8, move: 10 };   /* this phone has no goal yet (no goal cards) and no plan (no See my plan) */
   for (const id of Object.keys(want)) {
     await pg.evaluate((id) => go(id), id);
     await pg.waitForTimeout(700);
     await pg.locator('#s-' + id + ' .kt-help').first().tap();
     await pg.locator('.sheet [data-kh="tour"]').tap({ timeout: 4000 });
     const shown = []; let stuck = false, slow = [];
-    for (let k = 0; k < 14; k++) {
+    let side = 0;
+    for (let k = 0; k < 16; k++) {
       const t0 = Date.now();
       const got = await pg.waitForFunction((prev) => {
         if (!document.getElementById('ksTour') && prev !== '') return { end: 1 };
@@ -113,6 +119,8 @@ await context.close(); await b.close();
       if (Date.now() - t0 > 1300) slow.push(got.t + " " + (Date.now() - t0) + "ms");
       await pg.waitForTimeout(650);
       const on = await pg.evaluate(() => { const r = document.getElementById('ksSpot').getBoundingClientRect(); return r.width > 8 && r.height > 8 && r.top < innerHeight && r.bottom > 0; });
+      /* p40: the app never slides sideways (it hid the left rail mid-tour) */
+      side = Math.max(side, await pg.evaluate(() => { const a = document.getElementById('app'), r = document.querySelector('.rail'); return Math.max(a.scrollLeft, r ? -r.getBoundingClientRect().left : 0); }));
       shown.push(Object.assign(got, { on }));
       await pg.locator('#ksCoach [data-t="next"]').tap();
     }
@@ -120,11 +128,21 @@ await context.close(); await b.close();
     console.log(`iPhone, own data, ${id}: ${shown.length}/${total} shown: ${shown.map((x) => x.t).join(', ')}${stuck ? ' | STUCK' : ''}${slow.length ? ' | slow: ' + slow.join(', ') : ''}${shown.some((x) => !x.on) ? ' | off: ' + shown.filter((x) => !x.on).map((x) => x.t).join(', ') : ''}`);
     ck(`iPhone, own data, ${id}: every stop shows, numbered without gaps (${want[id]} stops)`, !stuck && shown.length === want[id] && total === want[id] && shown.every((x, i) => x.s.trim() === (i + 1) + ' / ' + total));
     ck(`iPhone, own data, ${id}: each stop arrives within 1.3 s and is lit on screen`, !slow.length && shown.every((x) => x.on));
+    ck(`iPhone, own data, ${id}: the app never slides sideways, the left rail stays on screen`, side < 1);
     await pg.evaluate(() => { if (KovaTour.active()) KovaTour.end(); });
   }
+  /* p40: a tour has the screen to itself: the New in Kova card and alerts wait */
+  const pop = await pg.evaluate(async () => {
+    const d = document.createElement('div'); d.className = 'kwn card'; d.textContent = 'New in Kova'; document.body.appendChild(d);
+    const before = getComputedStyle(d).visibility; KovaScreenTour.run('move'); await new Promise((r) => { const t0 = Date.now(); (function w() { if (KovaTour.active() || Date.now() - t0 > 3000) r(); else setTimeout(w, 50); })(); });
+    const during = getComputedStyle(d).visibility; KovaTour.end(); const after = getComputedStyle(d).visibility; d.remove();
+    return [before, during, after];
+  });
+  ck('the New in Kova card steps aside while a tour runs, and comes back after: ' + pop.join(' > '), pop.join() === 'visible,hidden,visible');
   /* smooth: only transform moves (nothing is redrawn frame by frame) */
-  const motion = await pg.evaluate(() => {
+  const motion = await pg.evaluate(async () => {
     KovaScreenTour.run('fuel');
+    await new Promise((r) => { const t0 = Date.now(); (function w() { if (document.getElementById('ksSpot') || Date.now() - t0 > 3000) r(); else setTimeout(w, 50); })(); });
     const g = (sel) => getComputedStyle(document.querySelector(sel)).transitionProperty;
     const r = [g('#ksSpot'), g('.ks-dim'), g('.ks-cn'), g('#ksCoach')];
     KovaTour.end(); return r;

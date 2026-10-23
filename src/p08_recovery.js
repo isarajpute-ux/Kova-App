@@ -16,7 +16,7 @@
    On Workout, under Training: your body figure (the slim one from
    Customize) coloured by recovery, what is ready and what is resting,
    "Train what's fresh" (builds today's workout from ready muscles: 2-3
-   working sets each, compound lifts first) and "Follow along" (the
+   working sets each, compound lifts first) and "Coach me" (the
    workout player). Tap a muscle for its page: recovery, when it is ready,
    when you last trained it and with what, this week's hard sets against
    the 10-20 that builds muscle, the exercises and stretches for it.
@@ -106,7 +106,7 @@ window.KovaRecovery=(function(){
       +(any?(rest.length||mid.length?'<div class="krc-l">Resting: '+rest.concat(mid).slice(0,4).map(function(m){ return '<button type="button" class="krc-m" data-krc="m" data-m="'+m+'">'+esc(M[m].n)+' '+M[m].pct+'%</button>'; }).join('')+'</div>':'<div class="krc-l">Everything is recovered. A good day for a full workout.</div>')
           +(big.length?'<div class="krc-l">Ready: '+esc(big.slice(0,5).map(function(m){ return M[m].n; }).join(', '))+'</div>':'')
         :'<div class="krc-l">No sets logged yet, so every muscle is fresh. Log a workout and this map shows what needs rest.</div>')
-      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0">Follow along</div></div></div>';
+      +'<div class="kl-acts krc-acts"><div class="chip on km-cta" data-krc="fresh" role="button" tabindex="0">Train what’s fresh</div><div class="chip" data-krc="play" role="button" tabindex="0" title="Kova talks you through it: one exercise at a time, a rest timer and a voice">Coach me</div></div></div>';
   }
 
   /* ---------- Stretch, right next to recovery ----------

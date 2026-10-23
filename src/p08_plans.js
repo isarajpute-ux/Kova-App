@@ -60,7 +60,7 @@
            ['A whole week built around you','Your goal, the days you can train, the time you have and your equipment. Kova writes your split, 2 to 3 hard sets per exercise, and moves it when life gets busy.'],
            ['Muscle recovery','A body map of what is fresh and what is sore, from the sets you logged. One tap builds today’s workout from the muscles that are ready.'],
            ['Form Check','Film your set. Kova counts the reps, names the exercise and tells you what to fix, like knees caving in or a rounded back.'],
-           ['Follow along','Your workout one exercise at a time: the moving picture, your target, a rest timer and a voice.'],
+           ['Coach me','Kova talks you through your workout one exercise at a time: the moving picture, your target, a rest timer and a natural voice.'],
            ['Log a set in one tap','"Same" repeats your last set. Records, history and a chart for every lift.'],
            ['And that is the tip of it','Zone 2 running from your heart rate, stretching for every muscle, attachments remembered, and your food and sleep tuned to the body you are building.']]},
     work:{t:'Get your hours back, with an AI team behind you', tag:'Work OS & AI team', sub:'An AI team, tasks, meetings and posting',

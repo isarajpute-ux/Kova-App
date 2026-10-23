@@ -83,10 +83,15 @@ window.KovaTour=(function(){
   }
   function end(why){
     var o=$('#ksTour'); if(o) o.remove();
+    document.body.classList.remove('ks-touring');
     var s=st; st=null;
     if(s&&s.o.done) try{ s.o.done(why==='left'?'left':''); }catch(e){}
   }
   var headless=/jsdom/i.test((navigator&&navigator.userAgent)||'');
+  /* p40: the app never slides sideways. #app and #main only scroll up and
+     down; something that scrolled one sideways (a tour step, a focus while
+     a panel slid in) pushed the left rail off a phone screen mid-tour. */
+  document.addEventListener('scroll',function(e){ var t=e.target; if(t&&(t.id==='app'||t.id==='main')&&t.scrollLeft) t.scrollLeft=0; },true);
 
   /* ---- seen once, remembered everywhere --------------------------------
      A tour is marked seen the moment it starts (not when it ends, so
@@ -215,6 +220,9 @@ window.KovaTour=(function(){
       +'<div class="ks-spot" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';
     ov.style.setProperty('--kr',RAD+'px');
     document.body.appendChild(ov);
+    /* p40: the tour has the screen to itself; pop-ups that float over the
+       app (the New in Kova card, an alert, Kova was updated) wait */
+    document.body.classList.add('ks-touring');
     ov.__p={dim:[].slice.call(ov.querySelectorAll('.ks-dim')),cn:[].slice.call(ov.querySelectorAll('.ks-cn')),ring:ov.querySelector('#ksSpot')};
     /* the whole page dims first, the light opens from the middle */
     last=''; cur=null;
@@ -230,7 +238,7 @@ window.KovaTour=(function(){
     requestAnimationFrame(follow);
     go(0);
   }
-  return {run:run,end:end,back:back,next:function(){ if(st) go(st.i+1); },step:function(){ return st?st.i:-1; },active:function(){ return !!st; },once:once,seen:seen,mark:mark,canRemember:canRemember};
+  return {run:run,end:end,back:back,next:function(){ if(st) go(st.i+1); },step:function(){ return st?st.i:-1; },active:function(){ return !!st; },titles:function(){ return st?st.steps.map(function(x){ return x.t; }):[]; },once:once,seen:seen,mark:mark,canRemember:canRemember};
 })();
 
 /* ---------------------------------------------------------------------
@@ -307,6 +315,19 @@ window.KovaScreenTour=(function(){
     return hid;
   }; }
   function rail(){ var r=q('.rail'); if(r&&r.getClientRects().length) return r; return q('.tabbar')||q('nav'); }
+  function inMove(sel){ return function(){ return q('#s-move '+sel); }; }
+  /* p40: Workout's newer parts (they sit on the own-data screen), so its
+     tour covers the whole screen (5th field 1: built a moment after the
+     screen opens, so the tour waits for it) */
+  var MOVE_MORE=[
+    ['Check my form','Film a set. Kova names the exercise and checks how you move.',inMove('[data-act="formcheck"]')],
+    ['Scan a machine','A photo, video or link of any gym machine: what it is and how to use it.',inMove('[data-act="machine"]')],
+    ['Exercises and stretches','Every exercise with a moving picture, and stretches with a timer.',inMove('.kxp-act')],
+    ['Dream physique','Send a photo of the body you want. Kova marks what to build on you and writes your plan.','#kdpCard',null,1],
+    ['Muscle recovery','Which muscles are ready, from the sets you log. Train what\u2019s fresh builds today\u2019s workout.','#krcCard',null,1],
+    ['Stretch','Stretches for what you trained, with a timer.','#krsCard',null,1],
+    ['Zone 2','Easy runs in your fat-burning zone, with your heart rate live.','#kz2Card',null,1]
+  ];
   var TOURS={
     home:[
       ['Morning brief','What matters today, from your night, training and food.','#s-home .card.kova'],
@@ -357,12 +378,16 @@ window.KovaScreenTour=(function(){
     ],
     fuel:[
       ['Calories left','What is left today, with protein, carbs and fat.','#s-fuel .card.card-lg'],
-      ['Scan or log','Snap a meal or log it by hand.',function(){ var b=document.getElementById('scanBtn'); return b&&b.parentElement; }],
+      ['Scan or log','Snap a meal, scan a barcode or log it by hand.',function(){ var b=document.getElementById('scanBtn'); return b&&b.parentElement; }],
+      ['Energy balance','What you ate against what you burned.','#fuelBal .kv-card',null,1],
+      ['For your goal','What your training goal asks you to eat.','#goalFuel .card',null,1],
+      ['Your nutrition coach','Sage checks in on your week from your own logs.','#kciSlot .card',null,1],
       ['Today’s log','Everything you ate today.',up('mealLog')],
       ['Water','Tap a drop for each glass.',up('waterDots')],
       ['Energy','How meal timing lines up with your energy.','#nrgCard'],
       ['Micronutrients','Vitamins and minerals you are short on.','#microGrid'],
-      ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')]
+      ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')],
+      ['GLP-1 mode','On a GLP-1 medicine? Kova guards your muscle and protein.','#kg1Off',null,1]
     ]
   };
   /* p28: with your own data (live mode) Today, Vitals, Sleep and Workout
@@ -389,13 +414,16 @@ window.KovaScreenTour=(function(){
       ['Connect your watch','Set up the sync once. Each night shows up the morning after.',P('sleep','.kl-act[data-act="watch"]')],
       ['How syncing works','What your watch sends, and how often.',P('sleep','.kl-act[data-act="help"]')],
       ['Two weeks in','Sleep score, stage trends and what moves it need two weeks of nights.',P('sleep','.kl-note')],
+      ['For your goal','What your goal asks of your sleep, and how your nights compare.','#goalSleep .card',1],
       ['Energy while you slept','What your body burned overnight, from your resting metabolism.','#slpBurn']
     ],
     move:[
-      ['Training','Your sessions this week and your last one, from what you log.',P('move','.kv-card')],
-      ['Start here','Build a plan from a few questions, or start a session and log as you go.',P('move','.kl-acts')],
-      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card']
-    ]
+      ['Training','Your plan and your sessions this week, from what you log.',P('move','.kv-card')],
+      ['Start workout','One tap. Kova logs your sets as you go.',P('move','[data-act="session"]')],
+      ['Your plan','Your goal, days and session length. Change any of it here.',P('move','[data-act="customize"]')]
+    ].concat(MOVE_MORE.map(function(x){ return [x[0],x[1],x[2],x[4]]; })).concat([
+      ['Built around your goal','What you train for sets your training, food and sleep. For a sport, your week is written out here: tap a session for the full set.','#goalSlot .kg-card',1]
+    ])
   };
   /* finish every live tour the same way: getting around, and Kova itself */
   var END={home:[['Move around','Every area is one tap away here.',rail],['Kova, one tap away','Chat, your seven health checks and your AI team. Kova sits in the sidebar, like the other areas.','#kgOrb']],
@@ -403,13 +431,16 @@ window.KovaScreenTour=(function(){
   function gated(scr){ var e=document.getElementById('s-'+scr); return !!(e&&e.classList.contains('kl-gated')); }
   /* the stops to play: a gated screen's stops become its live card's */
   function list(id){
-    var out=[], done={};
+    var out=[], done={}, own=!!(LIVE[id]&&gated(id));
     (TOURS[id]||[]).forEach(function(t){
       var where=t[3]||id;
+      /* p40: with your own data a screen's tour stays on that screen; its
+         stops already cover it, and Customize has its own tour */
+      if(own&&where!==id) return;
       if(LIVE[where]&&gated(where)){
         if(done[where]) return; done[where]=1;
         /* the card is drawn at once, so a stop it lacks is simply not there (5th field) */
-        LIVE[where].concat(END[where]||[]).forEach(function(x){ out.push([x[0],x[1],x[2],where===id?undefined:where,null,1]); });
+        LIVE[where].concat(END[where]||[]).forEach(function(x){ out.push([x[0],x[1],x[2],where===id?undefined:where,null,x[3]?0:1]); });
         return;
       }
       out.push(t);
@@ -427,6 +458,7 @@ window.KovaScreenTour=(function(){
     }
     return false;
   }
+  var shownAt=0; document.addEventListener('kova:screen',function(){ shownAt=Date.now(); });
   var NAME={home:'Today',move:'Workout',vitals:'Vitals',sleep:'Sleep',fuel:'Fuel',customize:'Customize workout'};
   function onScreen(){ var s=document.querySelector('.screen.on'); return s?s.id.replace(/^s-/,''):''; }
   function colour(){
@@ -439,11 +471,11 @@ window.KovaScreenTour=(function(){
     return list(id).map(function(t){
       var get=typeof t[2]==='function'?t[2]:function(){ return q(t[2]); };
       var where=t[3]||id;
-      return {t:t[0],d:t[1],el:get,now:!t[4],sure:!!t[5],move:function(){
+      return {t:t[0],d:t[1],el:get,now:!t[4],sure:!!t[5],late:t[4]===1||t[5]===0,where:where,move:function(){
         /* a step on another screen goes there first; the engine waits for it */
         var moved=false;
         if(onScreen()!==where&&typeof window.go==='function'){ if(W&&W.reset) W.reset(); window.go(where); moved=true; }
-        if(t[4]){ try{ t[4](); }catch(e){} moved=true; }
+        if(t[4]){ if(typeof t[4]==='function') try{ t[4](); }catch(e){} moved=true; }   /* a function to open it, or 1: built a moment later, wait for it */
         return moved;
       }};
     }).filter(function(s){
@@ -462,12 +494,24 @@ window.KovaScreenTour=(function(){
     var home=id, where=[id], S=steps(id);
     list(id).forEach(function(t){ if(t[3]&&where.indexOf(t[3])<0) where.push(t[3]); });
     if(!S.length) return false;
-    KovaTour.run(S,{color:colour(),screens:where,done:function(why){
-      if(window.KovaWorkTour) KovaWorkTour.reset();
-      if(why==='left') return;                       /* you went elsewhere: stay there */
-      if(onScreen()!==home&&typeof window.go==='function') window.go(home);
-      var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
-    }});
+    /* p40: a card built a moment after the screen opens (Dream physique,
+       recovery, a coach's check-in) gets that moment, up to 1.2 s; one
+       still missing is dropped, so the count never has gaps */
+    function missing(x){ if(!x.late||x.where!==onScreen()) return false; var el=null; try{ el=x.el(); }catch(e){} return !el||hiddenForGood(el); }
+    function begin(){
+      S=S.filter(function(x){ return !missing(x); });
+      if(!S.length) return;
+      KovaTour.run(S,{color:colour(),screens:where,done:function(why){
+        if(window.KovaWorkTour) KovaWorkTour.reset();
+        if(why==='left') return;                       /* you went elsewhere: stay there */
+        if(onScreen()!==home&&typeof window.go==='function') window.go(home);
+        var m=document.getElementById('main'); if(m&&m.scrollTo) m.scrollTo({top:0,behavior:'smooth'});
+      }});
+    }
+    /* only a screen that has just opened is still building: on one open
+       for a while, what is missing is not coming */
+    var until=shownAt+1200, jsd=/jsdom/i.test((navigator&&navigator.userAgent)||'');
+    (function wait(){ if(jsd||!S.some(missing)||Date.now()>until) return begin(); setTimeout(wait,100); })();
     return true;
   }
   /* the "?" beside each title */

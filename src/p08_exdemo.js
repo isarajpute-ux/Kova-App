@@ -427,9 +427,15 @@ window.KovaDemo=(function(){
   add('Hack squat',{K:[st({hip:[104,98],t:-18,lN:{a:[126,176],f:-12},lF:{a:[123,176],f:-12},aN:{r:1,e:[8,16],w:[12,2]},aF:{r:1,e:[8,16],w:[12,2]}}),
       st({hip:[92,128],t:-18,lN:{a:[126,176],f:-12},lF:{a:[123,176],f:-12},aN:{r:1,e:[8,16],w:[12,2]},aF:{r:1,e:[8,16],w:[12,2]}})],
     eq:[{k:'rail',x1:118,y1:184,x2:62,y2:20},{k:'tpad',side:'back'},{k:'rail',x1:112,y1:184,x2:150,y2:168}],mus:m(['quads'],['glutes'])});
-  add('Leg press',{K:[{hip:[72,142],t:-62,lN:{a:[104,104],f:-50,s:1},lF:{a:[101,104],f:-50,s:1},aN:{e:[22,20],w:[44,26]},aF:{e:[21,20],w:[43,26]}},
-      {hip:[72,142],t:-62,lN:{a:[138,80],f:-50,s:1},lF:{a:[135,80],f:-50,s:1},aN:{e:[22,20],w:[44,26]},aF:{e:[21,20],w:[43,26]}}],
-    eq:[{k:'back',x1:62,y1:150,x2:14,y2:120},{k:'seat',x:60,y:150,w:40},{k:'plat',at:'aN',ang:-45}],mus:m(['quads','glutes'],['hams'])});
+  /* p41 (the owner: "the leg press movement is completely wrong"): a 40-degree
+     sled. Seated, reclined; the feet travel in a straight line up the sled,
+     flat on a plate across it (it was drawn along the sled); at the bottom
+     the knees come toward the chest at about 90 degrees (they bent down and
+     away, like a leg raise); the knees stay soft at the top; the hands hold
+     the handles by the seat. */
+  add('Leg press',{K:[{hip:[74,142],t:-55,lN:{a:[117,106],f:-130},lF:{a:[114,106],f:-130},aN:{W:[67,141]},aF:{W:[65,141]}},
+      {hip:[74,142],t:-55,lN:{a:[134,91],f:-130},lF:{a:[131,91],f:-130},aN:{W:[67,141]},aF:{W:[65,141]}}],
+    eq:[{k:'back',x1:70,y1:151,x2:22,y2:116},{k:'seat',x:62,y:150,w:40},{k:'plat',at:'aN',ang:-130}],mus:m(['quads','glutes'],['hams'])});
   add('Bulgarian split squat',{K:[st({hip:[100,106],t:6,lN:{a:[128,GY]},lF:{a:[58,142],f:165,s:1},aN:HANG,aF:HANG}),
       st({hip:[94,136],t:10,lN:{a:[128,GY]},lF:{a:[58,142],f:165,s:1},aN:HANG,aF:HANG})],
     eq:[{k:'bench',x:22,y:146,w:48},DB,DBF],mus:m(['quads','glutes'],['adductors','hams'])});

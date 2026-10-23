@@ -1,7 +1,9 @@
 /* =====================================================================
-   KovaPlayer - follow along with your workout (p35).
+   KovaPlayer - Coach me (p35; "Follow along" until p41, when the owner
+   asked what it meant: it is now "Coach me", Kova talking you through the
+   workout; not "Guided", which is already the workout's own mode).
 
-   Press Follow along (in a workout, or on the Muscle recovery card) and
+   Press Coach me (in a workout, or on the Muscle recovery card) and
    the exercise you are on fills the screen: its moving picture, which set
    of how many, the weight and reps to do (from Auto-Target, adjustable
    with - and +), and Done set. Then the rest counts down in a ring with
@@ -52,13 +54,55 @@ window.KovaPlayer=(function(){
   function sync(){ var c=cur(); if(!c||c.done) return c; var k=c.i+':'+c.j; if(P.key!==k){ P.key=k; var t=target(c); P.w=t.w; P.r=t.r; stopCount(); } return c; }
   function progress(){ var k=K(), d=k&&k.setsDone?k.setsDone():[0,0]; return {d:d[0],t:d[1]}; }
 
-  /* ---------- the voice ---------- */
-  function speak(t){ if(!P.voice) return; try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t); u.rate=1.02; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  /* ---------- the voice ----------
+     p41 (the owner: "a more natural voice, like ElevenLabs"): signed in,
+     Kova's natural voice comes from the server (ElevenLabs, its key in
+     Vercel), each line fetched once and kept; the newest line wins, as
+     before. Without it, or if it fails, the best voice this phone has: a
+     Premium, Enhanced or natural one before the robotic default, and
+     never the novelty voices. */
+  var V={ok:null,cache:{},n:0,au:null,best:null};
+  var SILENT='data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';   /* a twentieth of a second of silence (WAV plays everywhere) */
+  function score(v){
+    var n=v.name||'', l=String(v.lang||'').toLowerCase().replace('_','-'), s=0;
+    if(l.indexOf('en')!==0) return -99;
+    if(/compact|novelty|whisper|bad news|bells|boing|bubbles|cellos|jester|organ|trinoids|zarvox|albert|fred|junior|ralph|kathy|bahh|superstar|wobble|grandma|grandpa|rocko|shelley|flo|eddy|reed|sandy/i.test(n)) return -50;
+    if(/premium/i.test(n)) s+=6; if(/enhanced|neural|natural/i.test(n)) s+=5; if(/siri/i.test(n)) s+=4; if(/^google/i.test(n)) s+=3;
+    if(/\b(ava|zoe|evan|nathan|noelle|samantha|allison|susan|tom|serena|daniel|karen|moira|aria|jenny|guy|libby|sonia|tessa)\b/i.test(n)) s+=1;
+    if(l===String(navigator.language||'en-US').toLowerCase()) s+=2;
+    return s;
+  }
+  function best(){
+    if(V.best) return V.best;
+    var L=[]; try{ L=window.speechSynthesis?speechSynthesis.getVoices()||[]:[]; }catch(e){}
+    var top=-1; L.forEach(function(v){ var x=score(v); if(x>top){ top=x; V.best=v; } });
+    return V.best;
+  }
+  try{ if(window.speechSynthesis&&speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged',function(){ V.best=null; }); }catch(e){}
+  function deviceSay(t){ try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  function cloud(){ try{ return V.ok!==false&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
+  function line(t){
+    if(V.cache[t]) return Promise.resolve(V.cache[t]);
+    return KovaLink.authFetch('/tts',{json:{text:t}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
+      if(!r.ok||!j.audio){ if(r.status===503||r.status===404||r.status===401||r.status===403) V.ok=false; throw new Error(j.error||('HTTP '+r.status)); }
+      V.ok=true; return (V.cache[t]='data:'+(j.type||'audio/mpeg')+';base64,'+j.audio);
+    }); });
+  }
+  function play(u){ try{ if(window.speechSynthesis) speechSynthesis.cancel(); var a=V.au||(V.au=new Audio()); a.src=u; var p=a.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+  /* phones only play sound after a tap: the tap that opens the player unlocks it */
+  function unlock(){ try{ if(!V.au&&typeof Audio!=='undefined'){ V.au=new Audio(); V.au.src=SILENT; var p=V.au.play(); if(p&&p.catch) p.catch(function(){}); } }catch(e){} }
+  function speak(t){
+    if(!P.voice) return;
+    var my=++V.n;
+    if(cloud()){ line(t).then(function(u){ if(my===V.n) play(u); }).catch(function(){ if(my===V.n) deviceSay(t); }); return; }
+    try{ if(V.au) V.au.pause(); }catch(e){}
+    deviceSay(t);
+  }
   var WORD=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'];
   function num(n){ n=Math.round(n); return n<=20?WORD[n]:String(n); }
   function setLine(c){
     var t={w:P.w,r:P.r};
-    return (c.warm?'Warm-up set. ':'Set '+num(c.wn)+' of '+num(c.wt)+'. ')+num(t.r)+' reps'+(t.w?' at '+t.w+(t.w===1?' pound':' pounds'):'')+'.';
+    return (c.warm?'Warm-up set, light, to get ready. ':'Set '+num(c.wn)+' of '+num(c.wt)+'. ')+num(t.r)+' reps'+(t.w?' at '+t.w+(t.w===1?' pound':' pounds'):'')+'.';
   }
   function announce(c){ if(!c||c.done) return; speak(c.e.n+'. '+setLine(c)); }
   function stopCount(){ if(P.count){ clearInterval(P.count.iv); P.count=null; } }
@@ -103,7 +147,7 @@ window.KovaPlayer=(function(){
     if(!c) return '<div class="kz2p-in"><div class="kxp-none">There is no workout to follow yet. Start one from Workout.</div><button type="button" class="kz2p-go" data-kpl="close">Close</button></div>';
     var left=a?a.restLeft():0, nx=nextOf(c), resting=left>0&&!c.done;
     var head='<div class="hdr kz2p-hd"><div class="hdr-l"><button type="button" class="back" data-kpl="close" aria-label="Back to the workout">'+ic('chevron-left')+'</button>'
-      +'<div><div class="kz2p-eye">FOLLOW ALONG · '+esc(String(s.day||'Today').toUpperCase())+'</div><div class="title">'+esc(c.done?'All done':c.e.n)+'</div></div></div>'
+      +'<div><div class="kz2p-eye">COACH · '+esc(String(s.day||'Today').toUpperCase())+'</div><div class="title">'+esc(c.done?'All done':c.e.n)+'</div></div></div>'
       +'<div class="hdr-r"><button type="button" class="iconbtn kz2p-help" data-kpl="tour" aria-label="Show me around the player">?</button>'
       +'<button type="button" class="iconbtn'+(P.voice?' on':'')+'" data-kpl="voice" aria-pressed="'+P.voice+'" aria-label="'+(P.voice?'Voice on':'Voice off')+'">'+ic('headphones')+'</button></div></div>';
     var bar='<div class="kpl-prog" role="progressbar" aria-valuemin="0" aria-valuemax="'+pr.t+'" aria-valuenow="'+pr.d+'" aria-label="Sets done"><i style="width:'+(pr.t?pr.d/pr.t*100:0).toFixed(1)+'%"></i></div>'
@@ -111,7 +155,7 @@ window.KovaPlayer=(function(){
     if(c.done) return '<div class="kz2p-in">'+head+bar+'<section class="card kpl-stage kpl-end"><div class="kz2p-num">'+pr.d+'<i>sets</i></div><span>Every set is logged. Finish saves the workout, your records and your recovery map.</span></section>'
       +'<div class="kz2p-bar" role="group" aria-label="Workout controls"><button type="button" class="chip kz2p-c" data-kpl="close">'+ic('chevron-left')+'<span>Back</span></button><button type="button" class="kz2p-go" data-kpl="finish">'+ic('check')+'<span>Finish workout</span></button></div></div>';
     var stage='<section class="card kpl-stage"><div class="kpl-fig" data-kpl-fig="'+esc(c.e.n)+'" role="img" aria-label="'+esc(c.e.n)+', moving from the start to the finish of the lift"></div>'
-      +(c.warm?'<span class="chip kpl-tag">Warm-up</span>':'')+'</section>';
+      +(c.warm?'<span class="chip kpl-tag">Warm-up</span><div class="kpl-wu">A light set to get ready. Not counted.</div>':'')+'</section>';
     var body;
     if(resting){
       var len=Math.max(left,P.restLen||left); P.restLen=len;
@@ -165,23 +209,24 @@ window.KovaPlayer=(function(){
   function open(){
     var k=K(); if(!k||!k.api){ say('The workout is still loading.'); return false; }
     var el=document.getElementById('kpl');
-    if(!el){ el=document.createElement('div'); el.id='kpl'; el.className='kz2p kpl'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Follow along');
+    if(!el){ el=document.createElement('div'); el.id='kpl'; el.className='kz2p kpl'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label','Coach me');
       (document.getElementById('app')||document.body).appendChild(el); }
     P.on=true; P.key=''; P.cue={}; P.wasRest=k.api.restLeft()>0;
+    unlock();
     paint(); clearInterval(P.iv); P.iv=setInterval(tick,250);
     var c=sync(); if(c&&!c.done&&!P.wasRest) announce(c);
     track('player_open',{});
     if(window.KovaTour&&KovaTour.canRemember()&&KovaTour.once('playerpage')) setTimeout(tour,700);
     return true;
   }
-  function close(){ P.on=false; stopCount(); clearInterval(P.iv); var el=document.getElementById('kpl'); if(el) el.remove(); try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ K().render(); }catch(e){} }
+  function close(){ P.on=false; stopCount(); clearInterval(P.iv); var el=document.getElementById('kpl'); if(el) el.remove(); V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ K().render(); }catch(e){} }
 
   /* the player's own tour (every new part is shown around) */
   var TOUR=[['.kpl-stage','The exercise, moving','Watch the start and the finish of the lift while you set up.'],
     ['.kpl-do','Your target','The weight and reps for this set, from what you lifted last time. Change them with - and + if you did something else.'],
     ['[data-kpl="count"]','Count my reps','A voice counts each rep at a steady tempo: two seconds down, one up.'],
     ['[data-kpl="done"]','Done set','Logs the set and starts your rest, with what comes next.'],
-    ['[data-kpl="voice"]','The voice','It tells you each set, the rest and what is next. Turn it off here.']];
+    ['[data-kpl="voice"]','The voice','A natural voice tells you each set, the rest and what is next. Turn it off here.']];
   function tour(){
     if(!window.KovaTour||!document.getElementById('kpl')) return false;
     var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
@@ -190,12 +235,12 @@ window.KovaPlayer=(function(){
     return true;
   }
 
-  /* "Follow along" in the workout's own row of chips */
+  /* "Coach me" in the workout's own row of chips */
   function decorate(){
     /* only while the workout is on screen: looking up addExBtn by id brings a parked screen back (KovaPark), even inside quiet() */
     var sc=document.getElementById('s-session'); if(!sc||!sc.classList.contains('on')) return;
     var add=document.getElementById('addExBtn'); if(!add||!add.parentNode||add.parentNode.querySelector('.kpl-chip')) return;
-    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Follow along</div>');
+    add.insertAdjacentHTML('beforebegin','<div class="chip kpl-chip" data-kpl="open" role="button" tabindex="0" style="border-radius:16px;flex-shrink:0">'+ic('player-play')+' Coach me</div>');
   }
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },90); }
   document.addEventListener('click',function(ev){
@@ -203,7 +248,7 @@ window.KovaPlayer=(function(){
     var a=b.getAttribute('data-kpl');
     if(a==='open'){ open(); return; }
     if(a==='close'){ close(); return; }
-    if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice) try{ speechSynthesis.cancel(); }catch(e){} paint(); return; }
+    if(a==='voice'){ P.voice=!P.voice; lsPut('kova.pl.voice',P.voice); if(!P.voice){ V.n++; try{ if(V.au) V.au.pause(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} } paint(); return; }
     if(a==='tour'){ tour(); return; }
     if(a==='done'){ done(); return; }
     if(a==='skip'){ var ap=A(); if(ap) ap.skipRest(); return; }
@@ -222,5 +267,5 @@ window.KovaPlayer=(function(){
   if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kpl,#kz2,#krcCard,#kz2Card,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
   soon();
-  return {open:open,close:close,done:done,move:move,cur:cur,nextOf:nextOf,countReps:countReps,tour:tour,TOUR:TOUR,decorate:decorate,setLine:setLine,_P:P};
+  return {open:open,close:close,done:done,move:move,cur:cur,nextOf:nextOf,countReps:countReps,tour:tour,TOUR:TOUR,decorate:decorate,setLine:setLine,_P:P,voice:{score:score,best:best,speak:speak,state:V}};
 })();
