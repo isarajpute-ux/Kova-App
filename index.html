@@ -807,6 +807,16 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .kova-dot{width:4px;height:4px;background:var(--acc);border-radius:50%}
 .kova-lbl{font-size:9px;font-weight:400;color:var(--ron-txt-3);letter-spacing:.16em;text-transform:uppercase}
 .kova-txt{font-size:12.5px;font-weight:300;line-height:1.55;padding-left:8px;color:var(--ron-txt)}
+/* p43c, the owner: people do not know the Today card is a button: it says so, as a button */
+.kova-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 2px;padding:11px 14px;border-radius:100px;background:var(--acc);color:#0A0A0A;font-size:13px;font-weight:500;box-shadow:0 6px 20px var(--acc-dim,rgba(0,0,0,.2))}
+.kova-cta .ic{font-size:15px;color:#0A0A0A}
+.card.kova.tap:hover .kova-cta{filter:brightness(1.06)}
+.card.kova.tap:active .kova-cta{transform:scale(.98)}
+/* p43c, the owner: scrolling the workout's buttons sideways, a big scroll bar came up over them. Rows of chips scroll without one, and on a wide screen they wrap */
+.sess-acts,div[style*="overflow-x:auto"]{scrollbar-width:none;-ms-overflow-style:none}
+.sess-acts::-webkit-scrollbar,div[style*="overflow-x:auto"]::-webkit-scrollbar{display:none;height:0}
+@media (min-width:700px){ .sess-acts{flex-wrap:wrap;overflow:visible!important} }
+body.light-mode .kova-cta{background:#EDE6D6;color:#1C1A17}body.light-mode .kova-cta .ic{color:#1C1A17}
 
 .pillrow{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
 .pill{background:rgba(255,255,255,.10);border:.5px solid rgba(255,255,255,.28);border-radius:12px;padding:9px;text-align:center;font-size:11.5px;font-weight:500;color:var(--txt);cursor:pointer;transition:all .18s;backdrop-filter:blur(12px)}
@@ -8641,13 +8651,13 @@ body.light-mode .kxp-body .m.p{fill:var(--acc);fill-opacity:.85}
    Workout background and its orange. The five zones are graphite steps;
    Zone 2 is the orange. Dark, soft light and light glass. ---- */
 .kz2p{position:fixed;inset:0;z-index:9500;overflow:auto;-webkit-overflow-scrolling:touch;color:var(--ron-txt,#E3E3E3);
-  --acc:#E87A3C;--acc-2:#CF6528;--acc-bg:rgba(232,122,60,.12);--acc-brd:rgba(232,122,60,.42);--acc-glow:rgba(232,122,60,.30);--acc-ink:#F0945C;
+  --acc:#B7AA8C;--acc-2:#9E9274;--acc-bg:rgba(183,170,140,.12);--acc-brd:rgba(183,170,140,.42);--acc-glow:rgba(183,170,140,.30);--acc-ink:#D6CAAA;
   --ink:255,255,255;--z1:rgba(255,255,255,.26);--z2:var(--acc);--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);
-  background:radial-gradient(60% 40% at 88% 12%,rgba(232,122,60,.16),transparent 70%),radial-gradient(55% 40% at 8% 70%,rgba(120,72,40,.18),transparent 70%),
+  background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.13),transparent 70%),radial-gradient(55% 40% at 8% 70%,rgba(110,98,74,.16),transparent 70%),
     radial-gradient(ellipse 130% 95% at 50% -6%,#0B0807 0%,#050506 52%,#040003 100%)}
-body.soft-light .kz2p{--acc-ink:#FFB386;background:radial-gradient(60% 40% at 88% 12%,rgba(232,122,60,.20),transparent 70%),radial-gradient(ellipse 135% 100% at 50% -8%,#5E4F4B 0%,#4E423F 40%,#423836 74%,#3B3230 100%)}
-body.light-mode .kz2p{--acc-ink:#B9541B;--acc-bg:rgba(232,122,60,.14);--ink:28,26,23;--z1:rgba(28,26,23,.20);--z3:rgba(28,26,23,.40);--z4:rgba(28,26,23,.60);--z5:rgba(28,26,23,.82);
-  background:radial-gradient(60% 40% at 88% 10%,rgba(232,122,60,.14),transparent 70%),radial-gradient(55% 40% at 6% 72%,rgba(214,186,160,.35),transparent 70%),
+body.soft-light .kz2p{--acc-ink:#E8DDC2;background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.18),transparent 70%),radial-gradient(ellipse 135% 100% at 50% -8%,#5E4F4B 0%,#4E423F 40%,#423836 74%,#3B3230 100%)}
+body.light-mode .kz2p{--acc-ink:#5A5342;--acc-bg:rgba(90,83,66,.10);--acc-brd:rgba(90,83,66,.35);--acc-glow:rgba(90,83,66,.22);--ink:28,26,23;--z1:rgba(28,26,23,.20);--z3:rgba(28,26,23,.40);--z4:rgba(28,26,23,.60);--z5:rgba(28,26,23,.82);
+  background:radial-gradient(60% 40% at 88% 10%,rgba(183,170,140,.22),transparent 70%),radial-gradient(55% 40% at 6% 72%,rgba(214,200,170,.35),transparent 70%),
     radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
 .kz2p button{font-family:inherit;cursor:pointer}
 .kz2p .ic{font-size:17px}
@@ -8718,7 +8728,7 @@ body.light-mode .kz2p-say{background:linear-gradient(143deg,rgba(255,255,255,.75
 .kz2p-tl .in{fill:rgba(var(--ink),.05);stroke:var(--ron-line);stroke-width:1}
 .kz2p-tl .dt{fill:var(--ron-txt)}
 .kz2p-tl .nd.on .rg{fill:var(--acc-bg);stroke:var(--acc-brd)}
-.kz2p-tl .nd.on .in{fill:rgba(232,122,60,.18);stroke:var(--acc-brd)}
+.kz2p-tl .nd.on .in{fill:var(--acc-bg);stroke:var(--acc-brd)}
 .kz2p-tl .nd.on .dt{fill:var(--acc);filter:drop-shadow(0 0 6px var(--acc-glow))}
 .kz2p-tl .pl rect{fill:rgba(var(--ink),.07);stroke:var(--ron-line);stroke-width:.8}
 .kz2p-tl .pl text{font-size:13.5px;fill:var(--ron-txt)}
@@ -8738,7 +8748,7 @@ body.light-mode .kz2p-tb .tr{background:rgba(255,255,255,.55);border-color:rgba(
 /* the big card: glass with Workout's warm glow */
 .kz2p-hero{overflow:hidden}
 .kz2p-hero::before{content:'';position:absolute;inset:auto -20% -30% -20%;height:70%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
-.kz2p-hero::after{content:'';position:absolute;inset:-20% -30% auto auto;width:70%;height:50%;background:radial-gradient(closest-side,rgba(232,122,60,.16),transparent);pointer-events:none}
+.kz2p-hero::after{content:'';position:absolute;inset:-20% -30% auto auto;width:70%;height:50%;background:radial-gradient(closest-side,var(--acc-bg),transparent);pointer-events:none}
 .kz2p-hero>*{position:relative;z-index:1}
 .kz2p-hh{display:flex;align-items:center;gap:10px}
 .kz2p-tabs{display:flex;gap:2px;margin:16px 0 4px;border-bottom:.5px solid var(--ron-line);overflow-x:auto;scrollbar-width:none}
@@ -8791,8 +8801,8 @@ body.light-mode .kz2p-bar{background:linear-gradient(143deg,rgba(255,255,255,.8)
 .kz2c .kz2p-num{color:var(--ron-txt)}
 .kz2c .kl-acts{margin-top:10px}
 /* sheets */
-.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#E87A3C}
-body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#C8571A}
+.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#B7AA8C}
+body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#6B6046}
 .kz2s-hero{display:flex;align-items:baseline;gap:10px;margin:6px 0 10px}
 .kz2s-hero b{font:200 56px/1 Outfit,sans-serif;color:var(--z-in)}
 .kz2s-hero span{font-size:13px;line-height:1.4;color:var(--z-mute)}
@@ -8809,7 +8819,7 @@ body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(1
 .kz2s-zs>div{display:grid;grid-template-columns:14px 70px 1fr auto;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;border:1px solid var(--z-line)}
 .kz2s-zs>div.on{background:var(--z-card);border-color:var(--z-in)}
 .kz2s-zs .zd{width:12px;height:12px}
-.kz2s{--z1:rgba(255,255,255,.26);--z2:#E87A3C;--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);--acc-glow:rgba(232,122,60,.3)}
+.kz2s{--z1:rgba(255,255,255,.26);--z2:#B7AA8C;--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);--acc-glow:rgba(183,170,140,.3)}
 body.light-mode .kz2s{--z1:rgba(28,26,23,.2);--z3:rgba(28,26,23,.4);--z4:rgba(28,26,23,.6);--z5:rgba(28,26,23,.82)}
 .kz2s-zs span{font-size:12.5px;color:var(--z-mute)}.kz2s-zs em{font-style:normal;font-size:13px;font-weight:600}
 /* p42: a pop-up opened from a full page (Coach me's attachments, a Dream
@@ -8986,8 +8996,10 @@ body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
 .katt-t small{font-size:10px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.55))}
 .katt-t.on{border-color:var(--acc-brd,rgba(232,122,60,.5));background:var(--acc-bg,rgba(232,122,60,.12))}
 .katt-t:active{transform:scale(.97)}
-.katt-ic{width:44px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;color:var(--ron-txt,#fff);opacity:.9}
-.katt-t.on .katt-ic{color:var(--acc,#E87A3C);opacity:1}
+.katt-ic{width:44px;height:26px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;color:var(--ron-txt,#fff);opacity:.9}
+/* p43c: the redrawn icons: a light fill for solid parts, solid caps and grips, thick bars */
+.katt-ic *{vector-effect:non-scaling-stroke}.katt-ic .f{fill:currentColor;fill-opacity:.22}.katt-ic .s{fill:currentColor;stroke:none}.katt-ic .w{stroke-width:2.4}
+.katt-t.on .katt-ic{color:var(--acc,#B7AA8C);opacity:1}
 .katt-pl8 rect{stroke-width:1.3;opacity:.7}
 .katt-pl8 ellipse{fill:currentColor;stroke:none}
 .katt-as{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;margin-bottom:6px}
@@ -9051,10 +9063,10 @@ body.light-mode .katt-t.on .katt-ic{color:#C8571A}
 .kdp-pw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .kdp-mk{stroke:rgba(255,255,255,.7);stroke-width:1;vector-effect:non-scaling-stroke;animation:kdpGlow 2.6s ease-in-out infinite}
 .kdp-ln{stroke:rgba(255,255,255,.75);stroke-width:.8;vector-effect:non-scaling-stroke}
-.kdp-dot{fill:#fff;stroke:#E87A3C;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.kdp-dot{fill:#fff;stroke:var(--acc,#B7AA8C);stroke-width:1.4;vector-effect:non-scaling-stroke}
 .kdp-ml{position:absolute;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:100px;white-space:nowrap;pointer-events:none;
   font:400 11.5px/1 'Outfit',sans-serif;color:#F4F1EE;background:rgba(14,12,12,.58);border:.5px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3)}
-.kdp-ml i{width:6px;height:6px;border-radius:50%;background:#E87A3C;box-shadow:0 0 6px rgba(232,122,60,.9)}
+.kdp-ml i{width:6px;height:6px;border-radius:50%;background:#E9DDBB;box-shadow:0 0 6px rgba(233,221,187,.9)}
 body.light-mode .kdp-ml{color:#1C1A17;background:rgba(255,255,255,.8);border-color:rgba(255,255,255,.95)}
 @keyframes kdpGlow{0%,100%{opacity:.78}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.kdp-mk{animation:none}}
@@ -9159,6 +9171,32 @@ body.light-mode .kdp-tot.off{color:#8A6A10}
 .kdp-honest .kdp-looks b{font-weight:500;color:var(--ron-txt)}
 /* the sample Workout screen spaces its cards with margins (the live one with a gap) */
 #s-move .card+.kdp-card,#gpSlot+.kdp-card,#goalSlot+.kdp-card,#startBtn+.kdp-card{margin-bottom:12px}
+/* p43c, the owner: "too clustered... too zoomed in" on a phone and a
+   desktop. The page's frame had no styles at all (edge to edge, a photo as
+   wide as the screen): now a centred column with room at the sides, a
+   proper header, the two pictures side by side, the marked photo a sensible
+   size, and Workout's brown, not the old orange */
+.kdp .kz2p-wrap{max-width:720px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(56px + env(safe-area-inset-bottom))}
+.kdp .kz2p-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.kdp .kz2p-tt{flex:1;min-width:0}
+.kdp .kz2p-tt .title{font-size:26px;font-weight:400;letter-spacing:-.02em;line-height:1.1;color:var(--ron-txt,#F2F2F2)}
+.kdp .kz2p-q{width:40px;height:40px;border-radius:50%;flex-shrink:0;font-size:15px;display:grid;place-items:center}
+.kdp .card{margin-bottom:12px;padding:16px}
+.kdp-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kdp-slot{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;aspect-ratio:3/4;padding:12px 8px;border-radius:20px;overflow:hidden;cursor:pointer;font:inherit;text-align:center;color:var(--ron-txt,#F2F2F2);
+  border:1px dashed rgba(var(--ink),.22);background:linear-gradient(160deg,rgba(var(--ink),.07),rgba(var(--ink),.02))}
+.kdp-slot i{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--acc-bg);border:1px solid var(--acc-brd);color:var(--acc-ink)}
+.kdp-slot i .ic{font-size:20px;color:var(--acc-ink)}
+.kdp-slot b{position:relative;font-size:13px;font-weight:500}
+.kdp-slot small{position:relative;font-size:11px;color:var(--ron-txt-3,rgba(255,255,255,.6))}
+.kdp-slot.on{border-style:solid;border-color:rgba(var(--ink),.14)}
+.kdp .kdp-in .kdp-slot img{position:absolute;inset:0;width:100%;height:100%;max-height:none;margin:0;border-radius:0;object-fit:cover}
+.kdp-slot.on::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.72))}
+.kdp-slot.on b,.kdp-slot.on small{z-index:1;color:#fff}
+.kdp-slot.on small{color:rgba(255,255,255,.75)}
+.kdp .kdp-ql{display:block;margin-top:14px;text-transform:none;letter-spacing:.02em}
+.kdp-pf{max-width:440px;margin:10px auto 0}
+@media (min-width:900px){ .kdp .kz2p-wrap{max-width:760px} .kdp-pair{grid-template-columns:1fr 1fr;max-width:520px;margin:0 auto} }
 
 </style>
 <style id="p08-dial">
@@ -9168,24 +9206,34 @@ body.light-mode .kdp-tot.off{color:#8A6A10}
    the centre; thin Outfit labels with a line icon above. Then the card
    under it: a big glass card, a spaced capital name with a glowing dot, a
    huge thin number, the expand arrows at the top right. */
-.kdl{--kdl-a:rgba(255,255,255,.15);--kdl-b:rgba(255,255,255,.055);--kdl-sa:rgba(238,232,224,.66);--kdl-sb:rgba(196,188,178,.5);
-  --kdl-e1:rgba(255,255,255,.78);--kdl-e2:rgba(255,255,255,.2);--kdl-e3:rgba(255,255,255,.07);
+.kdl{--kdl-a:rgba(255,255,255,.10);--kdl-b:rgba(255,255,255,.02);--kdl-sa:rgba(255,255,255,.58);--kdl-sb:rgba(226,226,228,.40);
+  --kdl-e1:rgba(255,255,255,.92);--kdl-e2:rgba(255,255,255,.26);--kdl-e3:rgba(255,255,255,.10);
+  --kdl-glass:linear-gradient(165deg,rgba(255,255,255,.20),rgba(255,255,255,.07) 46%,rgba(255,255,255,.13));
   --kdl-ink:rgba(255,255,255,.84);--kdl-on:#FFFFFF;--kdl-glow:#E3E85C;
   position:relative;width:min(100%,370px);aspect-ratio:1/1;margin:0 auto;touch-action:none;-webkit-user-select:none;user-select:none;outline:none}
-.kdl-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 14px 22px rgba(0,0,0,.32))}
+/* the light behind the dial, so the glass has something to show through (the reference's lit satin) */
+.kdl::before{content:"";position:absolute;inset:-6%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,250,240,.20),rgba(255,244,226,.09) 48%,rgba(255,244,226,.03) 70%,transparent);filter:blur(6px)}
+.kdl::after{content:"";position:absolute;left:58%;top:62%;width:46%;height:40%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,.12),transparent);filter:blur(10px)}
+/* each segment's glass: what is behind it blurred, lifted and lit, clipped to the segment */
+.kdl-gl{position:absolute;inset:0;pointer-events:none}
+.kdl-g{position:absolute;inset:0;background:var(--kdl-glass);-webkit-backdrop-filter:blur(14px) saturate(1.7) brightness(1.15);backdrop-filter:blur(14px) saturate(1.7) brightness(1.15)}
+.kdl-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 16px 26px rgba(0,0,0,.38))}
 .kdl-s,.kdl-x{transition:none}
 .kdl.kdl-drag{cursor:grabbing}
 .kdl-ls{position:absolute;inset:0}
 .kdl-l{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;width:27%;padding:4px 2px;background:none;border:0;
-  color:var(--kdl-ink);font:300 12.5px/1.1 'Outfit',-apple-system,sans-serif;letter-spacing:.01em;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  color:var(--kdl-ink);font:300 13.5px/1.1 'Outfit',-apple-system,sans-serif;letter-spacing:.01em;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .kdl-l span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kdl-l.on{color:var(--kdl-on);font-weight:400;font-size:13.5px;text-shadow:0 1px 8px rgba(0,0,0,.25)}
+.kdl-l.on{color:var(--kdl-on);font-weight:400;font-size:14.5px;text-shadow:0 1px 8px rgba(0,0,0,.25)}
 .kdl-l:focus-visible{outline:1.5px solid var(--kdl-on);outline-offset:2px;border-radius:12px}
-.kdl-ic{width:21px;height:21px;flex-shrink:0;color:currentColor}
+.kdl-ic{width:26px;height:26px;flex-shrink:0;color:currentColor}
 .kdl-l svg.kdl-ic use{color:currentColor}
-.kdl-mus path{fill:currentColor;fill-opacity:.14;stroke:currentColor;stroke-width:1.15;vector-effect:non-scaling-stroke}
-.kdl-art{width:30px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.kdl-art *{vector-effect:non-scaling-stroke}
+.kdl-mi{fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+.kdl-mi *,.kdl-mi .f,.kdl-art .f{fill:currentColor;fill-opacity:.22}
+.kdl-art .s,.kdl-mi .s{fill:currentColor;stroke:none}
+.kdl-art .w,.kdl-mi .w{stroke-width:2.4}
+.kdl-art{width:36px;height:21px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 /* the hub: a soft halo, a dark ring, the glowing button */
 .kdl-hub{position:absolute;left:50%;top:50%;width:38%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;
   background:radial-gradient(circle,rgba(14,9,6,.0) 58%,rgba(14,9,6,.28) 60%,rgba(14,9,6,.22) 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.035)}
@@ -9200,9 +9248,11 @@ body.light-mode .kdp-tot.off{color:#8A6A10}
 .kdl-c svg{width:44%;height:44%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .kdl-c svg path[d^="M9 6.5"]{fill:currentColor;stroke-width:1}
 .kdl-dot{width:15%;height:15%;border-radius:50%;background:#1B1408;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
-body.soft-light .kdl{--kdl-a:rgba(255,255,255,.2);--kdl-b:rgba(255,255,255,.09);--kdl-e2:rgba(255,255,255,.26)}
-body.light-mode .kdl{--kdl-a:rgba(255,255,255,.82);--kdl-b:rgba(255,255,255,.5);--kdl-sa:#FFFFFF;--kdl-sb:rgba(255,255,255,.92);
-  --kdl-e1:#FFFFFF;--kdl-e2:rgba(28,26,23,.08);--kdl-e3:rgba(28,26,23,.14);--kdl-ink:rgba(28,26,23,.72);--kdl-on:#1C1A17}
+body.soft-light .kdl{--kdl-a:rgba(255,255,255,.14);--kdl-b:rgba(255,255,255,.05);--kdl-e2:rgba(255,255,255,.32)}
+body.light-mode .kdl{--kdl-a:rgba(255,255,255,.55);--kdl-b:rgba(255,255,255,.2);--kdl-sa:#FFFFFF;--kdl-sb:rgba(255,255,255,.92);
+  --kdl-e1:#FFFFFF;--kdl-e2:rgba(17,19,24,.10);--kdl-e3:rgba(17,19,24,.16);--kdl-ink:rgba(17,19,24,.72);--kdl-on:#111318;
+  --kdl-glass:linear-gradient(165deg,rgba(255,255,255,.75),rgba(255,255,255,.4) 50%,rgba(255,255,255,.6))}
+body.light-mode .kdl::before{background:radial-gradient(closest-side,rgba(255,255,255,.9),rgba(255,255,255,.4) 50%,transparent)}
 body.light-mode .kdl-svg{filter:drop-shadow(0 12px 20px rgba(60,50,40,.16))}
 body.light-mode .kdl-l.on{text-shadow:none}
 body.light-mode .kdl-hub{background:radial-gradient(circle,rgba(28,26,23,0) 58%,rgba(28,26,23,.07) 60%,rgba(28,26,23,.05) 100%)}
@@ -9210,9 +9260,9 @@ body.light-mode .kdl-hub{background:radial-gradient(circle,rgba(28,26,23,0) 58%,
 /* the switch under the dial (Exercises: muscle or equipment) */
 .kdl-sw{display:flex;justify-content:center;gap:4px;margin:2px auto 12px;width:max-content;padding:3px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
 .kdl-sw button{border:0;background:none;border-radius:99px;padding:6px 14px;font:300 12.5px 'Outfit',sans-serif;color:var(--txt-2,rgba(255,255,255,.7));cursor:pointer}
-.kdl-sw button.on{background:rgba(255,255,255,.14);color:var(--txt,#fff);font-weight:400}
+.kdl-sw button.on{background:#F2F2F3;color:#131314;font-weight:500}
 body.light-mode .kdl-sw{background:rgba(255,255,255,.5);border-color:rgba(28,26,23,.08)}
-body.light-mode .kdl-sw button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+body.light-mode .kdl-sw button.on{background:#1A1D24;color:#F2F5FA}
 
 /* the page around it */
 .kdl-top{display:flex;align-items:center;gap:10px;margin:0 2px 2px}
@@ -9225,10 +9275,17 @@ body.light-mode .kdl-ib{border-color:rgba(28,26,23,.1);background:rgba(255,255,2
 .kdl-page .kxp-q{margin:8px 0 0}
 
 /* the card */
-.kdl-card{position:relative;max-width:680px;margin:0 auto;border-radius:30px;padding:18px 18px 16px;overflow:hidden;
-  background:radial-gradient(80% 70% at 88% -10%,rgba(255,238,206,.12),transparent 60%),linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.035) 62%);
-  border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 18px 40px rgba(0,0,0,.3);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
-body.light-mode .kdl-card{background:radial-gradient(80% 70% at 88% -10%,rgba(255,250,236,.9),transparent 60%),linear-gradient(160deg,rgba(255,255,255,.82),rgba(255,255,255,.55));border-color:#FFFFFF;box-shadow:0 14px 34px rgba(60,50,40,.12)}
+.kdl-card{position:relative;isolation:isolate;max-width:680px;margin:0 auto;border-radius:32px;padding:18px 18px 16px;overflow:hidden;
+  background:linear-gradient(158deg,rgba(255,255,255,.15),rgba(255,255,255,.05) 42%,rgba(255,255,255,.035) 70%,rgba(255,255,255,.09));
+  border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(255,255,255,.06),0 24px 60px rgba(0,0,0,.45);
+  -webkit-backdrop-filter:blur(30px) saturate(1.8);backdrop-filter:blur(30px) saturate(1.8)}
+/* the light glowing inside it, as in the reference's card */
+.kdl-card::before{content:"";position:absolute;z-index:-1;top:-38%;left:28%;width:78%;height:96%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,251,240,.42),rgba(255,244,222,.16) 45%,rgba(255,244,222,.04) 72%,transparent);filter:blur(10px);animation:kdlGlow 7s ease-in-out infinite alternate}
+.kdl-card::after{content:"";position:absolute;z-index:-1;inset:auto -10% -40% -10%;height:70%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,.07),transparent)}
+@keyframes kdlGlow{from{transform:translateX(-6%) scale(1)}to{transform:translateX(6%) scale(1.06)}}
+body.light-mode .kdl-card{background:linear-gradient(158deg,rgba(255,255,255,.86),rgba(255,255,255,.55) 50%,rgba(255,255,255,.7));border-color:#FFFFFF;box-shadow:inset 0 1px 0 #fff,0 18px 44px rgba(40,44,54,.14)}
+body.light-mode .kdl-card::before{background:radial-gradient(closest-side,rgba(255,255,255,1),rgba(255,250,238,.5) 50%,transparent)}
 .kdl-ch{display:flex;align-items:center;gap:12px;min-height:36px}
 .kdl-name{font:400 13px 'Outfit',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--txt)}
 .kdl-st{display:inline-flex;align-items:center;gap:6px;font:300 13px 'Outfit',sans-serif;color:var(--txt-2)}
@@ -9247,20 +9304,21 @@ body.light-mode .kdl-st i{background:#B7BD2C}
 .kdl-strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;margin:14px -18px 0;padding:0 18px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .kdl-strip::-webkit-scrollbar{display:none}
 .kdl-card.open .kdl-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));overflow:visible;margin:14px 0 0;padding:0}
-.kdl-t{position:relative;flex:0 0 136px;scroll-snap-align:start;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:18px;padding:6px 6px 10px;text-align:left;color:var(--txt);cursor:pointer;font:inherit}
+.kdl-t{position:relative;flex:0 0 136px;scroll-snap-align:start;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:inset 0 1px 0 rgba(255,255,255,.12);border-radius:18px;padding:6px 6px 10px;text-align:left;color:var(--txt);cursor:pointer;font:inherit}
 .kdl-t .kxp-th{display:block;width:100%;height:92px;border-radius:13px;overflow:hidden}
 .kdl-t b{display:block;font:400 12.5px/1.25 'Outfit',sans-serif;margin:8px 4px 0}
 .kdl-t small{display:block;font:300 11.5px 'Outfit',sans-serif;color:var(--txt-3);margin:3px 4px 0}
-.kdl-t.on{border-color:rgba(227,232,92,.55);box-shadow:0 0 0 1px rgba(227,232,92,.25)}
+.kdl-t.on{background:rgba(255,255,255,.92);color:#131314;border-color:#fff}
+.kdl-t.on small{color:rgba(19,19,20,.6)}.kdl-t.on .kdl-art{color:#131314}
 .kdl-t .kdl-art{width:44px;height:26px;margin:8px 4px 2px;color:var(--txt)}
 .kdl-t.att{flex-basis:112px}
 body.light-mode .kdl-t{border-color:rgba(28,26,23,.08);background:rgba(255,255,255,.6)}
-body.light-mode .kdl-t.on{border-color:#B7BD2C}
+body.light-mode .kdl-t.on{background:#1A1D24;color:#F2F5FA;border-color:#1A1D24}body.light-mode .kdl-t.on .kdl-art{color:#F2F5FA}body.light-mode .kdl-t.on small{color:rgba(242,245,250,.7)}
 .kdl-none{font:300 14px/1.4 'Outfit',sans-serif;color:var(--txt-2);margin-top:12px}
 .kdl-go{display:flex;gap:8px;margin-top:14px}
 .kdl-go .btn{flex:1}
 .kdl-fig{display:block;height:150px;border-radius:18px;overflow:hidden;margin-top:12px}
-@media (prefers-reduced-motion:reduce){ .kdl-c{transition:none} }
+@media (prefers-reduced-motion:reduce){ .kdl-c{transition:none} .kdl-card::before{animation:none} }
 
 </style>
 </head>
@@ -9433,6 +9491,7 @@ body.light-mode .kdl-t.on{border-color:#B7BD2C}
       <div class="volrow" style="margin:0"><svg class="ic" style="font-size:13px;width:14px;opacity:.7"><use href="#i-heartbeat"/></svg><div class="volname">HRV ready</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,var(--good),var(--good))"></div></div><div class="volval" style="color:var(--good)">Green</div></div>
       <div class="volrow" style="margin:0"><svg class="ic" style="font-size:13px;width:14px;opacity:.7"><use href="#i-tools-kitchen-2"/></svg><div class="volname">Fuel synced</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:linear-gradient(90deg,rgba(242,236,240,.15),rgba(242,236,240,.55))"></div></div><div class="volval" style="color:var(--txt-2,rgba(255,255,255,.92))">+180</div></div>
     </div>
+    <div class="kova-cta" aria-hidden="true"><span>Open today’s workout</span><svg class="ic"><use href="#i-arrow-right"/></svg></div>
   </div>
 
   <div class="card">
@@ -9862,7 +9921,7 @@ body.light-mode .kdl-t.on{border-color:#B7BD2C}
 
   <div class="sub" id="sessModeNote" style="margin:-4px 2px 10px;font-size:10.5px"></div>
 
-  <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px">
+  <div class="sess-acts" style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px">
     <div class="chip" id="reorderBtn" style="border-radius:16px;flex-shrink:0">Order</div>
     <div class="chip" id="warmBtn" style="border-radius:16px;flex-shrink:0">Warm-ups on</div>
     <div class="chip" id="addExBtn" style="border-radius:16px;flex-shrink:0;background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600">+ Exercise</div>
@@ -68402,7 +68461,7 @@ window.KovaZone2=(function(){
   function tour(){
     if(!window.KovaTour||!document.getElementById('kz2')) return false;
     var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
-    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kz2 '+t[0]); }}; }),{color:'#E87A3C',screens:sc});
+    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kz2 '+t[0]); }}; }),{color:'section',screens:sc});
     var ov=document.getElementById('ksTour'); if(ov) ov.style.zIndex='9700';
     track('zone2_tour',{});
     return true;
@@ -68537,6 +68596,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-29',title:'Dream physique fixed, frosted glass, clearer icons',
+      lines:['Dream physique: tidy, brown, and says why AI failed','The dial: real frosted glass','New icons for every body part and attachment'],
+      steps:[
+        ['move','Dream physique','Cleaner and in Workout\u2019s brown. No numbers needed: it reads your photos.',function(){ return q('#kdpCard'); }],
+        ['move','The dial, in glass','Exercises and Stretch: frosted glass, and new icons.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','Your workout buttons','No more scroll bar covering them.',function(){ return first('#s-session .sess-acts'); }]
+      ]},
     {id:'new-2026-10-28',title:'The dial',
       lines:['Exercises, Stretch and attachments: turn a dial','The chosen one slides out, its card below','The centre button switches or starts'],
       steps:[
@@ -68904,7 +68970,7 @@ window.KovaPlayer=(function(){
   function tour(){
     if(!window.KovaTour||!document.getElementById('kpl')) return false;
     var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
-    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kpl '+t[0]); }}; }),{color:'#E87A3C',screens:sc});
+    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kpl '+t[0]); }}; }),{color:'section',screens:sc});
     var ov=document.getElementById('ksTour'); if(ov) ov.style.zIndex='9700';
     return true;
   }
@@ -70013,37 +70079,37 @@ window.KovaAttach=(function(){
      legs, arms, the weighted belt"): every common one, drawn, with what it is
      for. [name, kind, body areas, what it is for, drawing] */
   var CAT=[
-    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls','<circle cx="24" cy="5" r="2.4"/><path d="M24 7C22 14 16 18 12 23M24 7C26 14 32 18 36 23"/><circle cx="12" cy="24" r="2.6"/><circle cx="36" cy="24" r="2.6"/>'],
-    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V15M5 16H43"/>'],
-    ['EZ bar','Bars',['Arms'],'The curved bar','<path d="M3 15H11L15 11L19 18L24 13L29 18L33 11L37 15H45"/><path d="M5 10V20M43 10V20"/>'],
-    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows','<circle cx="24" cy="5" r="2.2"/><path d="M24 7L13 22M24 7L35 22M9 22H17M31 22H39"/>'],
-    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'One-arm moves','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 19H33Z"/><path d="M14 21H34" stroke-width="3"/>'],
-    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'Crossovers, flyes','<path d="M14 6L7 18H21ZM34 6L27 18H41Z"/><path d="M6 20H22M26 20H42" stroke-width="3"/>'],
-    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V13M3 7Q6 16 12 14H36Q42 16 45 7"/>'],
-    ['Parallel-grip lat bar','Cable handles',['Back'],'Palms-in pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V12M4 12H44M14 12V22M34 12V22"/>'],
-    ['MAG grip','Cable handles',['Back'],'Rows, pulldowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M10 10H38"/><rect x="12" y="10" width="5" height="12" rx="2"/><rect x="31" y="10" width="5" height="12" rx="2"/>'],
-    ['Row handle','Cable handles',['Back'],'Seated rows','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 13L19 23H29L33 13Z"/><path d="M18 18H30"/>'],
-    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks','<rect x="11" y="12" width="26" height="10" rx="5"/><path d="M24 12V7"/><circle cx="24" cy="5" r="2.2"/>'],
-    ['Tricep bar','Cable handles',['Arms'],'Pushdowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M6 10Q15 24 24 14Q33 24 42 10"/>'],
-    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squat, bench, deadlift','<path d="M1 14H47"/><rect x="5" y="5" width="4" height="18" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="39" y="5" width="4" height="18" rx="1"/><rect x="35" y="8" width="3" height="12" rx="1"/>'],
-    ['Trap bar','Bars',['Legs','Back'],'Deadlifts','<path d="M14 5H34L42 14L34 23H14L6 14Z"/><path d="M17 10V18M31 10V18M0 14H6M42 14H48"/>'],
-    ['Safety squat bar','Bars',['Legs'],'Squats, easy shoulders','<path d="M2 11H46"/><rect x="18" y="8" width="12" height="6" rx="3"/><path d="M19 13Q16 21 21 25M29 13Q32 21 27 25"/>'],
-    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'Palms-in presses','<rect x="8" y="7" width="32" height="14" rx="3"/><path d="M16 7V21M24 7V21M32 7V21M0 14H8M40 14H48"/>'],
-    ['Cambered bar','Bars',['Legs','Chest'],'Squats, presses','<path d="M1 8H11Q13 24 24 24Q35 24 37 8H47"/>'],
-    ['Landmine','Bars',['Back','Shoulders','Core'],'Rows, presses','<rect x="3" y="21" width="11" height="4" rx="1"/><path d="M9 21L41 7"/><circle cx="41" cy="7" r="4.5"/>'],
-    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'Bar on rails','<path d="M12 2V26M36 2V26M4 13H44"/>'],
-    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls','<rect x="7" y="7" width="6" height="14" rx="1.5"/><rect x="35" y="7" width="6" height="14" rx="1.5"/><path d="M13 14H35"/>'],
-    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings','<path d="M17 11Q17 3 24 3Q31 3 31 11"/><circle cx="24" cy="17" r="8.5"/>'],
-    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Plate raises','<circle cx="24" cy="14" r="11"/><circle cx="24" cy="14" r="3"/>'],
-    ['Medicine ball','Free weights',['Core'],'Slams, throws','<circle cx="24" cy="14" r="11"/><path d="M13 14H35M24 3Q18 14 24 25"/>'],
-    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'Weighted dips','<path d="M7 7Q24 17 41 7"/><path d="M24 12V17"/><circle cx="24" cy="21.5" r="5"/>'],
-    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Extra weight','<path d="M16 3L11 8V25H37V8L32 3L28 8H20Z"/><path d="M15 14H33"/>'],
-    ['Belt','Belts and gear',['Legs','Back'],'Heavy lifts','<rect x="3" y="9" width="42" height="10" rx="3"/><rect x="20" y="7" width="8" height="14" rx="1.5"/>'],
-    ['Straps','Belts and gear',['Back'],'Heavy pulls','<path d="M9 21C5 10 15 4 19 10L24 22M25 21C21 10 31 4 35 10L40 22"/>'],
-    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Heavy presses','<rect x="8" y="9" width="24" height="10" rx="5"/><circle cx="38" cy="14" r="4"/>'],
-    ['Knee sleeves','Belts and gear',['Legs'],'Warm knees','<path d="M12 4L10 24H21L19 4ZM29 4L27 24H38L36 4Z"/>'],
-    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'Pull-up help','<ellipse cx="24" cy="14" rx="18" ry="8"/>'],
-    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top','<ellipse cx="8" cy="14" rx="5" ry="3"/><ellipse cx="16" cy="14" rx="5" ry="3"/><ellipse cx="24" cy="14" rx="5" ry="3"/><ellipse cx="32" cy="14" rx="5" ry="3"/><ellipse cx="40" cy="14" rx="5" ry="3"/>']
+    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls','<circle cx="24" cy="3.4" r="2.1"/><path d="M24 5.5v2.6"/><path class="w" d="M24 8.2C21.4 12.6 16.8 16.6 12.8 21M24 8.2C26.6 12.6 31.2 16.6 35.2 21"/><path d="M22.2 10.9l1.3.6M20.3 13.1l1.3.6M18.1 15.2l1.3.6M15.8 17.3l1.3.6M26.5 10.9l-1.3.6M28.4 13.1l-1.3.6M30.6 15.2l-1.3.6M32.9 17.3l-1.3.6" stroke-width=".9"/><rect class="s" x="9.4" y="19.9" width="5.4" height="6.2" rx="2.2" transform="rotate(42 12.1 23)"/><rect class="s" x="33.2" y="19.9" width="5.4" height="6.2" rx="2.2" transform="rotate(-42 35.9 23)"/>'],
+    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls','<circle cx="24" cy="3.4" r="2.1"/><path d="M24 5.5v3.6"/><rect class="f" x="21" y="9.1" width="6" height="3.6" rx="1.3"/><rect x="5" y="12.7" width="38" height="3.2" rx="1.6"/><path d="M9 13.2v2.2M11 13.2v2.2M13 13.2v2.2M15 13.2v2.2M33 13.2v2.2M35 13.2v2.2M37 13.2v2.2M39 13.2v2.2" stroke-width=".8"/><rect class="s" x="2.6" y="11.9" width="3.2" height="4.8" rx="1.2"/><rect class="s" x="42.2" y="11.9" width="3.2" height="4.8" rx="1.2"/>'],
+    ['EZ bar','Bars',['Arms'],'The curved bar','<path class="w" d="M11 14h4.2l2.6-3.6 3.1 7.2L24 10.4l3.1 7.2 3.1-7.2 2.6 3.6H37"/><path d="M1.5 14H11M37 14h9.5"/><rect class="f" x="3.4" y="5.5" width="3.6" height="17" rx="1.2"/><rect class="f" x="7.4" y="8" width="2.6" height="12" rx="1"/><rect class="f" x="41" y="5.5" width="3.6" height="17" rx="1.2"/><rect class="f" x="38" y="8" width="2.6" height="12" rx="1"/>'],
+    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows','<circle cx="24" cy="3.4" r="2.1"/><path d="M24 5.5v2.4"/><path class="w" d="M24 8L15 19.2M24 8l9 11.2"/><rect class="s" x="8.6" y="18.4" width="9.6" height="4.6" rx="2.3" transform="rotate(-10 13.4 20.7)"/><rect class="s" x="29.8" y="18.4" width="9.6" height="4.6" rx="2.3" transform="rotate(10 34.6 20.7)"/>'],
+    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'One-arm moves','<circle cx="24" cy="3.2" r="2"/><path d="M24 5.2v1.4"/><path class="w" d="M24 6.6L14.2 18.8M24 6.6l9.8 12.2"/><rect class="f" x="12" y="18.2" width="24" height="6.2" rx="3.1"/><path d="M16.5 21.3h15" stroke-dasharray="1.3 1.7" stroke-width=".9"/>'],
+    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'Crossovers, flyes','<circle cx="12" cy="3.2" r="1.8"/><path class="w" d="M12 5L5.6 15.6M12 5l6.4 10.6"/><rect class="f" x="3.8" y="15.2" width="16.4" height="5.4" rx="2.7"/><circle cx="36" cy="3.2" r="1.8"/><path class="w" d="M36 5l-6.4 10.6M36 5l6.4 10.6"/><rect class="f" x="27.8" y="15.2" width="16.4" height="5.4" rx="2.7"/><path d="M7.5 17.9h9M31.5 17.9h9" stroke-dasharray="1.2 1.6" stroke-width=".8"/>'],
+    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns','<circle cx="24" cy="3" r="1.9"/><path d="M24 4.9v4.3"/><rect class="f" x="21.4" y="9.1" width="5.2" height="3" rx="1.1"/><path class="w" d="M10.5 12.3h27"/><path class="w" d="M10.5 12.3L4 20.5M37.5 12.3L44 20.5"/><path d="M3.3 19.4l3.6-4.6M44.7 19.4l-3.6-4.6" stroke-width="4" stroke-linecap="round" opacity=".55"/>'],
+    ['Parallel-grip lat bar','Cable handles',['Back'],'Palms-in pulldowns','<circle cx="24" cy="3" r="1.9"/><path d="M24 4.9v4.4"/><path class="w" d="M4 10.6h40"/><path d="M8.5 10.6v12.6h5.5V10.6M34 10.6v12.6h5.5V10.6"/><rect class="s" x="9.7" y="13" width="3.1" height="8.4" rx="1.5"/><rect class="s" x="35.2" y="13" width="3.1" height="8.4" rx="1.5"/>'],
+    ['MAG grip','Cable handles',['Back'],'Rows, pulldowns','<circle cx="24" cy="3" r="1.9"/><path d="M24 4.9v3.6"/><rect class="f" x="9" y="8.5" width="30" height="4" rx="1.6"/><rect class="s" x="11.5" y="12.5" width="5.4" height="11.5" rx="2.5"/><rect class="s" x="31.1" y="12.5" width="5.4" height="11.5" rx="2.5"/><path d="M14.2 14.5v7.5M33.8 14.5v7.5" stroke="#000" stroke-opacity=".35" stroke-width=".8"/>'],
+    ['Row handle','Cable handles',['Back'],'Seated rows','<circle cx="24" cy="3" r="1.9"/><path d="M24 4.9v1.4"/><path class="w" d="M24 6.3L14 20.5M24 6.3l10 14.2"/><path d="M19.4 12.8L18 20.5M28.6 12.8L30 20.5"/><rect class="s" x="13.2" y="19.6" width="8" height="5.2" rx="2.6"/><rect class="s" x="26.8" y="19.6" width="8" height="5.2" rx="2.6"/>'],
+    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks','<circle cx="24" cy="2.8" r="1.7"/><path d="M24 4.5v1.2"/><path class="w" d="M20.4 11.2V8.6a3.6 3.6 0 0 1 7.2 0v2.6"/><rect class="f" x="8" y="11" width="32" height="12" rx="6"/><path d="M15 11v12M33 11v12" stroke-dasharray="1.3 1.5" stroke-width=".8"/><rect class="s" x="18" y="13.6" width="12" height="6.8" rx="1.6" opacity=".55"/>'],
+    ['Tricep bar','Cable handles',['Arms'],'Pushdowns','<circle cx="24" cy="3" r="1.9"/><path d="M24 4.9v6"/><path class="w" d="M6 8.5Q14 22.5 24 12.6Q34 22.5 42 8.5"/><rect class="s" x="3.4" y="5.6" width="4.4" height="6.4" rx="2" transform="rotate(-30 5.6 8.8)"/><rect class="s" x="40.2" y="5.6" width="4.4" height="6.4" rx="2" transform="rotate(30 42.4 8.8)"/>'],
+    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squat, bench, deadlift','<path d="M.8 14h46.4"/><rect class="f" x="3.4" y="2.6" width="4.2" height="22.8" rx="1.4"/><rect class="f" x="8.2" y="5.4" width="3.2" height="17.2" rx="1.2"/><rect class="s" x="12" y="11.4" width="1.8" height="5.2" rx=".6"/><rect class="f" x="40.4" y="2.6" width="4.2" height="22.8" rx="1.4"/><rect class="f" x="36.6" y="5.4" width="3.2" height="17.2" rx="1.2"/><rect class="s" x="34.2" y="11.4" width="1.8" height="5.2" rx=".6"/><path d="M17 12.9v2.2M19 12.9v2.2M21 12.9v2.2M27 12.9v2.2M29 12.9v2.2M31 12.9v2.2" stroke-width=".8"/>'],
+    ['Trap bar','Bars',['Legs','Back'],'Deadlifts','<path class="w" d="M15 5.2h18l6.4 8.8L33 22.8H15L8.6 14Z"/><rect class="s" x="16.6" y="9.6" width="3.4" height="8.8" rx="1.7"/><rect class="s" x="28" y="9.6" width="3.4" height="8.8" rx="1.7"/><path d="M1 14h7.6M39.4 14H47"/><rect class="f" x="2" y="7.6" width="3.4" height="12.8" rx="1.1"/><rect class="f" x="42.6" y="7.6" width="3.4" height="12.8" rx="1.1"/>'],
+    ['Safety squat bar','Bars',['Legs'],'Squats, easy shoulders','<path d="M1 11.5h46"/><rect class="f" x="15.5" y="7.4" width="17" height="7.6" rx="3.8"/><path class="w" d="M19.5 14.6Q16.2 19.6 19.6 25.2M28.5 14.6Q31.8 19.6 28.4 25.2"/><rect class="f" x="2.2" y="5" width="3.4" height="13" rx="1.1"/><rect class="f" x="42.4" y="5" width="3.4" height="13" rx="1.1"/>'],
+    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'Palms-in presses','<rect class="w" x="9.2" y="5.6" width="29.6" height="16.8" rx="2.6"/><rect class="s" x="15.6" y="8.6" width="3.2" height="10.8" rx="1.6"/><rect class="s" x="22.4" y="8.6" width="3.2" height="10.8" rx="1.6"/><rect class="s" x="29.2" y="8.6" width="3.2" height="10.8" rx="1.6"/><path d="M1 14h8.2M38.8 14H47"/>'],
+    ['Cambered bar','Bars',['Legs','Chest'],'Squats, presses','<path class="w" d="M2 20.5h6.6L12.6 7.4h22.8l4 13.1H46"/><rect class="f" x="3" y="14" width="3.4" height="13" rx="1.1"/><rect class="f" x="41.6" y="14" width="3.4" height="13" rx="1.1"/><rect class="f" x="18" y="4.6" width="12" height="5" rx="2.5"/>'],
+    ['Landmine','Bars',['Back','Shoulders','Core'],'Rows, presses','<rect class="f" x="1.6" y="22.6" width="13" height="4" rx="1.2"/><circle cx="8" cy="20.6" r="2.3"/><path class="w" d="M9.9 19.6L35.6 8.4"/><circle class="f" cx="39.4" cy="7.2" r="6"/><circle cx="39.4" cy="7.2" r="1.5"/>'],
+    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'Bar on rails','<path class="w" d="M10 1.6v24.8M38 1.6v24.8"/><path d="M6 26.4h8M34 26.4h8"/><path d="M2.5 13h43"/><rect class="s" x="8.2" y="10.4" width="3.6" height="5.6" rx="1"/><rect class="s" x="36.2" y="10.4" width="3.6" height="5.6" rx="1"/><rect class="f" x="3.2" y="7.4" width="3" height="11.4" rx="1"/><rect class="f" x="41.8" y="7.4" width="3" height="11.4" rx="1"/>'],
+    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls','<path class="f" d="M4.4 8.2L9 5.6l4.6 2.6v11.6L9 22.4l-4.6-2.6Z"/><path class="f" d="M34.4 8.2L39 5.6l4.6 2.6v11.6L39 22.4l-4.6-2.6Z"/><rect class="s" x="13.6" y="10.6" width="2.6" height="6.8" rx=".8"/><rect class="s" x="31.8" y="10.6" width="2.6" height="6.8" rx=".8"/><path class="w" d="M16.2 14h15.6"/><path d="M19.5 12.8v2.4M22.5 12.8v2.4M25.5 12.8v2.4M28.5 12.8v2.4" stroke-width=".8"/>'],
+    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings','<path class="w" d="M17.4 12.6V9.4a6.6 6 0 0 1 13.2 0v3.2"/><path d="M19.8 11.6V9.6a4.2 3.8 0 0 1 8.4 0v2" opacity=".6"/><path class="f" d="M19.6 26.4A10.2 10.2 0 1 1 28.4 26.4Z"/><path d="M18.6 15.6a6.6 6.6 0 0 1 3.6-3.4" stroke-width="1.6" opacity=".8"/>'],
+    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Plate raises','<circle class="f" cx="24" cy="14" r="12.4"/><circle cx="24" cy="14" r="8.2"/><circle class="s" cx="24" cy="14" r="2.2"/><rect class="s" x="21.6" y="3.2" width="4.8" height="2.6" rx="1.3"/><rect class="s" x="21.6" y="3.2" width="4.8" height="2.6" rx="1.3" transform="rotate(120 24 14)"/><rect class="s" x="21.6" y="3.2" width="4.8" height="2.6" rx="1.3" transform="rotate(240 24 14)"/>'],
+    ['Medicine ball','Free weights',['Core'],'Slams, throws','<circle class="f" cx="24" cy="14" r="12"/><path d="M12.4 11.6C17.6 14.6 30.4 14.6 35.6 11.6M12.6 17C17.8 19.8 30.2 19.8 35.4 17"/><path d="M19 3.2C16.4 9 16.4 19 19 24.8M29 3.2C31.6 9 31.6 19 29 24.8"/>'],
+    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'Weighted dips','<path class="f" d="M4.5 3.4Q24 12.6 43.5 3.4l.4 3.8Q24 16.6 4.1 7.2Z"/><ellipse cx="24" cy="14.2" rx="1.3" ry="1.9"/><ellipse cx="24" cy="17.5" rx=".7" ry="1.9"/><path d="M24 19.4v.8"/><circle class="f" cx="24" cy="23.6" r="4.2"/><circle cx="24" cy="23.6" r="1"/>'],
+    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Extra weight','<path class="f" d="M17.2 2.6L12.4 6.8V25.6h23.2V6.8l-4.8-4.2-3.4 4.6h-6.8Z"/><rect class="s" x="15.4" y="11" width="7.4" height="5.6" rx="1" opacity=".55"/><rect class="s" x="25.2" y="11" width="7.4" height="5.6" rx="1" opacity=".55"/><rect class="s" x="15.4" y="18.2" width="7.4" height="5" rx="1" opacity=".55"/><rect class="s" x="25.2" y="18.2" width="7.4" height="5" rx="1" opacity=".55"/>'],
+    ['Belt','Belts and gear',['Legs','Back'],'Heavy lifts','<path class="f" d="M2.6 9.4Q24 5.2 45.4 9.4v9.2Q24 22.8 2.6 18.6Z"/><path d="M4.8 11.4Q24 7.6 43.2 11.4M4.8 16.6Q24 20.4 43.2 16.6" stroke-dasharray="1.3 1.5" stroke-width=".8"/><rect class="w" x="27.4" y="7.4" width="7.4" height="13.2" rx="1.6"/><path d="M31.1 8.8v10.4"/><circle class="s" cx="38.4" cy="14" r="1"/><circle class="s" cx="41.4" cy="14" r="1"/>'],
+    ['Straps','Belts and gear',['Back'],'Heavy pulls','<path class="w" d="M2 7.4h44"/><path class="f" d="M12.6 4.4a3.4 3.4 0 1 1 0 6.2l-1.6 15.4h-4.4L8.6 10.2a3.4 3.4 0 0 1 4-5.8Z"/><path class="f" d="M38.6 4.4a3.4 3.4 0 1 0 0 6.2l1.6 15.4h4.4l-2-15.8a3.4 3.4 0 0 0-4-5.8Z"/><path d="M8.2 18.4h4.4M39.2 18.4h4.4" stroke-width=".8" stroke-dasharray="1 1.1"/>'],
+    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Heavy presses','<circle class="f" cx="13" cy="14" r="9"/><path d="M13 9.6a4.4 4.4 0 1 1-4.4 4.4 2.4 2.4 0 0 1 2.4-2.4 1.6 1.6 0 0 1 1.6 1.6"/><path class="f" d="M13 23h22.6l4.2-3.4h4.4V23"/><path d="M28 23v-3.4h7.6" stroke-dasharray="1 1.2"/><path d="M44.2 19.6c2.4 0 3.2 3.4 0 3.4"/>'],
+    ['Knee sleeves','Belts and gear',['Legs'],'Warm knees','<path class="f" d="M13.6 2.4h20.8q-3.6 11.6 0 23.2H13.6q3.6-11.6 0-23.2Z"/><ellipse cx="24" cy="14" rx="4.2" ry="4.8"/><path d="M13.8 5.6h20.4M13.8 22.4h20.4" stroke-dasharray="1.2 1.5" stroke-width=".8"/>'],
+    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'Pull-up help','<path class="f" fill-rule="evenodd" d="M3.6 14C3.6 8.6 12.6 4.8 24 4.8S44.4 8.6 44.4 14 35.4 23.2 24 23.2 3.6 19.4 3.6 14Zm5 0c0 3.2 6.9 5.4 15.4 5.4S39.4 17.2 39.4 14 32.5 8.6 24 8.6 8.6 10.8 8.6 14Z"/><path d="M14 6.4c3-.8 6.4-1.1 10-1.1" stroke-width="1.6" opacity=".7"/>'],
+    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top','<rect x="1.4" y="10.6" width="10" height="6.8" rx="3.4"/><rect class="w" x="9" y="12.9" width="9" height="2.2" rx="1.1"/><rect x="15.6" y="10.6" width="10" height="6.8" rx="3.4"/><rect class="w" x="23.2" y="12.9" width="9" height="2.2" rx="1.1"/><rect x="29.8" y="10.6" width="10" height="6.8" rx="3.4"/><rect class="w" x="37.4" y="12.9" width="9" height="2.2" rx="1.1"/>']
   ];
   var AREAS=['Back','Legs','Glutes','Arms','Chest','Shoulders','Core'];
   /* the leg press: where your feet go changes what works (p42). Height matters
@@ -70506,14 +70572,27 @@ window.KovaDream=(function(){
     var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },45000):0;
     return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){
       clearTimeout(tm);
-      if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); });
+      if(!r.ok) return r.text().then(function(t){ throw said(r.status,t); });
       return r.json();
     }).then(function(d){
       var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
-      if(a<0||z<a) throw new Error('The answer came back in a form Kova could not read. Try again.');
+      if(a<0||z<a) throw Object.assign(new Error('unreadable'),{server:'The answer came back in a form Kova could not read. Try again.'});
       return JSON.parse(raw.slice(a,z+1));
     });
   }
+  /* p43c: the server's own reason ("out of credit", "too big", "busy"...), never just "the connection dropped" */
+  function said(status,t){ var j=null; try{ j=JSON.parse(t); }catch(x){} var e=new Error(status+' '+String(t).slice(0,120)); e.status=status; e.code=j&&j.code||''; e.server=j&&j.error?String(j.error):''; return e; }
+  function errText(e,again){
+    if(e&&e.signin) return 'Sign in and Kova\u2019s AI reads the picture for you, free.';
+    if(e&&e.server) return e.server;
+    if(e&&e.name==='AbortError') return 'Kova\u2019s AI took too long. '+again;
+    if(e&&e.status>=400&&e.status<500) return 'That picture could not be used. Try another photo or a short video.';
+    if(e&&e.status) return 'Kova\u2019s AI could not answer just now. '+again;
+    if(e&&/fetch|network|load failed|internet/i.test(String(e.message))) return 'No connection to Kova just now. Check the internet, then '+again.toLowerCase();
+    return 'Kova hit a problem ('+String(e&&e.message||'unknown').slice(0,80)+'). '+again;
+  }
+  /* only a dropped connection or a busy moment is worth one more try */
+  function retry(e){ return !!e&&!e.signin&&e.name!=='AbortError'&&(e.code==='busy'||(e.status>=500&&!e.code)||(!e.status&&/fetch|network|load failed/i.test(String(e.message)))); }
   function fit(d){ var K=window.KovaModel; return K&&K.fit&&/^data:image\//.test(d)?K.fit(d).catch(function(){ return d; }):Promise.resolve(d); }
   function compare(){
     if(!S.want||S.busy) return;
@@ -70522,7 +70601,7 @@ window.KovaDream=(function(){
     if(!(window.KovaModel&&KovaModel.connected())){ S.err='Sign in and Kova\u2019s AI reads the picture for you, free.'; paint(); return; }
     S.busy=true; S.err=''; paint();
     var once=function(){ return Promise.all([fit(S.want)].concat(S.me?[fit(S.me)]:[])).then(function(imgs){ return ask(imgs,facts); }); };
-    once().catch(function(e){ if(e&&!e.signin&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+    once().catch(function(e){ if(retry(e)) return new Promise(function(ok){ setTimeout(ok,1500); }).then(once); throw e; })
       .then(function(r){
         S.busy=false;
         if(!r||r.ok===false){ S.err=(r&&r.why_not)||'Kova could not see a body clearly in that picture. Try one where the whole body or torso is in view.'; paint(); return; }
@@ -70534,7 +70613,7 @@ window.KovaDream=(function(){
       })
       .catch(function(e){
         S.busy=false;
-        S.err=e&&e.signin?'Sign in and Kova’s AI reads the picture for you, free.':/^4\d\d /.test(String(e&&e.message))?'That picture could not be used. Try another photo or a short video.':e&&e.name==='AbortError'?'Kova\u2019s AI took too long. Try again.':'The connection dropped. Try again.';
+        S.err=errText(e,'Try again.'); track('dream_fail',{code:e&&e.code||'',status:e&&e.status||0});
         paint();
       });
   }
@@ -70561,8 +70640,8 @@ window.KovaDream=(function(){
     var c=K.cfg(), P=K.providers[c.p];
     var req=P.build(c.key,c.model,COACH,[{role:'user',content:facts}],{temperature:0.2,max_tokens:1800});
     var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },60000):0;
-    var once=function(){ return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){ if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); }); return r.json(); }); };
-    once().catch(function(e){ if(e&&e.name!=='AbortError'&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+    var once=function(){ return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){ if(!r.ok) return r.text().then(function(t){ throw said(r.status,t); }); return r.json(); }); };
+    once().catch(function(e){ if(retry(e)) return new Promise(function(ok){ setTimeout(ok,1500); }).then(once); throw e; })
       .then(function(d){
         clearTimeout(tm); S.coaching=false;
         var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
@@ -70571,7 +70650,7 @@ window.KovaDream=(function(){
         S.ans=cleanAns(j,q,days); keepAns(); track('dream_ask',{days:S.ans.split.length,meals:S.ans.meals.length});
         paint(); var el=document.querySelector('#kdp .kdp-ans'); if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
       })
-      .catch(function(e){ clearTimeout(tm); S.coaching=false; S.ansErr=e&&e.name==='AbortError'?'Kova took too long to answer. Ask again.':'The connection dropped. Ask again.'; paint(); });
+      .catch(function(e){ clearTimeout(tm); S.coaching=false; S.ansErr=errText(e,'Ask again.'); paint(); });
   }
   /* what came back, checked: real days, 2-3 working sets, meals added up here */
   function cleanAns(j,q,days){
@@ -70647,22 +70726,20 @@ window.KovaDream=(function(){
         +'<div class="kdp-you">'+youLine(Y)+'</div>'+err+'</section>';
       return h+results(o,Y,r)+'</div>';
     }
-    /* the two pictures in */
-    h+='<section class="card kdp-in"><div class="kz2p-k">THE BODY YOU WANT</div>'
-      +(want?'<img class="kdp-want" src="'+esc(want)+'" alt="The body you want"/>':'<div class="sub">A photo or a short video of the body you want: an actor, an athlete, an influencer, anyone. Kova reads the body, never who it is.</div>')
-      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="want">'+ic('video')+(want?'Change it':'Photo or video')+'</button><button type="button" class="chip" data-kdp="link">'+ic('arrow-up-right')+'Paste a link</button></div>'
-      +'<div class="kz2p-k" style="margin-top:14px">YOU NOW, OPTIONAL</div>'
-      +(S.me?'<img class="kdp-me" src="'+esc(S.me)+'" alt="You now"/>':'<div class="sub">A photo of you, front-on, and Kova marks what to build on your own body. Without it Kova uses your height, weight and age.</div>')
-      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="me">'+ic('video')+(S.me?'Change my photo':'Add my photo')+'</button></div>'
+    /* the two pictures in, side by side (p43c: it was two big stacked sections, edge to edge) */
+    var slot=function(k,img,t,sub){ return '<button type="button" class="kdp-slot'+(img?' on':'')+'" data-kdp="'+k+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(t)+'"/>':'<i>'+ic(k==='want'?'sparkles':'plus')+'</i>')+'<b>'+esc(t)+'</b><small>'+esc(img?'Tap to change':sub)+'</small></button>'; };
+    h+='<section class="card kdp-in"><div class="kdp-pair">'+slot('want',want,'The body you want','A photo or a video')+slot('me',S.me,'You now','Optional')+'</div>'
+      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="link">'+ic('arrow-up-right')+'Paste a link instead</button></div>'
       +'<div class="kdp-you">'+youLine(Y)+'</div>'
-      +'<label class="kz2p-k kdp-ql" for="kdpQ" style="display:block;margin-top:14px">WHAT DO YOU WANT? OPTIONAL</label>'
-      +'<textarea id="kdpQ" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(Y.sex==='f'?'How do I make my glutes bigger like her?':'How do I get my chest and arms bigger like him?')+'">'+esc(S.q||'')+'</textarea>'
+      +'<label class="kz2p-k kdp-ql" for="kdpQ">What do you want? Optional</label>'
+      +'<textarea id="kdpQ" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(Y.sex==='f'?'How do I make my glutes bigger like her?':'How do I get my back that wide?')+'">'+esc(S.q||'')+'</textarea>'
       +'<button type="button" class="kz2p-go kdp-go" data-kdp="compare"'+(S.want&&!S.busy?'':' disabled')+'>'+ic('sparkles')+'<span>'+(S.busy?'Reading the pictures…':'Compare')+'</span></button>'
       +err+'</section>';
     return h+'</div>';
   }
   function youLine(Y){
-    if(!Y.kg||!Y.hcm||!Y.age) return 'Your numbers: '+(Y.kg?wt(Y.kg,Y.unit):'weight not set')+(Y.hcm?', '+ht(Y.hcm,Y.unit):'')+'. <button type="button" class="kdp-link" data-kdp="maint">Add height, weight and age</button>';
+    /* the owner did not know their weight, age or height: that is fine, the photos are read */
+    if(!Y.kg||!Y.hcm||!Y.age) return 'No numbers needed: Kova reads the photos. <button type="button" class="kdp-link" data-kdp="maint">Add yours</button> for calories.';
     return 'You: '+(Y.sex==='f'?'woman':'man')+', '+Y.age+', '+ht(Y.hcm,Y.unit)+', '+wt(Y.kg,Y.unit)+(Y.bf?', about '+Math.round(Y.bf)+'% body fat':'')+'. <button type="button" class="kdp-link" data-kdp="maint">Change</button>';
   }
   function nm(m){ return NAME[m].replace(/ \(.*\)/,''); }
@@ -70695,7 +70772,7 @@ window.KovaDream=(function(){
       });
     });
     return '<figure class="kdp-pf '+(cls||'')+'"><div class="kdp-pw"><img src="'+esc(src)+'" alt="'+esc(label)+'"/>'
-      +'<svg viewBox="0 0 100 '+H.toFixed(1)+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><radialGradient id="'+g+'"><stop offset="0" stop-color="#FFA36B" stop-opacity=".9"/><stop offset=".55" stop-color="#E87A3C" stop-opacity=".5"/><stop offset="1" stop-color="#E87A3C" stop-opacity=".08"/></radialGradient></defs>'+shapes+lines+'</svg>'+tags+'</div></figure>';
+      +'<svg viewBox="0 0 100 '+H.toFixed(1)+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><radialGradient id="'+g+'"><stop offset="0" stop-color="#FFF4D8" stop-opacity=".9"/><stop offset=".55" stop-color="#D8C79C" stop-opacity=".5"/><stop offset="1" stop-color="#B7AA8C" stop-opacity=".08"/></radialGradient></defs>'+shapes+lines+'</svg>'+tags+'</div></figure>';
   }
   function results(o,Y,r){
     return hero(o,Y)+timeline(o,Y)+planCard(o,Y)+honest(o);
@@ -70879,7 +70956,7 @@ window.KovaDream=(function(){
     var steps=TOUR.concat(S.out?[['.kdp-photos','What to build','The glowing areas are the muscles to build more, on your own photo when you add one.'],['.kdp-tl','Your change','3 months, 6 months or a year: where you will be if you follow the plan. Tap a point in time.'],['.kdp-ans','Your plan','Train, Eat and Steps. Ask Kova anything and it writes your split and meals.']]:[])
       .filter(function(t){ return el.querySelector(t[0]); })
       .map(function(t){ return {t:t[1],d:t[2],el:function(){ return el.querySelector(t[0]); }}; });
-    KovaTour.run(steps,{color:'#E87A3C'});
+    KovaTour.run(steps,{color:'section'});
     var tt=document.getElementById('ksTour'); if(tt) tt.style.zIndex='9700';
   }
 
@@ -71078,7 +71155,7 @@ window.KovaVoice=(function(){
 
    KovaDial.mount(el, {items:[{id,label,icon}], sel, onPick(i,item),
      centre:{icon:'dot'|'swap'|'play', label, onTap}}) -> {set, swap, pop, sel}
-   KovaDial.mus(group) gives a segment icon drawn from Kova's own body map. */
+   KovaDial.mus(group) gives a segment icon for a body part. */
 window.KovaDial=(function(){
   'use strict';
   /* the geometry, in a 320 x 320 box (centre 160): the slot sits a little
@@ -71086,18 +71163,22 @@ window.KovaDial=(function(){
   var C=160, STEP=52, W=47, SLOT=80, RI=74, RO=132, GROW=19, LO=-66, HI=230, FADE=28;
   var N=0;
   function P(r,a){ a=a*Math.PI/180; return [C+r*Math.cos(a),C+r*Math.sin(a)]; }
-  function pt(r,a){ var q=P(r,a); return q[0].toFixed(1)+' '+q[1].toFixed(1); }
   /* an arc segment with soft corners: each corner is a curve from the
-     straight side onto the arc */
-  function seg(ri,ro,a0,a1,cr){
-    var dO=cr/ro*57.3, dI=cr/ri*57.3, big=(a1-a0)>180?1:0;
+     straight side onto the arc; k scales it to pixels (for the glass layer) */
+  function seg(ri,ro,a0,a1,cr,k){
+    k=k||1;
+    var pt=function(r,a){ var q=P(r,a); return (q[0]*k).toFixed(1)+' '+(q[1]*k).toFixed(1); };
+    var dO=cr/ro*57.3, dI=cr/ri*57.3, big=(a1-a0)>180?1:0, RO=(ro*k).toFixed(1), RI=(ri*k).toFixed(1);
     return 'M'+pt(ro-cr,a0)+'Q'+pt(ro,a0)+' '+pt(ro,a0+dO)
-      +'A'+ro.toFixed(1)+' '+ro.toFixed(1)+' 0 '+big+' 1 '+pt(ro,a1-dO)
+      +'A'+RO+' '+RO+' 0 '+big+' 1 '+pt(ro,a1-dO)
       +'Q'+pt(ro,a1)+' '+pt(ro-cr,a1)
       +'L'+pt(ri+cr,a1)+'Q'+pt(ri,a1)+' '+pt(ri,a1-dI)
-      +'A'+ri.toFixed(1)+' '+ri.toFixed(1)+' 0 '+big+' 0 '+pt(ri,a0+dI)
+      +'A'+RI+' '+RI+' 0 '+big+' 0 '+pt(ri,a0+dI)
       +'Q'+pt(ri,a0)+' '+pt(ri+cr,a0)+'Z';
   }
+  /* real frosted glass (the page behind blurred and lit through each
+     segment) where the browser can clip to a path; else the drawn glass */
+  var GLASS=false; try{ GLASS=!!(window.CSS&&CSS.supports&&(CSS.supports('clip-path','path("M0 0L1 1Z")')||CSS.supports('-webkit-clip-path','path("M0 0L1 1Z")'))); }catch(e){}
   function clamp(x,a,b){ return x<a?a:x>b?b:x; }
   function ease(t){ return 1-Math.pow(1-t,3); }
   function back(t){ var c=1.45; return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2); }
@@ -71106,23 +71187,14 @@ window.KovaDial=(function(){
   var raf=window.requestAnimationFrame?function(f){ return requestAnimationFrame(f); }:function(f){ return setTimeout(function(){ f(Date.now()); },16); };
   function now(){ return window.performance&&performance.now?performance.now():Date.now(); }
 
-  /* ---------- segment icons from the body map ---------- */
-  var MUS={Quads:['f-quad-l','f-quad-r'],Legs:['f-quad-l','f-quad-r'],Glutes:['b-glute-l','b-glute-r'],Hamstrings:['b-ham-l','b-ham-r'],
-    Chest:['f-pec-l','f-pec-r'],Back:['b-lat-l','b-lat-r','b-trap'],Shoulders:['f-delt-l'],Arms:['f-bicep-l','f-fore-l'],
-    Core:['f-abs-l1','f-abs-l2','f-abs-l3','f-abs-r1','f-abs-r2','f-abs-r3'],Calves:['b-calf-l','b-calf-r'],Upper:['f-pec-l','f-pec-r','f-delt-l','f-delt-r']};
-  var PATHS=null;
-  function paths(){
-    if(PATHS) return PATHS; PATHS={};
-    var src=(typeof BODY_FRONT==='string'?BODY_FRONT:'')+(typeof BODY_BACK==='string'?BODY_BACK:'');
-    src.replace(/<path[^>]*>/g,function(tag){ var id=/\bid="([^"]+)"/.exec(tag), d=/\bd="([^"]+)"/.exec(tag); if(id&&d) PATHS[id[1]]=d[1]; return tag; });
-    return PATHS;
-  }
+  /* ---------- segment icons ---------- */
+  /* p43c: hand-drawn body-part icons (the owner: the old ones, cut from the body map, did not read): a leg in profile lit at the front (quads), back (hamstrings) or calf, glutes, a chest, a back with lats, shoulders, a flexed arm, abs, a pull-up */
+  var MI={"all":"<rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/><rect class=\"f\" x=\"13\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/>","Quads":"<path d=\"M6.2 2.2h4.2c.6 3.2.6 6.4 1.8 9.6.4 1 .4 2-.2 3l-1 4.8 5.2 1.4c1 .3 1.4 1.4.4 1.8H8.8c-.6 0-1-.5-.9-1l.3-2.2c-1.4-1.6-2.2-3.6-1.4-5.8l.4-1.4C5.8 9.6 5.2 6.2 6.2 2.2Z\"/><path class=\"f\" d=\"M10.2 3.4c.6 2.8.8 5.6 1.8 8.2-1.6-.4-2.6-1.8-3-3.6-.4-1.8.2-3.4 1.2-4.6Z\"/>","Glutes":"<path d=\"M3.8 6.6c1.6-1.6 4.6-2.6 8.2-2.6s6.6 1 8.2 2.6\"/><path d=\"M3.8 6.6c-.8 3.4-.8 7 .6 10.2M20.2 6.6c.8 3.4.8 7-.6 10.2\"/><path class=\"f\" d=\"M12 9.2c-1.4-1.8-3.4-2.4-5.4-1.6C4.2 8.6 3.4 11.6 4.6 14.6c1.2 3 4.2 4.4 7.4 3.4ZM12 9.2c1.4-1.8 3.4-2.4 5.4-1.6 2.4 1 3.2 4 2 7-1.2 3-4.2 4.4-7.4 3.4Z\"/><path d=\"M12 8.6v10.2\"/><path d=\"M6.4 19.6c1.6 1.2 3.6 1.4 5.6.6M17.6 19.6c-1.6 1.2-3.6 1.4-5.6.6\"/>","Hamstrings":"<path d=\"M6.2 2.2h4.2c.6 3.2.6 6.4 1.8 9.6.4 1 .4 2-.2 3l-1 4.8 5.2 1.4c1 .3 1.4 1.4.4 1.8H8.8c-.6 0-1-.5-.9-1l.3-2.2c-1.4-1.6-2.2-3.6-1.4-5.8l.4-1.4C5.8 9.6 5.2 6.2 6.2 2.2Z\"/><path class=\"f\" d=\"M6.6 3.2c-.8 3-.4 5.8 1.2 8.2 1-1.6 1.2-3.6.8-5.6-.2-1.2-.9-2.2-2-2.6Z\"/>","Chest":"<path d=\"M3.4 6.6C6 4.8 9 4.4 12 5.4c3-1 6-.6 8.6 1.2\"/><path d=\"M3.4 6.6c-.6 4 0 8.4 1.6 12.4M20.6 6.6c.6 4 0 8.4-1.6 12.4\"/><path class=\"f\" d=\"M11.6 6.4c-2.6-.9-5.4-.4-7 .9-.6 2.6 0 5.4 1.8 6.8 2 1.6 4.4 1.4 5.2-.4ZM12.4 6.4c2.6-.9 5.4-.4 7 .9.6 2.6 0 5.4-1.8 6.8-2 1.6-4.4 1.4-5.2-.4Z\"/><path d=\"M12 6v8.2\"/>","Back":"<path d=\"M4.6 4.6h14.8\"/><path d=\"M4.6 4.6c-.8 2.6-.4 5 1.2 7.4l1.8 8.4h8.8l1.8-8.4c1.6-2.4 2-4.8 1.2-7.4\"/><path class=\"f\" d=\"M6 6.6c.6 3.6 2.6 7 5.4 9.6l-.2-6.6ZM18 6.6c-.6 3.6-2.6 7-5.4 9.6l.2-6.6Z\"/><path d=\"M8.4 4.6L12 8l3.6-3.4\"/><path d=\"M12 6.8v13.4\" stroke-width=\".9\"/>","Shoulders":"<circle cx=\"12\" cy=\"4.2\" r=\"2.4\"/><path d=\"M8 9.6c1.2-1 2.6-1.6 4-1.6s2.8.6 4 1.6\"/><path class=\"f\" d=\"M7.6 9.4C4.8 9.4 3 11.8 3.2 15.2l.4 3.4h3.4c.8-2.6 1.4-5.6.6-9.2ZM16.4 9.4c2.8 0 4.6 2.4 4.4 5.8l-.4 3.4H17c-.8-2.6-1.4-5.6-.6-9.2Z\"/><path d=\"M7.6 9.4C4.8 9.4 3 11.8 3.2 15.2l.4 3.4h3.4M16.4 9.4c2.8 0 4.6 2.4 4.4 5.8l-.4 3.4H17M8 9.6l-.4 11.6M16 9.6l.4 11.6\"/>","Arms":"<path d=\"M4.4 20.4h7.4c4.8 0 8.4-2.8 8.4-6.6 0-3.4-2.6-5.6-5.6-5.2-1.6.2-2.8 1.2-3.2 2.4\"/><path d=\"M11.4 11c-.6-1.4-2-2.2-3.6-2l-.6-3.6c1-.4 1.6-1.4 1.4-2.4-.2-1.2-1.4-2-2.6-1.6l-1.8.6c-1.2.4-1.8 1.6-1.4 2.8l2 6.6-.4 9\"/><path class=\"f\" d=\"M11.6 11.4c1-1.8 3.4-2.4 5.4-1.4 2 1.2 2.4 3.8 1 5.6-1.6 2-4.6 2.2-6.4.6Z\"/>","Core":"<path d=\"M6.6 3h10.8c.8 4.8.6 12.2-1.2 18H7.8C6 15.2 5.8 7.8 6.6 3Z\"/><path class=\"f\" d=\"M8.4 5.4h3v3h-3zM12.6 5.4h3v3h-3zM8.4 9.6h3v3h-3zM12.6 9.6h3v3h-3zM8.8 13.8h2.6v3.2H8.8zM12.6 13.8h2.6v3.2h-2.6z\"/><path d=\"M12 4v15.6\" stroke-width=\".9\"/>","Calves":"<path d=\"M6.2 2.2h4.2c.6 3.2.6 6.4 1.8 9.6.4 1 .4 2-.2 3l-1 4.8 5.2 1.4c1 .3 1.4 1.4.4 1.8H8.8c-.6 0-1-.5-.9-1l.3-2.2c-1.4-1.6-2.2-3.6-1.4-5.8l.4-1.4C5.8 9.6 5.2 6.2 6.2 2.2Z\"/><path class=\"f\" d=\"M8 13c-1.2 1.6-1 3.8.6 5.4.8-1.6.9-3.4.2-5Z\"/>","skill":"<path class=\"w\" d=\"M3 3.4h18\"/><path d=\"M8.8 3.6l2 5.4M15.2 3.6l-2 5.4\"/><circle class=\"f\" cx=\"12\" cy=\"10.6\" r=\"2.2\"/><path d=\"M12 12.8v5.6M12 18.4l-2.4 3.6M12 18.4l2.4 3.6M9.8 13.4l2.2.8 2.2-.8\"/>"};
+  var ALIAS={Legs:'Quads',Upper:'Chest'};
   function mus(g){
-    var ids=MUS[g]; if(!ids) return sprite(g==='all'?'grid-dots':'body-scan');
-    var L=paths(), d=ids.map(function(i){ return L[i]; }).filter(Boolean); if(!d.length) return sprite('body-scan');
-    var xs=[], ys=[]; d.join(' ').replace(/(-?\d+(?:\.\d+)?)[ ,](-?\d+(?:\.\d+)?)/g,function(_,x,y){ xs.push(+x); ys.push(+y); return _; });
-    var x0=Math.min.apply(0,xs), x1=Math.max.apply(0,xs), y0=Math.min.apply(0,ys), y1=Math.max.apply(0,ys), s=Math.max(x1-x0,y1-y0)*1.12, cx=(x0+x1)/2, cy=(y0+y1)/2;
-    return '<svg class="kdl-ic kdl-mus" viewBox="'+(cx-s/2).toFixed(1)+' '+(cy-s/2).toFixed(1)+' '+s.toFixed(1)+' '+s.toFixed(1)+'" aria-hidden="true">'+d.map(function(x){ return '<path d="'+x+'"/>'; }).join('')+'</svg>';
+    var k=g==='all'?'all':ALIAS[g]||g, svg=MI[k];
+    if(!svg) return sprite('body-scan');
+    return '<svg class="kdl-ic kdl-mi" viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg>';
   }
   function sprite(id){ return '<svg class="kdl-ic" aria-hidden="true"><use href="#i-'+id+'"/></svg>'; }
   /* a drawing in a 48 x 28 box (the attachments' own drawings) */
@@ -71135,10 +71207,11 @@ window.KovaDial=(function(){
   function html(o){
     o=o||{}; var id='kdl'+(++N);
     return '<div class="kdl" id="'+id+'" role="radiogroup" aria-label="'+esc(o.label||'Choose')+'">'
-      +'<svg class="kdl-svg" viewBox="0 0 320 320" aria-hidden="true"><defs>'
+      +'<div class="kdl-gl" aria-hidden="true"></div><svg class="kdl-svg" viewBox="0 0 320 320" aria-hidden="true"><defs>'
         +'<linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-a)"/><stop offset="1" style="stop-color:var(--kdl-b)"/></linearGradient>'
         +'<linearGradient id="'+id+'s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-sa)"/><stop offset="1" style="stop-color:var(--kdl-sb)"/></linearGradient>'
         +'<linearGradient id="'+id+'e" gradientUnits="userSpaceOnUse" x1="40" y1="20" x2="280" y2="300"><stop offset="0" style="stop-color:var(--kdl-e1)"/><stop offset=".55" style="stop-color:var(--kdl-e2)"/><stop offset="1" style="stop-color:var(--kdl-e3)"/></linearGradient>'
+        +'<filter id="'+id+'b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter>'
       +'</defs><g class="kdl-segs"></g></svg>'
       +'<div class="kdl-ls"></div>'
       +'<div class="kdl-hub"><button type="button" class="kdl-c" aria-label="'+esc(o.centre&&o.centre.label||'Centre')+'"></button></div></div>';
@@ -71148,7 +71221,7 @@ window.KovaDial=(function(){
     if(typeof el==='string') el=document.getElementById(el);
     if(!el||!el.querySelector) return null;
     o=o||{};
-    var id=el.id, segs=el.querySelector('.kdl-segs'), ls=el.querySelector('.kdl-ls'), cb=el.querySelector('.kdl-c');
+    var id=el.id, segs=el.querySelector('.kdl-segs'), ls=el.querySelector('.kdl-ls'), cb=el.querySelector('.kdl-c'), gl=el.querySelector('.kdl-gl');
     var st={items:o.items||[],pos:clamp(o.sel||0,0,Math.max(0,(o.items||[]).length-1)),pop:reduce?1:0,anim:null,sel:-1};
     st.sel=Math.round(st.pos);
     /* the track goes all the way round, like a real dial: whatever is chosen,
@@ -71159,14 +71232,16 @@ window.KovaDial=(function(){
     function build(){
       var h='', b='';
       st.items.forEach(function(it,i){
-        h+='<path class="kdl-s" fill="url(#'+id+'g)" stroke="url(#'+id+'e)" stroke-width=".9"/><path class="kdl-x" fill="url(#'+id+'s)"/>';
+        /* per segment: a soft glow of its rim, the glass with its bright edge, the milky light of the chosen one */
+        h+='<path class="kdl-r" fill="none" stroke="var(--kdl-e1)" stroke-width="2.6" filter="url(#'+id+'b)"/><path class="kdl-s" fill="url(#'+id+'g)" stroke="url(#'+id+'e)" stroke-width=".9"/><path class="kdl-x" fill="url(#'+id+'s)"/>';
         b+='<button type="button" class="kdl-l" role="radio" data-kdl-i="'+i+'" aria-checked="false" aria-label="'+esc(it.label)+'" tabindex="-1">'+(it.icon||'')+'<span>'+esc(it.label)+'</span></button>';
       });
       segs.innerHTML=h; ls.innerHTML=b;
+      if(gl) gl.innerHTML=GLASS?st.items.map(function(){ return '<i class="kdl-g"></i>'; }).join(''):'';
     }
     function centre(){ var c=o.centre||{}; cb.innerHTML=CENTRE[c.icon||'dot']||CENTRE.dot; cb.setAttribute('aria-label',c.label||'Centre'); cb.classList.toggle('kdl-c-act',!!c.onTap); }
     function draw(){
-      var S=segs.children, L=ls.children, pos=st.pos;
+      var S=segs.children, L=ls.children, G=gl?gl.children:[], pos=st.pos, kx=G.length?(el.clientWidth||0)/320:0;
       for(var i=0;i<st.items.length;i++){
         var d=rel(i,pos), ang=SLOT+d*STEP, t=Math.max(0,1-Math.abs(d)), t2=t*t*(3-2*t);
         var vis=clamp(Math.min((ang-LO)/FADE,(HI-ang)/FADE),0,1);
@@ -71176,8 +71251,10 @@ window.KovaDial=(function(){
         var k=0.36+0.64*e, ri2=44+(ri-44)*k, ro2=44+(ro-44)*k, sp=half*(0.55+0.45*Math.min(1,e));
         var op=vis*clamp(pp*1.6,0,1);
         var path=op>0.01?seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2)):'';
-        S[2*i].setAttribute('d',path); S[2*i].style.opacity=op.toFixed(3);
-        S[2*i+1].setAttribute('d',path); S[2*i+1].style.opacity=(op*t2).toFixed(3);
+        S[3*i].setAttribute('d',path); S[3*i].style.opacity=(op*(0.25+0.45*t2)).toFixed(3);
+        S[3*i+1].setAttribute('d',path); S[3*i+1].style.opacity=op.toFixed(3);
+        S[3*i+2].setAttribute('d',path); S[3*i+2].style.opacity=(op*t2).toFixed(3);
+        if(G[i]){ var gp=op>0.01&&kx?'path("'+seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2),kx)+'")':'none'; G[i].style.clipPath=gp; G[i].style.webkitClipPath=gp; G[i].style.opacity=op.toFixed(3); }
         var m=P((ri2+ro2)/2+3*t2,ang), lb=L[i];
         lb.style.left=(m[0]/3.2).toFixed(2)+'%'; lb.style.top=(m[1]/3.2).toFixed(2)+'%';
         lb.style.opacity=op.toFixed(3); lb.style.transform='translate(-50%,-50%) scale('+(0.94+0.08*t2).toFixed(3)+')';
@@ -71245,6 +71322,7 @@ window.KovaDial=(function(){
       wt=setTimeout(function(){ wacc=0; },180);
     },{passive:false});
     build(); centre(); draw(); pop(true);
+    if(window.ResizeObserver&&GLASS) try{ new ResizeObserver(function(){ if(!st.anim) draw(); }).observe(el); }catch(e){}
     var api={set:set,swap:swap,pop:pop,sel:function(){ return st.sel; },items:function(){ return st.items; },_st:st,el:el};
     el.__kdl=api;
     return api;
@@ -71253,7 +71331,7 @@ window.KovaDial=(function(){
   var EXPAND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-6.5 6.5M10 20H4v-6M4 20l6.5-6.5"/></svg>';
   var SHRINK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4l-6 6M14 4.5V10h5.5M4 20l6-6M10 19.5V14H4.5"/></svg>';
   function arrows(open){ return open?SHRINK:EXPAND; }
-  return {html:html,mount:mount,mus:mus,sprite:sprite,art:art,arrows:arrows,seg:seg,MUS:MUS,_geo:{C:C,STEP:STEP,SLOT:SLOT,RI:RI,RO:RO,GROW:GROW,LO:LO,HI:HI}};
+  return {html:html,mount:mount,mus:mus,sprite:sprite,art:art,arrows:arrows,seg:seg,MI:MI,_geo:{C:C,STEP:STEP,SLOT:SLOT,RI:RI,RO:RO,GROW:GROW,LO:LO,HI:HI}};
 })();
 
 </script>

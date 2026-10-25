@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-29',title:'Dream physique fixed, frosted glass, clearer icons',
+      lines:['Dream physique: tidy, brown, and says why AI failed','The dial: real frosted glass','New icons for every body part and attachment'],
+      steps:[
+        ['move','Dream physique','Cleaner and in Workout\u2019s brown. No numbers needed: it reads your photos.',function(){ return q('#kdpCard'); }],
+        ['move','The dial, in glass','Exercises and Stretch: frosted glass, and new icons.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','Your workout buttons','No more scroll bar covering them.',function(){ return first('#s-session .sess-acts'); }]
+      ]},
     {id:'new-2026-10-28',title:'The dial',
       lines:['Exercises, Stretch and attachments: turn a dial','The chosen one slides out, its card below','The centre button switches or starts'],
       steps:[

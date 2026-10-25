@@ -46,9 +46,12 @@ for (const theme of ['dark', 'soft', 'light']) {
   ck(theme + ': it opens its page inside the app', await p.locator('#kdp').count() === 1 && await p.evaluate(() => !!document.getElementById('kdp').closest('.app')));
   const pickFile = async (sel) => { const [fc] = await Promise.all([p.waitForEvent('filechooser'), p.locator(sel).click()]); await fc.setFiles(join(root, 'icon-512.png')); await p.waitForTimeout(500); };
   await pickFile('#kdp [data-kdp="want"]');
-  ck(theme + ': a picture of the body you want, picked from the phone, shows', await p.locator('#kdp .kdp-want').count() === 1 && !(await p.locator('#kdp [data-kdp="compare"]').isDisabled()));
+  ck(theme + ': a picture of the body you want, picked from the phone, shows', await p.locator('#kdp .kdp-slot.on[data-kdp="want"] img').count() === 1 && !(await p.locator('#kdp [data-kdp="compare"]').isDisabled()));
+  /* p43c: the page had no frame (edge to edge); now a centred column with room at the sides */
+  const fr = await p.evaluate(() => { const w = document.querySelector('#kdp .kz2p-wrap').getBoundingClientRect(), c = document.querySelector('#kdp .kdp-in').getBoundingClientRect(); return { l: c.left, r: innerWidth - c.right }; });
+  ck(theme + ': the page has room at the sides (not edge to edge)', fr.l >= 12 && fr.r >= 12 || (console.error(theme, fr), false));
   await pickFile('#kdp [data-kdp="me"]');
-  ck(theme + ': …and your own photo', await p.locator('#kdp .kdp-me').count() === 1);
+  ck(theme + ': …and your own photo, side by side with it', await p.locator('#kdp .kdp-slot.on[data-kdp="me"] img').count() === 1);
   await p.locator('#kdpQ').fill('How do I get my shoulders and back wider like him?');
   await p.locator('#kdp [data-kdp="compare"]').click();
   await p.waitForSelector('#kdp .kdp-tl', { timeout: 15000 }).catch(() => {});

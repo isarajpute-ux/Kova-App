@@ -235,7 +235,7 @@ window.KovaPlayer=(function(){
   function tour(){
     if(!window.KovaTour||!document.getElementById('kpl')) return false;
     var on=document.querySelector('.screen.on'), sc=on?[on.id.replace(/^s-/,'')]:[];
-    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kpl '+t[0]); }}; }),{color:'#E87A3C',screens:sc});
+    KovaTour.run(TOUR.map(function(t){ return {t:t[1],d:t[2],el:function(){ return document.querySelector('#kpl '+t[0]); }}; }),{color:'section',screens:sc});
     var ov=document.getElementById('ksTour'); if(ov) ov.style.zIndex='9700';
     return true;
   }

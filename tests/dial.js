@@ -28,7 +28,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const el = box.firstChild;
   ck('it draws a glass segment and a label for each choice, round a centre button', el.querySelectorAll('.kdl-s').length === 7 && el.querySelectorAll('.kdl-l').length === 7 && !!el.querySelector('.kdl-c svg'));
   ck('…it is a radio group: the one in the slot is checked', el.getAttribute('role') === 'radiogroup' && el.querySelector('.kdl-l.on').textContent === 'All' && el.querySelector('.kdl-l.on').getAttribute('aria-checked') === 'true');
-  ck('segment icons come from Kova’s own body map (the muscle’s real shape)', /<path d="M/.test(KD.mus('Chest')) && /kdl-mus/.test(KD.mus('Chest')) && /viewBox="[\d. -]+"/.test(KD.mus('Glutes')));
+  ck('every body part has its own drawn icon (a leg lit at the front, back or calf; glutes, chest, back, shoulders, a flexed arm, abs)', ['Quads', 'Hamstrings', 'Calves', 'Glutes', 'Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'skill', 'all'].every((g) => /kdl-mi/.test(KD.mus(g)) && /class="f"/.test(KD.mus(g))) && KD.mus('Legs') === KD.mus('Quads') && KD.mus('Quads') !== KD.mus('Hamstrings'));
   await wait(900);
   const op = (i) => +el.querySelectorAll('.kdl-s')[i].style.opacity;
   ck('it goes all the way round: with the first one chosen, the last sits on the other side of it', op(6) > 0.5 && op(1) > 0.5);

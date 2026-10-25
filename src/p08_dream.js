@@ -169,14 +169,27 @@ window.KovaDream=(function(){
     var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },45000):0;
     return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){
       clearTimeout(tm);
-      if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); });
+      if(!r.ok) return r.text().then(function(t){ throw said(r.status,t); });
       return r.json();
     }).then(function(d){
       var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
-      if(a<0||z<a) throw new Error('The answer came back in a form Kova could not read. Try again.');
+      if(a<0||z<a) throw Object.assign(new Error('unreadable'),{server:'The answer came back in a form Kova could not read. Try again.'});
       return JSON.parse(raw.slice(a,z+1));
     });
   }
+  /* p43c: the server's own reason ("out of credit", "too big", "busy"...), never just "the connection dropped" */
+  function said(status,t){ var j=null; try{ j=JSON.parse(t); }catch(x){} var e=new Error(status+' '+String(t).slice(0,120)); e.status=status; e.code=j&&j.code||''; e.server=j&&j.error?String(j.error):''; return e; }
+  function errText(e,again){
+    if(e&&e.signin) return 'Sign in and Kova\u2019s AI reads the picture for you, free.';
+    if(e&&e.server) return e.server;
+    if(e&&e.name==='AbortError') return 'Kova\u2019s AI took too long. '+again;
+    if(e&&e.status>=400&&e.status<500) return 'That picture could not be used. Try another photo or a short video.';
+    if(e&&e.status) return 'Kova\u2019s AI could not answer just now. '+again;
+    if(e&&/fetch|network|load failed|internet/i.test(String(e.message))) return 'No connection to Kova just now. Check the internet, then '+again.toLowerCase();
+    return 'Kova hit a problem ('+String(e&&e.message||'unknown').slice(0,80)+'). '+again;
+  }
+  /* only a dropped connection or a busy moment is worth one more try */
+  function retry(e){ return !!e&&!e.signin&&e.name!=='AbortError'&&(e.code==='busy'||(e.status>=500&&!e.code)||(!e.status&&/fetch|network|load failed/i.test(String(e.message)))); }
   function fit(d){ var K=window.KovaModel; return K&&K.fit&&/^data:image\//.test(d)?K.fit(d).catch(function(){ return d; }):Promise.resolve(d); }
   function compare(){
     if(!S.want||S.busy) return;
@@ -185,7 +198,7 @@ window.KovaDream=(function(){
     if(!(window.KovaModel&&KovaModel.connected())){ S.err='Sign in and Kova\u2019s AI reads the picture for you, free.'; paint(); return; }
     S.busy=true; S.err=''; paint();
     var once=function(){ return Promise.all([fit(S.want)].concat(S.me?[fit(S.me)]:[])).then(function(imgs){ return ask(imgs,facts); }); };
-    once().catch(function(e){ if(e&&!e.signin&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+    once().catch(function(e){ if(retry(e)) return new Promise(function(ok){ setTimeout(ok,1500); }).then(once); throw e; })
       .then(function(r){
         S.busy=false;
         if(!r||r.ok===false){ S.err=(r&&r.why_not)||'Kova could not see a body clearly in that picture. Try one where the whole body or torso is in view.'; paint(); return; }
@@ -197,7 +210,7 @@ window.KovaDream=(function(){
       })
       .catch(function(e){
         S.busy=false;
-        S.err=e&&e.signin?'Sign in and Kova’s AI reads the picture for you, free.':/^4\d\d /.test(String(e&&e.message))?'That picture could not be used. Try another photo or a short video.':e&&e.name==='AbortError'?'Kova\u2019s AI took too long. Try again.':'The connection dropped. Try again.';
+        S.err=errText(e,'Try again.'); track('dream_fail',{code:e&&e.code||'',status:e&&e.status||0});
         paint();
       });
   }
@@ -224,8 +237,8 @@ window.KovaDream=(function(){
     var c=K.cfg(), P=K.providers[c.p];
     var req=P.build(c.key,c.model,COACH,[{role:'user',content:facts}],{temperature:0.2,max_tokens:1800});
     var ctl=typeof AbortController!=='undefined'?new AbortController():null, tm=ctl?setTimeout(function(){ ctl.abort(); },60000):0;
-    var once=function(){ return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){ if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+String(t).slice(0,120)); }); return r.json(); }); };
-    once().catch(function(e){ if(e&&e.name!=='AbortError'&&!/^4\d\d /.test(String(e.message))) return new Promise(function(ok){ setTimeout(ok,1200); }).then(once); throw e; })
+    var once=function(){ return fetch(P.url,{method:'POST',headers:req.headers,body:req.body,signal:ctl?ctl.signal:undefined}).then(function(r){ if(!r.ok) return r.text().then(function(t){ throw said(r.status,t); }); return r.json(); }); };
+    once().catch(function(e){ if(retry(e)) return new Promise(function(ok){ setTimeout(ok,1500); }).then(once); throw e; })
       .then(function(d){
         clearTimeout(tm); S.coaching=false;
         var raw=(P.read(d)||'').replace(/```json|```/g,'').trim(), a=raw.indexOf('{'), z=raw.lastIndexOf('}');
@@ -234,7 +247,7 @@ window.KovaDream=(function(){
         S.ans=cleanAns(j,q,days); keepAns(); track('dream_ask',{days:S.ans.split.length,meals:S.ans.meals.length});
         paint(); var el=document.querySelector('#kdp .kdp-ans'); if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
       })
-      .catch(function(e){ clearTimeout(tm); S.coaching=false; S.ansErr=e&&e.name==='AbortError'?'Kova took too long to answer. Ask again.':'The connection dropped. Ask again.'; paint(); });
+      .catch(function(e){ clearTimeout(tm); S.coaching=false; S.ansErr=errText(e,'Ask again.'); paint(); });
   }
   /* what came back, checked: real days, 2-3 working sets, meals added up here */
   function cleanAns(j,q,days){
@@ -310,22 +323,20 @@ window.KovaDream=(function(){
         +'<div class="kdp-you">'+youLine(Y)+'</div>'+err+'</section>';
       return h+results(o,Y,r)+'</div>';
     }
-    /* the two pictures in */
-    h+='<section class="card kdp-in"><div class="kz2p-k">THE BODY YOU WANT</div>'
-      +(want?'<img class="kdp-want" src="'+esc(want)+'" alt="The body you want"/>':'<div class="sub">A photo or a short video of the body you want: an actor, an athlete, an influencer, anyone. Kova reads the body, never who it is.</div>')
-      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="want">'+ic('video')+(want?'Change it':'Photo or video')+'</button><button type="button" class="chip" data-kdp="link">'+ic('arrow-up-right')+'Paste a link</button></div>'
-      +'<div class="kz2p-k" style="margin-top:14px">YOU NOW, OPTIONAL</div>'
-      +(S.me?'<img class="kdp-me" src="'+esc(S.me)+'" alt="You now"/>':'<div class="sub">A photo of you, front-on, and Kova marks what to build on your own body. Without it Kova uses your height, weight and age.</div>')
-      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="me">'+ic('video')+(S.me?'Change my photo':'Add my photo')+'</button></div>'
+    /* the two pictures in, side by side (p43c: it was two big stacked sections, edge to edge) */
+    var slot=function(k,img,t,sub){ return '<button type="button" class="kdp-slot'+(img?' on':'')+'" data-kdp="'+k+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(t)+'"/>':'<i>'+ic(k==='want'?'sparkles':'plus')+'</i>')+'<b>'+esc(t)+'</b><small>'+esc(img?'Tap to change':sub)+'</small></button>'; };
+    h+='<section class="card kdp-in"><div class="kdp-pair">'+slot('want',want,'The body you want','A photo or a video')+slot('me',S.me,'You now','Optional')+'</div>'
+      +'<div class="kdp-ways"><button type="button" class="chip" data-kdp="link">'+ic('arrow-up-right')+'Paste a link instead</button></div>'
       +'<div class="kdp-you">'+youLine(Y)+'</div>'
-      +'<label class="kz2p-k kdp-ql" for="kdpQ" style="display:block;margin-top:14px">WHAT DO YOU WANT? OPTIONAL</label>'
-      +'<textarea id="kdpQ" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(Y.sex==='f'?'How do I make my glutes bigger like her?':'How do I get my chest and arms bigger like him?')+'">'+esc(S.q||'')+'</textarea>'
+      +'<label class="kz2p-k kdp-ql" for="kdpQ">What do you want? Optional</label>'
+      +'<textarea id="kdpQ" class="srch kdp-q" rows="2" maxlength="400" placeholder="'+esc(Y.sex==='f'?'How do I make my glutes bigger like her?':'How do I get my back that wide?')+'">'+esc(S.q||'')+'</textarea>'
       +'<button type="button" class="kz2p-go kdp-go" data-kdp="compare"'+(S.want&&!S.busy?'':' disabled')+'>'+ic('sparkles')+'<span>'+(S.busy?'Reading the pictures…':'Compare')+'</span></button>'
       +err+'</section>';
     return h+'</div>';
   }
   function youLine(Y){
-    if(!Y.kg||!Y.hcm||!Y.age) return 'Your numbers: '+(Y.kg?wt(Y.kg,Y.unit):'weight not set')+(Y.hcm?', '+ht(Y.hcm,Y.unit):'')+'. <button type="button" class="kdp-link" data-kdp="maint">Add height, weight and age</button>';
+    /* the owner did not know their weight, age or height: that is fine, the photos are read */
+    if(!Y.kg||!Y.hcm||!Y.age) return 'No numbers needed: Kova reads the photos. <button type="button" class="kdp-link" data-kdp="maint">Add yours</button> for calories.';
     return 'You: '+(Y.sex==='f'?'woman':'man')+', '+Y.age+', '+ht(Y.hcm,Y.unit)+', '+wt(Y.kg,Y.unit)+(Y.bf?', about '+Math.round(Y.bf)+'% body fat':'')+'. <button type="button" class="kdp-link" data-kdp="maint">Change</button>';
   }
   function nm(m){ return NAME[m].replace(/ \(.*\)/,''); }
@@ -358,7 +369,7 @@ window.KovaDream=(function(){
       });
     });
     return '<figure class="kdp-pf '+(cls||'')+'"><div class="kdp-pw"><img src="'+esc(src)+'" alt="'+esc(label)+'"/>'
-      +'<svg viewBox="0 0 100 '+H.toFixed(1)+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><radialGradient id="'+g+'"><stop offset="0" stop-color="#FFA36B" stop-opacity=".9"/><stop offset=".55" stop-color="#E87A3C" stop-opacity=".5"/><stop offset="1" stop-color="#E87A3C" stop-opacity=".08"/></radialGradient></defs>'+shapes+lines+'</svg>'+tags+'</div></figure>';
+      +'<svg viewBox="0 0 100 '+H.toFixed(1)+'" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><radialGradient id="'+g+'"><stop offset="0" stop-color="#FFF4D8" stop-opacity=".9"/><stop offset=".55" stop-color="#D8C79C" stop-opacity=".5"/><stop offset="1" stop-color="#B7AA8C" stop-opacity=".08"/></radialGradient></defs>'+shapes+lines+'</svg>'+tags+'</div></figure>';
   }
   function results(o,Y,r){
     return hero(o,Y)+timeline(o,Y)+planCard(o,Y)+honest(o);
@@ -542,7 +553,7 @@ window.KovaDream=(function(){
     var steps=TOUR.concat(S.out?[['.kdp-photos','What to build','The glowing areas are the muscles to build more, on your own photo when you add one.'],['.kdp-tl','Your change','3 months, 6 months or a year: where you will be if you follow the plan. Tap a point in time.'],['.kdp-ans','Your plan','Train, Eat and Steps. Ask Kova anything and it writes your split and meals.']]:[])
       .filter(function(t){ return el.querySelector(t[0]); })
       .map(function(t){ return {t:t[1],d:t[2],el:function(){ return el.querySelector(t[0]); }}; });
-    KovaTour.run(steps,{color:'#E87A3C'});
+    KovaTour.run(steps,{color:'section'});
     var tt=document.getElementById('ksTour'); if(tt) tt.style.zIndex='9700';
   }
 

@@ -4,13 +4,13 @@
    Workout background and its orange. The five zones are graphite steps;
    Zone 2 is the orange. Dark, soft light and light glass. ---- */
 .kz2p{position:fixed;inset:0;z-index:9500;overflow:auto;-webkit-overflow-scrolling:touch;color:var(--ron-txt,#E3E3E3);
-  --acc:#E87A3C;--acc-2:#CF6528;--acc-bg:rgba(232,122,60,.12);--acc-brd:rgba(232,122,60,.42);--acc-glow:rgba(232,122,60,.30);--acc-ink:#F0945C;
+  --acc:#B7AA8C;--acc-2:#9E9274;--acc-bg:rgba(183,170,140,.12);--acc-brd:rgba(183,170,140,.42);--acc-glow:rgba(183,170,140,.30);--acc-ink:#D6CAAA;
   --ink:255,255,255;--z1:rgba(255,255,255,.26);--z2:var(--acc);--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);
-  background:radial-gradient(60% 40% at 88% 12%,rgba(232,122,60,.16),transparent 70%),radial-gradient(55% 40% at 8% 70%,rgba(120,72,40,.18),transparent 70%),
+  background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.13),transparent 70%),radial-gradient(55% 40% at 8% 70%,rgba(110,98,74,.16),transparent 70%),
     radial-gradient(ellipse 130% 95% at 50% -6%,#0B0807 0%,#050506 52%,#040003 100%)}
-body.soft-light .kz2p{--acc-ink:#FFB386;background:radial-gradient(60% 40% at 88% 12%,rgba(232,122,60,.20),transparent 70%),radial-gradient(ellipse 135% 100% at 50% -8%,#5E4F4B 0%,#4E423F 40%,#423836 74%,#3B3230 100%)}
-body.light-mode .kz2p{--acc-ink:#B9541B;--acc-bg:rgba(232,122,60,.14);--ink:28,26,23;--z1:rgba(28,26,23,.20);--z3:rgba(28,26,23,.40);--z4:rgba(28,26,23,.60);--z5:rgba(28,26,23,.82);
-  background:radial-gradient(60% 40% at 88% 10%,rgba(232,122,60,.14),transparent 70%),radial-gradient(55% 40% at 6% 72%,rgba(214,186,160,.35),transparent 70%),
+body.soft-light .kz2p{--acc-ink:#E8DDC2;background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.18),transparent 70%),radial-gradient(ellipse 135% 100% at 50% -8%,#5E4F4B 0%,#4E423F 40%,#423836 74%,#3B3230 100%)}
+body.light-mode .kz2p{--acc-ink:#5A5342;--acc-bg:rgba(90,83,66,.10);--acc-brd:rgba(90,83,66,.35);--acc-glow:rgba(90,83,66,.22);--ink:28,26,23;--z1:rgba(28,26,23,.20);--z3:rgba(28,26,23,.40);--z4:rgba(28,26,23,.60);--z5:rgba(28,26,23,.82);
+  background:radial-gradient(60% 40% at 88% 10%,rgba(183,170,140,.22),transparent 70%),radial-gradient(55% 40% at 6% 72%,rgba(214,200,170,.35),transparent 70%),
     radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
 .kz2p button{font-family:inherit;cursor:pointer}
 .kz2p .ic{font-size:17px}
@@ -81,7 +81,7 @@ body.light-mode .kz2p-say{background:linear-gradient(143deg,rgba(255,255,255,.75
 .kz2p-tl .in{fill:rgba(var(--ink),.05);stroke:var(--ron-line);stroke-width:1}
 .kz2p-tl .dt{fill:var(--ron-txt)}
 .kz2p-tl .nd.on .rg{fill:var(--acc-bg);stroke:var(--acc-brd)}
-.kz2p-tl .nd.on .in{fill:rgba(232,122,60,.18);stroke:var(--acc-brd)}
+.kz2p-tl .nd.on .in{fill:var(--acc-bg);stroke:var(--acc-brd)}
 .kz2p-tl .nd.on .dt{fill:var(--acc);filter:drop-shadow(0 0 6px var(--acc-glow))}
 .kz2p-tl .pl rect{fill:rgba(var(--ink),.07);stroke:var(--ron-line);stroke-width:.8}
 .kz2p-tl .pl text{font-size:13.5px;fill:var(--ron-txt)}
@@ -101,7 +101,7 @@ body.light-mode .kz2p-tb .tr{background:rgba(255,255,255,.55);border-color:rgba(
 /* the big card: glass with Workout's warm glow */
 .kz2p-hero{overflow:hidden}
 .kz2p-hero::before{content:'';position:absolute;inset:auto -20% -30% -20%;height:70%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
-.kz2p-hero::after{content:'';position:absolute;inset:-20% -30% auto auto;width:70%;height:50%;background:radial-gradient(closest-side,rgba(232,122,60,.16),transparent);pointer-events:none}
+.kz2p-hero::after{content:'';position:absolute;inset:-20% -30% auto auto;width:70%;height:50%;background:radial-gradient(closest-side,var(--acc-bg),transparent);pointer-events:none}
 .kz2p-hero>*{position:relative;z-index:1}
 .kz2p-hh{display:flex;align-items:center;gap:10px}
 .kz2p-tabs{display:flex;gap:2px;margin:16px 0 4px;border-bottom:.5px solid var(--ron-line);overflow-x:auto;scrollbar-width:none}
@@ -154,8 +154,8 @@ body.light-mode .kz2p-bar{background:linear-gradient(143deg,rgba(255,255,255,.8)
 .kz2c .kz2p-num{color:var(--ron-txt)}
 .kz2c .kl-acts{margin-top:10px}
 /* sheets */
-.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#E87A3C}
-body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#C8571A}
+.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#B7AA8C}
+body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#6B6046}
 .kz2s-hero{display:flex;align-items:baseline;gap:10px;margin:6px 0 10px}
 .kz2s-hero b{font:200 56px/1 Outfit,sans-serif;color:var(--z-in)}
 .kz2s-hero span{font-size:13px;line-height:1.4;color:var(--z-mute)}
@@ -172,7 +172,7 @@ body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(1
 .kz2s-zs>div{display:grid;grid-template-columns:14px 70px 1fr auto;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;border:1px solid var(--z-line)}
 .kz2s-zs>div.on{background:var(--z-card);border-color:var(--z-in)}
 .kz2s-zs .zd{width:12px;height:12px}
-.kz2s{--z1:rgba(255,255,255,.26);--z2:#E87A3C;--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);--acc-glow:rgba(232,122,60,.3)}
+.kz2s{--z1:rgba(255,255,255,.26);--z2:#B7AA8C;--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);--acc-glow:rgba(183,170,140,.3)}
 body.light-mode .kz2s{--z1:rgba(28,26,23,.2);--z3:rgba(28,26,23,.4);--z4:rgba(28,26,23,.6);--z5:rgba(28,26,23,.82)}
 .kz2s-zs span{font-size:12.5px;color:var(--z-mute)}.kz2s-zs em{font-style:normal;font-size:13px;font-weight:600}
 /* p42: a pop-up opened from a full page (Coach me's attachments, a Dream

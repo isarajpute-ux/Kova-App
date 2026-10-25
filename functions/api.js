@@ -109,6 +109,7 @@ const crypto = require('crypto');
 const admin = require('firebase-admin');
 const { clean: cleanHealth } = require('./health');
 const { makeOAuth, HttpError, configured } = require('./providers');
+const claudeMod = require('./claude');
 const { makeAds, CTAS, EVENTS } = require('./ads');
 const { dayOf, WINDOWS } = require('./wellness');
 const { makeTraction } = require('./traction');
@@ -862,18 +863,9 @@ async function aiAsk(req, res, cfg) {
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'Kova\'s AI is not set up on this server yet.');
   await rateLimit(`ai_${u.uid}`, 300, 24 * 3600e3);
   const c = cleanAsk(req.body || {});
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify(Object.assign({ model: cfg.model }, c))
-  });
-  if (!r.ok) {
-    const t = await r.text().catch(() => '');
-    console.error('ai', r.status, t.slice(0, 300));
-    throw new HttpError(502, 'Kova\'s AI could not answer just now. Try again in a moment.');
-  }
-  const j = await r.json();
-  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null });
+  /* p43c: a failure says why (credit, key, model, photo size, busy), busy is tried again, a missing model moves on */
+  const { json: j, model } = await claudeMod.ask(cfg, Object.assign({ model: cfg.model }, c), { tag: 'ai' });
+  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model });
 }
 
 async function crewStep(req, res, cfg) {
@@ -885,17 +877,7 @@ async function crewStep(req, res, cfg) {
   if (c.model === 'opus') await rateLimit(`crew_opus_${u.uid}`, 60, 24 * 3600e3);
   const tools = c.tools.slice();
   if (c.web) tools.push({ type: 'web_search_20250305', name: 'web_search', max_uses: 3 });
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: CREW_MODELS[c.model] || cfg.model, max_tokens: 2000, system: c.system, tools, messages: c.messages })
-  });
-  if (!r.ok) {
-    const t = await r.text().catch(() => '');
-    console.error('crew', r.status, t.slice(0, 300));
-    throw new HttpError(502, 'Your employee could not think just now. Try again in a moment.');
-  }
-  const j = await r.json();
+  const { json: j } = await claudeMod.ask(cfg, { model: CREW_MODELS[c.model] || cfg.model, max_tokens: 2000, system: c.system, tools, messages: c.messages }, { tag: 'crew' });
   return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model: c.model || 'default' });
 }
 
@@ -1456,7 +1438,7 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/billing/webhook') return await billingWebhook(req, res, cfg);
     return res.status(404).json({ error: 'Not found.' });
   } catch (e) {
-    if (e instanceof HttpError) return res.status(e.status).json({ error: e.message });
+    if (e instanceof HttpError) return res.status(e.status).json(e.code ? { error: e.message, code: e.code } : { error: e.message });
     console.error(path, e);
     return res.status(500).json({ error: 'Server error.' });
   }

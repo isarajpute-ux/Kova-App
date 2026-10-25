@@ -14,7 +14,7 @@ const shots = join(root, 'tests', 'e2e', 'shots'); mkdirSync(shots, { recursive:
 const R = []; const ck = (n, c) => R.push([n, !!c]);
 const engine = process.env.ENGINE === 'webkit' ? webkit : chromium;
 const b = await engine.launch(); const site = await serve(join(root, 'dist'));
-const seen = { home: 1, today: 1, move: 1, workteam: 1, session: 1, customize: 1, 'new-2026-10-24': 1, 'new-2026-10-25': 1, 'new-2026-10-26': 1, 'new-2026-10-27': 1 };
+const seen = { home: 1, today: 1, move: 1, workteam: 1, session: 1, customize: 1, 'new-2026-10-24': 1, 'new-2026-10-25': 1, 'new-2026-10-26': 1, 'new-2026-10-27': 1, 'new-2026-10-28': 1 };
 for (const theme of ['dark', 'soft', 'light']) {
   const STORE = Object.assign({}, SIGNED_OUT_LOCAL, { 'kova.consent': JSON.stringify({ a: false, at: 1 }), kova_mode_v1: 'live', 'kova.tours.v1': JSON.stringify(seen),
     kova_profile_v2: JSON.stringify({ theme, tourSeen: true, tours: seen }) });
@@ -28,14 +28,14 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#kwn [data-kwn="show"]').click();
   await p.waitForSelector('#ksCoach.on', { timeout: 8000 }).catch(() => {});
   const c1 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Show me goes to Workout and lights up Exercises, now a dial', c1.t === 'Exercises, as a dial' && c1.scr === 's-move');
+  ck(theme + ': Show me goes to Workout and lights up Dream physique', c1.t === 'Dream physique' && c1.scr === 's-move');
   const spot = async (sel) => p.evaluate((sel) => { const s = document.getElementById('ksSpot').getBoundingClientRect(), k = document.querySelector(sel).getBoundingClientRect(); return s.left <= k.left + 2 && s.right >= k.right - 2 && s.top <= k.top + 2; }, sel);
   await p.waitForTimeout(900);                                  /* the light slides into place */
-  ck(theme + ': …with the light around it', await spot('#s-move .kxp-act[data-kxp="lib"]'));
+  ck(theme + ': …with the light around it', await spot('#kdpCard'));
   await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1300);
-  ck(theme + ': …then Stretch', (await p.evaluate(() => (document.querySelector('#ksCoach .ks-ct') || {}).textContent)) === 'Stretch, as a dial' && await spot('#s-move .kxp-act[data-kxp="str"]'));
+  ck(theme + ': …then the glass dial, on Exercises', (await p.evaluate(() => (document.querySelector('#ksCoach .ks-ct') || {}).textContent)) === 'The dial, in glass' && await spot('#s-move .kxp-act[data-kxp="lib"]'));
   await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1300);
-  ck(theme + ': …then the attachments, in the workout', (await p.evaluate(() => [(document.querySelector('#ksCoach .ks-ct') || {}).textContent, (document.querySelector('.screen.on') || {}).id].join())) === 'Attachments, as a dial,s-session');
+  ck(theme + ': …then the workout buttons, in the workout', (await p.evaluate(() => [(document.querySelector('#ksCoach .ks-ct') || {}).textContent, (document.querySelector('.screen.on') || {}).id].join())) === 'Your workout buttons,s-session');
   await p.screenshot({ path: join(shots, `whatsnew-step1-${theme}.png`) });
   await p.locator('#ksCoach [data-t="skip"]').click(); await p.waitForTimeout(400);
   ck(theme + ': Skip ends it, and the card does not come back', await p.locator('#ksTour').count() === 0 && await p.locator('#kwn').count() === 0);
