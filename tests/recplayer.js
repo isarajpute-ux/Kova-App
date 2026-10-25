@@ -65,7 +65,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('Stretch with me walks through them with the hold timer', /1 of \d/.test(doc.getElementById('sheetIn').textContent) && !!doc.getElementById('kxpTimer'));
   w.KovaExPage.stopTimer(); w.closeSheet(); await wait(10);
   sc.querySelector('[data-krs="all"]').click(); await wait(30);
-  ck('All stretches opens every stretch by body part', /Legs and hips/.test(doc.getElementById('sheetIn').textContent) && /Chest and shoulders/.test(doc.getElementById('sheetIn').textContent));
+  ck('All stretches opens every stretch by body part (the Stretch dial)', ['Legs', 'Back', 'Upper', 'Arms', 'Core'].every((x) => [...doc.querySelectorAll('#sheetIn .kdl-l')].some((l) => l.textContent.trim() === x)));
   w.closeSheet();
   card.querySelector('.krc-body .m.r-rest').dispatchEvent(new w.MouseEvent('click', { bubbles: true })); await wait(20);
   const sh = doc.getElementById('sheetIn').textContent;

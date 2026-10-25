@@ -27,9 +27,26 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.waitForSelector('.kxp-act[data-kxp="lib"]', { timeout: 8000 }).catch(() => {});
   ck(theme + ': Workout has Exercises and Stretch next to Check my form', await p.locator('#s-move .kxp-act[data-kxp="lib"]').count() === 1 && await p.locator('#s-move .kxp-act[data-kxp="str"]').count() === 1);
   await p.locator('#s-move .kxp-act[data-kxp="lib"]').click(); await p.waitForTimeout(500);
-  const cells = await p.evaluate(() => ({ n: document.querySelectorAll('#sheetIn .kxp-cell').length, svg: document.querySelectorAll('#sheetIn .kxp-cell svg').length, over: document.documentElement.scrollWidth - innerWidth }));
+  await p.waitForTimeout(900);                                  /* the dial pops out */
+  const cells = await p.evaluate(() => ({ n: document.querySelectorAll('#sheetIn #kxpCard .kdl-t').length, svg: document.querySelectorAll('#sheetIn #kxpCard .kdl-t svg').length, over: document.documentElement.scrollWidth - innerWidth }));
   ck(theme + ': the library shows every exercise with its picture, inside the screen', cells.n >= 80 && cells.svg >= 80 && cells.over <= 1);
-  await p.locator('#sheetIn .kxp-cell[data-exinfo="Romanian deadlift"]').click(); await p.waitForTimeout(400);
+  /* p43: the dial, as in the owner's Ron Design Lab reference */
+  const geo = await p.evaluate(() => { const d = document.querySelector('#sheetIn .kdl'), r = d.getBoundingClientRect(), on = d.querySelector('.kdl-l.on'), segs = [...d.querySelectorAll('.kdl-s')].filter((x) => +x.style.opacity > 0.5);
+    const far = (x) => { const L = x.getTotalLength(); let m = 0; for (let i = 0; i <= 60; i++) { const q = x.getPointAtLength(L * i / 60); m = Math.max(m, Math.hypot(q.x - 160, q.y - 160)); } return m; };
+    const sel = [...d.querySelectorAll('.kdl-x')].find((x) => +x.style.opacity > 0.5);
+    return { w: r.width, inView: r.left >= 0 && r.right <= innerWidth, shown: segs.length, sel: on && on.textContent.trim(), farSel: sel ? far(sel) : 0, farOther: Math.max(...segs.filter((x) => x.nextSibling !== sel).map(far)), glow: getComputedStyle(d.querySelector('.kdl-c')).boxShadow }; });
+  ck(theme + ': a dial of glass segments round a glowing centre, on screen, 4 to 6 showing at once', geo.inView && geo.w >= 300 && geo.shown >= 4 && geo.shown <= 6 && /rgba\(227, 232, 92/.test(geo.glow) || (console.error(theme, geo), false));
+  ck(theme + ': …the chosen one sits in the slot, lighter and pushed out past the others', geo.sel === 'All' && geo.farSel > geo.farOther + 8 || (console.error(theme, geo), false));
+  /* drag round the track: it slides, then settles on the one in the slot */
+  const box = await p.locator('#sheetIn .kdl').boundingBox(), cx = box.x + box.width / 2, cy = box.y + box.height / 2, R = box.width * 0.32;
+  await p.mouse.move(cx + R * Math.cos(1.4), cy + R * Math.sin(1.4)); await p.mouse.down();
+  for (let k = 1; k <= 12; k++) { const a = 1.4 + k * 0.14; await p.mouse.move(cx + R * Math.cos(a), cy + R * Math.sin(a)); await p.waitForTimeout(16); }
+  await p.mouse.up(); await p.waitForTimeout(900);
+  const dragged = await p.evaluate(() => ({ sel: document.querySelector('#sheetIn .kdl-l.on').textContent.trim(), card: document.querySelector('#kxpCard .kdl-name').textContent }));
+  ck(theme + ': dragging round it slides the segments; the one that lands in the slot fills the card', dragged.sel !== 'All' && dragged.card.toLowerCase().indexOf(dragged.sel.toLowerCase().slice(0, 4)) === 0 || (console.error(theme, dragged), false));
+  await p.screenshot({ path: join(shots, `exdemo-dial-${theme}.png`) });
+  await p.locator('#sheetIn .kdl-l', { hasText: 'All' }).first().click(); await p.waitForTimeout(900);
+  await p.locator('#sheetIn #kxpCard .kdl-t[data-exinfo="Romanian deadlift"]').click(); await p.waitForTimeout(400);
   const f1 = await p.evaluate(() => document.querySelector('#sheetIn .kxp-fig').innerHTML);
   await p.waitForTimeout(700);
   const f2 = await p.evaluate(() => document.querySelector('#sheetIn .kxp-fig').innerHTML);
@@ -50,7 +67,8 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.screenshot({ path: join(shots, `exdemo-page-${theme}.png`) });
   await p.evaluate(() => closeSheet());
   await p.locator('#s-move .kxp-act[data-kxp="str"]').click(); await p.waitForTimeout(400);
-  await p.locator('#sheetIn .kxp-cell[data-kxp="stretch"]').first().click(); await p.waitForTimeout(300);
+  await p.waitForTimeout(900);
+  await p.locator('#sheetIn #kxpSCard .kdl-t[data-kxp="stretch"]').first().click(); await p.waitForTimeout(300);
   await p.locator('#sheetIn [data-kxp="hold"]').click(); await p.waitForTimeout(1300);
   const tm = await p.evaluate(() => (document.getElementById('kxpTimer') || {}).textContent || '');
   ck(theme + ': a stretch timer counts the hold', /^\d+/.test(tm) && /side|Hold/.test(tm));

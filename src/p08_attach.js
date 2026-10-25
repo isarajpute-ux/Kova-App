@@ -96,7 +96,8 @@ window.KovaAttach=(function(){
   function kind(n){
     var k=K(), x=null, e='';
     try{ var X=(k&&k.XL||[]).filter(function(r){ return r.n===n; })[0]; e=X&&X.e||''; }catch(err){}
-    if(!OPT[e]){ try{ x=k&&k.lib?k.lib(n):null; }catch(err){} e=CODE[x&&(x.e||x.eq)]||''; }
+    /* the workout list answers every name; one it does not know comes back as "Other" with dumbbells: let the name decide then */
+    if(!OPT[e]){ try{ x=k&&k.lib?k.lib(n):null; }catch(err){} if(x&&x.m==='Other') x=null; e=CODE[x&&(x.e||x.eq)]||''; }
     if(OPT[e]) return e;
     if(/cable|pushdown|pulldown|face pull|crossover|fly/i.test(n)) return 'cable';
     if(/machine|leg press|leg curl|leg extension|pec deck|hack squat/i.test(n)) return 'machine';
@@ -122,20 +123,96 @@ window.KovaAttach=(function(){
       +'<div class="katt-pl">'+esc(n)+'</div>'
       +(lp?'<div class="katt-h">Where your feet go</div><div class="katt-grid">'+FEET.map(function(f){ return tile(f[0],cur,plate(f[3]),f[1]); }).join('')+'</div>'
         +'<div class="katt-n">Height matters more than width.</div>'
-        :'<div class="katt-h">Best for this one</div><div class="katt-grid katt-best">'+best.map(function(o){ return tile(o,cur,catOf(o)); }).join('')+'</div>')
+        :'<div class="katt-grid katt-best">'+best.map(function(o){ return tile(o,cur,catOf(o)); }).join('')+'</div>')
       +'<button type="button" class="chip katt-none" data-katt-v="">'+(lp?'No setting':'No attachment')+'</button>'
       +(where==='a'?'<button type="button" class="chip katt-more" data-katt-more="1">Every attachment</button><div class="katt-all" hidden></div>'
         :'<div class="katt-h">Every attachment</div><div class="katt-all">'+allHtml(cur)+'</div>')
       +'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>'
       +'</div>';
   }
+  /* p43, the owner: "Best for this one... doesn't make any sense... just rows
+     and rows... organized like the two images" (the Ron Design Lab dial). The
+     picker is the dial (src/p08_dial.js): body areas round the centre (the
+     exercise's own area chosen first), the card under it shows that area's
+     attachments in a row, the ones that fit this exercise first; on a leg
+     press the dial is where your feet go, the card shows the leg press that
+     way, and the centre button switches to gear. */
+  var AREA_OF={Quads:'Legs',Calves:'Legs',Adductors:'Legs',Hamstrings:'Legs',Glutes:'Glutes',Chest:'Chest',Back:'Back',Shoulders:'Shoulders',Biceps:'Arms',Triceps:'Arms',Forearms:'Arms',Core:'Core'};
+  function areaOf(n){
+    var k=K(), m='';
+    try{ var X=(k&&k.XL||[]).filter(function(r){ return r.n===n; })[0]; m=X&&X.m||''; }catch(e){}
+    if(AREA_OF[m]) return AREA_OF[m];
+    if(/pushdown|curl|tricep|skull|kickback/i.test(n)) return 'Arms';
+    if(/row|pulldown|pull.?up|chin|deadlift|shrug|face pull/i.test(n)) return 'Back';
+    if(/raise|overhead|shoulder|military/i.test(n)) return 'Shoulders';
+    if(/bench|chest|fly|dip|push.?up|press/i.test(n)) return 'Chest';
+    if(/hip thrust|glute|abduct|bridge/i.test(n)) return 'Glutes';
+    if(/crunch|plank|ab |core|twist|leg raise/i.test(n)) return 'Core';
+    return 'Legs';
+  }
+  var PK=null, PD=null;
+  function feetIcon(f){ return plate(f[3]).replace('class="katt-ic katt-pl8"','class="kdl-ic kdl-art katt-pl8"'); }
+  function pkRing(){
+    if(PK.mode==='feet') return FEET.map(function(f){ return {id:f[0],label:f[0].replace(/^Feet /,''),icon:feetIcon(f)}; });
+    return AREAS.map(function(a){ return {id:a,label:a,icon:window.KovaDial.mus(a)}; });
+  }
+  function pkSel(){ var R=pkRing(), id=PK.mode==='feet'?PK.foot:PK.area, i=R.map(function(x){ return x.id; }).indexOf(id); return i<0?0:i; }
+  function pkCard(){
+    var cur=PK.cur;
+    if(PK.mode==='feet'){
+      var f=FEET.filter(function(x){ return x[0]===PK.foot; })[0]||FEET[0], on=cur===f[0];
+      return '<div class="kdl-card" id="kattCard"><div class="kdl-ch"><span class="kdl-name">'+esc(f[0])+'</span>'+(on?'<span class="kdl-st"><i></i>In use</span>':'')+'</div>'
+        +'<span class="kdl-fig kxp-th" data-kxd="'+esc(f[2])+'"></span>'
+        +'<div class="kdl-sub"><i></i>'+esc(f[1])+'</div>'
+        +'<div class="kdl-go"><button type="button" class="btn" data-katt-v="'+esc(f[0])+'">'+(on?'Keep '+esc(f[0].toLowerCase()):'Use '+esc(f[0].toLowerCase()))+'</button>'
+        +(cur?'<button type="button" class="chip" data-katt-v="">Clear</button>':'')+'</div>'
+        +'<div class="kdl-sub">Height matters more than width.</div></div>';
+    }
+    var best=options(PK.n), L=CAT.filter(function(c){ return c[2].indexOf(PK.area)>=0; });
+    /* the ones that fit this exercise first, in their own order */
+    L=L.map(function(c,i){ var r=best.indexOf(c[0]); return [c,r<0?99:r,i]; }).sort(function(x,y){ return x[1]-y[1]||x[2]-y[2]; }).map(function(x){ return x[0]; });
+    var c0=catOf(cur);
+    return '<div class="kdl-card'+(PK.open?' open':'')+'" id="kattCard"><div class="kdl-ch"><span class="kdl-name">'+esc(PK.area)+'</span>'
+        +(cur?'<span class="kdl-st"><i></i>'+esc(cur)+'</span>':'')
+        +'<button type="button" class="kdl-x" data-katt-open="1" aria-expanded="'+!!PK.open+'" aria-label="'+(PK.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(PK.open)+'</button></div>'
+      +'<div class="kdl-big"><b'+(cur?' class="w"':'')+'>'+(cur?esc(cur):L.length)+'</b><span>'+(cur?esc(c0?c0[3]:'yours'):'attachments')+'</span></div>'
+      +'<div class="kdl-strip">'+L.map(function(c){ return '<button type="button" class="kdl-t att'+(c[0]===cur?' on':'')+'" data-katt-v="'+esc(c[0])+'" aria-pressed="'+(c[0]===cur)+'">'+icon(c).replace('class="katt-ic"','class="kdl-art"')+'<b>'+esc(c[0])+'</b>'+(PK.open?'<small>'+esc(c[3])+'</small>':'')+'</button>'; }).join('')+'</div>'
+      +(PK.open?'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>':'')
+      +(cur?'<div class="kdl-go"><button type="button" class="chip" data-katt-v="">No attachment</button></div>':'')
+      +'</div>';
+  }
+  function pickDialHtml(n,cur,where){
+    var lp=isLP(n), fo=lp&&FEET.some(function(f){ return f[0]===cur; });
+    PK={n:n,cur:cur||'',where:where,mode:lp&&(fo||!cur)?'feet':'gear',area:areaOf(n),foot:fo?cur:'Feet middle',open:false};
+    if(!lp&&catOf(cur)&&catOf(cur)[2].indexOf(PK.area)<0) PK.area=catOf(cur)[2][0];
+    return '<div class="katt-p kdl-page" data-katt-for="'+esc(n)+'" data-katt-where="'+where+'"><div class="kxp-h kdl-top"><div><b>'+esc(n)+'</b><small>'+(lp?'Feet and gear':'Attachment')+'</small></div></div>'
+      +KovaDial.html({label:lp?'Where your feet go':'Body area'})
+      +pkCard()+'</div>';
+  }
+  function pickDial(){
+    var el=document.querySelector('#sheet .katt-p.kdl-page .kdl'); if(!el||!PK) return;
+    var lp=isLP(PK.n);
+    PD=KovaDial.mount(el,{label:lp?'Where your feet go':'Body area',items:pkRing(),sel:pkSel(),
+      centre:lp?{icon:'swap',label:'Switch between feet and gear',onTap:function(){ PK.mode=PK.mode==='feet'?'gear':'feet'; PD.swap(pkRing(),pkSel()); repaint(); }}:{label:'Attachments'},
+      onPick:function(i,it){ if(PK.mode==='feet') PK.foot=it.id; else PK.area=it.id; repaint(); }});
+  }
+  function repaint(){
+    var c=document.getElementById('kattCard'); if(!c) return;
+    var t=document.createElement('div'); t.innerHTML=pkCard(); var nw=t.firstChild; c.parentNode.replaceChild(nw,c);
+    try{ if(window.KovaDemo) nw.querySelectorAll('[data-kxd]').forEach(function(e){ KovaDemo.mount(e,e.getAttribute('data-kxd')); }); }catch(x){}
+  }
+  function openPick(n,cur,where){
+    if(!window.openSheet) return;
+    if(!window.KovaDial){ openSheet('<div class="grab"></div>'+pickHtml(n,cur,where)); return; }
+    openSheet(pickDialHtml(n,cur,where)); pickDial(); repaint();
+  }
   /* any exercise by name, from anywhere (Coach me's top right, p42) */
-  function pickSheet(n,done){ if(!window.openSheet) return; PICK=done||null; openSheet('<div class="grab"></div>'+pickHtml(n,get(n),'x')); }
+  function pickSheet(n,done){ PICK=done||null; openPick(n,get(n),'x'); }
   var PICK=null;
   function sessionSheet(i){
     var k=K(); if(!k||!window.openSheet) return;
     var e=k.state().ex[i]; if(!e) return;
-    openSheet('<div class="grab"></div>'+pickHtml(e.n,e.att||get(e.n),'s'+i));
+    openPick(e.n,e.att||get(e.n),'s'+i);
   }
   function choose(box,v){
     var n=box.getAttribute('data-katt-for'), where=box.getAttribute('data-katt-where');
@@ -198,6 +275,8 @@ window.KovaAttach=(function(){
       return; }
     var ar=t.closest('[data-katt-area]');
     if(ar){ ev.preventDefault(); ev.stopPropagation(); AREA=ar.getAttribute('data-katt-area'); var bx=ar.closest('.katt-p'), al=bx&&bx.querySelector('.katt-all'), nm=bx&&bx.getAttribute('data-katt-for'); if(al) al.innerHTML=allHtml(get(nm)); return; }
+    var op=t.closest('[data-katt-open]');
+    if(op&&PK){ ev.preventDefault(); ev.stopPropagation(); PK.open=!PK.open; repaint(); return; }
     var mo=t.closest('[data-katt-more]');
     if(mo){ ev.preventDefault(); ev.stopPropagation(); var bx2=mo.closest('.katt-p'), al2=bx2&&bx2.querySelector('.katt-all'); if(al2){ al2.hidden=!al2.hidden; if(!al2.hidden) al2.innerHTML=allHtml(get(bx2.getAttribute('data-katt-for'))); } return; }
     var v=t.closest('[data-katt-v]');
@@ -216,5 +295,5 @@ window.KovaAttach=(function(){
   var pend=0; function soon(){ if(pend) return; pend=setTimeout(function(){ pend=0; if(window.KovaPark&&KovaPark.quiet) KovaPark.quiet(decorate); else decorate(); },80); }
   if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('.katt-chip,.katt-add,.katt-p,[data-kxd],[data-kxd-still],#kpl,#kz2'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
-  return {get:get,set:set,options:options,kind:kind,decorate:decorate,all:all,CAT:CAT,FEET:FEET,figure:figure,pickSheet:pickSheet,isLP:isLP};
+  return {get:get,set:set,options:options,kind:kind,decorate:decorate,all:all,CAT:CAT,FEET:FEET,figure:figure,pickSheet:pickSheet,isLP:isLP,areaOf:areaOf,_PK:function(){ return PK; },dial:function(){ return PD; }};
 })();

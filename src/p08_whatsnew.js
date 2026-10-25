@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-28',title:'The dial',
+      lines:['Exercises, Stretch and attachments: turn a dial','The chosen one slides out, its card below','The centre button switches or starts'],
+      steps:[
+        ['move','Exercises, as a dial','Turn it to a muscle. Tap the centre for equipment.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['move','Stretch, as a dial','Turn it to a body part. Tap the centre to start.',function(){ return first('#s-move .kxp-act[data-kxp="str"]'); }],
+        ['session','Attachments, as a dial','Turn it to a body area. On a leg press, to where your feet go.',function(){ return first('#s-session .katt-chip')||q('#addExBtn'); }]
+      ]},
     {id:'new-2026-10-27',title:'Cleaner pages, tidy reports, a calmer voice',
       lines:['Exercises, Stretch and every pop-up open as their own page','AI team reports in short, tidy blocks','A slower voice, with pauses','Dream physique on every Workout screen'],
       steps:[

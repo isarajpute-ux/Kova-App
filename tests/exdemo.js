@@ -86,16 +86,17 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   /* the library */
   doc.getElementById('sheetIn').innerHTML = '';
   const lb = doc.createElement('div'); lb.setAttribute('data-kxp', 'lib'); doc.body.appendChild(lb); lb.click(); await wait(20);
-  const cells = doc.querySelectorAll('#sheetIn .kxp-cell');
+  const cells = doc.querySelectorAll('#sheetIn #kxpCard .kdl-t');
   ck('Exercises lists every exercise with its picture', cells.length >= 80 && !!cells[0].querySelector('svg'));
-  doc.querySelector('#sheetIn [data-kxp="g"][data-g="Back"]').click(); await wait(10);
-  const back = [...doc.querySelectorAll('#sheetIn .kxp-cell b')].map((b) => b.textContent);
+  const pickL = async (label) => { const b = [...doc.querySelectorAll('#sheetIn .kdl-l')].find((x) => x.textContent.trim() === label); if (b) b.click(); await wait(900); };
+  await pickL('Back');
+  const back = [...doc.querySelectorAll('#sheetIn #kxpCard .kdl-t b')].map((b) => b.textContent);
   ck('a muscle filter shows only that muscle', back.includes('Lat pulldown') && !back.includes('Barbell back squat'));
-  doc.querySelector('#sheetIn [data-kxp="g"][data-g="all"]').click(); await wait(10);
+  await pickL('All');
   const q = doc.getElementById('kxpQ'); q.value = 'curl'; q.dispatchEvent(new w.Event('input', { bubbles: true })); await wait(10);
-  const found = [...doc.querySelectorAll('#sheetIn .kxp-cell b')].map((b) => b.textContent);
-  ck('search finds by name', found.length >= 5 && found.every((n) => /curl/i.test(n)));
-  doc.querySelector('#sheetIn .kxp-cell').click(); await wait(20);
+  const found = [...doc.querySelectorAll('#sheetIn #kxpCard .kdl-t b')].map((b) => b.textContent);
+  ck('search finds by name (the dial stays put)', found.length >= 5 && found.every((n) => /curl/i.test(n)) && !!doc.querySelector('#sheetIn .kdl'));
+  doc.querySelector('#sheetIn #kxpCard .kdl-t').click(); await wait(20);
   ck('an exercise opened from the library has a way back to it', !!doc.querySelector('#sheetIn [data-kxp="back"]'));
   doc.querySelector('#sheetIn [data-kxp="back"]').click(); await wait(10);
   ck('…and back keeps the search', !!doc.getElementById('kxpQ') && doc.getElementById('kxpQ').value === 'curl');
@@ -103,10 +104,11 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   /* stretch */
   const sb = doc.createElement('div'); sb.setAttribute('data-kxp', 'str'); doc.body.appendChild(sb); sb.click(); await wait(20);
   const st = doc.getElementById('sheetIn');
-  ck('Stretch lists the stretches by body part', /Legs and hips/.test(st.textContent) && /Chest and shoulders/.test(st.textContent) && st.querySelectorAll('.kxp-cell').length >= 17);
+  const parts = [...st.querySelectorAll('.kdl-l')].map((x) => x.textContent.trim());
+  ck('Stretch is a dial of body parts (today’s first when there is a workout), its card the stretches for the one chosen', ['Legs', 'Back', 'Upper', 'Arms', 'Core'].every((x) => parts.includes(x)) && st.querySelectorAll('#kxpSCard .kdl-t').length >= 3 && /min/.test(st.querySelector('#kxpSCard .kdl-big').textContent));
   const today = P.todays();
-  ck('for today’s workout it picks stretches for the muscles trained', Array.isArray(today) && (today.length === 0 ? /Start a workout/.test(st.textContent) : /Stretch with me/.test(st.textContent)));
-  st.querySelector('.kxp-cell[data-kxp="stretch"]').click(); await wait(20);
+  ck('for today’s workout it picks stretches for the muscles trained, and the centre button starts them', Array.isArray(today) && (today.length === 0 ? parts[0] === 'Legs' : parts[0] === 'Today') && st.querySelector('.kdl-c').getAttribute('aria-label') === 'Stretch with me');
+  st.querySelector('#kxpSCard .kdl-t[data-kxp="stretch"]').click(); await wait(20);
   ck('a stretch opens with its picture, cues and a timer', !!doc.querySelector('#sheetIn .kxp-fig svg') && !!doc.querySelector('#sheetIn [data-kxp="hold"]'));
   let finished = false;
   P.startTimer({ hold: '2 s each side' }, () => { finished = true; });

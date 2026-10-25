@@ -39,19 +39,24 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('Workout’s Exercises button is there', !!libBtn);
   libBtn.click(); await wait(30);
   const sh = () => doc.getElementById('sheetIn');
-  const count = () => sh().querySelectorAll('.kxp-cell').length;
-  const all = count();
+  /* p43: the library is the dial (muscle, or equipment with the centre button) and one card */
+  const tiles = () => [...sh().querySelectorAll('#kxpCard .kdl-t b')].map((b) => b.textContent);
+  const pick = async (label) => { const b = [...sh().querySelectorAll('.kdl-l')].find((x) => x.textContent.trim() === label); if (b) b.click(); await wait(900); return !!b; };
+  const all = tiles().length;
   ck('the library shows them all (130+ with a moving picture)', all >= 130 && /\d+ with a moving picture/.test(sh().textContent));
-  sh().querySelector('[data-kxp="e"][data-e="cable"]').click(); await wait(20);
-  const cab = [...sh().querySelectorAll('.kxp-cell b')].map((b) => b.textContent);
+  ck('…on a dial of muscles round a centre button, no rows of chips', sh().querySelectorAll('.kdl-l').length === 10 && !!sh().querySelector('.kdl-c') && !sh().querySelector('[data-kxp="g"]'));
+  sh().querySelector('[data-kxp="ring"][data-r="e"]').click(); await wait(1300);
+  ck('…Equipment turns it into an equipment dial (Any, Barbell, Dumbbell, Cable, Machine, Bodyweight, Different)', [...sh().querySelectorAll('.kdl-l')].map((x) => x.textContent.trim()).join() === 'Any,Barbell,Dumbbell,Cable,Machine,Bodyweight,Different');
+  await pick('Cable');
+  const cab = tiles();
   ck('…by equipment: Cable shows only cable ones', cab.length > 5 && cab.length < all && cab.every((n) => (K.XL.find((x) => x.n === n) || {}).eq === 'cable'));
-  sh().querySelector('[data-kxp="e"][data-e="all"]').click(); await wait(20);
-  sh().querySelector('[data-kxp="d"]').click(); await wait(20);
-  const dif = [...sh().querySelectorAll('.kxp-cell b')].map((b) => b.textContent);
-  ck('…"The different ones" shows only the odd-looking ones that work, each tagged', dif.length >= 15 && dif.every((n) => D.DIFF.indexOf(n) >= 0) && sh().querySelectorAll('.kxp-dif').length === dif.length);
-  sh().querySelector('[data-kxp="d"]').click(); await wait(20);
-  sh().querySelector('[data-kxp="g"][data-g="Back"]').click(); await wait(20);
-  ck('…and by muscle (Back has the new rows)', /T-bar row/.test(sh().textContent) && /Seal row/.test(sh().textContent) && !/Sissy squat/.test(sh().textContent));
+  await pick('Different');
+  const dif = tiles();
+  ck('…"Different" shows only the odd-looking ones that work', dif.length >= 15 && dif.every((n) => D.DIFF.indexOf(n) >= 0));
+  await pick('Any');
+  sh().querySelector('.kdl-c').click(); await wait(1300);
+  await pick('Back');
+  ck('…and by muscle (Back has the new rows), the card named for it', /T-bar row/.test(sh().textContent) && /Seal row/.test(sh().textContent) && !/Sissy squat/.test(sh().querySelector('#kxpCard').textContent) && /^Back/.test(sh().querySelector('#kxpCard .kdl-name').textContent));
   w.closeSheet();
   /* the attachments */
   ck('31 attachments, each drawn, with what it is for and the body areas it serves', A.CAT.length >= 30 && A.CAT.every((c) => c[0] && c[3] && c[2].length && /<(path|circle|rect|ellipse)/.test(c[4])));
@@ -66,18 +71,21 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const ab = pg().querySelector('[data-kpl="att"]');
   ck('Coach me has a button at the top right: on a leg press, where your feet go', !!ab && /\+ Feet/.test(ab.textContent) && ab.closest('.kpl-wh'));
   ab.click(); await wait(30);
-  ck('…it pops up above Coach me with the feet on a plate: middle, high, low, wide, narrow, one leg', /Where your feet go/.test(sh().textContent) && sh().querySelectorAll('.katt-pl8').length === 6 && ['Feet middle', 'Feet high', 'Feet low', 'Feet wide', 'Feet narrow', 'One leg'].every((n) => sh().textContent.indexOf(n) >= 0));
-  ck('…said honestly: high works the glutes and hamstrings more, low the quads, wide the inner thighs; width changes less than height', /More glutes, hamstrings/.test(sh().textContent) && /More quads/.test(sh().textContent) && /Inner thighs/.test(sh().textContent) && /Height matters more than width/.test(sh().textContent));
-  ck('…and every attachment is there too, by body area', sh().querySelectorAll('.katt-all .katt-t').length >= 30 && !!sh().querySelector('[data-katt-area="Back"]'));
-  sh().querySelector('[data-katt-area="Legs"]').click(); await wait(20);
-  ck('…Legs shows the leg gear only', [...sh().querySelectorAll('.katt-all .katt-t b')].every((b) => A.CAT.find((c) => c[0] === b.textContent)[2].indexOf('Legs') >= 0) && /Belt/.test(sh().querySelector('.katt-all').textContent));
-  sh().querySelector('[data-katt-v="Feet high"]').click(); await wait(40);
-  ck('picking "Feet high" saves it for the leg press and closes the pop-up', A.get('Leg press') === 'Feet high' && !doc.getElementById('sheet').classList.contains('on'));
+  const dl = () => [...sh().querySelectorAll('.kdl-l')].map((x) => x.textContent.trim());
+  ck('…it pops up above Coach me as a dial of where your feet go: middle, high, low, wide, narrow, one leg, each a plate', dl().join() === 'middle,high,low,wide,narrow,One leg' && sh().querySelectorAll('.kdl-l .katt-pl8').length === 6 && !!sh().querySelector('.kdl-c'));
+  ck('…the card shows the leg press that way, in a few honest words, with Use', /Feet middle/i.test(sh().querySelector('#kattCard .kdl-name').textContent) && /Quads and glutes/.test(sh().querySelector('#kattCard').textContent) && /Height matters more than width/.test(sh().querySelector('#kattCard').textContent) && !!sh().querySelector('#kattCard [data-kxd="Leg press"]'));
+  [...sh().querySelectorAll('.kdl-l')].find((x) => x.textContent.trim() === 'high').click(); await wait(900);
+  ck('…turning the dial to High shows feet high: more glutes and hamstrings', /Feet high/i.test(sh().querySelector('#kattCard .kdl-name').textContent) && /More glutes, hamstrings/.test(sh().querySelector('#kattCard').textContent) && !!sh().querySelector('#kattCard [data-kxd="Leg press (feet high)"]'));
+  sh().querySelector('.kdl-c').click(); await wait(1300);
+  ck('…the centre button switches the dial to gear, by body area', dl().join() === 'Back,Legs,Glutes,Arms,Chest,Shoulders,Core' && sh().querySelectorAll('#kattCard .kdl-t').length >= 5);
+  sh().querySelector('.kdl-c').click(); await wait(1300);
+  sh().querySelector('#kattCard [data-katt-v="Feet high"]').click(); await wait(40);
+  ck('Use feet high saves it for the leg press and closes the page', A.get('Leg press') === 'Feet high' && !doc.getElementById('sheet').classList.contains('on'));
   ck('…Coach me now shows the leg press with the feet high, and the button says so', pg().querySelector('.kpl-fig').getAttribute('data-kpl-fig') === 'Leg press (feet high)' && /Feet high/.test(pg().querySelector('[data-kpl="att"]').textContent));
   PL.close();
-  /* any other exercise: its best attachments first */
+  /* any other exercise: its own area, the ones that fit first */
   A.pickSheet('Rope pushdown'); await wait(20);
-  ck('a cable exercise gets its best attachments first, drawn (rope, straight bar, V-bar...)', /Best for this one/.test(sh().textContent) && [...sh().querySelectorAll('.katt-best .katt-t b')].map((b) => b.textContent).slice(0, 3).join() === 'Rope,Straight bar,V-bar' && sh().querySelectorAll('.katt-best .katt-ic').length >= 3);
+  ck('a cable exercise opens on its own area (a pushdown: Arms), the cable ones first, drawn (rope, straight bar...)', A._PK().area === 'Arms' && [...sh().querySelectorAll('#kattCard .kdl-t b')].map((b) => b.textContent).slice(0, 2).join() === 'Rope,Straight bar' && sh().querySelectorAll('#kattCard .kdl-t svg').length >= 4 && !/Best for this one/.test(sh().textContent));
   w.closeSheet();
   ck('no script errors', !errors.filter((x) => !/Not implemented|navigation/i.test(x)).length);
   const failed = R.filter((x) => !x[1]);

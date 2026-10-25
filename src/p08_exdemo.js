@@ -1021,7 +1021,7 @@ window.KovaExPage=(function(){
   /* ---------- Exercises and Stretch, from the Training card ---------- */
   var GROUPS=[['all','All'],['Quads','Legs'],['Glutes','Glutes'],['Hamstrings','Hamstrings'],['Chest','Chest'],['Back','Back'],['Shoulders','Shoulders'],['Arms','Arms'],['Core','Core'],['skill','Calisthenics']];
   var SKILLS=['Push up','Pike push-up','Handstand push-up','Dips','Pull up','Muscle-up','L-sit','Pistol squat','Front lever','Dead hang','Hanging leg raise'];
-  var LS={g:'all',q:'',e:'all',d:false};
+  var LS={g:'all',q:'',e:'all',d:false,ring:'m',open:false};
   var EQ=[['all','Any equipment'],['bb','Barbell'],['db','Dumbbell'],['cable','Cable'],['mach','Machine'],['bw','Bodyweight']];
   var EQN={bb:'Barbell',db:'Dumbbell',cable:'Cable',mach:'Machine',bw:'Bodyweight'};
   function allEx(){
@@ -1029,35 +1029,107 @@ window.KovaExPage=(function(){
     SKILLS.forEach(function(n){ if(!L.some(function(x){ return x.n===n; })) L.push({n:n,m:'skill',eq:'bw'}); });
     return L.filter(function(x){ return D.find(x.n); });
   }
-  function libHtml(){
-    var L=allEx().filter(function(x){
+  function libList(){
+    return allEx().filter(function(x){
       var g=LS.g, ok=g==='all'||x.m===g||(g==='Arms'&&/Biceps|Triceps|Forearms/.test(x.m))||(g==='Quads'&&/Quads|Calves|Adductors/.test(x.m))||(g==='skill'&&(x.m==='skill'||SKILLS.indexOf(x.n)>=0));
       ok=ok&&(LS.e==='all'||x.eq===LS.e||(LS.e==='db'&&x.eq==='kb'))&&(!LS.d||D.DIFF.indexOf(x.n)>=0);
       return ok&&(!LS.q||x.n.toLowerCase().indexOf(LS.q.toLowerCase())>=0);
     });
-    var all=allEx().length;
-    return '<div class="kxp"><div class="kxp-h"><div><b>Exercises</b><span>'+all+' with a moving picture'+(L.length!==all?', '+L.length+' shown':'')+'. Tap one to see how.</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
-      +'<input class="kxp-q" id="kxpQ" type="search" placeholder="Search exercises" aria-label="Search exercises" value="'+esc(LS.q)+'">'
-      +'<div class="kxp-gs" role="group" aria-label="Muscle">'+GROUPS.map(function(g){ return '<button type="button" class="chip'+(LS.g===g[0]?' on':'')+'" data-kxp="g" data-g="'+g[0]+'" aria-pressed="'+(LS.g===g[0])+'">'+g[1]+'</button>'; }).join('')+'</div>'
-      +'<div class="kxp-gs" role="group" aria-label="Equipment"><button type="button" class="chip kxp-dc'+(LS.d?' on':'')+'" data-kxp="d" aria-pressed="'+LS.d+'">The different ones</button>'
-        +EQ.map(function(g){ return '<button type="button" class="chip'+(LS.e===g[0]?' on':'')+'" data-kxp="e" data-e="'+g[0]+'" aria-pressed="'+(LS.e===g[0])+'">'+g[1]+'</button>'; }).join('')+'</div>'
-      +'<div class="kxp-grid">'+(L.length?L.map(function(x){ var dif=D.DIFF.indexOf(x.n)>=0; return '<button type="button" class="kxp-cell" data-exinfo="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b><small>'+esc((x.m==='skill'?'Calisthenics':x.m)+(EQN[x.eq]?' · '+EQN[x.eq]:''))+'</small>'+(dif?'<i class="kxp-dif">Different</i>':'')+'</button>'; }).join('')
-        :'<div class="kxp-none">Nothing matches. Try another muscle or equipment, or a shorter word, like "press" or "curl".</div>')+'</div></div>';
   }
+  /* p43: the owner's Ron Design Lab dial (src/p08_dial.js) instead of rows of
+     chips: a muscle dial (the centre button turns it into an equipment dial),
+     and one glass card under it: the muscle, how fresh it is, a big count,
+     the exercises in a row (the arrows at the top right open them all) */
+  var REC={Quads:['quads'],Glutes:['glutes'],Hamstrings:['hams'],Chest:['chest'],Back:['lats','traps'],Shoulders:['delts'],Arms:['biceps','triceps'],Core:['abs','obliques']};
+  function fresh(g){
+    var R=window.KovaRecovery, ms=REC[g]; if(!R||!ms) return null;
+    try{ var M=R.state(), w='ready'; ms.forEach(function(m){ var o=M[m]; if(o&&(o.st==='rest'||(o.st==='mid'&&w==='ready'))) w=o.st; }); return w; }catch(e){ return null; }
+  }
+  function done(L){ var k=K(), H={}; try{ H=k&&k.hist?k.hist()||{}:{}; }catch(e){} return L.filter(function(x){ return H[x.n]&&H[x.n].length; }).length; }
+  function libRing(){
+    var A=window.KovaDial;
+    if(LS.ring==='e') return [{id:'all',label:'Any',icon:A.sprite('grid-dots')},{id:'bb',label:'Barbell',icon:art('Olympic barbell')},{id:'db',label:'Dumbbell',icon:art('Dumbbells')},{id:'cable',label:'Cable',icon:art('Rope')},{id:'mach',label:'Machine',icon:art('Smith machine')},{id:'bw',label:'Bodyweight',icon:A.sprite('walk')},{id:'dif',label:'Different',icon:A.sprite('sparkles')}];
+    return GROUPS.map(function(g){ return {id:g[0],label:g[1],icon:g[0]==='skill'?A.sprite('yoga'):A.mus(g[0]==='all'?'all':g[0])}; });
+  }
+  function art(n){ var A=window.KovaDial, c=window.KovaAttach&&KovaAttach.CAT&&KovaAttach.CAT.filter(function(x){ return x[0]===n; })[0]; return c?A.art(c[4]):A.sprite('barbell'); }
+  function libCard(){
+    var L=libList(), gl=(GROUPS.filter(function(g){ return g[0]===LS.g; })[0]||GROUPS[0])[1], el=LS.d?'Different':LS.e!=='all'?EQN[LS.e]:'';
+    var name=(LS.g==='all'?(el||'All'):gl+(el?' · '+el:'')), f=LS.g!=='all'?fresh(LS.g):null, dn=done(L);
+    return '<div class="kdl-card'+(LS.open?' open':'')+'" id="kxpCard">'
+      +'<div class="kdl-ch"><span class="kdl-name">'+esc(name)+'</span>'
+        +(f?'<span class="kdl-st"><i'+(f==='ready'?'':' class="r"')+'></i>'+(f==='ready'?'Ready':f==='mid'?'Recovering':'Needs rest')+'</span>':'')
+        +'<button type="button" class="kdl-x" data-kxp="open" aria-expanded="'+!!LS.open+'" aria-label="'+(LS.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(LS.open)+'</button></div>'
+      +'<div class="kdl-big"><b>'+L.length+'</b><span>'+(L.length===1?'exercise':'exercises')+'</span></div>'
+      +(dn?'<div class="kdl-sub"><i></i>'+dn+' you have done</div>':'')
+      +(L.length?'<div class="kdl-strip">'+L.map(function(x){ return '<button type="button" class="kdl-t" data-exinfo="'+esc(x.n)+'"><span class="kxp-th" data-kxd-still="'+esc(x.n)+'"></span><b>'+esc(x.n)+'</b></button>'; }).join('')+'</div>'
+        :'<div class="kdl-none">Nothing here. Try another one.</div>')
+      +'</div>';
+  }
+  function libHtml(){
+    var all=allEx().length;
+    return '<div class="kxp kdl-page" data-kdl-page="lib"><div class="kxp-h kdl-top"><div><b>Exercises</b><small>'+all+' with a moving picture</small></div>'
+      +'<button type="button" class="kdl-ib" data-kxp="find" aria-label="Search exercises"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>'
+      +'<button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +'<input class="kxp-q" id="kxpQ" type="search" placeholder="Search exercises" aria-label="Search exercises" value="'+esc(LS.q)+'"'+(LS.q||LS.find?'':' hidden')+'>'
+      +KovaDial.html({label:LS.ring==='e'?'Equipment':'Muscle',centre:{label:'Switch'}})
+      +'<div class="kdl-sw" role="group" aria-label="Choose by"><button type="button" data-kxp="ring" data-r="m" class="'+(LS.ring!=='e'?'on':'')+'" aria-pressed="'+(LS.ring!=='e')+'">Muscle</button><button type="button" data-kxp="ring" data-r="e" class="'+(LS.ring==='e'?'on':'')+'" aria-pressed="'+(LS.ring==='e')+'">Equipment</button></div>'
+      +libCard()+'</div>';
+  }
+  function ringSel(){ var R=libRing(), id=LS.ring==='e'?(LS.d?'dif':LS.e):LS.g, i=R.map(function(x){ return x.id; }).indexOf(id); return i<0?0:i; }
+  var DIAL=null;
+  function paintCard(id,h){ var c=document.getElementById(id); if(!c) return; var t=document.createElement('div'); t.innerHTML=h; var n=t.firstChild; c.parentNode.replaceChild(n,c); mountIn(n); }
+  function libDial(){
+    var el=document.querySelector('#sheet .kdl-page[data-kdl-page="lib"] .kdl'); if(!el||!window.KovaDial) return;
+    DIAL=KovaDial.mount(el,{label:'Muscle',items:libRing(),sel:ringSel(),
+      centre:{icon:'swap',label:'Switch between muscle and equipment',onTap:function(){ libSwap(LS.ring==='e'?'m':'e'); }},
+      onPick:function(i,it){ if(LS.ring==='e'){ LS.d=it.id==='dif'; LS.e=it.id==='dif'?'all':it.id; } else LS.g=it.id; paintCard('kxpCard',libCard()); }});
+  }
+  function libSwap(r){
+    LS.ring=r; if(!DIAL) return;
+    document.querySelectorAll('#sheet .kdl-sw button').forEach(function(b){ var on=b.getAttribute('data-r')===r; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); });
+    DIAL.swap(libRing(),ringSel());
+  }
+  function libOpen(){ sheet(libHtml()); libDial(); }
   var SG=[['legs','Legs and hips',['quad','ham','hipflex','glute','calf','shin','butterfly']],['back','Back',['child','knees','lat']],['upper','Chest and shoulders',['chest','delt','neck']],['arms','Arms',['tri','bicep','wrist']],['core','Core',['cobra','lat']]];
   function todays(){
     var k=K(), S=k&&k.state&&k.state(); if(!S||!S.ex||!S.ex.length) return [];
     var mus=[]; S.ex.forEach(function(e){ var d=D.find(e.n); if(d&&d.mus) (d.mus.p||[]).forEach(function(m){ if(mus.indexOf(m)<0) mus.push(m); }); });
     return D.stretchesFor(mus).slice(0,6);
   }
-  function strHtml(){
-    var td=todays(), by=function(id){ return D.STR.filter(function(d){ return d.id===id; })[0]; };
-    var card=function(d){ return '<button type="button" class="kxp-cell" data-kxp="stretch" data-n="'+esc(d.n)+'"><span class="kxp-th" data-kxd-still="'+esc(d.n)+'"></span><b>'+esc(d.n)+'</b><small>'+esc(d.hold)+'</small></button>'; };
-    return '<div class="kxp"><div class="kxp-h"><div><b>Stretch</b><span>Hold each one, breathe, ease a little deeper as it lets go.</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
-      +(td.length?'<div class="kxp-l">For today’s workout</div><div class="kxp-grid">'+td.map(card).join('')+'</div><button type="button" class="btn kxp-go" data-kxp="routine">Stretch with me ('+td.length+' stretches)</button>'
-        :'<div class="kxp-none">Start a workout and Kova picks the stretches for the muscles it trains.</div>')
-      +SG.map(function(g){ return '<div class="kxp-l">'+g[1]+'</div><div class="kxp-grid">'+g[2].map(by).filter(Boolean).map(card).join('')+'</div>'; }).join('')+'</div>';
+  var SGI={legs:'Legs',back:'Back',upper:'Upper',arms:'Arms',core:'Core'};
+  function strGroups(){
+    var by=function(id){ return D.STR.filter(function(d){ return d.id===id; })[0]; }, td=todays(), G=[];
+    if(td.length) G.push({id:'today',label:'Today',n:'For today’s workout',L:td,icon:KovaDial.sprite('flame')});
+    SG.forEach(function(g){ G.push({id:g[0],label:SGI[g[0]]||g[1],n:g[1],L:g[2].map(by).filter(Boolean),icon:KovaDial.mus(g[0]==='legs'?'Quads':g[0]==='back'?'Back':g[0]==='upper'?'Upper':g[0]==='arms'?'Arms':'Core')}); });
+    return G;
   }
+  var SS={g:null,open:false};
+  function strCard(){
+    var G=strGroups(), g=G.filter(function(x){ return x.id===SS.g; })[0]||G[0];
+    var sec=g.L.reduce(function(a,d){ return a+secs(d.hold).reduce(function(x,y){ return x+y; },0); },0), min=Math.max(1,Math.round(sec/60));
+    return '<div class="kdl-card'+(SS.open?' open':'')+'" id="kxpSCard">'
+      +'<div class="kdl-ch"><span class="kdl-name">'+esc(g.id==='today'?'Today':g.n)+'</span><span class="kdl-st"><i></i>'+g.L.length+' stretches</span>'
+        +'<button type="button" class="kdl-x" data-kxp="sopen" aria-expanded="'+SS.open+'" aria-label="'+(SS.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(SS.open)+'</button></div>'
+      +'<div class="kdl-big"><b>'+min+'</b><span>min</span></div>'
+      +'<div class="kdl-sub">Tap the centre to start</div>'
+      +'<div class="kdl-strip">'+g.L.map(function(d){ return '<button type="button" class="kdl-t" data-kxp="stretch" data-n="'+esc(d.n)+'"><span class="kxp-th" data-kxd-still="'+esc(d.n)+'"></span><b>'+esc(d.n)+'</b><small>'+esc(d.hold)+'</small></button>'; }).join('')+'</div>'
+      +'</div>';
+  }
+  function strHtml(){
+    var G=strGroups(); if(!SS.g||!G.some(function(x){ return x.id===SS.g; })) SS.g=G[0].id;
+    return '<div class="kxp kdl-page" data-kdl-page="str"><div class="kxp-h kdl-top"><div><b>Stretch</b><small>Hold, breathe, ease in</small></div>'
+      +'<button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
+      +KovaDial.html({label:'Body part',centre:{label:'Stretch with me'}})
+      +strCard()+'</div>';
+  }
+  function strDial(){
+    var el=document.querySelector('#sheet .kdl-page[data-kdl-page="str"] .kdl'); if(!el||!window.KovaDial) return;
+    var G=strGroups();
+    DIAL=KovaDial.mount(el,{label:'Body part',items:G,sel:Math.max(0,G.map(function(x){ return x.id; }).indexOf(SS.g)),
+      centre:{icon:'play',label:'Stretch with me',onTap:function(){ var g=strGroups().filter(function(x){ return x.id===SS.g; })[0]; if(g&&g.L.length){ track('stretch_routine_start',{g:g.id}); routine(g.L,0); } }},
+      onPick:function(i,it){ SS.g=it.id; paintCard('kxpSCard',strCard()); }});
+  }
+  function strOpen(){ sheet(strHtml()); strDial(); }
   function routine(list,i){
     if(i>=list.length){ sheet('<div class="kxp"><div class="kxp-h"><div><b>All done</b><span>'+list.length+' stretches</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div><div class="kxp-none">Nice work. Stretching after training, a few times a week, keeps the range you trained for.</div></div>'); track('stretch_routine',{n:list.length}); return; }
     sheet(stretchHtml(list[i],(i+1)+' of '+list.length));
@@ -1097,13 +1169,17 @@ window.KovaExPage=(function(){
   function onClick(ev){
     var b=ev.target.closest&&ev.target.closest('[data-kxp]'); if(!b) return;
     var a=b.getAttribute('data-kxp');
-    if(a==='lib'){ LS={g:'all',q:'',e:'all',d:false}; sheet(libHtml()); track('exercise_library',{}); return; }
-    if(a==='str'){ sheet(strHtml()); track('stretch_open',{}); return; }
-    if(a==='g'){ LS.g=b.getAttribute('data-g'); sheet(libHtml()); return; }
-    if(a==='e'){ LS.e=b.getAttribute('data-e'); sheet(libHtml()); return; }
-    if(a==='d'){ LS.d=!LS.d; sheet(libHtml()); return; }
-    if(a==='stretch'){ var d=D.find(b.getAttribute('data-n')); if(d){ FROM=b.closest('.kxp')&&/^Stretch$/.test((b.closest('.kxp').querySelector('.kxp-h b')||{}).textContent||'')?'str':null; stopTimer(); sheet(stretchHtml(d).replace('<div class="kxp">','<div class="kxp">'+back())); } return; }
-    if(a==='back'){ stopTimer(); var f=FROM; FROM=null; sheet(f==='lib'?libHtml():strHtml()); return; }
+    if(a==='lib'){ LS={g:'all',q:'',e:'all',d:false,ring:'m',open:false}; libOpen(); track('exercise_library',{}); return; }
+    if(a==='str'){ SS.open=false; strOpen(); track('stretch_open',{}); return; }
+    if(a==='g'){ LS.g=b.getAttribute('data-g'); LS.ring='m'; libOpen(); return; }
+    if(a==='e'){ LS.e=b.getAttribute('data-e'); LS.d=false; LS.ring='e'; libOpen(); return; }
+    if(a==='d'){ LS.d=!LS.d; LS.ring='e'; libOpen(); return; }
+    if(a==='ring'){ libSwap(b.getAttribute('data-r')); return; }
+    if(a==='open'){ LS.open=!LS.open; paintCard('kxpCard',libCard()); return; }
+    if(a==='sopen'){ SS.open=!SS.open; paintCard('kxpSCard',strCard()); return; }
+    if(a==='find'){ LS.find=true; var fq=document.getElementById('kxpQ'); if(fq){ fq.hidden=false; fq.focus(); } return; }
+    if(a==='stretch'){ var d=D.find(b.getAttribute('data-n')); if(d){ FROM=b.closest('[data-kdl-page="str"]')||(b.closest('.kxp')&&/^Stretch$/.test((b.closest('.kxp').querySelector('.kxp-h b')||{}).textContent||''))?'str':null; stopTimer(); sheet(stretchHtml(d).replace('<div class="kxp">','<div class="kxp">'+back())); } return; }
+    if(a==='back'){ stopTimer(); var f=FROM; FROM=null; if(f==='lib') libOpen(); else strOpen(); return; }
     if(a==='hold'){ var d2=D.find(b.getAttribute('data-n')); if(d2){ b.textContent='Restart the timer'; startTimer(d2); } return; }
     if(a==='routine'){ var L=todays(); if(L.length) routine(L,0); return; }
     if(a==='pause'){ var on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',String(on)); b.textContent=on?'▶':'❚❚'; b.setAttribute('aria-label',on?'Play the picture':'Pause the picture');
@@ -1112,7 +1188,8 @@ window.KovaExPage=(function(){
   function onKey(ev){
     var b=ev.target.closest&&ev.target.closest('.kxp-act'); if(b&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); b.click(); }
   }
-  function onInput(ev){ if(ev.target&&ev.target.id==='kxpQ'){ LS.q=ev.target.value; var pos=ev.target.selectionStart; sheet(libHtml()); var q=document.getElementById('kxpQ'); if(q){ q.focus(); try{ q.setSelectionRange(pos,pos); }catch(e){} } } }
+  /* typing searches the card only: the dial stays where it is */
+  function onInput(ev){ if(ev.target&&ev.target.id==='kxpQ'){ LS.q=ev.target.value; paintCard('kxpCard',libCard()); } }
   document.addEventListener('click',onClick); document.addEventListener('keydown',onKey); document.addEventListener('input',onInput);
   /* the sheet closes: no timer left running */
   document.addEventListener('click',function(ev){ if(ev.target&&(ev.target.id==='sheet'||(ev.target.closest&&ev.target.closest('[data-kfc="x"]')))) stopTimer(); },true);
@@ -1123,5 +1200,6 @@ window.KovaExPage=(function(){
   window.addEventListener('kova:screen',soon); document.addEventListener('kova:screen',soon);
   soon();
   return {open:open,html:html,history:history,bodyMap:bodyMap,lib:libHtml,stretch:strHtml,stretchHtml:stretchHtml,todays:todays,decorate:decorate,startTimer:startTimer,stopTimer:stopTimer,secs:secs,
-    routine:function(list){ if(list&&list.length) routine(list,0); },openStretch:function(){ sheet(strHtml()); track('stretch_open',{from:'card'}); }};
+    routine:function(list){ if(list&&list.length) routine(list,0); },openStretch:function(){ SS.open=false; strOpen(); track('stretch_open',{from:'card'}); },
+    openLib:function(){ LS={g:'all',q:'',e:'all',d:false,ring:'m',open:false}; libOpen(); },_LS:function(){ return LS; },_SS:SS,dial:function(){ return DIAL; }};
 })();
