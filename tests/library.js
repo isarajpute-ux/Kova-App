@@ -43,7 +43,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const tiles = () => [...sh().querySelectorAll('#kxpCard .kdl-t b')].map((b) => b.textContent);
   const pick = async (label) => { const b = [...sh().querySelectorAll('.kdl-l')].find((x) => x.textContent.trim() === label); if (b) b.click(); await wait(900); return !!b; };
   const all = tiles().length;
-  ck('the library shows them all (130+ with a moving picture)', all >= 130 && /\d+ with a moving picture/.test(sh().textContent));
+  ck('the library shows them all (130+ with a moving picture), under one short title', all >= 130 && sh().querySelector('.kdl-top b').textContent === 'Exercises');
   ck('…on a dial of muscles round a centre button, no rows of chips', sh().querySelectorAll('.kdl-l').length === 10 && !!sh().querySelector('.kdl-c') && !sh().querySelector('[data-kxp="g"]'));
   sh().querySelector('[data-kxp="ring"][data-r="e"]').click(); await wait(1300);
   ck('…Equipment turns it into an equipment dial (Any, Barbell, Dumbbell, Cable, Machine, Bodyweight, Different)', [...sh().querySelectorAll('.kdl-l')].map((x) => x.textContent.trim()).join() === 'Any,Barbell,Dumbbell,Cable,Machine,Bodyweight,Different');

@@ -15,7 +15,8 @@ window.KovaDial=(function(){
   'use strict';
   /* the geometry, in a 320 x 320 box (centre 160): the slot sits a little
      right of straight down, as in the reference */
-  var C=160, STEP=52, W=47, SLOT=80, RI=74, RO=132, GROW=19, LO=-66, HI=230, FADE=28;
+  /* p43d: thicker, wider segments, as in the reference (four or five in view) */
+  var C=160, STEP=60, W=55, SLOT=82, RI=78, RO=141, GROW=13, LO=-72, HI=234, FADE=30;
   var N=0;
   function P(r,a){ a=a*Math.PI/180; return [C+r*Math.cos(a),C+r*Math.sin(a)]; }
   /* an arc segment with soft corners: each corner is a curve from the
@@ -66,7 +67,13 @@ window.KovaDial=(function(){
         +'<linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-a)"/><stop offset="1" style="stop-color:var(--kdl-b)"/></linearGradient>'
         +'<linearGradient id="'+id+'s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-sa)"/><stop offset="1" style="stop-color:var(--kdl-sb)"/></linearGradient>'
         +'<linearGradient id="'+id+'e" gradientUnits="userSpaceOnUse" x1="40" y1="20" x2="280" y2="300"><stop offset="0" style="stop-color:var(--kdl-e1)"/><stop offset=".55" style="stop-color:var(--kdl-e2)"/><stop offset="1" style="stop-color:var(--kdl-e3)"/></linearGradient>'
-        +'<filter id="'+id+'b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter>'
+        /* no hard borders: a soft light along the top inside edge and a soft shade along the bottom one (the reference's inner shadow) */
+        +'<filter id="'+id+'i" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.6" result="b"/>'
+          +'<feOffset in="b" dy="2.6" result="o1"/><feComposite in="SourceAlpha" in2="o1" operator="arithmetic" k2="1" k3="-1" result="e1"/><feFlood style="flood-color:var(--kdl-hi)"/><feComposite in2="e1" operator="in" result="lt"/>'
+          +'<feOffset in="b" dy="-2.6" result="o2"/><feComposite in="SourceAlpha" in2="o2" operator="arithmetic" k2="1" k3="-1" result="e2"/><feFlood style="flood-color:var(--kdl-lo)"/><feComposite in2="e2" operator="in" result="dk"/>'
+          +'<feMerge><feMergeNode in="dk"/><feMergeNode in="lt"/></feMerge></filter>'
+        /* the chosen one floats a little above the rest */
+        +'<filter id="'+id+'d" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="9" style="flood-color:#000" flood-opacity=".5"/></filter>'
       +'</defs><g class="kdl-segs"></g></svg>'
       +'<div class="kdl-ls"></div>'
       +'<div class="kdl-hub"><button type="button" class="kdl-c" aria-label="'+esc(o.centre&&o.centre.label||'Centre')+'"></button></div></div>';
@@ -88,7 +95,7 @@ window.KovaDial=(function(){
       var h='', b='';
       st.items.forEach(function(it,i){
         /* per segment: a soft glow of its rim, the glass with its bright edge, the milky light of the chosen one */
-        h+='<path class="kdl-r" fill="none" stroke="var(--kdl-e1)" stroke-width="2.6" filter="url(#'+id+'b)"/><path class="kdl-s" fill="url(#'+id+'g)" stroke="url(#'+id+'e)" stroke-width=".9"/><path class="kdl-x" fill="url(#'+id+'s)"/>';
+        h+='<path class="kdl-x" fill="url(#'+id+'s)" filter="url(#'+id+'d)"/><path class="kdl-h" fill="#fff" filter="url(#'+id+'i)"/><path class="kdl-s" fill="url(#'+id+'g)" stroke="url(#'+id+'e)" stroke-width=".6"/>';
         b+='<button type="button" class="kdl-l" role="radio" data-kdl-i="'+i+'" aria-checked="false" aria-label="'+esc(it.label)+'" tabindex="-1">'+(it.icon||'')+'<span>'+esc(it.label)+'</span></button>';
       });
       segs.innerHTML=h; ls.innerHTML=b;
@@ -102,13 +109,13 @@ window.KovaDial=(function(){
         var vis=clamp(Math.min((ang-LO)/FADE,(HI-ang)/FADE),0,1);
         /* the pop: each segment comes out from the hub, the chosen one first */
         var lag=Math.min(Math.abs(d),3)*0.11, pp=clamp((st.pop-lag)/(1-0.33),0,1), e=reduce?1:back(pp);
-        var ri=RI-1.5*t2, ro=RO+GROW*t2, half=(W+6*t2)/2, cr=11+9*t2;
+        var ri=RI-4*t2, ro=RO+GROW*t2, half=(W+4*t2)/2, cr=13+7*t2;
         var k=0.36+0.64*e, ri2=44+(ri-44)*k, ro2=44+(ro-44)*k, sp=half*(0.55+0.45*Math.min(1,e));
         var op=vis*clamp(pp*1.6,0,1);
         var path=op>0.01?seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2)):'';
-        S[3*i].setAttribute('d',path); S[3*i].style.opacity=(op*(0.25+0.45*t2)).toFixed(3);
+        S[3*i].setAttribute('d',path); S[3*i].style.opacity=(op*t2).toFixed(3);
         S[3*i+1].setAttribute('d',path); S[3*i+1].style.opacity=op.toFixed(3);
-        S[3*i+2].setAttribute('d',path); S[3*i+2].style.opacity=(op*t2).toFixed(3);
+        S[3*i+2].setAttribute('d',path); S[3*i+2].style.opacity=op.toFixed(3);
         if(G[i]){ var gp=op>0.01&&kx?'path("'+seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2),kx)+'")':'none'; G[i].style.clipPath=gp; G[i].style.webkitClipPath=gp; G[i].style.opacity=op.toFixed(3); }
         var m=P((ri2+ro2)/2+3*t2,ang), lb=L[i];
         lb.style.left=(m[0]/3.2).toFixed(2)+'%'; lb.style.top=(m[1]/3.2).toFixed(2)+'%';

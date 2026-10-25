@@ -34,8 +34,8 @@ for (const theme of ['dark', 'soft', 'light']) {
   const geo = await p.evaluate(() => { const d = document.querySelector('#sheetIn .kdl'), r = d.getBoundingClientRect(), on = d.querySelector('.kdl-l.on'), segs = [...d.querySelectorAll('.kdl-s')].filter((x) => +x.style.opacity > 0.5);
     const far = (x) => { const L = x.getTotalLength(); let m = 0; for (let i = 0; i <= 60; i++) { const q = x.getPointAtLength(L * i / 60); m = Math.max(m, Math.hypot(q.x - 160, q.y - 160)); } return m; };
     const sel = [...d.querySelectorAll('.kdl-x')].find((x) => +x.style.opacity > 0.5);
-    return { w: r.width, inView: r.left >= 0 && r.right <= innerWidth, shown: segs.length, sel: on && on.textContent.trim(), farSel: sel ? far(sel) : 0, farOther: Math.max(...segs.filter((x) => x.nextSibling !== sel).map(far)), glow: getComputedStyle(d.querySelector('.kdl-c')).boxShadow }; });
-  ck(theme + ': a dial of glass segments round a glowing centre, on screen, 4 to 6 showing at once', geo.inView && geo.w >= 300 && geo.shown >= 4 && geo.shown <= 6 && /rgba\(227, 232, 92/.test(geo.glow) || (console.error(theme, geo), false));
+    return { w: r.width, inView: r.left >= 0 && r.right <= innerWidth, shown: segs.length, sel: on && on.textContent.trim(), farSel: sel ? far(sel) : 0, farOther: Math.max(...segs.filter((x) => x.previousSibling.previousSibling !== sel).map(far)), yel: getComputedStyle(d.querySelector('.kdl-c')).backgroundColor }; });
+  ck(theme + ': a dial of frosted segments round a neon-yellow centre, on screen, 4 to 6 showing at once', geo.inView && geo.w >= 300 && geo.shown >= 4 && geo.shown <= 6 && /rgb\(223, 255, 0\)/.test(geo.yel) || (console.error(theme, geo), false));
   ck(theme + ': …the chosen one sits in the slot, lighter and pushed out past the others', geo.sel === 'All' && geo.farSel > geo.farOther + 8 || (console.error(theme, geo), false));
   /* drag round the track: it slides, then settles on the one in the slot */
   const box = await p.locator('#sheetIn .kdl').boundingBox(), cx = box.x + box.width / 2, cy = box.y + box.height / 2, R = box.width * 0.32;

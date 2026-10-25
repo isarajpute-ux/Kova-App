@@ -150,6 +150,14 @@ window.KovaAttach=(function(){
     if(/crunch|plank|ab |core|twist|leg raise/i.test(n)) return 'Core';
     return 'Legs';
   }
+  /* p43d, the owner: "17 attachments on Back... it's too much for a workout app": the six people use most for each area */
+  var TOP={Back:['V-bar','Wide lat bar','Row handle','Straight bar','Single handle','Straps'],
+    Legs:['Belt','Ankle strap','Trap bar','Safety squat bar','Knee sleeves','Dumbbells'],
+    Glutes:['Ankle strap','Band','Belt','Dumbbells','Kettlebell','Weight plate'],
+    Arms:['Rope','Straight bar','V-bar','EZ bar','Tricep bar','Single handle'],
+    Chest:['Stirrup handles','Single handle','Dumbbells','Dip belt','Wrist wraps','Weight plate'],
+    Shoulders:['Rope','Single handle','Dumbbells','Landmine','Wrist wraps','Band'],
+    Core:['Rope','Ankle strap','Medicine ball','Weight plate','Landmine','Kettlebell']};
   var PK=null, PD=null;
   function feetIcon(f){ return plate(f[3]).replace('class="katt-ic katt-pl8"','class="kdl-ic kdl-art katt-pl8"'); }
   function pkRing(){
@@ -168,22 +176,23 @@ window.KovaAttach=(function(){
         +(cur?'<button type="button" class="chip" data-katt-v="">Clear</button>':'')+'</div>'
         +'<div class="kdl-sub">Height matters more than width.</div></div>';
     }
-    var best=options(PK.n), L=CAT.filter(function(c){ return c[2].indexOf(PK.area)>=0; });
+    var best=options(PK.n), L=(TOP[PK.area]||[]).map(catOf).filter(Boolean);
     /* the ones that fit this exercise first, in their own order */
     L=L.map(function(c,i){ var r=best.indexOf(c[0]); return [c,r<0?99:r,i]; }).sort(function(x,y){ return x[1]-y[1]||x[2]-y[2]; }).map(function(x){ return x[0]; });
     var c0=catOf(cur);
-    return '<div class="kdl-card'+(PK.open?' open':'')+'" id="kattCard"><div class="kdl-ch"><span class="kdl-name">'+esc(PK.area)+'</span>'
-        +(cur?'<span class="kdl-st"><i></i>'+esc(cur)+'</span>':'')
-        +'<button type="button" class="kdl-x" data-katt-open="1" aria-expanded="'+!!PK.open+'" aria-label="'+(PK.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(PK.open)+'</button></div>'
+    if(L.length>6) L=L.slice(0,6);
+    return '<div class="kdl-card" id="kattCard"><div class="kdl-ch"><span class="kdl-name">'+esc(PK.area)+'</span>'
+        +(cur?'<span class="kdl-st"><i></i>In use</span>':'')+'</div>'
       +'<div class="kdl-big"><b'+(cur?' class="w"':'')+'>'+(cur?esc(cur):L.length)+'</b><span>'+(cur?esc(c0?c0[3]:'yours'):'attachments')+'</span></div>'
-      +'<div class="kdl-strip">'+L.map(function(c){ return '<button type="button" class="kdl-t att'+(c[0]===cur?' on':'')+'" data-katt-v="'+esc(c[0])+'" aria-pressed="'+(c[0]===cur)+'">'+icon(c).replace('class="katt-ic"','class="kdl-art"')+'<b>'+esc(c[0])+'</b>'+(PK.open?'<small>'+esc(c[3])+'</small>':'')+'</button>'; }).join('')+'</div>'
-      +(PK.open?'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>':'')
+      +'<div class="kdl-strip">'+L.map(function(c){ return '<button type="button" class="kdl-t att'+(c[0]===cur?' on':'')+'" data-katt-v="'+esc(c[0])+'" aria-pressed="'+(c[0]===cur)+'">'+icon(c).replace('class="katt-ic"','class="kdl-art"')+'<b>'+esc(c[0])+'</b><small>'+esc(c[3])+'</small></button>'; }).join('')
+        +'<button type="button" class="kdl-t att" data-katt-other="1" aria-expanded="'+!!PK.own+'"><svg class="kdl-art" viewBox="0 0 48 28" aria-hidden="true"><path d="M24 7v14M17 14h14"/></svg><b>Other</b><small>Type your own</small></button></div>'
+      +(PK.own?'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Your attachment" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>':'')
       +(cur?'<div class="kdl-go"><button type="button" class="chip" data-katt-v="">No attachment</button></div>':'')
       +'</div>';
   }
   function pickDialHtml(n,cur,where){
     var lp=isLP(n), fo=lp&&FEET.some(function(f){ return f[0]===cur; });
-    PK={n:n,cur:cur||'',where:where,mode:lp&&(fo||!cur)?'feet':'gear',area:areaOf(n),foot:fo?cur:'Feet middle',open:false};
+    PK={n:n,cur:cur||'',where:where,mode:lp&&(fo||!cur)?'feet':'gear',area:areaOf(n),foot:fo?cur:'Feet middle',own:false};
     if(!lp&&catOf(cur)&&catOf(cur)[2].indexOf(PK.area)<0) PK.area=catOf(cur)[2][0];
     return '<div class="katt-p kdl-page" data-katt-for="'+esc(n)+'" data-katt-where="'+where+'"><div class="kxp-h kdl-top"><div><b>'+esc(n)+'</b><small>'+(lp?'Feet and gear':'Attachment')+'</small></div></div>'
       +KovaDial.html({label:lp?'Where your feet go':'Body area'})
@@ -275,8 +284,8 @@ window.KovaAttach=(function(){
       return; }
     var ar=t.closest('[data-katt-area]');
     if(ar){ ev.preventDefault(); ev.stopPropagation(); AREA=ar.getAttribute('data-katt-area'); var bx=ar.closest('.katt-p'), al=bx&&bx.querySelector('.katt-all'), nm=bx&&bx.getAttribute('data-katt-for'); if(al) al.innerHTML=allHtml(get(nm)); return; }
-    var op=t.closest('[data-katt-open]');
-    if(op&&PK){ ev.preventDefault(); ev.stopPropagation(); PK.open=!PK.open; repaint(); return; }
+    var ot=t.closest('[data-katt-other]');
+    if(ot&&PK){ ev.preventDefault(); ev.stopPropagation(); PK.own=!PK.own; repaint(); var oi=document.querySelector('#kattCard .katt-own input'); if(oi) try{ oi.focus(); }catch(x){} return; }
     var mo=t.closest('[data-katt-more]');
     if(mo){ ev.preventDefault(); ev.stopPropagation(); var bx2=mo.closest('.katt-p'), al2=bx2&&bx2.querySelector('.katt-all'); if(al2){ al2.hidden=!al2.hidden; if(!al2.hidden) al2.innerHTML=allHtml(get(bx2.getAttribute('data-katt-for'))); } return; }
     var v=t.closest('[data-katt-v]');

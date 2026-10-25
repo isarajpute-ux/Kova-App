@@ -1067,7 +1067,7 @@ window.KovaExPage=(function(){
   }
   function libHtml(){
     var all=allEx().length;
-    return '<div class="kxp kdl-page" data-kdl-page="lib"><div class="kxp-h kdl-top"><div><b>Exercises</b><small>'+all+' with a moving picture</small></div>'
+    return '<div class="kxp kdl-page" data-kdl-page="lib"><div class="kxp-h kdl-top"><div><b>Exercises</b></div>'
       +'<button type="button" class="kdl-ib" data-kxp="find" aria-label="Search exercises"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg></button>'
       +'<button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
       +'<input class="kxp-q" id="kxpQ" type="search" placeholder="Search exercises" aria-label="Search exercises" value="'+esc(LS.q)+'"'+(LS.q||LS.find?'':' hidden')+'>'
@@ -1117,7 +1117,7 @@ window.KovaExPage=(function(){
   }
   function strHtml(){
     var G=strGroups(); if(!SS.g||!G.some(function(x){ return x.id===SS.g; })) SS.g=G[0].id;
-    return '<div class="kxp kdl-page" data-kdl-page="str"><div class="kxp-h kdl-top"><div><b>Stretch</b><small>Hold, breathe, ease in</small></div>'
+    return '<div class="kxp kdl-page" data-kdl-page="str"><div class="kxp-h kdl-top"><div><b>Stretch</b></div>'
       +'<button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div>'
       +KovaDial.html({label:'Body part',centre:{label:'Stretch with me'}})
       +strCard()+'</div>';

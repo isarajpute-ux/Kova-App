@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-30',title:'The dial, redone',
+      lines:['Smoky frosted glass on a warm brown spotlight','Six attachments per area, not seventeen'],
+      steps:[
+        ['move','Stretch and Exercises','Turn the dial. The chosen one turns solid; the centre starts or switches.',function(){ return first('#s-move .kxp-act[data-kxp="str"]'); }],
+        ['session','Attachments','Six per body area, the ones that fit first.',function(){ return first('#s-session .katt-chip')||q('#addExBtn'); }]
+      ]},
     {id:'new-2026-10-29',title:'Dream physique fixed, frosted glass, clearer icons',
       lines:['Dream physique: tidy, brown, and says why AI failed','The dial: real frosted glass','New icons for every body part and attachment'],
       steps:[

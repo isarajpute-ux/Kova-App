@@ -47,9 +47,9 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   /* p43: the picker is the dial; a curl opens on Arms, the bars that fit first */
   const P = A._PK(), names = [...sh.querySelectorAll('#kattCard .kdl-t b')].map((b) => b.textContent);
   ck('the picker is a dial of body areas, opened on the exercise’s own (a curl: Arms), no "Best for this one"', !!sh.querySelector('.kdl') && sh.querySelectorAll('.kdl-l').length === 7 && P.area === 'Arms' && sh.querySelector('.kdl-l.on').textContent === 'Arms' && !/Best for this one/.test(sh.textContent));
-  ck('…the card shows that area’s attachments in a row, the ones for a barbell first (Straight bar, EZ bar)', names[0] === 'Straight bar' && names[1] === 'EZ bar' && names.length >= 4);
-  sh.querySelector('[data-katt-open]').click(); await wait(20);
-  ck('…the arrows at its top right open them all, each with what it is for, and a box for your own', sh.querySelector('#kattCard').classList.contains('open') && !!sh.querySelector('#kattCard .kdl-t small') && !!sh.querySelector('.katt-own input'));
+  ck('…the card shows six for that area at most (the owner: 17 was too many), the ones for a barbell first (Straight bar, EZ bar), each with what it is for', names[0] === 'Straight bar' && names[1] === 'EZ bar' && names.filter((n) => n !== 'Other').length <= 6 && !!sh.querySelector('#kattCard .kdl-t small') && !sh.querySelector('#kattCard .kdl-x'));
+  sh.querySelector('[data-katt-other]').click(); await wait(20);
+  ck('…"Other" opens a box for your own', !!sh.querySelector('.katt-own input'));
   sh.querySelector('.katt-own input').value = 'Fat grips';
   sh.querySelector('[data-katt-own]').click(); await wait(80);
   ck('you can type your own, and it is kept', A.get('Barbell curl') === 'Fat grips' && K.state().ex[1].att === 'Fat grips');
