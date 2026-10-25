@@ -153,7 +153,7 @@ window.KovaTour=(function(){
     st.el=el; st.ride=false;
     if(st.seen[st.seen.length-1]!==i) st.seen.push(i);
     var sp=$('#ksSpot'); if(sp){ sp.classList.remove('ride'); sp.style.opacity=''; }
-    var ov=$('#ksTour'); if(ov) ov.classList.remove('ride');
+    var ov=$('#ksTour'); if(ov){ ov.classList.remove('ride'); if(st.o.color==='section') tint(ov,'section'); }
     var g=rect(el); spot(g);
     setTimeout(function(){ if(st&&st.i===i){ st.ride=true; if(sp) sp.classList.add('ride'); if(ov) ov.classList.add('ride'); } },560);
     var coach=$('#ksCoach'); if(!coach) return;
@@ -204,17 +204,26 @@ window.KovaTour=(function(){
     else if(e.key==='ArrowLeft'){ e.preventDefault(); back(); }
     else if(e.key==='Escape'){ e.preventDefault(); end(); }
   });
+  /* 'section' (What's new) takes the colour of the screen each step is on:
+     the owner saw Workout's tour in orange beside Workout's own brown */
+  function tint(ov,c){
+    var col=c==='section'?secCol():c&&/^#[0-9a-f]{6}$/i.test(c)?c:'';
+    if(!col) return;
+    var n=parseInt(col.slice(1),16), rgb=[(n>>16)&255,(n>>8)&255,n&255].join(',');
+    ov.classList.add('tinted'); ov.style.setProperty('--tc',col); ov.style.setProperty('--tg','rgba('+rgb+',.45)'); ov.style.setProperty('--tb','rgba('+rgb+',.16)');
+    /* the Next button's words: dark on a light colour, white on a dark one (light glass's deep accents) */
+    ov.style.setProperty('--tt',(.299*((n>>16)&255)+.587*((n>>8)&255)+.114*(n&255))/255>.55?'#111':'#FFF');
+  }
+  function secCol(){
+    var a=document.querySelector('.app');
+    var c=a?(getComputedStyle(a).getPropertyValue('--acc')||'').trim():'';
+    return /^#[0-9a-f]{6}$/i.test(c)?c:'';
+  }
   function run(steps,o){
     if(st) end();
     var ov=document.createElement('div'); ov.className='ks ks-tour'; ov.id='ksTour';
     /* a tour can take its section's colour; the Work OS keeps glowing white */
-    var col=o&&o.color&&/^#[0-9a-f]{6}$/i.test(o.color)?o.color:'';
-    if(col){
-      var n=parseInt(col.slice(1),16), rgb=[(n>>16)&255,(n>>8)&255,n&255].join(',');
-      ov.classList.add('tinted'); ov.style.setProperty('--tc',col); ov.style.setProperty('--tg','rgba('+rgb+',.45)'); ov.style.setProperty('--tb','rgba('+rgb+',.16)');
-      /* the Next button's words: dark on a light colour, white on a dark one (light glass's deep accents) */
-      ov.style.setProperty('--tt',(.299*((n>>16)&255)+.587*((n>>8)&255)+.114*(n&255))/255>.55?'#111':'#FFF');
-    }
+    tint(ov,o&&o.color);
     ov.innerHTML='<div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div>'
       +'<div class="ks-cn tl"></div><div class="ks-cn tr"></div><div class="ks-cn bl"></div><div class="ks-cn br"></div>'
       +'<div class="ks-spot" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';

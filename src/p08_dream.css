@@ -141,3 +141,5 @@ body.light-mode .kdp-tot.off{color:#8A6A10}
 /* 4. good to know */
 .kdp-honest p{margin:6px 0 0;font-size:11.5px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75))}
 .kdp-honest .kdp-looks b{font-weight:500;color:var(--ron-txt)}
+/* the sample Workout screen spaces its cards with margins (the live one with a gap) */
+#s-move .card+.kdp-card,#gpSlot+.kdp-card,#goalSlot+.kdp-card,#startBtn+.kdp-card{margin-bottom:12px}

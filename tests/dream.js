@@ -67,7 +67,12 @@ const T = (o) => Object.assign({ ok: true, target: { sex: 'male', visible: { upp
   w.go('move'); await wait(250); D.decorate(); await wait(20);
   const card = doc.getElementById('kdpCard');
   ck('the Dream physique card is on Workout, right under Training', !!card && /DREAM PHYSIQUE/.test(card.textContent) && /Find my dream physique/.test(card.textContent));
-  card.querySelector('[data-kdp="open"]').click(); await wait(50);
+  /* p43: the sample screen has no Training card, so the owner could not find it there */
+  { const acts = doc.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'), cls = acts.className; acts.className = 'x-acts'; card.remove(); D.decorate(); await wait(20);
+    const c2 = doc.getElementById('kdpCard'), prev = c2 && c2.previousElementSibling;
+    ck('…and on the sample screen (no Training card) it sits under Built around your goal', !!c2 && !!prev && /^(gpSlot|goalSlot|startBtn)$/.test(prev.id));
+    acts.className = cls; c2.remove(); D.decorate(); await wait(20); }
+  doc.getElementById('kdpCard').querySelector('[data-kdp="open"]').click(); await wait(50);
   const pg = () => doc.getElementById('kdp');
   ck('it opens a page inside the app, Compare waiting for a picture', !!pg() && pg().closest('.app') !== null && pg().querySelector('[data-kdp="compare"]').disabled);
   ck('…your numbers are shown, to change if they are wrong', /You: man, 28/.test(pg().textContent) && /lb/.test(pg().textContent));

@@ -38,7 +38,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('every exercise in today’s workout has an attachment button', chips.length === 2 && chips.every((c) => /\+ Attachment/.test(c.textContent)));
   chips[0].click(); await wait(30);
   const sh = doc.getElementById('sheetIn');
-  ck('a cable exercise offers the cable attachments (Rope, V-bar, Straight bar...)', /Rope/.test(sh.textContent) && /V-bar/.test(sh.textContent) && /Straight bar/.test(sh.textContent) && /Kova remembers it/.test(sh.textContent));
+  ck('a cable exercise offers the cable attachments (Rope, V-bar, Straight bar...)', /Rope/.test(sh.textContent) && /V-bar/.test(sh.textContent) && /Straight bar/.test(sh.textContent));
   sh.querySelector('[data-katt-v="Rope"]').click(); await wait(120);
   ck('choosing Rope puts it on the exercise and remembers it for Rope pushdown', K.state().ex[0].att === 'Rope' && A.get('Rope pushdown') === 'Rope');
   ck('…and the button now says Rope', /Rope/.test(doc.querySelector('#s-session .katt-chip').textContent) && doc.querySelector('#s-session .katt-chip').classList.contains('set'));

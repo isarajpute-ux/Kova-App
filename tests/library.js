@@ -55,7 +55,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   w.closeSheet();
   /* the attachments */
   ck('31 attachments, each drawn, with what it is for and the body areas it serves', A.CAT.length >= 30 && A.CAT.every((c) => c[0] && c[3] && c[2].length && /<(path|circle|rect|ellipse)/.test(c[4])));
-  ck('…including the owner’s: V-bar, straight bar, the curved bar, the bar like bicycle handlebars, the weighted belt', ['V-bar', 'Straight bar', 'EZ bar', 'Wide lat bar', 'Dip belt', 'Rope', 'MAG grip', 'Trap bar', 'Landmine'].every((n) => A.CAT.some((c) => c[0] === n)) && /bicycle/.test(A.CAT.find((c) => c[0] === 'Wide lat bar')[3]));
+  ck('…including the owner’s: V-bar, straight bar, the curved bar, the bar like bicycle handlebars, the weighted belt', ['V-bar', 'Straight bar', 'EZ bar', 'Wide lat bar', 'Dip belt', 'Rope', 'MAG grip', 'Trap bar', 'Landmine'].every((n) => A.CAT.some((c) => c[0] === n)));
+  ck('the owner: “8 words, not 28”: every attachment and foot position says what it is for in 4 words or fewer', A.CAT.every((c) => c[3].split(/\s+/).length <= 4) && A.FEET.every((f) => f[1].split(/\s+/).length <= 4));
   /* the picker from Coach me's top right */
   w.go('session'); await wait(200);
   const S = K.state(); let i = S.ex.findIndex((e) => /leg press/i.test(e.n));
@@ -66,7 +67,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('Coach me has a button at the top right: on a leg press, where your feet go', !!ab && /\+ Feet/.test(ab.textContent) && ab.closest('.kpl-wh'));
   ab.click(); await wait(30);
   ck('…it pops up above Coach me with the feet on a plate: middle, high, low, wide, narrow, one leg', /Where your feet go/.test(sh().textContent) && sh().querySelectorAll('.katt-pl8').length === 6 && ['Feet middle', 'Feet high', 'Feet low', 'Feet wide', 'Feet narrow', 'One leg'].every((n) => sh().textContent.indexOf(n) >= 0));
-  ck('…said honestly: high works the glutes and hamstrings more, low the quads, wide the inner thighs; width changes less than height', /more glutes and hamstrings/.test(sh().textContent) && /Low on the plate: more quads/.test(sh().textContent) && /inner thighs/.test(sh().textContent) && /Height on the plate changes more than width/.test(sh().textContent));
+  ck('…said honestly: high works the glutes and hamstrings more, low the quads, wide the inner thighs; width changes less than height', /More glutes, hamstrings/.test(sh().textContent) && /More quads/.test(sh().textContent) && /Inner thighs/.test(sh().textContent) && /Height matters more than width/.test(sh().textContent));
   ck('…and every attachment is there too, by body area', sh().querySelectorAll('.katt-all .katt-t').length >= 30 && !!sh().querySelector('[data-katt-area="Back"]'));
   sh().querySelector('[data-katt-area="Legs"]').click(); await wait(20);
   ck('…Legs shows the leg gear only', [...sh().querySelectorAll('.katt-all .katt-t b')].every((b) => A.CAT.find((c) => c[0] === b.textContent)[2].indexOf('Legs') >= 0) && /Belt/.test(sh().querySelector('.katt-all').textContent));

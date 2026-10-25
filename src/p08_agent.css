@@ -27,7 +27,8 @@
 .kg-btn.sm{height:32px;font-size:12.5px;margin-top:8px}
 .kg-veil{position:fixed;inset:0;z-index:360;background:rgba(4,4,6,.62);display:flex;align-items:flex-end;justify-content:center;padding:12px}
 @media (min-width:700px){ .kg-veil{align-items:center} }
-.kg-card{width:min(520px,100%);max-height:88vh;overflow:auto;padding:22px 20px 18px;border-radius:26px;color:#fff;
+/* the pop-up card only: the Built around card on Workout is also .kg-card (a .card) and was held to 520 px */
+.kg-card:not(.card){width:min(520px,100%);max-height:88vh;overflow:auto;padding:22px 20px 18px;border-radius:26px;color:#fff;
   font-family:'Urbanist','Outfit',-apple-system,sans-serif;background:linear-gradient(170deg,rgba(30,30,33,.97),rgba(15,15,17,.98));
   border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .kg-ph{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}

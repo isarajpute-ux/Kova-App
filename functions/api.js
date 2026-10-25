@@ -1235,8 +1235,10 @@ async function scanLink(req, res, cfg) {
 /* Coach me's natural voice (p41): a short line -> speech */
 async function voiceRoute(req, res, cfg) {
   const u = await requireUser(req);
-  await rateLimit(`voice_${u.uid}`, 600, 24 * 3600e3);
-  try { res.json(await voiceMod.say({ cfg, text: (req.body || {}).text })); }
+  const long = !!(req.body || {}).long;
+  await rateLimit(long ? `voicelong_${u.uid}` : `voice_${u.uid}`, long ? 40 : 600, 24 * 3600e3);
+  /* a whole report read aloud (long) costs as much as many short lines: its own, smaller daily limit */
+  try { res.json(await voiceMod.say({ cfg, text: (req.body || {}).text, long })); }
   catch (e) { if (e instanceof voiceMod.VoiceError) throw new HttpError(e.status, e.message); throw e; }
 }
 async function crewCaption(req, res, cfg) {

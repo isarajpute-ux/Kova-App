@@ -961,6 +961,14 @@ window.KovaCrew=(function(){
   function fail(job,why){ job.state='failed'; job.end=Date.now(); job.note=why; settle(job); saveJobs(); paintSoon(); }
   /* voice: the closing words and the report, read aloud */
   function speak(job){
+    /* p43: the shared voice (natural when the server has it), the report read as
+       parts with breaths between them; the "without AI" note is not read out */
+    if(job&&window.KovaVoice){
+      var w=emp(job.emp), rp=job.report, say=/without AI \(/.test(job.say||'')?'':String(job.say||job.note||'');
+      var txt=[(w?w.n+'.':''),say,rp&&rp.summary?rp.summary:''].filter(Boolean).join(' ')
+        +(rp&&rp.sections?'\n\n'+rp.sections.map(function(x){ return '## '+x.heading+'\n'+x.text; }).join('\n\n'):'');
+      return KovaVoice.speak(txt);
+    }
     try{
       if(!window.speechSynthesis||!job) return false;
       var who=emp(job.emp), r=job.report;
@@ -1016,23 +1024,23 @@ window.KovaCrew=(function(){
       var a=analyze(7), op=openItems(), top=op.slice().sort(function(x,y){ return rank(y)-rank(x); }).slice(0,3), rd=ready(), low=rd&&rd.level==='low';
       var meets=W.list('meetings',function(m){ return m.at>=sod()&&m.at<sod()+DAY; }).sort(function(x,y){ return x.at-y.at; });
       var risks=[];
-      if(a.overdue) risks.push(a.overdue+' overdue'+(a.oldestOverdue?'. The oldest, “'+a.oldestOverdue.name+'”, is '+a.oldestOverdue.days+' days late':'')+'.');
+      if(a.overdue) risks.push(a.overdue+' overdue'+(a.oldestOverdue?', the oldest '+a.oldestOverdue.days+' days late':'')+'.');
       if(a.stuck.length) risks.push(a.stuck.length+' waiting on someone for over 3 days: '+a.stuck.slice(0,2).join(', ')+'.');
       a.goals.forEach(function(g){ if(g.behind) risks.push('“'+g.name+'” is at '+g.pct+'%, and should be near '+g.expected+'% by now.'); });
       var heavy=top.slice().sort(function(x,y){ return effort(y)-effort(x); })[0];
       var blocks=[];
-      if(top[0]) blocks.push((low?'09:00–09:45':'09:00–10:30')+'  '+top[0].name+(low?' (one short block today)':' (deep work, before email)'));
+      if(top[0]) blocks.push((low?'09:00–09:45':'09:00–10:30')+'  '+top[0].name);
       meets.forEach(function(m){ blocks.push(hm(m.at)+'  '+(m.title||m.name||'Meeting')); });
       if(top[1]) blocks.push('11:00–12:00  '+top[1].name);
-      blocks.push('13:30–14:00  Email, messages and quick replies');
+      blocks.push('13:30–14:00  Email and replies');
       if(top[2]) blocks.push('14:00–15:00  '+top[2].name);
-      blocks.push('17:30  Stop, and write down tomorrow’s first task');
+      blocks.push('17:30  Stop. Note tomorrow’s first task');
       var adv=[];
-      if(low) adv.push('Your body is behind today ('+rd.fix+' health checks to fix). Keep deep work to one 45-minute block'+(heavy&&top.length>1?' and move “'+heavy.name+'” to tomorrow if it can wait':'')+'.');
-      else if(top[0]) adv.push('Protect the first 90 minutes for “'+top[0].name+'”. It matters most right now: '+whyTop(top[0])+'.');
-      if(op.length>15) adv.push('You have '+op.length+' open tasks. Finish 3 a day and archive anything nobody has touched for 30 days.');
-      if(a.overdue>=3) adv.push('Hand the '+a.overdue+' overdue tasks to your Project Manager; they get re-dated by priority in one go.');
-      if(!op.length) adv.push('Nothing is on the board yet. Add the 3 things that would make this week a win.');
+      if(low) adv.push('Low energy today: one 45-minute block'+(heavy&&top.length>1?', move “'+heavy.name+'” to tomorrow':'')+'.');
+      else if(top[0]) adv.push('Guard your first 90 minutes for “'+top[0].name+'”.');
+      if(op.length>15) adv.push(op.length+' open tasks: finish 3 a day, archive the stale ones.');
+      if(a.overdue>=3) adv.push('Let your Project Manager re-date the '+a.overdue+' overdue tasks.');
+      if(!op.length) adv.push('Add the 3 things that make this week a win.');
       var days=next7().map(function(d){ return {label:d.label,value:W.list('items',function(i){ return i.status!=='Completed'&&i.due>=d.s&&i.due<d.s+DAY; }).length}; });
       var mix=['Critical','High','Medium','Low'].map(function(p){ return {label:p,value:op.filter(function(i){ return (i.priority||'Medium')===p; }).length}; });
       return {title:'Your day',
@@ -1490,7 +1498,7 @@ window.KovaCrew=(function(){
     if(rep){ rep.skill=job.skill; job.report=rep; log(job,'Wrote the report','report'); }
     var why=brainWhy();
     finish(job,job.matched===false?'I cannot answer “'+job.text.split('\n')[0].slice(0,80)+'” without AI ('+why+'). Here is my '+sk.n.toLowerCase()+' instead.'
-      :'Answered on this device from your numbers, without AI ('+why+'). With AI on, I can answer anything you ask.');
+      :'Quick answer from your numbers, without AI ('+why+').');
   }
 
   /* ---------------- routines: schedules and events ---------------- */
@@ -2219,9 +2227,9 @@ window.KovaCrew=(function(){
         +(j.state==='waiting'?approvalCard(j,false):'')
         +(j.report?reportCard(j.report,j):'')
         +(j.sources&&j.sources.length?'<div class="crw-srcs">'+j.sources.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>'; }).join('')+'</div>':'')
-        +(j.say&&j.state!=='running'?'<div class="crw-say">'+md(j.say)+'</div>':'')
+        +(j.say&&j.state!=='running'?'<div class="crw-say'+(/without AI \(/.test(j.say)?' crw-fb':'')+'">'+md(j.say)+'</div>':'')
         +(j.note?'<div class="crw-note">'+esc(j.note)+'</div>':'')
-        +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link" data-c="speak" data-j="'+esc(j.id)+'">Read it to me</button>':'')
+        +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link crw-listen" data-c="speak" data-j="'+esc(j.id)+'" aria-label="Read it to me"><svg class="ic" aria-hidden="true"><use href="#i-headphones"/></svg>Listen</button>':'')
         +((j.state==='done'||j.state==='stopped'||j.state==='failed')&&j.changes&&j.changes.length?'<button class="crw-link" data-c="undo" data-j="'+esc(j.id)+'">Undo '+j.changes.length+' change'+(j.changes.length>1?'s':'')+'</button>':'')
         +(j.undone?'<div class="crw-note">Undid '+j.undone+' change'+(j.undone>1?'s':'')+'.</div>':'')
         +(window.KovaTeamPlus?KovaTeamPlus.again(j):'')
@@ -2276,20 +2284,38 @@ window.KovaCrew=(function(){
     if(a.name==='draft_email'){
       h+='<label>To<input data-f="to" value="'+esc(i.to||'')+'" placeholder="name@example.com"></label><label>Subject<input data-f="subject" value="'+esc(i.subject||'')+'"></label>'
         +'<label>Message<textarea data-f="body" rows="6">'+esc(i.body||'')+'</textarea></label>'
-        +'<div class="crw-row"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'" data-a="send">Approve and send</button><button class="crw-btn ghost" data-c="ok" data-j="'+esc(j.id)+'" data-a="draft">Save to Gmail drafts</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>'
+        +'<div class="crw-pr"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'" data-a="send">Approve and send</button><button class="crw-btn ghost" data-c="ok" data-j="'+esc(j.id)+'" data-a="draft">Save to Gmail drafts</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>'
         +'<div class="crw-fine">Sent from the Google account you connected in Work OS. <a href="mailto:'+esc(i.to||'')+'?subject='+encodeURIComponent(i.subject||'')+'&body='+encodeURIComponent(i.body||'')+'" data-c="mailto">Or open it in your mail app</a>.</div>';
     } else {
       h+='<div class="crw-what"><b>'+esc(d.n||'')+'</b>'+(d.s?'<span>'+esc(d.s)+'</span>':'')+'</div>'
         +'<details class="crw-args"><summary>Details</summary><pre>'+esc(JSON.stringify(i,null,2))+'</pre></details>'
-        +'<div class="crw-row"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'">Approve</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>';
+        +'<div class="crw-pr"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'">Approve</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>';
     }
     return h+'</div>';
+  }
+  /* p43, the owner: "it feels like I'm reading a whole book... make it more
+     organized and less clustered": each part of a report is its own small
+     block; "**Task**: Critical, 11 days late" is the task with a tag, a
+     "09:00-09:45 Task" line a time and the task, anything else one line */
+  function secHtml(s){
+    var L=String(s.text||'').split('\n'), items=L.filter(function(l){ return /^\s*[-*•]\s+/.test(l); });
+    if(!items.length||items.length!==L.filter(function(l){ return l.trim(); }).length)
+      return '<div class="crw-part"><div class="crw-pl">'+esc(s.heading)+'</div><div class="crw-rx">'+md(s.text)+'</div></div>';
+    return '<div class="crw-part"><div class="crw-pl">'+esc(s.heading)+'</div>'+items.map(function(l){ return secRow(l.replace(/^\s*[-*•]\s+/,'')); }).join('')+'</div>';
+  }
+  function secRow(t){
+    var m=/^\*\*(.+?)\*\*:\s*(.+)$/.exec(t);
+    if(m){ var tag=m[2].split(/,\s*/), lvl=/^(critical|high|medium|low)$/i.test(tag[0])?tag[0].toLowerCase():'';
+      return '<div class="crw-pr"><b>'+esc(m[1])+'</b><span class="crw-tags">'+tag.slice(0,2).map(function(x,i){ return '<i class="crw-tag'+(i===0&&lvl?' p-'+lvl:'')+'">'+esc(x.replace(/\.$/,''))+'</i>'; }).join('')+'</span></div>'; }
+    var tm=/^(\d{1,2}:\d{2})(?:\s*[–-]\s*\d{1,2}:\d{2})?\s+(.+)$/.exec(t);
+    if(tm) return '<div class="crw-pr crw-time"><time>'+esc(tm[1])+'</time><span>'+esc(tm[2].replace(/\s*\([^)]*\)\s*$/,''))+'</span></div>';
+    return '<div class="crw-pr crw-line"><span>'+md(t).replace(/^<p>|<\/p>$/g,'')+'</span></div>';
   }
   function reportCard(r,j){
     return '<div class="crw-rep"><div class="crw-rt">'+esc(r.title)+'</div>'+(r.summary?'<div class="crw-rs">'+md(r.summary)+'</div>':'')
       +(r.metrics&&r.metrics.length?'<div class="crw-rm">'+r.metrics.map(function(m){ return '<div><span class="k">'+esc(m.label)+'</span><span class="v">'+esc(m.value)+(m.unit&&String(m.unit).length<=3?'<sup>'+esc(m.unit)+'</sup>':'')+'</span>'+(m.note?'<span class="s">'+esc(m.note)+'</span>':'')+'</div>'; }).join('')+'</div>':'')
       +(r.charts&&r.charts.length?'<div class="crw-charts">'+r.charts.slice(0,4).map(function(ch){ return '<div class="crw-chart"><div class="k">'+esc(ch.title||'')+'</div>'+chart(ch,'card')+'</div>'; }).join('')+'</div>':(r.series?'<div class="crw-rsp">'+spark(r.series)+'</div>':''))
-      +(r.sections||[]).map(function(s){ return '<div class="crw-rh">'+esc(s.heading)+'</div><div class="crw-rx">'+md(s.text)+'</div>'; }).join('')
+      +(r.sections&&r.sections.length?'<div class="crw-parts">'+r.sections.map(secHtml).join('')+'</div>':'')
       +(r.ideas&&r.ideas.length?'<div class="crw-rh">Post ideas</div>'+r.ideas.slice(0,7).map(function(x,i){ var key=(j?j.id:'')+':'+i, saved=S.saved&&S.saved[key];
           return '<div class="crw-idea"><b>'+esc(x.hook||x.title||'')+'</b><span>'+esc([x.day,x.platform,x.format,x.time].filter(Boolean).join(' · '))+'</span>'+(j?'<button class="crd-link" data-c="idea" data-j="'+esc(j.id)+'" data-i="'+i+'"'+(saved?' disabled':'')+'>'+(saved?'Saved in the Studio ✓':'Save as a Studio draft')+'</button>':'')+'</div>'; }).join(''):'')
       +'</div>';
@@ -2491,7 +2517,7 @@ window.KovaCrew=(function(){
     if(c==='pause'){ pauseJob(jid); return; }
     if(c==='resume'){ var sc=b.closest('.crw-job'), ed={}; if(sc) sc.querySelectorAll('.crw-edit [data-f]').forEach(function(x){ var v0=x.value; ed[x.getAttribute('data-f')]=/^-?\d+(\.\d+)?$/.test(v0)?+v0:v0; }); resume(jid,ed); return; }
     if(c==='tell'){ var ti=b.closest('.crw-tell'), tv=ti&&ti.querySelector('input'); if(tv&&tv.value.trim()){ tell(jid,tv.value); S.clear={}; S.clear[jid+':tell']=1; tv.value=''; } return; }
-    if(c==='speak'){ if(!speak(S.jobs[jid])) say('This browser cannot read aloud.'); return; }
+    if(c==='speak'){ if(window.KovaVoice&&KovaVoice.talking()){ KovaVoice.stop(); return; } if(!speak(S.jobs[jid])) say('This browser cannot read aloud.'); return; }
     if(c==='voice'){ lsPut('kova.crew.voice',!lsJ('kova.crew.voice',false)); paint(); return; }
     if(c==='teach'){ var et=emp(id); if(et) teachStart(et); return; }
     if(c==='taughtrun'){ var er2=emp(id); if(er2){ if(busyWith(er2.id)){ say(er2.n+' is already working.'); return; } runTaught(er2,'you'); paint(); } return; }

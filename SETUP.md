@@ -103,7 +103,9 @@ Coach me (Kova talking you through a workout) speaks each set, the rest and what
 | `ELEVENLABS_API_KEY` | elevenlabs.io › sign up (free plan) › Developers › API keys › Create (Text to Speech access) | The phone's own voice |
 | `ELEVENLABS_VOICE_ID` (optional) | elevenlabs.io › Voices › a voice › Copy voice ID | Rachel, a calm, clear voice |
 
-Put them in Vercel › the kovactive project › Settings › Environment Variables, then redeploy. The free plan covers about 10,000 characters a month; Kova asks for each short line once and keeps it.
+Put them in Vercel › the kovactive project › Settings › Environment Variables, then redeploy. The free plan covers about 10,000 characters a month; Kova asks for each short line once and keeps it. The AI team's **Listen** reads a whole report (up to 1,200 characters each), so if people use it a lot, ElevenLabs' Starter plan (about 30,000 characters) is the next step.
+
+Kova uses ElevenLabs' expressive model (`eleven_multilingual_v2`) a touch slower than normal. To try another model, add `ELEVENLABS_MODEL` (for example `eleven_v3`). The voice itself matters most: pick one you like in ElevenLabs › Voices (the Voice Library has hundreds) and put its ID in `ELEVENLABS_VOICE_ID`.
 
 ## 4. Payments (RevenueCat, with Stripe on the web and the App Store / Google Play in the app)
 

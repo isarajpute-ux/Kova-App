@@ -21,7 +21,7 @@ w.localStorage.setItem('kova_mode_v1', 'live');
 w.localStorage.setItem('kova_profile_v2', JSON.stringify({ tourSeen: true }));
 w.localStorage.setItem('kova_hist_v1', JSON.stringify({ 'Barbell back squat': [set3(185, 20, true)], 'Leg press': [set3(270, 20)], 'Barbell bench press': [set3(155, 70)] }));
 const spoken = [];
-w.speechSynthesis = { cancel() {}, speak(u) { spoken.push(u.text); }, getVoices() { return []; }, addEventListener() {}, speaking: false };
+w.speechSynthesis = { cancel() {}, speak(u) { spoken.push(u.text); setTimeout(() => u.onend && u.onend(), 10); }, getVoices() { return []; }, addEventListener() {}, speaking: false };
 w.SpeechSynthesisUtterance = function (t) { this.text = t; };
 w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));
 
@@ -83,6 +83,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const pg = () => doc.getElementById('kpl');
   ck('Follow along opens over the app with the exercise, its moving picture and the set', !!pg() && pg().closest('.app') !== null && /Barbell bench press|Overhead press|Barbell row|Pull up|Lat pulldown/.test(pg().querySelector('.title').textContent) && !!pg().querySelector('.kpl-fig svg') && /Warm-up set|Set 1 of/.test(pg().textContent));
   ck('Up next says the working sets, the warm-up apart (plans are 2–3 working sets)', /Warm-up \+ [23] sets/.test(pg().querySelector('.kpl-up').textContent) && !/[45] sets/.test(pg().querySelector('.kpl-up').textContent));
+  for (let i = 0; i < 40 && !spoken.some((t) => /(Warm-up set|Set one of)/.test(t)); i++) await wait(50);
   ck('…and the voice says the set', spoken.some((t) => /(Warm-up set|Set one of)/.test(t) && /reps/.test(t)));
   const c0 = PL.cur(), e0 = c0.e;
   PL._P.w = 100; PL._P.r = 9;

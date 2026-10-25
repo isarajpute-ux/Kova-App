@@ -23,7 +23,7 @@ w.localStorage.setItem('kova_profile_v2', JSON.stringify({ tourSeen: true, tours
 w.localStorage.setItem('kova_hist_v1', JSON.stringify({ 'Romanian deadlift': [{ t: now - 72 * 36e5, sets: [{ w: 185, r: 8, role: 'work' }, { w: 185, r: 8, role: 'work' }], top: 185 }] }));
 const spoken = [], played = [], tts = [];
 const V = (name, lang, d) => ({ name, lang, default: !!d });
-w.speechSynthesis = { cancel() {}, speak(u) { spoken.push({ t: u.text, v: u.voice && u.voice.name }); }, getVoices() { return [V('Fred', 'en-US'), V('Samantha', 'en-US', 1), V('Ava (Premium)', 'en-US'), V('Thomas', 'fr-FR'), V('Zarvox', 'en-US')]; }, addEventListener() {} };
+w.speechSynthesis = { cancel() {}, speak(u) { spoken.push({ t: u.text, v: u.voice && u.voice.name }); setTimeout(() => u.onend && u.onend(), 10); }, getVoices() { return [V('Fred', 'en-US'), V('Samantha', 'en-US', 1), V('Ava (Premium)', 'en-US'), V('Thomas', 'fr-FR'), V('Zarvox', 'en-US')]; }, addEventListener() {} };
 w.SpeechSynthesisUtterance = function (t) { this.text = t; };
 w.Audio = function () { this.play = () => { played.push(this.src); return Promise.resolve(); }; this.pause = () => {}; };
 w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n;\n'));
@@ -51,6 +51,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const pg = () => doc.getElementById('kpl');
   ck('Coach me opens, named so', /COACH · /.test(pg().textContent) && pg().getAttribute('aria-label') === 'Coach me');
   ck('on a warm-up the screen says what it is: light, to get ready, not counted', /A light set to get ready\. Not counted\./.test(pg().textContent));
+  /* p43: the voice says one sentence at a time, with a breath between */
+  await until(() => spoken.some((x) => /Warm-up set, light, to get ready\. eight reps/.test(x.t)));
   ck('…and the voice says it plainly', spoken.some((x) => /Warm-up set, light, to get ready\. eight reps/.test(x.t)));
   /* the voice: signed out, the best voice the phone has */
   const voiced = spoken.filter((x) => x.v);
@@ -89,6 +91,11 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   req = null; await voice.say({ cfg, text: 'Set one of three.', fetch });
   ck('server: a line it already said is not asked for again', req === null);
   const api = fs.readFileSync(__dirname + '/../functions/api.js', 'utf8');
+  /* p43: the owner found it too fast and robotic: the expressive model, a touch slower, line breaks kept for a long passage */
+  req = null; await voice.say({ cfg: Object.assign({}, cfg), text: 'Do first.\n\nFill in your profile.', long: true, fetch });
+  const bd = JSON.parse(req[1].body);
+  ck('server: a passage keeps its line breaks (the model pauses there), at a touch under normal speed, livelier than the old settings', bd.text === 'Do first.\n\nFill in your profile.' && bd.voice_settings.speed < 1 && bd.voice_settings.speed >= 0.9 && bd.voice_settings.stability < 0.5 && bd.voice_settings.use_speaker_boost === true);
+  ck('server: the default model is the expressive one, not the fast Flash', require('../functions/env.js').fromEnv({}).elevenModel === 'eleven_multilingual_v2');
   ck('server: POST /tts needs sign-in and has a daily limit', /async function voiceRoute[\s\S]{0,120}requireUser[\s\S]{0,80}rateLimit/.test(api) && /path === '\/tts'/.test(api));
   /* the leg press */
   const D = w.KovaDemo.LIB['leg press'], J0 = w.KovaDemo.joints(D.K[0]), J1 = w.KovaDemo.joints(D.K[1]);

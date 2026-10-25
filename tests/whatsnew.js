@@ -55,7 +55,10 @@ function boot(store) {
   ck('on Workout the steps find Exercises, Stretch and the Zone 2 card', moveSteps.length === 3 && moveSteps.every((t) => !!t[3]()) && /Exercises/.test(moveSteps[0][3]().textContent) && moveSteps[2][3]().id === 'kz2Card');
   /* p37, the newest release: attachments, plain words, easier how-to */
   if (w.KovaExPage) w.KovaExPage.decorate(); await wait(20);
-  ck('the newest release is p42, the bigger library and every attachment, pointing at Exercises on Workout', rel.id === 'new-2026-10-26' && rel.steps.length === 2 && rel.steps[0][0] === 'move' && rel.steps[1][0] === 'session' && rel.steps[0][3]() && rel.steps[0][3]().getAttribute('data-kxp') === 'lib');
+  const r26 = N.REL.filter((r) => r.id === 'new-2026-10-26')[0];
+  ck('the p42 release, the bigger library and every attachment, points at Exercises on Workout', r26.steps.length === 2 && r26.steps[0][0] === 'move' && r26.steps[1][0] === 'session' && r26.steps[0][3]() && r26.steps[0][3]().getAttribute('data-kxp') === 'lib');
+  if (w.KovaDream) w.KovaDream.decorate(); await wait(20);
+  ck('the newest release is p43: Dream physique, pages instead of pop-ups, a calmer voice, each step finding its place', rel.id === 'new-2026-10-27' && rel.steps.length === 3 && rel.steps[0][3]() && rel.steps[0][3]().id === 'kdpCard' && rel.steps[1][3]() && rel.steps[1][3]().getAttribute('data-kxp') === 'lib' && rel.steps[2][0] === 'session' && rel.lines.every((l) => l.split(' ').length <= 10));
   ck('the p40/p41 release points at Kova in the sidebar and Workout\u2019s ?', r25.steps.length === 3 && r25.steps[0][3]() && r25.steps[0][3]().id === 'kgOrb' && r25.steps[1][3]() && r25.steps[1][3]().getAttribute('data-ktour') === 'move');
   ck('the p38 release, Dream physique, points at its card on Workout', !!r24 && r24.steps.length === 1 && r24.steps[0][0] === 'move');
   if (w.KovaDream) w.KovaDream.decorate(); await wait(20);

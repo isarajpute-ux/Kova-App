@@ -63,7 +63,7 @@ function fromEnv(env) {
     /* Coach me's natural voice (ElevenLabs, p41); Rachel by default */
     elevenKey: str(env, 'ELEVENLABS_API_KEY'),
     elevenVoice: str(env, 'ELEVENLABS_VOICE_ID', '21m00Tcm4TlvDq8ikWAM'),
-    elevenModel: str(env, 'ELEVENLABS_MODEL', 'eleven_flash_v2_5'),
+    elevenModel: str(env, 'ELEVENLABS_MODEL', 'eleven_multilingual_v2'),
     model,
     agentModel: str(env, 'KOVA_AGENT_MODEL', model),
     mealModel: str(env, 'KOVA_MEAL_MODEL', MEAL_MODEL_DEFAULT),

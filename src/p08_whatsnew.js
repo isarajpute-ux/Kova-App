@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-27',title:'Cleaner pages, tidy reports, a calmer voice',
+      lines:['Exercises, Stretch and every pop-up open as their own page','AI team reports in short, tidy blocks','A slower voice, with pauses','Dream physique on every Workout screen'],
+      steps:[
+        ['move','Dream physique','Now on every Workout screen. Send the body you want.',function(){ return q('#kdpCard'); }],
+        ['move','Pages, not pop-ups','Exercises, Stretch and the rest open as their own page. Back brings you here.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','A calmer voice','Coach me, and Listen on AI team reports, now speak slower, with pauses.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-26',title:'A bigger exercise library, and every attachment',
       lines:['Over 130 moving pictures: by muscle, by equipment, and the different ones that work','Every gym attachment, drawn, by body area','On a leg press, pick where your feet go and see what it works'],
       steps:[
@@ -87,7 +94,7 @@ window.KovaWhatsNew=(function(){
     rel.steps.forEach(function(t){ if(screens.indexOf(t[0])<0) screens.push(t[0]); });
     if(home&&screens.indexOf(home)<0) screens.push(home);
     track('whats_new',{id:rel.id});
-    KovaTour.run(steps(rel),{color:'#E87A3C',screens:screens,done:function(why){
+    KovaTour.run(steps(rel),{color:'section',screens:screens,done:function(why){
       if(why==='left') return;
       if(home&&onScreen()!==home&&typeof window.go==='function') window.go(home);
     }});

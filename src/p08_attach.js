@@ -26,48 +26,48 @@ window.KovaAttach=(function(){
      legs, arms, the weighted belt"): every common one, drawn, with what it is
      for. [name, kind, body areas, what it is for, drawing] */
   var CAT=[
-    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls, hammer curls','<circle cx="24" cy="5" r="2.4"/><path d="M24 7C22 14 16 18 12 23M24 7C26 14 32 18 36 23"/><circle cx="12" cy="24" r="2.6"/><circle cx="36" cy="24" r="2.6"/>'],
-    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls, rows','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V15M5 16H43"/>'],
-    ['EZ bar','Bars',['Arms'],'The curved bar: curls and skull crushers, easier on the wrists','<path d="M3 15H11L15 11L19 18L24 13L29 18L33 11L37 15H45"/><path d="M5 10V20M43 10V20"/>'],
-    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows and pulldowns, pushdowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7L13 22M24 7L35 22M9 22H17M31 22H39"/>'],
-    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'The D-handle: one-arm rows, raises, flyes, curls','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 19H33Z"/><path d="M14 21H34" stroke-width="3"/>'],
-    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'A pair of D-handles: crossovers, flyes, two-arm curls','<path d="M14 6L7 18H21ZM34 6L27 18H41Z"/><path d="M6 20H22M26 20H42" stroke-width="3"/>'],
-    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns. The bent ends look like bicycle handlebars','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V13M3 7Q6 16 12 14H36Q42 16 45 7"/>'],
-    ['Parallel-grip lat bar','Cable handles',['Back'],'Pulldowns with your palms facing each other','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V12M4 12H44M14 12V22M34 12V22"/>'],
-    ['MAG grip','Cable handles',['Back'],'Neutral handles, close or wide, for rows and pulldowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M10 10H38"/><rect x="12" y="10" width="5" height="12" rx="2"/><rect x="31" y="10" width="5" height="12" rx="2"/>'],
-    ['Row handle','Cable handles',['Back'],'The double-D handle for close-grip seated rows','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 13L19 23H29L33 13Z"/><path d="M18 18H30"/>'],
-    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks, hip abduction, cable leg raises','<rect x="11" y="12" width="26" height="10" rx="5"/><path d="M24 12V7"/><circle cx="24" cy="5" r="2.2"/>'],
-    ['Tricep bar','Cable handles',['Arms'],'A bent bar for pushdowns with a softer grip','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M6 10Q15 24 24 14Q33 24 42 10"/>'],
-    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squats, presses, deadlifts, rows','<path d="M1 14H47"/><rect x="5" y="5" width="4" height="18" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="39" y="5" width="4" height="18" rx="1"/><rect x="35" y="8" width="3" height="12" rx="1"/>'],
-    ['Trap bar','Bars',['Legs','Back'],'The hex bar: deadlifts and shrugs from inside it','<path d="M14 5H34L42 14L34 23H14L6 14Z"/><path d="M17 10V18M31 10V18M0 14H6M42 14H48"/>'],
-    ['Safety squat bar','Bars',['Legs'],'Squats with handles in front, easier on the shoulders','<path d="M2 11H46"/><rect x="18" y="8" width="12" height="6" rx="3"/><path d="M19 13Q16 21 21 25M29 13Q32 21 27 25"/>'],
-    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'The football bar: presses and curls with palms facing','<rect x="8" y="7" width="32" height="14" rx="3"/><path d="M16 7V21M24 7V21M32 7V21M0 14H8M40 14H48"/>'],
-    ['Cambered bar','Bars',['Legs','Chest'],'A bent bar: the weight hangs lower and swings, so you work to steady it','<path d="M1 8H11Q13 24 24 24Q35 24 37 8H47"/>'],
-    ['Landmine','Bars',['Back','Shoulders','Core'],'One end of a bar in a floor sleeve: T-bar rows, presses, rotations','<rect x="3" y="21" width="11" height="4" rx="1"/><path d="M9 21L41 7"/><circle cx="41" cy="7" r="4.5"/>'],
-    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'A bar on rails: squats, presses, lunges with the path set for you','<path d="M12 2V26M36 2V26M4 13H44"/>'],
-    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls, lunges','<rect x="7" y="7" width="6" height="14" rx="1.5"/><rect x="35" y="7" width="6" height="14" rx="1.5"/><path d="M13 14H35"/>'],
-    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings, goblet squats, carries','<path d="M17 11Q17 3 24 3Q31 3 31 11"/><circle cx="24" cy="17" r="8.5"/>'],
-    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Svend press, plate raises, weighted sit-ups','<circle cx="24" cy="14" r="11"/><circle cx="24" cy="14" r="3"/>'],
-    ['Medicine ball','Free weights',['Core'],'Throws, slams, Russian twists','<circle cx="24" cy="14" r="11"/><path d="M13 14H35M24 3Q18 14 24 25"/>'],
-    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'The weighted belt: a plate on a chain for dips and pull-ups','<path d="M7 7Q24 17 41 7"/><path d="M24 12V17"/><circle cx="24" cy="21.5" r="5"/>'],
-    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Weight for push-ups, pull-ups and walks','<path d="M16 3L11 8V25H37V8L32 3L28 8H20Z"/><path d="M15 14H33"/>'],
-    ['Belt','Belts and gear',['Legs','Back'],'A lifting belt to brace on heavy squats and deadlifts','<rect x="3" y="9" width="42" height="10" rx="3"/><rect x="20" y="7" width="8" height="14" rx="1.5"/>'],
-    ['Straps','Belts and gear',['Back'],'Lifting straps: your grip holds on heavy pulls','<path d="M9 21C5 10 15 4 19 10L24 22M25 21C21 10 31 4 35 10L40 22"/>'],
-    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Wrist support on heavy presses','<rect x="8" y="9" width="24" height="10" rx="5"/><circle cx="38" cy="14" r="4"/>'],
-    ['Knee sleeves','Belts and gear',['Legs'],'Warm, supported knees on squats','<path d="M12 4L10 24H21L19 4ZM29 4L27 24H38L36 4Z"/>'],
-    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'A resistance band: help on pull-ups, or extra pull at the top','<ellipse cx="24" cy="14" rx="18" ry="8"/>'],
-    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top of squats and presses','<ellipse cx="8" cy="14" rx="5" ry="3"/><ellipse cx="16" cy="14" rx="5" ry="3"/><ellipse cx="24" cy="14" rx="5" ry="3"/><ellipse cx="32" cy="14" rx="5" ry="3"/><ellipse cx="40" cy="14" rx="5" ry="3"/>']
+    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls','<circle cx="24" cy="5" r="2.4"/><path d="M24 7C22 14 16 18 12 23M24 7C26 14 32 18 36 23"/><circle cx="12" cy="24" r="2.6"/><circle cx="36" cy="24" r="2.6"/>'],
+    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V15M5 16H43"/>'],
+    ['EZ bar','Bars',['Arms'],'The curved bar','<path d="M3 15H11L15 11L19 18L24 13L29 18L33 11L37 15H45"/><path d="M5 10V20M43 10V20"/>'],
+    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows','<circle cx="24" cy="5" r="2.2"/><path d="M24 7L13 22M24 7L35 22M9 22H17M31 22H39"/>'],
+    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'One-arm moves','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 19H33Z"/><path d="M14 21H34" stroke-width="3"/>'],
+    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'Crossovers, flyes','<path d="M14 6L7 18H21ZM34 6L27 18H41Z"/><path d="M6 20H22M26 20H42" stroke-width="3"/>'],
+    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V13M3 7Q6 16 12 14H36Q42 16 45 7"/>'],
+    ['Parallel-grip lat bar','Cable handles',['Back'],'Palms-in pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V12M4 12H44M14 12V22M34 12V22"/>'],
+    ['MAG grip','Cable handles',['Back'],'Rows, pulldowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M10 10H38"/><rect x="12" y="10" width="5" height="12" rx="2"/><rect x="31" y="10" width="5" height="12" rx="2"/>'],
+    ['Row handle','Cable handles',['Back'],'Seated rows','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 13L19 23H29L33 13Z"/><path d="M18 18H30"/>'],
+    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks','<rect x="11" y="12" width="26" height="10" rx="5"/><path d="M24 12V7"/><circle cx="24" cy="5" r="2.2"/>'],
+    ['Tricep bar','Cable handles',['Arms'],'Pushdowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M6 10Q15 24 24 14Q33 24 42 10"/>'],
+    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squat, bench, deadlift','<path d="M1 14H47"/><rect x="5" y="5" width="4" height="18" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="39" y="5" width="4" height="18" rx="1"/><rect x="35" y="8" width="3" height="12" rx="1"/>'],
+    ['Trap bar','Bars',['Legs','Back'],'Deadlifts','<path d="M14 5H34L42 14L34 23H14L6 14Z"/><path d="M17 10V18M31 10V18M0 14H6M42 14H48"/>'],
+    ['Safety squat bar','Bars',['Legs'],'Squats, easy shoulders','<path d="M2 11H46"/><rect x="18" y="8" width="12" height="6" rx="3"/><path d="M19 13Q16 21 21 25M29 13Q32 21 27 25"/>'],
+    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'Palms-in presses','<rect x="8" y="7" width="32" height="14" rx="3"/><path d="M16 7V21M24 7V21M32 7V21M0 14H8M40 14H48"/>'],
+    ['Cambered bar','Bars',['Legs','Chest'],'Squats, presses','<path d="M1 8H11Q13 24 24 24Q35 24 37 8H47"/>'],
+    ['Landmine','Bars',['Back','Shoulders','Core'],'Rows, presses','<rect x="3" y="21" width="11" height="4" rx="1"/><path d="M9 21L41 7"/><circle cx="41" cy="7" r="4.5"/>'],
+    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'Bar on rails','<path d="M12 2V26M36 2V26M4 13H44"/>'],
+    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls','<rect x="7" y="7" width="6" height="14" rx="1.5"/><rect x="35" y="7" width="6" height="14" rx="1.5"/><path d="M13 14H35"/>'],
+    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings','<path d="M17 11Q17 3 24 3Q31 3 31 11"/><circle cx="24" cy="17" r="8.5"/>'],
+    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Plate raises','<circle cx="24" cy="14" r="11"/><circle cx="24" cy="14" r="3"/>'],
+    ['Medicine ball','Free weights',['Core'],'Slams, throws','<circle cx="24" cy="14" r="11"/><path d="M13 14H35M24 3Q18 14 24 25"/>'],
+    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'Weighted dips','<path d="M7 7Q24 17 41 7"/><path d="M24 12V17"/><circle cx="24" cy="21.5" r="5"/>'],
+    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Extra weight','<path d="M16 3L11 8V25H37V8L32 3L28 8H20Z"/><path d="M15 14H33"/>'],
+    ['Belt','Belts and gear',['Legs','Back'],'Heavy lifts','<rect x="3" y="9" width="42" height="10" rx="3"/><rect x="20" y="7" width="8" height="14" rx="1.5"/>'],
+    ['Straps','Belts and gear',['Back'],'Heavy pulls','<path d="M9 21C5 10 15 4 19 10L24 22M25 21C21 10 31 4 35 10L40 22"/>'],
+    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Heavy presses','<rect x="8" y="9" width="24" height="10" rx="5"/><circle cx="38" cy="14" r="4"/>'],
+    ['Knee sleeves','Belts and gear',['Legs'],'Warm knees','<path d="M12 4L10 24H21L19 4ZM29 4L27 24H38L36 4Z"/>'],
+    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'Pull-up help','<ellipse cx="24" cy="14" rx="18" ry="8"/>'],
+    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top','<ellipse cx="8" cy="14" rx="5" ry="3"/><ellipse cx="16" cy="14" rx="5" ry="3"/><ellipse cx="24" cy="14" rx="5" ry="3"/><ellipse cx="32" cy="14" rx="5" ry="3"/><ellipse cx="40" cy="14" rx="5" ry="3"/>']
   ];
   var AREAS=['Back','Legs','Glutes','Arms','Chest','Shoulders','Core'];
   /* the leg press: where your feet go changes what works (p42). Height matters
      most; width changes less than people think (EMG studies), said plainly. */
   var FEET=[
-    ['Feet middle','Shoulder width, middle of the plate: quads and glutes evenly','Leg press',[0,0,1]],
-    ['Feet high','High on the plate: more glutes and hamstrings, the knees bend less','Leg press (feet high)',[0,-1,1]],
-    ['Feet low','Low on the plate: more quads; go lighter if your knees complain','Leg press (feet low)',[0,1,1]],
-    ['Feet wide','Wide, toes out: more inner thighs and glutes','Leg press (feet wide)',[1,0,1]],
-    ['Feet narrow','Close together: quads; width changes less than height','Leg press (feet narrow)',[-1,0,1]],
-    ['One leg','One leg at a time: evens out a weaker side','Single leg press',[0,0,0]]
+    ['Feet middle','Quads and glutes','Leg press',[0,0,1]],
+    ['Feet high','More glutes, hamstrings','Leg press (feet high)',[0,-1,1]],
+    ['Feet low','More quads','Leg press (feet low)',[0,1,1]],
+    ['Feet wide','Inner thighs, glutes','Leg press (feet wide)',[1,0,1]],
+    ['Feet narrow','Quads','Leg press (feet narrow)',[-1,0,1]],
+    ['One leg','Fix a weak side','Single leg press',[0,0,0]]
   ];
   function isLP(n){ return /leg press/i.test(String(n||'')); }
   function catOf(v){ return CAT.filter(function(c){ return c[0].toLowerCase()===String(v||'').toLowerCase(); })[0]||null; }
@@ -119,15 +119,15 @@ window.KovaAttach=(function(){
   function pickHtml(n,cur,where){
     var lp=isLP(n), best=lp?[]:options(n);
     return '<div class="katt-p" data-katt-for="'+esc(n)+'" data-katt-where="'+where+'">'
-      +'<div class="katt-pl">'+(lp?'Feet and gear for ':'Attachment for ')+esc(n)+'</div>'
+      +'<div class="katt-pl">'+esc(n)+'</div>'
       +(lp?'<div class="katt-h">Where your feet go</div><div class="katt-grid">'+FEET.map(function(f){ return tile(f[0],cur,plate(f[3]),f[1]); }).join('')+'</div>'
-        +'<div class="katt-n">Height on the plate changes more than width. Your quads work in every one.</div>'
+        +'<div class="katt-n">Height matters more than width.</div>'
         :'<div class="katt-h">Best for this one</div><div class="katt-grid katt-best">'+best.map(function(o){ return tile(o,cur,catOf(o)); }).join('')+'</div>')
       +'<button type="button" class="chip katt-none" data-katt-v="">'+(lp?'No setting':'No attachment')+'</button>'
       +(where==='a'?'<button type="button" class="chip katt-more" data-katt-more="1">Every attachment</button><div class="katt-all" hidden></div>'
         :'<div class="katt-h">Every attachment</div><div class="katt-all">'+allHtml(cur)+'</div>')
       +'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>'
-      +'<div class="katt-n">Kova remembers it for next time.</div></div>';
+      +'</div>';
   }
   /* any exercise by name, from anywhere (Coach me's top right, p42) */
   function pickSheet(n,done){ if(!window.openSheet) return; PICK=done||null; openSheet('<div class="grab"></div>'+pickHtml(n,get(n),'x')); }

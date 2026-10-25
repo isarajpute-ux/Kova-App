@@ -746,3 +746,27 @@ body.soft-light .app[data-pillar="work"] .wk-lit .wstress-b{background:#fff;colo
 .crd-num.w{font-size:24px;line-height:1.15;font-weight:400}
 .crd-cap{overflow-wrap:anywhere}
 .crw-mate~.crw-hero{margin-bottom:22px}
+/* p43, the owner: "it feels like I'm reading a whole book": a report's parts
+   are small blocks of rows (a task and its tag, a time and the task), the
+   "without AI" note is a quiet line, and the actions are small pills */
+.crw-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;margin-top:14px}
+.crw-part{border:1px solid var(--c-line);border-radius:16px;padding:11px 14px 5px;background:var(--c-card)}
+.crw-pl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-faint);margin-bottom:4px}
+.crw-pr{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-line);font-size:13px;line-height:1.35;color:var(--c-ink)}
+.crw-pl+.crw-pr,.crw-pl+.crw-rx{border-top:0}
+.crw-pr b{font-weight:500;flex:1;min-width:0}
+.crw-tags{display:flex;gap:4px;flex-shrink:0}
+.crw-tag{font-style:normal;font-size:10.5px;line-height:1;padding:4px 8px;border-radius:99px;border:1px solid var(--c-line);color:var(--c-mute);white-space:nowrap}
+.crw-tag.p-critical{color:#FF8F86;border-color:rgba(255,143,134,.38)}
+.crw-tag.p-high{color:#F1B872;border-color:rgba(241,184,114,.38)}
+body.light-mode .crw-tag.p-critical{color:#B4332A;border-color:rgba(180,51,42,.3)}
+body.light-mode .crw-tag.p-high{color:#97601A;border-color:rgba(151,96,26,.3)}
+.crw-time time{font-variant-numeric:tabular-nums;color:var(--c-faint);font-size:12px;width:38px;flex-shrink:0}
+.crw-line span{color:var(--c-mute)}
+.crw-line span b{color:var(--c-ink);font-weight:500}
+.crw-say.crw-fb{font-size:11.5px;color:var(--c-faint)}
+.crw-job>.crw-listen{display:inline-flex;margin-top:12px;margin-right:6px}
+.crw-listen,.tp-again .crw-link{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 13px;border-radius:99px;border:1px solid var(--c-line)!important;background:var(--c-card);text-decoration:none!important;font-weight:500}
+.crw-listen .ic{width:14px;height:14px;color:currentColor}
+.tp-again{gap:6px}
+.crw-part .crw-rx{padding:4px 0 9px;color:var(--c-ink)}.crw-part .crw-rx p{margin:0}

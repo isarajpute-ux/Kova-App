@@ -899,11 +899,14 @@ body.light-mode .oshero-d.ok{background:#5FD08A}
 .chip.on{background:var(--acc-dim);border-color:var(--acc-brd);color:var(--acc)}
 
 .m{transition:fill .18s}
-.sheet{position:fixed;inset:0;background:rgba(10,12,14,.52);backdrop-filter:blur(8px);display:none;align-items:flex-start;justify-content:center;z-index:50}
+.sheet{position:fixed;inset:0;background:#040003;display:none;flex-direction:column;z-index:50}
 .sheet.on{display:flex}
-@keyframes sheetDown{from{transform:translateY(-100%);opacity:.4}to{transform:translateY(0);opacity:1}}
-.sheet.on .sheet-in{animation:sheetDown .28s cubic-bezier(.2,.9,.3,1)}
-.sheet-in{width:100%;max-width:420px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.07));backdrop-filter:blur(50px) saturate(1.6);border:.5px solid rgba(255,255,255,.30);border-radius:0 0 22px 22px;padding:16px 16px 22px;color:var(--txt);box-shadow:0 12px 44px rgba(0,0,0,.42),inset 0 -1px 0 rgba(255,255,255,.18)}
+@keyframes sheetPage{from{transform:translateX(28px);opacity:0}to{transform:none;opacity:1}}
+.sheet.on{animation:sheetPage .26s cubic-bezier(.2,.9,.3,1)}
+.sheet-top{flex-shrink:0;display:flex;align-items:center;width:100%;max-width:680px;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 16px 4px}
+.sheet-in{flex:1;min-height:0;width:100%;max-width:680px;margin:0 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px calc(32px + env(safe-area-inset-bottom));color:var(--txt)}
+#sheet .sheet-in{background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+#sheet .grab,#sheetIn .kfc-x,#sheetIn [aria-label="Close"],#sheetIn .iconbtn[onclick="closeSheet()"]{display:none}
 .sheet-in::-webkit-scrollbar{display:none}
 .srch{width:100%;background:rgba(255,255,255,.12);border:.5px solid rgba(255,255,255,.30);border-radius:12px;padding:10px 12px;color:var(--txt,#FFFFFF);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13px;outline:none;backdrop-filter:blur(14px)}
 .srch::placeholder{color:var(--ink-2,rgba(255,255,255,.72))}
@@ -3864,7 +3867,8 @@ html.kova-live [data-demo]{display:none!important}
 .kg-btn.sm{height:32px;font-size:12.5px;margin-top:8px}
 .kg-veil{position:fixed;inset:0;z-index:360;background:rgba(4,4,6,.62);display:flex;align-items:flex-end;justify-content:center;padding:12px}
 @media (min-width:700px){ .kg-veil{align-items:center} }
-.kg-card{width:min(520px,100%);max-height:88vh;overflow:auto;padding:22px 20px 18px;border-radius:26px;color:#fff;
+/* the pop-up card only: the Built around card on Workout is also .kg-card (a .card) and was held to 520 px */
+.kg-card:not(.card){width:min(520px,100%);max-height:88vh;overflow:auto;padding:22px 20px 18px;border-radius:26px;color:#fff;
   font-family:'Urbanist','Outfit',-apple-system,sans-serif;background:linear-gradient(170deg,rgba(30,30,33,.97),rgba(15,15,17,.98));
   border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .kg-ph{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
@@ -4033,7 +4037,7 @@ body.light-mode .ko.ko-rail.on{background:rgba(16,20,26,.08)}
 .kt-q b{font-weight:600;margin-right:4px}
 .kt-more{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px}
 .kt-b{display:flex;gap:8px;margin-top:8px}
-.kt-card{width:min(640px,100%)}
+.kg-card.kt-card{width:min(640px,100%)}
 .kt-card .kg-btn.main{--kc:#F2F2F3}
 .kt-sel{width:100%;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#fff;padding:0 12px;margin-bottom:12px;font:500 14px 'Urbanist',sans-serif}
 .kt-sum{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px}
@@ -5855,6 +5859,30 @@ body.soft-light .app[data-pillar="work"] .wk-lit .wstress-b{background:#fff;colo
 .crd-num.w{font-size:24px;line-height:1.15;font-weight:400}
 .crd-cap{overflow-wrap:anywhere}
 .crw-mate~.crw-hero{margin-bottom:22px}
+/* p43, the owner: "it feels like I'm reading a whole book": a report's parts
+   are small blocks of rows (a task and its tag, a time and the task), the
+   "without AI" note is a quiet line, and the actions are small pills */
+.crw-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px;margin-top:14px}
+.crw-part{border:1px solid var(--c-line);border-radius:16px;padding:11px 14px 5px;background:var(--c-card)}
+.crw-pl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-faint);margin-bottom:4px}
+.crw-pr{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-line);font-size:13px;line-height:1.35;color:var(--c-ink)}
+.crw-pl+.crw-pr,.crw-pl+.crw-rx{border-top:0}
+.crw-pr b{font-weight:500;flex:1;min-width:0}
+.crw-tags{display:flex;gap:4px;flex-shrink:0}
+.crw-tag{font-style:normal;font-size:10.5px;line-height:1;padding:4px 8px;border-radius:99px;border:1px solid var(--c-line);color:var(--c-mute);white-space:nowrap}
+.crw-tag.p-critical{color:#FF8F86;border-color:rgba(255,143,134,.38)}
+.crw-tag.p-high{color:#F1B872;border-color:rgba(241,184,114,.38)}
+body.light-mode .crw-tag.p-critical{color:#B4332A;border-color:rgba(180,51,42,.3)}
+body.light-mode .crw-tag.p-high{color:#97601A;border-color:rgba(151,96,26,.3)}
+.crw-time time{font-variant-numeric:tabular-nums;color:var(--c-faint);font-size:12px;width:38px;flex-shrink:0}
+.crw-line span{color:var(--c-mute)}
+.crw-line span b{color:var(--c-ink);font-weight:500}
+.crw-say.crw-fb{font-size:11.5px;color:var(--c-faint)}
+.crw-job>.crw-listen{display:inline-flex;margin-top:12px;margin-right:6px}
+.crw-listen,.tp-again .crw-link{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 13px;border-radius:99px;border:1px solid var(--c-line)!important;background:var(--c-card);text-decoration:none!important;font-weight:500}
+.crw-listen .ic{width:14px;height:14px;color:currentColor}
+.tp-again{gap:6px}
+.crw-part .crw-rx{padding:4px 0 9px;color:var(--c-ink)}.crw-part .crw-rx p{margin:0}
 
 </style>
 <style id="p08-help">
@@ -9129,6 +9157,8 @@ body.light-mode .kdp-tot.off{color:#8A6A10}
 /* 4. good to know */
 .kdp-honest p{margin:6px 0 0;font-size:11.5px;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75))}
 .kdp-honest .kdp-looks b{font-weight:500;color:var(--ron-txt)}
+/* the sample Workout screen spaces its cards with margins (the live one with a gap) */
+#s-move .card+.kdp-card,#gpSlot+.kdp-card,#goalSlot+.kdp-card,#startBtn+.kdp-card{margin-bottom:12px}
 
 </style>
 </head>
@@ -13632,7 +13662,7 @@ body.ks-on #kovaFab{display:none!important}
   </div>
 </div>
 
-<div class="sheet" id="sheet"><div class="sheet-in" id="sheetIn"></div></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="sheet-top"><button type="button" class="back" id="sheetBack" aria-label="Back"><svg class="ic" aria-hidden="true"><use href="#i-chevron-left"/></svg></button></div><div class="sheet-in" id="sheetIn"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -19349,8 +19379,9 @@ var CARDIO=[
 
 /* ---------- bottom sheet ---------- */
 var SH=document.getElementById('sheet'),SHI=document.getElementById('sheetIn');
-function openSheet(html){SHI.innerHTML=html;SHI.style.maxHeight=Math.round((window.visualViewport?window.visualViewport.height:window.innerHeight)*0.92)+'px';SHI.scrollTop=0;SH.classList.add('on')}
+function openSheet(html){SHI.innerHTML=html;SHI.scrollTop=0;var A=getComputedStyle(document.getElementById('app'));SH.style.backgroundColor=A.backgroundColor!=='rgba(0, 0, 0, 0)'?A.backgroundColor:getComputedStyle(document.body).backgroundColor;SH.style.backgroundImage=A.backgroundImage;SH.classList.add('on')}
 function closeSheet(){SH.classList.remove('on')}
+document.getElementById('sheetBack').addEventListener('click',function(){var x=SHI.querySelector('.kfc-x,[aria-label="Close"],.iconbtn[onclick="closeSheet()"]');if(x)x.click();if(SH.classList.contains('on'))closeSheet()});
 SH.addEventListener('click',function(e){if(e.target===SH)closeSheet()});
 
 /* ---------- exercise history ---------- */
@@ -46829,7 +46860,7 @@ window.KovaTour=(function(){
     st.el=el; st.ride=false;
     if(st.seen[st.seen.length-1]!==i) st.seen.push(i);
     var sp=$('#ksSpot'); if(sp){ sp.classList.remove('ride'); sp.style.opacity=''; }
-    var ov=$('#ksTour'); if(ov) ov.classList.remove('ride');
+    var ov=$('#ksTour'); if(ov){ ov.classList.remove('ride'); if(st.o.color==='section') tint(ov,'section'); }
     var g=rect(el); spot(g);
     setTimeout(function(){ if(st&&st.i===i){ st.ride=true; if(sp) sp.classList.add('ride'); if(ov) ov.classList.add('ride'); } },560);
     var coach=$('#ksCoach'); if(!coach) return;
@@ -46880,17 +46911,26 @@ window.KovaTour=(function(){
     else if(e.key==='ArrowLeft'){ e.preventDefault(); back(); }
     else if(e.key==='Escape'){ e.preventDefault(); end(); }
   });
+  /* 'section' (What's new) takes the colour of the screen each step is on:
+     the owner saw Workout's tour in orange beside Workout's own brown */
+  function tint(ov,c){
+    var col=c==='section'?secCol():c&&/^#[0-9a-f]{6}$/i.test(c)?c:'';
+    if(!col) return;
+    var n=parseInt(col.slice(1),16), rgb=[(n>>16)&255,(n>>8)&255,n&255].join(',');
+    ov.classList.add('tinted'); ov.style.setProperty('--tc',col); ov.style.setProperty('--tg','rgba('+rgb+',.45)'); ov.style.setProperty('--tb','rgba('+rgb+',.16)');
+    /* the Next button's words: dark on a light colour, white on a dark one (light glass's deep accents) */
+    ov.style.setProperty('--tt',(.299*((n>>16)&255)+.587*((n>>8)&255)+.114*(n&255))/255>.55?'#111':'#FFF');
+  }
+  function secCol(){
+    var a=document.querySelector('.app');
+    var c=a?(getComputedStyle(a).getPropertyValue('--acc')||'').trim():'';
+    return /^#[0-9a-f]{6}$/i.test(c)?c:'';
+  }
   function run(steps,o){
     if(st) end();
     var ov=document.createElement('div'); ov.className='ks ks-tour'; ov.id='ksTour';
     /* a tour can take its section's colour; the Work OS keeps glowing white */
-    var col=o&&o.color&&/^#[0-9a-f]{6}$/i.test(o.color)?o.color:'';
-    if(col){
-      var n=parseInt(col.slice(1),16), rgb=[(n>>16)&255,(n>>8)&255,n&255].join(',');
-      ov.classList.add('tinted'); ov.style.setProperty('--tc',col); ov.style.setProperty('--tg','rgba('+rgb+',.45)'); ov.style.setProperty('--tb','rgba('+rgb+',.16)');
-      /* the Next button's words: dark on a light colour, white on a dark one (light glass's deep accents) */
-      ov.style.setProperty('--tt',(.299*((n>>16)&255)+.587*((n>>8)&255)+.114*(n&255))/255>.55?'#111':'#FFF');
-    }
+    tint(ov,o&&o.color);
     ov.innerHTML='<div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div><div class="ks-dim"></div>'
       +'<div class="ks-cn tl"></div><div class="ks-cn tr"></div><div class="ks-cn bl"></div><div class="ks-cn br"></div>'
       +'<div class="ks-spot" id="ksSpot"></div><div class="ks-coach" id="ksCoach"></div>';
@@ -52790,6 +52830,14 @@ window.KovaCrew=(function(){
   function fail(job,why){ job.state='failed'; job.end=Date.now(); job.note=why; settle(job); saveJobs(); paintSoon(); }
   /* voice: the closing words and the report, read aloud */
   function speak(job){
+    /* p43: the shared voice (natural when the server has it), the report read as
+       parts with breaths between them; the "without AI" note is not read out */
+    if(job&&window.KovaVoice){
+      var w=emp(job.emp), rp=job.report, say=/without AI \(/.test(job.say||'')?'':String(job.say||job.note||'');
+      var txt=[(w?w.n+'.':''),say,rp&&rp.summary?rp.summary:''].filter(Boolean).join(' ')
+        +(rp&&rp.sections?'\n\n'+rp.sections.map(function(x){ return '## '+x.heading+'\n'+x.text; }).join('\n\n'):'');
+      return KovaVoice.speak(txt);
+    }
     try{
       if(!window.speechSynthesis||!job) return false;
       var who=emp(job.emp), r=job.report;
@@ -52845,23 +52893,23 @@ window.KovaCrew=(function(){
       var a=analyze(7), op=openItems(), top=op.slice().sort(function(x,y){ return rank(y)-rank(x); }).slice(0,3), rd=ready(), low=rd&&rd.level==='low';
       var meets=W.list('meetings',function(m){ return m.at>=sod()&&m.at<sod()+DAY; }).sort(function(x,y){ return x.at-y.at; });
       var risks=[];
-      if(a.overdue) risks.push(a.overdue+' overdue'+(a.oldestOverdue?'. The oldest, “'+a.oldestOverdue.name+'”, is '+a.oldestOverdue.days+' days late':'')+'.');
+      if(a.overdue) risks.push(a.overdue+' overdue'+(a.oldestOverdue?', the oldest '+a.oldestOverdue.days+' days late':'')+'.');
       if(a.stuck.length) risks.push(a.stuck.length+' waiting on someone for over 3 days: '+a.stuck.slice(0,2).join(', ')+'.');
       a.goals.forEach(function(g){ if(g.behind) risks.push('“'+g.name+'” is at '+g.pct+'%, and should be near '+g.expected+'% by now.'); });
       var heavy=top.slice().sort(function(x,y){ return effort(y)-effort(x); })[0];
       var blocks=[];
-      if(top[0]) blocks.push((low?'09:00–09:45':'09:00–10:30')+'  '+top[0].name+(low?' (one short block today)':' (deep work, before email)'));
+      if(top[0]) blocks.push((low?'09:00–09:45':'09:00–10:30')+'  '+top[0].name);
       meets.forEach(function(m){ blocks.push(hm(m.at)+'  '+(m.title||m.name||'Meeting')); });
       if(top[1]) blocks.push('11:00–12:00  '+top[1].name);
-      blocks.push('13:30–14:00  Email, messages and quick replies');
+      blocks.push('13:30–14:00  Email and replies');
       if(top[2]) blocks.push('14:00–15:00  '+top[2].name);
-      blocks.push('17:30  Stop, and write down tomorrow’s first task');
+      blocks.push('17:30  Stop. Note tomorrow’s first task');
       var adv=[];
-      if(low) adv.push('Your body is behind today ('+rd.fix+' health checks to fix). Keep deep work to one 45-minute block'+(heavy&&top.length>1?' and move “'+heavy.name+'” to tomorrow if it can wait':'')+'.');
-      else if(top[0]) adv.push('Protect the first 90 minutes for “'+top[0].name+'”. It matters most right now: '+whyTop(top[0])+'.');
-      if(op.length>15) adv.push('You have '+op.length+' open tasks. Finish 3 a day and archive anything nobody has touched for 30 days.');
-      if(a.overdue>=3) adv.push('Hand the '+a.overdue+' overdue tasks to your Project Manager; they get re-dated by priority in one go.');
-      if(!op.length) adv.push('Nothing is on the board yet. Add the 3 things that would make this week a win.');
+      if(low) adv.push('Low energy today: one 45-minute block'+(heavy&&top.length>1?', move “'+heavy.name+'” to tomorrow':'')+'.');
+      else if(top[0]) adv.push('Guard your first 90 minutes for “'+top[0].name+'”.');
+      if(op.length>15) adv.push(op.length+' open tasks: finish 3 a day, archive the stale ones.');
+      if(a.overdue>=3) adv.push('Let your Project Manager re-date the '+a.overdue+' overdue tasks.');
+      if(!op.length) adv.push('Add the 3 things that make this week a win.');
       var days=next7().map(function(d){ return {label:d.label,value:W.list('items',function(i){ return i.status!=='Completed'&&i.due>=d.s&&i.due<d.s+DAY; }).length}; });
       var mix=['Critical','High','Medium','Low'].map(function(p){ return {label:p,value:op.filter(function(i){ return (i.priority||'Medium')===p; }).length}; });
       return {title:'Your day',
@@ -53319,7 +53367,7 @@ window.KovaCrew=(function(){
     if(rep){ rep.skill=job.skill; job.report=rep; log(job,'Wrote the report','report'); }
     var why=brainWhy();
     finish(job,job.matched===false?'I cannot answer “'+job.text.split('\n')[0].slice(0,80)+'” without AI ('+why+'). Here is my '+sk.n.toLowerCase()+' instead.'
-      :'Answered on this device from your numbers, without AI ('+why+'). With AI on, I can answer anything you ask.');
+      :'Quick answer from your numbers, without AI ('+why+').');
   }
 
   /* ---------------- routines: schedules and events ---------------- */
@@ -54048,9 +54096,9 @@ window.KovaCrew=(function(){
         +(j.state==='waiting'?approvalCard(j,false):'')
         +(j.report?reportCard(j.report,j):'')
         +(j.sources&&j.sources.length?'<div class="crw-srcs">'+j.sources.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>'; }).join('')+'</div>':'')
-        +(j.say&&j.state!=='running'?'<div class="crw-say">'+md(j.say)+'</div>':'')
+        +(j.say&&j.state!=='running'?'<div class="crw-say'+(/without AI \(/.test(j.say)?' crw-fb':'')+'">'+md(j.say)+'</div>':'')
         +(j.note?'<div class="crw-note">'+esc(j.note)+'</div>':'')
-        +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link" data-c="speak" data-j="'+esc(j.id)+'">Read it to me</button>':'')
+        +(j.state==='done'&&(j.say||j.report)&&window.speechSynthesis?'<button class="crw-link crw-listen" data-c="speak" data-j="'+esc(j.id)+'" aria-label="Read it to me"><svg class="ic" aria-hidden="true"><use href="#i-headphones"/></svg>Listen</button>':'')
         +((j.state==='done'||j.state==='stopped'||j.state==='failed')&&j.changes&&j.changes.length?'<button class="crw-link" data-c="undo" data-j="'+esc(j.id)+'">Undo '+j.changes.length+' change'+(j.changes.length>1?'s':'')+'</button>':'')
         +(j.undone?'<div class="crw-note">Undid '+j.undone+' change'+(j.undone>1?'s':'')+'.</div>':'')
         +(window.KovaTeamPlus?KovaTeamPlus.again(j):'')
@@ -54105,20 +54153,38 @@ window.KovaCrew=(function(){
     if(a.name==='draft_email'){
       h+='<label>To<input data-f="to" value="'+esc(i.to||'')+'" placeholder="name@example.com"></label><label>Subject<input data-f="subject" value="'+esc(i.subject||'')+'"></label>'
         +'<label>Message<textarea data-f="body" rows="6">'+esc(i.body||'')+'</textarea></label>'
-        +'<div class="crw-row"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'" data-a="send">Approve and send</button><button class="crw-btn ghost" data-c="ok" data-j="'+esc(j.id)+'" data-a="draft">Save to Gmail drafts</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>'
+        +'<div class="crw-pr"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'" data-a="send">Approve and send</button><button class="crw-btn ghost" data-c="ok" data-j="'+esc(j.id)+'" data-a="draft">Save to Gmail drafts</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>'
         +'<div class="crw-fine">Sent from the Google account you connected in Work OS. <a href="mailto:'+esc(i.to||'')+'?subject='+encodeURIComponent(i.subject||'')+'&body='+encodeURIComponent(i.body||'')+'" data-c="mailto">Or open it in your mail app</a>.</div>';
     } else {
       h+='<div class="crw-what"><b>'+esc(d.n||'')+'</b>'+(d.s?'<span>'+esc(d.s)+'</span>':'')+'</div>'
         +'<details class="crw-args"><summary>Details</summary><pre>'+esc(JSON.stringify(i,null,2))+'</pre></details>'
-        +'<div class="crw-row"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'">Approve</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>';
+        +'<div class="crw-pr"><button class="crw-btn" data-c="ok" data-j="'+esc(j.id)+'">Approve</button><button class="crw-btn ghost" data-c="skip" data-j="'+esc(j.id)+'">Skip</button></div>';
     }
     return h+'</div>';
+  }
+  /* p43, the owner: "it feels like I'm reading a whole book... make it more
+     organized and less clustered": each part of a report is its own small
+     block; "**Task**: Critical, 11 days late" is the task with a tag, a
+     "09:00-09:45 Task" line a time and the task, anything else one line */
+  function secHtml(s){
+    var L=String(s.text||'').split('\n'), items=L.filter(function(l){ return /^\s*[-*•]\s+/.test(l); });
+    if(!items.length||items.length!==L.filter(function(l){ return l.trim(); }).length)
+      return '<div class="crw-part"><div class="crw-pl">'+esc(s.heading)+'</div><div class="crw-rx">'+md(s.text)+'</div></div>';
+    return '<div class="crw-part"><div class="crw-pl">'+esc(s.heading)+'</div>'+items.map(function(l){ return secRow(l.replace(/^\s*[-*•]\s+/,'')); }).join('')+'</div>';
+  }
+  function secRow(t){
+    var m=/^\*\*(.+?)\*\*:\s*(.+)$/.exec(t);
+    if(m){ var tag=m[2].split(/,\s*/), lvl=/^(critical|high|medium|low)$/i.test(tag[0])?tag[0].toLowerCase():'';
+      return '<div class="crw-pr"><b>'+esc(m[1])+'</b><span class="crw-tags">'+tag.slice(0,2).map(function(x,i){ return '<i class="crw-tag'+(i===0&&lvl?' p-'+lvl:'')+'">'+esc(x.replace(/\.$/,''))+'</i>'; }).join('')+'</span></div>'; }
+    var tm=/^(\d{1,2}:\d{2})(?:\s*[–-]\s*\d{1,2}:\d{2})?\s+(.+)$/.exec(t);
+    if(tm) return '<div class="crw-pr crw-time"><time>'+esc(tm[1])+'</time><span>'+esc(tm[2].replace(/\s*\([^)]*\)\s*$/,''))+'</span></div>';
+    return '<div class="crw-pr crw-line"><span>'+md(t).replace(/^<p>|<\/p>$/g,'')+'</span></div>';
   }
   function reportCard(r,j){
     return '<div class="crw-rep"><div class="crw-rt">'+esc(r.title)+'</div>'+(r.summary?'<div class="crw-rs">'+md(r.summary)+'</div>':'')
       +(r.metrics&&r.metrics.length?'<div class="crw-rm">'+r.metrics.map(function(m){ return '<div><span class="k">'+esc(m.label)+'</span><span class="v">'+esc(m.value)+(m.unit&&String(m.unit).length<=3?'<sup>'+esc(m.unit)+'</sup>':'')+'</span>'+(m.note?'<span class="s">'+esc(m.note)+'</span>':'')+'</div>'; }).join('')+'</div>':'')
       +(r.charts&&r.charts.length?'<div class="crw-charts">'+r.charts.slice(0,4).map(function(ch){ return '<div class="crw-chart"><div class="k">'+esc(ch.title||'')+'</div>'+chart(ch,'card')+'</div>'; }).join('')+'</div>':(r.series?'<div class="crw-rsp">'+spark(r.series)+'</div>':''))
-      +(r.sections||[]).map(function(s){ return '<div class="crw-rh">'+esc(s.heading)+'</div><div class="crw-rx">'+md(s.text)+'</div>'; }).join('')
+      +(r.sections&&r.sections.length?'<div class="crw-parts">'+r.sections.map(secHtml).join('')+'</div>':'')
       +(r.ideas&&r.ideas.length?'<div class="crw-rh">Post ideas</div>'+r.ideas.slice(0,7).map(function(x,i){ var key=(j?j.id:'')+':'+i, saved=S.saved&&S.saved[key];
           return '<div class="crw-idea"><b>'+esc(x.hook||x.title||'')+'</b><span>'+esc([x.day,x.platform,x.format,x.time].filter(Boolean).join(' · '))+'</span>'+(j?'<button class="crd-link" data-c="idea" data-j="'+esc(j.id)+'" data-i="'+i+'"'+(saved?' disabled':'')+'>'+(saved?'Saved in the Studio ✓':'Save as a Studio draft')+'</button>':'')+'</div>'; }).join(''):'')
       +'</div>';
@@ -54320,7 +54386,7 @@ window.KovaCrew=(function(){
     if(c==='pause'){ pauseJob(jid); return; }
     if(c==='resume'){ var sc=b.closest('.crw-job'), ed={}; if(sc) sc.querySelectorAll('.crw-edit [data-f]').forEach(function(x){ var v0=x.value; ed[x.getAttribute('data-f')]=/^-?\d+(\.\d+)?$/.test(v0)?+v0:v0; }); resume(jid,ed); return; }
     if(c==='tell'){ var ti=b.closest('.crw-tell'), tv=ti&&ti.querySelector('input'); if(tv&&tv.value.trim()){ tell(jid,tv.value); S.clear={}; S.clear[jid+':tell']=1; tv.value=''; } return; }
-    if(c==='speak'){ if(!speak(S.jobs[jid])) say('This browser cannot read aloud.'); return; }
+    if(c==='speak'){ if(window.KovaVoice&&KovaVoice.talking()){ KovaVoice.stop(); return; } if(!speak(S.jobs[jid])) say('This browser cannot read aloud.'); return; }
     if(c==='voice'){ lsPut('kova.crew.voice',!lsJ('kova.crew.voice',false)); paint(); return; }
     if(c==='teach'){ var et=emp(id); if(et) teachStart(et); return; }
     if(c==='taughtrun'){ var er2=emp(id); if(er2){ if(busyWith(er2.id)){ say(er2.n+' is already working.'); return; } runTaught(er2,'you'); paint(); } return; }
@@ -68291,6 +68357,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-10-27',title:'Cleaner pages, tidy reports, a calmer voice',
+      lines:['Exercises, Stretch and every pop-up open as their own page','AI team reports in short, tidy blocks','A slower voice, with pauses','Dream physique on every Workout screen'],
+      steps:[
+        ['move','Dream physique','Now on every Workout screen. Send the body you want.',function(){ return q('#kdpCard'); }],
+        ['move','Pages, not pop-ups','Exercises, Stretch and the rest open as their own page. Back brings you here.',function(){ return first('#s-move .kxp-act[data-kxp="lib"]'); }],
+        ['session','A calmer voice','Coach me, and Listen on AI team reports, now speak slower, with pauses.',function(){ return first('.kpl-chip'); }]
+      ]},
     {id:'new-2026-10-26',title:'A bigger exercise library, and every attachment',
       lines:['Over 130 moving pictures: by muscle, by equipment, and the different ones that work','Every gym attachment, drawn, by body area','On a leg press, pick where your feet go and see what it works'],
       steps:[
@@ -68355,7 +68428,7 @@ window.KovaWhatsNew=(function(){
     rel.steps.forEach(function(t){ if(screens.indexOf(t[0])<0) screens.push(t[0]); });
     if(home&&screens.indexOf(home)<0) screens.push(home);
     track('whats_new',{id:rel.id});
-    KovaTour.run(steps(rel),{color:'#E87A3C',screens:screens,done:function(why){
+    KovaTour.run(steps(rel),{color:'section',screens:screens,done:function(why){
       if(why==='left') return;
       if(home&&onScreen()!==home&&typeof window.go==='function') window.go(home);
     }});
@@ -68488,7 +68561,8 @@ window.KovaPlayer=(function(){
     return V.best;
   }
   try{ if(window.speechSynthesis&&speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged',function(){ V.best=null; }); }catch(e){}
-  function deviceSay(t){ try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  /* p43: the shared voice says it slower, a sentence at a time (src/p08_voice.js) */
+  function deviceSay(t){ if(window.KovaVoice){ KovaVoice.device(t); return; } try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
   function cloud(){ try{ return V.ok!==false&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
   function line(t){
     if(V.cache[t]) return Promise.resolve(V.cache[t]);
@@ -69752,48 +69826,48 @@ window.KovaAttach=(function(){
      legs, arms, the weighted belt"): every common one, drawn, with what it is
      for. [name, kind, body areas, what it is for, drawing] */
   var CAT=[
-    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls, hammer curls','<circle cx="24" cy="5" r="2.4"/><path d="M24 7C22 14 16 18 12 23M24 7C26 14 32 18 36 23"/><circle cx="12" cy="24" r="2.6"/><circle cx="36" cy="24" r="2.6"/>'],
-    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls, rows','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V15M5 16H43"/>'],
-    ['EZ bar','Bars',['Arms'],'The curved bar: curls and skull crushers, easier on the wrists','<path d="M3 15H11L15 11L19 18L24 13L29 18L33 11L37 15H45"/><path d="M5 10V20M43 10V20"/>'],
-    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows and pulldowns, pushdowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7L13 22M24 7L35 22M9 22H17M31 22H39"/>'],
-    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'The D-handle: one-arm rows, raises, flyes, curls','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 19H33Z"/><path d="M14 21H34" stroke-width="3"/>'],
-    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'A pair of D-handles: crossovers, flyes, two-arm curls','<path d="M14 6L7 18H21ZM34 6L27 18H41Z"/><path d="M6 20H22M26 20H42" stroke-width="3"/>'],
-    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns. The bent ends look like bicycle handlebars','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V13M3 7Q6 16 12 14H36Q42 16 45 7"/>'],
-    ['Parallel-grip lat bar','Cable handles',['Back'],'Pulldowns with your palms facing each other','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V12M4 12H44M14 12V22M34 12V22"/>'],
-    ['MAG grip','Cable handles',['Back'],'Neutral handles, close or wide, for rows and pulldowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M10 10H38"/><rect x="12" y="10" width="5" height="12" rx="2"/><rect x="31" y="10" width="5" height="12" rx="2"/>'],
-    ['Row handle','Cable handles',['Back'],'The double-D handle for close-grip seated rows','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 13L19 23H29L33 13Z"/><path d="M18 18H30"/>'],
-    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks, hip abduction, cable leg raises','<rect x="11" y="12" width="26" height="10" rx="5"/><path d="M24 12V7"/><circle cx="24" cy="5" r="2.2"/>'],
-    ['Tricep bar','Cable handles',['Arms'],'A bent bar for pushdowns with a softer grip','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M6 10Q15 24 24 14Q33 24 42 10"/>'],
-    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squats, presses, deadlifts, rows','<path d="M1 14H47"/><rect x="5" y="5" width="4" height="18" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="39" y="5" width="4" height="18" rx="1"/><rect x="35" y="8" width="3" height="12" rx="1"/>'],
-    ['Trap bar','Bars',['Legs','Back'],'The hex bar: deadlifts and shrugs from inside it','<path d="M14 5H34L42 14L34 23H14L6 14Z"/><path d="M17 10V18M31 10V18M0 14H6M42 14H48"/>'],
-    ['Safety squat bar','Bars',['Legs'],'Squats with handles in front, easier on the shoulders','<path d="M2 11H46"/><rect x="18" y="8" width="12" height="6" rx="3"/><path d="M19 13Q16 21 21 25M29 13Q32 21 27 25"/>'],
-    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'The football bar: presses and curls with palms facing','<rect x="8" y="7" width="32" height="14" rx="3"/><path d="M16 7V21M24 7V21M32 7V21M0 14H8M40 14H48"/>'],
-    ['Cambered bar','Bars',['Legs','Chest'],'A bent bar: the weight hangs lower and swings, so you work to steady it','<path d="M1 8H11Q13 24 24 24Q35 24 37 8H47"/>'],
-    ['Landmine','Bars',['Back','Shoulders','Core'],'One end of a bar in a floor sleeve: T-bar rows, presses, rotations','<rect x="3" y="21" width="11" height="4" rx="1"/><path d="M9 21L41 7"/><circle cx="41" cy="7" r="4.5"/>'],
-    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'A bar on rails: squats, presses, lunges with the path set for you','<path d="M12 2V26M36 2V26M4 13H44"/>'],
-    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls, lunges','<rect x="7" y="7" width="6" height="14" rx="1.5"/><rect x="35" y="7" width="6" height="14" rx="1.5"/><path d="M13 14H35"/>'],
-    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings, goblet squats, carries','<path d="M17 11Q17 3 24 3Q31 3 31 11"/><circle cx="24" cy="17" r="8.5"/>'],
-    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Svend press, plate raises, weighted sit-ups','<circle cx="24" cy="14" r="11"/><circle cx="24" cy="14" r="3"/>'],
-    ['Medicine ball','Free weights',['Core'],'Throws, slams, Russian twists','<circle cx="24" cy="14" r="11"/><path d="M13 14H35M24 3Q18 14 24 25"/>'],
-    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'The weighted belt: a plate on a chain for dips and pull-ups','<path d="M7 7Q24 17 41 7"/><path d="M24 12V17"/><circle cx="24" cy="21.5" r="5"/>'],
-    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Weight for push-ups, pull-ups and walks','<path d="M16 3L11 8V25H37V8L32 3L28 8H20Z"/><path d="M15 14H33"/>'],
-    ['Belt','Belts and gear',['Legs','Back'],'A lifting belt to brace on heavy squats and deadlifts','<rect x="3" y="9" width="42" height="10" rx="3"/><rect x="20" y="7" width="8" height="14" rx="1.5"/>'],
-    ['Straps','Belts and gear',['Back'],'Lifting straps: your grip holds on heavy pulls','<path d="M9 21C5 10 15 4 19 10L24 22M25 21C21 10 31 4 35 10L40 22"/>'],
-    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Wrist support on heavy presses','<rect x="8" y="9" width="24" height="10" rx="5"/><circle cx="38" cy="14" r="4"/>'],
-    ['Knee sleeves','Belts and gear',['Legs'],'Warm, supported knees on squats','<path d="M12 4L10 24H21L19 4ZM29 4L27 24H38L36 4Z"/>'],
-    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'A resistance band: help on pull-ups, or extra pull at the top','<ellipse cx="24" cy="14" rx="18" ry="8"/>'],
-    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top of squats and presses','<ellipse cx="8" cy="14" rx="5" ry="3"/><ellipse cx="16" cy="14" rx="5" ry="3"/><ellipse cx="24" cy="14" rx="5" ry="3"/><ellipse cx="32" cy="14" rx="5" ry="3"/><ellipse cx="40" cy="14" rx="5" ry="3"/>']
+    ['Rope','Cable handles',['Arms','Shoulders','Back'],'Pushdowns, face pulls','<circle cx="24" cy="5" r="2.4"/><path d="M24 7C22 14 16 18 12 23M24 7C26 14 32 18 36 23"/><circle cx="12" cy="24" r="2.6"/><circle cx="36" cy="24" r="2.6"/>'],
+    ['Straight bar','Cable handles',['Arms','Back'],'Pushdowns, curls','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V15M5 16H43"/>'],
+    ['EZ bar','Bars',['Arms'],'The curved bar','<path d="M3 15H11L15 11L19 18L24 13L29 18L33 11L37 15H45"/><path d="M5 10V20M43 10V20"/>'],
+    ['V-bar','Cable handles',['Back','Arms'],'Close-grip rows','<circle cx="24" cy="5" r="2.2"/><path d="M24 7L13 22M24 7L35 22M9 22H17M31 22H39"/>'],
+    ['Single handle','Cable handles',['Back','Shoulders','Chest','Arms'],'One-arm moves','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 19H33Z"/><path d="M14 21H34" stroke-width="3"/>'],
+    ['Stirrup handles','Cable handles',['Chest','Shoulders','Arms'],'Crossovers, flyes','<path d="M14 6L7 18H21ZM34 6L27 18H41Z"/><path d="M6 20H22M26 20H42" stroke-width="3"/>'],
+    ['Wide lat bar','Cable handles',['Back'],'Wide pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V13M3 7Q6 16 12 14H36Q42 16 45 7"/>'],
+    ['Parallel-grip lat bar','Cable handles',['Back'],'Palms-in pulldowns','<circle cx="24" cy="5" r="2.2"/><path d="M24 7V12M4 12H44M14 12V22M34 12V22"/>'],
+    ['MAG grip','Cable handles',['Back'],'Rows, pulldowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M10 10H38"/><rect x="12" y="10" width="5" height="12" rx="2"/><rect x="31" y="10" width="5" height="12" rx="2"/>'],
+    ['Row handle','Cable handles',['Back'],'Seated rows','<circle cx="24" cy="4" r="2"/><path d="M24 6L15 13L19 23H29L33 13Z"/><path d="M18 18H30"/>'],
+    ['Ankle strap','Cable handles',['Legs','Glutes'],'Kickbacks','<rect x="11" y="12" width="26" height="10" rx="5"/><path d="M24 12V7"/><circle cx="24" cy="5" r="2.2"/>'],
+    ['Tricep bar','Cable handles',['Arms'],'Pushdowns','<circle cx="24" cy="4" r="2"/><path d="M24 6V10M6 10Q15 24 24 14Q33 24 42 10"/>'],
+    ['Olympic barbell','Bars',['Legs','Chest','Back','Shoulders'],'Squat, bench, deadlift','<path d="M1 14H47"/><rect x="5" y="5" width="4" height="18" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="39" y="5" width="4" height="18" rx="1"/><rect x="35" y="8" width="3" height="12" rx="1"/>'],
+    ['Trap bar','Bars',['Legs','Back'],'Deadlifts','<path d="M14 5H34L42 14L34 23H14L6 14Z"/><path d="M17 10V18M31 10V18M0 14H6M42 14H48"/>'],
+    ['Safety squat bar','Bars',['Legs'],'Squats, easy shoulders','<path d="M2 11H46"/><rect x="18" y="8" width="12" height="6" rx="3"/><path d="M19 13Q16 21 21 25M29 13Q32 21 27 25"/>'],
+    ['Swiss bar','Bars',['Chest','Shoulders','Arms'],'Palms-in presses','<rect x="8" y="7" width="32" height="14" rx="3"/><path d="M16 7V21M24 7V21M32 7V21M0 14H8M40 14H48"/>'],
+    ['Cambered bar','Bars',['Legs','Chest'],'Squats, presses','<path d="M1 8H11Q13 24 24 24Q35 24 37 8H47"/>'],
+    ['Landmine','Bars',['Back','Shoulders','Core'],'Rows, presses','<rect x="3" y="21" width="11" height="4" rx="1"/><path d="M9 21L41 7"/><circle cx="41" cy="7" r="4.5"/>'],
+    ['Smith machine','Machines',['Legs','Chest','Shoulders'],'Bar on rails','<path d="M12 2V26M36 2V26M4 13H44"/>'],
+    ['Dumbbells','Free weights',['Legs','Chest','Back','Shoulders','Arms'],'Presses, rows, curls','<rect x="7" y="7" width="6" height="14" rx="1.5"/><rect x="35" y="7" width="6" height="14" rx="1.5"/><path d="M13 14H35"/>'],
+    ['Kettlebell','Free weights',['Legs','Glutes','Core','Shoulders'],'Swings','<path d="M17 11Q17 3 24 3Q31 3 31 11"/><circle cx="24" cy="17" r="8.5"/>'],
+    ['Weight plate','Free weights',['Chest','Core','Shoulders'],'Plate raises','<circle cx="24" cy="14" r="11"/><circle cx="24" cy="14" r="3"/>'],
+    ['Medicine ball','Free weights',['Core'],'Slams, throws','<circle cx="24" cy="14" r="11"/><path d="M13 14H35M24 3Q18 14 24 25"/>'],
+    ['Dip belt','Belts and gear',['Chest','Arms','Back'],'Weighted dips','<path d="M7 7Q24 17 41 7"/><path d="M24 12V17"/><circle cx="24" cy="21.5" r="5"/>'],
+    ['Weight vest','Belts and gear',['Legs','Chest','Back','Core'],'Extra weight','<path d="M16 3L11 8V25H37V8L32 3L28 8H20Z"/><path d="M15 14H33"/>'],
+    ['Belt','Belts and gear',['Legs','Back'],'Heavy lifts','<rect x="3" y="9" width="42" height="10" rx="3"/><rect x="20" y="7" width="8" height="14" rx="1.5"/>'],
+    ['Straps','Belts and gear',['Back'],'Heavy pulls','<path d="M9 21C5 10 15 4 19 10L24 22M25 21C21 10 31 4 35 10L40 22"/>'],
+    ['Wrist wraps','Belts and gear',['Chest','Shoulders'],'Heavy presses','<rect x="8" y="9" width="24" height="10" rx="5"/><circle cx="38" cy="14" r="4"/>'],
+    ['Knee sleeves','Belts and gear',['Legs'],'Warm knees','<path d="M12 4L10 24H21L19 4ZM29 4L27 24H38L36 4Z"/>'],
+    ['Band','Belts and gear',['Legs','Glutes','Back','Arms','Shoulders'],'Pull-up help','<ellipse cx="24" cy="14" rx="18" ry="8"/>'],
+    ['Chains','Belts and gear',['Legs','Chest'],'Heavier at the top','<ellipse cx="8" cy="14" rx="5" ry="3"/><ellipse cx="16" cy="14" rx="5" ry="3"/><ellipse cx="24" cy="14" rx="5" ry="3"/><ellipse cx="32" cy="14" rx="5" ry="3"/><ellipse cx="40" cy="14" rx="5" ry="3"/>']
   ];
   var AREAS=['Back','Legs','Glutes','Arms','Chest','Shoulders','Core'];
   /* the leg press: where your feet go changes what works (p42). Height matters
      most; width changes less than people think (EMG studies), said plainly. */
   var FEET=[
-    ['Feet middle','Shoulder width, middle of the plate: quads and glutes evenly','Leg press',[0,0,1]],
-    ['Feet high','High on the plate: more glutes and hamstrings, the knees bend less','Leg press (feet high)',[0,-1,1]],
-    ['Feet low','Low on the plate: more quads; go lighter if your knees complain','Leg press (feet low)',[0,1,1]],
-    ['Feet wide','Wide, toes out: more inner thighs and glutes','Leg press (feet wide)',[1,0,1]],
-    ['Feet narrow','Close together: quads; width changes less than height','Leg press (feet narrow)',[-1,0,1]],
-    ['One leg','One leg at a time: evens out a weaker side','Single leg press',[0,0,0]]
+    ['Feet middle','Quads and glutes','Leg press',[0,0,1]],
+    ['Feet high','More glutes, hamstrings','Leg press (feet high)',[0,-1,1]],
+    ['Feet low','More quads','Leg press (feet low)',[0,1,1]],
+    ['Feet wide','Inner thighs, glutes','Leg press (feet wide)',[1,0,1]],
+    ['Feet narrow','Quads','Leg press (feet narrow)',[-1,0,1]],
+    ['One leg','Fix a weak side','Single leg press',[0,0,0]]
   ];
   function isLP(n){ return /leg press/i.test(String(n||'')); }
   function catOf(v){ return CAT.filter(function(c){ return c[0].toLowerCase()===String(v||'').toLowerCase(); })[0]||null; }
@@ -69845,15 +69919,15 @@ window.KovaAttach=(function(){
   function pickHtml(n,cur,where){
     var lp=isLP(n), best=lp?[]:options(n);
     return '<div class="katt-p" data-katt-for="'+esc(n)+'" data-katt-where="'+where+'">'
-      +'<div class="katt-pl">'+(lp?'Feet and gear for ':'Attachment for ')+esc(n)+'</div>'
+      +'<div class="katt-pl">'+esc(n)+'</div>'
       +(lp?'<div class="katt-h">Where your feet go</div><div class="katt-grid">'+FEET.map(function(f){ return tile(f[0],cur,plate(f[3]),f[1]); }).join('')+'</div>'
-        +'<div class="katt-n">Height on the plate changes more than width. Your quads work in every one.</div>'
+        +'<div class="katt-n">Height matters more than width.</div>'
         :'<div class="katt-h">Best for this one</div><div class="katt-grid katt-best">'+best.map(function(o){ return tile(o,cur,catOf(o)); }).join('')+'</div>')
       +'<button type="button" class="chip katt-none" data-katt-v="">'+(lp?'No setting':'No attachment')+'</button>'
       +(where==='a'?'<button type="button" class="chip katt-more" data-katt-more="1">Every attachment</button><div class="katt-all" hidden></div>'
         :'<div class="katt-h">Every attachment</div><div class="katt-all">'+allHtml(cur)+'</div>')
       +'<div class="katt-own"><input class="srch" maxlength="40" placeholder="Something else? Type it" aria-label="Your own attachment"/><button type="button" class="chip on" data-katt-own="1">Save</button></div>'
-      +'<div class="katt-n">Kova remembers it for next time.</div></div>';
+      +'</div>';
   }
   /* any exercise by name, from anywhere (Coach me's top right, p42) */
   function pickSheet(n,done){ if(!window.openSheet) return; PICK=done||null; openSheet('<div class="grab"></div>'+pickHtml(n,get(n),'x')); }
@@ -70277,11 +70351,15 @@ window.KovaDream=(function(){
   }
   function decorate(){
     var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
-    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
+    /* with your own data: right under Training, above Muscle recovery; with
+       the sample screen (no Training card) under Built around your goal,
+       where the owner could not find it */
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)');
+    var at=host?(host.closest('.kv-card')||host):document.querySelector('#s-move #gpSlot')||document.querySelector('#s-move #goalSlot')||document.getElementById('startBtn');
+    if(!at) return;
     var have=document.getElementById('kdpCard'), html=card();
     if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kdpCard'); if(n0) n0.__h=html; } return; }
-    /* right under Training, above Muscle recovery */
-    (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+    at.insertAdjacentHTML('afterend',html);
     var n=document.getElementById('kdpCard'); if(n) n.__h=html;
   }
 
@@ -70567,6 +70645,157 @@ window.KovaDream=(function(){
   if(window.MutationObserver) new MutationObserver(function(ms){ for(var i=0;i<ms.length;i++){ var t=ms[i].target; if(!(t.closest&&t.closest('#kdpCard,#kdp,#krcCard,#krsCard,#kz2Card,#kz2,#kpl,[data-kxd],[data-kxd-still]'))){ soon(); return; } } }).observe(document.body,{childList:true,subtree:true});
   document.addEventListener('kova:screen',soon);
   return {open:open,close:close,plan:plan,you:you,card:card,decorate:decorate,at:at,compare:compare,coach:coach,cleanAns:cleanAns,take:take,addPlan:addPlan,addSplit:addSplit,usePlan:usePlan,TOUR:TOUR,SYS:SYS,COACH:COACH,_S:S,LIST:LIST,MOVE:MOVE};
+})();
+
+</script>
+<script id="p08-voice">
+/* p43: one voice for Kova (the AI team's "Read it to me", and Coach me
+   when the server's natural voice is off).
+
+   The owner: "it speaks way too fast, no pauses, no commas, doesn't sound
+   human at all... make it sound like ElevenLabs". What makes ElevenLabs
+   sound human is a neural model that reads the whole passage first and
+   plans its timing, pitch and breaths from the meaning; a phone's built-in
+   voice reads word by word and cannot. So:
+   - signed in, with the server's ElevenLabs key: the whole passage goes in
+     one request (functions/voice.js: the expressive model, a little under
+     normal speed), so it phrases across sentences like a person;
+   - otherwise the phone's best voice, but written for the ear first
+     (prep): times said as times ("9 to 9:45 AM"), bullets and headings
+     turned into sentences, brackets, quotes and symbols out; then said one
+     sentence at a time, a little slower, with a short breath between
+     sentences and a longer one between parts. */
+window.KovaVoice=(function(){
+  var RATE=0.9, GAP=360, PART=720, MAX=1200;
+  var S={n:0,best:null,ok:null,au:null,talking:false};
+
+  /* the phone's voices: Premium, Enhanced or natural ones before the robotic default, never the novelty ones */
+  function score(v){
+    var n=v.name||'', l=String(v.lang||'').toLowerCase().replace('_','-'), s=0;
+    if(l.indexOf('en')!==0) return -99;
+    if(/compact|novelty|whisper|bad news|bells|boing|bubbles|cellos|jester|organ|trinoids|zarvox|albert|fred|junior|ralph|kathy|bahh|superstar|wobble|grandma|grandpa|rocko|shelley|flo|eddy|reed|sandy/i.test(n)) return -50;
+    if(/premium/i.test(n)) s+=6; if(/enhanced|neural|natural/i.test(n)) s+=5; if(/siri/i.test(n)) s+=4; if(/^google/i.test(n)) s+=3;
+    if(/\b(ava|zoe|evan|nathan|noelle|samantha|allison|susan|tom|serena|daniel|karen|moira|aria|jenny|guy|libby|sonia|tessa)\b/i.test(n)) s+=1;
+    if(l===String(navigator.language||'en-US').toLowerCase()) s+=2;
+    return s;
+  }
+  function best(){
+    if(S.best) return S.best;
+    var L=[]; try{ L=window.speechSynthesis?speechSynthesis.getVoices()||[]:[]; }catch(e){}
+    var top=-1; L.forEach(function(v){ var x=score(v); if(x>top){ top=x; S.best=v; } });
+    return S.best;
+  }
+  try{ if(window.speechSynthesis&&speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged',function(){ S.best=null; }); }catch(e){}
+
+  /* ---------- written for the ear ---------- */
+  /* 13:30 -> "1:30 PM" (the colon is held back until both passes are done) */
+  function clock(h,m){
+    h=+h; m=+m; var ap=h>=12?'PM':'AM', h12=h%12||12;
+    return h12+(m?'\u0002'+(m<10?'0':'')+m:'')+' '+ap;
+  }
+  function times(t){
+    return t
+      .replace(/\b([01]?\d|2[0-3]):([0-5]\d)\s*[–—-]\s*([01]?\d|2[0-3]):([0-5]\d)\b/g,function(_,h1,m1,h2,m2){
+        var a=clock(h1,m1), b=clock(h2,m2), same=a.slice(-2)===b.slice(-2);
+        return (same?a.slice(0,-3):a)+' to '+b; })
+      .replace(/\b([01]?\d|2[0-3]):([0-5]\d)\b/g,function(_,h,m){ return clock(h,m); })
+      /* a time that starts a line is followed by a breath: "9 AM, fill in..." */
+      .replace(/^(\d[\d\u0002]*(?: [AP]M)?(?: to \d[\d\u0002]*)? [AP]M)\s+(?=[A-Za-z])/,'$1, ')
+      .replace(/\u0002/g,':');
+  }
+  function words(t){
+    return times(t)
+      .replace(/\*\*|__|[`#>]/g,'')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')
+      .replace(/https?:\/\/\S+/g,'the link')
+      .replace(/[“”"«»]/g,'').replace(/[‘’]/g,"'")
+      .replace(/\s*\(([^)]{1,120})\)/g,', $1,')
+      .replace(/(\d)\s*[–—-]\s*(\d)/g,'$1 to $2')
+      .replace(/\s+[–—]\s+/g,', ').replace(/\s*·\s*/g,', ')
+      .replace(/(\d)\s*×\s*(\d)/g,'$1 by $2')
+      .replace(/(\d)\s*%/g,'$1 percent').replace(/\s&\s/g,' and ')
+      .replace(/(\d)\s*lbs?\b/g,'$1 pounds').replace(/(\d)\s*kg\b/g,'$1 kilos')
+      .replace(/(\d)\s*s\b/g,'$1 seconds').replace(/(\d)\s*min\b/g,'$1 minutes').replace(/(\d)\s*h\b/g,'$1 hours').replace(/(\d)\s*d\b/g,'$1 days')
+      .replace(/\be\.g\.\s*/gi,'for example, ').replace(/\bi\.e\.\s*/gi,'that is, ').replace(/\bvs\.?\s/gi,'versus ')
+      .replace(/\s*:\s+/g,': ').replace(/\s*;\s*/g,'. ')
+      .replace(/,\s*,/g,',').replace(/,\s*([.!?])/g,'$1').replace(/\s{2,}/g,' ').trim().replace(/[,;:\s]+$/,'');
+  }
+  /* the passage as parts (a heading and what is under it), each a list of sentences */
+  function prep(text){
+    var parts=[], cur=null;
+    String(text||'').slice(0,4000).split(/\n/).forEach(function(raw){
+      var l=raw.trim(); if(!l){ cur=null; return; }
+      var head=/^#{1,6}\s+/.test(l)||/^\*\*[^*]+\*\*:?$/.test(l);
+      var item=/^([-*•]|\d+[.)])\s+/.test(l);
+      l=words(l.replace(/^#{1,6}\s+/,'').replace(/^([-*•]|\d+[.)])\s+/,''));
+      if(!l) return;
+      /* a heading, or plain words after a list, start a new part */
+      if(head||!cur||(cur.list&&!item)){ cur=[]; parts.push(cur); }
+      if(!/[.!?:]$/.test(l)) l+='.';
+      if(head) l=l.replace(/[.:]$/,'.');
+      l.replace(/([.!?])\s+(?=[A-Z0-9])/g,'$1\u0001').split('\u0001').forEach(function(s){
+        while(s.length>180){ var c=s.lastIndexOf(', ',170); if(c<40) break; cur.push(s.slice(0,c+1)); s=s.slice(c+2); }
+        if(s) cur.push(s);
+      });
+      if(head) cur.head=true;
+      if(item&&!head) cur.list=true;
+    });
+    return parts.filter(function(p){ return p.length; });
+  }
+  /* for the natural voice: line breaks between parts, the model pauses there */
+  function passage(parts){ return parts.map(function(p){ return p.join(' '); }).join('\n\n').slice(0,MAX); }
+
+  /* ---------- the phone's voice: a sentence at a time, with breaths ---------- */
+  function device(text,o){
+    o=o||{};
+    var parts=typeof text==='string'?prep(text):text;
+    if(!window.speechSynthesis||!parts.length) return false;
+    var my=++S.n, q=[];
+    parts.forEach(function(p,pi){ p.forEach(function(s,si){ q.push({s:s,gap:si===p.length-1&&pi<parts.length-1?PART:GAP}); }); });
+    try{ speechSynthesis.cancel(); }catch(e){}
+    try{ if(S.au) S.au.pause(); }catch(e){}
+    S.talking=true;
+    (function next(i){
+      if(my!==S.n) return;
+      if(i>=q.length){ S.talking=false; if(o.done) o.done(); return; }
+      var u=new SpeechSynthesisUtterance(q[i].s), v=best();
+      if(v){ u.voice=v; u.lang=v.lang; }
+      u.rate=o.rate||RATE; u.pitch=1;
+      var went=false, go=function(){ if(went) return; went=true; setTimeout(function(){ next(i+1); },q[i].gap); };
+      u.onend=go; u.onerror=go;
+      try{ speechSynthesis.speak(u); }catch(e){ go(); }
+      /* some browsers never say "ended": move on after a generous guess */
+      setTimeout(go,1200+q[i].s.length*95/(o.rate||RATE));
+    })(0);
+    return true;
+  }
+
+  /* ---------- the natural voice (ElevenLabs through Kova's server) ---------- */
+  function cloud(){ try{ return S.ok!==false&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
+  function natural(t){
+    return KovaLink.authFetch('/tts',{json:{text:t,long:true}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
+      if(!r.ok||!j.audio){ if(r.status===503||r.status===404||r.status===401||r.status===403) S.ok=false; throw new Error(j.error||('HTTP '+r.status)); }
+      S.ok=true; return 'data:'+(j.type||'audio/mpeg')+';base64,'+j.audio;
+    }); });
+  }
+  function play(u,o){
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+    try{ var a=S.au||(S.au=new Audio()); a.src=u; S.talking=true; a.onended=function(){ S.talking=false; if(o&&o.done) o.done(); }; var p=a.play(); if(p&&p.catch) p.catch(function(){ S.talking=false; }); }catch(e){ S.talking=false; }
+  }
+  /* say a passage: the natural voice when it is there, else the phone's, written for the ear */
+  function speak(text,o){
+    o=o||{};
+    var parts=prep(text); if(!parts.length) return false;
+    stop(); var my=S.n;
+    if(cloud()&&!o.device){
+      natural(passage(parts)).then(function(u){ if(my===S.n) play(u,o); }).catch(function(){ if(my===S.n) device(parts,o); });
+      return true;
+    }
+    return device(parts,o);
+  }
+  function stop(){ S.n++; S.talking=false; try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){} try{ if(S.au) S.au.pause(); }catch(e){} }
+  function talking(){ return S.talking; }
+  return {speak:speak,device:device,stop:stop,talking:talking,prep:prep,words:words,passage:passage,score:score,best:best,state:S,RATE:RATE};
 })();
 
 </script>

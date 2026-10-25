@@ -280,11 +280,15 @@ window.KovaDream=(function(){
   }
   function decorate(){
     var sc=document.getElementById('s-move'); if(!sc||!sc.classList.contains('on')) return;
-    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)'); if(!host) return;
+    /* with your own data: right under Training, above Muscle recovery; with
+       the sample screen (no Training card) under Built around your goal,
+       where the owner could not find it */
+    var host=document.querySelector('#s-move .kl-acts:not(.kz2-acts):not(.krc-acts)');
+    var at=host?(host.closest('.kv-card')||host):document.querySelector('#s-move #gpSlot')||document.querySelector('#s-move #goalSlot')||document.getElementById('startBtn');
+    if(!at) return;
     var have=document.getElementById('kdpCard'), html=card();
     if(have){ if(have.__h!==html){ have.outerHTML=html; var n0=document.getElementById('kdpCard'); if(n0) n0.__h=html; } return; }
-    /* right under Training, above Muscle recovery */
-    (host.closest('.kv-card')||host).insertAdjacentHTML('afterend',html);
+    at.insertAdjacentHTML('afterend',html);
     var n=document.getElementById('kdpCard'); if(n) n.__h=html;
   }
 

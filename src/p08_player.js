@@ -79,7 +79,8 @@ window.KovaPlayer=(function(){
     return V.best;
   }
   try{ if(window.speechSynthesis&&speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged',function(){ V.best=null; }); }catch(e){}
-  function deviceSay(t){ try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
+  /* p43: the shared voice says it slower, a sentence at a time (src/p08_voice.js) */
+  function deviceSay(t){ if(window.KovaVoice){ KovaVoice.device(t); return; } try{ if(window.speechSynthesis){ var u=new SpeechSynthesisUtterance(t), v=best(); if(v){ u.voice=v; u.lang=v.lang; } u.rate=1; u.pitch=1; speechSynthesis.cancel(); speechSynthesis.speak(u); } }catch(e){} }
   function cloud(){ try{ return V.ok!==false&&!!(window.KovaLink&&KovaLink.authFetch&&window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser); }catch(e){ return false; } }
   function line(t){
     if(V.cache[t]) return Promise.resolve(V.cache[t]);
