@@ -1,0 +1,50 @@
+/* KovaAsk (p20): "Tell me" times under the team box, what the team is on,
+   the check-in and meeting-prep switches, and the Send to Maya sheet.
+   Thin outlines, the app's accent. Dark, soft light and light glass. */
+.kas-when{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 2px}
+.kas-when>span{font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.75));margin-right:2px}
+.kas-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;border:1px solid var(--ron-line,rgba(255,255,255,.18));
+  background:transparent;color:var(--ron-txt-2,rgba(255,255,255,.8));font:inherit;font-size:11.5px;cursor:pointer}
+.kas-chip.on{border-color:var(--acc);color:var(--ron-txt,#fff);background:color-mix(in srgb,var(--acc) 14%,transparent)}
+.kas-chip:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kas-pick input{border:0;background:none;color:inherit;font:inherit;font-size:11.5px;padding:0;width:74px}
+.kas-card{margin-top:12px}
+.kas-sub{font-size:12px;font-weight:300;line-height:1.5;color:var(--ron-txt-2,rgba(255,255,255,.75));margin:6px 0}
+.kas-list{display:flex;flex-direction:column;gap:6px}
+.kas-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14))}
+.kas-dot{width:8px;height:8px;flex-shrink:0;border-radius:50%;border:1px solid var(--acc);display:inline-block}
+.kas-dot.run{background:var(--acc);box-shadow:0 0 8px var(--acc);animation:kasPulse 1.4s ease-in-out infinite}
+@keyframes kasPulse{50%{opacity:.35}}
+.kas-t{flex:1;min-width:0;font-size:12.5px;line-height:1.4;color:var(--ron-txt,#fff)}
+.kas-t b{font-weight:500}
+.kas-t small{display:block;font-size:11px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72));margin-top:2px}
+.kas-plan{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--ron-line-2,rgba(255,255,255,.08))}
+.kas-plan:first-of-type{border-top:0}
+.kas-pt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.kas-pt b{font-size:13px;font-weight:500}
+.kas-pt small{font-size:11.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kas-time{width:112px;padding:6px 8px;border-radius:10px;border:1px solid var(--ron-line,rgba(255,255,255,.18));background:transparent;color:inherit;font:inherit;font-size:12px}
+.kas-send{padding-bottom:8px}
+.kas-what{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.14));margin-bottom:6px}
+.kas-what b{font-size:13.5px;font-weight:500}
+.kas-what span{font-size:11.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kas-plats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-bottom:6px}
+.kas-plat{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.16));
+  background:transparent;color:var(--ron-txt,#fff);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.kas-plat small{font-size:10.5px;font-weight:300;color:var(--ron-txt-2,rgba(255,255,255,.72))}
+.kas-plat.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent)}
+.kas-plat:disabled{opacity:.5;cursor:default}
+.kas-in{width:100%;box-sizing:border-box;margin:0 0 6px;padding:10px 12px;border-radius:12px;border:1px solid var(--ron-line,rgba(255,255,255,.16));background:rgba(255,255,255,.04);
+  color:var(--ron-txt,#fff);font:inherit;font-size:13px;line-height:1.45;resize:vertical}
+.kas-in:focus{outline:none;border-color:var(--acc)}
+.kas-check{display:flex;align-items:center;gap:8px;margin:10px 0 4px;font-size:12.5px;color:var(--ron-txt-2,rgba(255,255,255,.8))}
+.kas-msg{min-height:16px;font-size:12px;color:var(--ron-txt-2,rgba(255,255,255,.8));margin:6px 0}
+.kas-msg.bad{color:#F7A3B0}
+.kas-send .btn{margin-top:6px}
+body.light-mode .kas-chip,body.light-mode .kas-row,body.light-mode .kas-time,body.light-mode .kas-what,body.light-mode .kas-plat,body.light-mode .kas-in{border-color:rgba(28,26,23,.16)}
+body.light-mode .kas-in{background:#fff;color:#1C1A17}
+body.light-mode .kas-chip,body.light-mode .kas-plat small,body.light-mode .kas-t small,body.light-mode .kas-pt small,body.light-mode .kas-sub,body.light-mode .kas-what span{color:rgba(28,26,23,.7)}
+body.light-mode .kas-t,body.light-mode .kas-plat{color:#1C1A17}
+body.light-mode .kas-msg.bad{color:#A3283D}
+body.soft-light .kas-in{background:rgba(255,255,255,.07)}
+@media (prefers-reduced-motion:reduce){ .kas-dot.run{animation:none} }

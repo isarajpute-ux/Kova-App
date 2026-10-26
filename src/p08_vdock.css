@@ -1,0 +1,176 @@
+/* KovaVDock (p22): Vitals as one section at a time behind a dock of icon
+   tiles, styled after the three reference images in Kova's accent.
+   Dark, soft light and light glass. */
+
+
+/* one section at a time: the dock replaces the drop-down headers */
+#s-vitals.kvd-on>.vall{display:none}
+#s-vitals.kvd-on .kvd-gone{display:none}
+#s-vitals.kvd-on>.vsec:not(.kvd-cur){display:none}
+#s-vitals.kvd-on>.vsec>.vsec-h{display:none}
+#s-vitals.kvd-on>.vsec.kvd-cur>.vsec-b{max-height:none;opacity:1;padding-top:0;overflow:visible;animation:kvdInF .42s cubic-bezier(.22,1,.36,1) both}
+#s-vitals.kvd-on.kvd-back>.vsec.kvd-cur>.vsec-b{animation-name:kvdInB}
+@keyframes kvdInF{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes kvdInB{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+.kvd-tx{animation:kvdTx .38s cubic-bezier(.22,1,.36,1)}
+@keyframes kvdTx{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* image 1: "Label: Value" title */
+.kvd-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 10px;margin:2px 2px 14px}
+.kvd-ht{grid-column:1/-1;font-size:clamp(18px,5.4vw,22px);min-width:0;font-weight:300;letter-spacing:-.02em;line-height:1.2;color:var(--ron-txt,#fff)}
+.kvd-hl{color:rgba(255,255,255,.58);font-weight:300}
+.kvd-ht b{font-weight:400}
+.kvd-hs{grid-column:1;grid-row:2;font-size:12px;font-weight:300;color:rgba(255,255,255,.66)}
+.kvd-hn{grid-row:2;grid-column:2;display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.62);font-variant-numeric:tabular-nums}
+.kvd-sq{width:36px;height:36px;border-radius:13px;border:0;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;flex-shrink:0;
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 12px rgba(0,0,0,.25)}
+.kvd-sq svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kvd-sq{transition:transform .2s cubic-bezier(.22,1,.36,1),background .25s}
+.kvd-sq:active{transform:scale(.92)}
+.kvd-sq:focus-visible,.kvd-t:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+#kvdName{display:inline-block}
+
+/* image 3 and 1: graphite cards, big radius, a soft line of light on top */
+#s-vitals.kvd-on .vsec-b>.card,.kvd-card{border-radius:28px;border:1px solid rgba(255,255,255,.07);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.22)}
+#s-vitals.kvd-on .vsec-b .big{font-weight:200;letter-spacing:-.03em}
+.kvd-card{position:relative;overflow:hidden;padding:18px 18px 16px;margin-bottom:12px;color:var(--ron-txt,#fff)}
+.kvd-ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.kvd-ct{font-size:16px;font-weight:400;letter-spacing:-.01em}
+.kvd-cs{font-size:12px;font-weight:300;color:rgba(255,255,255,.62);margin-top:2px;line-height:1.45}
+
+/* image 1: the glow of colour behind the glass */
+.kvd-power::before{content:"";position:absolute;left:-30%;top:-45%;width:95%;height:120%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--acc) 55%,transparent),transparent);filter:blur(28px);opacity:.55}
+.kvd-power>*{position:relative}
+
+/* image 3: the big thin number with a small unit */
+.kvd-big{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:14px 0 10px}
+.kvd-num{font-size:68px;font-weight:200;line-height:.9;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.kvd-num.sm{font-size:clamp(28px,8.6vw,40px);white-space:nowrap}
+.kvd-unit{font-size:16px;font-weight:300;letter-spacing:.02em;color:rgba(255,255,255,.7);margin-left:-6px}
+.kvd-word{font-size:12px;font-weight:400;margin-left:auto;align-self:center;padding:5px 11px;border-radius:99px;border:1px solid rgba(255,255,255,.14)}
+.kvd-word.good{color:var(--acc);border-color:color-mix(in srgb,var(--acc) 50%,transparent)}
+.kvd-word.bad{color:#FF8A96;border-color:rgba(255,120,135,.45)}
+.kvd-word.none{margin-left:0;color:rgba(255,255,255,.7)}
+
+/* image 3: the track, the band, the white pills and the glowing ring */
+.kvd-track{position:relative;height:22px;margin:6px 4px 0}
+.kvd-track::before{content:"";position:absolute;left:0;right:0;top:50%;height:1.5px;margin-top:-.75px;border-radius:2px;background:rgba(255,255,255,.2)}
+.kvd-band{position:absolute;left:50%;width:25%;top:50%;height:6px;margin-top:-3px;border-radius:4px;background:rgba(255,255,255,.18)}
+.kvd-pill{position:absolute;top:50%;width:12px;height:5px;margin:-2.5px 0 0 -6px;border-radius:3px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.35)}
+.kvd-knob{position:absolute;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:#0B0B0D;border:4px solid var(--acc);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent),0 0 16px color-mix(in srgb,var(--acc) 75%,transparent)}
+.kvd-tl3{display:flex;justify-content:space-between;font-size:10px;font-weight:300;color:rgba(255,255,255,.58);margin:4px 2px 14px;letter-spacing:.02em}
+
+/* image 3: three readings, split by slanted lines */
+.kvd-sms{display:grid;grid-template-columns:repeat(3,1fr)}
+.kvd-sm{position:relative;padding:2px 10px 0 14px;min-width:0}
+.kvd-sm:first-child{padding-left:2px}
+.kvd-sm+.kvd-sm::before{content:"";position:absolute;left:2px;top:6px;bottom:4px;width:1px;background:rgba(255,255,255,.16);transform:skewX(-12deg)}
+.kvd-sm b{display:block;font-size:22px;font-weight:300;letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kvd-sm b small{font-size:11px;font-weight:300;margin-left:2px;opacity:.75}
+.kvd-sm span{display:block;font-size:11.5px;font-weight:300;color:rgba(255,255,255,.66);margin-top:1px}
+.kvd-sm em{display:block;font-style:normal;font-size:10.5px;font-weight:300;color:rgba(255,255,255,.62);min-height:14px;margin-top:2px}
+.kvd-sm.good b{color:var(--acc)}
+.kvd-sm.bad b{color:#FF8A96}
+.kvd-mt{position:relative;height:10px;margin-top:6px}
+.kvd-mt::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.2)}
+.kvd-mt::after{content:"";position:absolute;left:50%;top:2px;bottom:2px;width:1px;background:rgba(255,255,255,.3)}
+.kvd-mt i{position:absolute;top:50%;width:18px;height:3.5px;margin:-1.75px 0 0 -9px;border-radius:3px;background:#fff}
+.kvd-sm.good .kvd-mt i{background:var(--acc);box-shadow:0 0 8px color-mix(in srgb,var(--acc) 70%,transparent)}
+.kvd-sm.bad .kvd-mt i{background:#FF6B7A;box-shadow:0 0 8px rgba(255,107,122,.6)}
+
+/* image 1: the trend drawn in dashes */
+.kvd-trend{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.kvd-trh{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:300;margin-bottom:10px}
+.kvd-trh b{font-weight:400}
+.kvd-dash{display:flex;align-items:center;gap:4px;height:6px;overflow:hidden}
+.kvd-dash i{display:block;height:3px;border-radius:2px;background:#fff;flex-shrink:0}
+.kvd-dash i.kvd-dot{width:3px;height:3px;border-radius:50%}
+
+/* image 3: the vivid tile beside the dark one */
+.kvd-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kvd-tile{position:relative;overflow:hidden;border-radius:30px;padding:16px 14px 6px;min-height:212px;display:flex;flex-direction:column;color:#fff;
+  border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.kvd-tile.vivid{border-color:transparent;background:radial-gradient(120% 90% at 20% 0%,color-mix(in srgb,var(--acc) 72%,#fff) 0%,var(--acc) 48%,color-mix(in srgb,var(--acc) 72%,#000) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 34px color-mix(in srgb,var(--acc) 35%,transparent)}
+.kvd-tt{font-size:15px;font-weight:400;letter-spacing:-.01em}
+.kvd-ts{font-size:12px;font-weight:300;opacity:.72;margin-top:2px}
+.kvd-tv{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin:12px 0 4px}
+.kvd-tv em{font-style:normal;font-size:11.5px;font-weight:400;opacity:.92;white-space:nowrap}
+.kvd-tv em.bad{color:#FF8A96;opacity:1}
+.kvd-dots{width:100%;max-width:150px;margin:auto auto 0;display:block}
+.kvd-dg{fill:rgba(255,255,255,.22)}
+.kvd-ring{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.2;stroke-dasharray:5 4}
+.kvd-mk{fill:#0B0B0D;stroke:#fff;stroke-width:2.6}
+.kvd-mk.now{stroke:var(--acc)}
+.kvd-mk.off{stroke:#FF6B7A}
+.kvd-tile.vivid.ink-dark{color:#0D0D10}
+.kvd-tile.vivid.ink-dark .kvd-dg{fill:rgba(13,13,16,.22)}
+.kvd-tile.vivid.ink-dark .kvd-ring{stroke:rgba(13,13,16,.7)}
+.kvd-tile.vivid .kvd-mk.base{fill:transparent}
+.kvd-tile.vivid.ink-dark .kvd-mk{stroke:#0D0D10;fill:transparent}
+.kvd-tile.vivid.ink-light .kvd-mk{stroke:#fff;fill:transparent}
+.kvd-empty .kvd-cs{margin-top:6px}
+
+/* image 2: the dock - a full-width bar of wide squircle tiles you swipe;
+   one glowing piece slides to the tile you pick */
+.kvd-dock{position:sticky;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;margin:18px 0 0;padding:10px 8px;border-radius:32px;
+  background:rgba(20,20,23,.86);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.07)}
+.kvd-row{position:relative;display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;padding:4px 6px;margin:-4px 0;scroll-behavior:smooth;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);cursor:grab}
+.kvd-row::-webkit-scrollbar{display:none}
+.kvd-row.drag{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}
+.kvd-t{position:relative;z-index:1;flex:0 0 80px;height:62px;border-radius:22px;border:0;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;scroll-snap-align:center;
+  background:linear-gradient(150deg,#36363C 0%,#26262A 60%,#202023 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.35),0 6px 14px rgba(0,0,0,.3);
+  transform:scale(calc(1 - var(--kvd-a,0) * .07));opacity:calc(1 - var(--kvd-a,0) * .28);
+  transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .4s,color .35s,background-color .35s,box-shadow .35s}
+.kvd-t:active{transform:scale(.94)}
+.kvd-t.on{background:transparent;box-shadow:none;opacity:1;color:color-mix(in srgb,var(--acc) 30%,#0B0B0D);transform:scale(1)}
+.kvd-ind{position:absolute;z-index:0;left:0;top:4px;height:62px;width:80px;border-radius:22px;pointer-events:none;opacity:0;
+  background:radial-gradient(130% 120% at 28% 18%,#fff 0%,color-mix(in srgb,var(--acc) 18%,#fff) 45%,color-mix(in srgb,var(--acc) 42%,#fff) 100%);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 40%,transparent),0 0 26px color-mix(in srgb,var(--acc) 55%,transparent),0 8px 18px rgba(0,0,0,.35);
+  transition:transform .5s cubic-bezier(.22,1,.36,1),width .5s cubic-bezier(.22,1,.36,1),opacity .3s}
+.kvd-ind.ready{opacity:1}
+.kvd-gw{position:relative;width:27px;height:27px;display:block}
+.kvd-g{position:absolute;inset:0;width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;
+  transition:opacity .32s ease,transform .4s cubic-bezier(.22,1,.36,1)}
+.kvd-g.kvd-gf{opacity:0;transform:scale(.72);stroke-width:1.8}
+.kvd-t.on .kvd-gf{opacity:1;transform:none}
+.kvd-t.on .kvd-go{opacity:0;transform:scale(1.18)}
+.kvd-g .kvd-fill{fill:currentColor;stroke:none}
+.kvd-tl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* on Vitals, Ask Kova floats above the dock instead of beside it */
+body.kvd-vis .kfab{bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
+.kfab{transition:bottom .35s cubic-bezier(.22,1,.36,1),transform .2s}
+@media (prefers-reduced-motion:reduce){ .kvd-t,.kvd-ind,.kvd-g{transform:none!important;transition:none} #s-vitals.kvd-on>.vsec.kvd-cur>.vsec-b,.kvd-tx{animation:none} .kvd-row{scroll-behavior:auto} }
+
+/* light glass */
+body.light-mode .kvd-ht,body.light-mode .kvd-card,body.light-mode .kvd-tile:not(.vivid){color:#1C1A17}
+body.light-mode .kvd-hl,body.light-mode .kvd-hs,body.light-mode .kvd-hn,body.light-mode .kvd-cs,body.light-mode .kvd-unit,body.light-mode .kvd-tl3,body.light-mode .kvd-sm span,body.light-mode .kvd-sm em,body.light-mode .kvd-word.none{color:rgba(28,26,23,.66)}
+body.light-mode .kvd-sq{color:#1C1A17;background:linear-gradient(150deg,#fff,rgba(255,255,255,.7));box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(28,26,23,.1)}
+body.light-mode #s-vitals.kvd-on .vsec-b>.card,body.light-mode .kvd-card,body.light-mode .kvd-tile:not(.vivid){background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.6));border-color:rgba(28,26,23,.08);box-shadow:inset 0 1px 0 #fff,0 10px 30px rgba(28,26,23,.08)}
+body.light-mode .kvd-power::before{opacity:.35}
+body.light-mode .kvd-track::before,body.light-mode .kvd-mt::before{background:rgba(28,26,23,.2)}
+body.light-mode .kvd-band{background:rgba(28,26,23,.14)}
+body.light-mode .kvd-pill,body.light-mode .kvd-dash i,body.light-mode .kvd-mt i{background:#1C1A17;box-shadow:none}
+body.light-mode .kvd-mt::after,body.light-mode .kvd-sm+.kvd-sm::before{background:rgba(28,26,23,.2)}
+body.light-mode .kvd-knob{background:#fff}
+body.light-mode .kvd-word{border-color:rgba(28,26,23,.16)}
+body.light-mode .kvd-word.bad,body.light-mode .kvd-sm.bad b,body.light-mode .kvd-tv em.bad{color:#B3263A}
+body.light-mode .kvd-sm.good b,body.light-mode .kvd-word.good{color:color-mix(in srgb,var(--acc) 70%,#000)}
+body.light-mode .kvd-trend{border-top-color:rgba(28,26,23,.08)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-dg{fill:rgba(28,26,23,.2)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-ring{stroke:rgba(28,26,23,.6)}
+body.light-mode .kvd-tile:not(.vivid) .kvd-mk{fill:#fff;stroke:#1C1A17}
+body.light-mode .kvd-tile:not(.vivid) .kvd-mk.off{stroke:#B3263A}
+body.light-mode .kvd-dock{background:rgba(255,255,255,.86);border-color:rgba(28,26,23,.08);box-shadow:0 18px 40px rgba(28,26,23,.14),inset 0 1px 0 #fff}
+body.light-mode .kvd-t:not(.on){color:#1C1A17;background:linear-gradient(150deg,#fff 0%,#F1EEE9 100%);box-shadow:inset 0 1px 0 #fff,0 6px 14px rgba(28,26,23,.1)}
+body.light-mode .kvd-t.on{background:transparent;box-shadow:none;color:color-mix(in srgb,var(--acc) 30%,#0B0B0D)}
+body.light-mode .kvd-ind{background:radial-gradient(130% 120% at 28% 18%,color-mix(in srgb,var(--acc) 22%,#fff) 0%,color-mix(in srgb,var(--acc) 62%,#fff) 100%);box-shadow:0 0 0 1px color-mix(in srgb,var(--acc) 35%,transparent),0 0 22px color-mix(in srgb,var(--acc) 40%,transparent),0 8px 18px rgba(28,26,23,.12)}
+
+/* soft light */
+body.soft-light .kvd-dock{background:rgba(48,44,52,.88)}
+body.soft-light .kvd-t:not(.on){background:linear-gradient(150deg,#4A4650 0%,#38353D 100%)}

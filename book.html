@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Book a time</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/icon-192.png">
+<style>
+:root{--bg:#0B0B0D;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);--txt:#fff;--txt2:rgba(255,255,255,.68);--acc:#E8607A;--ink:#0B0B0D;--bad:#FF8A96}
+@media (prefers-color-scheme:light){:root{--bg:#F2EFEA;--card:rgba(255,255,255,.8);--line:rgba(28,26,23,.12);--txt:#1C1A17;--txt2:rgba(28,26,23,.66);--acc:#B8325A;--ink:#fff;--bad:#B3263A}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Outfit","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;padding:max(24px,env(safe-area-inset-top)) 16px 40px;background-image:radial-gradient(80% 50% at 15% 0%,color-mix(in srgb,var(--acc) 22%,transparent),transparent)}
+main{max-width:560px;margin:0 auto}
+.brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt2);margin-bottom:22px}
+h1{font-size:30px;font-weight:300;letter-spacing:-.02em;margin:0 0 4px}
+h1 b{font-weight:500}
+.sub{color:var(--txt2);font-size:14px;margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:18px;margin-bottom:14px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2);margin:0 0 10px}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;min-width:62px;padding:10px 8px;border-radius:18px;border:1px solid var(--line);background:transparent;color:var(--txt);font:inherit;cursor:pointer;text-align:center;transition:background .25s,border-color .25s,color .25s}
+.day small{display:block;font-size:11px;color:var(--txt2)}
+.day b{display:block;font-size:20px;font-weight:300}
+.day.on{background:var(--acc);border-color:var(--acc);color:var(--ink)}
+.day.on small{color:inherit;opacity:.8}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.time{padding:11px 6px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--txt);font:inherit;font-size:14px;cursor:pointer;transition:background .2s,border-color .2s}
+.time:hover{border-color:var(--acc)}
+.time.on{background:color-mix(in srgb,var(--acc) 18%,transparent);border-color:var(--acc)}
+label{display:block;font-size:12px;color:var(--txt2);margin:12px 0 5px}
+input,textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);background:transparent;color:var(--txt);font:inherit}
+input:focus,textarea:focus{outline:none;border-color:var(--acc)}
+textarea{resize:vertical;min-height:70px}
+.btn{display:block;width:100%;margin-top:16px;padding:14px;border:0;border-radius:16px;background:var(--acc);color:var(--ink);font:inherit;font-weight:600;font-size:15px;cursor:pointer;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.msg{min-height:20px;font-size:13px;margin-top:10px;color:var(--txt2)}
+.msg.bad{color:var(--bad)}
+.picked{font-size:15px;margin:0 0 4px}
+.none{color:var(--txt2);font-size:14px;padding:6px 0}
+.ok{text-align:center;padding:26px 18px}
+.ok .tick{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:var(--acc);color:var(--ink);font-size:26px}
+.foot{font-size:12px;color:var(--txt2);text-align:center;margin-top:20px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">Kova</div>
+  <div id="load" class="sub">Loading free times…</div>
+  <div id="page" hidden>
+    <h1 id="hTitle"></h1>
+    <p class="sub" id="hSub"></p>
+    <div class="card">
+      <p class="lbl">Pick a day</p>
+      <div class="days" id="days" role="listbox" aria-label="Days"></div>
+    </div>
+    <div class="card">
+      <p class="lbl" id="tLbl">Pick a time</p>
+      <div class="times" id="times" role="listbox" aria-label="Times"></div>
+    </div>
+    <form class="card" id="form" hidden novalidate>
+      <p class="picked" id="picked"></p>
+      <label for="fName">Your name</label>
+      <input id="fName" autocomplete="name" maxlength="80" required>
+      <label for="fEmail">Your email</label>
+      <input id="fEmail" type="email" autocomplete="email" maxlength="120" required>
+      <label for="fNote">Anything to share before the call? (optional)</label>
+      <textarea id="fNote" maxlength="600"></textarea>
+      <button class="btn" id="fGo" type="submit">Book it</button>
+      <div class="msg" id="fMsg" role="status"></div>
+    </form>
+  </div>
+  <div id="done" class="card ok" hidden>
+    <div class="tick" aria-hidden="true">&#10003;</div>
+    <h1 style="font-size:24px">You're booked</h1>
+    <p class="sub" id="dWhen"></p>
+    <p class="sub" id="dMail"></p>
+    <button class="btn ghost" id="dIcs" type="button">Add to my calendar</button>
+  </div>
+  <div id="err" class="card" hidden><p id="errTxt" style="margin:0"></p></div>
+  <p class="foot">Times are shown in your time zone (<span id="tz"></span>).</p>
+</main>
+<script>
+(function(){
+  'use strict';
+  var API=(window.KOVA_API||'/api').replace(/\/+$/,'');
+  var m=location.pathname.match(/\/book\/([a-z0-9-]{3,30})\/?$/i), slug=(m&&m[1])||new URLSearchParams(location.search).get('u')||'';
+  var S={data:null,day:'',pick:null,done:null};
+  var $=function(id){ return document.getElementById(id); };
+  var tz=''; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''; }catch(e){}
+  $('tz').textContent=tz||'local';
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function dayKey(t){ var d=new Date(t); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  function clock(t){ return new Date(t).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}); }
+  function long(t){ return new Date(t).toLocaleString([],{weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}); }
+  function fail(msg){ $('load').hidden=true; $('page').hidden=true; $('err').hidden=false; $('errTxt').textContent=msg; }
+  if(!slug) return fail('This booking link is missing its name.');
+  function api(path,opts){
+    return fetch(API+path,opts).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok){ var e=new Error(j.error||('Error '+r.status)); e.status=r.status; throw e; } return j; }); });
+  }
+  function load(keep){
+    return api('/book/'+encodeURIComponent(slug)).then(function(d){
+      S.data=d; $('load').hidden=true; $('page').hidden=false;
+      $('hTitle').innerHTML=esc(d.title)+' with <b>'+esc(d.name)+'</b>';
+      $('hSub').textContent=d.mins+' minutes';
+      document.title=d.title+' with '+d.name;
+      var byDay={}; (d.slots||[]).forEach(function(s){ var k=dayKey(s.start); (byDay[k]=byDay[k]||[]).push(s); });
+      S.byDay=byDay;
+      var keys=Object.keys(byDay);
+      if(!keys.length){ $('days').innerHTML='<div class="none">No free times in the next few weeks. Check back soon.</div>'; $('times').innerHTML=''; return; }
+      if(!keep||!byDay[S.day]) S.day=keys[0];
+      paint();
+    },function(e){ fail(e.status===404?(e.message||'No booking page here.'):'Could not load the free times. Check your connection and refresh.'); });
+  }
+  function paint(){
+    var keys=Object.keys(S.byDay);
+    $('days').innerHTML=keys.map(function(k){ var t=S.byDay[k][0].start, d=new Date(t);
+      return '<button type="button" class="day'+(k===S.day?' on':'')+'" role="option" aria-selected="'+(k===S.day)+'" data-d="'+k+'"><small>'+d.toLocaleDateString([],{weekday:'short'})+'</small><b>'+d.getDate()+'</b><small>'+d.toLocaleDateString([],{month:'short'})+'</small></button>'; }).join('');
+    var list=S.byDay[S.day]||[];
+    $('tLbl').textContent=new Date(list[0].start).toLocaleDateString([],{weekday:'long',month:'long',day:'numeric'});
+    $('times').innerHTML=list.map(function(s){ var on=S.pick&&S.pick.start===s.start; return '<button type="button" class="time'+(on?' on':'')+'" role="option" aria-selected="'+on+'" data-s="'+s.start+'">'+clock(s.start)+'</button>'; }).join('');
+    $('form').hidden=!S.pick;
+    if(S.pick) $('picked').textContent=long(S.pick.start)+' · '+S.data.mins+' min';
+  }
+  $('days').addEventListener('click',function(e){ var b=e.target.closest('[data-d]'); if(!b) return; S.day=b.dataset.d; S.pick=null; paint(); });
+  $('times').addEventListener('click',function(e){ var b=e.target.closest('[data-s]'); if(!b) return; var st=+b.dataset.s; S.pick=(S.byDay[S.day]||[]).filter(function(x){ return x.start===st; })[0]||null; paint(); if(S.pick) $('fName').focus(); });
+  $('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('fName').value.trim(), email=$('fEmail').value.trim(), msg=$('fMsg');
+    msg.className='msg';
+    if(!name){ msg.className='msg bad'; msg.textContent='Add your name.'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.className='msg bad'; msg.textContent='Check your email address.'; return; }
+    $('fGo').disabled=true; msg.textContent='Booking…';
+    api('/book/'+encodeURIComponent(slug),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({start:S.pick.start,name:name,email:email,note:$('fNote').value.trim()})}).then(function(r){
+      S.done=r; $('page').hidden=true; $('done').hidden=false;
+      $('dWhen').textContent=r.title+' with '+r.with+', '+long(r.start);
+      $('dMail').textContent=r.invited?'A calendar invite is on its way to '+email+'.':'Save it to your calendar below.';
+    },function(err){
+      $('fGo').disabled=false; msg.className='msg bad'; msg.textContent=err.message||'Could not book it. Try again.';
+      if(err.status===409){ S.pick=null; load(true); }
+    });
+  });
+  /* an .ics file: works with Apple, Google and Outlook calendars */
+  $('dIcs').addEventListener('click',function(){
+    var r=S.done; if(!r) return;
+    var f=function(t){ return new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); };
+    var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kova//Booking//EN','BEGIN:VEVENT','UID:'+r.id+'@kova','DTSTAMP:'+f(Date.now()),'DTSTART:'+f(r.start),'DTEND:'+f(r.end),
+      'SUMMARY:'+String(r.title+' with '+r.with).replace(/[,;\\]/g,' '),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'})); a.download='kova-booking.ics'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+  });
+  load(false);
+})();
+</script>
+</body>
+</html>

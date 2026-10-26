@@ -1,0 +1,58 @@
+/* KovaBrand (p13): platform marks, the "Posting to" chips, and the Studio
+   field tabs with a colour of their own. Dark, soft light and light glass. */
+.kb-logo{display:block;flex-shrink:0;border-radius:6px}
+
+/* round glass chip with a mark and a count badge */
+.kb-chip{position:relative;width:44px;height:44px;flex-shrink:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:.5px solid rgba(255,255,255,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 14px -8px rgba(0,0,0,.6);transition:transform .18s ease,box-shadow .18s ease}
+.kb-chip:active{transform:scale(.94)}
+.kb-chip.on{border-color:rgba(255,255,255,.55);box-shadow:0 0 0 2px rgba(255,255,255,.18),inset 0 1px 0 rgba(255,255,255,.2),0 6px 16px -8px rgba(0,0,0,.6)}
+.kb-badge{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font:600 10.5px/1 'Outfit',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#fff;background:#2A2B30;border:1px solid rgba(255,255,255,.22)}
+body.light-mode .kb-chip{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(255,255,255,.7));border-color:rgba(18,20,24,.12);box-shadow:inset 0 1px 0 #fff,0 6px 14px -8px rgba(20,24,32,.3)}
+body.light-mode .kb-chip.on{border-color:rgba(18,20,24,.45);box-shadow:0 0 0 2px rgba(18,20,24,.1),inset 0 1px 0 #fff,0 6px 16px -8px rgba(20,24,32,.3)}
+body.light-mode .kb-badge{background:#fff;color:#16181C;border-color:rgba(18,20,24,.18)}
+
+/* the row in the Studio editor */
+/* a glass tray, like a task tray: "Posting to" and the marks */
+.ks-brands{display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 44px);margin:0 22px 14px;padding:6px 8px 6px 16px;
+  border-radius:999px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:1;
+  background:linear-gradient(150deg,rgba(40,40,44,.92),rgba(26,26,29,.92));border:.5px solid rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
+.ks-brands::-webkit-scrollbar{display:none}
+.ks-brands .lb{flex-shrink:0;font-size:12.5px;letter-spacing:.01em;color:rgba(255,255,255,.6);margin-right:4px}
+.ks-brands .kb-chip{width:40px;height:40px}
+body.soft-light .ks-brands{background:linear-gradient(150deg,rgba(92,92,96,.92),rgba(70,70,74,.92));border-color:rgba(255,255,255,.18)}
+body.light-mode .ks-brands{background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(246,247,249,.92));border-color:rgba(18,20,24,.1);box-shadow:0 8px 20px -12px rgba(20,24,32,.3)}
+body.light-mode .ks-brands .lb{color:rgba(18,20,24,.6)}
+@media (max-width:999px){.ks-brands{margin:0 8px 10px;max-width:calc(100% - 16px)}}
+.ks-plats div{gap:7px}
+.ks-plats div .kb-logo{border-radius:4px}
+.ks-plats div i.bad{width:6px;height:6px;border-radius:50%;background:#E5484D;margin-left:2px}
+.ks-card .ph.g .kb-logo{margin:auto}
+.wpill .kb-logo{border-radius:4px;margin-right:1px}
+
+/* ---- Studio field tabs: the one you tap rises and curves. One colour per
+   appearance, never a rainbow: a white glow in dark, a light foggy blue in
+   soft light, a black glow in light glass. The text panel under it glows
+   the same way. ---- */
+#s-workstudio .ks-dt{transition:transform .28s cubic-bezier(.2,.9,.3,1),background .28s ease,box-shadow .28s ease,border-radius .28s ease}
+#s-workstudio .ks-dt.on{transform:translateY(-9px);border-radius:28px 28px 0 0;color:#fff;border-color:rgba(255,255,255,.28);
+  background:linear-gradient(128deg,#2E2E33 0%,#5C5C64 50%,#B9B9C1 100%);box-shadow:0 0 30px rgba(255,255,255,.22),0 -6px 20px rgba(0,0,0,.3)}
+#s-workstudio .ks-dt.on .a{color:#fff}
+#s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.82)}
+#s-workstudio .ks-dt.done .a::after{background:currentColor;box-shadow:none}
+/* the glow behind the words */
+#s-workstudio .ks-dock[data-f] .ks-front::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;transition:background .35s ease;
+  background:radial-gradient(70% 120% at 8% 100%,var(--fglow) 0%,transparent 62%),radial-gradient(50% 90% at 95% 0%,var(--fglow2) 0%,transparent 70%)}
+#s-workstudio .ks-dock[data-f]{--fglow:rgba(255,255,255,.16);--fglow2:rgba(255,255,255,.07)}
+/* soft light: a light, foggy blue */
+body.soft-light #s-workstudio .ks-dt.on{background:linear-gradient(128deg,#3D4D66 0%,#6F86AA 52%,#BCCBE2 100%);box-shadow:0 0 30px rgba(170,195,235,.32),0 -6px 20px rgba(0,0,0,.22);border-color:rgba(220,232,250,.35)}
+body.soft-light #s-workstudio .ks-dock[data-f]{--fglow:rgba(170,195,235,.30);--fglow2:rgba(170,195,235,.12)}
+/* light glass: a black glow, white words */
+body.light-mode #s-workstudio .ks-dt.on{color:#fff;border-color:rgba(18,20,24,.4);background:linear-gradient(128deg,#141518 0%,#2C2E33 55%,#50535A 100%);box-shadow:0 0 26px rgba(18,20,24,.28),0 -6px 18px rgba(18,20,24,.14)}
+body.light-mode #s-workstudio .ks-dt.on .a{color:#fff}
+body.light-mode #s-workstudio .ks-dt.on .b{color:rgba(255,255,255,.78)}
+body.light-mode #s-workstudio .ks-dock[data-f]{--fglow:rgba(18,20,24,.10);--fglow2:rgba(18,20,24,.05)}
+@media (prefers-reduced-motion:reduce){#s-workstudio .ks-dt{transition:none}}

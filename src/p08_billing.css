@@ -1,0 +1,12 @@
+/* KovaBilling: the checkout message and the manage / restore links on the plan screen */
+.kbi-msg{font-size:11.5px;line-height:1.5;text-align:center;margin-top:9px;color:var(--txt-2,rgba(255,255,255,.9));min-height:0}
+.kbi-msg:empty{display:none}
+.kbi-msg.bad{color:var(--bad,#E5484D)}
+.kbi-links{display:flex;justify-content:center;gap:6px 14px;flex-wrap:wrap;margin-top:12px}
+.kbi-l{background:none;border:0;padding:8px 4px;min-height:36px;font:500 11.5px 'Outfit',sans-serif;color:var(--txt-2,rgba(255,255,255,.9));text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+/* p19: the card on Workout / Work OS when that part is not in the plan */
+.kbl{display:flex;align-items:center;gap:12px;border:.5px solid var(--acc-brd,rgba(255,255,255,.2))}
+.kbl-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.kbl-t b{font-size:13px;font-weight:500}
+.kbl-t span{font-size:11.5px;font-weight:300;line-height:1.45;color:var(--ron-txt-2,rgba(255,255,255,.75))}
+.kbl .chip{flex-shrink:0;cursor:pointer}

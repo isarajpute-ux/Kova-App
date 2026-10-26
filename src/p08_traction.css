@@ -1,0 +1,73 @@
+/* ---- KovaTraction: comment pop-up, the Traction sheet, the business card ---- */
+.kt-pop{position:fixed;z-index:345;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);width:min(360px,calc(100vw - 32px));
+  padding:14px 14px 12px;border-radius:20px;color:#fff;font-family:'Urbanist','Outfit',-apple-system,sans-serif;
+  background:linear-gradient(160deg,rgba(30,30,33,.95),rgba(16,16,18,.96));-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 56px rgba(0,0,0,.55),0 0 26px rgba(255,255,255,.08);
+  opacity:0;transform:translateY(12px);transition:opacity .3s ease,transform .35s cubic-bezier(.3,.7,.2,1)}
+.kt-pop.on{opacity:1;transform:none}
+.kt-ph{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(255,255,255,.6);margin-bottom:8px}
+.kt-pf{padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:11px}
+.kt-x{margin-left:auto;width:26px;height:26px;border-radius:8px;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:17px;cursor:pointer;flex-shrink:0}
+.kt-q{font-size:15px;line-height:1.4;margin-bottom:6px}
+.kt-q b{font-weight:600;margin-right:4px}
+.kt-more{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px}
+.kt-b{display:flex;gap:8px;margin-top:8px}
+.kg-card.kt-card{width:min(640px,100%)}
+.kt-card .kg-btn.main{--kc:#F2F2F3}
+.kt-sel{width:100%;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#fff;padding:0 12px;margin-bottom:12px;font:500 14px 'Urbanist',sans-serif}
+.kt-sum{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px}
+.kt-trend{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.07);display:flex;flex-direction:column}
+.kt-trend b{font-size:15px}
+.kt-trend span{font-size:11.5px;color:rgba(255,255,255,.55)}
+.kt-trend.rising b{color:#7DE0A6}.kt-trend.falling b{color:#FF8A7E}.kt-trend.steady b{color:#F4E18E}
+.kt-tot{font-size:13.5px;color:rgba(255,255,255,.7)}
+.kt-tot b{font-size:20px;color:#fff;font-weight:600}
+.kt-sec{margin:14px 0}
+.kt-h{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 2px 8px}
+.kt-h em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:400;color:rgba(255,255,255,.35);margin-left:6px}
+.kt-svg{display:block;width:100%;height:130px}
+.kt-svg rect{fill:rgba(255,255,255,.28)}
+.kt-svg rect.hot{fill:#fff;filter:drop-shadow(0 0 3px rgba(255,255,255,.7))}
+.kt-xl{display:flex;justify-content:space-between;font-size:10.5px;color:rgba(255,255,255,.4);margin-top:3px}
+.kt-curve{height:110px;border-radius:12px;background:rgba(255,255,255,.03)}
+.kt-curve .fill{fill:rgba(255,255,255,.08)}
+.kt-curve .line{fill:none;stroke:#fff;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.kt-curve .mark{stroke:#FF8A7E;stroke-width:1.2;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.kt-note{font-size:13px;color:rgba(255,255,255,.72);margin-top:7px;line-height:1.4}
+.kt-note b{color:#FF8A7E}
+.kt-tabs,.kt-mode{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 10px}
+.kt-tab{height:34px;padding:0 13px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(255,255,255,.8);
+  font:500 13px 'Urbanist','Outfit',sans-serif;cursor:pointer}
+.kt-tab.on{background:#F2F2F3;color:#131314;border-color:#fff}
+.kt-ks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.kt-k{padding:10px 10px 8px;border-radius:13px;background:rgba(255,255,255,.05)}
+.kt-k b{display:block;font-size:18px;font-weight:600}
+.kt-k span{font-size:11.5px;color:rgba(255,255,255,.5)}
+.kt-aud{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kt-hb{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-bottom:6px}
+.kt-hb span{width:64px;flex-shrink:0;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kt-hb i{flex:1;height:8px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}
+.kt-hb i b{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,rgba(255,255,255,.55),#fff)}
+.kt-hb em{font-style:normal;width:36px;text-align:right;color:rgba(255,255,255,.6)}
+.kt-c{font-size:13.5px;line-height:1.4;padding:8px 10px;border-radius:11px;background:rgba(255,255,255,.04);margin-bottom:5px}
+.kt-c b{font-weight:600;margin-right:4px}
+.kt-c span{float:right;font-size:11.5px;color:rgba(255,255,255,.4)}
+.kt-adv{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
+.kt-go{width:100%;height:46px;margin-top:10px;font-size:14.5px}
+.kt-verdict{padding:12px 13px;border-radius:15px;background:rgba(255,255,255,.07);font-size:14px;line-height:1.45;margin-bottom:10px}
+.kt-verdict b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.kt-verdict.new-angle b{color:#FF8A7E}.kt-verdict.tweak b{color:#F4E18E}.kt-verdict.keep b{color:#7DE0A6}
+.kt-al{margin:10px 0}
+.kt-at{font-size:12px;font-weight:600;color:rgba(255,255,255,.55);margin:0 2px 5px}
+.kt-ai{font-size:13.5px;line-height:1.45;padding:8px 11px;border-radius:11px;background:rgba(255,255,255,.04);margin-bottom:5px;border-left:2px solid rgba(255,255,255,.25)}
+.kt-al.fix .kt-ai{border-left-color:#FF8A7E}.kt-al.keep .kt-ai{border-left-color:#7DE0A6}.kt-al.try .kt-ai{border-left-color:#8FBEEA}
+.kt-th{margin-bottom:8px}
+.kt-th q{display:block;font-size:12.5px;color:rgba(255,255,255,.55);margin:-2px 0 0 72px;font-style:italic}
+.kt-th.negative .kt-hb i b{background:linear-gradient(90deg,rgba(255,138,126,.5),#FF8A7E)}
+.kt-th.positive .kt-hb i b{background:linear-gradient(90deg,rgba(125,224,166,.5),#7DE0A6)}
+.kt-hand{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.04);margin-bottom:6px}
+.kt-hand div{flex:1;min-width:0}
+.kt-hand b{display:block;font-size:14px}
+.kt-hand span{display:block;font-size:12px;color:rgba(255,255,255,.5)}
+.kt-in{margin-bottom:10px}
+@media (max-width:520px){ .kt-ks{grid-template-columns:repeat(2,1fr)} .kt-aud{grid-template-columns:1fr} }

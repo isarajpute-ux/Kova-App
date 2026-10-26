@@ -1,0 +1,126 @@
+/* KovaCam (p15): the viewfinder from the reference (image 1), in white and
+   black glow. The picture fills the screen; glass pills sit over it.
+   Dark and soft light: black glass, white glow. Light glass: white glass,
+   black ink and a soft dark glow. */
+.kvc{--kv-glass:rgba(10,10,12,.42);--kv-line:rgba(255,255,255,.22);--kv-ink:#fff;--kv-mute:rgba(255,255,255,.7);
+  --kv-glow:0 0 18px rgba(255,255,255,.28);--kv-on:#fff;--kv-on-ink:#0B0B0C;--kv-tick:rgba(255,255,255,.55);
+  position:fixed;inset:0;z-index:10000;background:#000;color:var(--kv-ink);font-family:'Outfit','Urbanist',system-ui,sans-serif;overflow:hidden;
+  opacity:0;transition:opacity .22s ease}
+.kvc.in{opacity:1}
+body.soft-light .kvc{--kv-glass:rgba(40,40,44,.45);--kv-line:rgba(255,255,255,.28)}
+body.light-mode .kvc{--kv-glass:rgba(255,255,255,.62);--kv-line:rgba(18,20,24,.14);--kv-ink:#0B0B0C;--kv-mute:rgba(11,11,12,.66);
+  --kv-glow:0 0 20px rgba(0,0,0,.28);--kv-on:#0B0B0C;--kv-on-ink:#fff;--kv-tick:rgba(11,11,12,.45)}
+.kvc button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+.kvc-i{width:20px;height:20px;display:block}
+
+/* the picture, edge to edge, darker at the top and the bottom for the text */
+.kvc-stage{position:absolute;inset:0;touch-action:none;cursor:crosshair}
+.kvc-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%;transition:transform .25s ease}
+.kvc-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.6) 0,rgba(0,0,0,.08) 26%,rgba(0,0,0,0) 55%,rgba(0,0,0,.62) 100%)}
+body.light-mode .kvc-shade{background:linear-gradient(180deg,rgba(255,255,255,.55) 0,rgba(255,255,255,.06) 26%,rgba(255,255,255,0) 55%,rgba(255,255,255,.6) 100%)}
+.kvc-none{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);max-width:280px;text-align:center;font-size:14px;line-height:1.45;color:var(--kv-mute)}
+
+/* the frame: four thin glowing corners, and a soft dim outside it */
+.kvc-frame{position:absolute;border-radius:22px;box-shadow:0 0 0 100vmax rgba(0,0,0,.22);transition:left .2s,top .2s,width .2s,height .2s;pointer-events:none}
+body.light-mode .kvc-frame{box-shadow:0 0 0 100vmax rgba(255,255,255,.18)}
+.kvc-frame .c{position:absolute;width:38px;height:38px;border:1.6px solid var(--kv-ink);filter:drop-shadow(0 0 5px rgba(255,255,255,.8));pointer-events:auto;cursor:nwse-resize;touch-action:none;
+  animation:kvcGlow 3.2s ease-in-out infinite}
+body.light-mode .kvc-frame .c{filter:drop-shadow(0 0 5px rgba(0,0,0,.45))}
+.kvc-frame .c::after{content:"";position:absolute;inset:-14px}
+.kvc-frame .tl{left:0;top:0;border-right:0;border-bottom:0;border-top-left-radius:20px}
+.kvc-frame .tr{right:0;top:0;border-left:0;border-bottom:0;border-top-right-radius:20px;cursor:nesw-resize}
+.kvc-frame .bl{left:0;bottom:0;border-right:0;border-top:0;border-bottom-left-radius:20px;cursor:nesw-resize}
+.kvc-frame .br{right:0;bottom:0;border-left:0;border-top:0;border-bottom-right-radius:20px}
+@keyframes kvcGlow{50%{opacity:.55}}
+.kvc-grid{position:absolute;pointer-events:none;opacity:0;transition:opacity .2s;
+  background:linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(255,255,255,.35) 0,rgba(255,255,255,.35) calc(33.33% + .5px),transparent 0,transparent calc(66.66% - .5px),rgba(255,255,255,.35) 0,rgba(255,255,255,.35) calc(66.66% + .5px),transparent 0),
+    linear-gradient(180deg,transparent calc(33.33% - .5px),rgba(255,255,255,.35) 0,rgba(255,255,255,.35) calc(33.33% + .5px),transparent 0,transparent calc(66.66% - .5px),rgba(255,255,255,.35) 0,rgba(255,255,255,.35) calc(66.66% + .5px),transparent 0)}
+.kvc-grid.on{opacity:1}
+
+/* the + pill: where the camera focuses */
+.kvc-aim{position:absolute;width:62px;height:34px;margin:-17px 0 0 -31px;border-radius:999px;pointer-events:none;
+  border:1.5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.08);box-shadow:0 0 16px rgba(255,255,255,.45),inset 0 0 10px rgba(255,255,255,.2);
+  transition:left .25s cubic-bezier(.2,.9,.3,1),top .25s cubic-bezier(.2,.9,.3,1)}
+.kvc-aim::before,.kvc-aim::after{content:"";position:absolute;left:50%;top:50%;background:#fff;box-shadow:0 0 6px #fff}
+.kvc-aim::before{width:16px;height:1.6px;margin:-.8px 0 0 -8px}
+.kvc-aim::after{width:1.6px;height:16px;margin:-8px 0 0 -.8px}
+.kvc-aim span{position:absolute;left:50%;top:-14px;bottom:-14px;width:1px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.7),transparent)}
+.kvc-aim.hit{animation:kvcHit .7s ease-out}
+@keyframes kvcHit{0%{transform:scale(1.5);opacity:0}35%{transform:scale(.92);opacity:1}100%{transform:scale(1)}}
+body.light-mode .kvc-aim{border-color:rgba(11,11,12,.85);background:rgba(255,255,255,.3);box-shadow:0 0 16px rgba(0,0,0,.3)}
+body.light-mode .kvc-aim::before,body.light-mode .kvc-aim::after{background:#0B0B0C;box-shadow:none}
+
+/* the glass pills */
+.kvc-pill,.kvc-round,.kvc-zoom,.kvc-ruler,.kvc-menu{background:var(--kv-glass);border:.5px solid var(--kv-line);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 30px -12px rgba(0,0,0,.6)}
+.kvc-top{position:absolute;left:0;right:0;top:0;padding:calc(12px + env(safe-area-inset-top,0px)) 18px 0;display:flex;align-items:center;justify-content:space-between;z-index:3}
+.kvc-pill{width:62px;height:44px;border-radius:999px;display:grid;place-items:center;cursor:pointer;color:var(--kv-ink)}
+.kvc-pill:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.14),var(--kv-glow)}
+.kvc-area{font-size:17px;font-weight:500;letter-spacing:-.01em;text-shadow:0 0 14px rgba(255,255,255,.35)}
+body.light-mode .kvc-area{text-shadow:none}
+.kvc-menu{position:absolute;right:18px;top:calc(64px + env(safe-area-inset-top,0px));z-index:4;border-radius:20px;padding:6px;display:flex;flex-direction:column;min-width:190px}
+.kvc-menu[hidden]{display:none}
+.kvc-menu button{display:flex;align-items:center;gap:10px;height:44px;padding:0 12px;border:0;border-radius:14px;background:none;cursor:pointer;text-align:left;font-size:14px}
+.kvc-menu button:hover,.kvc-menu button:focus-visible{background:rgba(255,255,255,.1);outline:none}
+.kvc-menu button[aria-pressed="true"]{background:var(--kv-on);color:var(--kv-on-ink)}
+.kvc-menu button:disabled{opacity:.4;cursor:default}
+.kvc-head{position:absolute;left:24px;right:96px;top:calc(76px + env(safe-area-inset-top,0px));z-index:2;pointer-events:none}
+.kvc-head h2{margin:0;font:500 clamp(30px,8.6vw,44px)/1.05 'Outfit',sans-serif;letter-spacing:-.025em;text-shadow:0 0 24px rgba(255,255,255,.35)}
+.kvc-head p{margin:8px 0 0;font-size:15px;line-height:1.35;color:var(--kv-mute)}
+.kvc-head p b{font-weight:600;color:var(--kv-ink)}
+body.light-mode .kvc-head h2{text-shadow:0 0 24px rgba(255,255,255,.8)}
+
+/* zoom: a tall capsule on the right, the chosen level a white pill */
+.kvc-zoom{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:3;width:66px;padding:8px 6px;border-radius:999px;display:flex;flex-direction:column;gap:8px}
+.kvc-zoom button{height:44px;border:0;border-radius:999px;background:none;cursor:pointer;font-size:15px;color:var(--kv-mute);transition:background .2s,color .2s,box-shadow .2s;font-variant-numeric:tabular-nums}
+.kvc-zoom button.on{background:var(--kv-on);color:var(--kv-on-ink);box-shadow:0 0 22px rgba(255,255,255,.55)}
+body.light-mode .kvc-zoom button.on{box-shadow:0 0 22px rgba(0,0,0,.35)}
+.kvc-zoom button:disabled{opacity:.3;cursor:default}
+
+/* the low part: shots, the ruler, the shutter */
+.kvc-low{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:0 16px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:12px}
+.kvc-strip{display:flex;align-items:center;gap:8px;max-width:100%;overflow-x:auto;scrollbar-width:none;padding:4px}
+.kvc-strip::-webkit-scrollbar{display:none}
+.kvc-strip.none{display:none}
+.kvc-strip button{flex-shrink:0;width:74px;height:52px;padding:0;border:.5px solid var(--kv-line);border-radius:999px;overflow:hidden;cursor:pointer;background:var(--kv-glass)}
+.kvc-strip button img{width:100%;height:100%;object-fit:cover;display:block}
+.kvc-strip button.on{width:116px;height:72px;border:2px solid rgba(255,255,255,.75);box-shadow:0 0 0 3px rgba(0,0,0,.35),0 0 20px rgba(255,255,255,.35)}
+body.light-mode .kvc-strip button.on{border-color:rgba(11,11,12,.75);box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 20px rgba(0,0,0,.25)}
+.kvc-ruler{width:min(100%,460px);height:66px;border-radius:999px;display:flex;align-items:stretch;padding:5px}
+.kvc-asp{flex:0 0 34%;border:0;border-radius:999px;background:none;cursor:pointer;font-size:17px;color:var(--kv-mute);font-variant-numeric:tabular-nums}
+.kvc-asp:hover{color:var(--kv-ink)}
+.kvc-size{position:relative;flex:1;border-radius:999px;border:.5px solid var(--kv-line);background:rgba(255,255,255,.06);cursor:ew-resize;touch-action:none;outline:none;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.kvc-size:focus-visible{box-shadow:0 0 0 2px var(--kv-ink)}
+.kvc-size b{position:absolute;left:0;right:0;top:9px;text-align:center;font-size:16px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--kv-ink);text-shadow:0 0 12px rgba(255,255,255,.6)}
+body.light-mode .kvc-size b{text-shadow:none}
+.kvc-size .t{position:absolute;left:14px;right:14px;bottom:10px;height:10px;
+  background:radial-gradient(circle,var(--kv-tick) 1.2px,transparent 1.6px) 0 100%/14px 4px repeat-x,linear-gradient(var(--kv-tick),var(--kv-tick)) 0 100%/1px 9px no-repeat,linear-gradient(var(--kv-tick),var(--kv-tick)) 100% 100%/1px 9px no-repeat}
+.kvc-size .mk{position:absolute;bottom:6px;width:2px;height:20px;margin-left:-1px;border-radius:2px;background:var(--kv-ink);box-shadow:0 0 10px rgba(255,255,255,.9);transition:left .15s}
+body.light-mode .kvc-size .mk{box-shadow:0 0 8px rgba(0,0,0,.4)}
+.kvc-foot{width:min(100%,460px);display:flex;align-items:center;justify-content:space-between;padding:2px 10px 0}
+.kvc-round{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--kv-ink)}
+.kvc-round input{display:none}
+.kvc-shot{width:78px;height:78px;border-radius:50%;border:2.5px solid var(--kv-ink);background:none;padding:5px;cursor:pointer;box-shadow:0 0 26px rgba(255,255,255,.45)}
+.kvc-shot span{display:block;width:100%;height:100%;border-radius:50%;background:var(--kv-ink);transition:transform .12s;box-shadow:0 0 18px rgba(255,255,255,.6)}
+.kvc-shot:active span,.kvc-shot.busy span{transform:scale(.86)}
+.kvc-shot.busy{opacity:.75}
+body.light-mode .kvc-shot{box-shadow:0 0 26px rgba(0,0,0,.25)}
+body.light-mode .kvc-shot span{box-shadow:0 0 18px rgba(0,0,0,.3)}
+.kvc button:focus-visible,.kvc-round:focus-within{outline:2px solid var(--kv-ink);outline-offset:2px}
+.kvc-flash{position:absolute;inset:0;background:#fff;opacity:0;animation:kvcFlash .32s ease-out;pointer-events:none;z-index:5}
+@keyframes kvcFlash{0%{opacity:.6}100%{opacity:0}}
+
+/* short phones: the heading smaller so the frame keeps its room */
+@media (max-height:700px){
+  .kvc-head h2{font-size:28px}.kvc-head p{font-size:13px}
+  .kvc-zoom button{height:38px}
+  .kvc-ruler{height:58px}.kvc-shot{width:68px;height:68px}
+  .kvc-strip button{width:60px;height:42px}.kvc-strip button.on{width:92px;height:58px}
+}
+/* laptops: the controls keep a phone's proportions in the middle */
+@media (min-width:1024px){
+  .kvc-head{left:max(24px,calc(50% - 300px))}
+  .kvc-zoom{right:max(16px,calc(50% - 360px))}
+}
+@media (prefers-reduced-motion:reduce){.kvc-frame .c,.kvc-aim.hit{animation:none}.kvc,.kvc-frame,.kvc-aim{transition:none}}

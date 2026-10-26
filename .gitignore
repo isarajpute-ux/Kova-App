@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+.env
+.env.*
+.firebase/
+firebase-debug.log
+*.log
+tests/node_modules/
+*.bak
+dist/
+.claude/
+.look/
+native/sounds/
+
+# a copy of dist/ the preview pane serves
+preview/

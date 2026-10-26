@@ -1,0 +1,61 @@
+/* ---- KovaFolders: a small row of glass folders in the Studio sidebar ---- */
+.ks-accsum{font-size:11.5px;color:var(--ks-t3,rgba(255,255,255,.4));margin:-2px 4px 6px}
+.kfm{position:relative;outline:none;margin:0 0 10px;font-family:'Urbanist','Outfit',-apple-system,sans-serif;color:#fff}
+.kfm:focus-visible{box-shadow:0 0 0 1px rgba(255,255,255,.35);border-radius:16px}
+.kfm-stage{position:relative;height:128px;perspective:700px;perspective-origin:50% 35%;overflow:hidden;border-radius:16px;
+  background:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.1px) 0 0/14px 14px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.kfm-row{position:absolute;left:0;right:0;bottom:10px;height:96px;transform-style:preserve-3d}
+.kfm-f{position:absolute;left:50%;bottom:0;width:64px;height:82px;padding:0;border:0;background:none;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,.7,.2,1),opacity .3s}
+.kfm-back{position:absolute;inset:8px 0 0 0;border-radius:9px;background:linear-gradient(160deg,rgba(255,255,255,.5),rgba(210,210,216,.3));
+  border:1px solid rgba(255,255,255,.6);box-shadow:0 10px 20px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.kfm-tab{position:absolute;left:0;top:0;height:16px;min-width:28px;padding:0 5px;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:3px;
+  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(232,232,236,.55));border:1px solid rgba(255,255,255,.7);border-bottom:0}
+.kfm-tab .ki{width:10px;height:10px;fill:none;stroke:#1b1b1d;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kfm-tab b{font-size:8.5px;font-weight:700;color:#1b1b1d}
+.kfm-paper{position:absolute;left:7px;right:7px;top:14px;height:34px;border-radius:5px;background:linear-gradient(180deg,#fff,#EFEFF2);
+  display:flex;flex-direction:column;gap:3px;padding:6px 5px;transform:rotate(-2deg)}
+.kfm-paper i{display:block;height:3px;border-radius:2px;background:#D6D6DB;width:78%}
+.kfm-paper i:nth-child(2){width:55%}
+.kfm-front{position:absolute;left:0;right:0;bottom:0;height:58%;border-radius:9px;padding:0 6px 6px;display:flex;align-items:flex-end;gap:4px;
+  background:linear-gradient(170deg,rgba(255,255,255,.62),rgba(218,218,224,.46));border:1px solid rgba(255,255,255,.75);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.kfm-name{font-size:9.5px;font-weight:700;color:#1b1b1d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kfm-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:rgba(0,0,0,.2);margin-bottom:3px}
+.kfm-dot.on{background:#fff;box-shadow:0 0 5px rgba(255,255,255,.9),0 0 0 1px rgba(0,0,0,.25)}
+/* ticked for this post: dark charcoal that glows */
+.kfm-f.lit .kfm-back,.kfm-f.lit .kfm-front,.kfm-f.lit .kfm-tab{background:linear-gradient(160deg,#3A3A40,#1C1C20 55%,#101012);border-color:rgba(255,255,255,.42)}
+.kfm-f.lit .kfm-front{box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 14px rgba(255,255,255,.22),0 0 30px rgba(255,255,255,.08)}
+.kfm-f.lit .kfm-back{box-shadow:0 10px 22px rgba(0,0,0,.5),0 0 16px rgba(255,255,255,.18)}
+.kfm-f.lit .kfm-name,.kfm-f.lit .kfm-tab b{color:#fff}
+.kfm-f.lit .kfm-tab .ki{stroke:#fff}
+.kfm-f.lit .kfm-paper{background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.12))}
+.kfm-f.lit .kfm-paper i{background:rgba(255,255,255,.4)}
+.kfm-f.focus .kfm-front{outline:1px solid rgba(255,255,255,.85);outline-offset:1px}
+.kfm-f:focus-visible{outline:none}
+.kfm-f:focus-visible .kfm-front{outline:2px solid #fff}
+.kfm-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 8px}
+.kfm-nav button{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font-size:16px;line-height:1;cursor:pointer;padding:0}
+.kfm-n{font-size:11px;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums;min-width:40px;text-align:center}
+/* the small glass card */
+.kfm-card{position:relative;padding:11px 12px 10px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%,rgba(255,255,255,.08));
+  border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.kfm-ch{display:flex;align-items:center;gap:7px}
+.kfm-ci .ki{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kfm-ch b{flex:1;font-size:14.5px;font-weight:600}
+.kfm-big{font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+.kfm-big small{font-size:10px;color:rgba(255,255,255,.5);font-weight:400}
+.kfm-glow{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+.kfm-glow.on{background:#fff;box-shadow:0 0 8px #fff,0 0 16px rgba(255,255,255,.5)}
+.kfm-cs{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:3px}
+.kfm-meta{font-size:10.5px;color:rgba(255,255,255,.42);margin-top:2px}
+.kfm-places{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.kfm-places span{font-size:10px;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.kfm-places span.on{background:#fff;color:#111;font-weight:600}
+.kfm-warn{margin-top:6px;font-size:10.5px;color:#FFD2CD}
+.kfm-acts{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.kfm-b{height:26px;padding:0 9px;border-radius:9px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;
+  font:500 11px 'Urbanist','Outfit',sans-serif;cursor:pointer}
+.kfm-b.on{background:#fff;color:#111;border-color:#fff;font-weight:600}
+@media (prefers-reduced-motion:reduce){ .kfm-f{transition:none} }

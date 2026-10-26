@@ -1,0 +1,28 @@
+/* Settings as grouped lists (p13). A section's rows share one panel (the
+   card surface, so it follows all three appearances) with a hairline
+   between rows. Headings are small and tinted, like a system settings
+   screen. Nothing inside a row changes. */
+#s-settings .sec-h{font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--acc);margin:18px 16px 7px}
+#s-settings .setg{padding:0!important;margin:0 0 4px!important;border-radius:22px;overflow:hidden}
+#s-settings .setg>*{margin:0!important}
+/* rows: no card of their own, full width, a line between them */
+#s-settings .setg>.list-item,#s-settings .setg>.exp-btn,#s-settings .setg #prefList>.list-item{
+  background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;min-height:52px;padding:10px 16px!important}
+#s-settings .setg>*+*:not(input):not(.exp-body:not(.open)),#s-settings .setg #prefList>.list-item+.list-item{
+  border-top:.5px solid var(--hair,rgba(255,255,255,.12))!important}
+#s-settings .setg>.list-item:active,#s-settings .setg>.exp-btn:active,#s-settings .setg #prefList>.list-item:active{background:var(--glass-2,rgba(255,255,255,.05))!important}
+#s-settings .setg .li-name{font-size:13.5px;font-weight:500}
+#s-settings .setg .li-sub{font-size:11.5px;line-height:1.4;margin-top:2px}
+#s-settings .setg .li-ico{width:32px;height:32px;border-radius:10px}
+/* an opened list sits inside its panel, a step in */
+#s-settings .setg>.exp-body.open{padding:4px 12px 14px}
+/* a notice or a card inside a section becomes part of the panel */
+#s-settings .setg>.card{background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:14px 16px!important}
+#s-settings .setg>.btn{width:auto;margin:12px 16px!important}
+#s-settings .setg>.sub{padding:12px 16px 0}
+#s-settings .setg>.sub+*{border-top:0!important}
+/* the hairline, per appearance */
+.app{--hair:rgba(255,255,255,.1)}
+body.soft-light .app{--hair:rgba(255,255,255,.16)}
+body.light-mode .app{--hair:rgba(28,26,23,.1)}

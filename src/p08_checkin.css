@@ -1,0 +1,25 @@
+/* p30: the nutrition coach's check-in on Fuel */
+.kci{padding:14px 15px}
+.kci-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.kci-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;
+  background:var(--acc-dim,rgba(255,255,255,.1));color:var(--acc,#fff);flex-shrink:0}
+.kci-t{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF)}
+.kci-sub{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.7));margin-top:1px}
+.kci-say{font-size:13px;line-height:1.5;color:var(--txt,#FFFFFF);padding:10px 12px;border-radius:12px;background:var(--acc-dim,rgba(255,255,255,.06));margin-bottom:12px;white-space:pre-line}
+.kci-say.none{color:var(--txt-2,rgba(255,255,255,.8))}
+.kci-when{color:var(--txt-2,rgba(255,255,255,.6));font-size:11.5px}
+.kci-wk{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-2,rgba(255,255,255,.65));margin:2px 0 8px}
+.kci-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kci-c{padding:9px 10px;border-radius:12px;border:.5px solid var(--ron-line,rgba(255,255,255,.12));min-width:0}
+.kci-k{font-size:11px;color:var(--txt-2,rgba(255,255,255,.7))}
+.kci-v{font-size:17px;font-weight:600;color:var(--txt,#FFFFFF);margin-top:2px;overflow-wrap:anywhere}
+.kci-v.none{opacity:.5}
+.kci-s{font-size:10.5px;line-height:1.35;color:var(--txt-2,rgba(255,255,255,.6));margin-top:2px}
+.kci-row{display:flex;align-items:center;gap:10px}
+.kci-go{flex:1;margin:0}
+.kci-tog{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:6px 2px;color:var(--txt,#FFFFFF);font:inherit;font-size:12.5px;cursor:pointer}
+.kci-tog span{width:34px;height:20px;border-radius:999px;background:rgba(127,127,127,.35);position:relative;transition:background .2s}
+.kci-tog span::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.kci-tog.on span{background:var(--acc,#4ade80)}
+.kci-tog.on span::after{transform:translateX(14px)}
+.kci-msg{display:block;margin:10px auto 0;background:none;border:0;color:var(--acc,#fff);font:inherit;font-size:12.5px;cursor:pointer}

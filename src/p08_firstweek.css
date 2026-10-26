@@ -1,0 +1,11 @@
+/* KovaFirstWeek: the one-a-day prompt on Today, and the plan offer after
+   the first win. Tokens only, so every appearance styles it. */
+.kfw{padding:2px 4px 20px;color:var(--txt)}
+.kfw-card{margin-bottom:12px;padding:14px 15px}
+.kfw-q{font:500 15px/1.35 'Outfit',sans-serif;color:var(--txt);margin-bottom:4px}
+.kfw-opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.kfw-o{min-height:40px;padding:8px 13px;border-radius:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.2));background:var(--glass,rgba(255,255,255,.07));color:var(--txt);font:500 12.5px 'Outfit',sans-serif;cursor:pointer}
+.kfw-o:hover,.kfw-o:focus-visible{border-color:var(--acc-brd,rgba(255,255,255,.45))}
+.kfw-rate .kfw-o{flex:1;min-width:44px;font-size:15px}
+.kfw-foot{display:flex;gap:14px;margin-top:8px}
+.kfw-l{background:none;border:0;padding:6px 0;min-height:32px;font:500 11.5px 'Outfit',sans-serif;color:var(--txt-3,rgba(255,255,255,.7));cursor:pointer}

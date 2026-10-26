@@ -1,0 +1,40 @@
+name: Kova timer (every 5 minutes)
+
+# Vercel's free plan runs its own timer once a day, so this calls the
+# server's timer (/api/cron) every 5 minutes instead: scheduled posts,
+# reminders, wellness audits and AI-team routines. Free for public repos.
+#
+# It does nothing until both are set in GitHub, Settings > Secrets and
+# variables > Actions:
+#   variable  KOVA_SITE_URL  your Vercel address, e.g. https://kova-app.vercel.app
+#   secret    CRON_SECRET    the same long random value as CRON_SECRET on Vercel
+#
+# GitHub may start a scheduled run a few minutes late when it is busy, and
+# pauses schedules in a repository with no activity for 60 days.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: kova-timer
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    name: Run the server's timer
+    runs-on: ubuntu-24.04   # pinned: ubuntu-latest moves to 26 on 2026-10-19 (p27)
+    timeout-minutes: 6
+    if: vars.KOVA_SITE_URL != ''
+    env:
+      SITE: ${{ vars.KOVA_SITE_URL }}
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Call /api/cron
+        run: |
+          if [ -z "$CRON_SECRET" ]; then echo "::warning::Add the CRON_SECRET secret (the same value as on Vercel) so the timer can run."; exit 0; fi
+          curl --fail-with-body --silent --show-error --max-time 300 \
+            -H "Authorization: Bearer $CRON_SECRET" "${SITE%/}/api/cron"

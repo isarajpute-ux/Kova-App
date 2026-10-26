@@ -1,0 +1,46 @@
+/* ---- KovaPlayer (p35): follow along. The Zone 2 page's ground and
+   glass (.kz2p), Kova's cards, round glass buttons and the orange bar. ---- */
+.kpl .kz2p-in{max-width:760px}
+.kpl-prog{height:4px;border-radius:2px;background:rgba(var(--ink),.1);overflow:hidden;margin:2px 0 8px}
+.kpl-prog i{display:block;height:100%;background:var(--acc);box-shadow:0 0 8px var(--acc-glow);transition:width .4s}
+.kpl-where{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ron-txt-2);margin-bottom:12px}
+.kpl-grid{display:grid;gap:12px}
+.kpl-grid>.card{margin-bottom:0;min-width:0}
+@media (min-width:760px){ .kpl-grid{grid-template-columns:1.2fr 1fr} .kpl-stage{grid-row:1 / 3} }
+.kpl-stage{position:relative;padding:8px;overflow:hidden;min-height:280px;display:flex;align-items:center;justify-content:center}
+.kpl-stage::after{content:'';position:absolute;left:10%;right:10%;bottom:-30%;height:60%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
+.kpl-fig{width:100%;height:300px}
+.kpl-tag{position:absolute;top:12px;left:12px}
+/* p41: what a warm-up set is, in plain words */
+.kpl-wu{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);padding:5px 12px;border-radius:100px;font-size:11.5px;font-weight:300;line-height:1.4;color:var(--ron-txt-2);text-align:center;
+  background:rgba(10,10,12,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+body.light-mode .kpl-wu{background:rgba(255,255,255,.72)}
+.kpl-end{flex-direction:column;gap:10px;text-align:center;padding:30px 20px;min-height:200px}
+.kpl-end span{font-size:13px;font-weight:300;color:var(--ron-txt-2);max-width:340px}
+.kpl-tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpl-st>span{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-2);margin-bottom:6px}
+.kpl-sv{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.kpl-sv .iconbtn{width:40px;height:40px;font-size:20px;font-weight:300;color:var(--ron-txt);flex-shrink:0}
+.kpl-sv .kz2p-num{font-size:46px;text-align:center;flex:1;min-width:0}
+.kpl-sv .kz2p-num i{font-size:13px;margin-left:3px}
+.kpl-acts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.kpl-hint{font-size:11px;font-weight:300;color:var(--ron-txt-3)}
+.kpl-rest{display:flex;flex-direction:column;align-items:center}
+.kpl-rw{position:relative;width:200px;height:200px}
+.kpl-ring{width:100%;height:100%}
+.kpl-ring circle{fill:none;stroke-width:8}
+.kpl-ring .t{stroke:rgba(var(--ink),.1)}
+.kpl-ring .v{stroke:var(--acc);stroke-linecap:round;filter:drop-shadow(0 0 8px var(--acc-glow));transition:stroke-dasharray .25s linear}
+.kpl-rn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kpl-rn b{font-weight:200;font-size:54px;letter-spacing:-.04em;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.kpl-rn span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-2)}
+.kpl-next{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:10px;border-radius:18px;border:.5px solid var(--ron-line);background:rgba(var(--ink),.04)}
+.kpl-next span{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ron-txt-2)}
+.kpl-next b{display:block;font-size:14px;font-weight:400;color:var(--ron-txt);margin-top:2px}
+.kpl-th{width:52px;height:52px;border-radius:14px;flex-shrink:0;background:radial-gradient(120% 100% at 50% 20%,rgba(var(--ink),.10),rgba(var(--ink),.02))}
+.kpl-up .kz2p-k{display:block;margin-bottom:8px}
+.kpl-ur{display:flex;align-items:center;gap:12px;padding:6px 0;border-top:.5px solid var(--ron-line)}
+.kpl-ur:first-of-type{border-top:0}
+.kpl-ur b{display:block;font-size:13.5px;font-weight:400;color:var(--ron-txt)}.kpl-ur span{font-size:11px;font-weight:300;color:var(--ron-txt-2)}
+.kpl .hdr-r .iconbtn.on{border-color:var(--acc-brd);color:var(--acc-ink)}
+.kpl-chip .ic{font-size:12px;vertical-align:-1px}

@@ -1,0 +1,4 @@
+/* KovaFresh (p37): "Kova was updated" */
+.kfr{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:9600;display:flex;align-items:center;gap:10px;padding:10px 10px 10px 16px!important;border-radius:22px;font-size:12.5px;max-width:calc(100% - 32px)}
+.kfr .chip{cursor:pointer;font:inherit;font-size:12px}
+.kfr-x{border:0;background:none;color:inherit;font-size:18px;line-height:1;padding:4px 6px;cursor:pointer;opacity:.7}

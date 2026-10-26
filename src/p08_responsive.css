@@ -1,0 +1,93 @@
+/* Every screen size (p13). The app used to be one 420px phone column on
+   every device, even a 27" monitor, under a pretend "9:41 · 5G" status
+   bar. Now:
+     phones (under 700px)   as before, minus the pretend status bar;
+     tablets (700px+)       a 680px page, tiles four to a row, wider sheets;
+     laptops (1024px+)      a 720px page and a sidebar with names;
+     big screens (1440px+)  a 760px page.
+   The charts are drawn for a phone; on wider screens they stay close to
+   a phone's size (see "charts on tablets and laptops" below).
+   The Work OS dashboard (.crd-wide) and the Studio canvas (.ks-wide) keep
+   their own wide layouts. The real safe area keeps the notch and the home
+   bar clear on phones. */
+.status{display:none}
+.wrap{padding-top:max(16px,env(safe-area-inset-top))}
+
+@media (min-width:700px){
+  .wrap{max-width:680px;padding-left:24px;padding-right:24px}
+  .grid2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .sheet-in{max-width:560px}
+}
+@media (min-width:1024px){
+  .wrap{max-width:720px;padding-left:32px;padding-right:32px}
+  /* the rail becomes a sidebar: icon and name */
+  .rail{width:212px;align-items:stretch;padding-left:14px;padding-right:14px}
+  .rail .rnav{width:auto;height:42px;border-radius:12px;justify-content:flex-start;gap:12px;padding:0 12px;font-size:18px}
+  .rail .rnav::after{content:attr(title);font:500 14px 'Outfit','Inter',system-ui,-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rail .rnav .ic{flex-shrink:0}
+  .rail .avatar{align-self:flex-start;margin:0 0 6px 8px}
+}
+@media (min-width:1440px){
+  .wrap{max-width:760px}
+}
+/* charts on tablets and laptops (p15: smaller). A chart is drawn for a
+   phone; on a wider page it keeps its shape, sits in the middle of its
+   card and stops at a phone-like size instead of filling the page:
+     line and bar charts  200px tall
+     dials and rings      180px
+     the body map         300px (front and back together)
+   and any other drawing in a card at most 220px, so a new chart starts
+   small too. Phones are unchanged. Work OS and the Studio keep their own
+   wide layouts. */
+@media (min-width:700px){
+  .screen:not([id^="s-work"]) .card svg[viewBox]:not(.ic){max-height:220px;margin-left:auto;margin-right:auto}
+  :is(#wkchart,#fxTrend,#prChart,#ecChart,#btChart,#actChart,#studyChart,#hrvChart,#stressChart,#slpChart,#ssGraph,#nrgCurve),
+  :is(#s-progress,#s-recovery,#s-watch) .card>svg[viewBox]{max-height:200px;margin-left:auto;margin-right:auto}
+  :is(#hsOrbit,#hsDial,#recDial,#stressDial,#wheelSvg){max-height:180px;margin-left:auto;margin-right:auto}
+  #s-prs .prgrid svg[viewBox],#s-prs :is(#conBest,#conWorst) svg[viewBox]{max-height:170px}
+  #bodySvg{max-height:300px;margin-left:auto;margin-right:auto}
+  #sigBars,#sigAxis{max-width:440px;margin-left:auto;margin-right:auto}
+  #sigBars{max-height:200px}
+  #recGrid{grid-template-columns:repeat(3,1fr)!important}
+}
+/* the smallest phones (iPhone SE, 320px): a little more room for content */
+@media (max-width:340px){
+  .rail{width:48px}
+  .wrap{padding-left:10px;padding-right:10px}
+}
+/* a card's title never runs under its round arrow button */
+.wgl-arw~.wgl-t{padding-right:42px}
+/* small phones (360px and under): the Fuel ring a little smaller, and a
+   macro's "+24g" on its own line instead of past the card's edge */
+@media (max-width:360px){
+  #fuelRingCard .ring-wrap{transform:scale(.84);transform-origin:left center;margin-right:-20px}
+  #fuelRingCard .volval{font-size:10.5px;min-width:0!important}
+  #fuelRingCard .volval span{display:block;text-align:right}
+  .volnote{font-size:10px;white-space:normal}
+  .volrow:has(.volnote){flex-wrap:wrap;row-gap:2px}
+  .volrow .volnote{flex-basis:100%;max-width:none!important;text-align:left!important}
+}
+/* the Studio's full-screen cards (Get started, sheets) start where the
+   rail ends on phones and tablets, so they centre in the page you see
+   instead of sliding under the rail */
+@media (max-width:999px){#s-workstudio .ks-veil{left:56px}}
+@media (max-width:340px){#s-workstudio .ks-veil{left:48px}}
+/* the Studio's Get started card on a phone: its two buttons share the row
+   when there is room and stack when there is not; text sized to fit */
+/* p27: smaller on phones (it filled an iPhone 16 Pro Max), and it scrolls
+   inside itself rather than running off a short screen */
+@media (max-width:520px){
+  #s-workstudio .ks-start{padding:22px 18px 16px;border-radius:26px;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain}
+  #s-workstudio .ks-start .ast{margin-bottom:14px}
+  #s-workstudio .ks-start .ast svg{width:38px;height:38px}
+  #s-workstudio .ks-start h3{font-size:21px;margin-bottom:12px}
+  #s-workstudio .ks-start p{font-size:15px;margin-bottom:18px}
+  #s-workstudio .ks-start .ks-what{gap:9px;margin-bottom:18px}
+  #s-workstudio .ks-start .ks-what li{font-size:14px;line-height:1.38;padding-left:16px}
+  #s-workstudio .ks-start .ks-big{height:48px;font-size:16px;border-radius:16px;gap:12px}
+  #s-workstudio .ks-start .row{margin-top:8px}
+  #s-workstudio .ks-start .row .ks-pill{height:44px;font-size:15px;border-radius:16px}
+  #s-workstudio .ks-start .row{flex-wrap:wrap}
+  #s-workstudio .ks-start .row>*{flex:1 1 130px;min-width:0}
+}
+@media (max-width:340px){#s-workstudio .ks-start .ks-big{font-size:15.5px;gap:10px}}

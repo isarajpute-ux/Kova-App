@@ -1,0 +1,12 @@
+/* p28: a phone on its side (short, touch-only screen in landscape) */
+.k-upright{display:none}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
+  .k-upright{position:fixed;inset:0;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    padding:24px max(24px,env(safe-area-inset-right)) 24px max(24px,env(safe-area-inset-left));text-align:center;
+    background:#040003;color:#FFFFFF}
+  .k-upright svg{width:56px;height:56px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px;opacity:.9}
+  .k-upright b{font-size:20px;font-weight:600}
+  .k-upright span{font-size:14px;line-height:1.45;max-width:340px;color:rgba(255,255,255,.72)}
+  body.light-mode .k-upright{background:#E7E5E0;color:#1C1A17}
+  body.light-mode .k-upright span{color:rgba(28,26,23,.72)}
+}

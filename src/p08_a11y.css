@@ -1,0 +1,20 @@
+/* KovaA11y (p11): focus you can see, motion you can turn off, targets
+   you can hit. :where() keeps these at zero specificity, so any screen's
+   own focus style still wins. */
+:where(button,a[href],[role="button"],[tabindex]:not([tabindex="-1"]),input,select,textarea,summary):focus-visible{
+  outline:2px solid currentColor;outline-offset:2px}
+/* the small round icon buttons (close x, back) draw at 28-42 px; the
+   area you can tap is 44 x 44 or more */
+:where(.iconbtn,.back){position:relative}
+:where(.iconbtn,.back)::after{content:"";position:absolute;inset:-8px;border-radius:inherit}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* light glass: secondary text was 56-60% ink (3.8-4.1:1 on the pale
+   ground); 68% is about 5:1, above the 4.5:1 small text needs. Prefixed
+   with html so it outranks the theme rules that load after this file. */
+html body.light-mode .app,html body.light-mode #sheet,html body.light-mode .card.card-lg,html body.light-mode .card.kova{--txt-3:rgba(28,26,23,.68)}
+html body.light-mode .card.card-lg,html body.light-mode .card.kova{--ron-txt-2:rgba(28,26,23,.68);--ron-txt-3:rgba(28,26,23,.6)}
+html body.light-mode .sub,html body.light-mode .li-sub{color:rgba(28,26,23,.68)}
+html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}

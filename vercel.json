@@ -1,0 +1,43 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "fluid": true,
+  "functions": {
+    "api/index.mjs": { "maxDuration": 300 },
+    "api/cron.mjs": { "maxDuration": 300 }
+  },
+  "crons": [
+    { "path": "/api/cron", "schedule": "0 13 * * *" }
+  ],
+  "rewrites": [
+    { "source": "/api", "destination": "/api/index?__p=/" },
+    { "source": "/api/:path*", "destination": "/api/index?__p=/:path*" },
+    { "source": "/book/:slug", "destination": "/book.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/refunds", "destination": "/refunds.html" },
+    { "source": "/cookies", "destination": "/cookies.html" },
+    { "source": "/licenses", "destination": "/licenses.html" },
+    { "source": "/__/auth/:path*", "destination": "https://kova-ee9d5.firebaseapp.com/__/auth/:path*" },
+    { "source": "/__/firebase/:path*", "destination": "https://kova-ee9d5.firebaseapp.com/__/firebase/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/m/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/manifest.webmanifest", "headers": [{ "key": "Content-Type", "value": "application/manifest+json" }] },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(self), microphone=(self), geolocation=(), payment=()" }
+      ]
+    }
+  ]
+}

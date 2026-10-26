@@ -1,0 +1,32 @@
+/* p30: the second question for hiking, cycling and calisthenics */
+.gp{padding:14px 15px}
+.gp-t{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF);margin-bottom:8px}
+.gp-q{font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF);margin:10px 0 7px}
+.gp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gp-chip{font:inherit;cursor:pointer}
+.gp-chip.on{background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc);font-weight:600}
+.gp-f{font-size:12.5px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9));margin:10px 0 4px}
+.gp-f.none{opacity:.75}
+.gp-wk{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-2,rgba(255,255,255,.65));margin:10px 0 6px}
+.gp-list{display:flex;flex-direction:column;gap:7px}
+.gp-li{padding:9px 11px;border-radius:12px;border:.5px solid var(--ron-line,rgba(255,255,255,.12))}
+.gp-li b{display:block;font-size:12.5px;font-weight:600;color:var(--txt,#FFFFFF);margin-bottom:2px}
+.gp-li span{font-size:12px;line-height:1.45;color:var(--txt-2,rgba(255,255,255,.85))}
+.gp-form{display:grid;gap:9px;margin-top:10px}
+.gp-form label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.75))}
+.gp-in{display:flex;gap:6px}.gp-in input{flex:1;min-width:0}.gp-in select{width:76px}
+.gp-cd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+.gp-big{font-size:34px;font-weight:300;color:var(--txt,#FFFFFF);line-height:1}
+.gp-big small{font-size:13px;color:var(--txt-2,rgba(255,255,255,.7))}
+.gp-ph{font-size:12px;font-weight:600;color:var(--acc)}
+.gp-sk{margin-top:12px;padding:11px 12px;border-radius:14px;border:.5px solid var(--acc-brd,rgba(255,255,255,.2));background:var(--acc-dim,rgba(255,255,255,.04))}
+.gp-skh{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--txt,#FFFFFF)}
+.gp-skh span{font-size:11px;color:var(--txt-2,rgba(255,255,255,.7))}
+.gp-skw{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.75));margin:2px 0 8px}
+.gp-sn{font-size:15px;font-weight:600;color:var(--txt,#FFFFFF)}
+.gp-sp{font-size:13px;color:var(--acc);margin-top:2px}
+.gp-mo{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.8));margin-top:4px}
+.gp-next{font-size:11.5px;color:var(--txt-2,rgba(255,255,255,.6));margin-top:6px}
+.gp-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:9px;flex-wrap:wrap}
+.gp-btn{margin:0;width:auto;padding-left:14px;padding-right:14px}
+.gp-link{background:none;border:0;color:var(--txt-2,rgba(255,255,255,.75));font:inherit;font-size:12px;cursor:pointer}

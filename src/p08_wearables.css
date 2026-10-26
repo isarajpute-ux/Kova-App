@@ -1,0 +1,19 @@
+/* p28: your own wearable on the Watch screen, and the "What do you wear?" picker.
+   The tiles keep the dark stage behind each drawing in every look. */
+.kw-cap{cursor:pointer}
+.kw-chg{color:var(--acc)}
+#wchDev[role="button"]{cursor:pointer;border-radius:18px}
+#wchDev[role="button"]:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+.kw-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:360px){ .kw-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.kw-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border-radius:16px;cursor:pointer;
+  background:radial-gradient(ellipse 90% 70% at 50% 40%,#141416,#08080A);border:1px solid rgba(255,255,255,.08);font:inherit;color:#FFFFFF}
+.kw-opt svg{width:40px;height:48px}
+.kw-opt span{font-size:11px;line-height:1.2;text-align:center;color:rgba(255,255,255,.86)}
+.kw-opt.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 0 14px var(--acc-glow,rgba(255,255,255,.2))}
+.kw-opt:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kw-how{margin-top:14px;padding:12px 13px;border-radius:16px;border:.5px solid var(--ron-line,rgba(255,255,255,.12))}
+.kw-hn{font-weight:600;font-size:13px;margin-bottom:3px;color:var(--txt,#FFFFFF)}
+/* the name sits under the drawing, not across its strap */
+.wchrow #wchDevName.kw-cap{bottom:-24px!important;font-size:11.5px!important}
+.wchstage:has(.kw-cap) .wchbatt{margin-top:36px}

@@ -1,0 +1,185 @@
+name: Check and deploy Kova
+
+# Runs on every push to any branch and on every pull request. On a push to
+# main, once every test has passed, it deploys the Firebase rules, and,
+# only if you chose GitHub Pages (the KOVA_API_URL repository variable is
+# set), publishes the website there.
+#
+# Vercel (or Netlify) builds the site and the server (/api) itself from
+# main through its GitHub app; vercel.json and netlify.toml say how.
+# timer.yml calls the server's timer every 5 minutes.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Tests (app in jsdom, server against fakes)
+    runs-on: ubuntu-24.04   # pinned: ubuntu-latest moves to 26 on 2026-10-19 (p27)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # the Claude Agent SDK and zod, for the wellness agent tests; the SDK's
+      # native binary is an optional download the tests never run
+      - name: Install function deps
+        run: cd functions && npm ci --omit=optional
+
+      - name: Every inline script parses
+        run: node tests/syntax.js
+
+      - name: The server files parse
+        run: for f in functions/*.js; do node --check "$f"; done
+
+      # every file in tests/, so a new test can never be left out of CI
+      - name: Every test in tests/
+        run: |
+          fail=0
+          for f in tests/*.js; do
+            echo "::group::$f"
+            node tests/e2e/ci.mjs "$f" node "$f" || { echo "::error file=$f::$f failed"; fail=1; }
+            echo "::endgroup::"
+          done
+          exit $fail
+
+      - name: ROUTES.md matches the server, and every call the app makes has a route
+        run: node build/routes.mjs --check
+
+      - name: recipes.json matches src/recipes
+        run: python3 src/recipes/build.py --check
+
+  browser:
+    name: The built site in a real browser
+    runs-on: ubuntu-24.04   # pinned: ubuntu-latest moves to 26 on 2026-10-19 (p27)
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Chromium for Playwright
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Build dist/ the way Netlify will
+        run: npm run build -- --size
+
+      - name: All 71 screens open without an error, and match the source page handler for handler
+        run: node tests/e2e/ci.mjs "All 71 screens open without an error, and match the source p" node tests/e2e/compare.mjs
+
+      - name: "Core journeys: skip sign-in, three questions, a meal from search, a one-set workout, GLP-1 mode, the plan"
+        run: node tests/e2e/ci.mjs "Core journeys - skip sign-in, three questions, a meal from se" node tests/e2e/flows.mjs
+      - name: Sign-in in a real browser (forgiving email and code steps)
+        run: node tests/e2e/ci.mjs "Sign-in in a real browser (forgiving email and code steps)" node tests/e2e/signin.mjs
+      - name: Text contrast on the main screens, all three appearances
+        run: node tests/e2e/ci.mjs "Text contrast on the main screens, all three appearances" node tests/e2e/contrast.mjs
+      - name: Keyboard only (Tab, Enter, Escape)
+        run: node tests/e2e/ci.mjs "Keyboard only (Tab, Enter, Escape)" node tests/e2e/keyboard.mjs
+      - name: Every guided tour shows all its stops, quickly
+        run: node tests/e2e/ci.mjs "Every guided tour shows all its stops, quickly" node tests/e2e/tours.mjs
+      - name: Every visible button on every screen has a spoken name
+        run: node tests/e2e/ci.mjs "Every visible button on every screen has a spoken name" node tests/e2e/names.mjs
+      - name: Closed screens parked, every screen opens whole
+        run: node tests/e2e/ci.mjs "Closed screens parked, every screen opens whole" node tests/e2e/park.mjs
+      - name: The camera (fake camera device), frame, zoom and shot
+        run: node tests/e2e/ci.mjs "The camera (fake camera device), frame, zoom and shot" node tests/e2e/camera.mjs
+      - name: The Studio video editor records a real edit
+        run: node tests/e2e/ci.mjs "The Studio video editor records a real edit" node tests/e2e/cut.mjs
+      - name: App Store and Play readiness (privacy manifest, permissions, in-app sign-in)
+        run: node tests/e2e/ci.mjs "App Store and Play readiness (privacy manifest, permissions," node tests/e2e/store.mjs
+      - name: The GitHub Pages build works under /Kova-App/ and reaches the server
+        run: node tests/e2e/ci.mjs "The GitHub Pages build works under /Kova-App/ and reaches th" node tests/e2e/pages.mjs
+      - name: "Safari's engine: the camera and the video editor (what iPhones run)"
+        run: node tests/e2e/ci.mjs "Safaris engine - the camera and the video editor (what iPhon" ENGINE=webkit node tests/e2e/camera.mjs && node tests/e2e/ci.mjs "Safaris engine - the camera and the video editor (what iPhon" ENGINE=webkit node tests/e2e/cut.mjs
+
+      - name: "Budgets: first load, time to usable, elements (slow 4G, 4x CPU)"
+        run: node tests/e2e/ci.mjs "Budgets - first load, time to usable, elements (slow 4G, 4x C" node tests/e2e/perf.mjs
+
+  rules:
+    name: Deploy Firebase rules
+    needs: [validate, browser]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-24.04   # pinned: ubuntu-latest moves to 26 on 2026-10-19 (p27)
+    # secrets cannot be read in a step's if:, so it comes in as env
+    env:
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # FIREBASE_TOKEN comes from `firebase login:ci` run locally once,
+      # then saved in repo Settings > Secrets and variables > Actions.
+      # Without the secret this step is skipped rather than failing the
+      # run, so a fork or a fresh clone still gets green CI.
+      # database only: Storage needs the paid Blaze plan since Feb 2026, and
+      # files now live on Netlify Blobs
+      - name: Deploy database rules
+        if: env.FIREBASE_TOKEN != ''
+        run: firebase deploy --only database --token "$FIREBASE_TOKEN" --non-interactive
+
+  pages:
+    name: Publish the website on GitHub Pages
+    needs: [validate, browser]
+    # only when you chose GitHub Pages: set KOVA_API_URL to switch it on
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.KOVA_API_URL != ''
+    runs-on: ubuntu-24.04   # pinned: ubuntu-latest moves to 26 on 2026-10-19 (p27)
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    # one publish at a time; a newer push waits rather than cutting one off
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Settings > Secrets and variables > Actions > Variables:
+      #   KOVA_API_URL  the server, e.g. https://kova-app.vercel.app/api
+      #   PAGES_BASE    only with a custom domain: "/" (default: /<repo name>/)
+      - name: Build for GitHub Pages
+        env:
+          KOVA_API_URL: ${{ vars.KOVA_API_URL }}
+          PAGES_BASE: ${{ vars.PAGES_BASE || format('/{0}/', github.event.repository.name) }}
+        run: npm run build:pages
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Publish
+        id: deploy
+        uses: actions/deploy-pages@v4

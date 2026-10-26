@@ -1,0 +1,180 @@
+/* ---- KovaZone2 (p33b): the Zone 2 page. The reference's layout in
+   Kova's own look: the frosted glass cards (.card), Outfit, the outline
+   icons, round glass buttons (.iconbtn, .back), chips, the dark brown
+   Workout background and its orange. The five zones are graphite steps;
+   Zone 2 is the orange. Dark, soft light and light glass. ---- */
+.kz2p{position:fixed;inset:0;z-index:9500;overflow:auto;-webkit-overflow-scrolling:touch;color:var(--ron-txt,#E3E3E3);
+  --acc:#B7AA8C;--acc-2:#9E9274;--acc-bg:rgba(183,170,140,.12);--acc-brd:rgba(183,170,140,.42);--acc-glow:rgba(183,170,140,.30);--acc-ink:#D6CAAA;
+  --ink:255,255,255;--z1:rgba(255,255,255,.26);--z2:var(--acc);--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);
+  background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.13),transparent 70%),radial-gradient(55% 40% at 8% 70%,rgba(110,98,74,.16),transparent 70%),
+    radial-gradient(ellipse 130% 95% at 50% -6%,#0B0807 0%,#050506 52%,#040003 100%)}
+body.soft-light .kz2p{--acc-ink:#E8DDC2;background:radial-gradient(60% 40% at 88% 12%,rgba(183,170,140,.18),transparent 70%),radial-gradient(ellipse 135% 100% at 50% -8%,#5E4F4B 0%,#4E423F 40%,#423836 74%,#3B3230 100%)}
+body.light-mode .kz2p{--acc-ink:#5A5342;--acc-bg:rgba(90,83,66,.10);--acc-brd:rgba(90,83,66,.35);--acc-glow:rgba(90,83,66,.22);--ink:28,26,23;--z1:rgba(28,26,23,.20);--z3:rgba(28,26,23,.40);--z4:rgba(28,26,23,.60);--z5:rgba(28,26,23,.82);
+  background:radial-gradient(60% 40% at 88% 10%,rgba(183,170,140,.22),transparent 70%),radial-gradient(55% 40% at 6% 72%,rgba(214,200,170,.35),transparent 70%),
+    radial-gradient(ellipse 140% 105% at 50% -10%,#F2F3F5 0%,#E7E9EC 44%,#DCDFE3 100%)}
+.kz2p button{font-family:inherit;cursor:pointer}
+.kz2p .ic{font-size:17px}
+.kz2p .chip .ic,.kz2p .kz2p-go .ic{color:currentColor;filter:none}
+.kz2p-in{max-width:1180px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px calc(118px + env(safe-area-inset-bottom))}
+.kz2p-hd{margin-bottom:12px}
+.kz2p-hd .back,.kz2p-hd .iconbtn{color:var(--ron-txt)}
+.kz2p-hd .hdr-r{gap:8px}
+.kz2p-help{font:400 17px 'Outfit',sans-serif}
+.kz2p-eye{font-size:10px;letter-spacing:.16em;color:var(--ron-txt-2)}
+.kz2p-say{position:relative;margin:4px 0 18px auto;max-width:560px;width:fit-content;padding:12px 16px;border-radius:20px;font-size:13.5px;line-height:1.45;color:var(--ron-txt-2);
+  background:linear-gradient(143deg,rgba(var(--ink),.085),rgba(var(--ink),.03));border:.5px solid var(--ron-line);-webkit-backdrop-filter:blur(30px) saturate(1.25);backdrop-filter:blur(30px) saturate(1.25)}
+body.light-mode .kz2p-say{background:linear-gradient(143deg,rgba(255,255,255,.75),rgba(255,255,255,.45));border-color:rgba(255,255,255,.9)}
+.kz2p-say b{font-weight:500;color:var(--ron-txt)}
+.kz2p-say.s-above b,.kz2p-say.s-in b{color:var(--acc-ink)}
+.kz2p-grid{display:grid;gap:12px;grid-template-columns:1fr}
+.kz2p-hero{order:-1}
+.kz2p-grid>.card{margin-bottom:0;min-width:0}
+@media (min-width:900px){
+  .kz2p-grid{grid-template-columns:1fr 1.25fr 1.15fr}
+  .kz2p-hero{order:0;grid-column:3;grid-row:1 / 3}
+  .kz2p-gauge{grid-column:1;grid-row:1}.kz2p-splits{grid-column:2;grid-row:1}.kz2p-hist{grid-column:1 / 3;grid-row:2}
+}
+/* card heads: Kova's small spaced capitals, the reference's pin and pill */
+.kz2p-card{position:relative}
+.kz2p-ch2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-right:52px;min-height:42px}
+.kz2p-k{display:inline-flex;align-items:flex-start;font-size:10.5px;letter-spacing:.15em;color:var(--ron-txt-2)}
+.kz2p-pin{display:inline-block;width:1px;height:14px;margin:-6px 0 0 5px;background:var(--ron-txt-3);position:relative}
+.kz2p-pin::before{content:'';position:absolute;top:-2px;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--ron-txt-2)}
+.kz2p-tag{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:6px 12px 6px 7px}
+.zd{display:inline-block;width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.zd.z1{background:var(--z1)}.zd.z2{background:var(--z2);box-shadow:0 0 10px var(--acc-glow)}.zd.z3{background:var(--z3)}.zd.z4{background:var(--z4)}.zd.z5{background:var(--z5)}
+.kz2p-card .kz2p-ed{position:absolute;top:14px;right:14px}
+.kz2p-ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:.5px solid var(--ron-line);background:linear-gradient(143deg,rgba(var(--ink),.09),rgba(var(--ink),.025));color:var(--acc-ink);flex-shrink:0}
+.kz2p-ic .ic{color:var(--acc-ink);filter:none}
+.kz2p-note{font-size:11.5px;font-weight:300;color:var(--ron-txt-2);margin-top:6px;line-height:1.5}
+.kz2p-link{border:0;background:none;padding:0;margin-top:6px;font-size:12.5px;color:var(--acc-ink);text-decoration:underline;text-underline-offset:3px}
+/* the big number: Kova's huge thin figures */
+.kz2p-num{font-weight:200;font-size:64px;letter-spacing:-.045em;line-height:1;color:var(--ron-txt);font-variant-numeric:tabular-nums}
+.kz2p-num i{font-style:normal;font-size:15px;font-weight:300;letter-spacing:0;color:var(--ron-txt-2);margin-left:6px}
+.kz2p-num.sm{font-size:42px}
+.kz2p-ring{width:40px;height:40px;flex-shrink:0}
+.kz2p-ring circle{fill:none;stroke-width:3.5}
+.kz2p-ring .t{stroke:rgba(var(--ink),.12)}
+.kz2p-ring .v{stroke:var(--acc);stroke-linecap:round;filter:drop-shadow(0 0 4px var(--acc-glow))}
+.kz2p-pv{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.kz2p-pv b{display:block;font-size:18px;font-weight:300;color:var(--ron-txt)}
+.kz2p-pv span{display:block;font-size:11px;color:var(--ron-txt-2)}
+/* the gauge */
+.kz2p-gv{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:12px}
+.kz2p-gv b{display:block;font-size:24px;font-weight:300;color:var(--ron-txt)}.kz2p-gv b i{font-style:normal;font-size:12px;color:var(--ron-txt-2)}
+.kz2p-gv span{font-size:11px;color:var(--ron-txt-2)}
+.kz2p-g{display:block;width:100%;height:auto;margin-top:-4px}
+.kz2p-g .ax{stroke:var(--ron-txt-3);stroke-width:1.2}
+.kz2p-g .end{fill:none;stroke:var(--ron-txt-3);stroke-width:1.2}
+.kz2p-g .mk{fill:var(--ron-txt)}.kz2p-g .mk.a{fill:var(--acc)}
+.kz2p-g .arc{fill:none;stroke:var(--acc);stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--acc-glow))}
+.kz2p-g .dash{fill:none;stroke:var(--ron-txt-3);stroke-width:1.6;stroke-dasharray:3 6;stroke-linecap:round}
+.kz2p-g .dome{fill:rgba(var(--ink),.08);stroke:var(--ron-txt-2);stroke-width:1.2}
+.kz2p-g text{font-size:12px;fill:var(--ron-txt-2)}
+/* the timeline */
+.kz2p-tl{display:block;width:100%;height:auto;margin-top:4px}
+.kz2p-tl .ln{stroke:var(--ron-txt-3);stroke-width:1.2}
+.kz2p-tl .end{fill:none;stroke:var(--ron-txt-3);stroke-width:1.2}
+.kz2p-tl .vd{stroke:var(--ron-line);stroke-width:1.2;stroke-dasharray:3 5}
+.kz2p-tl .oc{fill:none;stroke:var(--ron-txt-3);stroke-width:1.2}
+.kz2p-tl .rg{fill:none;stroke:var(--ron-txt-3);stroke-width:1;stroke-dasharray:3 4}
+.kz2p-tl .in{fill:rgba(var(--ink),.05);stroke:var(--ron-line);stroke-width:1}
+.kz2p-tl .dt{fill:var(--ron-txt)}
+.kz2p-tl .nd.on .rg{fill:var(--acc-bg);stroke:var(--acc-brd)}
+.kz2p-tl .nd.on .in{fill:var(--acc-bg);stroke:var(--acc-brd)}
+.kz2p-tl .nd.on .dt{fill:var(--acc);filter:drop-shadow(0 0 6px var(--acc-glow))}
+.kz2p-tl .pl rect{fill:rgba(var(--ink),.07);stroke:var(--ron-line);stroke-width:.8}
+.kz2p-tl .pl text{font-size:13.5px;fill:var(--ron-txt)}
+.kz2p-tl .pl .z1{fill:var(--z1)}.kz2p-tl .pl .z2{fill:var(--z2)}.kz2p-tl .pl .z3{fill:var(--z3)}.kz2p-tl .pl .z4{fill:var(--z4)}.kz2p-tl .pl .z5{fill:var(--z5)}
+.kz2p-tl .v{font-size:24px;font-weight:300;fill:var(--ron-txt)}.kz2p-tl .v.a{fill:var(--acc-ink)}
+/* the table */
+.kz2p-tb{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.kz2p-tb .th,.kz2p-tb .tr{display:grid;grid-template-columns:1.1fr 1.2fr 1fr;align-items:center;gap:8px;padding:0 14px}
+.kz2p-tb .th{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ron-txt-3)}
+.kz2p-tb .th span:last-child,.kz2p-tb .tr span:last-child{text-align:right}
+.kz2p-tb .tr{min-height:52px;border-radius:18px;background:rgba(var(--ink),.04);border:.5px solid var(--ron-line);font-size:13.5px;font-weight:300;color:var(--ron-txt)}
+body.light-mode .kz2p-tb .tr{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.9)}
+.kz2p-tb .tr.none{grid-template-columns:1fr;color:var(--ron-txt-2)}
+.kz2p-chip{display:inline-flex;align-items:center;height:28px;padding:0 11px;border-radius:999px;background:var(--acc-bg);border:.5px solid var(--acc-brd);color:var(--acc-ink);font-style:normal;font-size:12px}
+.kz2p-tb b{font-weight:400}
+.kz2s .kz2p-tb .th,.kz2s .kz2p-tb .tr{grid-template-columns:1fr 1fr .8fr .9fr;padding:0 12px}
+/* the big card: glass with Workout's warm glow */
+.kz2p-hero{overflow:hidden}
+.kz2p-hero::before{content:'';position:absolute;inset:auto -20% -30% -20%;height:70%;background:radial-gradient(closest-side,var(--acc-glow),transparent);opacity:.55;pointer-events:none}
+.kz2p-hero::after{content:'';position:absolute;inset:-20% -30% auto auto;width:70%;height:50%;background:radial-gradient(closest-side,var(--acc-bg),transparent);pointer-events:none}
+.kz2p-hero>*{position:relative;z-index:1}
+.kz2p-hh{display:flex;align-items:center;gap:10px}
+.kz2p-tabs{display:flex;gap:2px;margin:16px 0 4px;border-bottom:.5px solid var(--ron-line);overflow-x:auto;scrollbar-width:none}
+.kz2p-tabs::-webkit-scrollbar{display:none}
+.kz2p-tabs button{flex:1 0 auto;border:0;background:none;color:var(--ron-txt-2);font-size:13.5px;font-weight:300;padding:10px 8px 12px;position:relative;white-space:nowrap}
+.kz2p-tabs button.on{color:var(--ron-txt);font-weight:400}
+.kz2p-tabs button.on::after{content:'';position:absolute;left:8px;right:8px;bottom:-.5px;height:2px;border-radius:2px;background:var(--acc);box-shadow:0 0 8px var(--acc-glow)}
+.kz2p-big{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:18px 0 16px}
+.kz2p-big>div:first-child{min-width:0}
+.kz2p-big>div:first-child>span{display:block;font-size:12px;font-weight:300;color:var(--ron-txt-2);margin-top:8px}
+.kz2p-pills{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.kz2p-pills .chip{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 6px;font-size:12.5px}
+.kz2p-scope{font-size:10px;letter-spacing:.15em;color:var(--ron-txt-3);margin:18px 2px 6px}
+.kz2p-ch{display:block;width:100%;height:auto}
+.kz2p-ch ellipse{fill:none;stroke-width:1.4}
+.kz2p-ch ellipse.z1{stroke:var(--z1)}.kz2p-ch ellipse.z2{stroke:var(--z2);fill:var(--acc-bg);filter:drop-shadow(0 0 10px var(--acc-glow))}.kz2p-ch ellipse.z3{stroke:var(--z3)}.kz2p-ch ellipse.z4{stroke:var(--z4)}.kz2p-ch ellipse.z5{stroke:var(--z5)}
+.kz2p-ch .dt{fill:var(--ron-txt)}
+.kz2p-ch .ld{stroke:var(--ron-txt-3);stroke-width:1;stroke-dasharray:3 4}
+.kz2p-ch .v{font-size:20px;font-weight:300;fill:var(--ron-txt)}.kz2p-ch .v.a{fill:var(--acc-ink)}
+.kz2p-ch .l{font-size:11.5px;font-weight:300;fill:var(--ron-txt-2)}
+.kz2p-ch rect.z1{fill:var(--z1)}.kz2p-ch rect.z2{fill:var(--z2);filter:drop-shadow(0 0 10px var(--acc-glow))}.kz2p-ch rect.z3{fill:var(--z3)}.kz2p-ch rect.z4{fill:var(--z4)}.kz2p-ch rect.z5{fill:var(--z5)}
+.kz2p-ch .sl{fill:none;stroke-linecap:butt}
+.kz2p-ch .sl.z1{stroke:var(--z1)}.kz2p-ch .sl.z2{stroke:var(--z2)}.kz2p-ch .sl.z3{stroke:var(--z3)}.kz2p-ch .sl.z4{stroke:var(--z4)}.kz2p-ch .sl.z5{stroke:var(--z5)}
+.kz2p-ch circle.z1{fill:var(--z1)}.kz2p-ch circle.z2{fill:var(--z2)}.kz2p-ch circle.z3{fill:var(--z3)}.kz2p-ch circle.z4{fill:var(--z4)}.kz2p-ch circle.z5{fill:var(--z5)}
+.kz2p-ch .pbg{fill:none;stroke:rgba(var(--ink),.06)}
+.kz2p-ch .bd{fill:rgba(var(--ink),.035)}.kz2p-ch .bd.a{fill:var(--acc-bg)}
+.kz2p-ch .hl{fill:none;stroke:var(--acc);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 5px var(--acc-glow))}
+.kz2p-empty{padding:26px 4px;font-size:12.5px;font-weight:300;line-height:1.5;color:var(--ron-txt-2)}
+/* the bar: a glass pill, chips, and Kova's orange button */
+.kz2p-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));z-index:2;display:flex;align-items:center;gap:6px;padding:7px;border-radius:999px;max-width:calc(100vw - 24px);
+  background:linear-gradient(143deg,rgba(var(--ink),.12),rgba(var(--ink),.05));border:.5px solid var(--ron-line);-webkit-backdrop-filter:blur(30px) saturate(1.3);backdrop-filter:blur(30px) saturate(1.3);box-shadow:0 18px 48px rgba(0,0,0,.42),inset 0 .5px 0 rgba(255,255,255,.13)}
+body.light-mode .kz2p-bar{background:linear-gradient(143deg,rgba(255,255,255,.8),rgba(255,255,255,.55));border-color:rgba(255,255,255,.95);box-shadow:0 14px 40px rgba(64,58,50,.14)}
+.kz2p-t{color:var(--ron-txt);font-weight:300;font-size:17px;padding:0 8px 0 12px;white-space:nowrap;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;line-height:1.15}
+.kz2p-t small{font-size:11px;color:var(--ron-txt-2)}
+.kz2p-c{display:inline-flex;align-items:center;gap:7px;padding:12px 16px;font-size:13px;white-space:nowrap}
+.kz2p-go{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:100px;padding:13px 22px;background:var(--acc);color:#0A0A0A;font-size:14px;font-weight:500;letter-spacing:-.01em;box-shadow:0 8px 24px rgba(232,122,60,.35);white-space:nowrap}
+.kz2p-foot{margin-top:14px;text-align:center;font-size:11px;font-weight:300;color:var(--ron-txt-3)}
+@media (max-width:420px){ .kz2p-c{padding:11px 12px} .kz2p-go{padding:12px 18px} .kz2p-num{font-size:56px} .kz2p-pills .chip{font-size:11.5px;gap:4px;padding:10px 4px} }
+/* the card on Workout */
+.kz2c{margin-top:12px}
+.kz2c .kv-h{align-items:center}
+.kz2c-q{width:30px;height:30px;border-radius:50%;border:.5px solid var(--ron-line);background:none;display:grid;place-items:center;color:var(--ron-txt-2);cursor:pointer;padding:0}
+.kz2c-q .ic{font-size:15px}
+.kz2c-row{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:6px 0 8px}
+.kz2c-row>div:first-child>span{display:block;font-size:11px;font-weight:300;color:var(--ron-txt-2);margin-top:6px}
+.kz2c .kz2p-ring .t{stroke:var(--ron-line)}
+.kz2c .kz2p-ring .v{stroke:var(--acc)}
+.kz2c .kz2p-pv b{font-size:15px;font-weight:300;color:var(--ron-txt)}.kz2c .kz2p-pv span{font-size:10.5px;color:var(--ron-txt-2)}
+.kz2c-last{font-size:11.5px;font-weight:300;line-height:1.5;color:var(--ron-txt-2);margin:4px 0}
+.kz2c .kz2p-num{color:var(--ron-txt)}
+.kz2c .kl-acts{margin-top:10px}
+/* sheets */
+.kz2s{--z-in:#5FD08A;--z-line:rgba(255,255,255,.09);--z-mute:rgba(236,236,236,.62);--z-card:rgba(255,255,255,.045);--acc:#B7AA8C}
+body.light-mode .kz2s{--z-in:#1E8A55;--z-line:rgba(17,19,24,.09);--z-mute:rgba(17,19,24,.58);--z-card:rgba(255,255,255,.7);--acc:#6B6046}
+.kz2s-hero{display:flex;align-items:baseline;gap:10px;margin:6px 0 10px}
+.kz2s-hero b{font:200 56px/1 Outfit,sans-serif;color:var(--z-in)}
+.kz2s-hero span{font-size:13px;line-height:1.4;color:var(--z-mute)}
+.kz2s-tr{margin-top:8px;padding:8px 10px;border-radius:16px;background:var(--z-card);border:1px solid var(--z-line)}
+.kz2s-tr .kz2-tr{height:80px}.kz2s-tr span{font-size:11px;color:var(--z-mute)}
+.kz2s-wk{margin-top:12px;font-size:13.5px}
+.kz2s-p{font-size:13.5px;line-height:1.5;margin:6px 0}
+.kz2s-s{font-size:12px;color:var(--z-mute)}
+.kz2s-row{display:flex;gap:10px}
+.kz2s-row label{flex:1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--z-mute)}
+.kz2s-row input{height:44px;border-radius:14px;border:1px solid var(--z-line);background:var(--z-card);color:inherit;font:inherit;font-size:16px;padding:0 12px}
+
+.kz2s-zs{display:flex;flex-direction:column;gap:6px}
+.kz2s-zs>div{display:grid;grid-template-columns:14px 70px 1fr auto;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;border:1px solid var(--z-line)}
+.kz2s-zs>div.on{background:var(--z-card);border-color:var(--z-in)}
+.kz2s-zs .zd{width:12px;height:12px}
+.kz2s{--z1:rgba(255,255,255,.26);--z2:#B7AA8C;--z3:rgba(255,255,255,.46);--z4:rgba(255,255,255,.66);--z5:rgba(255,255,255,.88);--acc-glow:rgba(183,170,140,.3)}
+body.light-mode .kz2s{--z1:rgba(28,26,23,.2);--z3:rgba(28,26,23,.4);--z4:rgba(28,26,23,.6);--z5:rgba(28,26,23,.82)}
+.kz2s-zs span{font-size:12.5px;color:var(--z-mute)}.kz2s-zs em{font-style:normal;font-size:13px;font-weight:600}
+/* p42: a pop-up opened from a full page (Coach me's attachments, a Dream
+   physique split day) sits above that page, below a running tour */
+body:has(.kz2p) .sheet{z-index:9650}

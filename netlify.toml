@@ -1,0 +1,75 @@
+# Netlify config for Kova.
+# The app is one document plus a service worker. The build (build/site.mjs)
+# minifies it into dist/ and copies only the files the site serves, so the
+# server code, tests and notes in this repo are not public URLs.
+
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The server (functions/api.js and friends) runs as Netlify Functions:
+# netlify/functions/api.mjs answers /api/*, worker-background.mjs runs the
+# long jobs, cron.mjs is the 5-minute timer. See functions/netlify.js.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  # left as real packages instead of bundled: they load files at runtime
+  external_node_modules = ["firebase-admin", "@netlify/blobs", "@anthropic-ai/claude-agent-sdk", "zod"]
+
+# /api/* must come before the app's catch-all below, or every API call
+# would get index.html back.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# a booking link (/book/isa) opens the booking page
+[[redirects]]
+  from = "/book/*"
+  to = "/book.html"
+  status = 200
+
+# SPA-style: every path serves the app shell. 200 (rewrite) not 301, so
+# the URL the user opened is preserved for the in-app router.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# The service worker must never be served stale or an old shell pins
+# itself on the device and users stop receiving updates entirely.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# the after-first-screen files carry a content hash in their name, so a
+# phone can keep them for good; a new build gets a new name.
+[[headers]]
+  for = "/m/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Camera is needed for barcode/food/machine scanning and form-check
+    # video; everything else is denied rather than left at the default.
+    Permissions-Policy = "camera=(self), microphone=(self), geolocation=(), payment=()"

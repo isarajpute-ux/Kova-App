@@ -1,0 +1,51 @@
+/* KovaGLP1: rings instead of the calorie ring, dose and site, side
+   effects. Tokens only; nothing here is red for eating little. */
+#s-fuel.glp1-on #fuelRingCard,#s-fuel.glp1-on #fuelBal{display:none}
+.kg1-main{padding:14px 14px 12px}
+.kg1-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.kg1-link{background:none;border:0;color:var(--txt-2,rgba(255,255,255,.85));font:500 12px 'Outfit',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;min-height:32px}
+.kg1-rings{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.kg1-ring{position:relative}
+.kg1-ring svg{width:100%;max-width:96px;display:block;margin:0 auto}
+.kg1-tr{fill:none;stroke:var(--glass-brd,rgba(255,255,255,.18));stroke-width:6}
+.kg1-fg{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dasharray .4s}
+@media (prefers-reduced-motion:reduce){.kg1-fg{transition:none}}
+.kg1-rv{position:absolute;left:0;right:0;top:calc(50% - 18px);transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;line-height:1.05}
+.kg1-rv b{font:400 18px 'Outfit',sans-serif;font-variant-numeric:tabular-nums;color:var(--txt)}
+.kg1-rv small{font-size:10px;color:var(--txt-3,rgba(255,255,255,.7))}
+.kg1-rl{font-size:11px;font-weight:600;color:var(--txt-2,rgba(255,255,255,.9));margin-top:4px}
+.kg1-credit{font-size:12.5px;line-height:1.45;text-align:center;margin:10px 4px 8px;color:var(--txt-2,rgba(255,255,255,.9))}
+.kg1-credit.hit{color:var(--good);font-weight:600}
+.kg1-water{display:flex;justify-content:center;gap:8px}
+.kg1-pill{min-height:38px;padding:7px 14px;border-radius:100px;border:.5px solid var(--glass-brd,rgba(255,255,255,.22));background:var(--glass,rgba(255,255,255,.07));color:var(--txt);font:500 12.5px 'Outfit',sans-serif;cursor:pointer}
+.kg1-pill.strong{background:var(--acc,#e6e6e6);color:#111;border-color:transparent;font-weight:600}
+body.light-mode .kg1-pill.strong{color:#fff}
+.kg1-sec{padding:13px 14px}
+.kg1-st{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3,rgba(255,255,255,.7));margin-bottom:8px}
+.kg1-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kg1-row b{display:block;font:500 14px 'Outfit',sans-serif;color:var(--txt)}
+.kg1-row span{font-size:12px;color:var(--txt-2,rgba(255,255,255,.85))}
+.kg1-sites{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.kg1-site{min-height:34px;padding:5px 10px;border-radius:10px;border:.5px solid var(--glass-brd,rgba(255,255,255,.2));background:none;color:var(--txt-2,rgba(255,255,255,.85));font:500 11.5px 'Outfit',sans-serif;cursor:pointer}
+.kg1-site.next{border-color:var(--acc-brd,rgba(255,255,255,.45));color:var(--acc,#fff);background:var(--acc-bg,rgba(255,255,255,.08))}
+.kg1-note{font-size:11.5px;color:var(--txt-3,rgba(255,255,255,.7));margin-top:8px;line-height:1.45}
+.kg1-fx{display:flex;flex-direction:column;gap:5px;margin-bottom:9px}
+.kg1-fx>span{font-size:12.5px;font-weight:500;color:var(--txt)}
+.kg1-fx>div{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.kg1-fv{min-height:36px;border-radius:10px;border:.5px solid var(--glass-brd,rgba(255,255,255,.18));background:var(--glass,rgba(255,255,255,.05));color:var(--txt-2,rgba(255,255,255,.85));font:500 11px 'Outfit',sans-serif;cursor:pointer;padding:4px 2px}
+.kg1-fv.on{background:var(--acc-bg,rgba(255,255,255,.14));border-color:var(--acc-brd,rgba(255,255,255,.45));color:var(--txt);font-weight:600}
+.kg1-links{margin-top:4px}
+.kg1-l{font-size:12.5px;line-height:1.5;color:var(--txt-2,rgba(255,255,255,.9));margin:6px 0}
+.kg1-l small{color:var(--txt-3,rgba(255,255,255,.65))}
+.kg1-l div{color:var(--txt-3,rgba(255,255,255,.7));font-size:12px}
+.kg1-l.wait{color:var(--txt-3,rgba(255,255,255,.65))}
+.kg1-disc{font-size:11px;line-height:1.5;color:var(--txt-3,rgba(255,255,255,.65));margin:4px 4px 14px}
+.kg1-off{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;cursor:pointer;color:var(--txt);font-family:'Outfit',sans-serif}
+/* setup sheet */
+.kg1s{padding:2px 4px 20px;color:var(--txt)}
+.kg1f{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--txt-2,rgba(255,255,255,.85));margin-bottom:10px}
+.kg1f input,.kg1f select{min-height:42px;border-radius:12px;border:.5px solid var(--glass-brd,rgba(255,255,255,.22));background:var(--glass,rgba(255,255,255,.07));color:var(--txt);font:400 14px 'Outfit',sans-serif;padding:8px 11px}
+.kg1f input[type=range]{min-height:28px;padding:0;background:none;border:0;accent-color:var(--acc,#fff)}
+.kg1two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kg1c{display:flex;align-items:center;gap:9px;font-size:13px;min-height:40px;color:var(--txt-2,rgba(255,255,255,.9))}
+.kg1c input{width:18px;height:18px;accent-color:var(--acc,#fff)}

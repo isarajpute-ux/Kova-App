@@ -1,0 +1,50 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "store": {
+          "$key": {
+            ".validate": "newData.hasChildren(['v','t'])",
+            "v": {
+              ".validate": "newData.isString() && newData.val().length <= 9000000"
+            },
+            "t": {
+              ".validate": "newData.isNumber()"
+            },
+            "key": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "meta": {
+          "lastSeen": {
+            ".validate": "newData.isNumber()"
+          },
+          "ua": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "srv": {
+      "scheduled": {
+        ".indexOn": [
+          "at"
+        ]
+      }
+    }
+  }
+}

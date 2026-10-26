@@ -1,0 +1,69 @@
+/* Polish (p13): shadows that sit under their own box.
+
+   Cards are frosted glass (backdrop-filter). A big soft drop shadow
+   (0 18px 48px) fell 30-60px past each card, behind its neighbours, and
+   their glass blurred it back into view: a grey smudge with the shadow's
+   corners showing through, and a hard cut where the scroll area clips it.
+   Every surface in the page now gets a tight contact shadow: a hairline
+   one right under the edge and a short one pulled in by a negative spread,
+   so it ends within ~12px and never reaches the next card. The inset
+   highlights each surface had are kept. Floating things (sheets, menus,
+   pop-ups) keep their depth: nothing sits beside them.
+   Named zpolish so it loads after the other p08 styles; !important only
+   where the rule it replaces had it, or where a p07 style loads later. */
+
+/* ---- dark (and the default soft light inherits where it has no rule) ---- */
+.card,.warm,.paper,.cfg,.rdl,.ronpicker,.ronstage,
+:is(#s-hrv,#s-efficiency,#s-factors,#s-bedtime,#s-sounds) .card{
+  box-shadow:0 1px 2px rgba(0,0,0,.32),0 8px 16px -12px rgba(0,0,0,.7),inset 0 .5px 0 rgba(255,255,255,.13)}
+.fx-card,.fx-panel{box-shadow:0 1px 2px rgba(3,8,14,.3),0 8px 16px -12px rgba(3,8,14,.6),inset 0 .5px 0 rgba(255,255,255,.1)}
+.wgl,.wvar{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 1px 2px rgba(0,0,0,.3),0 8px 16px -12px rgba(0,0,0,.65)}
+.wglow{box-shadow:0 0 16px rgba(226,235,248,.12),0 8px 18px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.9)}
+.ws-dock{box-shadow:0 0 18px rgba(var(--ws-rgb),calc(var(--ws-glow,.24) * .7)),0 8px 18px -12px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.55)}
+.wk-lit{box-shadow:0 0 16px rgba(var(--wk-rgb),calc(var(--wk-glow,.2) * .7)),0 8px 16px -12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.5)}
+.oshero{box-shadow:0 0 0 1px rgba(255,255,255,.14),0 8px 18px -12px rgba(190,208,230,.35),inset 0 1px 0 rgba(255,255,255,.9)}
+body:not(.light-mode):not(.soft-light) .app[data-pillar="work"] :is(.wgl,.card):not(.wglow){
+  box-shadow:0 1px 2px rgba(0,0,0,.34),0 8px 18px -12px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)!important}
+body:not(.light-mode):not(.soft-light) .app[data-pillar="work"] .wglow{
+  box-shadow:0 0 18px rgba(255,255,255,.12),0 8px 18px -12px rgba(0,0,0,.6),inset 0 1px 0 #fff!important}
+/* the AI team's tiles */
+.crd{--t-g-glow:0 1px 2px rgba(0,0,0,.3),0 8px 18px -12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.07);
+  --t-lit-glow:0 0 18px rgba(255,255,255,.12),0 8px 18px -12px rgba(0,0,0,.55)}
+
+/* ---- soft light ---- */
+body.soft-light .cfg,body.soft-light .paper,body.soft-light .warm{
+  box-shadow:0 1px 2px rgba(30,52,86,.14),0 8px 16px -12px rgba(30,52,86,.38),inset 0 1px 0 rgba(255,255,255,.8)}
+body.soft-light .oshero{box-shadow:0 0 0 1px rgba(126,160,198,.2),0 8px 18px -12px rgba(70,104,146,.45),inset 0 1px 0 rgba(255,255,255,.7)}
+body.soft-light .crd{--t-g-glow:0 1px 2px rgba(0,0,0,.18),0 8px 16px -12px rgba(0,0,0,.4);--t-lit-glow:0 0 16px rgba(255,255,255,.1),0 8px 16px -12px rgba(0,0,0,.35)}
+
+/* ---- light glass ---- */
+body.light-mode .card{box-shadow:0 1px 2px rgba(58,52,45,.07),0 8px 16px -12px rgba(58,52,45,.22),inset 0 .5px 0 rgba(255,255,255,.85)}
+body.light-mode .card.card-lg,body.light-mode .card.kova{
+  box-shadow:0 1px 2px rgba(58,52,45,.08),0 8px 18px -12px rgba(58,52,45,.26),inset 0 .5px 0 rgba(255,255,255,.88)!important}
+body.light-mode .cfg,body.light-mode .paper,body.light-mode .warm{
+  box-shadow:0 1px 2px rgba(30,52,86,.08),0 8px 16px -12px rgba(30,52,86,.26),inset 0 1px 0 rgba(255,255,255,.88)}
+body.light-mode .fx-card,body.light-mode .fx-panel{box-shadow:0 1px 2px rgba(60,90,130,.07),0 8px 16px -12px rgba(60,90,130,.2),inset 0 .5px 0 rgba(255,255,255,.7)}
+body.light-mode .wgl{box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 1px 2px rgba(20,24,32,.06),0 8px 16px -12px rgba(20,24,32,.16)}
+body.light-mode .wvar{box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(20,24,32,.06),0 8px 16px -12px rgba(20,24,32,.16)}
+body.light-mode .wglow{box-shadow:0 0 14px rgba(20,24,32,.1),0 8px 18px -12px rgba(20,24,32,.3)}
+body.light-mode .oshero{box-shadow:0 0 0 1px rgba(10,14,22,.5),0 8px 18px -12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09)}
+body.light-mode .crd{--t-g-glow:0 1px 2px rgba(20,24,32,.1),0 8px 18px -12px rgba(20,24,32,.32);--t-lit-glow:0 1px 2px rgba(20,24,32,.12),0 8px 18px -12px rgba(20,24,32,.34)}
+
+/* ---- outlines: rings drawn on the page read in every appearance ---- */
+.app{--ring:rgba(242,236,240,.3)}
+body.soft-light .app{--ring:rgba(255,255,255,.46)}
+body.light-mode .app{--ring:rgba(28,26,23,.34)}
+
+/* Small controls (chips, pills, round icon buttons, toggles, tabs, the
+   "?" buttons) had a fixed faint white outline: nearly invisible on dark
+   and gone on light glass. Their outline is now a quarter of their own
+   text colour, which always contrasts with the surface they sit on, even
+   a dark slab inside light glass. State borders (.on, selected, pressed)
+   are left alone. The html body prefix outranks the per-theme rules. */
+html body :is(.chip,.iconbtn,.back,.qa,.tog,.gcirc,.altog,.cnt,.srch,.miniact,.schk,.tagbtn,.exnum,.modeseg,
+  .ronpill,.roncirc,.ronnode,.wpill,.wk-tab,.wgl-arw,.kt-help,.fuelnav-b,.fuelrow-x,.intcount,.khr,.glass-disc,.ssread,.gsw,.pgex):not(.on):not(.sel):not(.active):not([aria-pressed="true"]){
+  border-color:rgba(128,128,128,.3);border-color:color-mix(in srgb,currentColor 24%,transparent)}
+/* light glass: cards get a faint dark edge now the big shadow is gone;
+   the white inset line on top still reads as the frosted highlight */
+body.light-mode .card:not(.card-lg):not(.kova){border-color:rgba(28,26,23,.09)}
+body.soft-light .card{border-color:rgba(255,255,255,.2)}
