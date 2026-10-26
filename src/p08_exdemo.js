@@ -1049,7 +1049,7 @@ window.KovaExPage=(function(){
   function libRing(){
     var A=window.KovaDial;
     if(LS.ring==='e') return [{id:'all',label:'Any',icon:A.sprite('grid-dots')},{id:'bb',label:'Barbell',icon:art('Olympic barbell')},{id:'db',label:'Dumbbell',icon:art('Dumbbells')},{id:'cable',label:'Cable',icon:art('Rope')},{id:'mach',label:'Machine',icon:art('Smith machine')},{id:'bw',label:'Bodyweight',icon:A.sprite('walk')},{id:'dif',label:'Different',icon:A.sprite('sparkles')}];
-    return GROUPS.map(function(g){ return {id:g[0],label:g[1],icon:g[0]==='skill'?A.sprite('yoga'):A.mus(g[0]==='all'?'all':g[0])}; });
+    return GROUPS.map(function(g){ return {id:g[0],label:g[1],icon:A.mus(g[0])}; });
   }
   function art(n){ var A=window.KovaDial, c=window.KovaAttach&&KovaAttach.CAT&&KovaAttach.CAT.filter(function(x){ return x[0]===n; })[0]; return c?A.art(c[4]):A.sprite('barbell'); }
   function libCard(){

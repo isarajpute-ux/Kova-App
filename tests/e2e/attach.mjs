@@ -29,6 +29,9 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.screenshot({ path: join(shots, `attach-session-${theme}.png`) });
   const n0 = await p.evaluate(() => KSESS.state().ex.length);
   await p.locator('#addExBtn').click(); await p.waitForTimeout(500);
+  /* p43e: the page is the whole screen, so its list is not cut off at 300 px (the owner: "half the screen is not showing") */
+  const list = await p.evaluate(() => { const l = document.querySelector('#sheetIn .exadd').parentElement; return { mh: getComputedStyle(l).maxHeight, h: l.getBoundingClientRect().height, sh: l.scrollHeight }; });
+  ck(theme + ': "Add to today" shows its whole list, not half the screen', list.mh === 'none' && list.h >= list.sh - 1 && list.h > 300 || (console.error(theme, list), false));
   await p.locator('#sheet .chip.gp[data-g="Triceps"]').click(); await p.waitForTimeout(400);
   await p.locator('#sheet .exadd[data-n="Skull crusher"] .katt-add').click(); await p.waitForTimeout(300);
   ck(theme + ': in "Add to today" the button opens the choices and does not add the exercise', await p.evaluate(() => KSESS.state().ex.length) === n0 && await p.locator('#sheet .katt-p').count() === 1);

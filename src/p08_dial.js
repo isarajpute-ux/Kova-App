@@ -8,15 +8,26 @@
    out of sight. Used by Exercises, Stretch and the attachment picker; each
    page draws its own card under it (.kdl-card).
 
+   p43e (the owner: "it doesn't look exactly like the images... the
+   background not even like the reference"): rebuilt from the reference's
+   measured shapes and colours: one band of frosted glass the labels ride
+   round, a fixed taupe wedge for the choice, a lime button with a black dot
+   on one ring, all on a glossy brown form against a light dotted backdrop.
+
    KovaDial.mount(el, {items:[{id,label,icon}], sel, onPick(i,item),
-     centre:{icon:'dot'|'swap'|'play', label, onTap}}) -> {set, swap, pop, sel}
+     centre:{label, onTap}}) -> {set, swap, pop, sel}
    KovaDial.mus(group) gives a segment icon for a body part. */
 window.KovaDial=(function(){
   'use strict';
-  /* the geometry, in a 320 x 320 box (centre 160): the slot sits a little
-     right of straight down, as in the reference */
-  /* p43d: thicker, wider segments, as in the reference (four or five in view) */
-  var C=160, STEP=60, W=55, SLOT=82, RI=78, RO=141, GROW=13, LO=-72, HI=234, FADE=30;
+  /* the geometry, in a 320 x 320 box (centre 160). p43e, measured from the
+     owner's reference: one continuous band of frosted glass (T0 to T1) with a
+     gap at the top left, the labels riding round it; a solid taupe wedge
+     fixed in the slot a little right of straight down, longer than the band;
+     a small lime button on one ring. Angles in degrees, clockwise from 3
+     o'clock. */
+  var C=160, STEP=60, SLOT=82, RI=74, RO=150, T0=-78, T1=198, WI=70, WO=166, WH=28, HUB=56, FADE=22;
+  /* the old names, kept for callers that read _geo */
+  var W=WH*2, GROW=WO-RO, LO=T0, HI=T1;
   var N=0;
   function P(r,a){ a=a*Math.PI/180; return [C+r*Math.cos(a),C+r*Math.sin(a)]; }
   /* an arc segment with soft corners: each corner is a curve from the
@@ -57,24 +68,30 @@ window.KovaDial=(function(){
   function art(inner){ return '<svg class="kdl-ic kdl-art" viewBox="0 0 48 28" aria-hidden="true">'+inner+'</svg>'; }
 
   /* ---------- the dial ---------- */
-  var CENTRE={dot:'<i class="kdl-dot"></i>',
-    swap:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>',
-    play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5z"/></svg>'};
+  var CENTRE={dot:'<i class="kdl-dot"></i>'};
   function html(o){
     o=o||{}; var id='kdl'+(++N);
     return '<div class="kdl" id="'+id+'" role="radiogroup" aria-label="'+esc(o.label||'Choose')+'">'
+      /* the brown surface the dial sits on (the reference's glossy brown form) */
+      +'<i class="kdl-dome" aria-hidden="true"></i>'
       +'<div class="kdl-gl" aria-hidden="true"></div><svg class="kdl-svg" viewBox="0 0 320 320" aria-hidden="true"><defs>'
-        +'<linearGradient id="'+id+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-a)"/><stop offset="1" style="stop-color:var(--kdl-b)"/></linearGradient>'
+        /* the band: frosted, a little lighter towards its outer edge, a fine light rim brightest where the light comes from (the right) */
+        +'<radialGradient id="'+id+'t" gradientUnits="userSpaceOnUse" cx="160" cy="160" r="'+RO+'"><stop offset="'+(RI/RO).toFixed(2)+'" style="stop-color:var(--kdl-t1)"/><stop offset="1" style="stop-color:var(--kdl-t2)"/></radialGradient>'
+        +'<linearGradient id="'+id+'e" gradientUnits="userSpaceOnUse" x1="300" y1="40" x2="20" y2="300"><stop offset="0" style="stop-color:var(--kdl-e1)"/><stop offset=".5" style="stop-color:var(--kdl-e2)"/><stop offset="1" style="stop-color:var(--kdl-e3)"/></linearGradient>'
+        /* the chosen wedge: solid taupe, lighter towards its outer end */
         +'<linearGradient id="'+id+'s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--kdl-sa)"/><stop offset="1" style="stop-color:var(--kdl-sb)"/></linearGradient>'
-        +'<linearGradient id="'+id+'e" gradientUnits="userSpaceOnUse" x1="40" y1="20" x2="280" y2="300"><stop offset="0" style="stop-color:var(--kdl-e1)"/><stop offset=".55" style="stop-color:var(--kdl-e2)"/><stop offset="1" style="stop-color:var(--kdl-e3)"/></linearGradient>'
-        /* no hard borders: a soft light along the top inside edge and a soft shade along the bottom one (the reference's inner shadow) */
-        +'<filter id="'+id+'i" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.6" result="b"/>'
-          +'<feOffset in="b" dy="2.6" result="o1"/><feComposite in="SourceAlpha" in2="o1" operator="arithmetic" k2="1" k3="-1" result="e1"/><feFlood style="flood-color:var(--kdl-hi)"/><feComposite in2="e1" operator="in" result="lt"/>'
-          +'<feOffset in="b" dy="-2.6" result="o2"/><feComposite in="SourceAlpha" in2="o2" operator="arithmetic" k2="1" k3="-1" result="e2"/><feFlood style="flood-color:var(--kdl-lo)"/><feComposite in2="e2" operator="in" result="dk"/>'
+        +'<linearGradient id="'+id+'w" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".6" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>'
+        /* a soft light along the top inside edge, a soft shade along the bottom one */
+        +'<filter id="'+id+'i" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="3" result="b"/>'
+          +'<feOffset in="b" dy="3" result="o1"/><feComposite in="SourceAlpha" in2="o1" operator="arithmetic" k2="1" k3="-1" result="e1"/><feFlood style="flood-color:var(--kdl-hi)"/><feComposite in2="e1" operator="in" result="lt"/>'
+          +'<feOffset in="b" dy="-3" result="o2"/><feComposite in="SourceAlpha" in2="o2" operator="arithmetic" k2="1" k3="-1" result="e2"/><feFlood style="flood-color:var(--kdl-lo)"/><feComposite in2="e2" operator="in" result="dk"/>'
           +'<feMerge><feMergeNode in="dk"/><feMergeNode in="lt"/></feMerge></filter>'
-        /* the chosen one floats a little above the rest */
-        +'<filter id="'+id+'d" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="9" style="flood-color:#000" flood-opacity=".5"/></filter>'
-      +'</defs><g class="kdl-segs"></g></svg>'
+        /* the wedge floats a little above the band */
+        +'<filter id="'+id+'d" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="11" style="flood-color:#120A06" flood-opacity=".42"/></filter>'
+      +'</defs>'
+      +'<path class="kdl-tr" fill="url(#'+id+'t)"/><path class="kdl-th" fill="#fff" filter="url(#'+id+'i)"/><path class="kdl-te" fill="none" stroke="url(#'+id+'e)" stroke-width=".9"/>'
+      +'<path class="kdl-x" fill="#000" filter="url(#'+id+'d)"/><path class="kdl-s" fill="url(#'+id+'s)" stroke="url(#'+id+'w)" stroke-width=".9"/><path class="kdl-sh" fill="#fff" filter="url(#'+id+'i)"/>'
+      +'</svg>'
       +'<div class="kdl-ls"></div>'
       +'<div class="kdl-hub"><button type="button" class="kdl-c" aria-label="'+esc(o.centre&&o.centre.label||'Centre')+'"></button></div></div>';
   }
@@ -83,43 +100,43 @@ window.KovaDial=(function(){
     if(typeof el==='string') el=document.getElementById(el);
     if(!el||!el.querySelector) return null;
     o=o||{};
-    var id=el.id, segs=el.querySelector('.kdl-segs'), ls=el.querySelector('.kdl-ls'), cb=el.querySelector('.kdl-c'), gl=el.querySelector('.kdl-gl');
+    var svg=el.querySelector('.kdl-svg'), ls=el.querySelector('.kdl-ls'), cb=el.querySelector('.kdl-c'), gl=el.querySelector('.kdl-gl');
+    var PA={}; ['tr','th','te','x','s','sh'].forEach(function(k){ PA[k]=svg.querySelector('.kdl-'+k); });
     var st={items:o.items||[],pos:clamp(o.sel||0,0,Math.max(0,(o.items||[]).length-1)),pop:reduce?1:0,anim:null,sel:-1};
     st.sel=Math.round(st.pos);
-    /* the track goes all the way round, like a real dial: whatever is chosen,
+    /* the labels go all the way round, like a real dial: whatever is chosen,
        its neighbours sit on both sides (positions wrap; the nearest way round) */
     function n(){ return Math.max(1,st.items.length); }
     function wrap(i){ var m=n(); return ((Math.round(i)%m)+m)%m; }
     function rel(i,pos){ var m=n(), d=((i-pos)%m+m)%m; return d>m/2?d-m:d; }
     function build(){
-      var h='', b='';
-      st.items.forEach(function(it,i){
-        /* per segment: a soft glow of its rim, the glass with its bright edge, the milky light of the chosen one */
-        h+='<path class="kdl-x" fill="url(#'+id+'s)" filter="url(#'+id+'d)"/><path class="kdl-h" fill="#fff" filter="url(#'+id+'i)"/><path class="kdl-s" fill="url(#'+id+'g)" stroke="url(#'+id+'e)" stroke-width=".6"/>';
-        b+='<button type="button" class="kdl-l" role="radio" data-kdl-i="'+i+'" aria-checked="false" aria-label="'+esc(it.label)+'" tabindex="-1">'+(it.icon||'')+'<span>'+esc(it.label)+'</span></button>';
-      });
-      segs.innerHTML=h; ls.innerHTML=b;
-      if(gl) gl.innerHTML=GLASS?st.items.map(function(){ return '<i class="kdl-g"></i>'; }).join(''):'';
+      ls.innerHTML=st.items.map(function(it,i){
+        return '<button type="button" class="kdl-l" role="radio" data-kdl-i="'+i+'" aria-checked="false" aria-label="'+esc(it.label)+'" tabindex="-1">'+(it.icon||'')+'<span>'+esc(it.label)+'</span></button>';
+      }).join('');
+      if(gl) gl.innerHTML=GLASS?'<i class="kdl-g"></i>':'';
     }
-    function centre(){ var c=o.centre||{}; cb.innerHTML=CENTRE[c.icon||'dot']||CENTRE.dot; cb.setAttribute('aria-label',c.label||'Centre'); cb.classList.toggle('kdl-c-act',!!c.onTap); }
+    function centre(){ var c=o.centre||{}; cb.innerHTML=CENTRE.dot; cb.setAttribute('aria-label',c.label||'Centre'); cb.classList.toggle('kdl-c-act',!!c.onTap); }
+    function put(p,d){ p.setAttribute('d',d); }
     function draw(){
-      var S=segs.children, L=ls.children, G=gl?gl.children:[], pos=st.pos, kx=G.length?(el.clientWidth||0)/320:0;
+      var L=ls.children, pos=st.pos, pop=st.pop;
+      /* the band comes out of the hub with a little overshoot, then the wedge, then the labels */
+      var e1=reduce?1:back(clamp(pop/0.62,0,1)), e2=reduce?1:back(clamp((pop-0.22)/0.6,0,1));
+      var o1=clamp(pop/0.25,0,1), o2=clamp((pop-0.22)/0.25,0,1);
+      var ri=HUB+(RI-HUB)*e1, ro=HUB+10+(RO-HUB-10)*e1, sw=0.55+0.45*Math.min(1,e1);
+      var a0=SLOT-(SLOT-T0)*sw, a1=SLOT+(T1-SLOT)*sw, band=o1>0.01?seg(ri,Math.max(ri+12,ro),a0,a1,Math.min(17,(ro-ri)/2.4)):'';
+      put(PA.tr,band); put(PA.th,band); put(PA.te,band); svg.style.setProperty('--kdl-o1',o1.toFixed(3));
+      var wi=HUB+(WI-HUB)*e2, wo=HUB+12+(WO-HUB-12)*e2, wh=WH*(0.6+0.4*Math.min(1,e2)), wedge=o2>0.01?seg(wi,Math.max(wi+12,wo),SLOT-wh,SLOT+wh,Math.min(18,(wo-wi)/2.4)):'';
+      put(PA.x,wedge); put(PA.s,wedge); put(PA.sh,wedge); svg.style.setProperty('--kdl-o2',o2.toFixed(3));
+      var G=gl&&gl.firstChild, kx=G?(el.clientWidth||0)/320:0;
+      if(G){ var gp=band&&kx?'path("'+seg(ri,Math.max(ri+12,ro),a0,a1,Math.min(17,(ro-ri)/2.4),kx)+'")':'none'; G.style.clipPath=gp; G.style.webkitClipPath=gp; G.style.opacity=o1.toFixed(3); }
       for(var i=0;i<st.items.length;i++){
         var d=rel(i,pos), ang=SLOT+d*STEP, t=Math.max(0,1-Math.abs(d)), t2=t*t*(3-2*t);
-        var vis=clamp(Math.min((ang-LO)/FADE,(HI-ang)/FADE),0,1);
-        /* the pop: each segment comes out from the hub, the chosen one first */
-        var lag=Math.min(Math.abs(d),3)*0.11, pp=clamp((st.pop-lag)/(1-0.33),0,1), e=reduce?1:back(pp);
-        var ri=RI-4*t2, ro=RO+GROW*t2, half=(W+4*t2)/2, cr=13+7*t2;
-        var k=0.36+0.64*e, ri2=44+(ri-44)*k, ro2=44+(ro-44)*k, sp=half*(0.55+0.45*Math.min(1,e));
-        var op=vis*clamp(pp*1.6,0,1);
-        var path=op>0.01?seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2)):'';
-        S[3*i].setAttribute('d',path); S[3*i].style.opacity=(op*t2).toFixed(3);
-        S[3*i+1].setAttribute('d',path); S[3*i+1].style.opacity=op.toFixed(3);
-        S[3*i+2].setAttribute('d',path); S[3*i+2].style.opacity=op.toFixed(3);
-        if(G[i]){ var gp=op>0.01&&kx?'path("'+seg(ri2,Math.max(ri2+16,ro2),ang-sp,ang+sp,Math.min(cr,(ro2-ri2)/2.2),kx)+'")':'none'; G[i].style.clipPath=gp; G[i].style.webkitClipPath=gp; G[i].style.opacity=op.toFixed(3); }
-        var m=P((ri2+ro2)/2+3*t2,ang), lb=L[i];
+        /* fading out as they slide into the gap at the top left */
+        var vis=clamp(Math.min((ang-T0-4)/FADE,(T1-4-ang)/FADE),0,1);
+        var pl=reduce?1:clamp((pop-0.34-Math.min(Math.abs(d),3)*0.07)/0.4,0,1);
+        var r=(ri+ro)/2+((WI+WO)/2-(RI+RO)/2)*t2*e2, m=P(r,ang), lb=L[i], op=vis*pl;
         lb.style.left=(m[0]/3.2).toFixed(2)+'%'; lb.style.top=(m[1]/3.2).toFixed(2)+'%';
-        lb.style.opacity=op.toFixed(3); lb.style.transform='translate(-50%,-50%) scale('+(0.94+0.08*t2).toFixed(3)+')';
+        lb.style.opacity=op.toFixed(3); lb.style.transform='translate(-50%,-50%) scale('+(0.92+0.08*pl+0.06*t2).toFixed(3)+')';
         lb.style.visibility=op<0.15?'hidden':'visible';
         var on=wrap(pos)===i; lb.classList.toggle('on',on); lb.setAttribute('aria-checked',String(on)); lb.tabIndex=on?0:-1;
       }
@@ -141,21 +158,21 @@ window.KovaDial=(function(){
       run(to,quiet?0:Math.min(620,240+Math.abs(st.pos-to)*170),function(){ done(quiet); });
     }
     function pop(dir,done){
-      var from=st.pop, to=dir===false?0:1, t0=now(), ms=to?720:260;
+      var from=st.pop, to=dir===false?0:1, t0=now(), ms=to?760:260;
       if(reduce){ st.pop=to; draw(); if(done) done(); return; }
       (function f(){ var t=clamp((now()-t0)/ms,0,1); st.pop=from+(to-from)*t; draw(); if(t<1) raf(f); else if(done) done(); })();
     }
-    /* the centre button: a new set of segments goes back into the hub and the next one comes out all around */
+    /* the centre button: the labels go back into the hub and the next set comes out all around */
     function swap(items,sel,c){
       pop(false,function(){ st.items=items; st.pos=clamp(sel||0,0,items.length-1); st.sel=Math.round(st.pos); if(c) o.centre=c; build(); centre(); draw(); pop(true); });
     }
-    /* dragging round the track */
+    /* dragging round the band */
     var drag=null, moved=false;
     function angAt(ev){ var r=el.getBoundingClientRect(); return Math.atan2(ev.clientY-(r.top+r.height/2),ev.clientX-(r.left+r.width/2))*57.3; }
     el.addEventListener('pointerdown',function(ev){
       if(ev.button>0||(ev.target.closest&&ev.target.closest('.kdl-hub'))) return;
       var r=el.getBoundingClientRect(), dx=ev.clientX-(r.left+r.width/2), dy=ev.clientY-(r.top+r.height/2), rr=Math.sqrt(dx*dx+dy*dy)/r.width*320;
-      if(rr<40||rr>158) return;
+      if(rr<HUB-6||rr>WO+8) return;
       drag={a:angAt(ev),p:st.pos,x:ev.clientX,y:ev.clientY,id:ev.pointerId}; moved=false; st.anim=null;
     });
     el.addEventListener('pointermove',function(ev){
@@ -174,8 +191,8 @@ window.KovaDial=(function(){
     },true);
     el.addEventListener('keydown',function(ev){
       var k=ev.key, i=st.sel;
-      if(k==='ArrowRight'||k==='ArrowDown'){ ev.preventDefault(); set(i+1); setTimeout(function(){ var b=ls.querySelector('.kdl-l.on'); if(b) b.focus(); },300); }
-      else if(k==='ArrowLeft'||k==='ArrowUp'){ ev.preventDefault(); set(i-1); setTimeout(function(){ var b=ls.querySelector('.kdl-l.on'); if(b) b.focus(); },300); }
+      if(k==='ArrowRight'||k==='ArrowDown'){ ev.preventDefault(); set(i+1); setTimeout(function(){ var b=ls.querySelector('.kdl-l.on'); if(b) b.focus({preventScroll:true}); },300); }
+      else if(k==='ArrowLeft'||k==='ArrowUp'){ ev.preventDefault(); set(i-1); setTimeout(function(){ var b=ls.querySelector('.kdl-l.on'); if(b) b.focus({preventScroll:true}); },300); }
     });
     var wacc=0, wt=0;
     el.addEventListener('wheel',function(ev){
@@ -193,5 +210,5 @@ window.KovaDial=(function(){
   var EXPAND='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-6.5 6.5M10 20H4v-6M4 20l6.5-6.5"/></svg>';
   var SHRINK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4l-6 6M14 4.5V10h5.5M4 20l6-6M10 19.5V14H4.5"/></svg>';
   function arrows(open){ return open?SHRINK:EXPAND; }
-  return {html:html,mount:mount,mus:mus,sprite:sprite,art:art,arrows:arrows,seg:seg,MI:MI,_geo:{C:C,STEP:STEP,SLOT:SLOT,RI:RI,RO:RO,GROW:GROW,LO:LO,HI:HI}};
+  return {html:html,mount:mount,mus:mus,sprite:sprite,art:art,arrows:arrows,seg:seg,MI:MI,_geo:{C:C,STEP:STEP,SLOT:SLOT,RI:RI,RO:RO,GROW:GROW,LO:LO,HI:HI,W:W,WI:WI,WO:WO,WH:WH,T0:T0,T1:T1,HUB:HUB}};
 })();

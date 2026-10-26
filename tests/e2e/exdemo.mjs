@@ -31,12 +31,14 @@ for (const theme of ['dark', 'soft', 'light']) {
   const cells = await p.evaluate(() => ({ n: document.querySelectorAll('#sheetIn #kxpCard .kdl-t').length, svg: document.querySelectorAll('#sheetIn #kxpCard .kdl-t svg').length, over: document.documentElement.scrollWidth - innerWidth }));
   ck(theme + ': the library shows every exercise with its picture, inside the screen', cells.n >= 80 && cells.svg >= 80 && cells.over <= 1);
   /* p43: the dial, as in the owner's Ron Design Lab reference */
-  const geo = await p.evaluate(() => { const d = document.querySelector('#sheetIn .kdl'), r = d.getBoundingClientRect(), on = d.querySelector('.kdl-l.on'), segs = [...d.querySelectorAll('.kdl-s')].filter((x) => +x.style.opacity > 0.5);
-    const far = (x) => { const L = x.getTotalLength(); let m = 0; for (let i = 0; i <= 60; i++) { const q = x.getPointAtLength(L * i / 60); m = Math.max(m, Math.hypot(q.x - 160, q.y - 160)); } return m; };
-    const sel = [...d.querySelectorAll('.kdl-x')].find((x) => +x.style.opacity > 0.5);
-    return { w: r.width, inView: r.left >= 0 && r.right <= innerWidth, shown: segs.length, sel: on && on.textContent.trim(), farSel: sel ? far(sel) : 0, farOther: Math.max(...segs.filter((x) => x.previousSibling.previousSibling !== sel).map(far)), yel: getComputedStyle(d.querySelector('.kdl-c')).backgroundColor }; });
-  ck(theme + ': a dial of frosted segments round a neon-yellow centre, on screen, 4 to 6 showing at once', geo.inView && geo.w >= 300 && geo.shown >= 4 && geo.shown <= 6 && /rgb\(223, 255, 0\)/.test(geo.yel) || (console.error(theme, geo), false));
-  ck(theme + ': …the chosen one sits in the slot, lighter and pushed out past the others', geo.sel === 'All' && geo.farSel > geo.farOther + 8 || (console.error(theme, geo), false));
+  /* p43e: measured from the reference: a band of frosted glass, a wedge past it, a lime button, a brown form on a light dotted backdrop */
+  const geo = await p.evaluate(() => { const d = document.querySelector('#sheetIn .kdl'), r = d.getBoundingClientRect(), on = d.querySelector('.kdl-l.on');
+    const far = (x) => { const L = x.getTotalLength(); let m = 0; for (let i = 0; i <= 80; i++) { const q = x.getPointAtLength(L * i / 80); m = Math.max(m, Math.hypot(q.x - 160, q.y - 160)); } return m; };
+    const shown = [...d.querySelectorAll('.kdl-l')].filter((x) => +x.style.opacity > 0.5).length, dome = d.querySelector('.kdl-dome').getBoundingClientRect(), bg = getComputedStyle(document.getElementById('sheet')).backgroundImage;
+    const ob = on.getBoundingClientRect(), oa = Math.atan2(ob.top + ob.height / 2 - (r.top + r.height / 2), ob.left + ob.width / 2 - (r.left + r.width / 2)) * 57.3;
+    return { w: r.width, inView: r.left >= 0 && r.right <= innerWidth, shown, sel: on && on.textContent.trim(), oa, farSel: far(d.querySelector('.kdl-s')), farBand: far(d.querySelector('.kdl-tr')), yel: getComputedStyle(d.querySelector('.kdl-c')).backgroundImage, dot: !!d.querySelector('.kdl-c .kdl-dot'), dome: dome.width > r.width, dots: /radial-gradient/.test(bg), over: document.documentElement.scrollWidth - innerWidth }; });
+  ck(theme + ': a band of frosted glass round a lime button with a black dot, on a brown form against a dotted backdrop, on screen, 3 to 5 showing at once', geo.inView && geo.w >= 300 && geo.shown >= 3 && geo.shown <= 5 && /223, 225, 85/.test(geo.yel) && geo.dot && geo.dome && geo.dots && geo.over <= 1 || (console.error(theme, geo), false));
+  ck(theme + ': …the chosen one sits in the wedge a little right of straight down, the wedge reaching past the band', geo.sel === 'All' && Math.abs(geo.oa - 82) < 6 && geo.farSel > geo.farBand + 8 || (console.error(theme, geo), false));
   /* drag round the track: it slides, then settles on the one in the slot */
   const box = await p.locator('#sheetIn .kdl').boundingBox(), cx = box.x + box.width / 2, cy = box.y + box.height / 2, R = box.width * 0.32;
   await p.mouse.move(cx + R * Math.cos(1.4), cy + R * Math.sin(1.4)); await p.mouse.down();
@@ -45,7 +47,8 @@ for (const theme of ['dark', 'soft', 'light']) {
   const dragged = await p.evaluate(() => ({ sel: document.querySelector('#sheetIn .kdl-l.on').textContent.trim(), card: document.querySelector('#kxpCard .kdl-name').textContent }));
   ck(theme + ': dragging round it slides the segments; the one that lands in the slot fills the card', dragged.sel !== 'All' && dragged.card.toLowerCase().indexOf(dragged.sel.toLowerCase().slice(0, 4)) === 0 || (console.error(theme, dragged), false));
   await p.screenshot({ path: join(shots, `exdemo-dial-${theme}.png`) });
-  await p.locator('#sheetIn .kdl-l', { hasText: 'All' }).first().click(); await p.waitForTimeout(900);
+  /* All now sits in the gap at the top left (hidden): turn the dial back to it */
+  await p.evaluate(() => KovaExPage.dial().set(0)); await p.waitForTimeout(900);
   await p.locator('#sheetIn #kxpCard .kdl-t[data-exinfo="Romanian deadlift"]').click(); await p.waitForTimeout(400);
   const f1 = await p.evaluate(() => document.querySelector('#sheetIn .kxp-fig').innerHTML);
   await p.waitForTimeout(700);

@@ -2,7 +2,9 @@
    and all of them pop up all around... it's not like buttons, it's kind of
    like a slider". Segments round a centre button, the one in the slot is the
    choice, it goes all the way round, keys and taps move it, the centre
-   button does the page's own thing. */
+   button does the page's own thing. p43e: one band of frosted glass the
+   labels ride round, a fixed wedge for the choice, a lime button with a
+   black dot, all on a brown form (measured from the owner's reference). */
 const { JSDOM, VirtualConsole } = require('jsdom');
 const fs = require('fs');
 const html = fs.readFileSync(__dirname + '/../index.html', 'utf8');
@@ -26,12 +28,15 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const picks = []; let taps = 0;
   const D = KD.mount(box.firstChild, { items, sel: 0, onPick: (i, it) => picks.push(it.id), centre: { icon: 'swap', label: 'Switch', onTap: () => taps++ } });
   const el = box.firstChild;
-  ck('it draws a glass segment and a label for each choice, round a centre button', el.querySelectorAll('.kdl-s').length === 7 && el.querySelectorAll('.kdl-l').length === 7 && !!el.querySelector('.kdl-c svg'));
+  ck('it draws one band of glass, one wedge for the choice and a label for each choice, round a lime button with a black dot, on a brown form', el.querySelectorAll('.kdl-tr').length === 1 && el.querySelectorAll('.kdl-s').length === 1 && el.querySelectorAll('.kdl-l').length === 7 && !!el.querySelector('.kdl-c .kdl-dot') && !el.querySelector('.kdl-c svg') && !!el.querySelector('.kdl-dome'));
   ck('…it is a radio group: the one in the slot is checked', el.getAttribute('role') === 'radiogroup' && el.querySelector('.kdl-l.on').textContent === 'All' && el.querySelector('.kdl-l.on').getAttribute('aria-checked') === 'true');
   ck('every body part has its own drawn icon (a leg lit at the front, back or calf; glutes, chest, back, shoulders, a flexed arm, abs)', ['Quads', 'Hamstrings', 'Calves', 'Glutes', 'Chest', 'Back', 'Shoulders', 'Arms', 'Core', 'skill', 'all'].every((g) => /kdl-mi/.test(KD.mus(g)) && /class="f"/.test(KD.mus(g))) && KD.mus('Legs') === KD.mus('Quads') && KD.mus('Quads') !== KD.mus('Hamstrings'));
   await wait(900);
-  const op = (i) => +el.querySelectorAll('.kdl-s')[i].style.opacity;
+  const op = (i) => +el.querySelectorAll('.kdl-l')[i].style.opacity;
+  const G = KD._geo, ang = (i) => { const l = el.querySelectorAll('.kdl-l')[i]; return Math.atan2(parseFloat(l.style.top) * 3.2 - 160, parseFloat(l.style.left) * 3.2 - 160) * 57.3; };
   ck('it goes all the way round: with the first one chosen, the last sits on the other side of it', op(6) > 0.5 && op(1) > 0.5);
+  ck('…the chosen one sits in the wedge (a little right of straight down), the next ones ride round the band, and the ones in the gap at the top left are hidden', Math.abs(ang(0) - G.SLOT) < 2 && Math.abs(ang(1) - (G.SLOT + G.STEP)) < 2 && Math.abs(ang(6) - (G.SLOT - G.STEP)) < 2 && op(3) === 0 && op(4) === 0 && G.WO > G.RO && G.T1 - G.T0 < 300);
+  ck('…the wedge reaches past the band, the band leaves a gap at the top left', /^M/.test(el.querySelector('.kdl-s').getAttribute('d')) && /^M/.test(el.querySelector('.kdl-tr').getAttribute('d')));
   /* tap a segment: it slides into the slot, the nearest way round */
   el.querySelectorAll('.kdl-l')[6].click(); await wait(900);
   ck('tapping a segment slides it into the slot and says so once', D.sel() === 6 && picks.join() === 'core' && el.querySelector('.kdl-l.on').textContent === 'Core');

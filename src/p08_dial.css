@@ -1,111 +1,119 @@
-/* p43d: the dial (src/p08_dial.js), rebuilt to the owner's Ron Design Lab
-   reference and its design notes ("it looks cartoonish"):
-   - a warm dark-brown surface under a soft studio spotlight (#2B1E17 to
-     #140E0A), set on the whole page;
-   - the segments are dark frosted glass, heavily blurred so the brown
-     tints through, translucent charcoal-smoke, NO hard borders: a soft light
-     along the top inside edge and a soft shade along the bottom one;
-   - the chosen one loses its transparency: solid slate gray, floating a
-     little above the rest on a soft shadow;
-   - a flat, matte neon-yellow button (#DFFF00) with one black dot, in dark
-     brown rings;
-   - thin white line icons, clean geometric white type;
-   - the card: blurred translucent glass, a small spaced capital label, a
-     tiny glowing dot, a big bold white number. */
+/* p43e: the dial (src/p08_dial.js), rebuilt from the owner's Ron Design Lab
+   reference, its shapes and colours measured from the image ("it doesn't
+   look exactly like the images... the background not even like the
+   reference"):
+   - the backdrop: a light misty gray (#E0E0E0) with a faint dot grid;
+   - on it a big glossy brown form (#33281F, a warm tan sheen #A07D66 on its
+     right side), the dial sitting on it;
+   - one band of frosted glass (a touch lighter than the brown, lighter again
+     towards its outer edge, a fine light rim brightest on the right), a gap
+     at the top left; the labels ride round it, thin white type with a thin
+     line icon above;
+   - the choice: a solid taupe wedge (#8C8480 to #9D9794), longer than the
+     band, floating on a soft shadow;
+   - the centre: a lime button (#DFE155, a darker edge #CBCE4F) with one
+     black dot, on a single grayish-brown ring (#463A32);
+   - the card: smoky gray glass (#58514F), small spaced capitals, a glowing
+     lime dot, a big white number.
+   The same in all three looks (the reference is one scene); dark only dims
+   the backdrop a little. */
 
-/* the surface: the whole page */
+/* the page: the backdrop, edge to edge, the Back button floating on it */
 #sheet:has(.kdl-page){background:
-  radial-gradient(60% 46% at 64% 30%,rgba(168,118,82,.42),rgba(120,82,56,.16) 55%,transparent 80%),
-  radial-gradient(70% 50% at 12% 4%,rgba(214,176,140,.16),transparent 60%),
-  radial-gradient(80% 60% at 50% 110%,rgba(10,6,4,.85),transparent 70%),
-  linear-gradient(165deg,#3A281D 0%,#2B1E17 38%,#1C140F 70%,#140E0A 100%)!important}
-body.soft-light #sheet:has(.kdl-page){background:
-  radial-gradient(60% 46% at 64% 30%,rgba(196,150,114,.45),transparent 80%),
-  linear-gradient(165deg,#5A4537 0%,#47362B 45%,#33271F 100%)!important}
-body.light-mode #sheet:has(.kdl-page){background:
-  radial-gradient(60% 46% at 64% 28%,rgba(255,255,255,.9),rgba(255,250,242,.3) 55%,transparent 80%),
-  linear-gradient(165deg,#EFE6DB 0%,#E2D5C6 45%,#CDBDAB 100%)!important}
-#sheet:has(.kdl-page) .kdl-page{--txt:#F7F2EC;--txt-2:rgba(247,242,236,.74);--txt-3:rgba(247,242,236,.52)}
-body.light-mode #sheet:has(.kdl-page) .kdl-page{--txt:#20170F;--txt-2:rgba(32,23,15,.7);--txt-3:rgba(32,23,15,.5)}
-#sheet:has(.kdl-page) .back{background:rgba(70,56,48,.4);border-color:transparent;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+  radial-gradient(circle,rgba(0,0,0,.085) 1px,transparent 1.6px) 0 0/22px 22px,
+  linear-gradient(160deg,#E8E8E8 0%,#E0E0E0 50%,#D8D8D8 100%)!important}
+body:not(.light-mode):not(.soft-light) #sheet:has(.kdl-page){background:
+  radial-gradient(circle,rgba(0,0,0,.09) 1px,transparent 1.6px) 0 0/22px 22px,
+  linear-gradient(160deg,#D9D9D9 0%,#D0D0D0 50%,#C6C6C6 100%)!important}
+#sheet:has(.kdl-page) .sheet-top{position:absolute;left:0;right:0;top:0;z-index:3}
+#sheet:has(.kdl-page) .sheet-in{max-width:none;overflow-x:hidden;padding-top:calc(62px + env(safe-area-inset-top))}
+#sheet:has(.kdl-page) .back{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.06);color:#1E1915;box-shadow:0 4px 14px rgba(0,0,0,.08);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+#sheet:has(.kdl-page) .back .ic{color:#1E1915}
+.kdl-page{position:relative;z-index:0;max-width:680px;margin:0 auto;--txt:#F4EFEB;--txt-2:rgba(244,239,235,.76);--txt-3:rgba(244,239,235,.56)}
+.kdl+.kdl-card{margin-top:36px}
+.kdl-page .kdl-top{--txt:#1E1915;--txt-2:rgba(30,25,21,.7);--txt-3:rgba(30,25,21,.5)}
 
-.kdl{--kdl-glass:rgba(92,80,74,.40);--kdl-a:rgba(255,255,255,.035);--kdl-b:rgba(255,255,255,0);
-  --kdl-sa:#A79F99;--kdl-sb:#827A74;--kdl-hi:rgba(255,255,255,.34);--kdl-lo:rgba(0,0,0,.30);
-  --kdl-e1:rgba(255,255,255,.22);--kdl-e2:rgba(255,255,255,.05);--kdl-e3:rgba(255,255,255,0);
-  --kdl-ink:rgba(255,255,255,.9);--kdl-on:#FFFFFF;--kdl-yel:#DFFF00;
-  position:relative;width:min(100%,380px);aspect-ratio:1/1;margin:0 auto;touch-action:none;-webkit-user-select:none;user-select:none;outline:none}
-body.soft-light .kdl{--kdl-glass:rgba(120,106,98,.38)}
-body.light-mode .kdl{--kdl-glass:rgba(255,255,255,.36);--kdl-sa:#9C948E;--kdl-sb:#7C7570;--kdl-hi:rgba(255,255,255,.7);--kdl-lo:rgba(60,40,24,.16);
-  --kdl-e1:rgba(255,255,255,.6);--kdl-ink:rgba(32,23,15,.82);--kdl-on:#FFFFFF}
-/* each segment's glass: the surface behind, heavily blurred, tinting through */
+.kdl{--kdl-t1:rgba(255,246,240,.07);--kdl-t2:rgba(255,246,240,.15);
+  --kdl-e1:rgba(255,255,255,.62);--kdl-e2:rgba(255,255,255,.26);--kdl-e3:rgba(255,255,255,.16);
+  --kdl-sa:#8E8682;--kdl-sb:#A09A96;--kdl-hi:rgba(255,255,255,.22);--kdl-lo:rgba(0,0,0,.22);
+  --kdl-ink:rgba(242,236,232,.86);--kdl-on:#FFFFFF;--kdl-yel:#DFE155;
+  position:relative;width:min(100%,380px);aspect-ratio:1/1;margin:26px auto 0;touch-action:none;-webkit-user-select:none;user-select:none;outline:none}
+/* the glossy brown form under the dial */
+.kdl-dome{position:absolute;z-index:-1;left:-9%;top:-4%;width:128%;aspect-ratio:1/1;border-radius:50%;pointer-events:none;
+  background:
+    radial-gradient(10% 24% at 82% 34%,rgba(160,125,102,.8),rgba(131,101,83,.32) 55%,transparent 80%),
+    radial-gradient(30% 24% at 76% 80%,rgba(14,8,5,.45),transparent 75%),
+    radial-gradient(48% 44% at 40% 38%,rgba(70,55,45,.55),transparent 80%),
+    radial-gradient(circle at 44% 42%,#382C24 0%,#33281F 38%,#2C211A 58%,#241A13 72%,#33251C 100%);
+  box-shadow:0 60px 90px -30px rgba(36,24,16,.55),0 18px 40px rgba(36,24,16,.22),inset -18px -24px 50px rgba(0,0,0,.35),inset 10px 14px 40px rgba(255,226,200,.05)}
+/* on a wide screen the brown form is bigger, as in the reference's close-up; on a phone it stays clear of the title */
+@media (min-width:700px){.kdl-dome{left:-26%;top:-21%;width:176%}}
+/* the band's glass: the brown behind it, blurred and lit through */
 .kdl-gl{position:absolute;inset:0;pointer-events:none}
-.kdl-g{position:absolute;inset:0;background:var(--kdl-glass);-webkit-backdrop-filter:blur(26px) saturate(1.25);backdrop-filter:blur(26px) saturate(1.25)}
+.kdl-g{position:absolute;inset:0;background:rgba(240,228,222,.05);-webkit-backdrop-filter:blur(18px) saturate(1.15) brightness(1.08);backdrop-filter:blur(18px) saturate(1.15) brightness(1.08)}
 .kdl-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kdl-tr,.kdl-te{opacity:var(--kdl-o1,1)}
+.kdl-th{opacity:calc(var(--kdl-o1,1)*.8)}
+.kdl-x{opacity:calc(var(--kdl-o2,1)*.9)}
+.kdl-s{opacity:var(--kdl-o2,1)}
+.kdl-sh{opacity:calc(var(--kdl-o2,1)*.7)}
 .kdl.kdl-drag{cursor:grabbing}
 .kdl-ls{position:absolute;inset:0}
-.kdl-l{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;width:30%;padding:4px 2px;background:none;border:0;
-  color:var(--kdl-ink);font:300 15px/1.1 'Outfit',-apple-system,sans-serif;letter-spacing:.01em;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.kdl-l span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kdl-l.on{color:var(--kdl-on);font-weight:400;font-size:16px}
-.kdl-l:focus-visible{outline:1.5px solid var(--kdl-on);outline-offset:2px;border-radius:12px}
-/* thin white line icons, no fills on the dial */
-.kdl-ic{width:26px;height:26px;flex-shrink:0;color:currentColor}
-.kdl-mi{fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.kdl-l{position:absolute;display:flex;flex-direction:column;align-items:center;gap:7px;width:31%;padding:4px 2px;background:none;border:0;outline:none;
+  color:var(--kdl-ink);font:300 16px/1.1 'Outfit',-apple-system,sans-serif;letter-spacing:.01em;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.kdl-l span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kdl-l span::first-letter{text-transform:uppercase}
+.kdl-l.on{color:var(--kdl-on);font-size:17px;text-shadow:0 1px 3px rgba(40,30,25,.28)}
+.kdl-l:focus,.kdl-l:focus-visible{outline:none}
+/* thin white line icons */
+.kdl-ic{width:22px;height:22px;flex-shrink:0;color:currentColor}
+.kdl-mi{fill:none;stroke:currentColor;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
 .kdl-mi *,.kdl-art *{vector-effect:non-scaling-stroke}
-.kdl-art{width:38px;height:22px;fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.kdl-art{width:36px;height:21px;fill:none;stroke:currentColor;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
 .kdl-art .f,.kdl-mi .f{fill:currentColor;fill-opacity:.12}
 .kdl-art .s,.kdl-mi .s{fill:currentColor;stroke:none}
 .kdl-art .w,.kdl-mi .w{stroke-width:2}
 .kdl-l .kdl-mi .f,.kdl-l .kdl-art .f{fill:none}
 .kdl-l .kdl-art .s{fill:none;stroke:currentColor}
-.kdl-l .kdl-art .w,.kdl-l .kdl-mi .w{stroke-width:1.6}
-/* the hub: dark brown rings round a flat neon-yellow button */
-.kdl-hub{position:absolute;left:50%;top:50%;width:40%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;
-  background:radial-gradient(circle,#2E2119 0%,#2A1E17 60%,rgba(42,30,23,0) 71%);box-shadow:inset 0 2px 10px rgba(0,0,0,.25)}
-.kdl-hub::before{content:"";position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle at 50% 42%,#24180F,#1A110B 75%);
-  box-shadow:inset 0 3px 8px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.04)}
-body.light-mode .kdl-hub{background:radial-gradient(circle,rgba(120,98,80,.22),rgba(120,98,80,.14) 60%,transparent 71%)}
-body.light-mode .kdl-hub::before{background:radial-gradient(circle at 50% 42%,#3A2B21,#2A1E16 75%)}
-.kdl-c{position:absolute;left:50%;top:50%;width:47%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;border:0;padding:0;cursor:pointer;
-  background:var(--kdl-yel);box-shadow:0 6px 14px rgba(0,0,0,.45),0 1px 0 rgba(255,255,255,.35) inset,0 -2px 3px rgba(80,90,0,.25) inset;
-  display:grid;place-items:center;color:#0B0B05;transition:transform .2s cubic-bezier(.2,.9,.3,1.3)}
+.kdl-l .kdl-art .w,.kdl-l .kdl-mi .w{stroke-width:1.5}
+/* the centre: one grayish-brown ring, a lime button with a black dot */
+.kdl-hub{position:absolute;left:50%;top:50%;width:35%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,#40342C 0%,#463A32 64%,#473B33 100%);box-shadow:0 2px 10px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04)}
+.kdl-c{position:absolute;left:50%;top:50%;width:61%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:radial-gradient(circle at 42% 36%,#E4E65E 0%,#DFE155 55%,#D9DB52 100%);
+  box-shadow:0 2px 0 #C3C15C,0 3px 0 #B6B455,0 8px 14px rgba(0,0,0,.42),inset 0 1px 1px rgba(255,255,255,.45),inset 0 -2px 3px rgba(120,120,30,.18);
+  display:grid;place-items:center;transition:transform .2s cubic-bezier(.2,.9,.3,1.3)}
 .kdl-c:active{transform:translate(-50%,-50%) scale(.93)}
-.kdl-c:focus-visible{outline:2px solid var(--kdl-on);outline-offset:4px}
-.kdl-c svg{width:40%;height:40%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.kdl-c svg path[d^="M9 6.5"]{fill:currentColor;stroke-width:1}
-.kdl-dot{width:14%;height:14%;border-radius:50%;background:#0B0B05}
+.kdl-c:focus{outline:none}
+.kdl-c:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.kdl-dot{width:13%;height:13%;border-radius:50%;background:#281A0C;box-shadow:inset 0 1px 1px rgba(0,0,0,.6)}
 
 /* the switch under the dial (Exercises: muscle or equipment) */
-.kdl-sw{display:flex;justify-content:center;gap:2px;margin:4px auto 14px;width:max-content;padding:3px;border-radius:99px;background:rgba(70,56,48,.42);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.kdl-sw{display:flex;justify-content:center;gap:2px;margin:18px auto 14px;width:max-content;padding:3px;border-radius:99px;background:rgba(58,46,39,.55);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .kdl-sw button{border:0;background:none;border-radius:99px;padding:7px 16px;font:300 13px 'Outfit',sans-serif;color:var(--txt-2);cursor:pointer}
-.kdl-sw button.on{background:#9A928C;color:#fff;font-weight:400;box-shadow:0 4px 10px rgba(0,0,0,.3)}
-body.light-mode .kdl-sw{background:rgba(255,255,255,.45)}
+.kdl-sw button.on{background:#9A938F;color:#fff;font-weight:400;box-shadow:0 4px 10px rgba(0,0,0,.3)}
 
 /* the page around it: few words */
 .kdl-top{display:flex;align-items:center;gap:10px;margin:0 2px 0}
 .kdl-top>div{flex:1;min-width:0}
 .kdl-top b{display:block;font:400 24px/1.1 'Outfit',sans-serif;letter-spacing:-.01em;color:var(--txt)}
 .kdl-top small{font:300 13px 'Outfit',sans-serif;color:var(--txt-3)}
-.kdl-ib{width:42px;height:42px;border-radius:50%;border:0;background:rgba(70,56,48,.42);color:var(--txt);display:grid;place-items:center;cursor:pointer;flex-shrink:0;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.kdl-ib{width:42px;height:42px;border-radius:50%;border:0;background:rgba(58,46,39,.62);color:#F4EFEB;display:grid;place-items:center;cursor:pointer;flex-shrink:0;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .kdl-ib .ic{width:18px;height:18px}
-body.light-mode .kdl-ib{background:rgba(255,255,255,.5)}
-.kdl-page .kxp-q{margin:10px 0 0}
+.kdl-page .kxp-q{margin:12px 0 0;background:rgba(58,46,39,.62);border-color:transparent;color:#F4EFEB;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.kdl-page .kxp-q::placeholder{color:rgba(244,239,235,.6)}
 
 /* the card: blurred translucent glass, a soft warm light in it */
 .kdl-card{position:relative;isolation:isolate;max-width:680px;margin:0 auto;border-radius:30px;padding:20px 20px 18px;overflow:hidden;
-  background:rgba(52,40,33,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 30px 60px rgba(0,0,0,.4);
+  background:rgba(84,77,74,.80);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 30px 60px rgba(30,20,14,.35);
   -webkit-backdrop-filter:blur(30px) saturate(1.2);backdrop-filter:blur(30px) saturate(1.2)}
 .kdl-card::before{content:"";position:absolute;z-index:-1;top:-30%;left:36%;width:70%;height:90%;border-radius:50%;pointer-events:none;
-  background:radial-gradient(closest-side,rgba(255,236,200,.22),rgba(255,226,180,.07) 55%,transparent);filter:blur(12px)}
-body.soft-light .kdl-card{background:rgba(80,64,54,.42)}
-body.light-mode .kdl-card{background:rgba(255,255,255,.46);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 24px 50px rgba(80,60,40,.16)}
-body.light-mode .kdl-card::before{background:radial-gradient(closest-side,rgba(255,255,255,.9),transparent)}
+  background:radial-gradient(closest-side,rgba(255,250,240,.12),rgba(255,246,236,.04) 55%,transparent);filter:blur(12px)}
 .kdl-ch{display:flex;align-items:center;gap:12px;min-height:34px}
 .kdl-name{font:500 12px 'Outfit',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--txt)}
 .kdl-st{display:inline-flex;align-items:center;gap:7px;font:300 13px 'Outfit',sans-serif;color:var(--txt-2)}
-.kdl-st i{width:7px;height:7px;border-radius:50%;background:#DFFF00;box-shadow:0 0 0 3px rgba(223,255,0,.14),0 0 10px rgba(223,255,0,.8)}
+.kdl-st i{width:7px;height:7px;border-radius:50%;background:#E4E65E;box-shadow:0 0 0 3px rgba(228,230,94,.16),0 0 10px rgba(228,230,94,.85)}
 .kdl-st i.r{background:#F2A65A;box-shadow:0 0 0 3px rgba(242,166,90,.14),0 0 10px rgba(242,166,90,.7)}
-body.light-mode .kdl-st i{background:#A6C200;box-shadow:0 0 8px rgba(166,194,0,.6)}
 .kdl-x{margin-left:auto;width:38px;height:38px;border-radius:50%;border:0;background:none;color:var(--txt);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
 .kdl-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .kdl-big{display:flex;align-items:baseline;gap:8px;margin-top:4px}
@@ -113,8 +121,7 @@ body.light-mode .kdl-st i{background:#A6C200;box-shadow:0 0 8px rgba(166,194,0,.
 .kdl-big b.w{font-size:32px;font-weight:500;letter-spacing:-.01em}
 .kdl-big span{font:300 16px 'Outfit',sans-serif;color:var(--txt-2)}
 .kdl-sub{display:flex;align-items:center;gap:7px;font:300 13px 'Outfit',sans-serif;color:var(--txt-2);margin-top:8px}
-.kdl-sub i{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #DFFF00}
-body.light-mode .kdl-sub i{border-bottom-color:#8FA600}
+.kdl-sub i{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #E4E65E}
 .kdl-strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;margin:16px -20px 0;padding:0 20px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .kdl-strip::-webkit-scrollbar{display:none}
 .kdl-card.open .kdl-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));overflow:visible;margin:16px 0 0;padding:0}
@@ -126,11 +133,12 @@ body.light-mode .kdl-sub i{border-bottom-color:#8FA600}
 .kdl-t small{display:block;font:300 11.5px 'Outfit',sans-serif;color:var(--txt-3);margin:3px 4px 0}
 .kdl-t .kdl-art{width:44px;height:26px;margin:8px 4px 2px;color:var(--txt)}
 .kdl-t.att{flex-basis:108px}
-.kdl-t.on{background:#9A928C;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.kdl-t.on{background:#9A938F;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.35)}
 .kdl-t.on small{color:rgba(255,255,255,.75)}.kdl-t.on .kdl-art{color:#fff}
-body.light-mode .kdl-t{background:rgba(255,255,255,.5)}
 .kdl-none{font:300 14px/1.4 'Outfit',sans-serif;color:var(--txt-2);margin-top:12px}
 .kdl-go{display:flex;gap:8px;margin-top:14px}
 .kdl-go .btn{flex:1}
+.kdl-card .btn,.kdl-card .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);color:#fff}
+.kdl-card .chip.on{background:#9A938F;color:#fff}
 .kdl-fig{display:block;height:150px;border-radius:18px;overflow:hidden;margin-top:12px}
 @media (prefers-reduced-motion:reduce){ .kdl-c{transition:none} }
