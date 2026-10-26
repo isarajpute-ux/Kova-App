@@ -97,8 +97,8 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const found = [...doc.querySelectorAll('#sheetIn #kxpCard .kdl-t b')].map((b) => b.textContent);
   ck('search finds by name (the dial stays put)', found.length >= 5 && found.every((n) => /curl/i.test(n)) && !!doc.querySelector('#sheetIn .kdl'));
   doc.querySelector('#sheetIn #kxpCard .kdl-t').click(); await wait(20);
-  ck('an exercise opened from the library has a way back to it', !!doc.querySelector('#sheetIn [data-kxp="back"]'));
-  doc.querySelector('#sheetIn [data-kxp="back"]').click(); await wait(10);
+  ck('an exercise opened from the library has a way back to it (the page’s Back, one page at a time)', typeof w.sheetBack === 'function' && doc.getElementById('sheet').classList.contains('has-prev') && !doc.querySelector('#sheetIn [data-kxp="back"]'));
+  doc.getElementById('sheetBack').click(); await wait(10);
   ck('…and back keeps the search', !!doc.getElementById('kxpQ') && doc.getElementById('kxpQ').value === 'curl');
 
   /* stretch */

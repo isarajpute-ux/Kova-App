@@ -995,6 +995,8 @@ window.KovaExPage=(function(){
   function sheet(h,replace){ if(!window.openSheet) return false; openSheet(h,replace?{replace:true}:null); mountIn(document.getElementById('sheet')||document); return true; }
   /* p44: Back steps back one page (index.html openSheet keeps the one under it); a stretch timer stops when its page is left */
   window.addEventListener('kova:sheetpop',function(){ try{ stopTimer(); }catch(e){} });
+  /* a page that comes back: its moving pictures start again (they stop while the page is put away) */
+  window.addEventListener('kova:sheetback',function(){ try{ var sh=document.getElementById('sheet'); if(sh) sh.querySelectorAll('[data-kxd]').forEach(function(el){ if(el.closest('[aria-pressed="true"]')) return; D.mount(el,el.getAttribute('data-kxd')); }); }catch(e){} });
   var FROM=null;
   function back(){ return ''; }   /* p44: the page's Back goes to the list it came from (openSheet keeps it) */
   function open(name){

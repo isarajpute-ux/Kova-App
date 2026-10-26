@@ -52,7 +52,7 @@ for (const theme of ['dark', 'soft', 'light']) {
     const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else { mo.disconnect(); ok({ draws: KovaDemo.stats.draws - d0, frames: n, changes: ch }); } }; requestAnimationFrame(f); }));
   ck(theme + ': the moving picture plays almost entirely from memory after its first loops, 30 changes a second at most, the page stays smooth', pf.draws <= 8 && pf.changes <= 64 && pf.changes >= 20 && pf.frames >= 50 || (console.error(theme, pf), false));
   const lit = await p.evaluate(() => [...document.querySelectorAll('#sheetIn .kxp-body .m.p')].map((m) => getComputedStyle(m).fill));
-  const acc = theme === 'light' ? 'rgb(200, 87, 26)' : 'rgb(232, 122, 60)';
+  const acc = theme === 'light' ? 'rgb(90, 83, 66)' : 'rgb(183, 170, 140)';   /* Workout's brown (the owner: no more orange) */
   ck(theme + ': the hamstrings and glutes light up in the Workout colour', lit.length >= 4 && lit.every((c) => c === acc) || (console.error(theme, lit.slice(0, 3)), false));
   await p.locator('#sheetIn [data-kxp="pause"]').click(); await p.waitForTimeout(150);
   const s1 = await p.evaluate(() => document.querySelector('#sheetIn .kxp-fig').innerHTML); await p.waitForTimeout(500);

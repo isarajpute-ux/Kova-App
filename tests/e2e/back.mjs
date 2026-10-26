@@ -33,8 +33,10 @@ for (const theme of ['dark', 'light']) {
   await p.locator('#sheetBack').click(); await p.waitForTimeout(500);
   const back1 = await p.evaluate(() => ({ t: (document.querySelector('#sheetIn .kxp-h b') || {}).textContent, on: document.getElementById('sheet').classList.contains('on'), top: document.getElementById('sheetIn').scrollTop, scr: (document.querySelector('.screen.on') || {}).id }));
   ck(theme + ': Back goes to the exercise page, where you were on it (not all the way out)', back1.on && back1.t === ex && Math.abs(back1.top - sc1) < 40 || (console.log(back1, sc1), false));
-  const d0 = await p.evaluate(() => KovaDemo.stats.draws); await p.waitForTimeout(700);
-  ck(theme + ': …its moving picture still moves', (await p.evaluate(() => KovaDemo.stats.draws)) > d0 || await p.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches));
+  /* it plays from memory after its first loops: watch the picture itself change */
+  await p.evaluate(() => { document.getElementById('sheetIn').scrollTop = 0; }); await p.waitForTimeout(150);
+  const moves = await p.evaluate(() => new Promise((ok) => { const f = document.querySelector('#sheetIn .kxp-fig, #sheetIn [data-kxd]'); if (!f) return ok(-1); let n = 0; const mo = new MutationObserver((m) => { n += m.length; }); mo.observe(f, { subtree: true, childList: true, attributes: true }); setTimeout(() => { mo.disconnect(); ok(n); }, 900); }));
+  ck(theme + ': …its moving picture still moves', moves > 3 || await p.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches) || (console.log('moves', moves), false));
   await p.locator('#sheetBack').click(); await p.waitForTimeout(500);
   ck(theme + ': Back again closes it, onto the workout', await p.evaluate(() => !document.getElementById('sheet').classList.contains('on') && document.querySelector('.screen.on').id === 's-session'));
   /* Stretch, from Workout: a body part, a stretch, Back to the same body part */
