@@ -1,9 +1,9 @@
 /* ---- KovaRecovery (p35): the Muscle recovery card on Workout and a
    muscle's page. Kova's card; ready / recovering / needs rest in Kova's
    good, warm and Workout-orange colours. Dark, soft light, light glass. ---- */
-.krc{margin-top:12px;--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+.krc{margin-top:12px;--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#C08573}
 body.light-mode .krc,body.light-mode .krcs{--r-ready:#2E9E5B;--r-mid:#C9A227;--r-rest:#D9601F}
-.krcs{--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#E87A3C}
+.krcs{--r-ready:#5FD08A;--r-mid:#F4E18E;--r-rest:#C08573}
 .krc .kv-h{align-items:center}
 .krc-q{width:30px;height:30px;border-radius:50%;border:.5px solid var(--ron-line);background:none;display:grid;place-items:center;color:var(--ron-txt-2);cursor:pointer;padding:0}
 .krc-q .ic{font-size:15px}
@@ -16,7 +16,7 @@ body.light-mode .krc,body.light-mode .krcs{--r-ready:#2E9E5B;--r-mid:#C9A227;--r
 body.light-mode .krc-body .m{fill:rgba(18,22,28,.05)}
 .krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.55;stroke:var(--r-ready);stroke-opacity:.7}
 .krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.6;stroke:var(--r-mid);stroke-opacity:.8}
-.krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8;stroke:var(--r-rest);filter:drop-shadow(0 0 4px rgba(232,122,60,.5))}
+.krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8;stroke:var(--r-rest);filter:drop-shadow(0 0 4px rgba(192,133,115,.45))}
 body.light-mode .krc-body .m.r-ready{fill:var(--r-ready);fill-opacity:.6}
 body.light-mode .krc-body .m.r-mid{fill:var(--r-mid);fill-opacity:.65}
 body.light-mode .krc-body .m.r-rest{fill:var(--r-rest);fill-opacity:.8}
@@ -37,7 +37,7 @@ body.light-mode .krc-m{background:rgba(255,255,255,.6)}
 .krcs-top{display:flex;align-items:center;gap:16px;margin:4px 0 8px}
 .krcs-top b{display:block;font-size:15px;font-weight:400}.krcs-top span{display:block;font-size:12px;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:2px}
 .krcs-wk .bar{position:relative;height:8px;border-radius:4px;background:rgba(127,127,127,.18);overflow:visible}
-.krcs-wk .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#E87A3C}
+.krcs-wk .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#B7AA8C}
 .krcs-wk .bar b{position:absolute;top:-4px;width:1px;height:16px;background:currentColor;opacity:.4}
 .krcs-wk span{display:block;font-size:12px;line-height:1.5;color:var(--kp-mute,rgba(236,236,236,.62));margin-top:8px}
 .krcs-n{margin-top:16px;font-size:12px}

@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-02',title:'Back goes back one page',
+      lines:['Back returns to the page before','Workout is brown everywhere now','Swap day is now Customize','When to stretch: after training'],
+      steps:[
+        ['session','Customize','Your goal, muscles, numbers or program.',function(){ return q('#s-session [data-go="customize"]'); }],
+        ['session','Back, one page at a time','Exercise, then stretch, then Back: the exercise again.',function(){ return first('#s-session [data-exinfo]'); }]
+      ]},
     {id:'new-2026-11-01',title:'Your tasks stay saved',
       lines:['Phone and laptop now merge your tasks','The dial is gone: simple tabs for now'],
       steps:[

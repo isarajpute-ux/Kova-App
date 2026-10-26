@@ -68,6 +68,8 @@ window.KovaPush=(function(){
       out[id]={kind:a.id.indexOf('med:')===0?'meds':(KIND[a.id]||'custom'),title:String(a.title||'Kova').slice(0,60),body:String(a.body||'').slice(0,160),
         time:hhmm(m),days:days,on:!!a.on,screen:a.id.indexOf('med:')===0?'health':(SCREEN[a.p]||'home')};
     });
+    /* p44: task reminders, each a one-off on its own date (src/p08_taskalert.js) */
+    try{ if(window.KovaTaskAlert&&KovaTaskAlert.pushItems) Object.assign(out,KovaTaskAlert.pushItems(Math.max(0,40-Object.keys(out).length))); }catch(e){}
     return out;
   }
   function tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC'; }catch(e){ return 'UTC'; } }

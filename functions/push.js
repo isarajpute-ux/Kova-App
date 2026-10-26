@@ -18,7 +18,7 @@
 const crypto = require('crypto');
 const W = require('./wellness');
 
-const KINDS = ['bedtime', 'wind_down', 'water', 'meds', 'meal', 'workout', 'weigh_in', 'glp1', 'custom', 'today', 'recap'];
+const KINDS = ['bedtime', 'wind_down', 'water', 'meds', 'meal', 'workout', 'weigh_in', 'glp1', 'custom', 'today', 'recap', 'task'];
 const SCREENS = /^[a-z][a-z0-9_-]{0,30}$/;
 /* Kova's one alert sound (src/p08_chime.js): the phone has kova_kova.wav
    and, on Android, a kova_kova channel that plays it. Every push uses it. */
@@ -41,7 +41,9 @@ function cleanItem(x) {
     time: String(x.time),
     days: days.length ? Array.from(new Set(days)).sort() : [0, 1, 2, 3, 4, 5, 6],
     on: x.on !== false,
-    screen: SCREENS.test(String(x.screen || '')) ? String(x.screen) : 'home'
+    screen: SCREENS.test(String(x.screen || '')) ? String(x.screen) : 'home',
+    /* p44: a one-off on its own date (a task's reminder), YYYY-MM-DD in the person's time zone */
+    ...(/^\d{4}-\d{2}-\d{2}$/.test(String(x.date || '')) ? { date: String(x.date) } : {})
   };
 }
 
@@ -78,6 +80,7 @@ function dueItems(list, sent, t) {
   Object.keys(list.items || {}).forEach((id) => {
     const it = list.items[id];
     if (!it || !it.on || !it.days.includes(dow)) return;
+    if (it.date && it.date !== L.date) return;                 // a one-off: only on its day
     const at = hm(it.time);
     if (L.mins < at || L.mins >= at + WINDOW) return;
     if ((sent || {})[id] === L.date) return;                  // once a day

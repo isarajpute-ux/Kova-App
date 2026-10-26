@@ -176,3 +176,19 @@ function photoStandIn(){
 self.addEventListener('message', function(e){
   if (e.data === 'skipWaiting') self.skipWaiting();
 });
+
+/* p44: a task reminder the page showed (src/p08_taskalert.js): tapping it
+   brings Kova forward on that task, or opens Kova on it. FCM's own pushes
+   carry no kovaUrl and are left to Firebase. */
+self.addEventListener('notificationclick', function (e) {
+  var d = e.notification && e.notification.data;
+  if (!d || !d.kovaUrl) return;
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      if (c.url.indexOf(self.location.origin) === 0 && 'focus' in c) { c.postMessage({ kovaTask: d.task || '' }); return c.focus(); }
+    }
+    return self.clients.openWindow ? self.clients.openWindow(d.kovaUrl) : null;
+  }));
+});

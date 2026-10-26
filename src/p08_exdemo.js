@@ -983,7 +983,8 @@ window.KovaExPage=(function(){
     }
     h+='<div class="kxp-l">Your history</div>'+history(name);
     var sl=mus?D.stretchesFor((mus.p||[]).concat(mus.s||[])):[];
-    if(sl.length) h+='<div class="kxp-l">Stretch after</div>'+stretchCards(sl);
+    /* p44, the owner: "should I be stretching before?" Warm up by moving (Kova's warm-up sets); hold stretches after, or on rest days. Long holds (over a minute a muscle) just before lifting can cost a little strength; holds do not stop soreness (Behm 2016, Herbert 2011). */
+    if(sl.length) h+='<div class="kxp-l">Stretch after training</div><div class="kxp-tip">Before: warm-up sets, not long holds.</div>'+stretchCards(sl);
     h+='<button type="button" class="btn ghost kxp-go" data-kfc="fc">Check my form on video</button></div>';
     return h;
   }
@@ -991,9 +992,11 @@ window.KovaExPage=(function(){
     (root||document).querySelectorAll('[data-kxd]').forEach(function(el){ if(!el.__kxd){ el.__kxd=1; D.mount(el,el.getAttribute('data-kxd')); } });
     (root||document).querySelectorAll('[data-kxd-still]').forEach(function(el){ if(!el.__kxd){ el.__kxd=1; D.mount(el,el.getAttribute('data-kxd-still'),{still:true,u:1}); } });
   }
-  function sheet(h){ if(!window.openSheet) return false; openSheet(h); mountIn(document.getElementById('sheet')||document); return true; }
+  function sheet(h,replace){ if(!window.openSheet) return false; openSheet(h,replace?{replace:true}:null); mountIn(document.getElementById('sheet')||document); return true; }
+  /* p44: Back steps back one page (index.html openSheet keeps the one under it); a stretch timer stops when its page is left */
+  window.addEventListener('kova:sheetpop',function(){ try{ stopTimer(); }catch(e){} });
   var FROM=null;
-  function back(){ return FROM?'<button type="button" class="kxp-back" data-kxp="back">‹ '+(FROM==='lib'?'All exercises':'All stretches')+'</button>':''; }
+  function back(){ return ''; }   /* p44: the page's Back goes to the list it came from (openSheet keeps it) */
   function open(name){
     FROM=document.getElementById('kxpQ')?'lib':null;
     track('exercise_page',{has:!!D.find(name)});
@@ -1111,6 +1114,7 @@ window.KovaExPage=(function(){
       +'<div class="kdl-ch"><span class="kdl-name">'+esc(g.id==='today'?'Today':g.n)+'</span><span class="kdl-st"><i></i>'+g.L.length+' stretches</span>'
         +'<button type="button" class="kdl-x" data-kxp="sopen" aria-expanded="'+SS.open+'" aria-label="'+(SS.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(SS.open)+'</button></div>'
       +'<div class="kdl-big"><b>'+min+'</b><span>min</span></div>'
+      +'<div class="kdl-sub">Best after training or on rest days</div>'
       
       +'<div class="kdl-strip">'+g.L.map(function(d){ return '<button type="button" class="kdl-t" data-kxp="stretch" data-n="'+esc(d.n)+'"><span class="kxp-th" data-kxd-still="'+esc(d.n)+'"></span><b>'+esc(d.n)+'</b><small>'+esc(d.hold)+'</small></button>'; }).join('')+'</div>'
       +'</div>';
@@ -1131,8 +1135,8 @@ window.KovaExPage=(function(){
   }
   function strOpen(){ sheet(strHtml()); strDial(); }
   function routine(list,i){
-    if(i>=list.length){ sheet('<div class="kxp"><div class="kxp-h"><div><b>All done</b><span>'+list.length+' stretches</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div><div class="kxp-none">Nice work. Stretching after training, a few times a week, keeps the range you trained for.</div></div>'); track('stretch_routine',{n:list.length}); return; }
-    sheet(stretchHtml(list[i],(i+1)+' of '+list.length));
+    if(i>=list.length){ sheet('<div class="kxp"><div class="kxp-h"><div><b>All done</b><span>'+list.length+' stretches</span></div><button type="button" class="kfc-x" data-kfc="x" aria-label="Close">×</button></div><div class="kxp-none">Nice work. Stretching after training, a few times a week, keeps the range you trained for.</div></div>',true); track('stretch_routine',{n:list.length}); return; }
+    sheet(stretchHtml(list[i],(i+1)+' of '+list.length),i>0);
     startTimer(list[i],function(){ routine(list,i+1); });
   }
 
@@ -1179,7 +1183,7 @@ window.KovaExPage=(function(){
     if(a==='sopen'){ SS.open=!SS.open; paintCard('kxpSCard',strCard()); return; }
     if(a==='find'){ LS.find=true; var fq=document.getElementById('kxpQ'); if(fq){ fq.hidden=false; fq.focus(); } return; }
     if(a==='stretch'){ var d=D.find(b.getAttribute('data-n')); if(d){ FROM=b.closest('[data-kdl-page="str"]')||(b.closest('.kxp')&&/^Stretch$/.test((b.closest('.kxp').querySelector('.kxp-h b')||{}).textContent||''))?'str':null; stopTimer(); sheet(stretchHtml(d).replace('<div class="kxp">','<div class="kxp">'+back())); } return; }
-    if(a==='back'){ stopTimer(); var f=FROM; FROM=null; if(f==='lib') libOpen(); else strOpen(); return; }
+    if(a==='back'){ stopTimer(); if(window.sheetBack&&sheetBack()) return; var f=FROM; FROM=null; if(f==='lib') libOpen(); else strOpen(); return; }
     if(a==='hold'){ var d2=D.find(b.getAttribute('data-n')); if(d2){ b.textContent='Restart the timer'; startTimer(d2); } return; }
     if(a==='routine'){ var L=todays(); if(L.length) routine(L,0); return; }
     if(a==='pause'){ var on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',String(on)); b.textContent=on?'▶':'❚❚'; b.setAttribute('aria-label',on?'Play the picture':'Pause the picture');

@@ -122,7 +122,7 @@ window.KovaOrb=(function(){
     if(O.embed){ if(chatOpen()) KovaChat.close(); return; }
     var v=O.panel; O.panel=null; if(O.el) O.el.classList.remove('open'); if(v){ v.classList.remove('on'); setTimeout(function(){ v.remove(); },220); } }
 
-  var MET_COL={rhr:'#E8607A',hrv:'#E8607A',training:'#E87A3C',sleep:'#8FBEEA',bedtime:'#8FBEEA',food:'#D9B92E',hydration:'#D9B92E'};
+  var MET_COL={rhr:'#E8607A',hrv:'#E8607A',training:'#B7AA8C',sleep:'#8FBEEA',bedtime:'#8FBEEA',food:'#D9B92E',hydration:'#D9B92E'};
   var ST_N={ok:'Fine',watch:'Watch',fix:'Fix',neglect:'No data'};
   function audit(){ return window.KovaAgent&&KovaAgent.audit?KovaAgent.audit():null; }
   function spark(pts,col){
@@ -241,7 +241,7 @@ window.KovaAgent=(function(){
   'use strict';
   var W=window.KovaWellness;
   /* each alert wears the colour of the area it is about */
-  var COL={rhr:'#E8607A',hrv:'#E8607A',training:'#E87A3C',sleep:'#8FBEEA',bedtime:'#8FBEEA',food:'#F4E18E',hydration:'#F4E18E'};
+  var COL={rhr:'#E8607A',hrv:'#E8607A',training:'#B7AA8C',sleep:'#8FBEEA',bedtime:'#8FBEEA',food:'#F4E18E',hydration:'#F4E18E'};
   var AREA={rhr:'vitals',hrv:'vitals',training:'move',sleep:'sleep',bedtime:'sleep',food:'fuel',hydration:'fuel'};
   var AREA_N={vitals:'Vitals',move:'Workout',sleep:'Sleep',fuel:'Fuel'};
   var WIN_N={morning:'Morning',evening:'Evening',night:'Night'};

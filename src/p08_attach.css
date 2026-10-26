@@ -19,7 +19,7 @@ body.light-mode #sheet .exadd+.katt-p{background:rgba(255,255,255,.5)}
 .katt-t{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:8px 9px 9px;border-radius:14px;border:1px solid var(--ron-line,rgba(255,255,255,.12));background:rgba(255,255,255,.03);color:inherit;text-align:left;font:inherit;cursor:pointer;min-width:0}
 .katt-t b{font-size:11.5px;font-weight:500;line-height:1.25}
 .katt-t small{font-size:10px;line-height:1.35;color:var(--ron-txt-3,rgba(255,255,255,.55))}
-.katt-t.on{border-color:var(--acc-brd,rgba(232,122,60,.5));background:var(--acc-bg,rgba(232,122,60,.12))}
+.katt-t.on{border-color:var(--acc-brd,rgba(183,170,140,.5));background:var(--acc-bg,rgba(183,170,140,.12))}
 .katt-t:active{transform:scale(.97)}
 .katt-ic{width:44px;height:26px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;color:var(--ron-txt,#fff);opacity:.9}
 /* p43c: the redrawn icons: a light fill for solid parts, solid caps and grips, thick bars */
@@ -37,7 +37,7 @@ body.light-mode .katt-t{background:rgba(255,255,255,.55);border-color:rgba(18,22
 body.light-mode .katt-t small,body.light-mode .katt-h,body.light-mode .katt-n{color:rgba(18,22,28,.58)}
 body.soft-light .katt-t small{color:rgba(255,255,255,.7)}
 body.light-mode .katt-ic{color:#1C1A17}
-body.light-mode .katt-t.on .katt-ic{color:#C8571A}
+body.light-mode .katt-t.on .katt-ic{color:#5A5342}
 /* Coach me's top right: the attachment for the exercise you are on */
 .kpl-wh{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .kpl-att{flex-shrink:0;font:inherit;font-size:11px;cursor:pointer;padding:5px 10px;max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
