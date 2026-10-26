@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-04',title:'A cycle calendar',
+      lines:['Tap a day to mark your period','See your next 3 periods','Tips for your phase: train, recover, eat','Search \u201cplates\u201d for the plate calculator'],
+      steps:[
+        ['vitals','Cycle calendar','Tap a day to mark or clear your period.',function(){ return q('#kcSec .kcx-cal'); }]
+      ]},
     {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
       lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Every button checked; the dead ones now work','Recipes open faster'],
       steps:[

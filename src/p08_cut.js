@@ -256,6 +256,7 @@ window.KovaCut=(function(){
     }).join('');
     var mu=$('#kctMusic'), T=total();
     mu.style.width=Math.max(220,T*PPS)+'px';
+    mu.setAttribute('aria-label',C.cut.music?'Music: '+C.cut.music.name+'. Change it':'Add music');
     if(C.cut.music){
       mu.classList.add('on');
       mu.innerHTML='<span class="nt">'+ic('note')+'</span><span class="nm">'+esc(C.cut.music.name)+'</span><span class="wv">'+wave()+'</span>';
@@ -302,7 +303,7 @@ window.KovaCut=(function(){
           +'<button type="button" class="kct-plus" data-k="add" aria-label="Add a clip here">'+ic('plus')+'</button></div>'
         +'<div class="kct-tl" id="kctTl" tabindex="0" aria-label="Timeline: scroll to move through the video"><div class="kct-in">'
           +'<div class="kct-clips" id="kctClips"></div>'
-          +'<button type="button" class="kct-music" id="kctMusic" data-k="music"></button></div></div></div>'
+          +'<button type="button" class="kct-music" id="kctMusic" data-k="music" aria-label="Add music"></button></div></div></div>'
       +'<div class="kct-mopt" id="kctMopt" hidden></div>'
       +'<div class="kct-tools">'
         +'<button type="button" class="kct-t wide" id="kctUp" data-k="up" aria-pressed="false">'+ic('up')+'<span>Upscale</span></button>'

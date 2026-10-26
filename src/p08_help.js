@@ -30,6 +30,7 @@ window.KovaHelp=(function(){
     {t:'Call your team by name (voice)',k:'voice listen listening wake word hey mic microphone talk speak say name call',s:'workteam',q:'.crw-listen'},
     {t:'Ask Kova (chat)',k:'chat ask question assistant talk message kova',act:function(){ if(window.KovaChat) KovaChat.open(); }},
     {t:'Your 7 health checks',k:'seven 7 metrics checks readiness alerts plan agent orb',act:function(){ if(window.KovaOrb) KovaOrb.open('seven'); }},
+    {t:'Plate calculator',k:'plates plate calculator barbell bar load each side loading 45 35 15 kg lb',act:function(){ if(window.KovaLift) KovaLift.plates(0); }},
     {t:'Do it for me (email and tasks)',k:'email gmail draft task do it for me send',act:function(){ if(window.KovaOrb) KovaOrb.open('do'); }},
     {t:'Sleep sounds and timer',k:'sounds noise rain white brown noise wind down timer mixes music',s:'sounds'},
     {t:'Cycle and fertility (in Vitals)',k:'cycle period menstrual ovulation fertile fertility luteal pms cramps bloating spotting pregnancy test lh basal temperature mucus contraception',s:'cycle'},

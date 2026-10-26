@@ -257,3 +257,33 @@ body.light-mode .kcx-risk{color:#1E7A4B}body.light-mode .kcx-risk.high{color:#B0
 @media (max-width:360px){.kcx-s3 b{font-size:24px}.kcx-two2 b{font-size:24px}.kcx-arc{height:64px}.kcx-arc button{font-size:10.5px}}
 @media (prefers-reduced-motion:reduce){.kcx-arc button{transition:none}}
 .kcx-round .ic,.kcx-arc .ic{color:inherit!important;width:1em;height:1em}
+/* p45: the month you can tap, the next 3 periods, this phase's tips */
+.kcx-calh{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}
+.kcx-calh b{font:400 15px 'Outfit',sans-serif}
+.kcx-calb{width:36px;height:36px;border-radius:50%;border:0;background:var(--x-card2);color:var(--x-ink);display:grid;place-items:center;cursor:pointer}
+.kcx-calb .ic{width:16px;height:16px}
+.kcx-calw,.kcx-calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.kcx-calw span{font-size:11px;color:var(--x-faint);padding-bottom:2px}
+.kcx-cd{aspect-ratio:1;min-height:36px;border-radius:50%;border:0;background:none;color:var(--x-ink);font:400 13.5px 'Outfit',sans-serif;cursor:pointer;position:relative;padding:0}
+.kcx-cd:disabled{cursor:default;color:var(--x-mute)}
+.kcx-cd.p{background:var(--x-rose);color:#fff}
+.kcx-cd.pp{border:1.5px dashed var(--x-rose);color:var(--x-rose)}
+.kcx-cd.fw::after{content:"";position:absolute;left:50%;bottom:4px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--x-amber)}
+.kcx-cd.now{outline:1.5px solid var(--x-ink);outline-offset:-1.5px;font-weight:600}
+.kcx-cd:focus-visible{outline:2px solid var(--x-ink);outline-offset:1px}
+.kcx-calk .p::before{background:var(--x-rose);height:8px;width:8px;border-radius:50%;vertical-align:0}
+.kcx-calk .pp::before{background:none;border:1.5px dashed var(--x-rose);height:6px;width:6px;border-radius:50%;vertical-align:0}
+.kcx-calk .fw::before{height:4px;width:4px;border-radius:50%;vertical-align:2px}
+.kcx-calk .now::before{background:none;border:1.5px solid var(--x-ink);height:6px;width:6px;border-radius:50%;vertical-align:0}
+.kcx-next{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:.5px solid var(--x-line)}
+.kcx-next small{font-size:12px;color:var(--x-mute)}
+.kcx-next b{font:500 14px 'Outfit',sans-serif}
+.kcx-tips .kcx-ph{margin-bottom:8px;cursor:default}
+.kcx-tip{display:flex;gap:12px;align-items:baseline;padding:7px 0;border-top:.5px solid var(--x-line);font-size:14px;line-height:1.35}
+.kcx-tip:first-of-type{border-top:0}
+.kcx-tip em{font-style:normal;flex:0 0 64px;font-size:12px;color:var(--kc,var(--x-rose))}
+body.light-mode .kcx-tip em{color:var(--x-rose)}
+/* p45: live mode hides Vitals' sample sections and the dock; the cycle
+   section is your own data, so it stays, with its own header */
+html.kova-live #s-vitals.kl-gated>.kcx-vsec.kl-keep{display:block;margin-top:12px}
+html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
