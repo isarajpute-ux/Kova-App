@@ -49,7 +49,7 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('"vitamins" finds the vitamins and minerals card', find('vitamins')[0] === 'Vitamins and minerals');
   ck('"dark mode" finds appearance', /Appearance/.test(find('dark mode')[0]));
   ck('"employees" finds the AI team', /AI team/.test(find('employees')[0]));
-  ck('"period" finds cycle tracking', find('period')[0] === 'Cycle and fertility (in Vitals)');
+  ck('"period" finds cycle tracking', find('period')[0] === 'Cycle and fertility');
   ck('a typo still lands ("vitamns")', find('vitamns')[0] === 'Vitamins and minerals');
   ck('card titles on screens are searchable ("micronutrients")', find('micronutrients').length > 0);
   const junk = H.search('qwxz blorf');

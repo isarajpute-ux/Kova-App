@@ -287,3 +287,7 @@ body.light-mode .kcx-tip em{color:var(--x-rose)}
    section is your own data, so it stays, with its own header */
 html.kova-live #s-vitals.kl-gated>.kcx-vsec.kl-keep{display:block;margin-top:12px}
 html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
+/* p46: the cycle's own screen */
+.kcx-page{padding:4px 0 28px}
+.kcx-calc .kcx-ph{cursor:default;margin-bottom:6px}
+.kcx-sum .kcx-prof{margin-bottom:10px}
