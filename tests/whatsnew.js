@@ -63,7 +63,7 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: task times and reminders, its step on New task in Work OS', rel.id === 'new-2026-11-03' && rel.steps.length === 1 && rel.steps[0][0] === 'worktasks' && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: the cycle calendar, its step on the calendar in Vitals', rel.id === 'new-2026-11-04' && rel.steps.length === 1 && rel.steps[0][0] === 'vitals' && rel.lines.every((l) => l.split(' ').length <= 10));
   const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
   ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;
@@ -96,7 +96,10 @@ function boot(store) {
   const fa = r22.steps.filter((t) => t[0] === 'session')[0];
   ck('…and the Coach me button in the workout', !!fa && !!fa[3]() && /Coach me/.test(fa[3]().textContent));
   ck('the p40/p41 release finds the Coach me button too', !!r25.steps[2][3]() && /Coach me/.test(r25.steps[2][3]().textContent));
-  ck('the newest release finds New task in Work OS', !!rel.steps[0][3]() && rel.steps[0][3]().id === 'wtNewTask');
+  const r1103 = N.REL.filter((r) => r.id === 'new-2026-11-03')[0];
+  ck('the task-reminder release finds New task in Work OS', !!r1103.steps[0][3]() && r1103.steps[0][3]().id === 'wtNewTask');
+  w.KovaCycle._set({ on: true, flow: { [new Date(Date.now() - 3 * 864e5).toISOString().slice(0, 10)]: 'med' } }); w.go('vitals'); w.KovaCycle.paint(true); await wait(50);
+  ck('the newest release finds the cycle calendar in Vitals', !!rel.steps[0][3]() && rel.steps[0][3]().classList.contains('kcx-cal'));
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

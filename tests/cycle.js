@@ -143,6 +143,34 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   w4.KP.set('cycle', null); w4.dispatchEvent(new w4.Event('kova:cloud'));
   ck('with sync off nothing comes from the account', Object.keys(w4.KovaCycle._data().flow).length === 2);
 
+  // p45: a month you can tap, the next 3 periods, this phase's tips
+  w2.go && w2.go('vitals'); w2.KovaCycle.paint(true); await wait(50);
+  const d2 = w2.document, sec2 = () => d2.getElementById('kcSec');
+  const now = new Date(), dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const days = () => [...sec2().querySelectorAll('.kcx-cd')];
+  ck('the calendar shows every day of this month', days().length === dim && sec2().querySelector('.kcx-calh b').textContent.includes(now.toLocaleDateString('en-US', { month: 'long' })));
+  ck('days still to come cannot be marked', days().filter((b) => b.disabled).length === dim - now.getDate());
+  ck('every day says what it is to a screen reader', days().every((b) => /\d/.test(b.getAttribute('aria-label') || '')));
+  const tk = key(sod());
+  sec2().querySelector('[data-d="' + tk + '"]').click(); await wait(20);
+  ck('tapping today marks a period day (and it is saved)', w2.KovaCycle._data().flow[tk] === 'med' && /"med"/.test(w2.localStorage.getItem('kova_cycle_v1')) && sec2().querySelector('[data-d="' + tk + '"]').classList.contains('p'));
+  sec2().querySelector('[data-d="' + tk + '"]').click(); await wait(20);
+  ck('tapping it again clears it', !w2.KovaCycle._data().flow[tk]);
+  const np = w2.KovaCycle.nextPeriods(3), st3 = sod() - 3 * DAY;
+  ck('the next 3 periods are predicted, a cycle apart', np.length === 3 && Math.round((np[0].a - st3) / DAY) === 28 && Math.round((np[2].a - np[1].a) / DAY) === 28);
+  const sd = new Date(st3 + DAY / 2), want = new Date(sd.getFullYear(), sd.getMonth(), sd.getDate() + 28).getTime();
+  ck('predicted days land on midnight, also across a clock change (TZ=America/New_York in late October)', np.every((p) => new Date(p.a).getHours() === 0) && np[0].a === want && new Date(w2.KovaCycle.today().next).getHours() === 0);
+  ck('they are listed under the calendar', /Next 3 periods/.test(sec2().textContent) && sec2().querySelectorAll('.kcx-next b').length === 1);
+  const lbl = () => sec2().querySelector('.kcx-calh b').textContent;
+  const m0 = lbl(); sec2().querySelector('[data-k="calm"][data-v="1"]').click(); await wait(20);
+  const nm = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  ck('Next month moves the calendar on, with the expected period on it', lbl() !== m0 && lbl().includes(nm.toLocaleDateString('en-US', { month: 'long' })) && sec2().querySelectorAll('.kcx-cd.pp').length >= 1);
+  sec2().querySelector('[data-k="calm"][data-v="-1"]').click(); await wait(20);
+  ck('Previous month comes back', lbl() === m0);
+  const tips = sec2().querySelector('.kcx-tips');
+  ck('this phase says what it means for training, recovery and food', tips && tips.textContent.includes(w2.KovaCycle.PHASE[w2.KovaCycle.today().phase].n + ': for you now') && tips.querySelectorAll('.kcx-tip').length === 3 && /^Train/.test(tips.querySelector('.kcx-tip').textContent));
+  ck('the tips are short (12 words or fewer)', [...tips.querySelectorAll('.kcx-tip span')].every((x) => x.textContent.trim().split(/\s+/).length <= 12));
+
   // a man
   const w3 = boot({ 'kova.sex': JSON.stringify('male') });
   await wait(900);

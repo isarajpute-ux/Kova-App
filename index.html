@@ -4614,6 +4614,36 @@ body.light-mode .kcx-risk{color:#1E7A4B}body.light-mode .kcx-risk.high{color:#B0
 @media (max-width:360px){.kcx-s3 b{font-size:24px}.kcx-two2 b{font-size:24px}.kcx-arc{height:64px}.kcx-arc button{font-size:10.5px}}
 @media (prefers-reduced-motion:reduce){.kcx-arc button{transition:none}}
 .kcx-round .ic,.kcx-arc .ic{color:inherit!important;width:1em;height:1em}
+/* p45: the month you can tap, the next 3 periods, this phase's tips */
+.kcx-calh{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}
+.kcx-calh b{font:400 15px 'Outfit',sans-serif}
+.kcx-calb{width:36px;height:36px;border-radius:50%;border:0;background:var(--x-card2);color:var(--x-ink);display:grid;place-items:center;cursor:pointer}
+.kcx-calb .ic{width:16px;height:16px}
+.kcx-calw,.kcx-calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.kcx-calw span{font-size:11px;color:var(--x-faint);padding-bottom:2px}
+.kcx-cd{aspect-ratio:1;min-height:36px;border-radius:50%;border:0;background:none;color:var(--x-ink);font:400 13.5px 'Outfit',sans-serif;cursor:pointer;position:relative;padding:0}
+.kcx-cd:disabled{cursor:default;color:var(--x-mute)}
+.kcx-cd.p{background:var(--x-rose);color:#fff}
+.kcx-cd.pp{border:1.5px dashed var(--x-rose);color:var(--x-rose)}
+.kcx-cd.fw::after{content:"";position:absolute;left:50%;bottom:4px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--x-amber)}
+.kcx-cd.now{outline:1.5px solid var(--x-ink);outline-offset:-1.5px;font-weight:600}
+.kcx-cd:focus-visible{outline:2px solid var(--x-ink);outline-offset:1px}
+.kcx-calk .p::before{background:var(--x-rose);height:8px;width:8px;border-radius:50%;vertical-align:0}
+.kcx-calk .pp::before{background:none;border:1.5px dashed var(--x-rose);height:6px;width:6px;border-radius:50%;vertical-align:0}
+.kcx-calk .fw::before{height:4px;width:4px;border-radius:50%;vertical-align:2px}
+.kcx-calk .now::before{background:none;border:1.5px solid var(--x-ink);height:6px;width:6px;border-radius:50%;vertical-align:0}
+.kcx-next{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:.5px solid var(--x-line)}
+.kcx-next small{font-size:12px;color:var(--x-mute)}
+.kcx-next b{font:500 14px 'Outfit',sans-serif}
+.kcx-tips .kcx-ph{margin-bottom:8px;cursor:default}
+.kcx-tip{display:flex;gap:12px;align-items:baseline;padding:7px 0;border-top:.5px solid var(--x-line);font-size:14px;line-height:1.35}
+.kcx-tip:first-of-type{border-top:0}
+.kcx-tip em{font-style:normal;flex:0 0 64px;font-size:12px;color:var(--kc,var(--x-rose))}
+body.light-mode .kcx-tip em{color:var(--x-rose)}
+/* p45: live mode hides Vitals' sample sections and the dock; the cycle
+   section is your own data, so it stays, with its own header */
+html.kova-live #s-vitals.kl-gated>.kcx-vsec.kl-keep{display:block;margin-top:12px}
+html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
 
 </style>
 <style id="p08-links">
@@ -51058,6 +51088,8 @@ window.KovaCycle=(function(){
   function key(t){ var d=new Date(t); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
   function parse(k){ var p=String(k).split('-'); return new Date(+p[0],+p[1]-1,+p[2]).getTime(); }
   function sod(t){ var d=new Date(t||Date.now()); d.setHours(0,0,0,0); return d.getTime(); }
+  /* p45: n days of 24 h drift an hour across a clock change; land on that day's midnight */
+  function rd(t){ return sod(t+DAY/2); }
   function md(t){ return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
   function lsJ(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } }
 
@@ -51162,15 +51194,16 @@ window.KovaCycle=(function(){
     t=t||Date.now();
     var s=stats(); if(!s.starts.length) return null;
     var last=parse(s.starts[s.starts.length-1]); if(last>t) return null;
-    var day=Math.floor((sod(t)-last)/DAY)+1;
+    var day=Math.round((sod(t)-last)/DAY)+1;
     var next=last+s.avg*DAY; while(next<sod(t)-DAY*2&&day<=s.avg+7) next+=s.avg*DAY;
-    var ov=next-14*DAY, method='calendar', confirmed=false;
+    next=rd(next);
+    var ov=rd(next-14*DAY), method='calendar', confirmed=false;
     var from=s.starts[s.starts.length-1];
     var lhPos=Object.keys(D.lh).filter(function(k){ return k>=from&&D.lh[k]==='pos'; }).sort()[0];
-    if(lhPos){ ov=parse(lhPos)+DAY; method='lh'; }
+    if(lhPos){ ov=rd(parse(lhPos)+DAY); method='lh'; }
     var r=rise(Object.keys(D.bbt).length>=6?D.bbt:D.temp,from);
-    if(r){ ov=parse(r.day); method='temp'; confirmed=true; next=Math.max(next,ov+12*DAY); }
-    var fertile=[ov-5*DAY,ov];
+    if(r){ ov=parse(r.day); method='temp'; confirmed=true; next=Math.max(next,rd(ov+12*DAY)); }
+    var fertile=[rd(ov-5*DAY),ov];
     var ovDay=Math.round((ov-last)/DAY)+1;
     var phase=day<=s.plen?'menstrual':(day<ovDay-2?'follicular':(day<=ovDay+1?'ovulatory':'luteal'));
     if(day>s.avg+7) phase='late';
@@ -51249,7 +51282,7 @@ window.KovaCycle=(function(){
   function dash(t){
     var n=Math.max(t.stats.avg,t.day), last=parse(t.stats.starts[t.stats.starts.length-1]), h='';
     for(var i=0;i<n;i++){
-      var d=last+i*DAY, k=key(d), c='o';
+      var d=rd(last+i*DAY), k=key(d), c='o';
       if(/light|med|heavy/.test(D.flow[k]||'')) c='p';
       else if(i<t.stats.plen&&d>sod()) c='pp';
       else if(!t.hormonal&&!t.paused&&d>=t.fertile[0]&&d<=t.fertile[1]) c=(d===t.ov?'ov':'fw');
@@ -51277,7 +51310,56 @@ window.KovaCycle=(function(){
   function todayCount(){ var k=key(Date.now()), n=Object.keys(D.sev[k]||{}).filter(function(id){ return D.sev[k][id]>0; }).length;
     ['flow','lh','preg','prog','mucus','bbt','sexact'].forEach(function(f){ if(D[f][k]!=null&&D[f][k]!==''&&D[f][k]!=='none') n++; }); return n; }
 
-  var UI={open:{prof:true},grp:null};
+  /* ---- p45: a month you can tap, the next 3 periods, and what this
+     phase means for training (the owner's grader asked for all three).
+     A past day or today toggles a period day (medium flow, as "Period
+     today" does); the next 3 predicted periods are dashed, fertile days
+     amber (none on hormonal birth control or in pregnancy). ---- */
+  function kd(t){ return key(t+DAY/2); }      /* midnight +-1 h (clock changes) is still that day */
+  function nextPeriods(t,n){
+    if(!t||t.paused) return [];
+    var s=t.stats, a=t.next, out=[];
+    while(a<sod()-DAY/2) a+=s.avg*DAY;
+    for(var i=0;i<(n||3);i++){ a=rd(a); out.push({a:a,b:rd(a+(s.plen-1)*DAY),ov:rd(a-14*DAY)}); a+=s.avg*DAY; }
+    return out;
+  }
+  function calBody(t){
+    var now=sod(), m=new Date(UI.calM||now); m.setDate(1); m.setHours(0,0,0,0);
+    var y=m.getFullYear(), mo=m.getMonth(), dim=new Date(y,mo+1,0).getDate(), lead=m.getDay();
+    var pr=nextPeriods(t,3), pred={}, fert={}, fw=t&&!t.hormonal&&!t.paused;
+    pr.forEach(function(p){ for(var d=p.a;d<=p.b+DAY/2;d+=DAY) pred[kd(d)]=1; if(fw) for(var f=p.ov-5*DAY;f<=p.ov+DAY/2;f+=DAY) fert[kd(f)]=1; });
+    if(fw) for(var f0=t.fertile[0];f0<=t.fertile[1]+DAY/2;f0+=DAY) fert[kd(f0)]=1;
+    var CH='<svg class="ic"><use href="#i-chevron-', h='<div class="kcx-cal"><div class="kcx-calh">'
+      +'<button class="kcx-calb" data-k="calm" data-v="-1" aria-label="Previous month">'+CH+'left"/></svg></button>'
+      +'<b>'+m.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</b>'
+      +'<button class="kcx-calb" data-k="calm" data-v="1" aria-label="Next month">'+CH+'right"/></svg></button></div>'
+      +'<div class="kcx-calw" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div><div class="kcx-calg">';
+    for(var i=0;i<lead;i++) h+='<span></span>';
+    for(var d=1;d<=dim;d++){
+      var dt=new Date(y,mo,d).getTime(), k=key(dt), per=/light|med|heavy/.test(D.flow[k]||''), fut=dt>now, pp=!per&&fut&&pred[k], fe=!per&&fert[k];
+      var lab=new Date(dt).toLocaleDateString('en-US',{month:'long',day:'numeric'})+(per?', period':pp?', period expected':'')+(fe?', fertile window':'')+(dt===now?', today':'');
+      h+='<button class="kcx-cd'+(per?' p':'')+(pp?' pp':'')+(fe?' fw':'')+(dt===now?' now':'')+'"'+(fut?' disabled':' data-k="calday" data-d="'+k+'" aria-pressed="'+per+'"')+' aria-label="'+lab+'">'+d+'</button>';
+    }
+    h+='</div><div class="kcx-key kcx-calk"><span class="p">Period</span><span class="pp">Expected</span>'+(fw?'<span class="fw">Fertile</span>':'')+'<span class="now">Today</span></div>';
+    if(pr.length) h+='<div class="kcx-next"><small>Next 3 periods</small><b>'+pr.map(function(p){ return md(p.a); }).join(' · ')+'</b></div>';
+    return h+'<p class="kcx-fine">Tap a day to mark or clear your period.</p></div>';
+  }
+  /* what this phase means, in a few words (PHASE has the longer why) */
+  var TIP={
+    menstrual:['Train by feel. Heavy days are fine if you feel good.','Heat and a steady bedtime ease cramps.','Iron: red meat, lentils, spinach.'],
+    follicular:['Best stretch for hard sessions and PRs.','Sleep is usually steadier now.','Your normal targets fit.'],
+    ovulatory:['Strength feels good. Warm up well.','Keep your routine.','Normal targets.'],
+    luteal:['Hard work is fine. If it feels harder, cut sets, not weight.','A cooler room (about 65 °F) helps sleep.','Hungrier: a protein-first snack helps.'],
+    late:['Train by feel.','Keep your routine.','Normal targets.']
+  };
+  function tipsCard(t){
+    if(!t||t.paused||!TIP[t.phase]) return '';
+    var P=PHASE[t.phase], x=TIP[t.phase];
+    return '<div class="kcx-card kcx-tips" style="--kc:'+P.c+'"><div class="kcx-ph"><span>'+esc(P.n)+': for you now</span></div>'
+      +[['Train',x[0]],['Recover',x[1]],['Eat',x[2]]].map(function(r){ return '<div class="kcx-tip"><em>'+r[0]+'</em><span>'+esc(r[1])+'</span></div>'; }).join('')+'</div>';
+  }
+
+  var UI={open:{prof:true,cal:true},grp:null};
   function section(){
     var t=D.on?today():null, s=stats();
     if(!D.on){
@@ -51301,12 +51383,14 @@ window.KovaCycle=(function(){
         +(op?('<div class="kcx-tl"><span>This cycle</span><b>'+(s.cycles?s.avg+' days'+(s.sd!=null?' ±'+Math.max(1,Math.round(s.sd)):''):'~28 days')+'</b></div>'+dash(t)
           +'<div class="kcx-key"><span class="p">Period</span><span class="fw">Fertile window</span><span class="ov">Ovulation</span><span class="now">Today</span></div>'):'')
         +'</div>';
-      h+=dialCard(t)+curveCard(t);
+      h+=tipsCard(t)+dialCard(t)+curveCard(t);
       var pt=patterns(), soon=pt.filter(function(p){ return p.kind==='before'&&Math.abs(Math.round((t.next-sod())/DAY)-p.o)<=1; })[0];
       if(soon) h+='<div class="kcx-heads"><span>Heads-up</span>'+esc(soon.t.replace(' ('+soon.n+' cycles).','.'))+' Your period is due '+(dn<=0?'today':'in '+dn+' day'+(dn===1?'':'s'))+'.</div>';
     }
     h+='<div class="kcx-acts"><button class="kcx-btn" data-k="log">Log today'+(todayCount()?' · '+todayCount():'')+'</button>'
       +'<button class="kcx-btn ghost" data-k="period">'+(/light|med|heavy/.test(D.flow[key(Date.now())]||'')?'Period today ✓':'Period today')+'</button></div>';
+    var np=nextPeriods(t,1)[0];
+    h+=rec('cal','Calendar:',np?'Next period '+md(np.a):'Tap a day to mark your period',calBody(t));
     /* record rows */
     var fl=flags(), pt2=patterns(), st0=D.status||{};
     h+=rec('tests','Tests:','Ovulation, pregnancy, progesterone',testsBody());
@@ -51481,7 +51565,7 @@ window.KovaCycle=(function(){
     var scr=document.getElementById('s-vitals'); if(!scr) return null;
     var el=document.getElementById('kcSec'); if(el) return el;
     if(sex()==='male'&&!D.on) return null;
-    var wrap=document.createElement('div'); wrap.className='vsec kcx-vsec';
+    var wrap=document.createElement('div'); wrap.className='vsec kcx-vsec kl-keep';   /* p45: your own data, so it shows with live mode's plain cards too (it was hidden there) */
     var open=D.on||sex()==='female';
     wrap.innerHTML='<div class="vsec-h'+(open?' open':'')+'" data-s="cycle" role="button" tabindex="0" aria-expanded="'+open+'">'
       +'<div class="vsec-i"><svg class="ic" style="font-size:15px"><use href="#i-heartbeat"/></svg></div><div class="vsec-n">Cycle & fertility</div><div class="vsec-c" id="kcSecN"></div>'
@@ -51531,6 +51615,12 @@ window.KovaCycle=(function(){
       var v=k==='startnow'?tk:(($('#kcxStart')||{}).value||'');
       if(!v){ say('Pick the first day of your last period.'); return; }
       D.on=true; D.dismissed=false; D.flow[v]=D.flow[v]&&D.flow[v]!=='none'&&D.flow[v]!=='spot'?D.flow[v]:'med'; D.days[v]=true; save(D); paintAll(); say('Cycle tracking is on.'); return;
+    }
+    if(k==='calm'){ var m0=new Date(UI.calM||sod()); m0.setDate(1); m0.setMonth(m0.getMonth()+(+b.getAttribute('data-v'))); UI.calM=m0.getTime(); paint(); var nb=$('#kcSec [data-k="calm"][data-v="'+b.getAttribute('data-v')+'"]'); if(nb) nb.focus({preventScroll:true}); return; }
+    if(k==='calday'){
+      var dk=b.getAttribute('data-d'); if(!dk||dk>tk) return;
+      if(/light|med|heavy/.test(D.flow[dk]||'')){ delete D.flow[dk]; delete D.days[dk]; } else { D.flow[dk]='med'; D.days[dk]=true; }
+      save(D); paintAll(); var cb=$('#kcSec [data-d="'+dk+'"]'); if(cb) cb.focus({preventScroll:true}); return;
     }
     if(k==='period'){ if(/light|med|heavy/.test(D.flow[tk]||'')){ delete D.flow[tk]; delete D.days[tk]; } else { D.flow[tk]='med'; D.days[tk]=true; } save(D); paintAll(); return; }
     if(k==='st'){ var fld=b.getAttribute('data-f'), val=b.getAttribute('data-v')==='true'; D.status[fld]=val; if(fld==='preg'&&val&&!D.status.pregAt) D.status.pregAt=sod(); if(fld==='preg'&&!val) delete D.status.pregAt; save(D); paint(); return; }
@@ -51655,7 +51745,7 @@ window.KovaCycle=(function(){
       if(sc&&window.MutationObserver) new MutationObserver(function(){ if(!drawn&&vitalsOn()) paint(); }).observe(sc,{attributes:true,attributeFilter:['class']}); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
-  return {_fromCloud:fromCloud,paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
+  return {_fromCloud:fromCloud,nextPeriods:function(n){ return nextPeriods(D.on?today():null,n); },paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
     setSex:setSex,sex:sex,_data:function(){ return D; },_set:function(d){ D=Object.assign(blank(),d); if(d.days&&!d.flow) Object.keys(d.days).forEach(function(k){ if(d.days[k]) D.flow[k]='med'; }); save(D); paintAll(); }};
 })();
 
@@ -54846,6 +54936,7 @@ window.KovaHelp=(function(){
     {t:'Call your team by name (voice)',k:'voice listen listening wake word hey mic microphone talk speak say name call',s:'workteam',q:'.crw-listen'},
     {t:'Ask Kova (chat)',k:'chat ask question assistant talk message kova',act:function(){ if(window.KovaChat) KovaChat.open(); }},
     {t:'Your 7 health checks',k:'seven 7 metrics checks readiness alerts plan agent orb',act:function(){ if(window.KovaOrb) KovaOrb.open('seven'); }},
+    {t:'Plate calculator',k:'plates plate calculator barbell bar load each side loading 45 35 15 kg lb',act:function(){ if(window.KovaLift) KovaLift.plates(0); }},
     {t:'Do it for me (email and tasks)',k:'email gmail draft task do it for me send',act:function(){ if(window.KovaOrb) KovaOrb.open('do'); }},
     {t:'Sleep sounds and timer',k:'sounds noise rain white brown noise wind down timer mixes music',s:'sounds'},
     {t:'Cycle and fertility (in Vitals)',k:'cycle period menstrual ovulation fertile fertility luteal pms cramps bloating spotting pregnancy test lh basal temperature mucus contraception',s:'cycle'},
@@ -60300,6 +60391,7 @@ window.KovaCut=(function(){
     }).join('');
     var mu=$('#kctMusic'), T=total();
     mu.style.width=Math.max(220,T*PPS)+'px';
+    mu.setAttribute('aria-label',C.cut.music?'Music: '+C.cut.music.name+'. Change it':'Add music');
     if(C.cut.music){
       mu.classList.add('on');
       mu.innerHTML='<span class="nt">'+ic('note')+'</span><span class="nm">'+esc(C.cut.music.name)+'</span><span class="wv">'+wave()+'</span>';
@@ -60346,7 +60438,7 @@ window.KovaCut=(function(){
           +'<button type="button" class="kct-plus" data-k="add" aria-label="Add a clip here">'+ic('plus')+'</button></div>'
         +'<div class="kct-tl" id="kctTl" tabindex="0" aria-label="Timeline: scroll to move through the video"><div class="kct-in">'
           +'<div class="kct-clips" id="kctClips"></div>'
-          +'<button type="button" class="kct-music" id="kctMusic" data-k="music"></button></div></div></div>'
+          +'<button type="button" class="kct-music" id="kctMusic" data-k="music" aria-label="Add music"></button></div></div></div>'
       +'<div class="kct-mopt" id="kctMopt" hidden></div>'
       +'<div class="kct-tools">'
         +'<button type="button" class="kct-t wide" id="kctUp" data-k="up" aria-pressed="false">'+ic('up')+'<span>Upscale</span></button>'
@@ -68769,6 +68861,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-04',title:'A cycle calendar',
+      lines:['Tap a day to mark your period','See your next 3 periods','Tips for your phase: train, recover, eat','Search \u201cplates\u201d for the plate calculator'],
+      steps:[
+        ['vitals','Cycle calendar','Tap a day to mark or clear your period.',function(){ return q('#kcSec .kcx-cal'); }]
+      ]},
     {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
       lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Every button checked; the dead ones now work','Recipes open faster'],
       steps:[
