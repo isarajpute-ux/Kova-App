@@ -3838,7 +3838,7 @@ window.KovaCloudAuth = (function(){
       return { signedIn: !!u, email: u && u.email, uid: u && u.uid, anon: !!(u && u.isAnonymous) };
     },
     open: function(opts){
-      if (!auth) return;
+      if (!auth) { toastSafe('Sign-in could not load. Check your connection and try again.'); return; }
       try { localStorage.removeItem('kova.auth.skipped'); } catch(e){}
       modal(true, opts || { mode: 'in' }); err('');
     }
@@ -12786,7 +12786,6 @@ body.ks-on #kovaFab{display:none!important}
   <div class="hdr">
     <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">NOTEBOOK</div><div class="title-s" id="nbTitle" style="font-size:19px">Cell Biology Unit 3</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" data-toast="Copied a shareable link."><svg class="ic"><use href="#i-arrows-shuffle"/></svg></div></div>
   </div>
 
   <div class="card">
@@ -13104,8 +13103,6 @@ body.ks-on #kovaFab{display:none!important}
     <div id="connectList"></div>
   </div>
 
-  <div class="sec-h">Preferences</div>
-  <div id="prefList"></div>
 
   <div class="sec-h">Data & privacy</div>
   <div class="sub" id="kovaBackupStatus" style="margin-bottom:9px">Checking…</div>
@@ -13129,8 +13126,8 @@ body.ks-on #kovaFab{display:none!important}
   </div>
 
   <div class="sec-h">About</div>
-  <div class="list-item" data-toast="Kova v0.1 prototype build."><div style="flex:1"><div class="li-name">Version</div></div><div class="sub">0.1 prototype</div></div>
-  <div class="list-item" data-toast="Support opens a chat with the Kova team."><div style="flex:1"><div class="li-name">Help & support</div></div><svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg></div>
+  <div class="list-item" id="setVersion"><div style="flex:1"><div class="li-name">Version</div></div><div class="sub" id="setVersionV">Kova</div></div>
+  <div class="list-item tap" id="setHelp" role="button" tabindex="0"><div style="flex:1"><div class="li-name">Help & support</div><div class="li-sub">Show me around, or find anything</div></div><svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg></div>
   <div class="sec-h">Security</div>
   <div class="list-item tap" id="authPinRow"><div class="li-ico"><svg class="ic"><use href="#i-focus-2"/></svg></div><div style="flex:1"><div class="li-name" id="authPinLabel">Biometric unlock</div><div class="li-sub" id="authPinSub">Off</div></div><svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg></div>
   <div class="list-item" id="authAcctRow" style="display:none"><div class="li-ico"><svg class="ic"><use href="#i-cloud"/></svg></div><div style="flex:1"><div class="li-name" id="authAcctLabel">Account</div><div class="li-sub" id="authAcctSub">—</div></div></div>
@@ -13646,7 +13643,7 @@ body.ks-on #kovaFab{display:none!important}
 
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
     <div class="sec-h" style="margin:0">Micronutrients</div>
-    <div class="chip" data-toast="Full 20 nutrient panel with RDA percentages lands with the food database." style="font-size:10.5px">See all</div>
+    <div class="chip" data-kmi="tog" role="button" tabindex="0" style="font-size:10.5px">See all</div>
   </div>
   <div class="sub" style="margin-bottom:8px">Macros hitting target doesn't mean the diet is complete — low fiber and blown-out sodium happen even at the right calories</div>
   <div class="grid2" style="grid-template-columns:1fr 1fr 1fr" id="microGrid"></div>
@@ -13662,7 +13659,7 @@ body.ks-on #kovaFab{display:none!important}
 
   <div class="card roncard">
     <svg class="roncorner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" data-toast="Longer history lands with the food database."><path d="M7 17L17 7M9 7h8v8"/></svg>
+      stroke-linecap="round" id="kcalMore" role="button" aria-label="See the whole month" style="cursor:pointer"><path d="M7 17L17 7M9 7h8v8"/></svg>
     <div style="font-size:15px;font-weight:400;letter-spacing:-.02em">Calories this week</div>
     <div class="sub" style="margin-bottom:2px">Tap a day. Accent stem is your target for that day.</div>
     <svg id="kcalStem" width="100%" viewBox="0 0 300 150" style="display:block;touch-action:none;cursor:pointer"></svg>
@@ -23058,18 +23055,18 @@ function startPractice(subject,n,secs,topic){
   draw();
 }
 
-/* ---------- settings ---------- */
+/* ---------- settings (p44): the version is the real build; Help & support opens Kova's help ---------- */
 (function(){
-  var PREF=[
-    {n:'Units',v:'Pounds, feet',i:'i-weight'},
-    {n:'Notifications',v:'On for Kova insights',i:'i-bell'},
-    {n:'Week starts on',v:'Monday',i:'i-calendar-stats'},
-    {n:'Sound & haptics',v:'On',i:'i-headphones'}
-  ];
-  var pl=document.getElementById('prefList');
-  if(pl) pl.innerHTML=PREF.map(function(x){
-    return '<div class="list-item" data-toast="Adjust in the real app." style="margin-bottom:6px"><div class="li-ico"><svg class="ic"><use href="#'+x.i+'"/></svg></div><div style="flex:1"><div class="li-name">'+x.n+'</div></div><div class="sub">'+x.v+'</div></div>';
-  }).join('');
+  var v=document.getElementById('setVersionV');
+  if(v){ var id=String(window.KOVA_BUILD||'').slice(0,10); v.textContent=id&&!/KOVA_BUILD/.test(id)?'Build '+id:'Kova'; }
+  var h=document.getElementById('setHelp');
+  if(h){ var open=function(){ try{ if(window.KovaHelp&&KovaHelp.open) KovaHelp.open(); else go('tour'); }catch(e){} };
+    h.onclick=open; h.onkeydown=function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } }; }
+  var k=document.getElementById('kcalMore');
+  if(k) k.addEventListener('click',function(){
+    var t=document.querySelector('#fuelRange [data-r="30"]'); if(t) t.click();
+    var log=document.getElementById('fuelLogTitle'); if(log&&log.scrollIntoView) log.scrollIntoView({behavior:'smooth',block:'start'});
+  });
 })();
 
 /* ---------- work settings accordion ---------- */
@@ -25087,13 +25084,17 @@ var METAPHORS={
         +(curMeal==='All'?'the library':curMeal.toLowerCase())+'.</div>';
       return;
     }
-    grid.innerHTML=list.map(function(r){
+    /* p44: 30 at a time, more as you scroll (all 400 at once took 0.3 s on a phone, with 800 blurred badges) */
+    SHOWN=list; grid.innerHTML=''; more();
+  }
+  var SHOWN=[], PAGE=30, sentinel=null, io=null;
+  function cardHtml(r){
       return '<div class="card rcard tap" data-id="'+r.id+'" style="margin:0;padding:0;overflow:hidden;display:flex;flex-direction:column">'
         // square image tile
         +'<div class="rcpart" style="aspect-ratio:1/1;'+r.viz+'">'
         +(r.img?'<img alt="" loading="lazy" '+photoAttrs(r.img,[400,800],true,'(min-width:760px) 260px, 45vw')+' onload="this.classList.add(\'ok\')" onerror="this.remove()"/>':'')
-        +'<div style="position:absolute;left:6px;top:6px;background:rgba(0,0,0,.42);backdrop-filter:blur(10px);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:8.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+r.tag+'</div>'
-        +'<div style="position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.42);backdrop-filter:blur(10px);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:9px;font-weight:700;color:var(--acc)">'+r.kcal+' kcal</div>'
+        +'<div style="position:absolute;left:6px;top:6px;background:rgba(0,0,0,.58);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:8.5px;font-weight:600;color:var(--txt,#FFFFFF)">'+r.tag+'</div>'
+        +'<div style="position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.58);border:.5px solid rgba(255,255,255,.24);border-radius:10px;padding:2px 7px;font-size:9px;font-weight:700;color:var(--acc)">'+r.kcal+' kcal</div>'
         +'</div>'
         // brief underneath
         +'<div style="padding:9px 10px 10px;flex:1;display:flex;flex-direction:column">'
@@ -25105,12 +25106,20 @@ var METAPHORS={
         +'<div><div style="font-size:11.5px;font-weight:700;color:var(--txt,#FFFFFF)">'+r.c+'<span style="font-size:8px;opacity:.7">g</span></div><div style="font-size:7px;font-weight:600;color:var(--ink-3,rgba(255,255,255,.7));letter-spacing:.5px">CARB</div></div>'
         +'<div><div style="font-size:11.5px;font-weight:700;color:var(--txt,#FFFFFF)">'+r.f+'<span style="font-size:8px;opacity:.7">g</span></div><div style="font-size:7px;font-weight:600;color:var(--ink-3,rgba(255,255,255,.7));letter-spacing:.5px">FAT</div></div>'
         +'</div></div></div>';
-    }).join('');
-    grid.querySelectorAll('.rcard').forEach(function(e){
-      e.onclick=function(){ openRecipe(e.dataset.id); };
-    });
   }
-
+  function more(){
+    var from=grid.querySelectorAll('.rcard').length, next=SHOWN.slice(from,from+PAGE);
+    if(!next.length) return;
+    if(sentinel&&sentinel.parentNode) sentinel.remove();
+    grid.insertAdjacentHTML('beforeend',next.map(cardHtml).join(''));
+    if(from+PAGE<SHOWN.length){
+      sentinel=document.createElement('div'); sentinel.className='rcp-more'; sentinel.style.gridColumn='1/-1'; sentinel.style.height='1px';
+      grid.appendChild(sentinel);
+      if('IntersectionObserver' in window){ if(!io) io=new IntersectionObserver(function(es){ if(es.some(function(x){ return x.isIntersecting; })) more(); },{rootMargin:'600px'}); io.observe(sentinel); }
+      else more();
+    }
+  }
+  grid.addEventListener('click',function(e){ var c=e.target.closest&&e.target.closest('.rcard'); if(c&&grid.contains(c)) openRecipe(c.getAttribute('data-id')); });
   function openRecipe(id){
     var r=RECIPES.filter(function(x){return x.id===id})[0];
     if(!r)return;
@@ -36107,8 +36116,7 @@ window.KovaStudio=(function(){
     var offs=st.plats.filter(function(k){ return modeOf(k)==='off'; });
     var note=document.getElementById('wcPlatNote');
     if(!haveServer()){
-      note.innerHTML='No integrations server set. Kova will compose and queue, '
-        +'but cannot publish until the Worker is deployed and its address is set in Settings.';
+      note.innerHTML='Sign in so Kova can post for you. Until then it writes each post and keeps it in the queue.';
     } else if(offs.length){
       note.innerHTML=esc(offs.map(function(k){return P[k].n}).join(', '))
         +' not linked yet \u2014 those will be composed and held in the queue.';
@@ -59534,7 +59542,9 @@ window.KovaLegal=(function(){
     var bs=document.querySelector('#klgBiz .li-sub'); if(bs) bs.textContent=bizFilled()?B.name+' · '+B.email:'Not filled in yet';
   }
   function onSet(e){
-    var b=e.target.closest('[data-klg]'); if(!b) return;
+    var b=e.target.closest('[data-klg]');
+    if(!b&&e.target.closest('#klgAna')){ set(!allowed()); return; }   /* p44: the whole row is the switch */
+    if(!b) return;
     var k=b.getAttribute('data-klg');
     if(k==='ana'){ set(!allowed()); return; }
     if(k==='page'){ window.open(url(b.getAttribute('data-p')),'_blank','noopener'); return; }
@@ -68760,7 +68770,7 @@ window.KovaWhatsNew=(function(){
   /* newest first */
   var REL=[
     {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
-      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Attach real files when composing a post'],
+      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Every button checked; the dead ones now work','Recipes open faster'],
       steps:[
         ['worktasks','New task','Add a time and when to be reminded.',function(){ return q('#wtNewTask'); }]
       ]},

@@ -36,6 +36,19 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('Health > conditions: Add with nothing typed says what to type', toasts.some((m) => /Type the condition/.test(m)));
   doc.getElementById('condIn').value = 'Asthma'; doc.getElementById('condAdd').click();
   ck('…and adds what you type', /Asthma/.test(doc.getElementById('s-health').textContent));
+  /* placeholders from the first prototype that only flashed a message */
+  ck('no button only says "in the real app", "lands with the food database", "prototype" or "copied a link" without doing it', ![...doc.querySelectorAll('[data-toast]')].some((e) => /real app|lands with|prototype|shareable link|opens a chat/i.test(e.getAttribute('data-toast'))) && !doc.getElementById('prefList'));
+  w.go('settings'); await wait(50);
+  ck('Settings > Version says the build, not "0.1 prototype"', !/prototype/.test(doc.getElementById('setVersion').textContent));
+  doc.getElementById('setHelp').click(); await wait(50);
+  ck('Settings > Help & support opens Kova’s help (find anything, show me around)', doc.getElementById('sheet').classList.contains('on') && !!doc.querySelector('#sheetIn .kh'));
+  w.closeSheet();
+  w.go('fuel'); await wait(50);
+  const see = doc.querySelector('#s-fuel .chip[data-kmi="tog"]');
+  ck('Fuel > Micronutrients: See all is a real button', !!see);
+  doc.getElementById('fuelRange').querySelector('[data-r="1"]').click();
+  doc.getElementById('kcalMore').dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+  ck('Fuel > Calories this week: the arrow opens the month in your log', doc.querySelector('#fuelRange [data-r="30"]').classList.contains('on'));
   ck('no script errors', !errors.filter((x) => !/Not implemented/i.test(x)).length || (console.log(errors.slice(0, 3)), false));
   let p = 0; R.forEach(([n, c]) => { console.log((c ? 'ok   ' : 'FAIL ') + n); if (c) p++; });
   console.log(p + '/' + R.length + ' realbuttons');

@@ -64,7 +64,9 @@ window.KovaLegal=(function(){
     var bs=document.querySelector('#klgBiz .li-sub'); if(bs) bs.textContent=bizFilled()?B.name+' · '+B.email:'Not filled in yet';
   }
   function onSet(e){
-    var b=e.target.closest('[data-klg]'); if(!b) return;
+    var b=e.target.closest('[data-klg]');
+    if(!b&&e.target.closest('#klgAna')){ set(!allowed()); return; }   /* p44: the whole row is the switch */
+    if(!b) return;
     var k=b.getAttribute('data-klg');
     if(k==='ana'){ set(!allowed()); return; }
     if(k==='page'){ window.open(url(b.getAttribute('data-p')),'_blank','noopener'); return; }

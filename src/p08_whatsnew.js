@@ -24,7 +24,7 @@ window.KovaWhatsNew=(function(){
   /* newest first */
   var REL=[
     {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
-      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Attach real files when composing a post'],
+      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Every button checked; the dead ones now work','Recipes open faster'],
       steps:[
         ['worktasks','New task','Add a time and when to be reminded.',function(){ return q('#wtNewTask'); }]
       ]},
