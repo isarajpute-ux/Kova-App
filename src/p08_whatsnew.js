@@ -23,11 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
-    {id:'new-2026-10-31',title:'The dial, like the picture',
-      lines:['A glass band on a glossy brown form','The choice sits in the taupe wedge','Add to today shows its whole list'],
+    {id:'new-2026-11-01',title:'Your tasks stay saved',
+      lines:['Phone and laptop now merge your tasks','The dial is gone: simple tabs for now'],
       steps:[
-        ['move','Stretch and Exercises','Turn the band. The one in the wedge is chosen.',function(){ return first('#s-move .kxp-act[data-kxp="str"]'); }],
-        ['session','Add to today','The whole list now, on every screen.',function(){ return q('#addExBtn'); }]
+        ['worktasks','Your tasks','Saved on every device. Nothing gets overwritten.',function(){ return q('#wtNewTask'); }],
+        ['move','Exercises and Stretch','Simple tabs for now. A new design is coming.',function(){ return first('#s-move .kxp-act[data-kxp="str"]'); }]
       ]},
     {id:'new-2026-10-30',title:'The dial, redone',
       lines:['Smoky frosted glass on a warm brown spotlight','Six attachments per area, not seventeen'],

@@ -1111,7 +1111,7 @@ window.KovaExPage=(function(){
       +'<div class="kdl-ch"><span class="kdl-name">'+esc(g.id==='today'?'Today':g.n)+'</span><span class="kdl-st"><i></i>'+g.L.length+' stretches</span>'
         +'<button type="button" class="kdl-x" data-kxp="sopen" aria-expanded="'+SS.open+'" aria-label="'+(SS.open?'Show fewer':'Show them all')+'">'+KovaDial.arrows(SS.open)+'</button></div>'
       +'<div class="kdl-big"><b>'+min+'</b><span>min</span></div>'
-      +'<div class="kdl-sub">Tap the centre to start</div>'
+      
       +'<div class="kdl-strip">'+g.L.map(function(d){ return '<button type="button" class="kdl-t" data-kxp="stretch" data-n="'+esc(d.n)+'"><span class="kxp-th" data-kxd-still="'+esc(d.n)+'"></span><b>'+esc(d.n)+'</b><small>'+esc(d.hold)+'</small></button>'; }).join('')+'</div>'
       +'</div>';
   }
@@ -1126,7 +1126,7 @@ window.KovaExPage=(function(){
     var el=document.querySelector('#sheet .kdl-page[data-kdl-page="str"] .kdl'); if(!el||!window.KovaDial) return;
     var G=strGroups();
     DIAL=KovaDial.mount(el,{label:'Body part',items:G,sel:Math.max(0,G.map(function(x){ return x.id; }).indexOf(SS.g)),
-      centre:{icon:'play',label:'Stretch with me',onTap:function(){ var g=strGroups().filter(function(x){ return x.id===SS.g; })[0]; if(g&&g.L.length){ track('stretch_routine_start',{g:g.id}); routine(g.L,0); } }},
+      centre:{icon:'play',label:'Stretch with me',short:'Stretch with me',onTap:function(){ var g=strGroups().filter(function(x){ return x.id===SS.g; })[0]; if(g&&g.L.length){ track('stretch_routine_start',{g:g.id}); routine(g.L,0); } }},
       onPick:function(i,it){ SS.g=it.id; paintCard('kxpSCard',strCard()); }});
   }
   function strOpen(){ sheet(strHtml()); strDial(); }

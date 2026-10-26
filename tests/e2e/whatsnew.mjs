@@ -28,12 +28,12 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#kwn [data-kwn="show"]').click();
   await p.waitForSelector('#ksCoach.on', { timeout: 8000 }).catch(() => {});
   const c1 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Show me goes to Workout and lights up Stretch', c1.t === 'Stretch and Exercises' && c1.scr === 's-move');
+  ck(theme + ': Show me goes to your tasks in Work OS', c1.t === 'Your tasks' && c1.scr === 's-worktasks' || (console.error(theme, c1), false));
   const spot = async (sel) => p.evaluate((sel) => { const s = document.getElementById('ksSpot').getBoundingClientRect(), k = document.querySelector(sel).getBoundingClientRect(); return s.left <= k.left + 2 && s.right >= k.right - 2 && s.top <= k.top + 2; }, sel);
   await p.waitForTimeout(900);                                  /* the light slides into place */
-  ck(theme + ': …with the light around it', await spot('#s-move .kxp-act[data-kxp="str"]'));
+  ck(theme + ': …with the light around New task', await spot('#wtNewTask'));
   await p.locator('#ksCoach [data-t="next"]').click(); await p.waitForTimeout(1300);
-  ck(theme + ': …then Add to today, in the workout', (await p.evaluate(() => [(document.querySelector('#ksCoach .ks-ct') || {}).textContent, (document.querySelector('.screen.on') || {}).id].join())) === 'Add to today,s-session');
+  ck(theme + ': …then Exercises and Stretch, on Workout', (await p.evaluate(() => [(document.querySelector('#ksCoach .ks-ct') || {}).textContent, (document.querySelector('.screen.on') || {}).id].join())) === 'Exercises and Stretch,s-move');
   await p.screenshot({ path: join(shots, `whatsnew-step1-${theme}.png`) });
   await p.locator('#ksCoach [data-t="skip"]').click(); await p.waitForTimeout(400);
   ck(theme + ': Skip ends it, and the card does not come back', await p.locator('#ksTour').count() === 0 && await p.locator('#kwn').count() === 0);

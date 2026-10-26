@@ -202,7 +202,7 @@ window.KovaAttach=(function(){
     var el=document.querySelector('#sheet .katt-p.kdl-page .kdl'); if(!el||!PK) return;
     var lp=isLP(PK.n);
     PD=KovaDial.mount(el,{label:lp?'Where your feet go':'Body area',items:pkRing(),sel:pkSel(),
-      centre:lp?{icon:'swap',label:'Switch between feet and gear',onTap:function(){ PK.mode=PK.mode==='feet'?'gear':'feet'; PD.swap(pkRing(),pkSel()); repaint(); }}:{label:'Attachments'},
+      centre:lp?{icon:'swap',label:'Switch between feet and gear',short:function(){ return PK.mode==='feet'?'Gear':'Feet'; },onTap:function(){ PK.mode=PK.mode==='feet'?'gear':'feet'; PD.swap(pkRing(),pkSel()); repaint(); }}:{label:'Attachments'},
       onPick:function(i,it){ if(PK.mode==='feet') PK.foot=it.id; else PK.area=it.id; repaint(); }});
   }
   function repaint(){
