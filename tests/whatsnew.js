@@ -63,7 +63,9 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', rel.id === 'new-2026-11-02' && rel.steps.length === 2 && rel.steps.every((t) => t[0] === 'session') && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: task times and reminders, its step on New task in Work OS', rel.id === 'new-2026-11-03' && rel.steps.length === 1 && rel.steps[0][0] === 'worktasks' && rel.lines.every((l) => l.split(' ').length <= 10));
+  const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
+  ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;
   ck('the p43f release: tasks stay saved (Work OS tasks first), then the plain tabs on Exercises and Stretch', r31.id === 'new-2026-11-01' && r31.steps.length === 2 && r31.steps[0][0] === 'worktasks' && r31.steps[1][0] === 'move' && r31.steps[1][3]() && r31.steps[1][3]().getAttribute('data-kxp') === 'str' && r31.lines.every((l) => l.split(' ').length <= 10));
   ck('the p43d release, the dial redone: Stretch on Workout, then attachments in the workout', r30.steps.length === 2 && r30.steps[0][3]() && r30.steps[0][3]().getAttribute('data-kxp') === 'str' && r30.steps[1][0] === 'session' && r30.lines.every((l) => l.split(' ').length <= 10));
@@ -94,7 +96,7 @@ function boot(store) {
   const fa = r22.steps.filter((t) => t[0] === 'session')[0];
   ck('…and the Coach me button in the workout', !!fa && !!fa[3]() && /Coach me/.test(fa[3]().textContent));
   ck('the p40/p41 release finds the Coach me button too', !!r25.steps[2][3]() && /Coach me/.test(r25.steps[2][3]().textContent));
-  ck('the newest release finds the attachment button in the workout (or + Exercise)', !!rel.steps[1][3]());
+  ck('the newest release finds New task in Work OS', !!rel.steps[0][3]() && rel.steps[0][3]().id === 'wtNewTask');
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

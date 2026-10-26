@@ -34,7 +34,7 @@ window.KovaBlocks=(function(){
     var W=window.WorkOS, tasks=[];
     try{ tasks=(W.overdue()||[]).map(function(i){ return {i:i,od:true}; }).concat((W.dueToday()||[]).map(function(i){ return {i:i,od:false}; })); }catch(e){}
     var cog=function(i){ return window.KovaCog?KovaCog.of(i):5; };
-    tasks=tasks.map(function(x){ var c=cog(x.i); return {id:String(x.i.id||x.i.name),name:x.i.name||'Task',od:x.od,cog:c,band:c>=7?'deep':(c>=4?'normal':'light')}; });
+    tasks=tasks.map(function(x){ var c=cog(x.i); return {id:String(x.i.id||x.i.name),name:x.i.name||'Task',od:x.od,cog:c,band:c>=7?'deep':(c>=4?'normal':'light'),at:(!x.od&&window.KovaTaskAlert)?KovaTaskAlert.dueAt(x.i):0}; });
     return {t:t,score:R.score,wake:wake,tasks:tasks,busy:(S.busy||[]).filter(function(b){ return b.end>day0(t)&&b.start<day0(t)+864e5; })};
   }
   function windows(I){
@@ -57,9 +57,11 @@ window.KovaBlocks=(function(){
   function plan(t){
     var I=inputs(t), W=windows(I), low=I.score!=null&&I.score<50, good=I.score!=null&&I.score>=75;
     var taken=I.busy.slice(), blocks=[], later=[];
-    var order=I.tasks.slice().sort(function(a,b){ if(a.od!==b.od) return a.od?-1:1; return b.cog-a.cog; });
+    var order=I.tasks.slice().sort(function(a,b){ if(!!a.at!==!!b.at) return a.at?-1:1; if(a.od!==b.od) return a.od?-1:1; return b.cog-a.cog; });
     var deepUsed=0;
     order.forEach(function(x){
+      /* p44: a task with its own time stays at that time; the rest fit round it */
+      if(x.at){ var ln=(x.band==='deep'?60:x.band==='normal'?45:30)*MIN, fb={id:'b-'+x.id,taskId:x.id,title:x.name,start:x.at,end:x.at+ln,kind:x.band,why:'At the time you set.'}; blocks.push(fb); taken.push(fb); if(x.band==='deep') deepUsed++; return; }
       var pin=S.pinned&&S.pinned[x.id];
       if(pin&&pin.start>=day0(I.t)&&pin.start<day0(I.t)+864e5){ blocks.push({id:'b-'+x.id,taskId:x.id,title:x.name,start:pin.start,end:pin.end,kind:x.band,why:'You moved this one; it stays where you put it.'}); taken.push(pin); return; }
       var len=(x.band==='deep'?(good?90:low?45:60):x.band==='normal'?45:30)*MIN;

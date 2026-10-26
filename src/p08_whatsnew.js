@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
+      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Attach real files when composing a post'],
+      steps:[
+        ['worktasks','New task','Add a time and when to be reminded.',function(){ return q('#wtNewTask'); }]
+      ]},
     {id:'new-2026-11-02',title:'Back goes back one page',
       lines:['Back returns to the page before','Workout is brown everywhere now','Swap day is now Customize','When to stretch: after training'],
       steps:[

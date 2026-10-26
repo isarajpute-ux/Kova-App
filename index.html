@@ -26839,7 +26839,7 @@ window.__paintSport=function(){ if(window.__paintPlanGen) try{ __paintPlanGen();
     if(b&&w) b.onclick=function(){ b.classList.toggle('open'); w.classList.toggle('open'); };
   })();
   document.getElementById('condAdd').onclick=function(){
-    var i=document.getElementById('condIn'), v=i.value.trim(); if(!v)return;
+    var i=document.getElementById('condIn'), v=i.value.trim(); if(!v){ toast('Type the condition first, like asthma.'); try{ i.focus(); }catch(e){} return; }
     var x=H(); if(x.cond.indexOf(v)<0)x.cond.push(v); save(x); i.value=''; paintCond(); teaser();
   };
 
@@ -43355,15 +43355,21 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
     });
   }
   var add=document.getElementById('kdcAdd');
-  if(add) add.onclick=function(){
-    var nm=prompt('File or document name'); if(!nm) return;
-    st.files.push(String(nm).slice(0,60)); paintFiles(); paintNote();
-  };
+  /* p44: real files (it asked for a typed name before, the owner: "buttons just for show"); kept on this device in KovaBlobs */
+  function pick(accept){
+    var inp=document.createElement('input'); inp.type='file'; inp.multiple=true; if(accept) inp.accept=accept;
+    inp.onchange=function(){
+      [].slice.call(inp.files||[]).slice(0,10).forEach(function(f){
+        st.files.push(String(f.name).slice(0,60));
+        try{ if(window.KovaBlobs&&KovaBlobs.put) KovaBlobs.put('kdc_'+Date.now().toString(36)+'_'+st.files.length,f); }catch(e){}
+      });
+      paintFiles(); paintNote();
+    };
+    inp.click();
+  }
+  if(add) add.onclick=function(){ pick(''); };
   var med=document.getElementById('kdcMedia');
-  if(med) med.onclick=function(){
-    var nm=prompt('Image or video name'); if(!nm) return;
-    st.files.push(String(nm).slice(0,60)); paintFiles(); paintNote();
-  };
+  if(med) med.onclick=function(){ pick('image/*,video/*'); };
   var mode=document.getElementById('kdcMode');
   if(mode) mode.onclick=function(){
     st.mode=(st.mode+1)%MODES.length;
@@ -43386,7 +43392,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
         due:WorkOS.startOfDay()
       },'user');
     }catch(e){}
-    toast0('Queued for '+name+'. It sends once the Worker is deployed.');
+    toast0('Saved to your board as Queued for '+name+'. To post it now, use Studio.');
     document.getElementById('kdcBody').value='';
     st.files=[]; paintFiles(); paintNote();
   };
@@ -58290,7 +58296,7 @@ window.KovaBlocks=(function(){
     var W=window.WorkOS, tasks=[];
     try{ tasks=(W.overdue()||[]).map(function(i){ return {i:i,od:true}; }).concat((W.dueToday()||[]).map(function(i){ return {i:i,od:false}; })); }catch(e){}
     var cog=function(i){ return window.KovaCog?KovaCog.of(i):5; };
-    tasks=tasks.map(function(x){ var c=cog(x.i); return {id:String(x.i.id||x.i.name),name:x.i.name||'Task',od:x.od,cog:c,band:c>=7?'deep':(c>=4?'normal':'light')}; });
+    tasks=tasks.map(function(x){ var c=cog(x.i); return {id:String(x.i.id||x.i.name),name:x.i.name||'Task',od:x.od,cog:c,band:c>=7?'deep':(c>=4?'normal':'light'),at:(!x.od&&window.KovaTaskAlert)?KovaTaskAlert.dueAt(x.i):0}; });
     return {t:t,score:R.score,wake:wake,tasks:tasks,busy:(S.busy||[]).filter(function(b){ return b.end>day0(t)&&b.start<day0(t)+864e5; })};
   }
   function windows(I){
@@ -58313,9 +58319,11 @@ window.KovaBlocks=(function(){
   function plan(t){
     var I=inputs(t), W=windows(I), low=I.score!=null&&I.score<50, good=I.score!=null&&I.score>=75;
     var taken=I.busy.slice(), blocks=[], later=[];
-    var order=I.tasks.slice().sort(function(a,b){ if(a.od!==b.od) return a.od?-1:1; return b.cog-a.cog; });
+    var order=I.tasks.slice().sort(function(a,b){ if(!!a.at!==!!b.at) return a.at?-1:1; if(a.od!==b.od) return a.od?-1:1; return b.cog-a.cog; });
     var deepUsed=0;
     order.forEach(function(x){
+      /* p44: a task with its own time stays at that time; the rest fit round it */
+      if(x.at){ var ln=(x.band==='deep'?60:x.band==='normal'?45:30)*MIN, fb={id:'b-'+x.id,taskId:x.id,title:x.name,start:x.at,end:x.at+ln,kind:x.band,why:'At the time you set.'}; blocks.push(fb); taken.push(fb); if(x.band==='deep') deepUsed++; return; }
       var pin=S.pinned&&S.pinned[x.id];
       if(pin&&pin.start>=day0(I.t)&&pin.start<day0(I.t)+864e5){ blocks.push({id:'b-'+x.id,taskId:x.id,title:x.name,start:pin.start,end:pin.end,kind:x.band,why:'You moved this one; it stays where you put it.'}); taken.push(pin); return; }
       var len=(x.band==='deep'?(good?90:low?45:60):x.band==='normal'?45:30)*MIN;
@@ -68751,6 +68759,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
+      lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Attach real files when composing a post'],
+      steps:[
+        ['worktasks','New task','Add a time and when to be reminded.',function(){ return q('#wtNewTask'); }]
+      ]},
     {id:'new-2026-11-02',title:'Back goes back one page',
       lines:['Back returns to the page before','Workout is brown everywhere now','Swap day is now Customize','When to stretch: after training'],
       steps:[

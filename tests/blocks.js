@@ -101,6 +101,13 @@ function fakeDb() {
   B.open(); await wait(20);
   const sheetText = w.document.querySelector('#sheetIn .kbk').textContent;
   ck('the plan opens as one sheet with times and reasons (or what moved)', w.document.querySelectorAll('#sheetIn .kbk-b').length === B._S().blocks.length && /Your day, blocked/.test(sheetText) && (B._S().blocks.length === 0 || /window|dip|peak|moved/i.test(sheetText)));
+  /* p44: a task with its own time stays at that time (Gym at 5 PM is not moved to the morning) */
+  if (w.KovaTaskAlert) {
+    const d0 = w.WorkOS.startOfDay();
+    w.WorkOS.create('items', { name: 'Gym at 5', status: 'Not Started', priority: 'High', due: d0, time: '17:00', remind: 0 });
+    const P2 = B.plan(d0 + 8 * 36e5), gym = P2.blocks.filter((b) => b.title === 'Gym at 5')[0];
+    ck('a task with a time is planned at that time, the rest around it', gym && new Date(gym.start).getHours() === 17 && /At the time you set/.test(gym.why) && P2.blocks.filter((b) => b !== gym).every((b) => b.end <= gym.start || b.start >= gym.end));
+  } else ck('task reminders module loaded for the plan', false);
   const css = fs.readFileSync(__dirname + '/../src/p08_billing.js', 'utf8');
   const plans = fs.readFileSync(__dirname + '/../src/p08_plans.js', 'utf8');
   ck('the plan screen sells where you end up, not features or price', /has it handled/.test(plans) && /Where you will be/.test(plans) && !/One person, one price/.test(css + plans));
