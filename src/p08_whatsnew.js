@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-08',title:'Patterns from your own data',
+      lines:['After a workout: what Kova found','Sleep and your cycle against how much you lift'],
+      steps:[
+        ['sessdone','Patterns Kova found','Shows once there are 5 workouts each way.',function(){ return q('#sdBody .kpt'); }]
+      ]},
     {id:'new-2026-11-07',title:'Plates gets its own screen',
       lines:['Plates opens a full screen, weight filled in','Fuel shows a tip for your cycle phase','Screen readers: every icon button is named'],
       steps:[
