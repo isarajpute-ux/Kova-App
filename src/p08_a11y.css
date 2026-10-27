@@ -18,3 +18,5 @@ html body.light-mode .app,html body.light-mode #sheet,html body.light-mode .card
 html body.light-mode .card.card-lg,html body.light-mode .card.kova{--ron-txt-2:rgba(28,26,23,.68);--ron-txt-3:rgba(28,26,23,.6)}
 html body.light-mode .sub,html body.light-mode .li-sub{color:rgba(28,26,23,.68)}
 html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}
+/* p47: the screen title takes focus when a screen opens (for screen readers); it is not a control, so no ring */
+.hdr .title:focus,.hdr .title-s:focus{outline:none}

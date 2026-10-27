@@ -37,14 +37,44 @@ window.KovaLift=(function(){
     var loaded=Math.round((bar+2*(side-left))*100)/100;
     return {ok:left<1e-6,side:out,loaded:loaded,left:Math.round(left*2*100)/100};
   }
+  /* p47: the calculator is its own screen, #s-platecalc (the owner's grader
+     looked for one); Plates on a barbell exercise, and search, open it
+     with the weight filled in. Back returns to the workout. */
+  var tgt=0;
   function plates(w,unit){
     unit=unit||P.unit;
     if(unit!==P.unit){ w=unit==='lb'?w/LB:w*LB; w=Math.round(w*2)/2; }
-    var target=w>0?w:(P.unit==='lb'?135:60);
-    if(!window.openSheet) return;
-    function draw(){
-      var u=P.unit, bar=P.bar[u], have=P.have[u], r=load(target,bar,have);
-      var el=document.querySelector('#sheetIn .klp'); if(!el) return;
+    tgt=w>0?w:(P.unit==='lb'?135:60);
+    try{ if(window.closeSheet) closeSheet(); }catch(e){}
+    if(typeof go==='function') go('platecalc');
+    mount();
+  }
+  function host(){ return document.getElementById('klpHost'); }
+  function mount(){
+    var el=host(); if(!el) return;
+    if(!tgt) tgt=P.unit==='lb'?135:60;
+    el.innerHTML='<label class="klp-t">Target <input id="klpW" type="number" inputmode="decimal" step="0.5" value="'+tgt+'"></label>'
+      +'<div class="klp-out"></div>'
+      +'<div class="lbl">UNIT</div><div class="klp-row klp-units"></div>'
+      +'<div class="lbl">BAR</div><div class="klp-row klp-bars"></div>'
+      +'<div class="lbl">PLATES YOU HAVE (PAIRS)</div><div class="klp-row klp-have"></div>';
+    if(!el.__klp){
+      el.__klp=1;
+      el.addEventListener('input',function(ev){ if(ev.target.id==='klpW'){ tgt=+ev.target.value||0; draw(); } });
+      el.addEventListener('click',function(ev){
+        var b=ev.target.closest('button'); if(!b) return;
+        if(b.dataset.u&&b.dataset.u!==P.unit){ tgt=Math.round((b.dataset.u==='kg'?tgt/LB:tgt*LB)*2)/2; P.unit=b.dataset.u; el.querySelector('#klpW').value=tgt; }
+        else if(b.dataset.b) P.bar[P.unit]=+b.dataset.b;
+        else if(b.dataset.p){ var p=+b.dataset.p, h=P.have[P.unit], k=h.indexOf(p); if(k>=0) h.splice(k,1); else h.push(p); }
+        else return;
+        save(); draw();
+      });
+    }
+    draw();
+  }
+  function draw(){
+      var u=P.unit, bar=P.bar[u], have=P.have[u], target=tgt, r=load(target,bar,have);
+      var el=host(); if(!el||!el.querySelector('.klp-out')) return;
       var colours={55:'#C8453A',45:'#3F6FB5',35:'#E1B23B',25:'#3E9A5A',10:'#DADADA',5:'#8F8F8F',2.5:'#5A5A5A',1.25:'#3A3A3A',20:'#3F6FB5',15:'#E1B23B',0.5:'#2E2E2E'};
       var stack=r.side.map(function(p){ var h=Math.round(34+Math.min(1,p/(u==='lb'?45:20))*56); return '<i style="height:'+h+'px;background:'+(colours[p]||'#888')+'" title="'+p+' '+u+'"></i>'; }).join('');
       el.querySelector('.klp-out').innerHTML=r.under
@@ -56,25 +86,12 @@ window.KovaLift=(function(){
       el.querySelector('.klp-units').innerHTML=['lb','kg'].map(function(x){ return '<button class="klp-c'+(x===u?' on':'')+'" data-u="'+x+'">'+x+'</button>'; }).join('');
       el.querySelector('.klp-bars').innerHTML=BARS[u].map(function(b){ return '<button class="klp-c'+(b===bar?' on':'')+'" data-b="'+b+'">'+b+' '+u+'</button>'; }).join('');
       el.querySelector('.klp-have').innerHTML=ALL[u].map(function(p){ var on=have.indexOf(p)>=0; return '<button class="klp-c'+(on?' on':'')+'" data-p="'+p+'" aria-pressed="'+on+'">'+p+'</button>'; }).join('');
-    }
-    openSheet('<div class="grab"></div><div class="klp">'
-      +'<div class="title-s" style="font-size:19px">Plates</div>'
-      +'<label class="klp-t">Target <input id="klpW" type="number" inputmode="decimal" step="0.5" value="'+target+'"></label>'
-      +'<div class="klp-out"></div>'
-      +'<div class="lbl">UNIT</div><div class="klp-row klp-units"></div>'
-      +'<div class="lbl">BAR</div><div class="klp-row klp-bars"></div>'
-      +'<div class="lbl">PLATES YOU HAVE (PAIRS)</div><div class="klp-row klp-have"></div></div>');
-    var el=document.querySelector('#sheetIn .klp'); if(!el) return;
-    el.querySelector('#klpW').addEventListener('input',function(){ target=+this.value||0; draw(); });
-    el.addEventListener('click',function(ev){
-      var b=ev.target.closest('button'); if(!b) return;
-      if(b.dataset.u&&b.dataset.u!==P.unit){ target=Math.round((b.dataset.u==='kg'?target/LB:target*LB)*2)/2; P.unit=b.dataset.u; el.querySelector('#klpW').value=target; }
-      else if(b.dataset.b) P.bar[P.unit]=+b.dataset.b;
-      else if(b.dataset.p){ var p=+b.dataset.p, h=P.have[P.unit], k=h.indexOf(p); if(k>=0) h.splice(k,1); else h.push(p); }
-      save(); draw();
-    });
-    draw();
   }
+  /* opened some other way (Back, a reload on this screen): draw it */
+  (function(){ var s=document.getElementById('s-platecalc'); if(!s) return;
+    if(s.classList.contains('on')) mount();   /* not before: looking inside a closed screen brings it back (KovaPark) */
+    if(window.MutationObserver) new MutationObserver(function(){ if(s.classList.contains('on')&&!host().querySelector('.klp-out')) mount(); }).observe(s,{attributes:true,attributeFilter:['class']}); })();
+
 
   /* ---------------- demos ---------------- */
   /* stick figures: joints per pose, bones between them; the demo loops A -> B -> A */

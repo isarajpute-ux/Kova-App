@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-07',title:'Plates gets its own screen',
+      lines:['Plates opens a full screen, weight filled in','Fuel shows a tip for your cycle phase','Screen readers: every icon button is named'],
+      steps:[
+        ['platecalc','Plates','Type a weight; see what goes on each side.',function(){ return q('#klpHost .klp-out')||q('#klpHost'); }],
+        ['fuel','Cycle on Fuel','What to eat in this phase.',function(){ return q('#s-fuel .kc-fuel'); }]
+      ]},
     {id:'new-2026-11-06',title:'Cycle on Sleep',
       lines:['Open Cycle from Sleep too','With a sleep tip for your phase'],
       steps:[

@@ -291,3 +291,9 @@ html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
 .kcx-page{padding:4px 0 28px}
 .kcx-calc .kcx-ph{cursor:default;margin-bottom:6px}
 .kcx-sum .kcx-prof{margin-bottom:10px}
+/* p47: a placeholder shaped like the screen until it is drawn (the cycle code loads after the first screen) */
+.kcx-skel i{display:block;border-radius:26px;margin:0 0 10px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.1),rgba(255,255,255,.05));background-size:200% 100%;animation:kcxSh 1.4s linear infinite}
+.kcx-skel .a{height:150px}.kcx-skel .b{height:330px}.kcx-skel .c{height:120px}
+body.light-mode .kcx-skel i{background-image:linear-gradient(90deg,rgba(30,20,24,.04),rgba(30,20,24,.08),rgba(30,20,24,.04))}
+@keyframes kcxSh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.kcx-skel i{animation:none}}

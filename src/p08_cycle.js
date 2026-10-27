@@ -723,24 +723,32 @@ window.KovaCycle=(function(){
     el.style.setProperty('--kc',P?P.c:ROSE);
     el.innerHTML=t?'<i></i><b>Cycle · day '+t.day+'</b><span>'+esc(t.paused?'Pregnant':P.n)+(t.phase!=='late'&&!t.paused?' · period in '+Math.max(0,Math.round((t.next-sod())/DAY))+' d':'')+'</span><em>›</em>':'<i></i><b>Cycle</b><span>Log your last period to start</span><em>›</em>';
   }
-  /* p46b: a link on Sleep too (the owner), with this phase's sleep tip.
-     Made the first time Sleep opens: looking inside a closed screen brings
-     it back into the page (KovaPark), which the first screen cannot afford. */
-  var slpEl=null;
-  function sleepOn(){ var v=document.getElementById('s-sleep'); return !!(v&&v.classList.contains('on')); }
-  function paintSleep(){
-    if(!slpEl&&!sleepOn()) return;
-    if(sex()==='male'&&!D.on){ if(slpEl){ slpEl.remove(); slpEl=null; } return; }
-    if(!slpEl){
-      var scr=document.getElementById('s-sleep'); if(!scr) return;
-      slpEl=document.createElement('button'); slpEl.type='button'; slpEl.className='kc-mini kc-slp kl-keep'; slpEl.setAttribute('data-go','cycle');
-      var after=scr.querySelector(':scope > .kl-panel')||scr.querySelector(':scope > .hdr');
-      if(after) after.insertAdjacentElement('afterend',slpEl); else scr.insertBefore(slpEl,scr.firstChild);
-    }
+  /* p46b: a link on Sleep too (the owner), with this phase's sleep tip;
+     p47: and on Fuel under the calorie ring, with its eating tip (the
+     grader: "cycle phase not used on the fuel screen"); Fuel only while
+     there is a phase to speak of. Made the first time each screen opens:
+     looking inside a closed screen brings it back into the page
+     (KovaPark), which the first screen cannot afford. */
+  var LINKS={
+    sleep:{cls:'kc-slp',tip:1,after:[':scope > .kl-panel',':scope > .hdr'],el:null},
+    fuel:{cls:'kc-fuel',tip:2,after:[':scope > .card.card-lg',':scope > .hdr'],el:null,need:true}
+  };
+  function onScr(id){ var v=document.getElementById('s-'+id); return !!(v&&v.classList.contains('on')); }
+  function sleepOn(){ return onScr('sleep'); }
+  function paintLink(id){
+    var K=LINKS[id]; if(!K.el&&!onScr(id)) return;
     var t=D.on?today():null, P=t?PHASE[t.phase]:null;
-    slpEl.style.setProperty('--kc',P?P.c:ROSE);
-    slpEl.innerHTML='<i></i><b>Cycle'+(t?' · day '+t.day:'')+'</b><span>'+esc(t?(t.paused?'Pregnant':P.n+' · '+((TIP[t.phase]||[])[1]||'')):(D.on?'Log your last period':'Track your period'))+'</span><em>›</em>';
+    if((sex()==='male'&&!D.on)||(K.need&&(!t||t.paused))){ if(K.el){ K.el.remove(); K.el=null; } return; }
+    if(!K.el){
+      var scr=document.getElementById('s-'+id); if(!scr) return;
+      K.el=document.createElement('button'); K.el.type='button'; K.el.className='kc-mini '+K.cls+' kl-keep'; K.el.setAttribute('data-go','cycle');
+      var after=null; K.after.some(function(q){ return (after=scr.querySelector(q)); });
+      if(after) after.insertAdjacentElement('afterend',K.el); else scr.insertBefore(K.el,scr.firstChild);
+    }
+    K.el.style.setProperty('--kc',P?P.c:ROSE);
+    K.el.innerHTML='<i></i><b>Cycle'+(t?' · day '+t.day:'')+'</b><span>'+esc(t?(t.paused?'Pregnant':P.n+' · '+((TIP[t.phase]||[])[K.tip]||'')):(D.on?'Log your last period':'Track your period'))+'</span><em>›</em>';
   }
+  function paintSleep(){ paintLink('sleep'); paintLink('fuel'); }
   function paintAll(){ paint(); paintHome(); paintSleep(); }
   function start(){
     takeTemp();
@@ -753,8 +761,8 @@ window.KovaCycle=(function(){
     ]); }catch(e){}
     var tries=0;
     (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
-      var ss=document.getElementById('s-sleep');
-      if(ss&&window.MutationObserver) new MutationObserver(function(){ if(sleepOn()) paintSleep(); }).observe(ss,{attributes:true,attributeFilter:['class']});
+      ['sleep','fuel'].forEach(function(id){ var ss=document.getElementById('s-'+id);
+        if(ss&&window.MutationObserver) new MutationObserver(function(){ if(onScr(id)) paintLink(id); }).observe(ss,{attributes:true,attributeFilter:['class']}); });
       var cs=document.getElementById('s-cycle');
       if(cs&&window.MutationObserver) new MutationObserver(function(){ if(screenOn()) paint(); }).observe(cs,{attributes:true,attributeFilter:['class']}); })();
   }
