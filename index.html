@@ -4644,6 +4644,10 @@ body.light-mode .kcx-tip em{color:var(--x-rose)}
    section is your own data, so it stays, with its own header */
 html.kova-live #s-vitals.kl-gated>.kcx-vsec.kl-keep{display:block;margin-top:12px}
 html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
+/* p46: the cycle's own screen */
+.kcx-page{padding:4px 0 28px}
+.kcx-calc .kcx-ph{cursor:default;margin-bottom:6px}
+.kcx-sum .kcx-prof{margin-bottom:10px}
 
 </style>
 <style id="p08-links">
@@ -12447,6 +12451,14 @@ body.ks-on #kovaFab{display:none!important}
 
 </section>
 
+<section class="screen" id="s-cycle">
+  <div class="hdr">
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Go back"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div><div class="title-s">Cycle</div></div></div>
+  </div>
+  <div class="kcx kcx-page" id="kcSec"></div>
+</section>
+
 <section class="screen" id="s-watch">
   <div class="hdr">
     <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
@@ -14888,7 +14900,7 @@ window.KW_TODAY=function(){return window.KOVA_WEEK[4]};
    in learn-module.html. */
 var KOVA_LEARN_ENABLED = false;
 
-var PILLAR={maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',plan:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
+var PILLAR={cycle:'vitals',maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',plan:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
 
 /* ---------- KOVA PROFILE STORE ---------- */
 var KP=(function(){
@@ -15093,8 +15105,6 @@ window.__restoreNav=restoreNav;
 function go(id,opts){
   opts=opts||{};
   if(id==='chat'&&window.KovaChat){ KovaChat.open(); return; }
-  /* the cycle is a section of Vitals now, not a page of its own */
-  if(id==='cycle'){ go('vitals',opts); if(window.KovaCycle&&KovaCycle.focus) KovaCycle.focus(); return; }
   /* screen_view for both analytics sinks. Hooked here rather than at
      each call site because every navigation in the app funnels through
      go() - there is no second route in. */
@@ -51383,14 +51393,13 @@ window.KovaCycle=(function(){
         +(op?('<div class="kcx-tl"><span>This cycle</span><b>'+(s.cycles?s.avg+' days'+(s.sd!=null?' ±'+Math.max(1,Math.round(s.sd)):''):'~28 days')+'</b></div>'+dash(t)
           +'<div class="kcx-key"><span class="p">Period</span><span class="fw">Fertile window</span><span class="ov">Ovulation</span><span class="now">Today</span></div>'):'')
         +'</div>';
-      h+=tipsCard(t)+dialCard(t)+curveCard(t);
       var pt=patterns(), soon=pt.filter(function(p){ return p.kind==='before'&&Math.abs(Math.round((t.next-sod())/DAY)-p.o)<=1; })[0];
       if(soon) h+='<div class="kcx-heads"><span>Heads-up</span>'+esc(soon.t.replace(' ('+soon.n+' cycles).','.'))+' Your period is due '+(dn<=0?'today':'in '+dn+' day'+(dn===1?'':'s'))+'.</div>';
     }
     h+='<div class="kcx-acts"><button class="kcx-btn" data-k="log">Log today'+(todayCount()?' · '+todayCount():'')+'</button>'
       +'<button class="kcx-btn ghost" data-k="period">'+(/light|med|heavy/.test(D.flow[key(Date.now())]||'')?'Period today ✓':'Period today')+'</button></div>';
-    var np=nextPeriods(t,1)[0];
-    h+=rec('cal','Calendar:',np?'Next period '+md(np.a):'Tap a day to mark your period',calBody(t));
+    h+='<div class="kcx-card kcx-calc"><div class="kcx-ph"><span>Calendar</span></div>'+calBody(t)+'</div>';
+    if(t) h+=tipsCard(t)+dialCard(t)+curveCard(t);
     /* record rows */
     var fl=flags(), pt2=patterns(), st0=D.status||{};
     h+=rec('tests','Tests:','Ovulation, pregnancy, progesterone',testsBody());
@@ -51560,48 +51569,54 @@ window.KovaCycle=(function(){
       +'<p class="kcx-fine">Symptoms like cramps or bloating cannot be measured by a phone; Kova only finds your own patterns in what you log. See a doctor for irregular cycles, bleeding longer than 7 days, bleeding between periods or severe pelvic pain.</p></div>';
   }
 
-  /* ---------------- where it lives: a section of Vitals ---------------- */
+  /* ---------------- where it lives (p46): its own screen ----------------
+     The owner: "a dedicated cycle screen, reachable from Sleep or Vitals".
+     #s-cycle holds the whole tracker (#kcSec). Vitals keeps its Cycle &
+     fertility section (a dock tile in sample mode), now a summary (day,
+     phase, next period) with Open Cycle; Today's Cycle card and search
+     open the screen too. */
   function host(){
+    var el=document.getElementById('kcSec'); if(!el) return null;
+    if(!el.__kc){ el.__kc=1; el.addEventListener('click',onClick); el.addEventListener('change',onChange); }
+    return el;
+  }
+  function sumHost(){
     var scr=document.getElementById('s-vitals'); if(!scr) return null;
-    var el=document.getElementById('kcSec'); if(el) return el;
+    var el=document.getElementById('kcSum'); if(el) return el;
     if(sex()==='male'&&!D.on) return null;
     var wrap=document.createElement('div'); wrap.className='vsec kcx-vsec kl-keep';   /* p45: your own data, so it shows with live mode's plain cards too (it was hidden there) */
     var open=D.on||sex()==='female';
     wrap.innerHTML='<div class="vsec-h'+(open?' open':'')+'" data-s="cycle" role="button" tabindex="0" aria-expanded="'+open+'">'
       +'<div class="vsec-i"><svg class="ic" style="font-size:15px"><use href="#i-heartbeat"/></svg></div><div class="vsec-n">Cycle & fertility</div><div class="vsec-c" id="kcSecN"></div>'
       +'<span class="vsec-v"><svg class="ic" style="font-size:15px"><use href="#i-chevron-down"/></svg></span></div>'
-      +'<div class="vsec-b'+(open?' open':'')+'" data-b="cycle"><div class="kcx" id="kcSec"></div></div>';
+      +'<div class="vsec-b'+(open?' open':'')+'" data-b="cycle"><div class="kcx kcx-sum" id="kcSum"></div></div>';
     /* after the Today section, before How you're feeling */
     var secs=scr.querySelectorAll('.vsec'), after=secs[0]||scr.querySelector('.card.card-lg');
     if(after&&after.parentNode) after.parentNode.insertBefore(wrap,after.nextSibling); else scr.appendChild(wrap);
     var hd=wrap.querySelector('.vsec-h'), bd=wrap.querySelector('.vsec-b');
     var tog=function(){ var o=!hd.classList.contains('open'); hd.classList.toggle('open',o); bd.classList.toggle('open',o); hd.setAttribute('aria-expanded',String(o)); };
     hd.addEventListener('click',tog); hd.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); tog(); } });
-    el=wrap.querySelector('#kcSec'); el.addEventListener('click',onClick); el.addEventListener('change',onChange);
-    return el;
+    return wrap.querySelector('#kcSum');
   }
-  /* the section's insides are drawn the first time Vitals opens, not at
-     start-up: nothing on the first screen needs them */
-  var drawn=false;
-  function vitalsOn(){ var v=document.getElementById('s-vitals'); return !!(v&&v.classList.contains('on')); }
+  function sumPaint(){
+    var el=sumHost(); if(!el) return;
+    var t=D.on?today():null, n=document.getElementById('kcSecN');
+    if(n) n.textContent=t?'Day '+t.day:(D.on?'Start':'Off');
+    var go='<button class="kcx-btn" data-go="cycle">'+(D.on?'Open Cycle':'Start tracking')+'</button>';
+    if(!t){ el.innerHTML='<p class="kcx-p">'+(D.on?'Log the first day of your last period to start the predictions.':'Your period, symptoms and fertile window, in one place.')+'</p><div class="kcx-acts">'+go+'</div>'; return; }
+    var P=PHASE[t.phase], dn=Math.round((t.next-sod())/DAY);
+    el.innerHTML='<div class="kcx-card kcx-prof" style="--kc:'+P.c+'"><div class="kcx-3"><div><small>Day:</small><b>'+t.day+'</b></div><div><small>Phase:</small><b>'+esc(t.paused?'Pregnant':P.n)+'</b></div>'
+      +'<div><small>Next period:</small><b>'+(t.paused?'Paused':(t.phase==='late'?'Late':(dn<=0?'Today':md(t.next))))+'</b></div></div></div><div class="kcx-acts">'+go+'</div>';
+  }
+  /* the screen is drawn each time it opens (dates move on), not at start-up */
+  function screenOn(){ var v=document.getElementById('s-cycle'); return !!(v&&v.classList.contains('on')); }
   function paint(force){
+    sumPaint();
     var el=host(); if(!el) return;
-    if(!drawn&&!force&&!vitalsOn()){ var n0=document.getElementById('kcSecN'); if(n0){ var t0=D.on?today():null; n0.textContent=t0?'Day '+t0.day:(D.on?'Start':'Off'); } return; }
-    drawn=true;
+    if(!force&&!screenOn()) return;
     el.innerHTML=section();
-    var n=document.getElementById('kcSecN'); if(n){ var t=D.on?today():null; n.textContent=t?'Day '+t.day:(D.on?'Start':'Off'); }
   }
-  function focus(){
-    var tries=0;
-    (function f(){
-      var el=host();
-      if(!el){ if(++tries<20) return setTimeout(f,150); return; }
-      paint(true);
-      var w=el.closest('.vsec'), hd=w&&w.querySelector('.vsec-h'), bd=w&&w.querySelector('.vsec-b');
-      if(hd&&!hd.classList.contains('open')){ hd.classList.add('open'); bd.classList.add('open'); }
-      if(w&&w.scrollIntoView) w.scrollIntoView({block:'start',behavior:'smooth'});
-    })();
-  }
+  function focus(){ paint(true); }
   function onClick(e){
     var b=e.target.closest('[data-k]'); if(!b) return;
     var k=b.getAttribute('data-k'), tk=key(Date.now());
@@ -51740,9 +51755,17 @@ window.KovaCycle=(function(){
   function paintAll(){ paint(); paintHome(); }
   function start(){
     takeTemp();
+    /* the screen's own tour, the first time it opens (rule 8) */
+    try{ if(window.KovaScreenTour&&KovaScreenTour.register) KovaScreenTour.register('cycle','Cycle',[
+      ['Where you are','Day of your cycle, phase and next period.','#kcSec .kcx-prof'],
+      ['Calendar','Tap a day to mark or clear your period. Dashed days are expected.','#kcSec .kcx-calc'],
+      ['For you now','How to train, recover and eat in this phase.','#kcSec .kcx-tips'],
+      ['Log today','Flow, symptoms and signs, a tap each.','#kcSec [data-k="log"]']
+    ]); }catch(e){}
     var tries=0;
     (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
-      if(sc&&window.MutationObserver) new MutationObserver(function(){ if(!drawn&&vitalsOn()) paint(); }).observe(sc,{attributes:true,attributeFilter:['class']}); })();
+      var cs=document.getElementById('s-cycle');
+      if(cs&&window.MutationObserver) new MutationObserver(function(){ if(screenOn()) paint(); }).observe(cs,{attributes:true,attributeFilter:['class']}); })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(start,300); }); else setTimeout(start,300);
   return {_fromCloud:fromCloud,nextPeriods:function(n){ return nextPeriods(D.on?today():null,n); },paint:paint,focus:focus,today:today,regularity:regularity,phase:phaseNow,stats:stats,cycles:cycles,patterns:patterns,flags:flags,PHASE:PHASE,GROUPS:GROUPS,openLog:openLog,report:report,reportHTML:reportHTML,
@@ -54939,7 +54962,7 @@ window.KovaHelp=(function(){
     {t:'Plate calculator',k:'plates plate calculator barbell bar load each side loading 45 35 15 kg lb',act:function(){ if(window.KovaLift) KovaLift.plates(0); }},
     {t:'Do it for me (email and tasks)',k:'email gmail draft task do it for me send',act:function(){ if(window.KovaOrb) KovaOrb.open('do'); }},
     {t:'Sleep sounds and timer',k:'sounds noise rain white brown noise wind down timer mixes music',s:'sounds'},
-    {t:'Cycle and fertility (in Vitals)',k:'cycle period menstrual ovulation fertile fertility luteal pms cramps bloating spotting pregnancy test lh basal temperature mucus contraception',s:'cycle'},
+    {t:'Cycle and fertility',k:'cycle period menstrual ovulation fertile fertility luteal pms cramps bloating spotting pregnancy test lh basal temperature mucus contraception',s:'cycle'},
     {t:'Vitamins and minerals',k:'micronutrients vitamins minerals iron vitamin d magnesium fiber sodium potassium calcium b12 folate',s:'fuel',q:'#microGrid'},
     {t:'Log food',k:'log food add meal eat search food usda calories macros protein',s:'fuel'},
     {t:'Recipes',k:'recipes meals cook dinner lunch breakfast',s:'recipes'},
@@ -59783,7 +59806,7 @@ window.KovaPark=(function(){
   /* opening a screen always brings it back, before go() shows it */
   function hookGo(){
     var real=window.go; if(typeof real!=='function'||real.__park) return;
-    var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); if(id==='cycle'){ var v=gid.call(document,'s-vitals'); if(v) unpark(v); } return real.apply(this,arguments); };
+    var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); return real.apply(this,arguments); };
     w.__park=1; window.go=w;
   }
   /* two passes: the first as soon as the page has loaded, so it holds the
@@ -68861,10 +68884,15 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-05',title:'Cycle has its own page',
+      lines:['Open it from Vitals or Today','Calendar, phase, next periods and tips'],
+      steps:[
+        ['cycle','Your cycle page','Where you are, the calendar and tips for this phase.',function(){ return q('#kcSec .kcx-prof')||q('#kcSec .kcx-card'); }]
+      ]},
     {id:'new-2026-11-04',title:'A cycle calendar',
       lines:['Tap a day to mark your period','See your next 3 periods','Tips for your phase: train, recover, eat','Search \u201cplates\u201d for the plate calculator'],
       steps:[
-        ['vitals','Cycle calendar','Tap a day to mark or clear your period.',function(){ return q('#kcSec .kcx-cal'); }]
+        ['cycle','Cycle calendar','Tap a day to mark or clear your period.',function(){ return q('#kcSec .kcx-cal'); }]
       ]},
     {id:'new-2026-11-03',title:'Tasks with a time, and reminders',
       lines:['Give a task a time; Kova reminds you','Plan my day keeps timed tasks in place','Every button checked; the dead ones now work','Recipes open faster'],

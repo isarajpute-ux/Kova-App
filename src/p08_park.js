@@ -116,7 +116,7 @@ window.KovaPark=(function(){
   /* opening a screen always brings it back, before go() shows it */
   function hookGo(){
     var real=window.go; if(typeof real!=='function'||real.__park) return;
-    var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); if(id==='cycle'){ var v=gid.call(document,'s-vitals'); if(v) unpark(v); } return real.apply(this,arguments); };
+    var w=function(id){ var s=gid.call(document,'s-'+id); if(s) unpark(s); return real.apply(this,arguments); };
     w.__park=1; window.go=w;
   }
   /* two passes: the first as soon as the page has loaded, so it holds the

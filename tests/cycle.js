@@ -47,9 +47,12 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   await wait(900);
   const d = w.document, K = w.KovaCycle;
   const sec = () => d.getElementById('kcSec');
-  ck('the section is drawn the first time Vitals opens, not at start', sec() && !sec().children.length);
+  ck('the cycle screen is drawn when it opens, not at start', sec() && !sec().children.length);
   w.go('vitals'); await wait(80);
-  ck('there is no separate cycle page: it is a section of Vitals', !d.getElementById('s-cycle') && !!sec() && !!sec().closest('#s-vitals') && /Cycle & fertility/.test(sec().closest('.vsec').textContent));
+  const sum = d.getElementById('kcSum');
+  ck('Vitals has a Cycle & fertility section with a way in', !!sum && /Cycle & fertility/.test(sum.closest('.vsec').textContent) && /Start tracking/.test(sum.textContent));
+  sum.querySelector('[data-go="cycle"]').click(); await wait(80);
+  ck('it opens the cycle\'s own screen, s-cycle, in Vitals\' colours', d.getElementById('s-cycle').classList.contains('on') && !!sec().closest('#s-cycle') && d.getElementById('app').getAttribute('data-pillar') === 'vitals' && /Cycle/.test(d.querySelector('#s-cycle .title-s').textContent));
   ck('before tracking: one card that asks when the last period started', /When did your last period start/.test(sec().textContent) && !!d.getElementById('kcxStart'));
   d.getElementById('kcxStart').value = key(sod() - 30 * DAY);
   sec().querySelector('[data-k="start"]').click(); await wait(30);
@@ -125,7 +128,11 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
 
   // old links and old data
   w.go('home'); await wait(10); w.go('cycle'); await wait(250);
-  ck('anything that still opens "cycle" lands on Vitals, at the section', d.getElementById('s-vitals').classList.contains('on'));
+  ck('anything that opens "cycle" (Today\'s card, search, old links) lands on the cycle screen', d.getElementById('s-cycle').classList.contains('on') && sec().querySelectorAll('.kcx-calc,.kcx-prof,.kcx-tips').length === 3);
+  w.go('vitals'); await wait(30);
+  ck('Vitals sums it up: day, phase and next period, with Open Cycle', /Day:/.test(d.getElementById('kcSum').textContent) && /Next period:/.test(d.getElementById('kcSum').textContent) && /Open Cycle/.test(d.getElementById('kcSum').textContent));
+  w.go('cycle'); await wait(30); w.goBack(); await wait(30);
+  ck('Back from the cycle screen returns to Vitals', d.getElementById('s-vitals').classList.contains('on'));
   K._set({ on: true, days: { [key(sod() - 3 * DAY)]: true }, sym: { [key(sod() - DAY)]: ['cramps', 'tender', 'cravings'] } });
   const w2 = boot({ kova_cycle_v1: JSON.stringify({ on: true, days: { [key(sod() - 3 * DAY)]: true }, sym: { [key(sod() - DAY)]: ['cramps', 'tender', 'cravings'] }, temp: {} }), 'kova.sex': JSON.stringify('female') });
   await wait(900);
@@ -144,7 +151,7 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   ck('with sync off nothing comes from the account', Object.keys(w4.KovaCycle._data().flow).length === 2);
 
   // p45: a month you can tap, the next 3 periods, this phase's tips
-  w2.go && w2.go('vitals'); w2.KovaCycle.paint(true); await wait(50);
+  w2.go('cycle'); await wait(60);
   const d2 = w2.document, sec2 = () => d2.getElementById('kcSec');
   const now = new Date(), dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const days = () => [...sec2().querySelectorAll('.kcx-cd')];
@@ -174,7 +181,7 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   // a man
   const w3 = boot({ 'kova.sex': JSON.stringify('male') });
   await wait(900);
-  ck('a man sees no cycle section in Vitals', !w3.document.getElementById('kcSec') && !w3.document.querySelector('.kcx-vsec'));
+  ck('a man sees no cycle section in Vitals', !w3.document.querySelector('.kcx-vsec'));
 
   const css = fs.readFileSync(__dirname + '/../src/p08_cycle.css', 'utf8');
   ck('three appearances are styled', /body\.soft-light \.kcx/.test(css) && /body\.light-mode \.kcx/.test(css));
