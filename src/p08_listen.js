@@ -31,20 +31,49 @@ window.KovaListen=(function(){
 
   /* ---------------- hearing a name ---------------- */
   function clean(t){ return String(t||'').replace(/\s+/g,' ').trim(); }
+  /* p49: the owner, in a crowd: "it couldn't hear and nothing pulled up".
+     In noise the recogniser often writes the name a little wrong ("Mia",
+     "my a" for Maya). An exact name still counts anywhere; a near one
+     (one letter off, or the same sounds, or two words run together)
+     counts right after a wake word (hey, hi, ok, yo, hello), so other
+     people's chatter does not open boxes. Names under 4 letters are
+     exact only. */
+  var WAKE=/^(hey|hay|hi|ok|okay|yo|hello)$/;
+  function lev(a,b){
+    var m=a.length, n=b.length, d=[], i, j;
+    for(i=0;i<=m;i++){ d[i]=[i]; } for(j=1;j<=n;j++) d[0][j]=j;
+    for(i=1;i<=m;i++) for(j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    return d[m][n];
+  }
+  function sound(w){ w=w.replace(/ph/g,'f').replace(/ck|q/g,'k').replace(/z/g,'s').replace(/(.)\1+/g,'$1'); return w.charAt(0)+w.slice(1).replace(/[aeiouyhw]/g,''); }
+  function near(w,n){
+    if(w===n) return 2;
+    if(n.length<4||w.length<2) return 0;
+    if(w.charAt(0)===n.charAt(0)&&lev(w,n)<=(n.length>=7?2:1)) return 1;
+    if(w.length>=3&&sound(w)===sound(n)&&Math.abs(w.length-n.length)<=2) return 1;
+    return 0;
+  }
   function find(text){
-    var t=' '+String(text||'').toLowerCase().replace(/[^a-z0-9' ]+/g,' ')+' ', best=null;
+    var words=String(text||'').toLowerCase().replace(/[^a-z0-9' ]+/g,' ').split(/\s+/).filter(Boolean).map(function(x){ return x.replace(/'s$/,'').replace(/'/g,''); }), best=null;
     team().forEach(function(e){
       var n=e.n.toLowerCase().replace(/[^a-z0-9]/g,'');
-      var i=t.search(new RegExp('\\b'+n+'\\b'));
-      if(i>=0&&(!best||i<best.i)) best={e:e,i:i,n:n};
+      for(var i=0;i<words.length&&!(best&&best.i<=i);i++){
+        var opts=i+1<words.length?[[words[i]+words[i+1],2],[words[i],1]]:[[words[i],1]];   /* two words run together first ("my a") */
+        for(var c=0;c<opts.length;c++){
+          var q=near(opts[c][0],n); if(!q) continue;
+          if(q===1&&!(i>0&&WAKE.test(words[i-1]))) continue;
+          if(!best||i<best.i) best={e:e,i:i,n:n,w:words.slice(i,i+opts[c][1]).join(' '),exact:q===2};
+          return;
+        }
+      }
     });
     return best;
   }
   /* what they asked: the words after the name, without greetings and filler */
   function request(text,name){
-    var low=String(text||''), m=low.toLowerCase().search(new RegExp('\\b'+name+'\\b'));
-    if(m<0) return '';
-    var rest=low.slice(m+name.length).replace(/^[\s,.:;!?-]+/,'');
+    var low=String(text||''), at=new RegExp('\\b'+String(name).replace(/[^a-z0-9 ]/g,'').replace(/ /g,"[^a-z0-9]+")+'(\'s)?\\b').exec(low.toLowerCase());
+    if(!at) return '';
+    var rest=low.slice(at.index+at[0].length).replace(/^[\s,.:;!?-]+/,'');
     rest=rest.replace(/^(please|can you|could you|would you|i need you to|i want you to)\s+/i,function(x){ return /please/i.test(x)?'':x; });
     rest=clean(rest);
     if(/^(hi|hey|hello|good (morning|afternoon|evening|night)|are you there|you there)[.!?]*$/i.test(rest)) rest='';
@@ -56,13 +85,13 @@ window.KovaListen=(function(){
     if(S.pop&&S.emp&&S.state!=='sent'){
       if(S.state==='waiting'){
         /* the name was said on its own; this is the job */
-        var again=find(text), job=again&&again.e.id===S.emp.id?request(text,again.n):text;
+        var again=find(text), job=again&&again.e.id===S.emp.id?request(text,again.w):text;
         S.heard=text; if(job) setAsk(job,final); paintPop(); return;
       }
-      if(S.state==='heard'&&!final){ var f0=find(text); if(f0&&f0.e.id===S.emp.id){ S.heard=text; var r0=request(text,f0.n); if(r0) setAsk(r0,false); paintPop(); } }
+      if(S.state==='heard'&&!final){ var f0=find(text); if(f0&&f0.e.id===S.emp.id){ S.heard=text; var r0=request(text,f0.w); if(r0) setAsk(r0,false); paintPop(); } }
       if(S.state==='heard'&&final){
         var f1=find(text);
-        if(f1&&f1.e.id===S.emp.id){ var r1=request(text,f1.n); if(r1) setAsk(r1,true); else toWaiting(); }
+        if(f1&&f1.e.id===S.emp.id){ var r1=request(text,f1.w); if(r1) setAsk(r1,true); else toWaiting(); }
         else if(!f1&&!S.ask&&text.length>=3){ S.heard=text; setAsk(text.charAt(0).toUpperCase()+text.slice(1),true); }   /* the job arrived as its own piece */
         else if(S.ask) setAsk(S.ask,true);
       }
@@ -70,7 +99,7 @@ window.KovaListen=(function(){
     }
     var f=find(text); if(!f) return;
     open(f.e,text);
-    var r=request(text,f.n);
+    var r=request(text,f.w);
     if(r) setAsk(r,final); else if(final) toWaiting();
   }
   function setAsk(t,final){
@@ -182,8 +211,10 @@ window.KovaListen=(function(){
     if(!SR||!S.on||S.running||document.hidden) return;
     var r=new SR();
     r.continuous=true; r.interimResults=true; r.lang=navigator.language||'en-US';
+    r.maxAlternatives=5;   /* p49: in a crowd the name is often in the 2nd or 3rd guess */
     r.onresult=function(ev){
-      for(var i=ev.resultIndex;i<ev.results.length;i++){ var res=ev.results[i]; hear(res[0].transcript,res.isFinal); }
+      S.restarts=0;
+      for(var i=ev.resultIndex;i<ev.results.length;i++){ var res=ev.results[i]; hear(pick(res),res.isFinal); }
     };
     r.onerror=function(ev){
       if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){ S.err='Microphone permission was refused. Allow it in your browser settings to call your team by name.'; set(false); }
@@ -192,9 +223,16 @@ window.KovaListen=(function(){
     r.onend=function(){
       S.running=false; pill();
       /* browsers stop after a pause or a minute; carry on while it is on, gently */
-      if(S.on&&!document.hidden){ var gap=Date.now()-S.last<4000?Math.min(8000,500*Math.pow(2,S.restarts++)):300; S.last=Date.now(); setTimeout(begin,gap); }
+      if(S.on&&!document.hidden){ var gap=Date.now()-S.last<4000?Math.min(2000,300*Math.pow(2,S.restarts++)):150; S.last=Date.now(); setTimeout(begin,gap); }   /* p49: never deaf for more than 2 s (it was up to 8) */
     };
     try{ r.start(); S.rec=r; S.running=true; S.err=''; S.last=Date.now(); pill(); }catch(e){ S.running=false; }
+  }
+  /* the phone's guesses for one piece of speech: the first one with a name in it,
+     else its best guess (once a box is open, its best guess) */
+  function pick(res){
+    var t=res[0]&&res[0].transcript||''; if(S.pop) return t;
+    for(var a=0;a<res.length;a++){ var x=res[a]&&res[a].transcript; if(x&&find(x)) return x; }
+    return t;
   }
   function halt(){ S.running=false; try{ if(S.rec) S.rec.abort(); }catch(e){} S.rec=null; pill(); }
   function set(on){
@@ -221,5 +259,5 @@ window.KovaListen=(function(){
     return true;
   }
   return {supported:supported,set:set,on:function(){ return S.on; },running:function(){ return S.running; },error:function(){ return S.err; },
-    hear:hear,find:find,request:request,close:close,send:send,ask:ask,_S:S};
+    hear:hear,find:find,request:request,pick:pick,close:close,send:send,ask:ask,_S:S};
 })();

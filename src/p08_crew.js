@@ -2185,7 +2185,7 @@ window.KovaCrew=(function(){
     var L=window.KovaListen; if(!L) return '';
     var ok=L.supported(), on=ok&&L.on(), err=L.error(), names=emps().filter(function(e){ return e.enabled; }).map(function(e){ return e.n; }).slice(0,2);
     return '<div class="crw-listen"><span class="crw-lt"><b>Call them by name</b><small>'
-      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
+      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. In a noisy room, say “hey” first. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
           :'This browser cannot listen for names. Chrome, Edge and Safari can.')
       +(err?'<em>'+esc(err)+'</em>':'')+'</small></span>'
       +'<button class="crw-tog'+(on?' on':'')+'" data-c="listen" role="switch" aria-checked="'+on+'" aria-label="Call your team by name"'+(ok?'':' disabled')+'><span></span></button></div>';

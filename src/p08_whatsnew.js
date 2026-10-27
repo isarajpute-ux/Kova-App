@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-09',title:'A simpler profile',
+      lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
+      steps:[
+        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfEditBtn'); }],
+        ['workteam','Call them by name','In a noisy room, say "hey" before the name.',function(){ return q('#wtmBody [data-c="listen"]'); }]
+      ]},
     {id:'new-2026-11-08',title:'Patterns from your own data',
       lines:['After a workout: what Kova found','Sleep and your cycle against how much you lift'],
       steps:[

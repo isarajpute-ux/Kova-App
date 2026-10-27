@@ -36,6 +36,11 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('names are found anywhere in a sentence', L.find('good evening maya').e.n === 'Maya' && L.find('hey Leo can you help').e.n === 'Leo' && !L.find('nothing to see here'));
   ck('the job is the words after the name', L.request('Hey Maya, can you write the weekly report', 'maya') === 'Can you write the weekly report');
   ck('a greeting alone is not a job', L.request('Good morning Maya', 'maya') === '' && L.request('Maya hello', 'maya') === '');
+  /* p49: in a crowd the name comes out a little wrong */
+  ck('in noise, a near name counts right after "hey" (Mia, Maia, my a for Maya)', ['hey mia plan my week', 'hey maia plan my week', 'hey my a plan my week', 'ok mya, plan my week'].every((t) => (L.find(t) || {}).e && L.find(t).e.n === 'Maya'));
+  ck('…but not on its own, so other people\'s chatter does not open boxes', !L.find('mia said plan the week') && !L.find('i talked to mia') && L.find('i talked to maya').e.n === 'Maya');
+  ck('names under 4 letters stay exact (Leo is not "Lee")', !L.find('hey lee help me') && L.find('hey leo help me').e.n === 'Leo');
+  ck('the job still follows the name as it was heard', L.request('hey my a, plan my week', L.find('hey my a, plan my week').w) === 'Plan my week' && L.request("Maya's turn: write the report", 'maya') === 'Turn: write the report');
 
   w.go('workteam'); await wait(100);
   const sw = doc.querySelector('#wtmBody [data-c="listen"]');
@@ -113,6 +118,15 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('a step whose element is missing is skipped, not left blank', /3 \/ 3/.test(doc.getElementById('ksCoach').textContent));
   doc.querySelector('#ksCoach [data-t="next"]').click(); await wait(30);
   ck('the tour ends cleanly', done && !doc.getElementById('ksTour'));
+  const rx = recs[recs.length - 1];
+  ck('it asks the phone for 5 guesses of each phrase', rx.maxAlternatives === 5);
+  rx.onresult({ resultIndex: 0, results: [Object.assign([{ transcript: 'hey me a plan my weak' }, { transcript: 'hey maya plan my week' }], { isFinal: false })] }); await wait(20);
+  ck('when the best guess misses the name, a later guess with it still opens the box', !!L._S.pop && L._S.emp && L._S.emp.n === 'Maya');
+  L.close(); await wait(20);
+  L.set(true); await wait(30);
+  const ry = recs[recs.length - 1], n0 = recs.length; ry.onend(); await wait(2300);
+  ck('after the microphone stops it starts again within 2 seconds', recs.length > n0 && L.running());
+  L.set(false); await wait(20);
   let reached = [];
   w.KovaScreenTour.run('move'); await wait(80);
   for (let i = 0; i < 12 && doc.getElementById('ksTour'); i++) { reached.push(doc.querySelector('.screen.on').id + ':' + doc.querySelector('#ksCoach .ks-ct').textContent); doc.querySelector('#ksCoach [data-t="next"]').click(); await wait(250); }
