@@ -723,7 +723,25 @@ window.KovaCycle=(function(){
     el.style.setProperty('--kc',P?P.c:ROSE);
     el.innerHTML=t?'<i></i><b>Cycle · day '+t.day+'</b><span>'+esc(t.paused?'Pregnant':P.n)+(t.phase!=='late'&&!t.paused?' · period in '+Math.max(0,Math.round((t.next-sod())/DAY))+' d':'')+'</span><em>›</em>':'<i></i><b>Cycle</b><span>Log your last period to start</span><em>›</em>';
   }
-  function paintAll(){ paint(); paintHome(); }
+  /* p46b: a link on Sleep too (the owner), with this phase's sleep tip.
+     Made the first time Sleep opens: looking inside a closed screen brings
+     it back into the page (KovaPark), which the first screen cannot afford. */
+  var slpEl=null;
+  function sleepOn(){ var v=document.getElementById('s-sleep'); return !!(v&&v.classList.contains('on')); }
+  function paintSleep(){
+    if(!slpEl&&!sleepOn()) return;
+    if(sex()==='male'&&!D.on){ if(slpEl){ slpEl.remove(); slpEl=null; } return; }
+    if(!slpEl){
+      var scr=document.getElementById('s-sleep'); if(!scr) return;
+      slpEl=document.createElement('button'); slpEl.type='button'; slpEl.className='kc-mini kc-slp kl-keep'; slpEl.setAttribute('data-go','cycle');
+      var after=scr.querySelector(':scope > .kl-panel')||scr.querySelector(':scope > .hdr');
+      if(after) after.insertAdjacentElement('afterend',slpEl); else scr.insertBefore(slpEl,scr.firstChild);
+    }
+    var t=D.on?today():null, P=t?PHASE[t.phase]:null;
+    slpEl.style.setProperty('--kc',P?P.c:ROSE);
+    slpEl.innerHTML='<i></i><b>Cycle'+(t?' · day '+t.day:'')+'</b><span>'+esc(t?(t.paused?'Pregnant':P.n+' · '+((TIP[t.phase]||[])[1]||'')):(D.on?'Log your last period':'Track your period'))+'</span><em>›</em>';
+  }
+  function paintAll(){ paint(); paintHome(); paintSleep(); }
   function start(){
     takeTemp();
     /* the screen's own tour, the first time it opens (rule 8) */
@@ -735,6 +753,8 @@ window.KovaCycle=(function(){
     ]); }catch(e){}
     var tries=0;
     (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
+      var ss=document.getElementById('s-sleep');
+      if(ss&&window.MutationObserver) new MutationObserver(function(){ if(sleepOn()) paintSleep(); }).observe(ss,{attributes:true,attributeFilter:['class']});
       var cs=document.getElementById('s-cycle');
       if(cs&&window.MutationObserver) new MutationObserver(function(){ if(screenOn()) paint(); }).observe(cs,{attributes:true,attributeFilter:['class']}); })();
   }

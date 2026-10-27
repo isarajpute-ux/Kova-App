@@ -7,3 +7,5 @@ body.light-mode .kc-mini{--x-card:rgba(255,255,255,.78);--x-ink:#1E1418;--x-mute
 .kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
 .kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
 .kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
+.kc-slp{margin-top:4px}
+.kc-slp span{line-height:1.3;min-width:0}

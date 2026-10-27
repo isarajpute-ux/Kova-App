@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-06',title:'Cycle on Sleep',
+      lines:['Open Cycle from Sleep too','With a sleep tip for your phase'],
+      steps:[
+        ['sleep','Cycle','Your phase and a sleep tip. Tap to open.',function(){ return q('#s-sleep .kc-slp'); }]
+      ]},
     {id:'new-2026-11-05',title:'Cycle has its own page',
       lines:['Open it from Vitals or Today','Calendar, phase, next periods and tips'],
       steps:[
