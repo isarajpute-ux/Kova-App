@@ -20,7 +20,7 @@ window.KovaHelp=(function(){
   /* screens people land on; the rest are steps inside a flow */
   var SKIP=['tour','quiz','workquiz','lquiz','workitem','workmeeting','workfolder','notebook','recipe','progress','source','sessdone','ownplan','chat','snap','explain','workdiag'];
   var NAME={home:'Today (home)',move:'Workout',work:'Work OS',workstudio:'New post',workspace:'Work OS files',worksettings:'Work OS settings',
-    worktoday:'Work OS board',workteam:'AI team',session:'Workout session',customize:'Customize workout',cycle:'Cycle',sounds:'Sleep sounds',
+    worktoday:'Work OS board',workteam:'AI team',session:'Workout session',customize:'Customize workout',cycle:'Cycle',platecalc:'Plate calculator',sounds:'Sleep sounds',
     settings:'Settings',profile:'Profile',plan:'Subscription',watch:'Your watch',health:'Health profile'};
   var PILLAR={sleep:'Sleep',move:'Workout',fuel:'Fuel',vitals:'Vitals',work:'Work OS',home:'Today',settings:'Settings',learn:'Learn'};
 

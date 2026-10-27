@@ -61,10 +61,19 @@ function boot() {
   const d = L.load(62.5, 20, [25, 20, 15, 10, 5, 2.5, 1.25]);
   ck('62.5 kg loads exactly with a 1.25 kg plate', d.ok && d.side.join() === '20,1.25');
   ck('under the bar says so', L.load(30, 45, [45]).under === true);
+  w.go('session'); await wait(20);
   L.plates(225, 'lb'); await wait(20);
-  ck('the plate sheet shows what goes on each side, and the bar and unit choices', /45 · 45/.test(doc.querySelector('#sheetIn .klp').textContent) && doc.querySelectorAll('#sheetIn .klp-bars .klp-c').length >= 3 && doc.querySelectorAll('#sheetIn .klp-units .klp-c').length === 2);
-  doc.querySelector('#sheetIn .klp [data-u="kg"]').click(); await wait(10);
-  ck('switching to kg converts the target and uses kg plates', /kg each side/.test(doc.querySelector('#sheetIn .klp-out').textContent) && +doc.getElementById('klpW').value === 102);
+  const pc = doc.getElementById('klpHost');
+  ck('Plates opens its own screen, s-platecalc, in Workout\'s colours', doc.getElementById('s-platecalc').classList.contains('on') && doc.getElementById('app').getAttribute('data-pillar') === 'move' && /Plates/.test(doc.querySelector('#s-platecalc .title-s').textContent));
+  ck('it shows what goes on each side, and the bar and unit choices (45 / 35 / 15 lb bars among them)', /45 · 45/.test(pc.textContent) && [45, 35, 15].every((b) => !!pc.querySelector('.klp-bars [data-b="' + b + '"]')) && pc.querySelectorAll('.klp-units .klp-c').length === 2 && pc.querySelectorAll('.klp-bar i').length >= 2);
+  ck('the weight comes in filled', +doc.getElementById('klpW').value === 225);
+  pc.querySelector('[data-u="kg"]').click(); await wait(10);
+  ck('switching to kg converts the target and uses kg plates', /kg each side/.test(pc.querySelector('.klp-out').textContent) && +doc.getElementById('klpW').value === 102);
+  pc.querySelector('[data-u="lb"]').click(); await wait(10);
+  const inp = doc.getElementById('klpW'); inp.value = '135'; inp.dispatchEvent(new w.Event('input', { bubbles: true })); await wait(10);
+  ck('typing a new weight redraws it (135: a 45 each side)', /^45 /.test(pc.querySelector('.klp-big').textContent.trim()) && /Loads exactly 135/.test(pc.textContent));
+  w.goBack(); await wait(20);
+  ck('Back returns to the workout', doc.getElementById('s-session').classList.contains('on'));
 
   // demos for every exercise
   const XL = w.KSESS.XL;

@@ -23,6 +23,22 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-08',title:'Patterns from your own data',
+      lines:['After a workout: what Kova found','Sleep and your cycle against how much you lift'],
+      steps:[
+        ['sessdone','Patterns Kova found','Shows once there are 5 workouts each way.',function(){ return q('#sdBody .kpt'); }]
+      ]},
+    {id:'new-2026-11-07',title:'Plates gets its own screen',
+      lines:['Plates opens a full screen, weight filled in','Fuel shows a tip for your cycle phase','Screen readers: every icon button is named'],
+      steps:[
+        ['platecalc','Plates','Type a weight; see what goes on each side.',function(){ return q('#klpHost .klp-out')||q('#klpHost'); }],
+        ['fuel','Cycle on Fuel','What to eat in this phase.',function(){ return q('#s-fuel .kc-fuel'); }]
+      ]},
+    {id:'new-2026-11-06',title:'Cycle on Sleep',
+      lines:['Open Cycle from Sleep too','With a sleep tip for your phase'],
+      steps:[
+        ['sleep','Cycle','Your phase and a sleep tip. Tap to open.',function(){ return q('#s-sleep .kc-slp'); }]
+      ]},
     {id:'new-2026-11-05',title:'Cycle has its own page',
       lines:['Open it from Vitals or Today','Calendar, phase, next periods and tips'],
       steps:[

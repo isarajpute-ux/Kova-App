@@ -41,6 +41,15 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   const screens = [...d.querySelectorAll('.screen[id^="s-"]')].map((s) => s.id.slice(2));
   for (const s of screens) { try { w.go(s); } catch (e) {} await wait(300); scan(s); }
   ck('on all ' + screens.length + ' screens every button, link and tappable thing has a name', nameless.length === 0 || (console.error(nameless.slice(0, 5)), false));
+  /* p47: icon-only buttons carry their name in the page itself (not only once the script runs) */
+  const markup = html.split(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/);
+  const bare = [];
+  markup.forEach((seg) => { for (const m of seg.matchAll(/<div\b([^>]*\bclass="(?:[^"]*\s)?(?:iconbtn|back)(?:\s[^"]*)?"[^>]*)>([\s\S]*?)<\/div>/g)) { if (!/aria-label/.test(m[1]) && !m[2].replace(/<[^>]+>/g, '').trim()) bare.push(m[1].slice(0, 60)); } });
+  ck('every icon-only button and Back in the page has a label written in (not added later)', bare.length === 0 || (console.error(bare.slice(0, 5)), false));
+  const typing = d.activeElement; w.go('home'); await wait(30);
+  ck('…but not while typing in something over the screens (Ask Kova)', typing && typing.id === 'kcIn' && d.activeElement === typing);
+  typing.blur(); w.go('sleep'); await wait(30);
+  ck('opening a screen moves focus to its title, for screen readers', d.activeElement && d.activeElement.closest('#s-sleep') && /Sleep/.test(d.activeElement.textContent) && d.activeElement.getAttribute('tabindex') === '-1');
   ck('every text field, picker and slider has a label, not just a placeholder', unlabelled.length === 0 || (console.error(unlabelled.slice(0, 5)), false));
   const back = d.querySelector('.hdr .back');
   ck('the header back chevron reads "Back"', back && back.getAttribute('aria-label') === 'Back' && back.getAttribute('role') === 'button' && back.getAttribute('tabindex') === '0');

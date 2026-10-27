@@ -47,7 +47,7 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   await wait(900);
   const d = w.document, K = w.KovaCycle;
   const sec = () => d.getElementById('kcSec');
-  ck('the cycle screen is drawn when it opens, not at start', sec() && !sec().children.length);
+  ck('the cycle screen is drawn when it opens, not at start: until then a placeholder shaped like it', sec() && sec().children.length === 1 && sec().querySelectorAll('.kcx-skel i').length === 3);
   w.go('vitals'); await wait(80);
   const sum = d.getElementById('kcSum');
   ck('Vitals has a Cycle & fertility section with a way in', !!sum && /Cycle & fertility/.test(sum.closest('.vsec').textContent) && /Start tracking/.test(sum.textContent));
@@ -133,6 +133,15 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   ck('Vitals sums it up: day, phase and next period, with Open Cycle', /Day:/.test(d.getElementById('kcSum').textContent) && /Next period:/.test(d.getElementById('kcSum').textContent) && /Open Cycle/.test(d.getElementById('kcSum').textContent));
   w.go('cycle'); await wait(30); w.goBack(); await wait(30);
   ck('Back from the cycle screen returns to Vitals', d.getElementById('s-vitals').classList.contains('on'));
+  w.go('sleep'); await wait(30);
+  const slp = d.querySelector('#s-sleep .kc-slp'), ph = K.PHASE[K.today().phase].n;
+  ck('Sleep has a Cycle link: day, phase and a sleep tip for it, kept in live mode', !!slp && slp.classList.contains('kl-keep') && slp.textContent.includes('Cycle · day ' + K.today().day) && slp.textContent.includes(ph + ' · ') && slp.querySelector('span').textContent.length > ph.length + 5);
+  w.go('fuel'); await wait(30);
+  const fuelLink = d.querySelector('#s-fuel .kc-fuel');
+  ck('Fuel has the cycle\'s eating tip under the calorie ring', !!fuelLink && fuelLink.previousElementSibling && fuelLink.previousElementSibling.matches('.card.card-lg') && fuelLink.textContent.includes(ph + ' · ') && /›/.test(fuelLink.textContent));
+  w.go('sleep'); await wait(30);
+  d.querySelector('#s-sleep .kc-slp').click(); await wait(30);
+  ck('tapping it opens the cycle screen, and Back returns to Sleep', d.getElementById('s-cycle').classList.contains('on') && (w.goBack(), d.getElementById('s-sleep').classList.contains('on')));
   K._set({ on: true, days: { [key(sod() - 3 * DAY)]: true }, sym: { [key(sod() - DAY)]: ['cramps', 'tender', 'cravings'] } });
   const w2 = boot({ kova_cycle_v1: JSON.stringify({ on: true, days: { [key(sod() - 3 * DAY)]: true }, sym: { [key(sod() - DAY)]: ['cramps', 'tender', 'cravings'] }, temp: {} }), 'kova.sex': JSON.stringify('female') });
   await wait(900);
@@ -181,7 +190,8 @@ function periods(agos, plen) { const f = {}; agos.forEach((a) => { for (let i = 
   // a man
   const w3 = boot({ 'kova.sex': JSON.stringify('male') });
   await wait(900);
-  ck('a man sees no cycle section in Vitals', !w3.document.querySelector('.kcx-vsec'));
+  w3.go('sleep'); await wait(30); w3.go('fuel'); await wait(30);
+  ck('a man sees no cycle section in Vitals and no Cycle link on Sleep or Fuel', !w3.document.querySelector('.kcx-vsec') && !w3.document.querySelector('.kc-slp') && !w3.document.querySelector('.kc-fuel'));
 
   const css = fs.readFileSync(__dirname + '/../src/p08_cycle.css', 'utf8');
   ck('three appearances are styled', /body\.soft-light \.kcx/.test(css) && /body\.light-mode \.kcx/.test(css));

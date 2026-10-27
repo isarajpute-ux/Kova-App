@@ -4648,6 +4648,12 @@ html.kova-live #s-vitals.kl-gated>.kcx-vsec>.vsec-h{display:flex}
 .kcx-page{padding:4px 0 28px}
 .kcx-calc .kcx-ph{cursor:default;margin-bottom:6px}
 .kcx-sum .kcx-prof{margin-bottom:10px}
+/* p47: a placeholder shaped like the screen until it is drawn (the cycle code loads after the first screen) */
+.kcx-skel i{display:block;border-radius:26px;margin:0 0 10px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.1),rgba(255,255,255,.05));background-size:200% 100%;animation:kcxSh 1.4s linear infinite}
+.kcx-skel .a{height:150px}.kcx-skel .b{height:330px}.kcx-skel .c{height:120px}
+body.light-mode .kcx-skel i{background-image:linear-gradient(90deg,rgba(30,20,24,.04),rgba(30,20,24,.08),rgba(30,20,24,.04))}
+@keyframes kcxSh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.kcx-skel i{animation:none}}
 
 </style>
 <style id="p08-links">
@@ -6386,6 +6392,9 @@ body.light-mode .kg1-pill.strong{color:#fff}
 .kld-cues{margin:12px 0 8px;padding-left:20px}
 .kld-cues li{font-size:13.5px;line-height:1.5;margin:5px 0;color:var(--txt-2,rgba(255,255,255,.92))}
 .kld-note{font-size:11px;color:var(--txt-3,rgba(255,255,255,.65));line-height:1.45}
+/* p47: the calculator's own screen */
+.klp-page{max-width:560px;padding:4px 2px 28px}
+.klp-wait{font-size:13px;color:var(--txt-3,rgba(255,255,255,.5))}
 
 </style>
 <style id="p08-social">
@@ -6525,6 +6534,8 @@ html body.light-mode .app,html body.light-mode #sheet,html body.light-mode .card
 html body.light-mode .card.card-lg,html body.light-mode .card.kova{--ron-txt-2:rgba(28,26,23,.68);--ron-txt-3:rgba(28,26,23,.6)}
 html body.light-mode .sub,html body.light-mode .li-sub{color:rgba(28,26,23,.68)}
 html body.light-mode .card.card-lg .li-sub{color:rgba(28,26,23,.68)!important}
+/* p47: the screen title takes focus when a screen opens (for screen readers); it is not a control, so no ring */
+.hdr .title:focus,.hdr .title-s:focus{outline:none}
 
 </style>
 <style id="p08-launch">
@@ -7197,6 +7208,9 @@ body.light-mode .kc-mini{--x-card:rgba(255,255,255,.78);--x-ink:#1E1418;--x-mute
 .kc-mini{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 12px;padding:12px 14px;border-radius:18px;border:.5px solid var(--x-line);background:var(--x-card);color:var(--x-ink);cursor:pointer;text-align:left;font-family:'Urbanist','Outfit',sans-serif}
 .kc-mini i{width:9px;height:9px;border-radius:50%;background:var(--kc);box-shadow:0 0 8px var(--kc);flex-shrink:0}
 .kc-mini b{font-size:13.5px}.kc-mini span{flex:1;font-size:12px;color:var(--x-mute)}.kc-mini em{font-style:normal;color:var(--x-mute)}
+.kc-slp{margin-top:4px}
+.kc-slp span,.kc-fuel span{line-height:1.3;min-width:0}
+.kc-fuel{margin-top:10px}
 
 </style>
 <style id="p08-camera">
@@ -9442,6 +9456,20 @@ body.ks-touring #kta{display:none}
 @media (prefers-reduced-motion:reduce){.kta-c{animation:none}}
 
 </style>
+<style id="p08-patterns">
+/* p48: Patterns Kova found, on the workout summary (src/p08_patterns.js).
+   App tokens only, so it follows dark, soft light and light glass. */
+.kpt{padding:16px 16px 12px}
+.kpt .lbl{margin-bottom:8px}
+.kpt-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:.5px solid var(--line,rgba(255,255,255,.08))}
+.kpt-row:first-of-type{border-top:0}
+.kpt-n{flex:0 0 auto;min-width:96px;font:200 34px/1 'Outfit',sans-serif;letter-spacing:-.03em;color:var(--acc)}
+.kpt-t{font-size:14px;line-height:1.3;color:var(--txt)}
+.kpt-s{font-size:12px;color:var(--txt-2);margin-top:3px}
+.kpt-none,.kpt-fine{margin:4px 0 0;font-size:12.5px;line-height:1.4;color:var(--txt-2)}
+.kpt-fine{font-size:11.5px;color:var(--txt-3,var(--txt-2))}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -9476,7 +9504,7 @@ body.ks-touring #kta{display:none}
 <section class="screen" id="s-home">
   <div class="hdr">
     <div class="hdr-l"><div><div class="eyebrow">FRIDAY · JUL 31</div><div class="title" style="color:var(--txt,#FFFFFF);text-shadow:none">Today</div></div></div>
-    <div class="hdr-r"><div class="iconbtn"><svg class="ic"><use href="#i-bell"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" role="button" aria-label="Reminders" tabindex="0"><svg class="ic"><use href="#i-bell"/></svg></div></div>
   </div>
   <!-- 1. MORNING BRIEF (top) -->
   <div class="card kova" style="margin-bottom:12px">
@@ -9565,10 +9593,10 @@ body.ks-touring #kta{display:none}
 <section class="screen on" id="s-move">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">FRIDAY · JUL 31</div><div class="title">Workout</div></div>
     </div>
-    <div class="hdr-r"><div class="iconbtn"><svg class="ic"><use href="#i-search"/></svg></div><div class="iconbtn"><svg class="ic"><use href="#i-bell"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" role="button" aria-label="Search" tabindex="0"><svg class="ic"><use href="#i-search"/></svg></div><div class="iconbtn" role="button" aria-label="Reminders" tabindex="0"><svg class="ic"><use href="#i-bell"/></svg></div></div>
   </div>
 
   <div id="usualSlot"></div>
@@ -9722,7 +9750,7 @@ body.ks-touring #kta{display:none}
 <!-- ===== FORM CHECK ===== -->
 <section class="screen" id="s-formcheck">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">VIDEO TO PROGRAM</div><div class="title-s">Form check</div></div></div>
   </div>
 
@@ -9787,7 +9815,7 @@ body.ks-touring #kta{display:none}
 <!-- ===== HEALTH PROFILE ===== -->
 <section class="screen" id="s-health">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">PRIVATE TO YOU</div><div class="title-s">Health profile</div></div></div>
   </div>
 
@@ -9847,7 +9875,7 @@ body.ks-touring #kta{display:none}
 <!-- ===== MACHINE SCANNER ===== -->
 <section class="screen" id="s-machine">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">POINT AND LEARN</div><div class="title-s">Scan machine</div></div></div>
   </div>
 
@@ -9995,7 +10023,7 @@ body.ks-touring #kta{display:none}
 
 <!-- ===== STRENGTH BASELINE ===== -->
 <section class="screen" id="s-strength">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">TRAINING</div><div class="title-s">Strength check-in</div></div></div></div>
 
   <div class="card">
@@ -10032,7 +10060,7 @@ body.ks-touring #kta{display:none}
 <section class="screen" id="s-session">
   <div class="hdr" style="align-items:flex-start">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow" id="sessDate">FRIDAY · WEEK 4</div><div class="title-s" id="sessTitle">Legs day</div></div>
     </div>
     <div class="modeseg" id="sessMode">
@@ -10110,7 +10138,7 @@ body.ks-touring #kta{display:none}
 <section class="screen" id="s-plan">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">SUBSCRIPTION</div><div class="title">Kova</div></div>
     </div>
   </div>
@@ -10120,7 +10148,7 @@ body.ks-touring #kta{display:none}
 <section class="screen" id="s-sessdone">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow" id="sdDate">SESSION COMPLETE</div><div class="title">Done</div></div>
     </div>
   </div>
@@ -10387,7 +10415,7 @@ window.KovaMenu=(function(){
 <section class="screen" id="s-progress">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">STRENGTH PROGRESS</div><div class="title-s" id="pgName" style="font-size:19px">Barbell back squat</div></div>
     </div>
   </div>
@@ -10434,7 +10462,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== WHAT MOVES YOUR SLEEP ===== -->
 <section class="screen" id="s-factors">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">LAST 30 NIGHTS</div><div class="title-s">What moves your sleep</div></div></div></div>
 
   <!-- the frosted metric card, straight off the reference -->
@@ -10498,9 +10526,9 @@ window.KovaMenu=(function(){
 <!-- ===== HEALTH SPAN ===== -->
 <section class="screen" id="s-healthspan">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="title-s">Health Span</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" id="hsInfo"><svg class="ic"><use href="#i-info-circle"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" id="hsInfo" role="button" aria-label="About healthspan" tabindex="0"><svg class="ic"><use href="#i-info-circle"/></svg></div></div>
   </div>
 
   <div class="hsnav" id="hsNav">
@@ -10559,7 +10587,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== VOLUME ===== -->
 <section class="screen" id="s-volume">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">TRAINING LOAD</div><div class="title-s">Volume</div></div></div></div>
   <div class="card roncard" id="tvlCard" style="padding:18px 16px 14px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -10646,7 +10674,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== PRs ===== -->
 <section class="screen" id="s-prs">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">ALL TIME</div><div class="title-s">Personal records</div></div></div></div>
   <div class="card roncard" style="padding:18px 18px 14px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -10715,7 +10743,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== RECOVERY ===== -->
 <section class="screen" id="s-recovery">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">TODAY</div><div class="title-s">Recovery</div></div></div></div>
 
   <div class="card card-lg" style="padding:16px 12px 16px 8px">
@@ -10790,7 +10818,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== ZONE 2 ===== -->
 <section class="screen" id="s-zone2">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">CARDIO</div><div class="title-s">Easy cardio</div></div></div></div>
 
   <div class="card kova"><div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">WHAT THIS MEANS</div></div>
@@ -10821,7 +10849,7 @@ window.KovaMenu=(function(){
 
 <!-- ===== BEDTIME ===== -->
 <section class="screen" id="s-bedtime">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">LAST 14 NIGHTS</div><div class="title-s">Bedtime</div></div></div></div>
 
   <div class="card card-lg bw-card">
@@ -10964,9 +10992,9 @@ window.KovaMenu=(function(){
 <!-- ===== WORK ===== -->
 <section class="screen" id="s-work">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow" id="wkDate">FRIDAY &middot; JUL 31</div><div class="title">Studio</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" data-go="worksettings"><svg class="ic"><use href="#i-settings"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" data-go="worksettings" role="button" aria-label="Work OS settings" tabindex="0"><svg class="ic"><use href="#i-settings"/></svg></div></div>
   </div>
 
   <div class="wk-tabs">
@@ -11058,10 +11086,10 @@ window.KovaMenu=(function(){
 <!-- ===== STUDIO: COMPOSE ===== -->
 <section class="screen" id="s-workcompose">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">STUDIO</div><div class="title-s">Compose</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" id="wcMenu"><svg class="ic"><use href="#i-dots"/></svg></div>
-    <div class="iconbtn" id="wcHist"><svg class="ic"><use href="#i-list-details"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" id="wcMenu" role="button" aria-label="More options" tabindex="0"><svg class="ic"><use href="#i-dots"/></svg></div>
+    <div class="iconbtn" id="wcHist" role="button" aria-label="History" tabindex="0"><svg class="ic"><use href="#i-list-details"/></svg></div></div>
   </div>
 
   <div class="wgl">
@@ -11977,7 +12005,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== STUDIO: INBOUND ===== -->
 <section class="screen" id="s-workinbound">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">STUDIO</div><div class="title-s">Inbound</div></div></div>
   </div>
   <div class="wgl">
@@ -11989,7 +12017,7 @@ body.ks-on #kovaFab{display:none!important}
 </section>
 
 <section class="screen" id="s-workdiag">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">REAL DIAGNOSIS</div><div class="title-s">What's actually wrong</div></div></div></div>
 
   <div class="card">
@@ -12009,7 +12037,7 @@ body.ks-on #kovaFab{display:none!important}
   <div class="prog" id="wqProg"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
     <div id="wqCat" class="eyebrow" style="color:var(--acc)">YOUR WORK · 1 OF 5</div>
-    <div class="iconbtn" data-go="work" style="border-radius:50%;width:26px;height:26px;font-size:14px"><svg class="ic"><use href="#i-x"/></svg></div>
+    <div class="iconbtn" data-go="work" style="border-radius:50%;width:26px;height:26px;font-size:14px" role="button" aria-label="Close" tabindex="0"><svg class="ic"><use href="#i-x"/></svg></div>
   </div>
   <div id="wqBody" style="min-height:340px"></div>
   <div class="qnav"><div class="qback" id="wqBack">← back</div><div class="qnext" id="wqNext">continue <svg class="ic" style="font-size:13px"><use href="#i-arrow-right"/></svg></div></div>
@@ -12018,9 +12046,9 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== LEARN ===== -->
 <section class="screen" id="s-learn">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">FRIDAY · JUL 31</div><div class="title">Learn</div></div></div>
-    <div class="hdr-r"><div class="iconbtn"><svg class="ic"><use href="#i-search"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" role="button" aria-label="Search" tabindex="0"><svg class="ic"><use href="#i-search"/></svg></div></div>
   </div>
 
   <div class="card card-lg" style="padding:16px 12px 16px 8px">
@@ -12175,7 +12203,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== ACCOUNTABILITY ===== -->
 <section class="screen" id="s-accountability">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">CHECK-IN</div><div class="title-s">Accountability</div></div></div></div>
 
   <div class="card kova" style="margin-bottom:14px"><div class="kova-h"><div class="kova-dot"></div><div class="kova-lbl">KOVA · THE HONEST READ</div></div>
@@ -12198,7 +12226,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== FLASHCARDS ===== -->
 <section class="screen" id="s-cards">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow" id="cardSubj">SAT READING</div><div class="title-s">Flashcards</div></div></div>
   <div class="chip" id="cardCount">1 / 5</div></div>
   <div class="sub" style="text-align:right;margin-bottom:8px" id="recallStat"></div>
@@ -12219,7 +12247,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== SLEEP STAGES ===== -->
 <section class="screen" id="s-stages">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">LAST NIGHT</div><div class="title-s">Sleep stages</div></div></div></div>
 
   <div id="wkStrip" class="wkstrip"></div>
@@ -12236,7 +12264,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== HRV ===== -->
 <section class="screen" id="s-hrv">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">NERVOUS SYSTEM</div><div class="title-s">HRV</div></div></div>
   </div>
   <div class="card card-lg" style="border-color:var(--acc-brd)">
@@ -12266,7 +12294,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== SLEEP EFFICIENCY ===== -->
 <section class="screen" id="s-efficiency">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">LAST NIGHT</div><div class="title-s">How the night broke up</div></div></div>
   </div>
 
@@ -12400,7 +12428,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== SLEEP SOUNDS ===== -->
 <section class="screen" id="s-sounds">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">WIND DOWN</div><div class="title-s">Sleep sounds</div></div></div>
   </div>
 
@@ -12451,19 +12479,27 @@ body.ks-on #kovaFab{display:none!important}
 
 </section>
 
+<section class="screen" id="s-platecalc">
+  <div class="hdr">
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div><div class="title-s">Plates</div></div></div>
+  </div>
+  <div class="klp klp-page" id="klpHost"><p class="klp-wait">Loading the plate calculator…</p></div>
+</section>
+
 <section class="screen" id="s-cycle">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Go back"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="title-s">Cycle</div></div></div>
   </div>
-  <div class="kcx kcx-page" id="kcSec"></div>
+  <div class="kcx kcx-page" id="kcSec"><div class="kcx-skel" role="status" aria-label="Loading your cycle"><i class="a"></i><i class="b"></i><i class="c"></i></div></div>
 </section>
 
 <section class="screen" id="s-watch">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="title-s">Your watch</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" id="wchMenu"><svg class="ic"><use href="#i-adjustments"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" id="wchMenu" role="button" aria-label="Watch settings" tabindex="0"><svg class="ic"><use href="#i-adjustments"/></svg></div></div>
   </div>
 
   <div class="wchstage">
@@ -12564,9 +12600,9 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== VITALS ===== -->
 <section class="screen" id="s-vitals">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">FRIDAY · JUL 31</div><div class="title">Vitals</div></div></div>
-    <div class="hdr-r"><div class="iconbtn"><svg class="ic"><use href="#i-search"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" role="button" aria-label="Search" tabindex="0"><svg class="ic"><use href="#i-search"/></svg></div></div>
   </div>
 
   <div class="card kova" style="margin-bottom:14px">
@@ -12731,7 +12767,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== STRESS ===== -->
 <section class="screen" id="s-stress">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">TODAY</div><div class="title-s">Stress</div></div></div></div>
 
   <div class="ronstage">
@@ -12802,7 +12838,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== NOTEBOOKS ===== -->
 <section class="screen" id="s-notebooks">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">ACTIVE RECALL</div><div class="title-s">Notebooks</div></div></div>
     <div class="chip" id="newNbBtn" style="background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc)"><svg class="ic" style="font-size:11px"><use href="#i-plus"/></svg> New</div>
   </div>
@@ -12826,7 +12862,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== NOTEBOOK ===== -->
 <section class="screen" id="s-notebook">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">NOTEBOOK</div><div class="title-s" id="nbTitle" style="font-size:19px">Cell Biology Unit 3</div></div></div>
   </div>
 
@@ -12854,15 +12890,15 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== WORK OS ===== -->
 <section class="screen" id="s-worktoday">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Today</div></div></div></div>
   <div id="wtBody"></div>
 </section>
 
 <section class="screen" id="s-worktasks">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Tasks</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wtNewTask"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wtNewTask" role="button" aria-label="New task" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div class="toggle" id="wtView" style="margin-bottom:12px">
     <div class="tog on" data-v="table">Table</div><div class="tog" data-v="kanban">Kanban</div>
   </div>
@@ -12870,39 +12906,39 @@ body.ks-on #kovaFab{display:none!important}
 </section>
 
 <section class="screen" id="s-workitem">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow" id="wiEyebrow">ITEM</div><div class="title-s" id="wiTitle" style="font-size:19px">Item</div></div></div></div>
   <div id="wiItemBody"></div>
 </section>
 
 <section class="screen" id="s-workprojects">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Projects</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wpNew"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wpNew" role="button" aria-label="New project" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="wpBody"></div>
 </section>
 
 <section class="screen" id="s-workgoals">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Goals &amp; metrics</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wgNew"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wgNew" role="button" aria-label="New goal" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="wgBody"></div>
 </section>
 
 <section class="screen" id="s-workprofile">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Business profile</div></div></div></div>
   <div id="wprBody"></div>
 </section>
 
 <section class="screen" id="s-workactivity">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Activity</div></div></div></div>
   <div id="wacBody"></div>
 </section>
 
 <section class="screen" id="s-workintegrations">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Integrations</div></div></div></div>
   <div id="wintBody"></div>
 </section>
@@ -12912,50 +12948,50 @@ body.ks-on #kovaFab{display:none!important}
 
 
 <section class="screen" id="s-workteam">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Your team</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wtmAsk"><svg class="ic"><use href="#i-sparkles"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wtmAsk" role="button" aria-label="Ask your AI team" tabindex="0"><svg class="ic"><use href="#i-sparkles"/></svg></div></div></div>
   <div id="wtmBody"></div>
 </section>
 
 <section class="screen" id="s-workauto">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Automations</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="waNew"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="waNew" role="button" aria-label="New automation" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="waBody"></div>
 </section>
 
 <section class="screen" id="s-workmeetings">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Meetings</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wmNew"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wmNew" role="button" aria-label="New meeting" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="wmBody"></div>
 </section>
 
 <section class="screen" id="s-workmeeting">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow" id="wmdEyebrow">MEETING</div><div class="title-s" id="wmdTitle" style="font-size:19px">Meeting</div></div></div></div>
   <div id="wmdBody"></div>
 </section>
 
 <section class="screen" id="s-workfiles">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK</div><div class="title-s" style="font-size:19px">Files</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wfNew"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wfNew" role="button" aria-label="Add a file" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="wfBody"></div>
 </section>
 
 <section class="screen" id="s-workfolder">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">FOLDER</div><div class="title-s" id="wfoTitle" style="font-size:19px">Folder</div></div></div>
-  <div class="hdr-r"><div class="iconbtn" id="wfoAdd"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
+  <div class="hdr-r"><div class="iconbtn" id="wfoAdd" role="button" aria-label="Add to this folder" tabindex="0"><svg class="ic"><use href="#i-plus"/></svg></div></div></div>
   <div id="wfoBody"></div>
 </section>
 
 <!-- ===== SOURCE DETAIL (notebook ingestion) ===== -->
 <section class="screen" id="s-source">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow" id="srcEyebrow">SOURCE</div><div class="title-s" id="srcTitle" style="font-size:19px">Source</div></div></div>
   </div>
   <div id="srcBody"></div>
@@ -12964,7 +13000,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== PRACTICE RESULT / QUIZ ===== -->
 <section class="screen" id="s-lquiz">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow" id="lqSubjLbl">PRACTICE</div><div class="title-s" id="lqTitle" style="font-size:19px">Question 1 of 10</div></div></div>
     <div class="chip" id="lqTimer" style="display:none;background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc)">0:30</div>
   </div>
@@ -12982,9 +13018,9 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== PROFILE ===== -->
 <section class="screen" id="s-profile">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">YOUR ACCOUNT</div><div class="title-s">Profile</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" id="pfEditBtn"><svg class="ic"><use href="#i-pencil"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" id="pfEditBtn" role="button" aria-label="Edit profile" tabindex="0"><svg class="ic"><use href="#i-pencil"/></svg></div></div>
   </div>
 
   <!-- hero: the one glowing surface -->
@@ -13053,7 +13089,7 @@ body.ks-on #kovaFab{display:none!important}
 </section>
 
 <section class="screen" id="s-settings">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">YOUR ACCOUNT</div><div class="title">Settings</div></div></div></div>
 
   <div class="card tap" id="setMeRow" data-go="profile" style="display:flex;align-items:center;gap:12px;padding:14px">
@@ -13178,7 +13214,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== WORK SETTINGS ===== -->
 <section class="screen" id="s-worksettings">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">WORK PROFILE</div><div class="title-s" id="wsTitle">Ecommerce</div></div></div></div>
 
   <div class="sub" style="margin-bottom:14px;line-height:1.5">Tap a section to open it. Everything here feeds the advice Kova gives you.</div>
@@ -13189,7 +13225,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== RECIPES ===== -->
 <section class="screen" id="s-recipes">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">BUILT FOR YOUR TARGETS</div><div class="title-s">Recipes</div></div></div></div>
   <div class="rcpsearch"><svg class="ic" style="font-size:15px;opacity:.5"><use href="#i-search"/></svg>
   <input id="rcpQ" type="search" placeholder="Search recipes or an ingredient"/></div>
@@ -13203,14 +13239,14 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== RECIPE DETAIL ===== -->
 <section class="screen" id="s-recipe">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow" id="rcpEyebrow">DINNER</div><div class="title-s" id="rcpTitle">Recipe</div></div></div></div>
   <div id="rcpBody"></div>
 </section>
 
 <!-- ===== SNAP SOLVE ===== -->
 <section class="screen" id="s-snap">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">STEP BY STEP</div><div class="title-s">Snap solve</div></div></div></div>
 
   <div class="card card-lg" style="text-align:center;padding:22px 16px">
@@ -13233,7 +13269,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== EXPLAIN ===== -->
 <section class="screen" id="s-explain">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">AT YOUR LEVEL</div><div class="title-s">Explain</div></div></div></div>
 
   <div class="card">
@@ -13261,7 +13297,7 @@ body.ks-on #kovaFab{display:none!important}
 
 
 <section class="screen" id="s-focus">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">DEEP WORK</div><div class="title-s">Focus session</div></div></div></div>
 
   <div class="card">
@@ -13289,7 +13325,7 @@ body.ks-on #kovaFab{display:none!important}
 
 <!-- ===== KOVA CHAT ===== -->
 <section class="screen" id="s-chat">
-  <div class="hdr"><div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+  <div class="hdr"><div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
   <div><div class="eyebrow">TRAINER</div><div class="title-s">Ask Kova</div></div></div></div>
   <div id="chatEmpty" style="padding:26px 2px 10px;text-align:center">
     <div style="width:52px;height:52px;border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;
@@ -13309,7 +13345,7 @@ body.ks-on #kovaFab{display:none!important}
            style="flex:1;min-width:0;background:transparent;border:0;outline:none;color:var(--txt,#FFFFFF);
                   font-size:14px;font-family:inherit;padding:6px 0"/>
     <div class="iconbtn" id="chatSend" style="width:34px;height:34px;flex-shrink:0;
-              background:var(--acc);border-color:transparent">
+              background:var(--acc);border-color:transparent" role="button" aria-label="Send" tabindex="0">
       <svg class="ic" style="color:#0B0B0C;font-size:15px"><use href="#i-arrow-right"/></svg></div>
   </div>
   <div class="sub" style="margin-top:8px;text-align:center;opacity:.55">Answers come from your own data, on this device.</div>
@@ -13320,7 +13356,7 @@ body.ks-on #kovaFab{display:none!important}
   <div class="prog" id="qProg"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
     <div id="qCat" style="font-size:9.5px;font-weight:600;color:var(--acc);letter-spacing:2px">WHAT YOU WANT · 1 OF 6</div>
-    <div class="iconbtn" data-go="move" style="border-radius:50%;width:26px;height:26px;font-size:14px"><svg class="ic"><use href="#i-x"/></svg></div>
+    <div class="iconbtn" data-go="move" style="border-radius:50%;width:26px;height:26px;font-size:14px" role="button" aria-label="Close" tabindex="0"><svg class="ic"><use href="#i-x"/></svg></div>
   </div>
   <div id="qBody" style="min-height:380px"></div>
   <div class="qnav">
@@ -13333,7 +13369,7 @@ body.ks-on #kovaFab{display:none!important}
 <section class="screen" id="s-ownplan">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">YOUR PROGRAM</div><div class="title-s">Build your plan</div></div>
     </div>
   </div>
@@ -13370,10 +13406,10 @@ body.ks-on #kovaFab{display:none!important}
 <section class="screen" id="s-sleep">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow" id="slpDate">FRIDAY · JUL 31</div><div class="title">Sleep</div></div>
     </div>
-    <div class="hdr-r"><div class="iconbtn"><svg class="ic"><use href="#i-search"/></svg></div><div class="iconbtn"><svg class="ic"><use href="#i-bell"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" role="button" aria-label="Search" tabindex="0"><svg class="ic"><use href="#i-search"/></svg></div><div class="iconbtn" role="button" aria-label="Reminders" tabindex="0"><svg class="ic"><use href="#i-bell"/></svg></div></div>
   </div>
 
   <div class="card card-lg" style="padding:16px 12px 16px 8px">
@@ -13501,7 +13537,7 @@ body.ks-on #kovaFab{display:none!important}
 <!-- ===== NAPS (p76-naps) ===== -->
 <section class="screen" id="s-naps">
   <div class="hdr">
-    <div class="hdr-l"><div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+    <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">DAYTIME SLEEP</div><div class="title-s">Naps</div></div></div>
   </div>
 
@@ -13577,11 +13613,11 @@ body.ks-on #kovaFab{display:none!important}
 <section class="screen" id="s-fuel">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">FRIDAY · JUL 31</div><div class="title">Fuel</div></div>
     </div>
-    <div class="hdr-r"><div class="iconbtn" id="fuelScanIcon"><svg class="ic"><use href="#i-device-mobile"/></svg></div>
-    <div class="iconbtn"><svg class="ic"><use href="#i-search"/></svg></div></div>
+    <div class="hdr-r"><div class="iconbtn" id="fuelScanIcon" role="button" aria-label="Scan a barcode" tabindex="0"><svg class="ic"><use href="#i-device-mobile"/></svg></div>
+    <div class="iconbtn" role="button" aria-label="Search" tabindex="0"><svg class="ic"><use href="#i-search"/></svg></div></div>
   </div>
 
   <div class="card card-lg" style="padding:16px 12px 16px 8px">
@@ -13738,7 +13774,7 @@ body.ks-on #kovaFab{display:none!important}
 <section class="screen" id="s-maint">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">FUEL · MAINTENANCE</div><div class="title">Your numbers</div></div>
     </div>
     <div class="hdr-r" id="kmHdrR"></div>
@@ -13749,11 +13785,11 @@ body.ks-on #kovaFab{display:none!important}
 <section class="screen" id="s-scanner">
   <div class="hdr">
     <div class="hdr-l">
-      <div class="back" data-back><svg class="ic"><use href="#i-chevron-left"/></svg></div>
+      <div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
       <div><div class="eyebrow">INGREDIENT SCANNER</div><div class="title">Health check</div></div>
     </div>
     <div class="hdr-r">
-      <div class="iconbtn" id="scnCamBtn"><svg class="ic"><use href="#i-device-mobile"/></svg></div>
+      <div class="iconbtn" id="scnCamBtn" role="button" aria-label="Use the camera" tabindex="0"><svg class="ic"><use href="#i-device-mobile"/></svg></div>
     </div>
   </div>
 
@@ -14900,7 +14936,7 @@ window.KW_TODAY=function(){return window.KOVA_WEEK[4]};
    in learn-module.html. */
 var KOVA_LEARN_ENABLED = false;
 
-var PILLAR={cycle:'vitals',maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',plan:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
+var PILLAR={platecalc:'move',cycle:'vitals',maint:'fuel',watch:'vitals',healthspan:'healthspan',home:'home',hrv:'sleep',factors:'sleep',efficiency:'sleep',bedwin:'sleep',sounds:'sleep',naps:'sleep',tour:'settings',kova:'settings',alerts:'settings',health:'vitals',machine:'move',formcheck:'move',move:'move',customize:'move',session:'move',progress:'move',quiz:'move',ownplan:'move',volume:'move',strength:'move',prs:'move',chat:'move',recovery:'move',zone2:'move',bedtime:'sleep',work:'work',workquiz:'work',worktoday:'work',worktasks:'work',workitem:'work',workprojects:'work',workgoals:'work',workprofile:'work',workactivity:'work',workfiles:'work',workfolder:'work',workmeetings:'work',workmeeting:'work',workauto:'work',workteam:'work',workintegrations:'settings',workcompose:'work',workstudio:'work',workspace:'work',workinbound:'work',worksettings:'work',workdiag:'work',learn:'learn',cards:'learn',notebooks:'learn',notebook:'learn',source:'learn',practice:'learn',lquiz:'learn',focus:'learn',snap:'learn',explain:'learn',accountability:'learn',stages:'sleep',vitals:'vitals',stress:'vitals',settings:'settings',plan:'settings',profile:'settings',sleep:'sleep',fuel:'fuel',recipes:'fuel',recipe:'fuel',scanner:'fuel'};
 
 /* ---------- KOVA PROFILE STORE ---------- */
 var KP=(function(){
@@ -15115,6 +15151,12 @@ function go(id,opts){
   }
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});
   var el=document.getElementById('s-'+id); if(el) el.classList.add('on');
+  /* p47: a keyboard or screen reader lands on the new screen's title, not
+     on the button left behind on the old one (WCAG 2.4.3). Not while
+     typing in something that floats over the screens. */
+  if(el) try{ var _ae=document.activeElement;
+    if(!_ae||_ae===document.body||(_ae.closest&&_ae.closest('.screen,.rnav'))){ var _tt=el.querySelector('.hdr .title,.hdr .title-s');
+      if(_tt){ if(!_tt.hasAttribute('tabindex')) _tt.setAttribute('tabindex','-1'); _tt.focus({preventScroll:true}); } } }catch(e){}
   document.getElementById('app').setAttribute('data-pillar',PILLAR[id]||'move');
   /* the chat button lives outside #app (it is positioned against the
      body), so it cannot inherit the pillar - mirror it so its gradient
@@ -51752,7 +51794,33 @@ window.KovaCycle=(function(){
     el.style.setProperty('--kc',P?P.c:ROSE);
     el.innerHTML=t?'<i></i><b>Cycle · day '+t.day+'</b><span>'+esc(t.paused?'Pregnant':P.n)+(t.phase!=='late'&&!t.paused?' · period in '+Math.max(0,Math.round((t.next-sod())/DAY))+' d':'')+'</span><em>›</em>':'<i></i><b>Cycle</b><span>Log your last period to start</span><em>›</em>';
   }
-  function paintAll(){ paint(); paintHome(); }
+  /* p46b: a link on Sleep too (the owner), with this phase's sleep tip;
+     p47: and on Fuel under the calorie ring, with its eating tip (the
+     grader: "cycle phase not used on the fuel screen"); Fuel only while
+     there is a phase to speak of. Made the first time each screen opens:
+     looking inside a closed screen brings it back into the page
+     (KovaPark), which the first screen cannot afford. */
+  var LINKS={
+    sleep:{cls:'kc-slp',tip:1,after:[':scope > .kl-panel',':scope > .hdr'],el:null},
+    fuel:{cls:'kc-fuel',tip:2,after:[':scope > .card.card-lg',':scope > .hdr'],el:null,need:true}
+  };
+  function onScr(id){ var v=document.getElementById('s-'+id); return !!(v&&v.classList.contains('on')); }
+  function sleepOn(){ return onScr('sleep'); }
+  function paintLink(id){
+    var K=LINKS[id]; if(!K.el&&!onScr(id)) return;
+    var t=D.on?today():null, P=t?PHASE[t.phase]:null;
+    if((sex()==='male'&&!D.on)||(K.need&&(!t||t.paused))){ if(K.el){ K.el.remove(); K.el=null; } return; }
+    if(!K.el){
+      var scr=document.getElementById('s-'+id); if(!scr) return;
+      K.el=document.createElement('button'); K.el.type='button'; K.el.className='kc-mini '+K.cls+' kl-keep'; K.el.setAttribute('data-go','cycle');
+      var after=null; K.after.some(function(q){ return (after=scr.querySelector(q)); });
+      if(after) after.insertAdjacentElement('afterend',K.el); else scr.insertBefore(K.el,scr.firstChild);
+    }
+    K.el.style.setProperty('--kc',P?P.c:ROSE);
+    K.el.innerHTML='<i></i><b>Cycle'+(t?' · day '+t.day:'')+'</b><span>'+esc(t?(t.paused?'Pregnant':P.n+' · '+((TIP[t.phase]||[])[K.tip]||'')):(D.on?'Log your last period':'Track your period'))+'</span><em>›</em>';
+  }
+  function paintSleep(){ paintLink('sleep'); paintLink('fuel'); }
+  function paintAll(){ paint(); paintHome(); paintSleep(); }
   function start(){
     takeTemp();
     /* the screen's own tour, the first time it opens (rule 8) */
@@ -51764,6 +51832,8 @@ window.KovaCycle=(function(){
     ]); }catch(e){}
     var tries=0;
     (function wait(){ var sc=document.getElementById('s-vitals'); if(sc&&!sc.__sec&&++tries<30) return setTimeout(wait,100); paintAll();
+      ['sleep','fuel'].forEach(function(id){ var ss=document.getElementById('s-'+id);
+        if(ss&&window.MutationObserver) new MutationObserver(function(){ if(onScr(id)) paintLink(id); }).observe(ss,{attributes:true,attributeFilter:['class']}); });
       var cs=document.getElementById('s-cycle');
       if(cs&&window.MutationObserver) new MutationObserver(function(){ if(screenOn()) paint(); }).observe(cs,{attributes:true,attributeFilter:['class']}); })();
   }
@@ -54949,7 +55019,7 @@ window.KovaHelp=(function(){
   /* screens people land on; the rest are steps inside a flow */
   var SKIP=['tour','quiz','workquiz','lquiz','workitem','workmeeting','workfolder','notebook','recipe','progress','source','sessdone','ownplan','chat','snap','explain','workdiag'];
   var NAME={home:'Today (home)',move:'Workout',work:'Work OS',workstudio:'New post',workspace:'Work OS files',worksettings:'Work OS settings',
-    worktoday:'Work OS board',workteam:'AI team',session:'Workout session',customize:'Customize workout',cycle:'Cycle',sounds:'Sleep sounds',
+    worktoday:'Work OS board',workteam:'AI team',session:'Workout session',customize:'Customize workout',cycle:'Cycle',platecalc:'Plate calculator',sounds:'Sleep sounds',
     settings:'Settings',profile:'Profile',plan:'Subscription',watch:'Your watch',health:'Health profile'};
   var PILLAR={sleep:'Sleep',move:'Workout',fuel:'Fuel',vitals:'Vitals',work:'Work OS',home:'Today',settings:'Settings',learn:'Learn'};
 
@@ -57680,14 +57750,44 @@ window.KovaLift=(function(){
     var loaded=Math.round((bar+2*(side-left))*100)/100;
     return {ok:left<1e-6,side:out,loaded:loaded,left:Math.round(left*2*100)/100};
   }
+  /* p47: the calculator is its own screen, #s-platecalc (the owner's grader
+     looked for one); Plates on a barbell exercise, and search, open it
+     with the weight filled in. Back returns to the workout. */
+  var tgt=0;
   function plates(w,unit){
     unit=unit||P.unit;
     if(unit!==P.unit){ w=unit==='lb'?w/LB:w*LB; w=Math.round(w*2)/2; }
-    var target=w>0?w:(P.unit==='lb'?135:60);
-    if(!window.openSheet) return;
-    function draw(){
-      var u=P.unit, bar=P.bar[u], have=P.have[u], r=load(target,bar,have);
-      var el=document.querySelector('#sheetIn .klp'); if(!el) return;
+    tgt=w>0?w:(P.unit==='lb'?135:60);
+    try{ if(window.closeSheet) closeSheet(); }catch(e){}
+    if(typeof go==='function') go('platecalc');
+    mount();
+  }
+  function host(){ return document.getElementById('klpHost'); }
+  function mount(){
+    var el=host(); if(!el) return;
+    if(!tgt) tgt=P.unit==='lb'?135:60;
+    el.innerHTML='<label class="klp-t">Target <input id="klpW" type="number" inputmode="decimal" step="0.5" value="'+tgt+'"></label>'
+      +'<div class="klp-out"></div>'
+      +'<div class="lbl">UNIT</div><div class="klp-row klp-units"></div>'
+      +'<div class="lbl">BAR</div><div class="klp-row klp-bars"></div>'
+      +'<div class="lbl">PLATES YOU HAVE (PAIRS)</div><div class="klp-row klp-have"></div>';
+    if(!el.__klp){
+      el.__klp=1;
+      el.addEventListener('input',function(ev){ if(ev.target.id==='klpW'){ tgt=+ev.target.value||0; draw(); } });
+      el.addEventListener('click',function(ev){
+        var b=ev.target.closest('button'); if(!b) return;
+        if(b.dataset.u&&b.dataset.u!==P.unit){ tgt=Math.round((b.dataset.u==='kg'?tgt/LB:tgt*LB)*2)/2; P.unit=b.dataset.u; el.querySelector('#klpW').value=tgt; }
+        else if(b.dataset.b) P.bar[P.unit]=+b.dataset.b;
+        else if(b.dataset.p){ var p=+b.dataset.p, h=P.have[P.unit], k=h.indexOf(p); if(k>=0) h.splice(k,1); else h.push(p); }
+        else return;
+        save(); draw();
+      });
+    }
+    draw();
+  }
+  function draw(){
+      var u=P.unit, bar=P.bar[u], have=P.have[u], target=tgt, r=load(target,bar,have);
+      var el=host(); if(!el||!el.querySelector('.klp-out')) return;
       var colours={55:'#C8453A',45:'#3F6FB5',35:'#E1B23B',25:'#3E9A5A',10:'#DADADA',5:'#8F8F8F',2.5:'#5A5A5A',1.25:'#3A3A3A',20:'#3F6FB5',15:'#E1B23B',0.5:'#2E2E2E'};
       var stack=r.side.map(function(p){ var h=Math.round(34+Math.min(1,p/(u==='lb'?45:20))*56); return '<i style="height:'+h+'px;background:'+(colours[p]||'#888')+'" title="'+p+' '+u+'"></i>'; }).join('');
       el.querySelector('.klp-out').innerHTML=r.under
@@ -57699,25 +57799,12 @@ window.KovaLift=(function(){
       el.querySelector('.klp-units').innerHTML=['lb','kg'].map(function(x){ return '<button class="klp-c'+(x===u?' on':'')+'" data-u="'+x+'">'+x+'</button>'; }).join('');
       el.querySelector('.klp-bars').innerHTML=BARS[u].map(function(b){ return '<button class="klp-c'+(b===bar?' on':'')+'" data-b="'+b+'">'+b+' '+u+'</button>'; }).join('');
       el.querySelector('.klp-have').innerHTML=ALL[u].map(function(p){ var on=have.indexOf(p)>=0; return '<button class="klp-c'+(on?' on':'')+'" data-p="'+p+'" aria-pressed="'+on+'">'+p+'</button>'; }).join('');
-    }
-    openSheet('<div class="grab"></div><div class="klp">'
-      +'<div class="title-s" style="font-size:19px">Plates</div>'
-      +'<label class="klp-t">Target <input id="klpW" type="number" inputmode="decimal" step="0.5" value="'+target+'"></label>'
-      +'<div class="klp-out"></div>'
-      +'<div class="lbl">UNIT</div><div class="klp-row klp-units"></div>'
-      +'<div class="lbl">BAR</div><div class="klp-row klp-bars"></div>'
-      +'<div class="lbl">PLATES YOU HAVE (PAIRS)</div><div class="klp-row klp-have"></div></div>');
-    var el=document.querySelector('#sheetIn .klp'); if(!el) return;
-    el.querySelector('#klpW').addEventListener('input',function(){ target=+this.value||0; draw(); });
-    el.addEventListener('click',function(ev){
-      var b=ev.target.closest('button'); if(!b) return;
-      if(b.dataset.u&&b.dataset.u!==P.unit){ target=Math.round((b.dataset.u==='kg'?target/LB:target*LB)*2)/2; P.unit=b.dataset.u; el.querySelector('#klpW').value=target; }
-      else if(b.dataset.b) P.bar[P.unit]=+b.dataset.b;
-      else if(b.dataset.p){ var p=+b.dataset.p, h=P.have[P.unit], k=h.indexOf(p); if(k>=0) h.splice(k,1); else h.push(p); }
-      save(); draw();
-    });
-    draw();
   }
+  /* opened some other way (Back, a reload on this screen): draw it */
+  (function(){ var s=document.getElementById('s-platecalc'); if(!s) return;
+    if(s.classList.contains('on')) mount();   /* not before: looking inside a closed screen brings it back (KovaPark) */
+    if(window.MutationObserver) new MutationObserver(function(){ if(s.classList.contains('on')&&!host().querySelector('.klp-out')) mount(); }).observe(s,{attributes:true,attributeFilter:['class']}); })();
+
 
   /* ---------------- demos ---------------- */
   /* stick figures: joints per pose, bones between them; the demo loops A -> B -> A */
@@ -68884,6 +68971,22 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-08',title:'Patterns from your own data',
+      lines:['After a workout: what Kova found','Sleep and your cycle against how much you lift'],
+      steps:[
+        ['sessdone','Patterns Kova found','Shows once there are 5 workouts each way.',function(){ return q('#sdBody .kpt'); }]
+      ]},
+    {id:'new-2026-11-07',title:'Plates gets its own screen',
+      lines:['Plates opens a full screen, weight filled in','Fuel shows a tip for your cycle phase','Screen readers: every icon button is named'],
+      steps:[
+        ['platecalc','Plates','Type a weight; see what goes on each side.',function(){ return q('#klpHost .klp-out')||q('#klpHost'); }],
+        ['fuel','Cycle on Fuel','What to eat in this phase.',function(){ return q('#s-fuel .kc-fuel'); }]
+      ]},
+    {id:'new-2026-11-06',title:'Cycle on Sleep',
+      lines:['Open Cycle from Sleep too','With a sleep tip for your phase'],
+      steps:[
+        ['sleep','Cycle','Your phase and a sleep tip. Tap to open.',function(){ return q('#s-sleep .kc-slp'); }]
+      ]},
     {id:'new-2026-11-05',title:'Cycle has its own page',
       lines:['Open it from Vitals or Today','Calendar, phase, next periods and tips'],
       steps:[
@@ -71711,6 +71814,105 @@ window.KovaTaskAlert=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 
   return {check:check,due:due,dueAt:dueAt,remindAt:remindAt,fmt:fmt,when:when,ask:ask,changed:changed,pushItems:pushItems,_fire:fire};
+})();
+
+</script>
+<script id="p08-patterns">
+/* =====================================================================
+   KovaPatterns - "Patterns Kova found", on the workout summary (p48).
+
+   The owner's grader: Kova's cross-pillar insight ("you lift more after a
+   good night", "your volume in the luteal phase") was only in comments.
+   From your own log only:
+     sleep   workout volume (KSESS.log) after 7+ hours of sleep against
+             after less (the night that ended that morning, KovaSleepLog);
+     cycle   with cycle tracking on, volume in the follicular and
+             ovulatory phase against the luteal phase (the phase on that
+             day, worked out from your own period starts).
+   A pattern shows only with at least 5 workouts on each side; until then
+   one line says how many there are. Averages of your own workouts, not
+   cause and effect, and the card says so.
+   ===================================================================== */
+window.KovaPatterns=(function(){
+  'use strict';
+  var MIN=5, DAY=864e5, GOOD=420;   /* 7 hours */
+  function key(t){ var d=new Date(t); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function sod(t){ var d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); }
+  function avg(a){ return a.reduce(function(s,x){ return s+x; },0)/a.length; }
+  function sessions(){ try{ return (window.KSESS&&KSESS.log()||[]).filter(function(s){ return s&&s.t&&s.vol>0&&!s.live; }); }catch(e){ return []; } }
+  function compare(a,b){
+    if(a.length<MIN||b.length<MIN) return null;
+    var x=avg(a), y=avg(b);
+    return {a:Math.round(x),b:Math.round(y),pct:y?Math.round((x-y)/y*100):0};
+  }
+
+  /* volume after 7+ hours of sleep against after less */
+  function sleep(list){
+    var S={}, hi=[], lo=[];
+    try{ (window.KovaSleepLog?KovaSleepLog.nights():[]).forEach(function(n){ if(n.mins>0) S[n.k]=n.mins; }); }catch(e){}
+    list.forEach(function(s){ var m=S[key(s.t)]; if(m==null) return; (m>=GOOD?hi:lo).push(s.vol); });
+    return {id:'sleep',n:[hi.length,lo.length],r:compare(hi,lo)};
+  }
+
+  /* the phase on any past day, from the period start before it */
+  function phaseAt(t,C){
+    var cs=C.cycles(), st=C.stats(), c=null;
+    cs.forEach(function(x){ if(x.a<=t+DAY/2) c=x; });
+    if(!c) return '';
+    var len=c.len||st.avg, day=Math.round((sod(t)-c.a)/DAY)+1, ov=len-13;
+    if(day>len+7) return '';
+    if(day<=(c.plen||st.plen)) return 'menstrual';
+    return day<ov-2?'follicular':(day<=ov+1?'ovulatory':'luteal');
+  }
+  function cycle(list){
+    var C=window.KovaCycle;
+    try{ if(!C||!C._data||!C._data().on||!C.cycles||!C.stats) return null; }catch(e){ return null; }
+    if((C._data().status||{}).preg) return null;
+    var fo=[], lu=[];
+    list.forEach(function(s){ var p=''; try{ p=phaseAt(s.t,C); }catch(e){} if(p==='follicular'||p==='ovulatory') fo.push(s.vol); else if(p==='luteal') lu.push(s.vol); });
+    return {id:'cycle',n:[fo.length,lu.length],r:compare(fo,lu)};
+  }
+  function all(){ var L=sessions(); return [sleep(L),cycle(L)].filter(Boolean); }
+
+  /* ---------- the card ---------- */
+  function num(x){ return Math.round(x).toLocaleString('en-US'); }
+  var SAY={
+    sleep:{up:'More volume after 7+ hours of sleep',down:'Less volume after 7+ hours of sleep',vs:'after 7+ h vs less'},
+    cycle:{up:'More volume in your follicular phase than luteal',down:'Less volume in your follicular phase than luteal',vs:'follicular vs luteal'}
+  };
+  function html(){
+    var R=all(), shown=R.filter(function(x){ return x.r; });
+    var h='<div class="kpt card"><div class="lbl">PATTERNS KOVA FOUND</div>';
+    if(!shown.length){
+      var s=R.filter(function(x){ return x.id==='sleep'; })[0];
+      return h+'<p class="kpt-none">Shows once Kova has 5 workouts after 7+ hours of sleep and 5 after less. So far: '+s.n[0]+' and '+s.n[1]+'.</p></div>';
+    }
+    shown.forEach(function(x){
+      var r=x.r, w=SAY[x.id];
+      h+='<div class="kpt-row" data-kpt="'+x.id+'"><b class="kpt-n">'+(r.pct>0?'+':'')+r.pct+'%</b><div><div class="kpt-t">'+(r.pct>=0?w.up:w.down)+'</div>'
+        +'<div class="kpt-s">Average '+num(r.a)+' vs '+num(r.b)+' ('+w.vs+') · '+x.n[0]+' and '+x.n[1]+' workouts</div></div></div>';
+    });
+    return h+'<p class="kpt-fine">Your own averages, not cause and effect.</p></div>';
+  }
+  /* added under the summary each time it is drawn; looking inside the
+     summary only once it is on screen (a closed screen stays parked) */
+  function add(){
+    var b=document.getElementById('sdBody'); if(!b||b.querySelector('.kpt')) return;
+    b.insertAdjacentHTML('beforeend',html());
+  }
+  var watching=false;
+  function onShow(){
+    add();
+    if(watching||!window.MutationObserver) return;
+    var b=document.getElementById('sdBody'); if(!b) return;
+    watching=true; new MutationObserver(function(){ if(!b.querySelector('.kpt')) add(); }).observe(b,{childList:true});
+  }
+  (function(){
+    var s=document.getElementById('s-sessdone'); if(!s) return;
+    if(s.classList.contains('on')) onShow();
+    if(window.MutationObserver) new MutationObserver(function(){ if(s.classList.contains('on')) onShow(); }).observe(s,{attributes:true,attributeFilter:['class']});
+  })();
+  return {all:all,html:html,phaseAt:phaseAt,add:add,MIN:MIN};
 })();
 
 </script>

@@ -63,7 +63,7 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: the cycle\'s own page, its step on that page', rel.id === 'new-2026-11-05' && rel.steps.length === 1 && rel.steps[0][0] === 'cycle' && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: patterns after a workout, its step on the summary', rel.id === 'new-2026-11-08' && rel.steps.length === 1 && rel.steps[0][0] === 'sessdone' && rel.lines.every((l) => l.split(' ').length <= 10));
   const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
   ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;
@@ -101,7 +101,18 @@ function boot(store) {
   w.KovaCycle._set({ on: true, flow: { [new Date(Date.now() - 3 * 864e5).toISOString().slice(0, 10)]: 'med' } }); w.go('cycle'); await wait(80);
   const r1104 = N.REL.filter((r) => r.id === 'new-2026-11-04')[0];
   ck('the calendar release finds the calendar on the cycle screen', r1104.steps[0][0] === 'cycle' && !!r1104.steps[0][3]() && r1104.steps[0][3]().classList.contains('kcx-cal'));
-  ck('the newest release finds the phase card on the cycle screen', !!rel.steps[0][3]() && rel.steps[0][3]().classList.contains('kcx-prof') && !!rel.steps[0][3]().closest('#s-cycle'));
+  const r1105 = N.REL.filter((r) => r.id === 'new-2026-11-05')[0];
+  ck('the cycle-page release finds the phase card on the cycle screen', !!r1105.steps[0][3]() && r1105.steps[0][3]().classList.contains('kcx-prof') && !!r1105.steps[0][3]().closest('#s-cycle'));
+  w.go('sleep'); await wait(30);
+  const r1106 = N.REL.filter((r) => r.id === 'new-2026-11-06')[0];
+  ck('the Sleep release finds the Cycle link on Sleep', !!r1106.steps[0][3]() && r1106.steps[0][3]().classList.contains('kc-slp'));
+  w.go('fuel'); await wait(30);
+  const r1107 = N.REL.filter((r) => r.id === 'new-2026-11-07')[0];
+  ck('the Plates release finds the cycle tip on Fuel', r1107.steps.length === 2 && !!r1107.steps[1][3]() && r1107.steps[1][3]().classList.contains('kc-fuel'));
+  if (w.KovaLift) { w.KovaLift.plates(225, 'lb'); await wait(20); }
+  ck('…and the plate calculator on its own screen', !!r1107.steps[0][3]() && !!r1107.steps[0][3]().closest('#s-platecalc'));
+  w.go('sessdone'); await wait(60);
+  ck('the newest release finds Patterns Kova found on the summary', !!rel.steps[0][3]() && rel.steps[0][3]().classList.contains('kpt'));
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

@@ -38,3 +38,6 @@
 .kld-cues{margin:12px 0 8px;padding-left:20px}
 .kld-cues li{font-size:13.5px;line-height:1.5;margin:5px 0;color:var(--txt-2,rgba(255,255,255,.92))}
 .kld-note{font-size:11px;color:var(--txt-3,rgba(255,255,255,.65));line-height:1.45}
+/* p47: the calculator's own screen */
+.klp-page{max-width:560px;padding:4px 2px 28px}
+.klp-wait{font-size:13px;color:var(--txt-3,rgba(255,255,255,.5))}
