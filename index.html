@@ -1170,6 +1170,26 @@ body.light-mode #pfAvaBtn{background:#16171A;color:#F2F3F5;border-color:#fff}
 .pf-nm{font:300 24px/1.2 Outfit,sans-serif;margin-top:12px;color:var(--txt)}
 .pf-sub{font-size:13px;color:var(--txt-2);margin-top:3px}
 .pf-card{padding:16px}
+.pf-sec{font:500 11px 'Outfit',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-2);margin:18px 6px 8px}
+.pf-list{padding:2px 0;overflow:hidden}
+.pf-row{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 16px;border:0;background:none;color:var(--txt);font:inherit;text-align:left;cursor:pointer;border-top:.5px solid rgba(127,127,127,.18)}
+.pf-row:first-child{border-top:0}
+.pf-row .pf-k{flex:0 0 auto;font-size:14.5px}
+.pf-row .pf-v{flex:1;min-width:0;text-align:right;font-size:14px;color:var(--txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-row .pf-v i{font-style:normal;font-size:11px;padding:2px 7px;border-radius:99px;margin-left:6px;background:rgba(127,127,127,.16);color:var(--txt-2)}
+.pf-row .pf-v i.ok{background:rgba(79,191,127,.16);color:#3FA56C}
+.pf-row svg{flex-shrink:0;width:14px;height:14px;opacity:.4}
+.pf-row.bad .pf-k{color:#D8564F}
+.pf-ed{padding:4px 2px 20px}
+.pf-ed h3{font:400 22px 'Outfit',sans-serif;margin:4px 0 6px;color:var(--txt)}
+.pf-ed p{font-size:13.5px;line-height:1.45;color:var(--txt-2);margin:0 0 14px}
+.pf-ed .pf-f{margin-bottom:14px}
+.pf-ed .pf-two{display:flex;gap:10px}.pf-ed .pf-two .pf-f{flex:1}
+.pf-ed .pf-opts{display:flex;gap:8px;margin-bottom:14px}
+.pf-ed .pf-opts button{flex:1}
+.pf-ed .pf-off{background:rgba(127,127,127,.14)!important;color:var(--txt)!important;box-shadow:none!important;border:0}
+.pf-ed .pf-msg{font-size:13px;margin:-4px 0 12px;color:var(--txt-2)}
+.pf-ed .pf-msg.bad{color:#D8564F}
 .pf-card .lbl{margin-bottom:12px}
 .pf-f input[readonly]{opacity:.75}
 .pf-note{display:block;font-size:11.5px;color:var(--txt-3,var(--txt-2));margin-top:4px}
@@ -3849,7 +3869,22 @@ window.KovaCloudAuth = (function(){
     },
     status: function(){
       var u = auth && auth.currentUser;
-      return { signedIn: !!u, email: u && u.email, uid: u && u.uid, anon: !!(u && u.isAnonymous) };
+      var pd = u && u.providerData && u.providerData[0];
+      return { signedIn: !!u, email: u && u.email, uid: u && u.uid, anon: !!(u && u.isAnonymous), provider: pd ? pd.providerId : '' };
+    },
+    /* p50b: the profile changes the sign-in email the safe way: a link goes to
+       the new address and the change happens only when it is opened
+       (Firebase verifyBeforeUpdateEmail); until then the old one still works */
+    changeEmail: function(next){
+      var u = auth && auth.currentUser;
+      if (!u) return Promise.reject({ code: 'kova/not-signed-in' });
+      return u.verifyBeforeUpdateEmail(next);
+    },
+    /* a link to choose a new password, to the sign-in email */
+    resetPassword: function(){
+      var u = auth && auth.currentUser;
+      if (!u || !u.email) return Promise.reject({ code: 'kova/not-signed-in' });
+      return auth.sendPasswordResetEmail(u.email);
     },
     open: function(opts){
       if (!auth) { toastSafe('Sign-in could not load. Check your connection and try again.'); return; }
@@ -13035,8 +13070,9 @@ body.ks-on #kovaFab{display:none!important}
     <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">YOUR ACCOUNT</div><div class="title-s">Profile</div></div></div>
   </div>
-  <!-- p50: a normal profile (the owner): photo and name, then first name,
-       last name, email, phone, and the watch -->
+  <!-- p50b: after research into how fitness, health and productivity apps do it
+       (Strava, Fitbit, WHOOP, MyFitnessPal, Linear): sections of rows, tap one to
+       change it; Profile, Account, Watch, Preferences, Your data -->
   <div class="card pf-top">
     <div class="pf-ava-w">
       <div id="pfAva"></div>
@@ -13045,15 +13081,16 @@ body.ks-on #kovaFab{display:none!important}
     <div class="pf-nm" id="pfName">&mdash;</div>
     <div class="pf-sub" id="pfRole">&mdash;</div>
   </div>
-  <div class="card pf-card">
-    <div class="lbl">DETAILS</div>
-    <div id="pfFields"></div>
-    <button class="btn" id="pfSave" type="button">Save</button>
-  </div>
-  <div class="card pf-card">
-    <div class="lbl">WATCH</div>
-    <div class="pf-watch" id="pfWatch"></div>
-  </div>
+  <div class="pf-sec">Profile</div>
+  <div class="card pf-list" id="pfProfile"></div>
+  <div class="pf-sec">Account</div>
+  <div class="card pf-list" id="pfAccount"></div>
+  <div class="pf-sec">Watch</div>
+  <div class="card pf-card"><div class="pf-watch" id="pfWatch"></div></div>
+  <div class="pf-sec">Preferences</div>
+  <div class="card pf-list" id="pfPrefs"></div>
+  <div class="pf-sec">Your data</div>
+  <div class="card pf-list" id="pfData"></div>
 </section>
 
 <section class="screen" id="s-settings">
@@ -35254,17 +35291,17 @@ if(!(window.KovaMode&&KovaMode.live)) try{ WorkOS.seed(); }catch(e){ console.war
 window.KovaProfile=(function(){
   'use strict';
 
-  /* p50: the owner: "a normal profile: first name, last name, email,
-     number, watch connected". Role and company left the form (a value
-     saved before stays in the record); `name` is still kept as first +
-     last for everything that greets you. */
-  var FIELDS=[
-    {k:'first', n:'First name',   ph:'First name',   max:30, ac:'given-name'},
-    {k:'last',  n:'Last name',    ph:'Last name',    max:30, ac:'family-name'},
-    {k:'email', n:'Email',        ph:'Email',        max:80, ac:'email', type:'email'},
-    {k:'phone', n:'Phone number', ph:'Phone number', max:24, ac:'tel',   type:'tel'}
-  ];
+  /* p50b: the owner: "do in-depth research ... what makes the best profile
+     setting, versatile, less friction ... I want to change my email, my
+     phone". Built after Strava, Fitbit, WHOOP, MyFitnessPal and Linear:
+     sections of rows (Profile, Account, Watch, Preferences, Your data), tap
+     one to change it on its own page. Everything here is real: body details
+     are the calorie calculator's record (Fuel follows), the sign-in email
+     changes through a link to the new address, the password through a reset
+     link, and Download / Delete are the privacy page's own. `name` is still
+     kept as first + last for everything that greets you. */
   var editing=false, buf=null;
+  var EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]+$/, LB=0.45359237;
 
   function esc(x){ var d=document.createElement('div'); d.textContent=x==null?'':String(x); return d.innerHTML; }
 
@@ -35314,11 +35351,25 @@ window.KovaProfile=(function(){
     return d.toLocaleDateString(undefined,{month:'short',year:'numeric'});
   }
 
-  /* the sign-in email, when there is an account (it cannot be changed here) */
-  function signInEmail(){
-    try{ var c=window.KovaCloudAuth&&KovaCloudAuth.status(); if(c&&c.signedIn&&!c.anon&&c.email) return c.email; }catch(e){}
-    return '';
+  function signInEmail(){ var a=acct(); return a&&a.email||''; }
+  function acct(){ var c=null; try{ c=window.KovaCloudAuth&&KovaCloudAuth.status(); }catch(e){} return c&&c.signedIn&&!c.anon?c:null; }
+  /* body details live in the calorie calculator's record (KP maint) */
+  function body(){ var p=null; try{ p=(window.KP&&KP.get('maint'))||(window.KovaMaint&&KovaMaint.draft&&KovaMaint.draft())||null; }catch(e){} p=p?JSON.parse(JSON.stringify(p)):{}; p.v=1; if(!p.unit) p.unit='lb'; return p; }
+  function saveBody(p){ p.v=1; try{ if(window.KovaMaint&&KovaMaint.save) KovaMaint.save(p); else KP.set('maint',p); }catch(e){ try{ KP.set('maint',p); }catch(x){} } }
+  function usU(p){ return p.unit!=='kg'; }
+  function hTxt(p){ if(!p.hcm) return ''; if(!usU(p)) return Math.round(p.hcm)+' cm'; var i=Math.round(p.hcm/2.54); return Math.floor(i/12)+' ft '+(i%12)+' in'; }
+  function wTxt(p){ if(!p.kg) return ''; return usU(p)?Math.round(p.kg/LB)+' lb':(Math.round(p.kg*10)/10)+' kg'; }
+  /* phone: kept as +<country code><number> (8 to 15 digits); a 10-digit
+     number on a US phone gets +1. null = not a phone number */
+  function normPhone(t){
+    t=String(t||'').trim(); if(!t) return '';
+    var d=t.replace(/\D/g,'');
+    if(/^\+/.test(t)) return d.length>=8&&d.length<=15?'+'+d:null;
+    if(d.length===10&&/US|^en$/i.test(navigator.language||'en-US')) return '+1'+d;
+    if(d.length===11&&d.charAt(0)==='1') return '+'+d;
+    return null;
   }
+  function fmtPhone(e){ var d=String(e||'').replace(/\D/g,''); if(/^\+1\d{10}$/.test(e)) return '+1 '+d.slice(1,4)+' '+d.slice(4,7)+' '+d.slice(7); return e; }
   var WATCH='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="3"/><path d="M9 6.5l.6-3h4.8l.6 3M9 17.5l.6 3h4.8l.6-3M12 9.5v2.7l1.6 1"/></svg>';
   function watchHtml(){
     var c=null, age='';
@@ -35329,24 +35380,127 @@ window.KovaProfile=(function(){
       +'<span>'+(on?'Connected'+(age&&age!=='never synced'?' · synced '+esc(age):''):(chose?'Not sending data yet':'For heart rate, sleep and steps'))+'</span></div>'
       +'<button class="btn" type="button" id="pfWatchBtn">'+(on?'Manage':'Connect')+'</button>';
   }
+  var CHEV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  function row(k,label,val,cls){ return '<button type="button" class="pf-row'+(cls?' '+cls:'')+'" data-ed="'+k+'"><span class="pf-k">'+esc(label)+'</span><span class="pf-v">'+(val||'')+'</span>'+CHEV+'</button>'; }
+  function add(){ return '<span style="opacity:.75">Add</span>'; }
   function paint(){
     var host=document.getElementById('pfName'); if(!host) return;
-    paintAll(); var m=me(), em=signInEmail()||m.email||'';
-    host.textContent=[m.first,m.last].filter(Boolean).join(' ')||m.name||'Your name';
-    document.getElementById('pfRole').textContent=em||'Add your details below';
-    var f=document.getElementById('pfFields');
-    if(f&&!editing){
-      buf={first:m.first||'',last:m.last||'',email:signInEmail()||m.email||'',phone:m.phone||''};
-      var locked=!!signInEmail();
-      f.innerHTML=FIELDS.map(function(x){
-        var ro=x.k==='email'&&locked;
-        return '<label class="pf-f"><span class="wfield-k">'+esc(x.n)+'</span>'
-          +'<input class="field" data-f="'+x.k+'" type="'+(x.type||'text')+'" maxlength="'+x.max+'" placeholder="'+esc(x.ph)+'" autocomplete="'+x.ac+'"'+(x.k==='phone'?' inputmode="tel"':'')+(ro?' readonly':'')+' value="'+esc(buf[x.k])+'">'
-          +(ro?'<span class="pf-note">The email you sign in with.</span>':'')+'</label>';
-      }).join('');
-      f.querySelectorAll('[data-f]').forEach(function(n){ n.oninput=function(){ buf[n.dataset.f]=n.value; editing=true; }; });
-    }
-    var w=document.getElementById('pfWatch'); if(w) w.innerHTML=watchHtml();
+    paintAll(); var m=me(), a=acct(), p=body(), em=a&&a.email||m.email||'';
+    var nm=[m.first,m.last].filter(Boolean).join(' ')||m.name||'';
+    host.textContent=nm||'Your name';
+    document.getElementById('pfRole').textContent=em||'Not signed in';
+    var P=document.getElementById('pfProfile');
+    if(P) P.innerHTML=row('name','Name',nm?esc(nm):add())+row('age','Age',p.age?esc(p.age):add())
+      +row('sex','Sex',p.sex==='f'?'Female':(p.sex==='m'?'Male':add()))+row('height','Height',hTxt(p)||add())+row('weight','Weight',wTxt(p)||add());
+    var A=document.getElementById('pfAccount');
+    if(A) A.innerHTML=row('email','Email',em?esc(em)+(m.pendingEmail&&a&&m.pendingEmail!==a.email?'<i>Change waiting</i>':''):add())
+      +row('phone','Phone',m.phone?esc(fmtPhone(m.phone))+'<i>Not verified</i>':add())
+      +(a?(a.provider==='password'?row('password','Password','Change'):'')
+          +'<div class="pf-row" style="cursor:default"><span class="pf-k">Signed in with</span><span class="pf-v">'+(a.provider==='google.com'?'Google':(a.provider==='apple.com'?'Apple':'Email'))+'</span></div>'
+          +row('signout','Sign out','')
+        :row('signin','Sign in','Back up and sync'));
+    var W=document.getElementById('pfWatch'); if(W) W.innerHTML=watchHtml();
+    var R=document.getElementById('pfPrefs'); if(R) R.innerHTML=row('units','Units',usU(p)?'US (lb, ft)':'Metric (kg, cm)');
+    var D=document.getElementById('pfData'); if(D) D.innerHTML=row('export','Download my data','')+row('delete','Delete my account','','bad');
+  }
+
+  /* ---- each row opens its own page (the app's full-screen sheet, with Back) ---- */
+  function field(k,label,val,o){ o=o||{}; return '<label class="pf-f"><span class="wfield-k">'+esc(label)+'</span><input class="field" data-in="'+k+'" type="'+(o.type||'text')+'"'
+    +(o.im?' inputmode="'+o.im+'"':'')+(o.ac?' autocomplete="'+o.ac+'"':'')+(o.max?' maxlength="'+o.max+'"':'')+' placeholder="'+esc(o.ph||label)+'" value="'+esc(val==null?'':val)+'"></label>'; }
+  var SAVE='<button class="btn" type="button" data-pf="save">Save</button>';
+  function page(h,fn,more){
+    if(!window.openSheet) return null;
+    openSheet('<div class="pf-ed">'+h+'</div>');
+    var el=document.querySelector('#sheetIn .pf-ed'); if(!el) return null;
+    function vals(){ var v={}; el.querySelectorAll('[data-in]').forEach(function(n){ v[n.getAttribute('data-in')]=n.value; }); return v; }
+    el.addEventListener('click',function(ev){
+      var b=ev.target.closest&&ev.target.closest('[data-pf]'); if(!b) return;
+      var k=b.getAttribute('data-pf');
+      if(k==='save'&&fn) fn(vals());
+      else if(more&&more[k]) more[k](b);
+    });
+    el.addEventListener('keydown',function(ev){ if(ev.key==='Enter'&&ev.target.matches('[data-in]')&&fn){ ev.preventDefault(); fn(vals()); } });
+    var first=el.querySelector('[data-in]'); if(first) try{ first.focus({preventScroll:true}); }catch(e){}
+    return el;
+  }
+  function say(el,t,bad){ var n=el&&el.querySelector('.pf-msg'); if(n){ n.textContent=t; n.classList.toggle('bad',!!bad); } }
+  function done(msg){ try{ closeSheet(); }catch(e){} paint(); paintSettingsRow(); if(msg) toast(msg); }
+  var MSG='<div class="pf-msg" role="status"></div>';
+  function emailErr(e){
+    var c=e&&e.code||'';
+    if(c==='auth/requires-recent-login') return 'For safety, sign out and sign in again, then try once more.';
+    if(c==='auth/email-already-in-use') return 'Another account already uses that email.';
+    if(c==='auth/invalid-email') return 'That email does not look right.';
+    if(c==='auth/operation-not-allowed') return 'Email changes are switched off for this app in Firebase.';
+    if(c==='auth/network-request-failed') return 'No connection. Try again.';
+    if(c==='auth/too-many-requests') return 'Too many tries. Wait a few minutes.';
+    return 'Could not send the link'+(c?' ('+c+')':'')+'.';
+  }
+  function edit(k){
+    var m=me(), p=body(), a=acct(), el;
+    if(k==='name'){
+      el=page('<h3>Name</h3><div class="pf-two">'+field('first','First name',m.first,{ac:'given-name',max:30})+field('last','Last name',m.last,{ac:'family-name',max:30})+'</div>'+MSG+SAVE,function(v){
+        var f=String(v.first||'').trim(), l=String(v.last||'').trim(); if(!f) return say(el,'Add a first name.',true);
+        m.first=f; m.last=l; m.name=(f+' '+l).trim(); saveMe(m); done('Saved.'); });
+    } else if(k==='age'){
+      el=page('<h3>Age</h3><p>Used for your calories and heart-rate zones.</p>'+field('age','Age',p.age||'',{type:'number',im:'numeric'})+MSG+SAVE,function(v){
+        var n=+v.age; if(!(n>=16&&n<=100)) return say(el,'Enter an age from 16 to 100.',true); p.age=Math.round(n); saveBody(p); done('Saved.'); });
+    } else if(k==='sex'){
+      el=page('<h3>Sex</h3><p>Used to work out your calories and body fat.</p><div class="pf-opts"><button class="btn'+(p.sex==='f'?'':' pf-off')+'" type="button" data-pf="f">Female</button><button class="btn'+(p.sex==='m'?'':' pf-off')+'" type="button" data-pf="m">Male</button></div>',null,{
+        f:function(){ setSex('f'); }, m:function(){ setSex('m'); } });
+      function setSex(x){ p.sex=x; saveBody(p); try{ localStorage.setItem('kova.micro.sex',JSON.stringify(x)); if(window.KovaCycle&&KovaCycle.setSex) KovaCycle.setSex(x==='f'?'female':'male'); }catch(e){} done('Saved.'); }
+    } else if(k==='height'){
+      var u=usU(p), inch=p.hcm?Math.round(p.hcm/2.54):null;
+      el=page('<h3>Height</h3>'+(u?'<div class="pf-two">'+field('ft','Feet',inch!=null?Math.floor(inch/12):'',{type:'number',im:'numeric'})+field('in','Inches',inch!=null?inch%12:'',{type:'number',im:'numeric'})+'</div>'
+        :field('cm','Centimetres',p.hcm?Math.round(p.hcm):'',{type:'number',im:'numeric'}))+MSG+SAVE,function(v){
+        var cm=u?((+v.ft||0)*12+(+v.in||0))*2.54:+v.cm;
+        if(!(cm>=120&&cm<=230)) return say(el,u?'Enter a height from 4 ft to 7 ft 6 in.':'Enter a height from 120 to 230 cm.',true);
+        p.hcm=Math.round(cm*10)/10; saveBody(p); done('Saved.'); });
+    } else if(k==='weight'){
+      var u2=usU(p);
+      el=page('<h3>Weight</h3><p>Also added to your weight log, so Fuel follows it.</p>'+field('w',u2?'Pounds':'Kilograms',p.kg?(u2?Math.round(p.kg/LB):Math.round(p.kg*10)/10):'',{type:'number',im:'decimal'})+MSG+SAVE,function(v){
+        var x=+v.w, kg=u2?x*LB:x;
+        if(!(kg>=30&&kg<=300)) return say(el,u2?'Enter a weight from 66 to 660 lb.':'Enter a weight from 30 to 300 kg.',true);
+        p.kg=Math.round(kg*100)/100; saveBody(p); try{ if(window.KovaMaint&&KovaMaint.logWeight) KovaMaint.logWeight(p.kg); }catch(e){} done('Saved.'); });
+    } else if(k==='email'){
+      if(a&&a.provider==='google.com'){
+        page('<h3>Email</h3><p>You sign in with Google, so this is your Google email: <b>'+esc(a.email)+'</b>. Change it in your Google account and Kova follows.</p><a class="btn" href="https://myaccount.google.com/personal-info" target="_blank" rel="noopener">Open my Google account</a>');
+        return;
+      }
+      if(a){
+        el=page('<h3>Change email</h3><p>You sign in with <b>'+esc(a.email)+'</b>. Kova sends a link to the new address and the change happens when you open it; until then the old one still works.</p>'
+          +field('email','New email','',{type:'email',ac:'email',max:80})+MSG+'<button class="btn" type="button" data-pf="save">Send the link</button>',function(v){
+          var e=String(v.email||'').trim();
+          if(!EMAIL.test(e)) return say(el,'That email does not look right.',true);
+          if(e.toLowerCase()===String(a.email||'').toLowerCase()) return say(el,'That is already your email.',true);
+          say(el,'Sending…');
+          KovaCloudAuth.changeEmail(e).then(function(){ var mm=me(); mm.pendingEmail=e; saveMe(mm); say(el,'Link sent to '+e+'. Open it to finish (check spam too).'); paint(); })
+            .catch(function(err){ say(el,emailErr(err),true); });
+        });
+        return;
+      }
+      el=page('<h3>Email</h3><p>You are not signed in, so this is only how to reach you. Sign in to back up your data and sign in with this email.</p>'
+        +field('email','Email',m.email||'',{type:'email',ac:'email',max:80})+MSG+SAVE+'<button class="btn pf-off" type="button" data-pf="signin" style="margin-top:8px">Sign in or create an account</button>',function(v){
+        var e=String(v.email||'').trim(); if(e&&!EMAIL.test(e)) return say(el,'That email does not look right.',true);
+        m.email=e; saveMe(m); done('Saved.'); },{signin:function(){ try{ closeSheet(); KovaCloudAuth.open({mode:'in'}); }catch(e){} }});
+    } else if(k==='phone'){
+      el=page('<h3>Phone</h3><p>Start with your country code (+1 in the US). Not checked by a text message yet.</p>'
+        +field('phone','Phone number',m.phone?fmtPhone(m.phone):'',{type:'tel',im:'tel',ac:'tel',max:24})+MSG+SAVE+(m.phone?'<button class="btn pf-off" type="button" data-pf="clear" style="margin-top:8px">Remove phone number</button>':''),function(v){
+        var r=normPhone(v.phone); if(r===null) return say(el,'Add your country code with +, then the number (8 to 15 digits).',true);
+        m.phone=r; saveMe(m); done(r?'Saved.':'Phone number removed.'); },{clear:function(){ m.phone=''; saveMe(m); done('Phone number removed.'); }});
+    } else if(k==='password'){
+      el=page('<h3>Password</h3><p>Kova sends a link to <b>'+esc(a&&a.email||'')+'</b> to choose a new password.</p>'+MSG+'<button class="btn" type="button" data-pf="save">Send the link</button>',function(){
+        say(el,'Sending…'); KovaCloudAuth.resetPassword().then(function(){ say(el,'Link sent. Check your email (and spam).'); }).catch(function(err){ say(el,emailErr(err),true); }); });
+    } else if(k==='signin'){ try{ KovaCloudAuth.open({mode:'in'}); }catch(e){}
+    } else if(k==='signout'){
+      page('<h3>Sign out</h3><p>Your data stays in your account. On this device Kova goes back to the sign-in screen.</p><button class="btn" type="button" data-pf="go">Sign out</button>',null,{go:function(){ try{ KovaCloudAuth.signOut(); }catch(e){} done('Signed out.'); }});
+    } else if(k==='units'){
+      var us=usU(p);
+      page('<h3>Units</h3><p>For your body and food numbers.</p><div class="pf-opts"><button class="btn'+(us?'':' pf-off')+'" type="button" data-pf="lb">US (lb, ft)</button><button class="btn'+(us?' pf-off':'')+'" type="button" data-pf="kg">Metric (kg, cm)</button></div>',null,{
+        lb:function(){ setU('lb'); }, kg:function(){ setU('kg'); } });
+      function setU(x){ p.unit=x; saveBody(p); try{ localStorage.setItem('kova.units',x==='lb'?'imperial':'metric'); }catch(e){} done('Saved.'); }
+    } else if(k==='export'){ try{ if(window.KovaPrivacy) KovaPrivacy.exportAll(); }catch(e){}
+    } else if(k==='delete'){ try{ if(window.KovaPrivacy) KovaPrivacy.startDelete(); }catch(e){} }
   }
 
   /* ---- avatar: real capture, stored as a data URL ---- */
@@ -35398,22 +35552,6 @@ window.KovaProfile=(function(){
     inp.click();
   }
 
-  function commit(){
-    var m=me(), b=buf||{};
-    var first=String(b.first||'').trim(), last=String(b.last||'').trim(), email=String(b.email||'').trim(), phone=String(b.phone||'').replace(/[^0-9+()\- .]/g,'').trim();
-    if(email&&!signInEmail()&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ toast('That email does not look right.'); return; }
-    if(phone&&phone.replace(/\D/g,'').length<7){ toast('That phone number looks too short.'); return; }
-    m.first=first; m.last=last; m.name=[first,last].filter(Boolean).join(' ');
-    if(!signInEmail()) m.email=email;
-    m.phone=phone;
-    saveMe(m);
-    editing=false;
-    paint();
-    if(window.__paintSettings) try{ __paintSettings(); }catch(e){}
-    paintSettingsRow();
-    toast('Saved.');
-  }
-
   /* backup: is this device synced to the account (painted from KovaCloud.status()) */
   function paintSync(){
     var host=document.getElementById('pfSync'); if(!host) return;
@@ -35449,17 +35587,17 @@ window.KovaProfile=(function(){
   }
 
   function wire(){
-    var a=document.getElementById('pfAvaBtn');
-    if(a&&!a.__w){ a.__w=1; a.onclick=function(ev){ ev.stopPropagation(); grabAvatar(); }; }
-    var s=document.getElementById('pfSave');
-    if(s&&!s.__w){ s.__w=1; s.onclick=commit; }
-    var w=document.getElementById('pfWatch');
-    if(w&&!w.__w){ w.__w=1; w.addEventListener('click',function(ev){
-      if(!(ev.target.closest&&ev.target.closest('#pfWatchBtn'))) return;
-      var c=null; try{ c=window.KovaWearables&&KovaWearables.current(); }catch(e){}
-      if(c&&c.from==='sync') go('watch'); else if(window.__watchSetup) __watchSetup(); else go('watch');
+    var av=document.getElementById('pfAvaBtn');
+    if(av&&!av.__w){ av.__w=1; av.onclick=function(ev){ ev.stopPropagation(); grabAvatar(); }; }
+    var scr=document.getElementById('s-profile');
+    if(scr&&!scr.__pf){ scr.__pf=1; scr.addEventListener('click',function(ev){
+      var r=ev.target.closest&&ev.target.closest('[data-ed]'); if(r){ ev.preventDefault(); edit(r.getAttribute('data-ed')); return; }
+      if(ev.target.closest&&ev.target.closest('#pfWatchBtn')){
+        var c=null; try{ c=window.KovaWearables&&KovaWearables.current(); }catch(e){}
+        if(c&&c.from==='sync') go('watch'); else if(window.__watchSetup) __watchSetup(); else go('watch');
+      }
     }); }
-    editing=false; paint();
+    paint();
   }
 
   function onScreen(id){
@@ -35471,7 +35609,7 @@ window.KovaProfile=(function(){
      when an account signs in or the cloud brings a profile down */
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',paintAll); else paintAll();
   window.addEventListener('kova:cloud',paintAll);
-  return {onScreen:onScreen, paint:paint, me:me, paintSettingsRow:paintSettingsRow, paintAll:paintAll};
+  return {onScreen:onScreen, paint:paint, me:me, paintSettingsRow:paintSettingsRow, paintAll:paintAll, edit:edit, normPhone:normPhone};
 })();
 </script>
 
@@ -68847,21 +68985,27 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-12',title:'Profile settings, done properly',
+      lines:['Tap any row to change it','Change your email safely, by a link','Height, weight and units update Fuel','Download or delete your data here'],
+      steps:[
+        ['profile','Your profile','Name, age, sex, height, weight. Tap to change.',function(){ return q('#pfProfile'); }],
+        ['profile','Your account','Email, phone, password and sign out.',function(){ return q('#pfAccount'); }]
+      ]},
     {id:'new-2026-11-11',title:'Your profile',
       lines:['First name, last name, email, phone','Your watch at a glance'],
       steps:[
-        ['profile','Your details','Change them here and tap Save.',function(){ return q('#pfFields'); }],
+        ['profile','Your details','Change them here and tap Save.',function(){ return q('#pfProfile'); }],
         ['profile','Your watch','Connected or not, and Connect.',function(){ return q('#pfWatch'); }]
       ]},
     {id:'new-2026-11-10',title:'A plain profile',
       lines:['Name, role and company: that is it','A darker card in dark mode'],
       steps:[
-        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfFields'); }]
+        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfProfile'); }]
       ]},
     {id:'new-2026-11-09',title:'A simpler profile',
       lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
       steps:[
-        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfFields'); }],
+        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfProfile'); }],
         ['workteam','Call them by name','In a noisy room, say "hey" before the name.',function(){ return q('#wtmBody [data-c="listen"]'); }]
       ]},
     {id:'new-2026-11-08',title:'Patterns from your own data',

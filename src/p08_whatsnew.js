@@ -23,21 +23,27 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-12',title:'Profile settings, done properly',
+      lines:['Tap any row to change it','Change your email safely, by a link','Height, weight and units update Fuel','Download or delete your data here'],
+      steps:[
+        ['profile','Your profile','Name, age, sex, height, weight. Tap to change.',function(){ return q('#pfProfile'); }],
+        ['profile','Your account','Email, phone, password and sign out.',function(){ return q('#pfAccount'); }]
+      ]},
     {id:'new-2026-11-11',title:'Your profile',
       lines:['First name, last name, email, phone','Your watch at a glance'],
       steps:[
-        ['profile','Your details','Change them here and tap Save.',function(){ return q('#pfFields'); }],
+        ['profile','Your details','Change them here and tap Save.',function(){ return q('#pfProfile'); }],
         ['profile','Your watch','Connected or not, and Connect.',function(){ return q('#pfWatch'); }]
       ]},
     {id:'new-2026-11-10',title:'A plain profile',
       lines:['Name, role and company: that is it','A darker card in dark mode'],
       steps:[
-        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfFields'); }]
+        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfProfile'); }]
       ]},
     {id:'new-2026-11-09',title:'A simpler profile',
       lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
       steps:[
-        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfFields'); }],
+        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfProfile'); }],
         ['workteam','Call them by name','In a noisy room, say "hey" before the name.',function(){ return q('#wtmBody [data-c="listen"]'); }]
       ]},
     {id:'new-2026-11-08',title:'Patterns from your own data',
