@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&display=swap");
+/* ===== Typography: bold tight grotesk + serif italic accents (Intake/Huel feel) ===== */
+:root{--nx-sans:'Inter Tight','Inter',-apple-system,Helvetica,Arial,sans-serif;--nx-serif:'Instrument Serif',Georgia,'Times New Roman',serif}
+body,.agS,.agNx,.agCmp,.agRv,.agAb,[id^="ag-"],[id^="nx-"],.header,.menu-drawer,.footer,.announcement-bar,.cart-drawer,.drawer{font-family:var(--nx-sans)!important}
+h1,h2,h3,.h0,.h1,.h2,.agP__title,.agT__title,.agCmp__title,.agRv__title,.agAb__h1,.agAb__h2,[id^="ag-"] .k__t,[id^="ag-"] h2,[id^="nx-"] h1,[id^="nx-"] h2{font-family:var(--nx-sans)!important;font-weight:600!important;letter-spacing:-.04em!important;line-height:1.02!important}
+h3,[id^="nx-"] h3,.agB__txt strong,.nxF__t,.nxA__row b{font-weight:600!important;letter-spacing:-.02em!important}
+h1 em,h2 em,h3 em,h1 i,h2 i,.agP__title em,[id^="ag-"] .k__t em,.nxRe__h span,.agP__desc em,.agT__title em{font-family:var(--nx-serif)!important;font-style:italic!important;font-weight:400!important;letter-spacing:-.01em!important;font-size:1.1em;line-height:.9}
+.agP__desc em{font-size:1.15em;color:#0A0A0A!important}
+.nxRe__h span{font-size:1.08em}
+p,.agP__desc,.nxF__x,.nxA__row small,.nxBn__p,.nxHero__p,.nxT__p,.nxRe__p,.agAcc__body,.agRv__x,.agAb__rte p{font-weight:400;letter-spacing:-.005em}
+.nxF__x,.nxBn__p,.nxA__row small{color:#6E6E6E!important}
+.nxEy,.nxBn__ey,.nxA__ey,.nxFit__ey,.nxRe__ey,.nxHero__ey,.nxT__ey{font-family:var(--nx-sans)!important;font-weight:600!important;letter-spacing:.22em!important;font-size:10.5px!important}
+.agP__title{font-weight:600!important;letter-spacing:-.035em!important}
+.agP__price,.agB__price b,.agSticky__p{font-family:var(--nx-sans)!important;letter-spacing:-.02em}
+.agP__atc,.agSticky__btn,.nxHero__btn,.agB__badge,.button{font-family:var(--nx-sans)!important;font-weight:600!important;letter-spacing:-.01em}
+.header__menu-item,.list-menu__item{font-family:var(--nx-sans)!important;font-weight:500!important;font-size:15px!important}

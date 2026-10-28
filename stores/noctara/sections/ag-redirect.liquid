@@ -6,6 +6,7 @@
 -%}
 {{ 'ag-xmas.css' | asset_url | stylesheet_tag }}
 {{ 'ag-xmas2.css' | asset_url | stylesheet_tag }}
+{{ 'ag-type.css' | asset_url | stylesheet_tag }}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <script src="{{ 'ag-gallery.js' | asset_url }}" defer="defer"></script>
 {%- if section.settings.enabled and template.name == 'index' and request.design_mode != true -%}
