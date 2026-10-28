@@ -1,0 +1,63 @@
+{%- liquid
+  assign s = section.settings
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxRe" style="padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="page-width nxRe__in">
+    <div class="nxRe__txt">
+      <p class="nxRe__ey">{{ s.eyebrow }}</p>
+      <h2 class="nxRe__h">{{ s.heading_1 }} <span>{{ s.heading_hl }}</span> {{ s.heading_2 }}</h2>
+      <p class="nxRe__p">{{ s.text }}</p>
+    </div>
+    <div class="nxRe__sl">
+      <div class="nxRe__track" data-nx-rt>
+        {%- for block in section.blocks -%}
+          <div class="nxRe__card" {{ block.shopify_attributes }}>
+            {%- if block.settings.video != blank -%}{{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata' }}{%- else -%}<div class="nxRe__ph">Add video</div>{%- endif -%}
+            {%- if block.settings.caption != blank -%}<span class="nxRe__cap">{{ block.settings.caption }}</span>{%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- if section.blocks.size > 1 -%}
+      <div class="nxRe__nav"><button type="button" data-nx-rp aria-label="Previous">{% render 'ag-icon', name: 'chevron-left' %}</button><button type="button" data-nx-rn aria-label="Next">{% render 'ag-icon', name: 'chevron-right' %}</button></div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{background:#0A0A0A;color:#fff}
+#nx-{{ section.id }} .nxRe__in{display:grid;gap:34px;align-items:center}
+#nx-{{ section.id }} .nxRe__ey{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#2B7BFF;margin:0 0 12px}
+#nx-{{ section.id }} .nxRe__h{color:#fff;font-size:34px!important;font-weight:500!important;letter-spacing:-.025em;line-height:1.08!important;margin:0 0 16px!important}
+#nx-{{ section.id }} .nxRe__h span{color:#2B7BFF;text-shadow:0 0 24px rgba(43,123,255,.45)}
+#nx-{{ section.id }} .nxRe__p{color:rgba(255,255,255,.62);font-size:14.5px;line-height:1.65;max-width:440px;margin:0}
+#nx-{{ section.id }} .nxRe__sl{position:relative;max-width:360px;width:100%;margin:0 auto}
+#nx-{{ section.id }} .nxRe__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:14px}
+#nx-{{ section.id }} .nxRe__track::-webkit-scrollbar{display:none}
+#nx-{{ section.id }} .nxRe__card{position:relative;flex:0 0 100%;aspect-ratio:9/14;scroll-snap-align:start;background:#1a1a1a}
+#nx-{{ section.id }} .nxRe__card video{width:100%;height:100%;object-fit:cover}
+#nx-{{ section.id }} .nxRe__ph{height:100%;display:grid;place-items:center;color:#555;font-size:13px}
+#nx-{{ section.id }} .nxRe__cap{position:absolute;left:12px;right:12px;bottom:14px;text-align:center;font-weight:700;font-size:15px;text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+#nx-{{ section.id }} .nxRe__nav{display:flex;justify-content:center;gap:12px;margin-top:16px}
+#nx-{{ section.id }} .nxRe__nav button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+#nx-{{ section.id }} .nxRe__nav button:last-child{background:#2B7BFF;border-color:#2B7BFF}
+#nx-{{ section.id }} .nxRe__nav svg{width:18px;height:18px}
+@media(min-width:990px){#nx-{{ section.id }} .nxRe__in{grid-template-columns:1fr 1fr;max-width:1000px;margin:0 auto}#nx-{{ section.id }} .nxRe__h{font-size:48px!important}}
+</style>
+<script>(function(){var r=document.getElementById('nx-{{ section.id }}');if(!r)return;var t=r.querySelector('[data-nx-rt]'),p=r.querySelector('[data-nx-rp]'),n=r.querySelector('[data-nx-rn]');if(!p)return;p.onclick=function(){t.scrollBy({left:-t.clientWidth,behavior:'smooth'})};n.onclick=function(){t.scrollBy({left:t.clientWidth,behavior:'smooth'})};})();</script>
+{% schema %}
+{
+  "name": "First reactions (videos)",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "See it work" },
+    { "type": "text", "id": "heading_1", "label": "Heading start", "default": "Watch people's" },
+    { "type": "text", "id": "heading_hl", "label": "Heading highlight (blue)", "default": "first breath" },
+    { "type": "text", "id": "heading_2", "label": "Heading end", "default": "with Noctara." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "The moment the band clicks into place and the nose opens — that first deep breath catches everyone off guard." },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 80 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 80 }
+  ],
+  "blocks": [ { "type": "video", "name": "Video", "settings": [ { "type": "video", "id": "video", "label": "Video" }, { "type": "text", "id": "caption", "label": "Caption" } ] } ],
+  "presets": [ { "name": "First reactions (videos)", "blocks": [ { "type": "video" }, { "type": "video" } ] } ]
+}
+{% endschema %}

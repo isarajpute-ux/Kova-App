@@ -1,0 +1,56 @@
+{%- liquid
+  assign s = section.settings
+  assign n = section.blocks.size
+  assign mid = n | divided_by: 2
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxFit" style="padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="page-width">
+    <p class="nxFit__ey">{{ s.eyebrow }}</p>
+    <h2 class="nxFit__h">{{ s.heading }}</h2>
+    <div class="nxFit__stage">
+      {%- if s.image != blank -%}{{ s.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'nxFit__img' }}{%- else -%}
+      <svg class="nxFit__img" viewBox="0 0 120 70" fill="none"><path d="M10 8c4 34 22 52 50 52s46-18 50-52" stroke="#0A0A0A" stroke-width="12" stroke-linecap="round"/></svg>{%- endif -%}
+    </div>
+    <p class="nxFit__code" data-nx-fcode></p>
+    <p class="nxFit__name" data-nx-fname></p>
+    <p class="nxFit__note" data-nx-fnote></p>
+    <div class="nxFit__ctl">
+      <input type="range" min="0" max="{{ n | minus: 1 }}" value="{{ mid }}" step="1" data-nx-frange aria-label="Size">
+      <div class="nxFit__labels">{%- for block in section.blocks -%}<span data-i="{{ forloop.index0 }}" data-code="{{ block.settings.code | escape }}" data-name="{{ block.settings.name | escape }}" data-note="{{ block.settings.note | escape }}" data-scale="{{ block.settings.scale }}" {{ block.shopify_attributes }}>{{ block.settings.code }}</span>{%- endfor -%}</div>
+    </div>
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{background:#fff;color:#0A0A0A;text-align:center}
+#nx-{{ section.id }} .nxFit__ey{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#2B7BFF;margin:0 0 12px}
+#nx-{{ section.id }} .nxFit__h{font-size:34px!important;font-weight:500!important;letter-spacing:-.03em;margin:0!important}
+#nx-{{ section.id }} .nxFit__stage{height:260px;display:grid;place-items:center}
+#nx-{{ section.id }} .nxFit__img{width:200px;height:auto;transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+#nx-{{ section.id }} .nxFit__code{font-size:40px;font-weight:700;margin:0;line-height:1}
+#nx-{{ section.id }} .nxFit__name{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#666;margin:8px 0 4px}
+#nx-{{ section.id }} .nxFit__note{font-size:14px;color:#888;margin:0 0 26px;min-height:20px}
+#nx-{{ section.id }} .nxFit__ctl{max-width:520px;margin:0 auto}
+#nx-{{ section.id }} input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;background:#E5E5E5;outline:none;margin:0}
+#nx-{{ section.id }} input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:34px;border-radius:50%;background:#2B7BFF;border:5px solid #fff;box-shadow:0 0 0 2px #2B7BFF,0 0 18px rgba(43,123,255,.55);cursor:pointer}
+#nx-{{ section.id }} input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#2B7BFF;border:5px solid #fff;box-shadow:0 0 0 2px #2B7BFF;cursor:pointer}
+#nx-{{ section.id }} .nxFit__labels{display:flex;justify-content:space-between;margin-top:16px}
+#nx-{{ section.id }} .nxFit__labels span{font-size:12px;font-weight:700;color:#BDBDBD;cursor:pointer;width:40px}
+#nx-{{ section.id }} .nxFit__labels span.on{color:#2B7BFF}
+@media(min-width:990px){#nx-{{ section.id }} .nxFit__h{font-size:56px!important}#nx-{{ section.id }} .nxFit__stage{height:320px}}
+</style>
+<script>(function(){var r=document.getElementById('nx-{{ section.id }}');if(!r)return;var g=r.querySelector('[data-nx-frange]'),L=r.querySelectorAll('.nxFit__labels span'),im=r.querySelector('.nxFit__img');function up(){var i=+g.value,d=L[i];if(!d)return;L.forEach(function(e){e.classList.toggle('on',e===d)});r.querySelector('[data-nx-fcode]').textContent=d.dataset.code;r.querySelector('[data-nx-fname]').textContent=d.dataset.name;r.querySelector('[data-nx-fnote]').textContent=d.dataset.note;if(im)im.style.transform='scale('+(+d.dataset.scale/100)+')';g.style.background='linear-gradient(90deg,#2B7BFF '+(i/(L.length-1)*100)+'%,#E5E5E5 0)'}g.addEventListener('input',up);L.forEach(function(e){e.onclick=function(){g.value=e.dataset.i;up()}});up();})();</script>
+{% schema %}
+{
+  "name": "Find your fit",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Find your fit" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Three sizes to fit every nose." },
+    { "type": "image_picker", "id": "image", "label": "Product image (transparent PNG)" },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 140, "step": 4, "default": 80 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 140, "step": 4, "default": 80 }
+  ],
+  "blocks": [ { "type": "size", "name": "Size", "settings": [ { "type": "text", "id": "code", "label": "Code", "default": "M" }, { "type": "text", "id": "name", "label": "Name", "default": "Medium" }, { "type": "text", "id": "note", "label": "Who it fits" }, { "type": "range", "id": "scale", "label": "Image size %", "min": 50, "max": 150, "step": 5, "default": 100 } ] } ],
+  "presets": [ { "name": "Find your fit" } ]
+}
+{% endschema %}

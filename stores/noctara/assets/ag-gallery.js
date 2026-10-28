@@ -40,3 +40,25 @@
   function go(){ run(); document.addEventListener('click',function(){ setTimeout(run,80); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
+/* Noctara: bundle checklist + save pill, "Delivery by" under add to cart */
+(function(){
+  function run(){
+    document.querySelectorAll('[data-ag-bundle]').forEach(function(c){
+      if(c.__nx) return; c.__nx=1;
+      var sm=c.querySelector('.agB__txt small'); if(sm && sm.textContent.indexOf('|')>-1){ var parts=sm.textContent.split('|'); sm.textContent=parts.shift().trim();
+        var ul=document.createElement('ul'); ul.className='nxPerks'; parts.forEach(function(t){ t=t.trim(); if(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li);} }); c.appendChild(ul); }
+      var pill=document.createElement('span'); pill.className='nxSavePill'; c.querySelector('.agB__txt').appendChild(pill);
+    });
+    var p=document.querySelector('[data-ag-product]');
+    document.querySelectorAll('[data-ag-bundle]').forEach(function(c){
+      var b=c.querySelector('[data-ag-bprice]'), s=c.querySelector('[data-ag-bcompare]'), pill=c.querySelector('.nxSavePill'); if(!pill) return;
+      var n=function(e){ return e? parseFloat(e.textContent.replace(/[^0-9.]/g,''))||0 : 0; };
+      var d=(s && !s.hidden)? n(s)-n(b) : 0; pill.style.display=d>0?'':'none'; pill.textContent='SAVE $'+(Math.round(d*100)/100).toFixed(d%1?2:0);
+    });
+    var f=document.querySelector('.agP__form'); if(f && !document.querySelector('.nxDelMain')){
+      var e=p&&p.querySelector('[data-ag-eta]'), days=e?(+e.dataset.shipMax||0)+(+e.dataset.delMax||0):9, dt=new Date(); dt.setDate(dt.getDate()+(days||9));
+      var d=document.createElement('p'); d.className='nxDelMain'; d.innerHTML='Delivery by <b>'+dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</b>'; f.parentNode.insertBefore(d,f.nextSibling); }
+  }
+  function go(){ run(); document.addEventListener('click',function(){ setTimeout(run,90); }); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+})();

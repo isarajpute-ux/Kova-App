@@ -1,0 +1,65 @@
+{%- liquid
+  assign s = section.settings
+  assign url = s.link | default: '/products/noctara-magnetic-nasal-strip'
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxHero">
+  <div class="nxHero__bg">
+    {%- if s.video != blank -%}
+      {{ s.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata' }}
+    {%- elsif s.image != blank -%}
+      {{ s.image | image_url: width: 2000 | image_tag: loading: 'eager', sizes: '100vw' }}
+    {%- endif -%}
+  </div>
+  <div class="page-width nxHero__in">
+    {%- if s.eyebrow != blank -%}<p class="nxHero__ey">{{ s.eyebrow }}</p>{%- endif -%}
+    <h1 class="nxHero__h">{{ s.heading | newline_to_br }}</h1>
+    {%- if s.text != blank -%}<p class="nxHero__p">{{ s.text }}</p>{%- endif -%}
+    <div class="nxHero__ctas">
+      <a href="{{ url }}" class="nxHero__btn">{{ s.btn }}</a>
+      {%- if s.note != blank -%}<span class="nxHero__note">{{ s.note }}</span>{%- endif -%}
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <ul class="nxHero__pts">
+        {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>{%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{position:relative;background:#0A0A0A;color:#fff;overflow:hidden;min-height:{{ s.h_m }}vh;display:flex;align-items:flex-end}
+#nx-{{ section.id }} .nxHero__bg{position:absolute;inset:0}
+#nx-{{ section.id }} .nxHero__bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.15) 0%,rgba(10,10,10,.55) 55%,#0A0A0A 100%)}
+#nx-{{ section.id }} .nxHero__bg video,#nx-{{ section.id }} .nxHero__bg img{width:100%;height:100%;object-fit:cover}
+#nx-{{ section.id }} .nxHero__bg:empty{background:radial-gradient(60% 50% at 70% 30%,rgba(43,123,255,.35),transparent 70%),radial-gradient(#222 1px,transparent 1.3px) 0 0/14px 14px}
+#nx-{{ section.id }} .nxHero__in{position:relative;padding-top:120px;padding-bottom:56px;width:100%}
+#nx-{{ section.id }} .nxHero__ey{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#7DB2FF;margin:0 0 14px}
+#nx-{{ section.id }} .nxHero__h{color:#fff;font-size:40px!important;line-height:1.04!important;font-weight:500!important;letter-spacing:-.03em;margin:0 0 16px!important;max-width:760px}
+#nx-{{ section.id }} .nxHero__p{color:rgba(255,255,255,.75);font-size:16px;line-height:1.55;max-width:520px;margin:0 0 26px}
+#nx-{{ section.id }} .nxHero__ctas{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+#nx-{{ section.id }} .nxHero__btn{display:inline-block;background:#fff;color:#0A0A0A;font-weight:600;font-size:15px;padding:17px 36px;border-radius:999px;text-decoration:none;box-shadow:0 0 0 0 rgba(43,123,255,.6);animation:nxRing 2.4s infinite}
+@keyframes nxRing{0%{box-shadow:0 0 0 0 rgba(43,123,255,.55)}70%{box-shadow:0 0 0 14px rgba(43,123,255,0)}100%{box-shadow:0 0 0 0 rgba(43,123,255,0)}}
+#nx-{{ section.id }} .nxHero__note{font-size:13px;color:rgba(255,255,255,.7)}
+#nx-{{ section.id }} .nxHero__pts{list-style:none;padding:0;margin:30px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+#nx-{{ section.id }} .nxHero__pts li{font-size:13px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+@media(min-width:990px){#nx-{{ section.id }}{min-height:{{ s.h_d }}vh}#nx-{{ section.id }} .nxHero__h{font-size:72px!important}#nx-{{ section.id }} .nxHero__in{padding-bottom:90px}}
+</style>
+{% schema %}
+{
+  "name": "Landing hero",
+  "tag": "div",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Background video" },
+    { "type": "image_picker", "id": "image", "label": "Background image (if no video)" },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Magnetic nasal strip" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Breathe wider.\nSleep deeper." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "A reusable magnetic band that gently opens your nose from the sides." },
+    { "type": "text", "id": "btn", "label": "Button", "default": "Shop Noctara" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "text", "id": "note", "label": "Note next to button", "default": "30-night money-back guarantee" },
+    { "type": "range", "id": "h_m", "label": "Height mobile (vh)", "min": 50, "max": 100, "step": 5, "default": 85 },
+    { "type": "range", "id": "h_d", "label": "Height desktop (vh)", "min": 50, "max": 100, "step": 5, "default": 90 }
+  ],
+  "blocks": [ { "type": "point", "name": "Pill", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Sweat-proof" } ] } ],
+  "presets": [ { "name": "Landing hero" } ]
+}
+{% endschema %}
