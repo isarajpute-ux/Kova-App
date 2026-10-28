@@ -76,3 +76,12 @@ Cart drawer: `cart-drawer/` (AuraGlow layout: social proof, reserved timer, bann
   - Videos need ≥1080px; supply 1080×1920 (Reels/Stories) **and** 1080×1350 (Feeds).
 - Reviews and counts must be real (supplier/customer). Keep urgency claims believable.
 - Contact-form "Hello" emails from random Gmail accounts right after launch are usually Shopify scams. Don't treat them as customers.
+
+## Intake references (intakebreathing.com/products/starter-kit-10), screenshots 19-21
+
+- **Sticky glass add-to-cart bar** (appears on scroll): frosted, blurred glass box, price + struck compare price,
+  savings line, white pill "Add To Cart", green **"Delivery by <date>"** (auto-calculated) under the button.
+- **Feature card carousel**: small caps label + 2-line heading. 4 cards side by side on desktop, one at a time
+  on mobile with round ‹ › arrows. Cards are looping videos with a title + short grey subtext. Mature, clean Inter-style font.
+- **Before/after "What sets us apart"**: slider with pill labels, then a ✓/✗ alternating list (green check = us, grey x = them).
+- **Trust block**: dark section, "Trusted by … across the country", big stat counters + globe.
