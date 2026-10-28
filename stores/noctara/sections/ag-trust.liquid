@@ -1,0 +1,54 @@
+{%- liquid
+  assign s = section.settings
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxT" style="padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="page-width nxT__in">
+    <div class="nxT__txt">
+      {%- if s.eyebrow != blank -%}<p class="nxT__ey">{{ s.eyebrow }}</p>{%- endif -%}
+      <h2 class="nxT__h">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="nxT__p">{{ s.text }}</p>{%- endif -%}
+      <div class="nxT__stats">
+        {%- for block in section.blocks -%}
+          <div class="nxT__stat" {{ block.shopify_attributes }}><b>{{ block.settings.num }}</b><span>{{ block.settings.label }}</span></div>
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="nxT__globe" aria-hidden="true">
+      {%- if s.image != blank -%}{{ s.image | image_url: width: 900 | image_tag: loading: 'lazy' }}{%- else -%}
+      <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width=".7"><circle cx="100" cy="100" r="90"/><ellipse cx="100" cy="100" rx="45" ry="90"/><ellipse cx="100" cy="100" rx="75" ry="90"/><path d="M10 100h180M22 55h156M22 145h156M100 10v180"/><g fill="{{ s.c_dot }}" stroke="none"><circle cx="70" cy="70" r="3"/><circle cx="128" cy="62" r="3"/><circle cx="104" cy="112" r="3"/><circle cx="60" cy="128" r="3"/><circle cx="146" cy="120" r="3"/><circle cx="90" cy="48" r="3"/></g></svg>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{background:{{ s.c_bg }};color:#fff}
+#nx-{{ section.id }} .nxT__in{display:grid;gap:36px;align-items:center}
+#nx-{{ section.id }} .nxT__ey{font-size:14px;color:rgba(255,255,255,.6);margin:0 0 10px}
+#nx-{{ section.id }} .nxT__h{color:#fff;font-size:30px!important;line-height:1.12!important;font-weight:500!important;letter-spacing:-.02em;margin:0 0 12px!important}
+#nx-{{ section.id }} .nxT__p{color:rgba(255,255,255,.7);font-size:15px;line-height:1.6;margin:0 0 26px;max-width:480px}
+#nx-{{ section.id }} .nxT__stats{display:grid;grid-template-columns:1fr 1fr;gap:22px 16px}
+#nx-{{ section.id }} .nxT__stat b{display:block;font-size:34px;font-weight:600;letter-spacing:-.02em;color:#fff}
+#nx-{{ section.id }} .nxT__stat span{font-size:13px;color:rgba(255,255,255,.65)}
+#nx-{{ section.id }} .nxT__globe{color:rgba(255,255,255,.28);max-width:420px;width:100%;margin:0 auto;animation:nxSpin 60s linear infinite}
+#nx-{{ section.id }} .nxT__globe img{width:100%;height:auto;border-radius:50%}
+@keyframes nxSpin{to{transform:rotate(360deg)}}
+@media(min-width:990px){#nx-{{ section.id }} .nxT__in{grid-template-columns:1.1fr 1fr}#nx-{{ section.id }} .nxT__h{font-size:46px!important}}
+</style>
+{% schema %}
+{
+  "name": "Trust stats + globe",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Our promise" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Trusted by people who sleep and train hard." },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    { "type": "image_picker", "id": "image", "label": "Globe image (optional)" },
+    { "type": "color", "id": "c_bg", "label": "Background", "default": "#0A0A0A" },
+    { "type": "color", "id": "c_dot", "label": "Globe dot colour", "default": "#18E08A" },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 64 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 64 }
+  ],
+  "blocks": [ { "type": "stat", "name": "Stat", "settings": [ { "type": "text", "id": "num", "label": "Number", "default": "30" }, { "type": "text", "id": "label", "label": "Label", "default": "Night guarantee" } ] } ],
+  "presets": [ { "name": "Trust stats + globe" } ]
+}
+{% endschema %}

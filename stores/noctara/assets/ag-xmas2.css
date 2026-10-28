@@ -1,0 +1,14 @@
+/* Noctara: white / black / glowing green (#18E08A) overrides */
+:root{--nx-blue:#18E08A;--nx-blue2:#0A0A0A}
+.agP__sideIc{background:#0A0A0A;color:#18E08A!important;border-radius:50%;padding:6px}
+.agP__feat svg{color:#0A0A0A!important}
+.agP__pill{background:#E6FCF2!important;color:#0A0A0A!important}
+.agTL__step:nth-of-type(3) .agTL__ic{background:#18E08A!important;color:#0A0A0A!important;box-shadow:0 0 18px rgba(24,224,138,.55)}
+.agDeal:before{background:#18E08A!important}
+.agRv__card:nth-child(even) .agRv__av{background:#18E08A!important;color:#0A0A0A!important}
+.agRv__ver{color:#0A0A0A!important}
+.agAb__val:nth-child(2) .ic{background:#18E08A!important;color:#0A0A0A!important}
+.agS .k__i--y,[id^="ag-"] .k__i--y{background:#E6FCF2!important;color:#0A0A0A!important}
+[id^="ag-"] .k__us .k__i--y{background:#18E08A!important;color:#0A0A0A!important}
+@media(min-width:990px){.nxA__w{max-width:960px!important}.nxA__list{display:grid!important;grid-template-columns:1fr 1fr}.nxA__row:nth-child(odd){border-right:1px solid #E6E6E6}.nxA__row:nth-last-child(-n+2){border-bottom:0!important}}
+.agSticky .agSticky__btn,.agP .agSticky__btn{background:#fff!important;color:#0A0A0A!important;box-shadow:none!important}

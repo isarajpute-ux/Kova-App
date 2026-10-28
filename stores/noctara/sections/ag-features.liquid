@@ -1,0 +1,76 @@
+{%- comment -%} Intake-style feature cards: 4 across on desktop, 1 at a time + arrows on mobile. Cards can be looping videos. {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxF" style="--bg:{{ s.c_bg }};--ink:{{ s.c_ink }};padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="page-width">
+    {%- if s.eyebrow != blank -%}<p class="nxEy">{{ s.eyebrow }}</p>{%- endif -%}
+    <h2 class="nxH">{{ s.heading | newline_to_br }}</h2>
+  </div>
+  <div class="nxF__track" data-nx-track>
+    {%- for block in section.blocks -%}
+      <article class="nxF__card" {{ block.shopify_attributes }}>
+        <div class="nxF__media">
+          {%- if block.settings.video != blank -%}
+            {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata', image_size: '800x' }}
+          {%- elsif block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 25vw, 85vw' }}
+          {%- else -%}
+            <div class="nxF__ph">{{ forloop.index }}</div>
+          {%- endif -%}
+        </div>
+        <h3 class="nxF__t">{{ block.settings.title }}</h3>
+        <p class="nxF__x">{{ block.settings.text }}</p>
+      </article>
+    {%- endfor -%}
+  </div>
+  <div class="page-width nxF__nav">
+    <button type="button" class="nxArr" data-nx-prev aria-label="Previous">{% render 'ag-icon', name: 'chevron-left' %}</button>
+    <button type="button" class="nxArr" data-nx-next aria-label="Next">{% render 'ag-icon', name: 'chevron-right' %}</button>
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{background:var(--bg);color:var(--ink)}
+.nxEy{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:#666;margin:0 0 10px}
+.nxH{font-size:{{ s.heading_m }}px!important;line-height:1.15!important;font-weight:500!important;letter-spacing:-.02em;margin:0 0 28px!important;max-width:620px}
+.nxF__track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 max(1.5rem,calc((100vw - var(--page-width,1200px))/2 + 5rem));scroll-padding:0 1.5rem}
+.nxF__track::-webkit-scrollbar{display:none}
+.nxF__card{flex:0 0 82%;scroll-snap-align:start}
+.nxF__media{aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#111}
+.nxF__media video,.nxF__media img{width:100%;height:100%;object-fit:cover;display:block}
+.nxF__ph{width:100%;height:100%;display:grid;place-items:center;color:#555;font-size:40px;background:linear-gradient(135deg,#1a1a1a,#3a3a3a)}
+.nxF__t{font-size:19px!important;font-weight:500!important;margin:18px 4px 6px!important;letter-spacing:-.01em}
+.nxF__x{font-size:14.5px;line-height:1.6;color:#6b6b6b;margin:0 4px}
+.nxF__nav{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+.nxArr{width:52px;height:52px;border-radius:50%;border:1px solid #CFCFCF;background:#fff;color:#0A0A0A;display:grid;place-items:center;cursor:pointer;padding:0}
+.nxArr svg{width:18px;height:18px}.nxArr:hover{border-color:#0A0A0A}
+@media(min-width:990px){.nxH{font-size:{{ s.heading_d }}px!important}.nxF__track{padding:0 5rem;overflow:visible}.nxF__card{flex:1 1 0}.nxF__nav{display:none}}
+</style>
+<script>
+(function(){var r=document.getElementById('nx-{{ section.id }}');if(!r)return;var t=r.querySelector('[data-nx-track]');function step(d){var c=t.querySelector('.nxF__card');t.scrollBy({left:d*(c?c.offsetWidth+16:300),behavior:'smooth'})}r.querySelector('[data-nx-prev]').onclick=function(){step(-1)};r.querySelector('[data-nx-next]').onclick=function(){step(1)};})();
+</script>
+{% schema %}
+{
+  "name": "Feature cards (Intake)",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Product" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Engineered for athletes.\nLoved by everyone." },
+    { "type": "range", "id": "heading_m", "label": "Heading size (mobile)", "min": 20, "max": 48, "step": 2, "default": 30 },
+    { "type": "range", "id": "heading_d", "label": "Heading size (desktop)", "min": 24, "max": 64, "step": 2, "default": 44 },
+    { "type": "color", "id": "c_bg", "label": "Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "c_ink", "label": "Text", "default": "#0A0A0A" },
+    { "type": "range", "id": "pad_top", "label": "Top padding", "min": 0, "max": 120, "step": 4, "default": 56 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 4, "default": 56 }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [
+      { "type": "video", "id": "video", "label": "Video (loops, muted)" },
+      { "type": "image_picker", "id": "image", "label": "Image (if no video)" },
+      { "type": "text", "id": "title", "label": "Title", "default": "Instantly expands" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Short line about this benefit." }
+    ] }
+  ],
+  "presets": [ { "name": "Feature cards (Intake)", "blocks": [ { "type": "card" }, { "type": "card" }, { "type": "card" }, { "type": "card" } ] } ]
+}
+{% endschema %}

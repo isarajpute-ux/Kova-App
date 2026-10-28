@@ -1,0 +1,11 @@
+# Noctara (magnetic nasal strip)
+
+- Draft theme: "Noctara v1 (draft)" (ID 188052930669) on store yw0gjb-h0. The live theme is not touched.
+- Product: noctara-magnetic-nasal-strip (ID 15414418767981), $29.99, compare-at $59.99, tab size S/M/L.
+- Discounts: automatic 2 kits −15%, 3+ kits −25%; code SLEEP15 (15%), all limited to this product.
+- Look: Intake + Huel. Inter font; white / black / glowing green #18E08A, red #FF3B30 for alerts only.
+- Kept from AuraGlow: countdown + code bar, side cards, gallery arrows + progress, review profiles, deal box,
+  stock/spots, bundles + ribbons, order timeline, accordions, UGC videos, Huel comparison, FAQ, About/Contact, cart drawer.
+- New: glass sticky ATC with "Delivery by" date, feature cards (ag-features), What sets us apart (ag-apart), trust + globe (ag-trust).
+- Still to fill in: product photos/videos, real reviews, box contents once the supplier is confirmed.
+- These files overlay store-template/theme. Upload them to a duplicate of the template theme.
