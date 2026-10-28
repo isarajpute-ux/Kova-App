@@ -1156,8 +1156,6 @@ body.light-mode .wpill.onglow{background:rgba(255,255,255,.10);
   border-color:rgba(255,255,255,.18);color:rgba(242,245,250,.75)}
 .pf-f{display:block;margin-bottom:16px}
 .pf-f .wfield-k{display:block;margin-bottom:6px}
-.pf-roles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.pf-roles .wpill{cursor:pointer;font-family:inherit;font-size:12.5px}
 .pfstat{background:rgba(10,10,12,.06);border:.5px solid rgba(10,10,12,.10);
   border-radius:15px;padding:9px 6px}
 .pfstat-v{font-family:Outfit,sans-serif;font-size:21px;font-weight:300;line-height:1}
@@ -1166,6 +1164,15 @@ body.light-mode .wpill.onglow{background:rgba(255,255,255,.10);
 #pfAvaBtn{background:#0A0A0C;border:2px solid rgba(255,255,255,.9)}
 #pfAvaBtn .ic{color:var(--txt,#FFFFFF)}
 body.light-mode .pfstat{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.14)}
+/* p49: in the dark look the profile card is dark grey, not the pale blue glow (the owner) */
+body:not(.light-mode):not(.soft-light) #s-profile .wglow{background:radial-gradient(125% 96% at 24% 6%,#3A3B40 0%,#2B2C30 45%,#1D1E21 100%);
+  border-color:rgba(255,255,255,.09);box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);color:#F2F3F5}
+body:not(.light-mode):not(.soft-light) #s-profile .wglow .wgl-k{color:rgba(242,243,245,.58)}
+body:not(.light-mode):not(.soft-light) #s-profile .wglow .wgl-sub{color:rgba(242,243,245,.68)}
+body:not(.light-mode):not(.soft-light) #s-profile .pfstat{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10)}
+body:not(.light-mode):not(.soft-light) #pfAva{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)}
+body:not(.light-mode):not(.soft-light) #pfAvaBtn{background:#F2F3F5;border-color:#1D1E21}
+body:not(.light-mode):not(.soft-light) #pfAvaBtn .ic{color:#0A0A0C}
 body.light-mode #pfAva{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16)}
 body.light-mode #pfAvaBtn{background:#F2F5FA;border-color:rgba(20,24,32,.8)}
 body.light-mode #pfAvaBtn .ic{color:#0A0A0C}
@@ -35284,17 +35291,16 @@ if(!(window.KovaMode&&KovaMode.live)) try{ WorkOS.seed(); }catch(e){ console.war
 window.KovaProfile=(function(){
   'use strict';
 
-  /* p49: the owner: "make it basic" - most people here are a designer, a
-     CEO, an owner. Name, what you do (a tap, or your own words) and a
-     company or school. No counters, and the examples no longer look like
-     someone else's details filled in. Website and About left the form (a
-     value saved before stays in the record). */
+  /* p49: the owner: "make it basic", then "no recommendations, just a
+     normal profile": Name, Role and Company, plain boxes. No counters,
+     no suggested roles, no examples that look like someone else's
+     details. Website and About left the form (a value saved before stays
+     in the record). */
   var FIELDS=[
-    {k:'name',  n:'Name',      max:40},
-    {k:'role',  n:'What do you do?', max:60},
-    {k:'org',   n:'Company or school', max:50}
+    {k:'name',  n:'Name',    ph:'Your name',    max:40, ac:'name'},
+    {k:'role',  n:'Role',    ph:'Your role',    max:60, ac:'organization-title'},
+    {k:'org',   n:'Company', ph:'Your company', max:50, ac:'organization'}
   ];
-  var ROLES=['Founder or CEO','Business owner','Designer','Developer','Creator','Student','Manager','Freelancer'];
 
   var editing=false, buf=null;
 
@@ -35386,7 +35392,7 @@ window.KovaProfile=(function(){
 
     host.textContent=m.name||'Add your name';
     document.getElementById('pfRole').textContent=
-      [m.role,m.org].filter(Boolean).join(' \u00b7 ') || 'Tap the pencil to add what you do';
+      [m.role,m.org].filter(Boolean).join(' \u00b7 ') || 'Tap the pencil to add your role';
 
     document.getElementById('pfStats').innerHTML=stats().map(function(r){
       return '<div class="pfstat"><div class="pfstat-v">'+r[1]+'</div>'
@@ -35509,20 +35515,11 @@ window.KovaProfile=(function(){
 
   function paintForm(){
     var el=document.getElementById('pfFields'); if(!el) return;
-    var r=String(buf.role||'');
-    el.innerHTML='<label class="pf-f"><span class="wfield-k">Name</span>'
-        +'<input class="field" data-f="name" maxlength="40" placeholder="Your name" autocomplete="name" value="'+esc(buf.name||'')+'"></label>'
-      +'<div class="pf-f"><span class="wfield-k" id="pfRoleK">What do you do?</span>'
-        +'<div class="pf-roles" role="group" aria-labelledby="pfRoleK">'+ROLES.map(function(x){
-          return '<button type="button" class="wpill'+(x===r?' on':'')+'" data-role="'+esc(x)+'" aria-pressed="'+(x===r)+'">'+esc(x)+'</button>'; }).join('')+'</div>'
-        +'<input class="field" data-f="role" maxlength="60" placeholder="Or type your own" aria-label="What you do, in your own words" value="'+(ROLES.indexOf(r)>=0?'':esc(r))+'"></div>'
-      +'<label class="pf-f"><span class="wfield-k">Company or school (optional)</span>'
-        +'<input class="field" data-f="org" maxlength="50" placeholder="Optional" autocomplete="organization" value="'+esc(buf.org||'')+'"></label>';
-    function mark(){ el.querySelectorAll('[data-role]').forEach(function(b){ var on=b.getAttribute('data-role')===buf.role; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); }
-    el.querySelectorAll('[data-f]').forEach(function(n){ n.oninput=function(){ buf[n.dataset.f]=n.value; if(n.dataset.f==='role') mark(); }; });
-    el.querySelectorAll('[data-role]').forEach(function(b){
-      b.onclick=function(){ var v=b.getAttribute('data-role'); buf.role=buf.role===v?'':v; el.querySelector('[data-f="role"]').value=''; mark(); };
-    });
+    el.innerHTML=FIELDS.map(function(f){
+      return '<label class="pf-f"><span class="wfield-k">'+esc(f.n)+'</span>'
+        +'<input class="field" data-f="'+f.k+'" maxlength="'+f.max+'" placeholder="'+esc(f.ph)+'" autocomplete="'+f.ac+'" value="'+esc(buf[f.k]||'')+'"></label>';
+    }).join('');
+    el.querySelectorAll('[data-f]').forEach(function(n){ n.oninput=function(){ buf[n.dataset.f]=n.value; }; });
   }
 
   /* ---- avatar: real capture, stored as a data URL ---- */
@@ -69004,6 +69001,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-10',title:'A plain profile',
+      lines:['Name, role and company: that is it','A darker card in dark mode'],
+      steps:[
+        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfEditBtn'); }]
+      ]},
     {id:'new-2026-11-09',title:'A simpler profile',
       lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
       steps:[

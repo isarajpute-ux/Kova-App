@@ -63,7 +63,7 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: a simpler profile, its step on the edit button', rel.id === 'new-2026-11-09' && rel.steps.length === 2 && rel.steps[0][0] === 'profile' && rel.steps[1][0] === 'workteam' && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: a plain profile, its step on the edit button', rel.id === 'new-2026-11-10' && rel.steps.length === 1 && rel.steps[0][0] === 'profile' && rel.lines.every((l) => l.split(' ').length <= 10));
   const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
   ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;

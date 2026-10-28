@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-10',title:'A plain profile',
+      lines:['Name, role and company: that is it','A darker card in dark mode'],
+      steps:[
+        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfEditBtn'); }]
+      ]},
     {id:'new-2026-11-09',title:'A simpler profile',
       lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
       steps:[
