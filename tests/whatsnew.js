@@ -63,7 +63,7 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: a plain profile, its step on the edit button', rel.id === 'new-2026-11-10' && rel.steps.length === 1 && rel.steps[0][0] === 'profile' && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: the profile, its steps on the details and the watch', rel.id === 'new-2026-11-11' && rel.steps.length === 2 && rel.steps.every((t) => t[0] === 'profile') && rel.lines.every((l) => l.split(' ').length <= 10));
   const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
   ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;
@@ -115,7 +115,7 @@ function boot(store) {
   const r1108 = N.REL.filter((r) => r.id === 'new-2026-11-08')[0];
   ck('the patterns release finds Patterns Kova found on the summary', !!r1108.steps[0][3]() && r1108.steps[0][3]().classList.contains('kpt'));
   w.go('profile'); await wait(30);
-  ck('the newest release finds the profile\'s edit button', !!rel.steps[0][3]() && rel.steps[0][3]().id === 'pfEditBtn');
+  ck('the newest release finds the details and the watch on the profile', !!rel.steps[0][3]() && rel.steps[0][3]().id === 'pfFields' && !!rel.steps[1][3]() && rel.steps[1][3]().id === 'pfWatch');
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

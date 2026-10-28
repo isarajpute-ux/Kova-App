@@ -1160,22 +1160,25 @@ body.light-mode .wpill.onglow{background:rgba(255,255,255,.10);
   border-radius:15px;padding:9px 6px}
 .pfstat-v{font-family:Outfit,sans-serif;font-size:21px;font-weight:300;line-height:1}
 .pfstat-k{font-size:9.5px;letter-spacing:.06em;opacity:.6;margin-top:2px}
-#pfAva{background:rgba(10,10,12,.08);border:.5px solid rgba(10,10,12,.14)}
-#pfAvaBtn{background:#0A0A0C;border:2px solid rgba(255,255,255,.9)}
-#pfAvaBtn .ic{color:var(--txt,#FFFFFF)}
 body.light-mode .pfstat{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.14)}
-/* p49: in the dark look the profile card is dark grey, not the pale blue glow (the owner) */
-body:not(.light-mode):not(.soft-light) #s-profile .wglow{background:radial-gradient(125% 96% at 24% 6%,#3A3B40 0%,#2B2C30 45%,#1D1E21 100%);
-  border-color:rgba(255,255,255,.09);box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);color:#F2F3F5}
-body:not(.light-mode):not(.soft-light) #s-profile .wglow .wgl-k{color:rgba(242,243,245,.58)}
-body:not(.light-mode):not(.soft-light) #s-profile .wglow .wgl-sub{color:rgba(242,243,245,.68)}
-body:not(.light-mode):not(.soft-light) #s-profile .pfstat{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10)}
-body:not(.light-mode):not(.soft-light) #pfAva{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)}
-body:not(.light-mode):not(.soft-light) #pfAvaBtn{background:#F2F3F5;border-color:#1D1E21}
-body:not(.light-mode):not(.soft-light) #pfAvaBtn .ic{color:#0A0A0C}
-body.light-mode #pfAva{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16)}
-body.light-mode #pfAvaBtn{background:#F2F5FA;border-color:rgba(20,24,32,.8)}
-body.light-mode #pfAvaBtn .ic{color:#0A0A0C}
+/* p50: the profile is plain cards (the owner: "a normal profile") */
+.pf-top{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 16px 18px}
+.pf-ava-w{position:relative;width:84px;height:84px}
+#pfAva{width:84px;height:84px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font:300 32px Outfit,sans-serif;background-size:cover;background-position:center;background-color:rgba(127,127,127,.16);border:.5px solid rgba(127,127,127,.28)}
+#pfAvaBtn{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;padding:0;cursor:pointer;background:#F2F3F5;color:#0A0A0C;border:2px solid #16171A}
+body.light-mode #pfAvaBtn{background:#16171A;color:#F2F3F5;border-color:#fff}
+.pf-nm{font:300 24px/1.2 Outfit,sans-serif;margin-top:12px;color:var(--txt)}
+.pf-sub{font-size:13px;color:var(--txt-2);margin-top:3px}
+.pf-card{padding:16px}
+.pf-card .lbl{margin-bottom:12px}
+.pf-f input[readonly]{opacity:.75}
+.pf-note{display:block;font-size:11.5px;color:var(--txt-3,var(--txt-2));margin-top:4px}
+.pf-watch{display:flex;align-items:center;gap:12px}
+.pf-wi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(127,127,127,.14);color:var(--txt);flex-shrink:0}
+.pf-wt{flex:1;min-width:0}
+.pf-wt b{display:block;font-weight:500;font-size:14.5px;color:var(--txt)}
+.pf-wt span{display:block;font-size:12px;color:var(--txt-2);margin-top:2px}
+.pf-watch .btn{width:auto;margin:0;padding:9px 16px;flex-shrink:0}
 
 /* uniform signal / achievement grids — equal size, even rows (item 6) */
 .uni-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -13031,67 +13034,25 @@ body.ks-on #kovaFab{display:none!important}
   <div class="hdr">
     <div class="hdr-l"><div class="back" data-back role="button" aria-label="Back" tabindex="0"><svg class="ic"><use href="#i-chevron-left"/></svg></div>
     <div><div class="eyebrow">YOUR ACCOUNT</div><div class="title-s">Profile</div></div></div>
-    <div class="hdr-r"><div class="iconbtn" id="pfEditBtn" role="button" aria-label="Edit profile" tabindex="0"><svg class="ic"><use href="#i-pencil"/></svg></div></div>
   </div>
-
-  <!-- hero: the one glowing surface -->
-  <div class="wglow" style="text-align:center;padding:20px 17px">
-    <div class="wgl-k" id="pfKind">Personal profile</div>
-    <div style="position:relative;width:82px;height:82px;margin:13px auto 0">
-      <div id="pfAva" style="width:82px;height:82px;border-radius:50%;overflow:hidden;
-        display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;
-        font-size:32px;font-weight:300;background-size:cover;background-position:center"></div>
-      <div id="pfAvaBtn" style="position:absolute;bottom:-2px;right:-2px;width:27px;height:27px;
-        border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer">
-        <svg class="ic" style="font-size:12px"><use href="#i-video"/></svg></div>
+  <!-- p50: a normal profile (the owner): photo and name, then first name,
+       last name, email, phone, and the watch -->
+  <div class="card pf-top">
+    <div class="pf-ava-w">
+      <div id="pfAva"></div>
+      <button type="button" id="pfAvaBtn" aria-label="Change photo"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.6-2.4h6.8L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.4"/></svg></button>
     </div>
-    <div style="font-family:Outfit,sans-serif;font-size:27px;font-weight:200;letter-spacing:-.9px;
-      margin-top:12px;line-height:1.15" id="pfName">&mdash;</div>
-    <div class="wgl-sub" style="margin-top:2px" id="pfRole">&mdash;</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:15px" id="pfStats"></div>
+    <div class="pf-nm" id="pfName">&mdash;</div>
+    <div class="pf-sub" id="pfRole">&mdash;</div>
   </div>
-
-  <!-- edit form, hidden until Edit -->
-  <div id="pfForm" style="display:none">
-    <div class="wgl">
-      <div class="wgl-k">Details</div>
-      <div id="pfFields" style="margin-top:10px"></div>
-    </div>
-    <button class="btn" id="pfSave" style="margin-bottom:8px">
-      <svg class="ic"><use href="#i-check"/></svg>Save changes</button>
-    <button class="btn" id="pfCancel" style="margin-bottom:14px;background:rgba(255,255,255,.07);
-      border:.5px solid rgba(255,255,255,.18);color:var(--txt)">Cancel</button>
+  <div class="card pf-card">
+    <div class="lbl">DETAILS</div>
+    <div id="pfFields"></div>
+    <button class="btn" id="pfSave" type="button">Save</button>
   </div>
-
-  <!-- view mode body -->
-  <div id="pfView">
-    <div class="wgl tap" data-go="settings" id="pfAcctCard">
-      <div class="wgl-arw"><svg class="ic" style="font-size:14px"><use href="#i-arrow-up-right"/></svg></div>
-      <div class="wgl-k">Account</div>
-      <div class="wgl-t" style="font-size:16px" id="pfAcctLine">&mdash;</div>
-      <div class="wgl-sub" id="pfAcctSub">&mdash;</div>
-    </div>
-
-    <!-- sync state. Painted by __paintSettings from KovaCloud.status() -->
-    <div class="wgl">
-      <div class="wgl-k">Backup</div>
-      <div style="margin-top:4px" id="pfSync"></div>
-    </div>
-
-    <div class="wgl">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div style="flex:1;min-width:0">
-          <div class="wgl-t" style="font-size:16px;margin:0">Connected accounts</div>
-          <div class="wgl-sub">Link a platform and Kova can read and publish through it.</div>
-        </div>
-        <div class="wpill" id="pfAddAcct" style="flex-shrink:0;margin-left:10px">
-          <svg class="ic" style="font-size:12px"><use href="#i-plus"/></svg></div>
-      </div>
-      <div style="margin-top:12px" id="pfConn"></div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px" id="pfCards"></div>
-
+  <div class="card pf-card">
+    <div class="lbl">WATCH</div>
+    <div class="pf-watch" id="pfWatch"></div>
   </div>
 </section>
 
@@ -13105,6 +13066,8 @@ body.ks-on #kovaFab{display:none!important}
     <div class="sub" id="setMeSub">Member since &mdash;</div></div>
     <svg class="ic" style="font-size:14px;opacity:.35"><use href="#i-chevron-right"/></svg>
   </div>
+  <!-- p50: backup state moved here from the old profile page -->
+  <div class="card" style="padding:4px 14px"><div id="pfSync"></div></div>
 
   <div class="sec-h">Training</div>
   <div class="list-item tap" data-go="strength" style="margin-bottom:16px">
@@ -35291,17 +35254,16 @@ if(!(window.KovaMode&&KovaMode.live)) try{ WorkOS.seed(); }catch(e){ console.war
 window.KovaProfile=(function(){
   'use strict';
 
-  /* p49: the owner: "make it basic", then "no recommendations, just a
-     normal profile": Name, Role and Company, plain boxes. No counters,
-     no suggested roles, no examples that look like someone else's
-     details. Website and About left the form (a value saved before stays
-     in the record). */
+  /* p50: the owner: "a normal profile: first name, last name, email,
+     number, watch connected". Role and company left the form (a value
+     saved before stays in the record); `name` is still kept as first +
+     last for everything that greets you. */
   var FIELDS=[
-    {k:'name',  n:'Name',    ph:'Your name',    max:40, ac:'name'},
-    {k:'role',  n:'Role',    ph:'Your role',    max:60, ac:'organization-title'},
-    {k:'org',   n:'Company', ph:'Your company', max:50, ac:'organization'}
+    {k:'first', n:'First name',   ph:'First name',   max:30, ac:'given-name'},
+    {k:'last',  n:'Last name',    ph:'Last name',    max:30, ac:'family-name'},
+    {k:'email', n:'Email',        ph:'Email',        max:80, ac:'email', type:'email'},
+    {k:'phone', n:'Phone number', ph:'Phone number', max:24, ac:'tel',   type:'tel'}
   ];
-
   var editing=false, buf=null;
 
   function esc(x){ var d=document.createElement('div'); d.textContent=x==null?'':String(x); return d.innerHTML; }
@@ -35309,6 +35271,7 @@ window.KovaProfile=(function(){
   function me(){
     var m=(window.KP&&KP.get('me'))||null;
     if(!m){ m={name:'',role:'',org:'',site:'',bio:'',avatar:'',since:Date.now()}; }
+    if(m.first==null&&m.last==null&&m.name){ var p=String(m.name).trim().split(/\s+/); m.first=p.shift()||''; m.last=p.join(' '); }
     return m;
   }
   function saveMe(m){ if(window.KP) KP.set('me',m); return m; }
@@ -35351,175 +35314,39 @@ window.KovaProfile=(function(){
     return d.toLocaleDateString(undefined,{month:'short',year:'numeric'});
   }
 
-  /* ---- stat pills: real counts, not decoration ---- */
-  function stats(){
-    var out=[];
-    try{
-      if(window.WorkOS){
-        out.push(['Posts', WorkOS.list('content').filter(function(c){return c.variants}).length]);
-        out.push(['Projects', WorkOS.list('projects').length]);
-      }
-    }catch(e){}
-    var linked=0;
-    try{
-      if(window.KovaStudio){
-        Object.keys(KovaStudio.platforms).forEach(function(k){
-          if(KovaStudio.modeOf(k)!=='off') linked++;
-        });
-      }
-    }catch(e){}
-    out.push(['Linked', linked]);
-    return out.slice(0,3);
+  /* the sign-in email, when there is an account (it cannot be changed here) */
+  function signInEmail(){
+    try{ var c=window.KovaCloudAuth&&KovaCloudAuth.status(); if(c&&c.signedIn&&!c.anon&&c.email) return c.email; }catch(e){}
+    return '';
   }
-
-  /* ---- connected accounts: live, from KovaLink ---- */
-  function connections(){
-    var P=(window.KovaStudio&&KovaStudio.platforms)||{};
-    return Object.keys(P).map(function(k){
-      var mode = window.KovaStudio ? KovaStudio.modeOf(k) : 'off';
-      return {k:k, n:P[k].n, prov:P[k].prov, mode:mode,
-              label:(window.KovaLink&&KovaLink.label(P[k].prov))||''};
-    });
+  var WATCH='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="3"/><path d="M9 6.5l.6-3h4.8l.6 3M9 17.5l.6 3h4.8l.6-3M12 9.5v2.7l1.6 1"/></svg>';
+  function watchHtml(){
+    var c=null, age='';
+    try{ c=window.KovaWearables&&KovaWearables.current(); }catch(e){}
+    try{ age=window.KovaHealth&&KovaHealth.ageText?KovaHealth.ageText():''; }catch(e){}
+    var on=!!(c&&c.from==='sync'), chose=!!(c&&c.from==='pick');
+    return '<div class="pf-wi">'+WATCH+'</div><div class="pf-wt"><b>'+(on||chose?esc(c.label):'No watch connected')+'</b>'
+      +'<span>'+(on?'Connected'+(age&&age!=='never synced'?' · synced '+esc(age):''):(chose?'Not sending data yet':'For heart rate, sleep and steps'))+'</span></div>'
+      +'<button class="btn" type="button" id="pfWatchBtn">'+(on?'Manage':'Connect')+'</button>';
   }
-
-  /* ================= RENDER ================= */
   function paint(){
     var host=document.getElementById('pfName'); if(!host) return;
-    var m=me();
-
-    /* hero */
-    paintAll(); m=me();
-
-    host.textContent=m.name||'Add your name';
-    document.getElementById('pfRole').textContent=
-      [m.role,m.org].filter(Boolean).join(' \u00b7 ') || 'Tap the pencil to add your role';
-
-    document.getElementById('pfStats').innerHTML=stats().map(function(r){
-      return '<div class="pfstat"><div class="pfstat-v">'+r[1]+'</div>'
-        +'<div class="pfstat-k">'+esc(r[0])+'</div></div>';
-    }).join('');
-
-    /* account row. Firebase Auth is the real identity now, so it is
-       asked first; the local KovaAuth record is the fallback for a
-       device that has never signed in. Saying "no account linked" while
-       Firebase has the user signed in would be a lie the user can see. */
-    var A=window.KovaAuth;
-    var ac=(A&&A.hasAccount&&A.hasAccount())?A.getAccount():null;
-    var cloud=null;
-    try{ cloud=window.KovaCloudAuth&&KovaCloudAuth.status(); }catch(e){}
-
-    if(cloud&&cloud.signedIn&&!cloud.anon){
-      document.getElementById('pfAcctLine').textContent = cloud.email||'Signed in';
-      document.getElementById('pfAcctSub').textContent =
-        'Synced to your account \u00b7 member since '+monthYear(m.since);
-    } else if(cloud&&cloud.anon){
-      document.getElementById('pfAcctLine').textContent = 'Guest';
-      document.getElementById('pfAcctSub').textContent =
-        'On this device only. Add an email to sync across devices.';
-    } else {
-      /* not signed in to the cloud: this card is the way back to sign-in */
-      try{
-        var card=document.getElementById('pfAcctCard');
-        if(card&&window.KovaCloudAuth&&KovaCloudAuth.open&&!card.__open){
-          card.__open=1;
-          card.addEventListener('click',function(ev){
-            var c=null; try{ c=KovaCloudAuth.status(); }catch(e){}
-            if(c&&c.signedIn) return;               /* signed in since: normal nav */
-            ev.stopPropagation(); ev.preventDefault(); KovaCloudAuth.open();
-          },true);
-        }
-      }catch(e){}
-      document.getElementById('pfAcctLine').textContent =
-        ac ? (ac.email||ac.provider) : 'No account linked';
-      document.getElementById('pfAcctSub').textContent =
-        ac ? ('Signed in with '+(ac.provider==='google'?'Google':'Apple')
-              +' \u00b7 member since '+monthYear(m.since))
-           : 'Using Kova without an account \u00b7 since '+monthYear(m.since);
+    paintAll(); var m=me(), em=signInEmail()||m.email||'';
+    host.textContent=[m.first,m.last].filter(Boolean).join(' ')||m.name||'Your name';
+    document.getElementById('pfRole').textContent=em||'Add your details below';
+    var f=document.getElementById('pfFields');
+    if(f&&!editing){
+      buf={first:m.first||'',last:m.last||'',email:signInEmail()||m.email||'',phone:m.phone||''};
+      var locked=!!signInEmail();
+      f.innerHTML=FIELDS.map(function(x){
+        var ro=x.k==='email'&&locked;
+        return '<label class="pf-f"><span class="wfield-k">'+esc(x.n)+'</span>'
+          +'<input class="field" data-f="'+x.k+'" type="'+(x.type||'text')+'" maxlength="'+x.max+'" placeholder="'+esc(x.ph)+'" autocomplete="'+x.ac+'"'+(x.k==='phone'?' inputmode="tel"':'')+(ro?' readonly':'')+' value="'+esc(buf[x.k])+'">'
+          +(ro?'<span class="pf-note">The email you sign in with.</span>':'')+'</label>';
+      }).join('');
+      f.querySelectorAll('[data-f]').forEach(function(n){ n.oninput=function(){ buf[n.dataset.f]=n.value; editing=true; }; });
     }
-
-    /* Sync state. Without this there is no way to tell whether your data
-       is actually backed up, and "it looks fine" is not the same as
-       "it is saved" - which is exactly the failure this whole layer
-       exists to prevent. */
-    (function(){
-      var host=document.getElementById('pfSync');
-      if(!host) return;
-      var st=null;
-      try{ st=window.KovaCloud&&KovaCloud.status(); }catch(e){}
-      if(!st||!st.ok){
-        host.innerHTML='<div class="wgl-sub" style="margin:0">Backend unavailable. '
-          +'Everything is saved on this device.</div>';
-        return;
-      }
-      var col,line,sub;
-      if(!st.signedIn){
-        col='rgba(255,255,255,.28)'; line='Not syncing';
-        sub='Sign in to back this device up.';
-      } else if(!st.online){
-        col='#F4E18E'; line='Offline';
-        sub=st.pending+' change'+(st.pending===1?'':'s')+' waiting to upload.';
-      } else if(st.pending){
-        col='#F4E18E'; line='Syncing';
-        sub=st.pending+' change'+(st.pending===1?'':'s')+' uploading.';
-      } else {
-        col='#8FD9A8'; line='Synced';
-        sub='Everything on this device is backed up.';
-      }
-      host.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:9px 0">'
-        +'<span style="width:7px;height:7px;border-radius:50%;background:'+col+';flex-shrink:0"></span>'
-        +'<div style="flex:1;min-width:0">'
-        +'<div style="font-size:12.5px;font-weight:500">'+line+'</div>'
-        +'<div class="wgl-k" style="margin-top:2px;letter-spacing:.05em">'+esc(sub)+'</div></div>'
-        +'<span class="wcount" id="pfSyncNow" style="cursor:pointer">Sync now</span></div>';
-      var b=document.getElementById('pfSyncNow');
-      if(b) b.onclick=function(){
-        try{ KovaCloud.pushAll(); KovaCloud.pull(); toast('Syncing\u2026'); }catch(e){}
-        setTimeout(function(){ if(window.__paintSettings) __paintSettings(); },1400);
-      };
-    })();
-
-    /* connections */
-    var cs=connections();
-    document.getElementById('pfConn').innerHTML = cs.length ? cs.map(function(c){
-      var col=c.mode==='direct'?'#8FD9A8':(c.mode==='draft'?'#F4E18E':'rgba(255,255,255,.28)');
-      var lbl=c.mode==='off'?'Not linked':(c.mode==='direct'?'Direct':'Draft only');
-      return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;'
-        +'border-top:.5px solid rgba(255,255,255,.07)">'
-        +'<span style="width:7px;height:7px;border-radius:50%;background:'+col+';flex-shrink:0"></span>'
-        +'<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:500">'+esc(c.n)+'</div>'
-        +(c.label?'<div class="wgl-k" style="margin-top:2px;letter-spacing:.05em">'+esc(c.label)+'</div>':'')
-        +'</div>'
-        +'<span class="wcount">'+lbl+'</span></div>';
-    }).join('') : '<div class="wgl-sub" style="margin:0">Nothing to connect yet.</div>';
-
-    /* two link cards */
-    document.getElementById('pfCards').innerHTML=
-      '<div class="wgl wgl-sm tap" style="margin:0" data-go="workcompose">'
-      +'<span class="wpill" style="cursor:default;font-size:9.5px">Studio</span>'
-      +'<div style="font-size:13.5px;font-weight:500;margin-top:10px;line-height:1.3">Compose a post</div>'
-      +'<div class="wgl-sub" style="font-size:10.5px">One brief, every platform.</div></div>'
-      +'<div class="wgl wgl-sm tap" style="margin:0" data-go="settings">'
-      +'<span class="wpill" style="cursor:default;font-size:9.5px">Security</span>'
-      +'<div style="font-size:13.5px;font-weight:500;margin-top:10px;line-height:1.3">PIN &amp; sign-in</div>'
-      +'<div class="wgl-sub" style="font-size:10.5px">Manage how you unlock Kova.</div></div>';
-
-
-    /* re-arm the data-go taps inside content we just replaced */
-    document.querySelectorAll('#pfCards [data-go]').forEach(function(n){
-      n.onclick=function(){ go(n.dataset.go); };
-    });
-
-    document.getElementById('pfView').style.display = editing?'none':'';
-    document.getElementById('pfForm').style.display = editing?'':'none';
-  }
-
-  function paintForm(){
-    var el=document.getElementById('pfFields'); if(!el) return;
-    el.innerHTML=FIELDS.map(function(f){
-      return '<label class="pf-f"><span class="wfield-k">'+esc(f.n)+'</span>'
-        +'<input class="field" data-f="'+f.k+'" maxlength="'+f.max+'" placeholder="'+esc(f.ph)+'" autocomplete="'+f.ac+'" value="'+esc(buf[f.k]||'')+'"></label>';
-    }).join('');
-    el.querySelectorAll('[data-f]').forEach(function(n){ n.oninput=function(){ buf[n.dataset.f]=n.value; }; });
+    var w=document.getElementById('pfWatch'); if(w) w.innerHTML=watchHtml();
   }
 
   /* ---- avatar: real capture, stored as a data URL ---- */
@@ -35571,26 +35398,46 @@ window.KovaProfile=(function(){
     inp.click();
   }
 
-  function startEdit(){
-    var m=me();
-    buf={name:m.name,role:m.role,org:m.org,site:m.site,bio:m.bio,avatar:m.avatar,since:m.since};
-    editing=true; paint(); paintForm();
-  }
-  function cancelEdit(){ editing=false; buf=null; paint(); }
   function commit(){
-    var m=me();
-    FIELDS.forEach(function(f){ m[f.k]=String(buf[f.k]||'').trim(); });
-    if(buf.avatar) m.avatar=buf.avatar;
+    var m=me(), b=buf||{};
+    var first=String(b.first||'').trim(), last=String(b.last||'').trim(), email=String(b.email||'').trim(), phone=String(b.phone||'').replace(/[^0-9+()\- .]/g,'').trim();
+    if(email&&!signInEmail()&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ toast('That email does not look right.'); return; }
+    if(phone&&phone.replace(/\D/g,'').length<7){ toast('That phone number looks too short.'); return; }
+    m.first=first; m.last=last; m.name=[first,last].filter(Boolean).join(' ');
+    if(!signInEmail()) m.email=email;
+    m.phone=phone;
     saveMe(m);
-    editing=false; buf=null;
+    editing=false;
     paint();
     if(window.__paintSettings) try{ __paintSettings(); }catch(e){}
     paintSettingsRow();
-    toast('Profile saved.');
+    toast('Saved.');
   }
 
+  /* backup: is this device synced to the account (painted from KovaCloud.status()) */
+  function paintSync(){
+    var host=document.getElementById('pfSync'); if(!host) return;
+    var st=null;
+    try{ st=window.KovaCloud&&KovaCloud.status(); }catch(e){}
+    if(!st||!st.ok){ host.innerHTML='<div class="sub" style="padding:10px 0">Backup is not available right now. Everything is saved on this device.</div>'; return; }
+    var col,line,sub;
+    if(!st.signedIn){ col='var(--txt-3,rgba(127,127,127,.6))'; line='Not backed up'; sub='Sign in to back this device up.'; }
+    else if(!st.online){ col='#E0B94F'; line='Offline'; sub=st.pending+' change'+(st.pending===1?'':'s')+' waiting to upload.'; }
+    else if(st.pending){ col='#E0B94F'; line='Backing up'; sub=st.pending+' change'+(st.pending===1?'':'s')+' uploading.'; }
+    else { col='#4FBF7F'; line='Backed up'; sub='Everything on this device is saved to your account.'; }
+    host.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:10px 0">'
+      +'<span style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0"></span>'
+      +'<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">'+line+'</div><div class="sub" style="margin-top:2px">'+esc(sub)+'</div></div>'
+      +(st.signedIn?'<button class="chip" type="button" id="pfSyncNow">Sync now</button>':'')+'</div>';
+    var b=document.getElementById('pfSyncNow');
+    if(b) b.onclick=function(){
+      try{ KovaCloud.pushAll(); KovaCloud.pull(); toast('Syncing\u2026'); }catch(e){}
+      setTimeout(paintSync,1400);
+    };
+  }
   /* keep the Settings summary row in step with the real record */
   function paintSettingsRow(){
+    paintSync();
     var m=me();
     var row=document.getElementById('setMeRow'); if(!row) return;
     var av=document.getElementById('setMeAva');
@@ -35598,22 +35445,21 @@ window.KovaProfile=(function(){
     var sb=document.getElementById('setMeSub');
     paintAll(); m=me();
     if(nm) nm.textContent=m.name||'Add your name';
-    if(sb) sb.textContent=[m.role,'Member since '+monthYear(m.since)].filter(Boolean).join(' \u00b7 ');
+    if(sb) sb.textContent=signInEmail()||m.email||('Member since '+monthYear(m.since));
   }
 
   function wire(){
-    var e=document.getElementById('pfEditBtn');
-    if(e&&!e.__w){ e.__w=1; e.onclick=function(){ editing?cancelEdit():startEdit(); }; }
     var a=document.getElementById('pfAvaBtn');
     if(a&&!a.__w){ a.__w=1; a.onclick=function(ev){ ev.stopPropagation(); grabAvatar(); }; }
     var s=document.getElementById('pfSave');
     if(s&&!s.__w){ s.__w=1; s.onclick=commit; }
-    var c=document.getElementById('pfCancel');
-    if(c&&!c.__w){ c.__w=1; c.onclick=cancelEdit; }
-    var ad=document.getElementById('pfAddAcct');
-    if(ad&&!ad.__w){ ad.__w=1; ad.onclick=function(){ go('workintegrations'); }; }
-    paint();
-    if(editing) paintForm();
+    var w=document.getElementById('pfWatch');
+    if(w&&!w.__w){ w.__w=1; w.addEventListener('click',function(ev){
+      if(!(ev.target.closest&&ev.target.closest('#pfWatchBtn'))) return;
+      var c=null; try{ c=window.KovaWearables&&KovaWearables.current(); }catch(e){}
+      if(c&&c.from==='sync') go('watch'); else if(window.__watchSetup) __watchSetup(); else go('watch');
+    }); }
+    editing=false; paint();
   }
 
   function onScreen(id){
@@ -69001,15 +68847,21 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-11',title:'Your profile',
+      lines:['First name, last name, email, phone','Your watch at a glance'],
+      steps:[
+        ['profile','Your details','Change them here and tap Save.',function(){ return q('#pfFields'); }],
+        ['profile','Your watch','Connected or not, and Connect.',function(){ return q('#pfWatch'); }]
+      ]},
     {id:'new-2026-11-10',title:'A plain profile',
       lines:['Name, role and company: that is it','A darker card in dark mode'],
       steps:[
-        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfEditBtn'); }]
+        ['profile','Your profile','Tap the pencil to change your name, role or company.',function(){ return q('#pfFields'); }]
       ]},
     {id:'new-2026-11-09',title:'A simpler profile',
       lines:['Name, what you do, company or school','Pick your role in one tap','Calling your team by name works in a crowd'],
       steps:[
-        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfEditBtn'); }],
+        ['profile','Edit your profile','Name, what you do and where.',function(){ return q('#pfFields'); }],
         ['workteam','Call them by name','In a noisy room, say "hey" before the name.',function(){ return q('#wtmBody [data-c="listen"]'); }]
       ]},
     {id:'new-2026-11-08',title:'Patterns from your own data',

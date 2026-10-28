@@ -1,9 +1,11 @@
-/* The profile's details, kept basic (p49, the owner: "make it basic",
-   then "no recommendations, just a normal profile"):
-     - Name, Role, Company: three plain boxes, no suggested roles;
-     - no character counters, no examples that look like someone's details;
-     - a website or About saved before stays in the record;
-     - in the dark look the profile card is dark grey, not pale blue. */
+/* The profile (p50, the owner: "a normal profile: first name, last
+   name, email, number, watch connected"):
+     - photo and name at the top, then First name, Last name, Email,
+       Phone number and Save, then the watch;
+     - an old single name splits into first and last;
+     - the sign-in email is shown and cannot be changed here;
+     - a website, About, role or company saved before stays in the record;
+     - the watch says if one is connected, with Connect or Manage. */
 const fs = require('fs');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const html = fs.readFileSync(__dirname + '/../index.html', 'utf8');
@@ -32,26 +34,33 @@ function boot(store) {
 (async () => {
   const w = boot({});
   await wait(900);
-  const d = w.document, $ = (s) => d.querySelector(s);
-  w.KP.set('me', { name: 'Old Name', role: '', org: '', site: 'old.example', bio: 'kept', since: Date.now() });
-  w.go('profile'); await wait(30);
-  ck('with no role yet, the profile says how to add one', /Tap the pencil to add your role/.test($('#pfRole').textContent));
-  $('#pfEditBtn').click(); await wait(20);
-  const f = $('#pfFields');
-  ck('the form is three plain boxes: Name, Role, Company', $('#pfForm').style.display === '' && f.querySelectorAll('input,textarea').length === 3 && [...f.querySelectorAll('.wfield-k')].map((x) => x.textContent).join() === 'Name,Role,Company');
-  ck('no suggested roles, no Website or About, no counters, no example that looks filled in', !f.querySelector('[data-role],.wpill,button') && !/Website|About/.test(f.textContent) && !f.querySelector('.wcount') && !/ \/ \d/.test(f.textContent) && !/Developer & product owner|kova\.app|Independent/.test(f.innerHTML) && [...f.querySelectorAll('input')].map((x) => x.placeholder).join() === 'Your name,Your role,Your company');
+  const d = w.document, $ = (q) => d.querySelector(q);
+  w.KP.set('me', { name: 'Sam Lee Jones', role: 'Designer', org: 'Acme', site: 'old.example', bio: 'kept', since: Date.now() });
+  w.go('profile'); await wait(40);
+  const f = $('#pfFields'), val = (k) => f.querySelector('[data-f="' + k + '"]').value;
+  ck('the profile is photo and name, then the details, then the watch', !!$('#pfAva') && !!$('#pfAvaBtn') && /Sam Lee Jones/.test($('#pfName').textContent) && !!$('#pfWatch') && !!$('#pfSave'));
+  ck('the details are First name, Last name, Email, Phone number', [...f.querySelectorAll('.wfield-k')].map((x) => x.textContent).join() === 'First name,Last name,Email,Phone number' && f.querySelector('[data-f="email"]').type === 'email' && f.querySelector('[data-f="phone"]').type === 'tel');
+  ck('the old extras are gone (post counts, linked platforms, shortcuts, pencil)', !$('#pfStats') && !$('#pfConn') && !$('#pfCards') && !$('#pfEditBtn') && !/Posts|Projects|Connected accounts/.test($('#s-profile').textContent));
+  ck('an old single name splits into first and last', val('first') === 'Sam' && val('last') === 'Lee Jones');
   const set = (k, v) => { const n = f.querySelector('[data-f="' + k + '"]'); n.value = v; n.dispatchEvent(new w.Event('input', { bubbles: true })); };
-  set('name', 'Sam Lee'); set('role', 'Designer'); set('org', 'Acme');
-  $('#pfSave').click(); await wait(20);
+  set('first', 'Sam'); set('last', 'Lee'); set('email', 'not-an-email'); $('#pfSave').click(); await wait(20);
+  ck('a wrong email is not saved', !w.KP.get('me').email);
+  set('email', 'sam@example.com'); set('phone', '+1 (555) 010-2233'); $('#pfSave').click(); await wait(20);
   const m = w.KP.get('me');
-  ck('saving keeps name, role and company', m.name === 'Sam Lee' && m.role === 'Designer' && m.org === 'Acme' && /Designer · Acme/.test($('#pfRole').textContent));
-  ck('a website and About saved before are kept', m.site === 'old.example' && m.bio === 'kept');
-  $('#pfEditBtn').click(); await wait(20);
-  ck('editing again shows what was saved', $('#pfFields [data-f="role"]').value === 'Designer' && $('#pfFields [data-f="org"]').value === 'Acme');
-  $('#pfCancel').click(); await wait(20);
+  ck('saving keeps first, last, email and phone, and the full name', m.first === 'Sam' && m.last === 'Lee' && m.name === 'Sam Lee' && m.email === 'sam@example.com' && m.phone === '+1 (555) 010-2233');
+  ck('the top shows the name and email', /Sam Lee/.test($('#pfName').textContent) && /sam@example\.com/.test($('#pfRole').textContent));
+  ck('what was saved before (website, About, role, company) is kept', m.site === 'old.example' && m.bio === 'kept' && m.role === 'Designer' && m.org === 'Acme');
+  set('phone', '12'); $('#pfSave').click(); await wait(20);
+  ck('a phone number that is too short is not saved', w.KP.get('me').phone === '+1 (555) 010-2233');
+  ck('no watch: it says so, with Connect', /No watch connected/.test($('#pfWatch').textContent) && /Connect/.test($('#pfWatchBtn').textContent));
+  w.KovaCloudAuth = Object.assign({}, w.KovaCloudAuth, { status: () => ({ signedIn: true, anon: false, email: 'sam@signin.com' }) });
+  w.go('home'); await wait(10); w.go('profile'); await wait(30);
+  const em = $('#pfFields [data-f="email"]');
+  ck('signed in: the sign-in email shows and cannot be changed here', em.value === 'sam@signin.com' && em.readOnly && /The email you sign in with/.test($('#pfFields').textContent));
+  w.go('settings'); await wait(30);
+  ck('Settings shows whether this device is backed up (moved from the old profile page)', !!$('#s-settings #pfSync') && /backed up|Backed up|Backing up|Offline|not available/.test($('#pfSync').textContent));
   const css = html.slice(0, html.indexOf('</head>'));
-  ck('in the dark look the profile card is dark grey (the pale blue glow stays out of it)', /body:not\(\.light-mode\):not\(\.soft-light\) #s-profile \.wglow\{background:radial-gradient\([^)]*#3A3B40/.test(css));
-  ck('the Cancel button\'s words are readable in the dark look', /id="pfCancel"[^>]*color:var\(--txt\)/.test(html));
+  ck('plain cards in every look (no pale glow card on the profile)', !/<section class="screen" id="s-profile">[\s\S]*?class="wglow[\s\S]*?<\/section>/.test(html.slice(html.indexOf('id="s-profile"') - 40, html.indexOf('id="s-settings"'))) && /\.pf-top\{/.test(css));
   ck('no page errors', errors.length === 0 || (console.error(errors.slice(0, 5)), false));
 
   const failed = R.filter((x) => !x[1]);
