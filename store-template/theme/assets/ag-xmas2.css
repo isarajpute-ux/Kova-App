@@ -1,0 +1,11 @@
+/* gallery: arrows + progress bar instead of thumbnails */
+.agP__thumbs,.agP__arrow{display:none!important}
+.agGN{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.agGN__btns{display:flex;justify-content:flex-end;gap:12px}
+.agGN__b{width:44px;height:44px;border-radius:50%;border:0;background:#B3122E;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 14px -6px rgba(179,18,46,.6);transition:opacity .2s,transform .15s;padding:0}
+.agGN__b:nth-child(2){background:#1E5A3A;box-shadow:0 6px 14px -6px rgba(30,90,58,.6)}
+.agGN__b:active{transform:scale(.92)}
+.agGN__b[disabled]{opacity:.35;cursor:default;box-shadow:none}
+.agGN__b svg{width:18px;height:18px}
+.agGN__bar{position:relative;height:3px;background:#E3DCD3;border-radius:3px;overflow:hidden}
+.agGN__fill{position:absolute;top:0;bottom:0;left:0;background:linear-gradient(90deg,#B3122E,#1E5A3A);border-radius:3px;transition:transform .35s ease}

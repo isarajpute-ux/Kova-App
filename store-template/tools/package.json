@@ -1,0 +1,16 @@
+{
+  "name": "render",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "liquidjs": "^10.16.1",
+    "playwright-core": "^1.56.1"
+  }
+}

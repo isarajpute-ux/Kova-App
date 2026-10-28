@@ -1,0 +1,217 @@
+{%- assign s = section.settings -%}
+{{ 'ag-sternify.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ag-sternify.js' | asset_url }}" defer="defer"></script>
+<style>
+  #ag-{{ section.id }}{--top-bg:{{ s.c_bg }};--top-ink:{{ s.c_text }};--top-muted:{{ s.c_label }};--top-tile:{{ s.c_tile }};--code-bg:{{ s.c_code_bg }};--code-ink:{{ s.c_code_text }};--accent-line:{{ s.c_line }};--dg-m:{{ s.digit_m }}px;--dg-d:{{ s.digit_d }}px}
+</style>
+<div id="ag-{{ section.id }}" class="agTop{% if s.show_line %} agTop--line{% endif %}" data-ag-top data-mode="{{ s.mode }}" data-hours="{{ s.hours }}" data-end="{{ s.end_date | escape }}" data-dismiss="{{ s.dismissible }}" data-key="{{ section.id }}">
+  <div class="agTop__in">
+    {%- if s.label != blank -%}<span class="agTop__label">{{ s.label }}</span>{%- endif -%}
+    <div class="agTop__clock" aria-live="off">
+      {%- if s.show_days -%}<span class="agTop__u" data-u="d">00</span><i>.</i>{%- endif -%}
+      <span class="agTop__u" data-u="h">00</span><i>.</i><span class="agTop__u" data-u="m">00</span><i>.</i><span class="agTop__u" data-u="s">00</span>
+    </div>
+    {%- if s.code != blank -%}
+      <button type="button" class="agTop__code" data-ag-copy="{{ s.code | escape }}" data-copied="{{ s.copied_text | escape }}" aria-label="Copy code {{ s.code | escape }}"><span data-copy-label>{{ s.code }}</span>{% render 'ag-icon', name: 'copy' %}</button>
+    {%- endif -%}
+  </div>
+  {%- if s.dismissible -%}<button type="button" class="agTop__x" data-top-close aria-label="Close">{% render 'ag-icon', name: 'close', stroke: 2 %}</button>{%- endif -%}
+</div>
+{%- if s.show_snow and s.snow_count > 0 -%}
+  <div class="agSnow" aria-hidden="true" style="--snow-c:{{ s.snow_color }};--op:{{ s.snow_opacity }}%">
+    {%- for i in (1..s.snow_count) -%}
+      {%- liquid
+        assign l = i | times: 37 | modulo: 100
+        assign d = i | times: 7 | modulo: 9 | plus: 9
+        assign dl = i | times: 13 | modulo: 17
+        assign sz = i | modulo: 4 | plus: 3
+        assign dr = i | times: 11 | modulo: 40 | minus: 20
+      -%}
+      <i style="left:{{ l }}%;--dur:{{ d }}s;--delay:-{{ dl }}s;--sz:{{ sz }}px;--drift:{{ dr }}px"></i>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+{% schema %}
+{
+ "name": "Countdown bar",
+ "tag": "div",
+ "class": "ag-section",
+ "enabled_on": {
+  "groups": [
+   "header"
+  ]
+ },
+ "settings": [
+  {
+   "type": "text",
+   "id": "label",
+   "label": "Label",
+   "default": "Ends in"
+  },
+  {
+   "type": "select",
+   "id": "mode",
+   "label": "Timer type",
+   "default": "evergreen",
+   "options": [
+    {
+     "value": "evergreen",
+     "label": "Per-visitor timer (resets daily)"
+    },
+    {
+     "value": "date",
+     "label": "Fixed end date"
+    }
+   ]
+  },
+  {
+   "type": "range",
+   "id": "hours",
+   "label": "Timer length",
+   "min": 1,
+   "max": 48,
+   "step": 1,
+   "unit": "h",
+   "default": 5
+  },
+  {
+   "type": "text",
+   "id": "end_date",
+   "label": "Fixed end date (YYYY-MM-DDTHH:MM)",
+   "default": "2026-12-24T23:59"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_days",
+   "label": "Show days",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "code",
+   "label": "Discount code",
+   "default": "XMAS25"
+  },
+  {
+   "type": "text",
+   "id": "copied_text",
+   "label": "Copied message",
+   "default": "Copied!"
+  },
+  {
+   "type": "checkbox",
+   "id": "dismissible",
+   "label": "Show close (×) button",
+   "default": true
+  },
+  {
+   "type": "checkbox",
+   "id": "show_line",
+   "label": "Thin accent line on top",
+   "default": false
+  },
+  {
+   "type": "range",
+   "id": "digit_m",
+   "label": "Digit size (mobile)",
+   "min": 12,
+   "max": 32,
+   "step": 1,
+   "unit": "px",
+   "default": 18
+  },
+  {
+   "type": "range",
+   "id": "digit_d",
+   "label": "Digit size (desktop)",
+   "min": 14,
+   "max": 40,
+   "step": 1,
+   "unit": "px",
+   "default": 26
+  },
+  {
+   "type": "color",
+   "id": "c_bg",
+   "label": "Background",
+   "default": "#0F2E1F"
+  },
+  {
+   "type": "color",
+   "id": "c_text",
+   "label": "Digits",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "color",
+   "id": "c_label",
+   "label": "Label",
+   "default": "#CFE0D4"
+  },
+  {
+   "type": "color",
+   "id": "c_tile",
+   "label": "Digit tile",
+   "default": "#1D4A33"
+  },
+  {
+   "type": "color",
+   "id": "c_code_bg",
+   "label": "Code background",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "color",
+   "id": "c_code_text",
+   "label": "Code text",
+   "default": "#B3122E"
+  },
+  {
+   "type": "color",
+   "id": "c_line",
+   "label": "Accent line",
+   "default": "#7A3446"
+  },
+  {
+   "type": "header",
+   "content": "Snowfall (whole store)"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_snow",
+   "label": "Show falling snow",
+   "default": true
+  },
+  {
+   "type": "range",
+   "id": "snow_count",
+   "label": "Number of snowflakes",
+   "min": 0,
+   "max": 60,
+   "step": 2,
+   "default": 26
+  },
+  {
+   "type": "range",
+   "id": "snow_opacity",
+   "label": "Snow opacity",
+   "min": 10,
+   "max": 100,
+   "step": 5,
+   "unit": "%",
+   "default": 75
+  },
+  {
+   "type": "color",
+   "id": "snow_color",
+   "label": "Snow colour",
+   "default": "#D6E2EC"
+  }
+ ],
+ "presets": [
+  {
+   "name": "Countdown bar"
+  }
+ ]
+}
+{% endschema %}

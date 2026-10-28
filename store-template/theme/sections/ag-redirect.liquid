@@ -1,0 +1,42 @@
+{%- liquid
+  assign target = '/products/auraglow-smart-tree-lights'
+  if section.settings.product != blank
+    assign target = section.settings.product.url
+  endif
+-%}
+{{ 'ag-xmas.css' | asset_url | stylesheet_tag }}
+{{ 'ag-xmas2.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ag-gallery.js' | asset_url }}" defer="defer"></script>
+{%- if section.settings.enabled and template.name == 'index' and request.design_mode != true -%}
+  <script>(function(){var u={{ target | json }};try{window.location.replace(u+window.location.search+window.location.hash)}catch(e){window.location.href=u}})();</script>
+  <noscript><meta http-equiv="refresh" content="0; url={{ target }}"></noscript>
+{%- endif -%}
+<script>
+(function(){
+  var u = {{ target | json }};
+  var m = document.querySelector('meta[name=viewport]');
+  if (m) m.setAttribute('content', 'width=device-width,initial-scale=1,maximum-scale=1');
+  function fix(){
+    {%- if section.settings.logo_link -%}
+    document.querySelectorAll('a.header__heading-link, .header__heading a, a[href="/"], a[href="{{ routes.root_url }}"]').forEach(function(a){ if (!a.closest('.agS')) a.setAttribute('href', u); });
+    {%- endif -%}
+  }
+  fix();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fix);
+})();
+</script>
+{% schema %}
+{
+  "name": "Skip homepage → product",
+  "tag": "div",
+  "class": "ag-redirect",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Send homepage visitors straight to the product page", "default": true },
+    { "type": "checkbox", "id": "logo_link", "label": "Logo links to the product page", "default": true },
+    { "type": "product", "id": "product", "label": "Product page to open" },
+    { "type": "paragraph", "content": "Ad tracking links (UTM / fbclid) are kept when visitors are forwarded." }
+  ],
+  "presets": [ { "name": "Skip homepage → product" } ]
+}
+{% endschema %}

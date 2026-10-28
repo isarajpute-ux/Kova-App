@@ -1,0 +1,144 @@
+{%- assign s = section.settings -%}
+{{ 'ag-sternify.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap">
+<style>
+#ag-{{ section.id }}{--line:{{ s.c_line }};--hl:{{ s.c_hl }};--acc:{{ s.c_acc }};--rh:{{ s.row_h }}px;--hh:{{ s.head_h }}px;background:{{ s.c_bg }};color:{{ s.c_ink }};font-family:'Inter',sans-serif;padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px}
+#ag-{{ section.id }} .k__t{text-align:center;font-family:'Inter',sans-serif;font-size:{{ s.heading_m }}px;font-weight:700;letter-spacing:-.02em;line-height:1.1;margin:0 0 12px}
+#ag-{{ section.id }} .k__t em{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:600;letter-spacing:-.01em}
+#ag-{{ section.id }} .k__s{text-align:center;color:#333;font-size:16px;line-height:1.5;max-width:460px;margin:0 auto 30px}
+#ag-{{ section.id }} .k__tbl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);max-width:860px;margin:0 auto}
+#ag-{{ section.id }} .k__col{display:flex;flex-direction:column;min-width:0}
+#ag-{{ section.id }} .k__h{height:var(--hh);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;padding:22px 6px 10px;text-align:center}
+#ag-{{ section.id }} .k__h b{font-size:14px;font-weight:500;line-height:1.25;order:-1}
+#ag-{{ section.id }} .k__img{width:80px;height:80px;border-radius:12px;overflow:hidden;background:#EFEBE5;display:grid;place-items:center;font-size:34px}
+#ag-{{ section.id }} .k__img img{width:100%;height:100%;object-fit:cover}
+#ag-{{ section.id }} .k__c{height:var(--rh);display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8px;font-size:14px;font-weight:500;line-height:1.3;border-bottom:1px solid var(--line)}
+#ag-{{ section.id }} .k__c:last-child{border-bottom:0}
+#ag-{{ section.id }} .k__labels .k__c{justify-content:flex-start;text-align:left;padding-left:0}
+#ag-{{ section.id }} .k__us{background:var(--hl);border-radius:12px}
+#ag-{{ section.id }} .k__vp{overflow:hidden;min-width:0}
+#ag-{{ section.id }} .k__track{display:flex;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+#ag-{{ section.id }} .k__track .k__col{flex:0 0 100%;transition:opacity .45s}
+#ag-{{ section.id }} .k__track .k__col:not(.is-on){opacity:0}
+#ag-{{ section.id }} .k__i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+#ag-{{ section.id }} .k__i svg{width:14px;height:14px}
+#ag-{{ section.id }} .k__i--y{background:#E6F4EA;color:#1E7A3C}
+#ag-{{ section.id }} .k__us .k__i--y{background:#1E7A3C;color:#fff}
+#ag-{{ section.id }} .k__i--n{background:#FBE9EB;color:#C8102E}
+#ag-{{ section.id }} .k__nav{display:flex;align-items:center;justify-content:space-between;max-width:860px;margin:22px auto 0;gap:12px}
+#ag-{{ section.id }} .k__dots{display:flex;gap:7px;align-items:center}
+#ag-{{ section.id }} .k__dots button{width:9px;height:9px;border-radius:9px;border:0;padding:0;background:#CFC7BC;transition:width .3s,background .3s;cursor:pointer}
+#ag-{{ section.id }} .k__dots button.is-on{width:32px;background:#141414}
+#ag-{{ section.id }} .k__arrs{display:flex;align-items:center;gap:12px}
+#ag-{{ section.id }} .k__hint{font-size:13px;font-weight:600;color:var(--acc)}
+#ag-{{ section.id }} .k__arr{width:52px;height:52px;border-radius:50%;border:1.5px solid #141414;background:#fff;color:#141414;display:grid;place-items:center;cursor:pointer;padding:0;transition:all .2s}
+#ag-{{ section.id }} .k__arr[data-k-next]:not([disabled]){background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 0 0 0 var(--acc);animation:kPing 1.8s ease-out infinite}
+@keyframes kPing{0%{box-shadow:0 0 0 0 rgba(179,18,46,.45)}100%{box-shadow:0 0 0 14px rgba(179,18,46,0)}}
+#ag-{{ section.id }} .k__arr[disabled]{opacity:.25;cursor:default}
+#ag-{{ section.id }} .k__arr svg{width:20px;height:20px}
+#ag-{{ section.id }} .k__cta{display:flex;justify-content:center;margin-top:30px}
+#ag-{{ section.id }} .k__cta a{color:#fff!important;background:#141414;text-decoration:none;font-weight:600;padding:16px 38px;border-radius:999px}
+@media(min-width:990px){#ag-{{ section.id }} .k__t{font-size:{{ s.heading_d }}px}#ag-{{ section.id }} .k__c{font-size:15px}#ag-{{ section.id }} .k__tbl{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr)}}
+</style>
+{%- capture yes -%}<span class="k__i k__i--y">{% render 'ag-icon', name: 'check', stroke: 2.8 %}</span>{%- endcapture -%}
+{%- capture no -%}<span class="k__i k__i--n">{% render 'ag-icon', name: 'close', stroke: 2.6 %}</span>{%- endcapture -%}
+<section id="ag-{{ section.id }}" class="agS agK" data-ag-k>
+  <div class="agWrap">
+    {%- if s.heading != blank -%}<h2 class="k__t">{{ s.heading | replace: '*', '' | replace: s.italic_word, '<em>ITW</em>' | replace: 'ITW', s.italic_word }}</h2>{%- endif -%}
+    {%- if s.sub != blank -%}<p class="k__s">{{ s.sub }}</p>{%- endif -%}
+    <div class="k__tbl">
+      <div class="k__col k__labels">
+        <div class="k__h"></div>
+        {%- for block in section.blocks -%}<div class="k__c" {{ block.shopify_attributes }}>{{ block.settings.label }}</div>{%- endfor -%}
+      </div>
+      <div class="k__col k__us">
+        <div class="k__h"><span class="k__img">{%- if s.us_img != blank -%}{{ s.us_img | image_url: width: 200 | image_tag: loading: 'lazy', alt: s.us_name }}{%- elsif product.featured_media -%}{{ product.featured_media | image_url: width: 200 | image_tag: loading: 'lazy', alt: s.us_name }}{%- else -%}🎄{%- endif -%}</span><b>{{ s.us_name }}</b></div>
+        {%- for block in section.blocks -%}{%- assign v = block.settings.us | strip -%}<div class="k__c">{%- if v == 'yes' -%}{{ yes }}{%- elsif v == 'no' -%}{{ no }}{%- else -%}{{ v }}{%- endif -%}</div>{%- endfor -%}
+      </div>
+      <div class="k__vp">
+        <div class="k__track" data-k-track>
+          {%- for i in (1..3) -%}
+          {%- assign kn = 'c' | append: i | append: '_name' -%}{%- assign ki = 'c' | append: i | append: '_img' -%}{%- assign ke = 'c' | append: i | append: '_emoji' -%}{%- assign kv = 'c' | append: i -%}
+          {%- if s[kn] != blank -%}
+          <div class="k__col{% if forloop.first %} is-on{% endif %}" data-k-col>
+            <div class="k__h"><span class="k__img">{%- if s[ki] != blank -%}{{ s[ki] | image_url: width: 200 | image_tag: loading: 'lazy', alt: s[kn] }}{%- else -%}{{ s[ke] }}{%- endif -%}</span><b>{{ s[kn] }}</b></div>
+            {%- for block in section.blocks -%}{%- assign v = block.settings[kv] | strip -%}<div class="k__c">{%- if v == 'yes' -%}{{ yes }}{%- elsif v == 'no' -%}{{ no }}{%- else -%}{{ v }}{%- endif -%}</div>{%- endfor -%}
+          </div>
+          {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+    <div class="k__nav">
+      <div class="k__dots" data-k-dots></div>
+      <div class="k__arrs"><span class="k__hint" data-k-hint>{{ s.hint }}</span>
+        <button type="button" class="k__arr" data-k-prev aria-label="Previous competitor" disabled>{% render 'ag-icon', name: 'chevron-left', stroke: 2.2 %}</button>
+        <button type="button" class="k__arr" data-k-next aria-label="Next competitor">{% render 'ag-icon', name: 'chevron-right', stroke: 2.2 %}</button>
+      </div>
+    </div>
+    {%- if s.cta_text != blank -%}<div class="k__cta"><a href="{{ s.cta_link | default: '#MainContent' }}">{{ s.cta_text }}</a></div>{%- endif -%}
+  </div>
+</section>
+<script>
+(function(){
+  var r = document.getElementById('ag-{{ section.id }}'); if (!r || r.__k) return; r.__k = 1;
+  var tr = r.querySelector('[data-k-track]'), cols = r.querySelectorAll('[data-k-col]'), dots = r.querySelector('[data-k-dots]');
+  var pv = r.querySelector('[data-k-prev]'), nx = r.querySelector('[data-k-next]'), i = 0, n = cols.length;
+  for (var d = 0; d < n; d++) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show competitor ' + (d + 1)); (function(k){ b.onclick = function(){ go(k); }; })(d); dots.appendChild(b); }
+  function go(k){ i = Math.max(0, Math.min(n - 1, k)); tr.style.transform = 'translateX(' + (-100 * i) + '%)';
+    for (var c = 0; c < n; c++) { cols[c].classList.toggle('is-on', c === i); dots.children[c].classList.toggle('is-on', c === i); }
+    pv.disabled = i === 0; nx.disabled = i === n - 1; var h = r.querySelector('[data-k-hint]'); if (h) h.style.visibility = i === n - 1 ? 'hidden' : 'visible'; }
+  pv.onclick = function(){ go(i - 1); }; nx.onclick = function(){ go(i + 1); };
+  var x0 = null; tr.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive: true });
+  tr.addEventListener('touchend', function(e){ if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1)); }, { passive: true });
+  go(0);
+})();
+</script>
+{% schema %}
+{
+  "name": "AuraGlow comparison table",
+  "tag": "div",
+  "class": "ag-section",
+  "max_blocks": 16,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why families choose AuraGlow" },
+    { "type": "text", "id": "italic_word", "label": "Word in the heading shown in italic", "default": "perfect" },
+    { "type": "text", "id": "hint", "label": "Text beside the arrow", "default": "Compare next" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "Swipe to compare" },
+    { "type": "paragraph", "content": "In each row type yes (✓), no (✗) or any short text." },
+    { "type": "text", "id": "us_name", "label": "Your column name", "default": "AuraGlow" },
+    { "type": "image_picker", "id": "us_img", "label": "Your image (blank = product image)" },
+    { "type": "text", "id": "c1_name", "label": "Competitor 1 name", "default": "Traditional lights" },
+    { "type": "image_picker", "id": "c1_img", "label": "Competitor 1 image" },
+    { "type": "text", "id": "c1_emoji", "label": "Competitor 1 icon (no image)", "default": "💡" },
+    { "type": "text", "id": "c2_name", "label": "Competitor 2 name", "default": "Amazon string lights" },
+    { "type": "image_picker", "id": "c2_img", "label": "Competitor 2 image" },
+    { "type": "text", "id": "c2_emoji", "label": "Competitor 2 icon (no image)", "default": "📦" },
+    { "type": "text", "id": "c3_name", "label": "Competitor 3 name", "default": "Other smart lights" },
+    { "type": "image_picker", "id": "c3_img", "label": "Competitor 3 image" },
+    { "type": "text", "id": "c3_emoji", "label": "Competitor 3 icon (no image)", "default": "📱" },
+    { "type": "range", "id": "row_h", "label": "Row height", "min": 44, "max": 100, "step": 2, "unit": "px", "default": 66 },
+    { "type": "range", "id": "head_h", "label": "Header height", "min": 80, "max": 220, "step": 4, "unit": "px", "default": 136 },
+    { "type": "range", "id": "heading_m", "label": "Heading size (mobile)", "min": 20, "max": 48, "step": 1, "unit": "px", "default": 30 },
+    { "type": "range", "id": "heading_d", "label": "Heading size (desktop)", "min": 24, "max": 64, "step": 1, "unit": "px", "default": 44 },
+    { "type": "color", "id": "c_hl", "label": "AuraGlow column background", "default": "#F6F3EE" },
+    { "type": "color", "id": "c_acc", "label": "Next button colour", "default": "#B3122E" },
+    { "type": "color", "id": "c_bg", "label": "Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "c_ink", "label": "Text", "default": "#141414" },
+    { "type": "color", "id": "c_line", "label": "Row lines", "default": "#EEE6DC" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Get my AuraGlow →" },
+    { "type": "text", "id": "cta_link", "label": "Button link", "default": "#MainContent" },
+    { "type": "range", "id": "pad_top", "label": "Top spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 52 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 52 }
+  ],
+  "blocks": [
+    { "type": "row", "name": "Row", "settings": [
+      { "type": "text", "id": "label", "label": "Feature", "default": "Setup time" },
+      { "type": "text", "id": "us", "label": "AuraGlow", "default": "yes" },
+      { "type": "text", "id": "c1", "label": "Competitor 1", "default": "no" },
+      { "type": "text", "id": "c2", "label": "Competitor 2", "default": "no" },
+      { "type": "text", "id": "c3", "label": "Competitor 3", "default": "no" } ] }
+  ],
+  "presets": [ { "name": "AuraGlow comparison table", "blocks": [ { "type": "row" }, { "type": "row" }, { "type": "row" } ] } ]
+}
+{% endschema %}

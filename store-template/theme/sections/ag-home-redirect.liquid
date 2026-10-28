@@ -1,0 +1,22 @@
+{%- liquid
+  assign target = '/products/auraglow-smart-tree-lights'
+  if section.settings.product != blank
+    assign target = section.settings.product.url
+  endif
+-%}
+{%- if request.design_mode -%}
+  <div style="padding:40px 20px;text-align:center;font:500 14px/1.5 sans-serif;color:#555">Visitors to the homepage are sent straight to <a href="{{ target }}">{{ target }}</a>. Change the product in this section's settings.</div>
+{%- else -%}
+  <meta http-equiv="refresh" content="0; url={{ target }}">
+  <script>window.location.replace({{ target | json }});</script>
+  <p style="padding:40px 20px;text-align:center;font-family:sans-serif"><a href="{{ target }}">Continue to the store</a></p>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Homepage redirect",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Send homepage visitors to" }
+  ],
+  "presets": [ { "name": "Homepage redirect" } ]
+}
+{% endschema %}

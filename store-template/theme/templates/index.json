@@ -1,0 +1,13 @@
+{
+ "sections": {
+  "redirect": {
+   "type": "ag-home-redirect",
+   "settings": {
+    "product": "auraglow-smart-tree-lights"
+   }
+  }
+ },
+ "order": [
+  "redirect"
+ ]
+}

@@ -1,0 +1,64 @@
+{%- assign s = section.settings -%}
+{{ 'ag-sternify.css' | asset_url | stylesheet_tag }}
+{{ 'ag-xmas.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>#ag-{{ section.id }}{--ag-font:'Poppins',sans-serif;--ag-serif:'DM Serif Display',Georgia,serif}</style>
+<section id="ag-{{ section.id }}" class="agS agAb">
+  <div class="agAb__hero"><div class="agWrap">
+    {%- if s.eyebrow != blank -%}<span class="agAb__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+    <h1 class="agAb__h1">{{ s.heading }}</h1>
+    <p class="agAb__lead">{{ s.lead }}</p>
+  </div></div>
+  <div class="agWrap">
+    <div class="agAb__story">
+      <div class="agAb__img">{%- if s.image != blank -%}{{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', alt: s.story_heading }}{%- else -%}{{ 'lifestyle-1' | placeholder_svg_tag }}{%- endif -%}</div>
+      <div><h2 class="agAb__h2">{{ s.story_heading }}</h2><div class="agAb__rte">{{ s.story }}</div></div>
+    </div>
+    <div class="agAb__stats">
+      {%- for i in (1..4) -%}{%- assign kv = 'stat_' | append: i -%}{%- assign kl = 'stat_' | append: i | append: '_l' -%}
+      <div class="agAb__stat"><b>{{ s[kv] }}</b><span>{{ s[kl] }}</span></div>
+      {%- endfor -%}
+    </div>
+    <div class="agAb__vals">
+      {%- for block in section.blocks -%}
+      <div class="agAb__val" {{ block.shopify_attributes }}><span class="ic">{% render 'ag-icon', name: block.settings.icon, stroke: 2 %}</span><h3>{{ block.settings.title }}</h3><p>{{ block.settings.text }}</p></div>
+      {%- endfor -%}
+    </div>
+    <div class="agAb__cta">
+      <h2>{{ s.cta_heading }}</h2><p>{{ s.cta_text }}</p>
+      <a href="{{ s.cta_link | default: '/products/auraglow-smart-tree-lights' }}">{{ s.cta_btn }}</a>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "AuraGlow about us",
+  "tag": "div",
+  "class": "ag-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "Our story" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "We make Christmas glow — in 60 seconds." },
+    { "type": "textarea", "id": "lead", "label": "Intro", "default": "AuraGlow turns any tree into a living light show you control from your phone. No tangles, no ladders, no stress — just the moment everyone gathers around and says “wow.”" },
+    { "type": "image_picker", "id": "image", "label": "Story image" },
+    { "type": "text", "id": "story_heading", "label": "Story heading", "default": "Born from a tangled Christmas" },
+    { "type": "richtext", "id": "story", "label": "Story", "default": "<p>Every December started the same way: an hour on a ladder, a knot of wires, and one dead bulb that took the whole strand down with it.</p><p>We built AuraGlow to fix that. One strand drapes from the top of the tree to the bottom in under a minute, then the free app lets you choose from 200+ animated designs — from classic warm white to snowfall, Santa and rainbow chases.</p><p>Today more than 1,500 families light their trees with AuraGlow. Each order is packed in a gift-ready box, shipped with free tracking and backed by our 30-day money-back guarantee.</p>" },
+    { "type": "header", "content": "Numbers" },
+    { "type": "text", "id": "stat_1", "label": "Stat 1", "default": "1,500+" }, { "type": "text", "id": "stat_1_l", "label": "Stat 1 label", "default": "Happy families" },
+    { "type": "text", "id": "stat_2", "label": "Stat 2", "default": "200+" }, { "type": "text", "id": "stat_2_l", "label": "Stat 2 label", "default": "Animated patterns" },
+    { "type": "text", "id": "stat_3", "label": "Stat 3", "default": "60 sec" }, { "type": "text", "id": "stat_3_l", "label": "Stat 3 label", "default": "Box to glowing tree" },
+    { "type": "text", "id": "stat_4", "label": "Stat 4", "default": "30 days" }, { "type": "text", "id": "stat_4_l", "label": "Stat 4 label", "default": "Money-back guarantee" },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_heading", "label": "Heading", "default": "Ready to light up your tree?" },
+    { "type": "text", "id": "cta_text", "label": "Text", "default": "Order early — Christmas stock is limited." },
+    { "type": "text", "id": "cta_btn", "label": "Button", "default": "Shop AuraGlow →" },
+    { "type": "text", "id": "cta_link", "label": "Button link", "default": "/products/auraglow-smart-tree-lights" }
+  ],
+  "blocks": [
+    { "type": "value", "name": "Value card", "limit": 6, "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "sparkle", "options": [ { "value": "sparkle", "label": "Sparkle" }, { "value": "shield", "label": "Shield" }, { "value": "heart-fill", "label": "Heart" }, { "value": "gift", "label": "Gift" }, { "value": "tree", "label": "Tree" }, { "value": "truck", "label": "Truck" }, { "value": "chat", "label": "Chat" } ] },
+      { "type": "text", "id": "title", "label": "Title", "default": "Designed for real homes" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Text" } ] }
+  ],
+  "presets": [ { "name": "AuraGlow about us" } ]
+}
+{% endschema %}

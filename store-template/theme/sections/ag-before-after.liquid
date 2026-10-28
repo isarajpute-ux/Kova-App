@@ -1,0 +1,86 @@
+{%- liquid
+  assign s = section.settings
+  case s.ratio
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    else
+      assign ratio = '1 / 1'
+  endcase
+-%}
+{{ 'ag-sternify.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ s.heading_font | default: 'DM Serif Display' | replace: ' ', '+' }}&family={{ s.font_family | default: 'Poppins' | replace: ' ', '+' }}:wght@400;500;600&display=swap">
+<script src="{{ 'ag-sternify.js' | asset_url }}" defer="defer"></script>
+<style>
+  #ag-{{ section.id }}{--ag-font:'{{ s.font_family | default: 'Poppins' }}',sans-serif;--ag-serif:'{{ s.heading_font | default: 'DM Serif Display' }}',Georgia,serif;--ag-bg:{{ s.c_bg }};--ag-ink:{{ s.c_ink }};--maxw:{{ s.max_width }}px;--ratio:{{ ratio }};--r:{{ s.radius }}px;--hs-m:{{ s.heading_m }}px;--hs-d:{{ s.heading_d }}px;--align:{{ s.heading_align }};--line:{{ s.c_line }};--h-bg:{{ s.c_handle }};--h-ic:{{ s.c_handle_icon }};--hsz:{{ s.handle_size }}px;--tag-bg:{{ s.c_tag }};--tag-ink:{{ s.c_tag_text }};--pos:{{ s.start }}%;padding-top:{{ s.pad_top }}px;padding-bottom:{{ s.pad_bottom }}px}
+</style>
+<section id="ag-{{ section.id }}" class="agS agBA">
+  <div class="agWrap">
+    <div class="agBA__in">
+      {%- if s.heading != blank -%}<h2 class="agBA__title">{{ s.heading }}</h2>{%- endif -%}
+      <div class="agBA__frame" data-ag-ba data-start="{{ s.start }}" data-hint="{{ s.hint }}">
+        {%- if s.after != blank -%}
+          {{ s.after | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 600px, 100vw', alt: s.after_label, class: 'agBA__img', draggable: 'false' }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'agBA__img agBA__ph' }}
+        {%- endif -%}
+        <div class="agBA__before">
+          {%- if s.before != blank -%}
+            {{ s.before | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 600px, 100vw', alt: s.before_label, class: 'agBA__img', draggable: 'false' }}
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'agBA__img agBA__ph agBA__ph--b' }}
+          {%- endif -%}
+        </div>
+        {%- if s.show_labels -%}
+          <span class="agBA__tag agBA__tag--b">{{ s.before_label }}</span>
+          <span class="agBA__tag agBA__tag--a">{{ s.after_label }}</span>
+        {%- endif -%}
+        <span class="agBA__line" aria-hidden="true"></span>
+        <button type="button" class="agBA__handle" role="slider" aria-label="Drag to compare" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ s.start }}" data-ba-handle>{% render 'ag-icon', name: 'drag', stroke: 2.2 %}</button>
+      </div>
+      {%- if s.cta_text != blank -%}
+        <div class="agBA__ctaWrap"><a class="agBtn" href="{{ s.cta_link | default: '#' }}" style="--btn:{{ s.c_cta }}">{{ s.cta_text }}</a></div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "AuraGlow before / after",
+  "tag": "div",
+  "class": "ag-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "See the difference" },
+    { "type": "text", "id": "heading_font", "label": "Heading font (Google Font name)", "default": "DM Serif Display" },
+    { "type": "text", "id": "font_family", "label": "Body font (Google Font name)", "default": "Poppins" },
+    { "type": "select", "id": "heading_align", "label": "Heading alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ] },
+    { "type": "range", "id": "heading_m", "label": "Heading size (mobile)", "min": 24, "max": 64, "step": 1, "unit": "px", "default": 40 },
+    { "type": "range", "id": "heading_d", "label": "Heading size (desktop)", "min": 28, "max": 80, "step": 1, "unit": "px", "default": 60 },
+    { "type": "image_picker", "id": "before", "label": "Before image (left)" },
+    { "type": "image_picker", "id": "after", "label": "After image (right)" },
+    { "type": "checkbox", "id": "show_labels", "label": "Show labels", "default": true },
+    { "type": "text", "id": "before_label", "label": "Before label", "default": "Before" },
+    { "type": "text", "id": "after_label", "label": "After label", "default": "After" },
+    { "type": "range", "id": "start", "label": "Starting position", "min": 5, "max": 95, "step": 1, "unit": "%", "default": 50 },
+    { "type": "checkbox", "id": "hint", "label": "Animate slider once when it comes into view", "default": true },
+    { "type": "select", "id": "ratio", "label": "Image shape", "default": "square", "options": [ { "value": "square", "label": "Square" }, { "value": "portrait", "label": "Portrait" }, { "value": "landscape", "label": "Landscape" } ] },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 320, "max": 1200, "step": 20, "unit": "px", "default": 600 },
+    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "handle_size", "label": "Handle size", "min": 28, "max": 72, "step": 2, "unit": "px", "default": 46 },
+    { "type": "color", "id": "c_bg", "label": "Background", "default": "#F1F0EC" },
+    { "type": "color", "id": "c_ink", "label": "Heading colour", "default": "#141414" },
+    { "type": "color", "id": "c_line", "label": "Divider line", "default": "#FFFFFF" },
+    { "type": "color", "id": "c_handle", "label": "Handle", "default": "#1A1A1A" },
+    { "type": "color", "id": "c_handle_icon", "label": "Handle arrows", "default": "#FFFFFF" },
+    { "type": "color", "id": "c_tag", "label": "Label background", "default": "#1A1A1A" },
+    { "type": "color", "id": "c_tag_text", "label": "Label text", "default": "#FFFFFF" },
+    { "type": "text", "id": "cta_text", "label": "Button text (optional)" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "color", "id": "c_cta", "label": "Button colour", "default": "#C8102E" },
+    { "type": "range", "id": "pad_top", "label": "Top spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom spacing", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 24 }
+  ],
+  "presets": [ { "name": "AuraGlow before / after" } ]
+}
+{% endschema %}

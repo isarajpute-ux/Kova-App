@@ -1,0 +1,11 @@
+{%- liquid
+  assign r = rating | default: 5 | times: 1.0
+  assign pct = r | times: 20
+  capture star
+    echo '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="m12 2.6 2.95 5.98 6.6.96-4.78 4.65 1.13 6.57L12 17.66l-5.9 3.1 1.13-6.57L2.45 9.54l6.6-.96z"/></svg>'
+  endcapture
+-%}
+<span class="agStars" style="--pct:{{ pct }}%;{% if star_size %}--ag-star-size:{{ star_size }}px;{% endif %}{% if star_color %}--ag-star:{{ star_color }};{% endif %}" role="img" aria-label="{{ r }} / 5">
+  <span class="agStars__base">{%- for i in (1..5) -%}{{ star }}{%- endfor -%}</span>
+  <span class="agStars__fill">{%- for i in (1..5) -%}{{ star }}{%- endfor -%}</span>
+</span>

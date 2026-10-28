@@ -1,0 +1,773 @@
+{% doc %}
+ Renders the cart drawer (AuraGlow layout). Styles: assets/ag-cart-drawer.css, behaviour: assets/ag-cart-drawer.js.
+ All texts, colors and rows are editable in Theme settings > Cart drawer (AuraGlow).
+
+ @param {block} [block] - An optional current block whose theme-editor attributes are applied to footer regions.
+
+ @example
+ {% render 'cart-drawer' %}
+{% enddoc %}
+
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'ag-cart-drawer.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'ag-cart-drawer.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+ case settings.ag_cd_avatar_shape
+  when 'rounded'
+   assign ag_av_radius = '28%'
+  when 'square'
+   assign ag_av_radius = '3px'
+  else
+   assign ag_av_radius = '50%'
+ endcase
+-%}
+<style>
+ .drawer {
+  visibility: hidden;
+ }
+ .ag-cd {
+  --ag-accent: {{ settings.ag_cd_accent | default: '#C8102E' }};
+  --ag-accent-text: {{ settings.ag_cd_accent_text | default: '#FFFFFF' }};
+  --ag-pink: {{ settings.ag_cd_pink_bg | default: '#FBE3E1' }};
+  --ag-social-bg: {{ settings.ag_cd_social_bg | default: '#FDF0EE' }};
+  --ag-text: {{ settings.ag_cd_text_color | default: '#141414' }};
+  --ag-muted: {{ settings.ag_cd_muted_color | default: '#8A8A8A' }};
+  --ag-badge-bg: {{ settings.ag_cd_badge_bg | default: '#00B67A' }};
+  --ag-banner-bg: {{ settings.ag_cd_banner_bg | default: '#3E1520' }};
+  --ag-star: {{ settings.ag_cd_banner_star_color | default: '#00B67A' }};
+  --ag-bar: {{ settings.ag_cd_fs_bar_color | default: '#141414' }};
+  --ag-track: {{ settings.ag_cd_fs_track_color | default: '#E4E4E4' }};
+  --ag-avatar-size: {{ settings.ag_cd_avatar_size | default: 32 }}px;
+  --ag-avatar-overlap: {{ settings.ag_cd_avatar_overlap | default: 10 }}px;
+  --ag-avatar-radius: {{ ag_av_radius }};
+  --ag-banner-h: {{ settings.ag_cd_banner_height | default: 150 }}px;
+  --ag-img-radius: {{ settings.ag_cd_image_radius | default: 10 }}px;
+ }
+ {%- if settings.ag_cd_accent != blank and settings.ag_cd_accent_text != blank %}
+  .ag-cd .drawer__inner-empty {
+   --color-button: {{ settings.ag_cd_accent.red }},{{ settings.ag_cd_accent.green }},{{ settings.ag_cd_accent.blue }};
+   --color-button-text: {{ settings.ag_cd_accent_text.red }},{{ settings.ag_cd_accent_text.green }},{{ settings.ag_cd_accent_text.blue }};
+  }
+ {%- endif %}
+</style>
+
+{%- capture ag_icon_star -%}
+ <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2.6l2.84 6.07 6.66.78-4.93 4.55 1.33 6.58L12 17.27l-5.9 3.31 1.33-6.58L2.5 9.45l6.66-.78z"/></svg>
+{%- endcapture -%}
+{%- capture ag_icon_person -%}
+ <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="12.5" r="5.6" fill="currentColor"/><path fill="currentColor" d="M4.5 32c1-6.6 5.6-10.6 11.5-10.6S26.5 25.4 27.5 32z"/></svg>
+{%- endcapture -%}
+
+<cart-drawer class="drawer ag-cd{% if cart == empty %} is-empty{% endif %}">
+ <div id="CartDrawer" class="cart-drawer">
+  <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
+  <div
+   class="drawer__inner gradient color-{{ settings.cart_color_scheme }}"
+   role="dialog"
+   aria-modal="true"
+   aria-label="{{ 'sections.cart.title' | t }}"
+   tabindex="-1"
+  >
+   {%- if cart == empty -%}
+    <div class="drawer__inner-empty">
+     <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
+      <div class="cart-drawer__empty-content">
+       <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
+       <button
+        class="drawer__close"
+        type="button"
+        onclick="this.closest('cart-drawer').close()"
+        aria-label="{{ 'accessibility.close' | t }}"
+       >
+        <span class="svg-wrapper">
+         {{- 'icon-close.svg' | inline_asset_content -}}
+        </span>
+       </button>
+       <a href="{{ routes.all_products_collection_url }}" class="button">
+        {{ 'general.continue_shopping' | t }}
+       </a>
+
+       {%- if shop.customer_accounts_enabled and customer == null -%}
+        <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
+        <p class="cart__login-paragraph">
+         {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+        </p>
+       {%- endif -%}
+      </div>
+     </div>
+     {%- if settings.cart_drawer_collection != blank -%}
+      <div class="cart-drawer__collection">
+       {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
+      </div>
+     {%- endif -%}
+    </div>
+   {%- endif -%}
+
+   {%- comment -%} 1. Header: bag icon / "Your Cart (N)" / close {%- endcomment -%}
+   <div class="drawer__header ag-cd__header">
+    <span class="ag-cd__header-icon" aria-hidden="true">
+     {%- if settings.ag_cd_show_icon -%}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="3.75" y="4.75" width="16.5" height="15" rx="2.25"/><path d="M8.25 8.75a3.75 3.75 0 0 0 7.5 0"/></svg>
+     {%- endif -%}
+    </span>
+    <h2 class="drawer__heading ag-cd__title">
+     {{- settings.ag_cd_title | default: 'Your Cart' | escape -}}
+     {%- if settings.ag_cd_show_count %} (<span data-ag-count>{{ cart.item_count }}</span>){% endif -%}
+    </h2>
+    <button
+     class="drawer__close ag-cd__close"
+     type="button"
+     onclick="this.closest('cart-drawer').close()"
+     aria-label="{{ 'accessibility.close' | t }}"
+    >
+     <span class="svg-wrapper">
+      {{- 'icon-close.svg' | inline_asset_content -}}
+     </span>
+    </button>
+   </div>
+
+   <div class="ag-cd__body">
+    {%- comment -%} 2. Social proof row {%- endcomment -%}
+    {%- if settings.ag_cd_show_social -%}
+     <div class="ag-cd__social">
+      <div class="ag-cd__avatars" aria-hidden="true">
+       {%- for i in (1..3) -%}
+        {%- assign ag_av_key = 'ag_cd_avatar_' | append: i -%}
+        {%- assign ag_av = settings[ag_av_key] -%}
+        <span class="ag-cd__avatar ag-cd__avatar--{{ i }}">
+         {%- if ag_av != blank -%}
+          {{ ag_av | image_url: width: 120, height: 120, crop: 'center' | image_tag: loading: 'lazy', alt: '' }}
+         {%- else -%}
+          {{ ag_icon_person }}
+         {%- endif -%}
+        </span>
+       {%- endfor -%}
+      </div>
+      <p class="ag-cd__social-text">{{ settings.ag_cd_social_text }}</p>
+      {%- if settings.ag_cd_show_badge -%}
+       <span class="ag-cd__badge" aria-hidden="true">
+        {%- if settings.ag_cd_badge_image != blank -%}
+         {{ settings.ag_cd_badge_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}
+        {%- else -%}
+         {{ ag_icon_star }}
+        {%- endif -%}
+       </span>
+      {%- endif -%}
+     </div>
+    {%- endif -%}
+
+    {%- comment -%} 3. Reserved timer (ticks via assets/ag-cart-drawer.js) {%- endcomment -%}
+    {%- if settings.ag_cd_show_timer -%}
+     {%- liquid
+      assign ag_min = settings.ag_cd_timer_minutes | default: 10
+      assign ag_min_str = ag_min | prepend: '0' | slice: -2, 2
+     -%}
+     <div class="ag-cd__timer">
+      <p>
+       {{ settings.ag_cd_timer_before | escape }}
+       <strong class="ag-cd__timer-value" data-ag-timer data-minutes="{{ ag_min }}">{{ ag_min_str }}:00</strong>
+       {{ settings.ag_cd_timer_after | escape }}
+      </p>
+     </div>
+    {%- endif -%}
+
+    {%- comment -%} 4. Banner (image + optional overlay, wine placeholder when empty) {%- endcomment -%}
+    {%- if settings.ag_cd_show_banner -%}
+     {%- assign ag_banner = settings.ag_cd_banner_image -%}
+     <div class="ag-cd__banner{% if ag_banner == blank %} ag-cd__banner--placeholder{% elsif settings.ag_cd_banner_overlay %} ag-cd__banner--shade{% endif %}">
+      {%- if ag_banner != blank -%}
+       {{
+        ag_banner
+        | image_url: width: 1000
+        | image_tag:
+         loading: 'lazy',
+         class: 'ag-cd__banner-img',
+         widths: '420, 640, 840, 1000',
+         sizes: '(min-width: 750px) 390px, calc(100vw - 32px)',
+         alt: ag_banner.alt
+       }}
+      {%- else -%}
+       <svg class="ag-cd__banner-art" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
+        <path d="M60 20 30 60h13L19 94h18L10 128h100L83 94h18L77 60h13z" fill="rgba(255,236,200,.07)" stroke="rgba(255,236,200,.38)" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M53 128h14v9H53z" fill="rgba(255,236,200,.3)"/>
+        <path d="M40 54q20 10 40-4M29 86q31 15 63-6M19 118q41 17 82-8" fill="none" stroke="rgba(255,236,200,.28)" stroke-width=".8"/>
+        <g class="ag-cd__lights">
+         <circle class="ag-cd__light" cx="46" cy="57" r="2.4" fill="#FFE7A8"/>
+         <circle class="ag-cd__light" cx="60" cy="59" r="2.4" fill="#FF6B6B"/>
+         <circle class="ag-cd__light" cx="73" cy="55" r="2.4" fill="#8EE3A8"/>
+         <circle class="ag-cd__light" cx="36" cy="90" r="2.4" fill="#8EC5FF"/>
+         <circle class="ag-cd__light" cx="52" cy="95" r="2.4" fill="#FFE7A8"/>
+         <circle class="ag-cd__light" cx="68" cy="94" r="2.4" fill="#FF6B6B"/>
+         <circle class="ag-cd__light" cx="83" cy="87" r="2.4" fill="#F7C948"/>
+         <circle class="ag-cd__light" cx="27" cy="122" r="2.4" fill="#F7C948"/>
+         <circle class="ag-cd__light" cx="45" cy="128" r="2.4" fill="#8EE3A8"/>
+         <circle class="ag-cd__light" cx="64" cy="129" r="2.4" fill="#FFE7A8"/>
+         <circle class="ag-cd__light" cx="82" cy="124" r="2.4" fill="#8EC5FF"/>
+         <circle class="ag-cd__light" cx="96" cy="114" r="2.4" fill="#FF6B6B"/>
+        </g>
+        <path d="M60 3.5l3.4 7 7.7 1.1-5.6 5.4 1.3 7.6L60 21l-6.8 3.6 1.3-7.6-5.6-5.4 7.7-1.1z" fill="#F7C948"/>
+       </svg>
+      {%- endif -%}
+      {%- if ag_banner == blank or settings.ag_cd_banner_overlay -%}
+       <div class="ag-cd__banner-overlay">
+        {%- if settings.ag_cd_banner_headline != blank -%}
+         <p class="ag-cd__banner-headline">{{ settings.ag_cd_banner_headline }}</p>
+        {%- endif -%}
+        {%- if settings.ag_cd_banner_stars -%}
+         <span class="ag-cd__stars" role="img" aria-label="5/5">
+          {%- for s in (1..5) -%}
+           <span class="ag-cd__star">{{ ag_icon_star }}</span>
+          {%- endfor -%}
+         </span>
+        {%- endif -%}
+        {%- if settings.ag_cd_banner_subtext != blank -%}
+         <p class="ag-cd__banner-sub">{{ settings.ag_cd_banner_subtext }}</p>
+        {%- endif -%}
+       </div>
+      {%- endif -%}
+     </div>
+    {%- endif -%}
+
+    {%- comment -%} 5. Line items (Dawn markup, IDs and custom elements kept) {%- endcomment -%}
+    <cart-drawer-items
+     view-event-payload="{{ cart | standard_event_data: 'view', context: 'dialog' | escape }}"
+     view-event-trigger="manual"
+     {% if cart == empty %}
+      class=" is-empty"
+     {% endif %}
+    >
+     <form
+      action="{{ routes.cart_url }}"
+      id="CartDrawer-Form"
+      class="cart__contents cart-drawer__form"
+      method="post"
+     >
+      <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
+       {%- if cart != empty -%}
+        <div class="drawer__cart-items-wrapper">
+         <table class="cart-items" role="table">
+          <thead role="rowgroup">
+           <tr role="row">
+            <th id="CartDrawer-ColumnProductImage" role="columnheader">
+             <span class="visually-hidden">{{ 'sections.cart.headings.image' | t }}</span>
+            </th>
+            <th id="CartDrawer-ColumnProduct" class="caption-with-letter-spacing" scope="col" role="columnheader">
+             {{ 'sections.cart.headings.product' | t }}
+            </th>
+            <th id="CartDrawer-ColumnTotal" class="right caption-with-letter-spacing" scope="col" role="columnheader">
+             {{ 'sections.cart.headings.total' | t }}
+            </th>
+            <th id="CartDrawer-ColumnQuantity" role="columnheader">
+             <span class="visually-hidden">{{ 'sections.cart.headings.quantity' | t }}</span>
+            </th>
+           </tr>
+          </thead>
+
+          <tbody role="rowgroup">
+           {%- for item in cart.items -%}
+            <tr
+             id="CartDrawer-Item-{{ item.index | plus: 1 }}"
+             class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
+             role="row"
+             {% if item.parent_relationship.parent != null %}
+              aria-label="{{- 'products.product.nested_label' | t: title: item.product.title, parent_title: item.parent_relationship.parent.title | escape -}}"
+             {% endif %}
+            >
+             <td class="cart-item__media" role="cell" headers="CartDrawer-ColumnProductImage">
+              {% if item.image %}
+               {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
+               <a href="{{ item.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>
+               <img
+                class="cart-item__image"
+                src="{{ item.image | image_url: width: 200, height: 200, crop: 'center' }}"
+                alt="{{ item.image.alt | escape }}"
+                loading="lazy"
+                width="100"
+                height="100"
+               >
+              {% endif %}
+             </td>
+
+             <td class="cart-item__details" role="cell" headers="CartDrawer-ColumnProduct">
+              {%- if settings.show_vendor -%}
+               <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
+              {%- endif -%}
+
+              <div class="cart-item__title">
+               <a href="{{ item.url }}" class="cart-item__name h4 break">
+                {{- item.product.title | escape -}}
+               </a>
+               {%- assign cart_disclosure_modal_id = 'CartDisclosureModal-drawer-' | append: item.key | replace: ':', '-' -%}
+               {%- render 'cart-disclosure-indicator',
+                product: item.product,
+                modal_id: cart_disclosure_modal_id
+               -%}
+              </div>
+
+              {%- if settings.ag_cd_show_variant and item.product.has_only_default_variant == false -%}
+               <p class="ag-cd__variant">{{ item.variant.title | escape }}</p>
+              {%- endif -%}
+
+              {%- if item.properties.size != 0 -%}
+               <dl class="ag-cd__props">
+                {%- for property in item.properties -%}
+                 {%- assign property_first_char = property.first | slice: 0 -%}
+                 {%- if property.last != blank and property_first_char != '_' -%}
+                  <div class="product-option">
+                   <dt>{{ property.first }}:</dt>
+                   <dd>
+                    {%- if property.last contains '/uploads/' -%}
+                     <a
+                      href="{{ property.last }}"
+                      class="link"
+                      target="_blank"
+                      aria-describedby="a11y-new-window-message"
+                     >
+                      {{ property.last | split: '/' | last }}
+                     </a>
+                    {%- else -%}
+                     {{ property.last }}
+                    {%- endif -%}
+                   </dd>
+                  </div>
+                 {%- endif -%}
+                {%- endfor -%}
+               </dl>
+              {%- endif -%}
+
+              {%- if item.selling_plan_allocation != null -%}
+               <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+              {%- endif -%}
+
+              <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+               {%- for discount in item.line_level_discount_allocations -%}
+                <li class="discounts__discount">
+                 {{- 'icon-discount.svg' | inline_asset_content -}}
+                 {{ discount.discount_application.title }}
+                </li>
+               {%- endfor -%}
+              </ul>
+             </td>
+
+             <td class="cart-item__totals right" role="cell" headers="CartDrawer-ColumnTotal">
+              {%- render 'loading-spinner' -%}
+              {%- liquid
+               assign ag_was = item.original_line_price
+               if settings.ag_cd_show_compare and item.variant.compare_at_price > item.original_price
+                assign ag_cmp = item.variant.compare_at_price | times: item.quantity
+                if ag_cmp > ag_was
+                 assign ag_was = ag_cmp
+                endif
+               endif
+              -%}
+              <div class="cart-item__price-wrapper">
+               {%- if ag_was > item.final_line_price -%}
+                <div class="cart-item__discounted-prices">
+                 <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+                 <span class="price price--end">{{ item.final_line_price | money }}</span>
+                 <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+                 <s class="cart-item__old-price price price--end">{{ ag_was | money }}</s>
+                </div>
+               {%- else -%}
+                <span class="price price--end">{{ item.final_line_price | money }}</span>
+               {%- endif -%}
+
+               {%- if item.variant.available and item.unit_price_measurement -%}
+                {% render 'unit-price', price: item.unit_price, measurement: item.unit_price_measurement %}
+               {%- endif -%}
+              </div>
+             </td>
+             {%- liquid
+              assign has_qty_rules = false
+              if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
+               assign has_qty_rules = true
+              endif
+
+              assign has_vol_pricing = false
+              if item.variant.quantity_price_breaks.size > 0
+               assign has_vol_pricing = true
+              endif
+             -%}
+             <td
+              class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
+              role="cell"
+              headers="CartDrawer-ColumnQuantity"
+             >
+              <quantity-popover>
+               <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
+                <div class="quantity-popover-container{% if has_qty_rules or has_vol_pricing %} quantity-popover-container--hover{% endif %}">
+                 <quantity-input class="quantity cart-quantity">
+                  <button
+                   class="quantity__button"
+                   name="minus"
+                   type="button"
+                   {% if item.instructions and item.instructions.can_update_quantity == false %}
+                    disabled
+                   {% endif %}
+                  >
+                   <span class="visually-hidden">
+                    {{- 'products.product.quantity.decrease' | t: product: item.product.title | escape -}}
+                   </span>
+                   <span class="svg-wrapper">
+                    {{- 'icon-minus.svg' | inline_asset_content -}}
+                   </span>
+                  </button>
+                  <input
+                   class="quantity__input"
+                   type="number"
+                   data-quantity-variant-id="{{ item.variant.id }}"
+                   data-quantity-line-key="{{ item.key }}"
+                   name="updates[]"
+                   value="{{ item.quantity }}"
+                   data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                   min="0"
+                   data-min="{{ item.variant.quantity_rule.min }}"
+                   {% if item.variant.quantity_rule.max != null %}
+                    max="{{ item.variant.quantity_rule.max }}"
+                   {% endif %}
+                   step="{{ item.variant.quantity_rule.increment }}"
+                   aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                   id="Drawer-quantity-{{ item.index | plus: 1 }}"
+                   data-index="{{ item.index | plus: 1 }}"
+                   {% if item.instructions and item.instructions.can_update_quantity == false %}
+                    disabled
+                   {% endif %}
+                  >
+                  <button
+                   class="quantity__button"
+                   name="plus"
+                   type="button"
+                   {% if item.instructions and item.instructions.can_update_quantity == false %}
+                    disabled
+                   {% endif %}
+                  >
+                   <span class="visually-hidden">
+                    {{- 'products.product.quantity.increase' | t: product: item.product.title | escape -}}
+                   </span>
+                   <span class="svg-wrapper">
+                    {{- 'icon-plus.svg' | inline_asset_content -}}
+                   </span>
+                  </button>
+                 </quantity-input>
+                </div>
+                <cart-remove-button
+                 id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
+                 data-index="{{ item.index | plus: 1 }}"
+                >
+                 <button
+                  type="button"
+                  class="button button--tertiary cart-remove-button{% if item.instructions and item.instructions.can_remove == false %} hidden{% endif %}"
+                  aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
+                  data-variant-id="{{ item.variant.id }}"
+                 >
+                  <span class="svg-wrapper">
+                   {{- 'icon-remove.svg' | inline_asset_content -}}
+                  </span>
+                 </button>
+                </cart-remove-button>
+               </div>
+               {%- if has_qty_rules or has_vol_pricing -%}
+                <button
+                 type="button"
+                 class="quantity-popover__info-button quantity-popover__info-button--icon-with-label button button--tertiary"
+                 aria-expanded="false"
+                >
+                 <span class="svg-wrapper">
+                  {{- 'icon-info.svg' | inline_asset_content -}}
+                 </span>
+                 <span>
+                  {%- if has_vol_pricing -%}
+                   {{ 'products.product.volume_pricing.note' | t }}
+                  {%- elsif has_qty_rules -%}
+                   {{ 'products.product.quantity.note' | t }}
+                  {%- endif -%}
+                 </span>
+                </button>
+               {%- endif -%}
+               {%- if has_vol_pricing or has_qty_rules -%}
+                <div class="cart-items__info global-settings-popup quantity-popover__info" tabindex="-1" hidden>
+                 {%- if has_qty_rules == false -%}
+                  <span class="volume-pricing-label caption">
+                   {{- 'products.product.volume_pricing.title' | t -}}
+                  </span>
+                 {%- endif -%}
+                 <div class="quantity__rules caption">
+                  {%- if item.variant.quantity_rule.increment > 1 -%}
+                   <span class="divider">
+                    {{- 'products.product.quantity.multiples_of' | t: quantity: item.variant.quantity_rule.increment -}}
+                   </span>
+                  {%- endif -%}
+                  {%- if item.variant.quantity_rule.min > 1 -%}
+                   <span class="divider">
+                    {{- 'products.product.quantity.min_of' | t: quantity: item.variant.quantity_rule.min -}}
+                   </span>
+                  {%- endif -%}
+                  {%- if item.variant.quantity_rule.max != null -%}
+                   <span class="divider">
+                    {{- 'products.product.quantity.max_of' | t: quantity: item.variant.quantity_rule.max -}}
+                   </span>
+                  {%- endif -%}
+                 </div>
+                 <button class="button-close button button--tertiary" type="button" aria-label="{{ 'accessibility.close' | t }}">
+                  <span class="svg-wrapper">
+                   {{- 'icon-close.svg' | inline_asset_content -}}
+                  </span>
+                 </button>
+                 {%- if item.variant.quantity_price_breaks.size > 0 -%}
+                  <volume-pricing class="parent-display">
+                   <ul class="list-unstyled">
+                    <li>
+                     <span>{{ item.variant.quantity_rule.min }}+</span>
+                     <span>{{ item.variant.price | money_with_currency }}/ea</span>
+                    </li>
+                    {%- for price_break in item.variant.quantity_price_breaks -%}
+                     <li>
+                      <span>
+                       {{- price_break.minimum_quantity -}}
+                       <span aria-hidden="true">+</span></span
+                      >
+                      <span>{{ price_break.price | money_with_currency }}/ea</span>
+                     </li>
+                    {%- endfor -%}
+                   </ul>
+                  </volume-pricing>
+                 {%- endif -%}
+                </div>
+               {%- endif -%}
+               <div id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}" class="cart-item__error" role="alert">
+                <small class="cart-item__error-text"></small>
+                <span class="svg-wrapper">
+                 {{- 'icon-error.svg' | inline_asset_content -}}
+                </span>
+               </div>
+              </quantity-popover>
+             </td>
+            </tr>
+           {%- endfor -%}
+          </tbody>
+         </table>
+        </div>
+       {%- endif -%}
+       <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
+       <p id="CartDrawer-LineItemStatus" class="visually-hidden" aria-hidden="true" role="status">
+        {{ 'accessibility.loading' | t }}
+       </p>
+      </div>
+      <div id="CartDrawer-CartErrors" role="alert"></div>
+     </form>
+    </cart-drawer-items>
+   </div>
+
+   <div class="drawer__footer ag-cd__footer">
+    {%- if settings.show_cart_note -%}
+     <details id="Details-CartDrawer">
+      <summary>
+       <span class="summary__title">
+        {{ 'sections.cart.note' | t }}
+        {{- 'icon-caret.svg' | inline_asset_content -}}
+       </span>
+      </summary>
+      <cart-note class="cart__note field">
+       <label class="visually-hidden" for="CartDrawer-Note">{{ 'sections.cart.note' | t }}</label>
+       <textarea
+        id="CartDrawer-Note"
+        class="text-area text-area--resize-vertical field__input"
+        name="note"
+        placeholder="{{ 'sections.cart.note' | t }}"
+       >{{ cart.note }}</textarea>
+      </cart-note>
+     </details>
+    {%- endif -%}
+
+    {%- liquid
+     assign ag_codes = ''
+     for app in cart.discount_applications
+      if app.type == 'discount_code'
+       assign ag_codes = ag_codes | append: app.title | append: ','
+      endif
+     endfor
+     assign ag_codes_list = ag_codes | split: ',' | uniq
+     assign ag_codes_str = ag_codes_list | join: ','
+
+     assign ag_fs_cents = settings.ag_cd_fs_threshold | default: 0 | times: 100 | round
+     assign ag_fs_left = ag_fs_cents | minus: cart.total_price
+     assign ag_fs_pct = 100
+     if ag_fs_cents > 0
+      assign ag_fs_pct = cart.total_price | times: 100 | divided_by: ag_fs_cents | at_most: 100
+     endif
+
+     assign ag_checkout_text = settings.ag_cd_checkout_text
+     if ag_checkout_text == blank
+      assign ag_checkout_text = 'sections.cart.checkout' | t
+     endif
+    -%}
+
+    <div
+     class="cart-drawer__footer ag-cd__foot"
+     data-ag-item-count="{{ cart.item_count }}"
+     data-ag-codes="{{ ag_codes_str | escape }}"
+     {{ block.shopify_attributes }}
+    >
+     {%- comment -%} 6. Free shipping progress {%- endcomment -%}
+     {%- if settings.ag_cd_show_fs and ag_fs_cents > 0 -%}
+      <div class="ag-cd__fs{% if ag_fs_left <= 0 %} is-done{% endif %}">
+       <p class="ag-cd__fs-text">
+        {%- if ag_fs_left > 0 -%}
+         {%- capture ag_fs_amount -%}<strong>{{ ag_fs_left | money }}</strong>{%- endcapture -%}
+         {{- settings.ag_cd_fs_text | escape | replace: '[amount]', ag_fs_amount -}}
+        {%- else -%}
+         {{- settings.ag_cd_fs_success | escape -}}
+        {%- endif -%}
+       </p>
+       <div class="ag-cd__fs-bar">
+        <div
+         class="ag-cd__fs-track"
+         role="progressbar"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         aria-valuenow="{{ ag_fs_pct }}"
+         aria-label="{{ settings.ag_cd_fs_label | default: 'Free shipping' | escape }}"
+        >
+         <span class="ag-cd__fs-fill" style="width: {{ ag_fs_pct }}%;"></span>
+        </div>
+        <span class="ag-cd__fs-icon" aria-hidden="true">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M2.5 6.5h11v9.5h-11zM13.5 10h4.2l3 3.2V16h-7.2z"/><circle cx="7" cy="17.6" r="1.7"/><circle cx="17.2" cy="17.6" r="1.7"/></svg>
+        </span>
+       </div>
+       {%- if settings.ag_cd_fs_label != blank -%}
+        <span class="ag-cd__fs-label">{{ settings.ag_cd_fs_label | escape }}</span>
+       {%- endif -%}
+      </div>
+     {%- endif -%}
+
+     {%- comment -%} 7. Discount code (applied via /cart/update.js in assets/ag-cart-drawer.js) {%- endcomment -%}
+     {%- if settings.ag_cd_show_discount -%}
+      <div
+       class="ag-cd__discount"
+       data-ag-discount
+       data-msg-success="{{ settings.ag_cd_discount_success | escape }}"
+       data-msg-error="{{ settings.ag_cd_discount_error | escape }}"
+      >
+       {%- if settings.ag_cd_discount_label != blank -%}
+        <label class="ag-cd__label" for="AgCartDiscount">{{ settings.ag_cd_discount_label | escape }}</label>
+       {%- endif -%}
+       <div class="ag-cd__discount-row">
+        <input
+         id="AgCartDiscount"
+         class="ag-cd__input"
+         type="text"
+         data-ag-discount-input
+         placeholder="{{ settings.ag_cd_discount_placeholder | escape }}"
+         aria-label="{{ settings.ag_cd_discount_label | default: settings.ag_cd_discount_placeholder | escape }}"
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="characters"
+         spellcheck="false"
+         enterkeyhint="done"
+        >
+        <button type="button" class="ag-cd__apply" data-ag-discount-apply>
+         {{- settings.ag_cd_discount_button | default: 'Apply' | escape -}}
+        </button>
+       </div>
+       <p class="ag-cd__msg" data-ag-discount-msg role="status" aria-live="polite"></p>
+       {%- if ag_codes_list.size > 0 -%}
+        <ul class="ag-cd__codes" role="list">
+         {%- for ag_code in ag_codes_list -%}
+          <li class="ag-cd__code">
+           {{- 'icon-discount.svg' | inline_asset_content -}}
+           <span>{{ ag_code | escape }}</span>
+           <button
+            type="button"
+            class="ag-cd__code-remove"
+            data-ag-discount-remove="{{ ag_code | escape }}"
+            aria-label="{{ 'accessibility.close' | t }}: {{ ag_code | escape }}"
+           >
+            <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 3l6 6M9 3 3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+           </button>
+          </li>
+         {%- endfor -%}
+        </ul>
+       {%- endif -%}
+      </div>
+     {%- endif -%}
+
+     {%- comment -%} 8. Discounts + subtotal {%- endcomment -%}
+     {%- if cart.cart_level_discount_applications.size > 0 or settings.ag_cd_show_subtotal -%}
+      <div class="ag-cd__totals">
+       {%- for discount in cart.cart_level_discount_applications -%}
+        <div class="ag-cd__row ag-cd__row--discount">
+         <span>{{ discount.title | escape }}</span>
+         <span>-{{ discount.total_allocated_amount | money }}</span>
+        </div>
+       {%- endfor -%}
+       {%- if settings.ag_cd_show_subtotal -%}
+        <div class="ag-cd__row ag-cd__subtotal" role="status">
+         <span>{{ settings.ag_cd_subtotal_label | default: 'Subtotal' | escape }}</span>
+         <span class="ag-cd__subtotal-value">{{ cart.total_price | money }}</span>
+        </div>
+       {%- endif -%}
+      </div>
+     {%- endif -%}
+
+     {%- if settings.ag_cd_show_tax_note -%}
+      <small class="tax-note caption-large rte ag-cd__tax">
+       {%- if cart.duties_included and cart.taxes_included -%}
+        {%- if shop.shipping_policy.body == blank -%}
+         {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+        {%- else -%}
+         {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+        {%- endif -%}
+       {%- elsif cart.duties_included == false and cart.taxes_included -%}
+        {%- if shop.shipping_policy.body == blank -%}
+         {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+        {%- else -%}
+         {{ 'sections.cart.taxes_included_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+        {%- endif -%}
+       {%- elsif cart.duties_included and cart.taxes_included == false -%}
+        {%- if shop.shipping_policy.body == blank -%}
+         {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+        {%- else -%}
+         {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+        {%- endif -%}
+       {%- else -%}
+        {%- if shop.shipping_policy.body == blank -%}
+         {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+        {%- else -%}
+         {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html' | t: link: shop.shipping_policy.url }}
+        {%- endif -%}
+       {%- endif -%}
+      </small>
+     {%- endif -%}
+
+     {%- comment -%} 9. Checkout button ("?discount=" fallback keeps codes on the way to checkout) {%- endcomment -%}
+     <div class="cart__ctas">
+      <button
+       type="submit"
+       id="CartDrawer-Checkout"
+       class="cart__checkout-button ag-cd__checkout"
+       name="checkout"
+       form="CartDrawer-Form"
+       {% if ag_codes_str != blank %}
+        formaction="{{ routes.cart_url }}?discount={{ ag_codes_str | url_encode }}"
+       {% endif %}
+       {% if cart == empty %}
+        disabled
+       {% endif %}
+      >
+       <span>{{ ag_checkout_text | escape }}</span>
+       {%- if settings.ag_cd_checkout_price -%}
+        <span class="ag-cd__checkout-dot" aria-hidden="true">&bull;</span>
+        <span class="ag-cd__checkout-total">{{ cart.total_price | money }}</span>
+       {%- endif -%}
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</cart-drawer>

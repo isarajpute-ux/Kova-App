@@ -1,0 +1,1738 @@
+{%- liquid
+  assign s = section.settings
+  assign cv = product.selected_or_first_available_variant
+  assign form_id = 'agForm-' | append: section.id
+  assign default_qty = 1
+  assign default_save = 0
+  for block in section.blocks
+    if block.type == 'bundle' and block.settings.is_default
+      assign default_qty = block.settings.qty
+      assign default_save = block.settings.save_pct
+    endif
+  endfor
+  assign cmp = cv.compare_at_price | default: 0
+  case s.image_ratio
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '5 / 4'
+    else
+      assign ratio = '1 / 1'
+  endcase
+  case s.pill_av_shape
+    when 'circle'
+      assign pill_r = '50%'
+    when 'rounded'
+      assign pill_r = '30%'
+    else
+      assign pill_r = '3px'
+  endcase
+  case s.mr_shape
+    when 'circle'
+      assign mr_r = '50%'
+    when 'rounded'
+      assign mr_r = '10px'
+    else
+      assign mr_r = '0'
+  endcase
+-%}
+{{ 'ag-sternify.css' | asset_url | stylesheet_tag }}
+{{ 'ag-video.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ s.font_family | default: 'Poppins' | replace: ' ', '+' }}:wght@400;500;600;700&display=swap">
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'ag-sternify.js' | asset_url }}" defer="defer"></script>
+<style>
+  #ag-{{ section.id }}{--ag-font:'{{ s.font_family | default: 'Poppins' }}',sans-serif;--ag-bg:{{ s.c_bg }};--ag-ink:{{ s.c_ink }};--ag-muted:{{ s.c_muted }};--ag-title:{{ s.c_title }};--ag-wine:{{ s.c_btn }};--ag-wine2:{{ s.c_btn2 }};--ag-soft:{{ s.c_soft }};--ag-line:{{ s.c_line }};--ag-red:{{ s.c_red }};--ag-star:{{ s.c_star }};--ag-gold:{{ s.c_gold }};--ag-hl:{{ s.c_highlight }};--ag-bundle-bg:{{ s.c_bundle }};--deal-bg:{{ s.deal_bg }};--deal-c:{{ s.deal_color }};--deal-code-bg:{{ s.deal_code_bg }};--spots-c:{{ s.spots_color }};--ag-radius:{{ s.radius }}px;--ag-ratio:{{ ratio }};--ag-title-m:{{ s.title_size_m }}px;--ag-title-d:{{ s.title_size_d }}px;--ag-pill-w:{{ s.pill_av_w }}px;--ag-pill-h:{{ s.pill_av_h }}px;--ag-pill-r:{{ pill_r }};--ag-pill-bw:{{ s.pill_av_border }}px;--ag-pill-bc:{{ s.pill_av_border_color }};--mr-w:{{ s.mr_w }}px;--mr-h:{{ s.mr_h }}px;--mr-r:{{ mr_r }};--mr-bw:{{ s.mr_border }}px;--mr-bc:{{ s.mr_border_color }};--mr-av-bg:{{ s.mr_av_bg }};--mr-av-c:{{ s.mr_av_text }};--mr-name-c:{{ s.mr_name_color }};--mr-name-s:{{ s.mr_name_size }}px;--mr-text-c:{{ s.mr_text_color }};--mr-text-s:{{ s.mr_text_size }}px;--mr-ver-c:{{ s.mr_ver_color }};--mr-bg:{{ s.mr_bg }};--mr-line:{{ s.mr_line }};--mr-arrow-bg:{{ s.mr_arrow_bg }};--mr-arrow-c:{{ s.mr_arrow_color }};padding-top:{{ s.pad_top }}px;padding-bottom:{{ s.pad_bottom }}px}
+</style>
+
+<section id="ag-{{ section.id }}" class="agS agP" data-ag-product data-money-format="{{ shop.money_format | strip_html | escape }}" data-price="{{ cv.price }}" data-compare="{{ cmp }}" data-available="{{ cv.available }}" data-sold-out="{{ s.soldout_text | escape }}" data-show-compare="{{ s.show_compare }}">
+  <div class="agWrap">
+    <div class="agP__grid">
+
+      {%- comment -%} ========== GALLERY ========== {%- endcomment -%}
+      <div class="agP__media">
+        <div class="agP__stage{% unless s.show_side_cards %} agP__stage--solo{% endunless %}">
+          <div class="agP__main">
+            <div class="agP__track" data-ag-track>
+              {%- for media in product.media -%}
+                <div class="agP__slide" data-index="{{ forloop.index0 }}">
+                  {%- if media.media_type == 'image' -%}
+                    {%- liquid
+                      if forloop.first
+                        assign lz = 'eager'
+                      else
+                        assign lz = 'lazy'
+                      endif
+                      assign malt = media.alt | default: product.title | escape
+                    -%}
+                    {{ media | image_url: width: 1400 | image_tag: loading: lz, widths: '400, 600, 800, 1000, 1200, 1400', sizes: '(min-width: 990px) 46vw, 100vw', alt: malt, class: 'agP__img' }}
+                  {%- else -%}
+                    {{ media | media_tag: image_size: '1200x', autoplay: false, loop: true, controls: true }}
+                  {%- endif -%}
+                </div>
+              {%- else -%}
+                <div class="agP__slide">{{ 'product-1' | placeholder_svg_tag: 'agP__ph' }}</div>
+              {%- endfor -%}
+            </div>
+            {%- if product.media.size > 1 -%}
+              <button type="button" class="agP__arrow agP__arrow--prev" data-ag-prev aria-label="Previous image">{% render 'ag-icon', name: 'chevron-left', stroke: 2 %}</button>
+              <button type="button" class="agP__arrow agP__arrow--next" data-ag-next aria-label="Next image">{% render 'ag-icon', name: 'chevron-right', stroke: 2 %}</button>
+            {%- endif -%}
+          </div>
+
+          {%- if s.show_side_cards -%}
+            <div class="agP__side">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'side_card' -%}
+                  <div class="agP__sideCard" {{ block.shopify_attributes }}>
+                    <span class="agP__sideIc" style="color:{{ block.settings.icon_color }}">{% render 'ag-icon', name: block.settings.icon %}</span>
+                    <strong>{{ block.settings.title }}</strong>
+                    <span class="sub">{{ block.settings.sub }}</span>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if s.show_thumbs and product.media.size > 1 -%}
+          <div class="agP__thumbs">
+            <button type="button" class="agP__thumbNav" data-ag-tprev aria-label="Scroll thumbnails left">{% render 'ag-icon', name: 'chevron-left' %}</button>
+            <div class="agP__thumbTrack" data-ag-thumbs>
+              {%- for media in product.media -%}
+                <button type="button" class="agP__thumb{% if forloop.first %} is-active{% endif %}" data-ag-thumb="{{ forloop.index0 }}" aria-label="Show image {{ forloop.index }}">
+                  {{ media.preview_image | image_url: width: 180 | image_tag: loading: 'lazy', alt: '' }}
+                </button>
+              {%- endfor -%}
+            </div>
+            <button type="button" class="agP__thumbNav" data-ag-tnext aria-label="Scroll thumbnails right">{% render 'ag-icon', name: 'chevron-right' %}</button>
+          </div>
+        {%- endif -%}
+
+        {%- if s.show_callout and s.callout_text != blank -%}
+          <div class="agP__callout agOnlyD">
+            <span class="agP__calloutIc">{% render 'ag-icon', name: s.callout_icon %}</span>
+            <div>{{ s.callout_text }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} ========== BUY BOX ========== {%- endcomment -%}
+      <div class="agP__info">
+        <div class="agP__rating">
+          {% render 'ag-stars', rating: s.rating %}
+          {%- if s.reviews_text != blank -%}<a href="{{ s.reviews_link | default: '#agReviews' }}" class="agP__rlink">{{ s.reviews_text }}</a>{%- endif -%}
+        </div>
+
+        <h1 class="agP__title">{{ s.title_override | default: product.title }}</h1>
+
+        {%- if s.desc != blank -%}<div class="agP__desc">{{ s.desc }}</div>{%- endif -%}
+
+        {%- if s.show_pill -%}
+          <div class="agP__pill">
+            <span class="agP__pillAv">
+              {%- if s.pill_avatar != blank -%}
+                {{ s.pill_avatar | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {%- elsif product.featured_media -%}
+                {{ product.featured_media | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span>{{ s.pill_text }}</span>
+          </div>
+        {%- endif -%}
+
+        <div class="agP__priceRow">
+          <span class="agP__price" data-ag-price>{{ cv.price | money }}</span>
+          {%- liquid
+            assign show_cmp = false
+            if s.show_compare and cmp > cv.price
+              assign show_cmp = true
+              assign off = cmp | minus: cv.price | times: 100 | divided_by: cmp
+            endif
+          -%}
+          <s class="agP__compare" data-ag-compare{% unless show_cmp %} hidden{% endunless %}>{% if show_cmp %}{{ cmp | money }}{% endif %}</s>
+          <span class="agP__off" data-ag-off{% unless show_cmp %} hidden{% endunless %}>{% if show_cmp %}-{{ off }}%{% endif %}</span>
+        </div>
+        {%- if s.bubble_text != blank -%}<div class="agP__bubble">{{ s.bubble_text }}</div>{%- endif -%}
+        {%- if s.show_deal -%}
+          <div class="agDeal" data-ag-deal data-hours="{{ s.deal_hours }}">
+            <div class="agDeal__t"><span class="agDeal__ic">{% render 'ag-icon', name: 'clock', stroke: 2 %}</span><span>{{ s.deal_text }}</span> <b class="agDeal__clock" data-deal-clock>{{ s.deal_hours | prepend: '0' | slice: -2, 2 }}:00:00</b></div>
+            {%- if s.deal_code != blank -%}<button type="button" class="agDeal__code" data-ag-copy="{{ s.deal_code | escape }}" data-copied="{{ s.deal_copied | escape }}" aria-label="Copy code {{ s.deal_code | escape }}"><span data-copy-label>{{ s.deal_code }}</span>{% render 'ag-icon', name: 'copy' %}</button>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- capture benefits -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'benefit' -%}
+              <li class="agP__benefit" {{ block.shopify_attributes }}><span style="color:{{ block.settings.icon_color }}">{% render 'ag-icon', name: block.settings.icon %}</span><span>{{ block.settings.text }}</span></li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if benefits != blank -%}<ul class="agP__benefits">{{ benefits }}</ul>{%- endif -%}
+
+        {%- if s.show_mr -%}
+          {%- capture slides -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'mini_review' -%}
+                <div class="agMR__slide" {{ block.shopify_attributes }}>
+                  <div class="agMR__img">
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: block.settings.name }}
+                    {%- else -%}
+                      {%- assign nm = block.settings.name | split: ' ' -%}
+                      <span class="agMR__ini">{{ nm[0] | slice: 0 }}{{ nm[1] | slice: 0 }}</span>
+                    {%- endif -%}
+                  </div>
+                  <div class="agMR__body">
+                    <div class="agMR__head"><strong class="agMR__name">{{ block.settings.name }}</strong>{% render 'ag-stars', rating: block.settings.rating, star_color: s.mr_star_color, star_size: s.mr_star_size %}</div>
+                    {%- if s.mr_show_verified and s.mr_ver_text != blank -%}<span class="agMR__ver">{% render 'ag-icon', name: s.mr_ver_icon %}{{ s.mr_ver_text }}</span>{%- endif -%}
+                    <p class="agMR__text">{{ block.settings.text }}</p>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if slides != blank -%}
+            <div class="agMR agMR--{{ s.mr_style }}" id="agReviews" data-ag-mr data-autoplay="{{ s.mr_autoplay }}" data-speed="{{ s.mr_speed }}">
+              <button type="button" class="agMR__nav agMR__nav--prev" data-mr-prev aria-label="Previous review">{% render 'ag-icon', name: 'chevron-left', stroke: 2 %}</button>
+              <div class="agMR__viewport"><div class="agMR__track" data-mr-track>{{ slides }}</div></div>
+              <button type="button" class="agMR__nav agMR__nav--next" data-mr-next aria-label="Next review">{% render 'ag-icon', name: 'chevron-right', stroke: 2 %}</button>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- unless product.has_only_default_variant -%}
+          <div class="agP__opt">
+            <div class="agP__optLabel"><strong>{{ s.variant_label | default: product.options.first }}</strong> – <span data-ag-vlabel>{{ cv.title }}</span></div>
+            <div class="agP__pills agP__pills--{{ s.pill_style }}" role="radiogroup" aria-label="{{ product.options.first | escape }}">
+              {%- for v in product.variants -%}
+                <button type="button" role="radio" aria-checked="{% if v.id == cv.id %}true{% else %}false{% endif %}" class="agP__pillBtn{% if v.id == cv.id %} is-active{% endif %}" data-ag-variant="{{ v.id }}" data-price="{{ v.price }}" data-compare="{{ v.compare_at_price | default: 0 }}" data-available="{{ v.available }}" data-title="{{ v.title | escape }}"{% if v.featured_media %} data-media="{{ v.featured_media.position | minus: 1 }}"{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.title }}</button>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endunless -%}
+
+        {%- if s.show_stock and s.stock_text != blank -%}
+          <p class="agP__stock{% if s.stock_glow %} is-glow{% endif %}"><span class="agP__dot"></span>{{ s.stock_text }}</p>
+        {%- endif -%}
+        {%- if s.show_spots and s.spots_text != blank -%}
+          {%- liquid
+            assign spots_pct = s.spots_count | times: 100 | divided_by: s.spots_total
+            if spots_pct > 100
+              assign spots_pct = 100
+            endif
+          -%}
+          <div class="agSpots">
+            <p class="agSpots__t">{% render 'ag-icon', name: 'bolt', stroke: 2 %}<span>{{ s.spots_text | replace: '[n]', s.spots_count }}</span></p>
+            {%- if s.spots_bar -%}<div class="agSpots__bar" aria-hidden="true"><span style="width:{{ spots_pct }}%"></span></div>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if s.show_bundles -%}
+          {%- capture bundles -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'bundle' -%}
+                {%- liquid
+                  assign bq = block.settings.qty
+                  assign keep = 100 | minus: block.settings.save_pct
+                  assign btotal = cv.price | times: bq | times: keep | divided_by: 100
+                  assign bunit = cv.price
+                  if cmp > cv.price
+                    assign bunit = cmp
+                  endif
+                  assign bbase = bunit | times: bq
+                -%}
+                <label class="agB__card{% if block.settings.is_default %} is-active{% endif %}" data-ag-bundle data-qty="{{ bq }}" data-save="{{ block.settings.save_pct }}" {{ block.shopify_attributes }}>
+                  <input type="radio" name="agBundle-{{ section.id }}" value="{{ bq }}"{% if block.settings.is_default %} checked{% endif %}>
+                  <span class="agB__img">
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                    {%- elsif product.featured_media -%}
+                      {{ product.featured_media | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                    {%- endif -%}
+                    {%- if bq > 1 -%}<em class="agB__x">×{{ bq }}</em>{%- endif -%}
+                  </span>
+                  <span class="agB__txt"><strong>{{ block.settings.title }}</strong><small>{{ block.settings.sub }}</small></span>
+                  <span class="agB__price"><b data-ag-bprice>{{ btotal | money }}</b><s data-ag-bcompare{% unless bbase > btotal %} hidden{% endunless %}>{{ bbase | money }}</s></span>
+                  {%- if block.settings.badge != blank -%}<span class="agB__badge" style="background:{{ block.settings.badge_color }}">{{ block.settings.badge }}</span>{%- endif -%}
+                </label>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if bundles != blank -%}
+            <div class="agB" role="radiogroup" aria-label="{{ s.bundle_heading | escape }}">
+              {%- if s.bundle_heading != blank -%}<div class="agB__head"><span>{{ s.bundle_heading }}</span></div>{%- endif -%}
+              {{ bundles }}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- liquid
+          assign keep0 = 100 | minus: default_save
+          assign atc_total = cv.price | times: default_qty | times: keep0 | divided_by: 100
+        -%}
+        <product-form class="agP__form" data-section-id="{{ section.id }}" data-hide-errors="false">
+          {%- form 'product', product, id: form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+            <input type="hidden" name="id" value="{{ cv.id }}" class="product-variant-id" data-ag-id>
+            <input type="hidden" name="quantity" value="{{ default_qty }}" data-ag-qty>
+            <div class="product-form__error-message-wrapper agP__err" role="alert" hidden>
+              <span class="product-form__error-message"></span>
+            </div>
+            <button type="submit" name="add" class="agP__atc" data-ag-atc{% unless cv.available %} disabled{% endunless %}>
+              <span data-ag-atc-label>{%- if cv.available -%}{{ s.atc_text }}{%- if s.atc_show_price -%} <i class="agP__sep">•</i> <span data-ag-atc-price>{{ atc_total | money }}</span>{%- endif -%}{%- else -%}{{ s.soldout_text }}{%- endif -%}</span>
+              <div class="loading__spinner hidden"><svg class="agSpin" viewBox="0 0 66 66" aria-hidden="true"><circle stroke-width="6" cx="33" cy="33" r="30" fill="none" stroke="currentColor" stroke-dasharray="140" stroke-linecap="round"></circle></svg></div>
+            </button>
+            {%- if s.show_dynamic_checkout -%}<div class="agP__dyn">{{ form | payment_button }}</div>{%- endif -%}
+          {%- endform -%}
+        </product-form>
+
+        {%- if s.ship_text != blank -%}<p class="agP__ship">{{ s.ship_text }}</p>{%- endif -%}
+
+        {%- if s.show_payment -%}
+          <ul class="agP__pay" aria-label="Payment methods">
+            {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag: class: 'agP__payIc' }}</li>{%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if s.loved_text != blank -%}
+          <div class="agP__loved"><p>{{ s.loved_text }}</p>{% render 'ag-stars', rating: 5, star_color: s.c_gold, star_size: 14 %}</div>
+        {%- endif -%}
+
+        {%- if s.show_ugc -%}
+          {%- capture ugc -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'ugc' -%}
+                <div class="agP__ugcItem{% if block.settings.video != blank %} agP__ugcItem--vid{% endif %}" data-ag-vcard {{ block.shopify_attributes }}>
+                  {%- if block.settings.video != blank -%}
+                    {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata', image_size: '480x', class: 'agVid' }}
+                    <span class="agVid__snd" aria-hidden="true"><span class="off">{% render 'ag-icon', name: 'sound-off', stroke: 2 %}</span><span class="on">{% render 'ag-icon', name: 'sound-on', stroke: 2 %}</span></span>
+                  {%- elsif block.settings.image != blank -%}
+                    {{ block.settings.image | image_url: width: 500 | image_tag: loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 990px) 15vw, 33vw', alt: block.settings.alt }}
+                  {%- elsif product.media.size > 0 -%}
+                    {%- assign um = forloop.index | modulo: product.media.size -%}
+                    {{ product.media[um].preview_image | image_url: width: 500 | image_tag: loading: 'lazy', alt: '' }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if ugc != blank -%}<div class="agP__ugc">{{ ugc }}</div>{%- endif -%}
+        {%- endif -%}
+
+        {%- if s.quote_text != blank -%}
+          <figure class="agP__quote"><blockquote>{{ s.quote_text }}</blockquote>{%- if s.quote_name != blank -%}<figcaption>{{ s.quote_name }}</figcaption>{%- endif -%}</figure>
+        {%- endif -%}
+
+        {%- capture feats -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'feature' -%}
+              <div class="agP__feat" {{ block.shopify_attributes }}>
+                <span class="agP__featIc" style="color:{{ block.settings.icon_color }}">{% render 'ag-icon', name: block.settings.icon %}</span>
+                <div><strong>{{ block.settings.title }}</strong><span>{{ block.settings.sub }}</span></div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if feats != blank -%}<div class="agP__feats">{{ feats }}</div>{%- endif -%}
+
+        {%- if s.show_eta -%}
+          <div class="agP__etaWrap" data-ag-eta data-cutoff="{{ s.cutoff_hour }}" data-ship-min="{{ s.ship_min }}" data-ship-max="{{ s.ship_max }}" data-del-min="{{ s.del_min }}" data-del-max="{{ s.del_max }}" data-style="{{ s.date_style }}">
+            <p class="agP__eta">{{ s.eta_before }} <b data-eta-left>--h : --m</b> {{ s.eta_after }}</p>
+            <div class="agTL">
+              <span class="agTL__line" aria-hidden="true"></span>
+              <div class="agTL__step"><span class="agTL__ic">{% render 'ag-icon', name: 'bag' %}</span><strong>{{ s.tl_1 }}</strong><span class="agTL__d">{{ s.tl_1_sub }}</span></div>
+              <div class="agTL__step"><span class="agTL__ic">{% render 'ag-icon', name: 'truck' %}</span><strong>{{ s.tl_2 }}</strong><span class="agTL__d" data-eta-ship>&nbsp;</span></div>
+              <div class="agTL__step"><span class="agTL__ic">{% render 'ag-icon', name: 'box' %}</span><strong>{{ s.tl_3 }}</strong><span class="agTL__d" data-eta-del>&nbsp;</span></div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- capture accs -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'accordion' -%}
+              <details class="agAcc__item" data-ag-acc{% if block.settings.open %} open{% endif %} {{ block.shopify_attributes }}>
+                <summary class="agAcc__sum"><span style="color:{{ block.settings.icon_color }}">{% render 'ag-icon', name: block.settings.icon %}</span><span>{{ block.settings.title }}</span><span class="agAcc__chev">{% render 'ag-icon', name: 'chevron-down' %}</span></summary>
+                <div class="agAcc__body">{{ block.settings.content }}</div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if accs != blank -%}<div class="agAcc">{{ accs }}</div>{%- endif -%}
+
+        {%- if s.show_callout and s.callout_text != blank -%}
+          <div class="agP__callout agOnlyM">
+            <span class="agP__calloutIc">{% render 'ag-icon', name: s.callout_icon %}</span>
+            <div>{{ s.callout_text }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.show_sticky -%}
+    <div class="agSticky" data-ag-sticky aria-hidden="true">
+      <div class="agSticky__img">{%- if product.featured_media -%}{{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</div>
+      <div class="agSticky__txt"><p class="agSticky__t">{{ s.title_override | default: product.title }}</p><p class="agSticky__p"><span data-ag-atc-price>{{ atc_total | money }}</span></p></div>
+      <button type="button" class="agSticky__btn" data-ag-sticky-btn tabindex="-1">{{ s.sticky_btn }}</button>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+ "name": "AuraGlow product page",
+ "tag": "div",
+ "class": "ag-section",
+ "enabled_on": {
+  "templates": [
+   "product"
+  ]
+ },
+ "max_blocks": 50,
+ "settings": [
+  {
+   "type": "header",
+   "content": "Layout & colours"
+  },
+  {
+   "type": "text",
+   "id": "font_family",
+   "label": "Font (any Google Font name)",
+   "default": "Poppins"
+  },
+  {
+   "type": "range",
+   "id": "pad_top",
+   "label": "Top spacing",
+   "min": 0,
+   "max": 100,
+   "step": 2,
+   "unit": "px",
+   "default": 20
+  },
+  {
+   "type": "range",
+   "id": "pad_bottom",
+   "label": "Bottom spacing",
+   "min": 0,
+   "max": 100,
+   "step": 2,
+   "unit": "px",
+   "default": 36
+  },
+  {
+   "type": "range",
+   "id": "radius",
+   "label": "Main image corner radius",
+   "min": 0,
+   "max": 32,
+   "step": 1,
+   "unit": "px",
+   "default": 14
+  },
+  {
+   "type": "color",
+   "id": "c_bg",
+   "label": "Background",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "color",
+   "id": "c_ink",
+   "label": "Text",
+   "default": "#1B1B1B"
+  },
+  {
+   "type": "color",
+   "id": "c_muted",
+   "label": "Muted text",
+   "default": "#6F6F6F"
+  },
+  {
+   "type": "color",
+   "id": "c_title",
+   "label": "Title colour",
+   "default": "#5A1F2E"
+  },
+  {
+   "type": "color",
+   "id": "c_btn",
+   "label": "Button colour (left)",
+   "default": "#4A1825"
+  },
+  {
+   "type": "color",
+   "id": "c_btn2",
+   "label": "Button colour (right)",
+   "default": "#7A3446"
+  },
+  {
+   "type": "color",
+   "id": "c_soft",
+   "label": "Card background",
+   "default": "#F6EBE8"
+  },
+  {
+   "type": "color",
+   "id": "c_line",
+   "label": "Borders",
+   "default": "#EADFDC"
+  },
+  {
+   "type": "color",
+   "id": "c_red",
+   "label": "Accent red (stock, badges, review stars)",
+   "default": "#C8102E"
+  },
+  {
+   "type": "color",
+   "id": "c_star",
+   "label": "Rating stars",
+   "default": "#6E3443"
+  },
+  {
+   "type": "color",
+   "id": "c_gold",
+   "label": "Gold stars",
+   "default": "#F2B01E"
+  },
+  {
+   "type": "color",
+   "id": "c_highlight",
+   "label": "Highlighted words",
+   "default": "#B0476A"
+  },
+  {
+   "type": "color",
+   "id": "c_bundle",
+   "label": "Bundle card background",
+   "default": "#FBF3F1"
+  },
+  {
+   "type": "header",
+   "content": "Gallery"
+  },
+  {
+   "type": "select",
+   "id": "image_ratio",
+   "label": "Main image shape",
+   "default": "square",
+   "options": [
+    {
+     "value": "square",
+     "label": "Square"
+    },
+    {
+     "value": "portrait",
+     "label": "Portrait"
+    },
+    {
+     "value": "landscape",
+     "label": "Landscape"
+    }
+   ]
+  },
+  {
+   "type": "checkbox",
+   "id": "show_side_cards",
+   "label": "Show feature cards beside image",
+   "default": true
+  },
+  {
+   "type": "checkbox",
+   "id": "show_thumbs",
+   "label": "Show thumbnails",
+   "default": true
+  },
+  {
+   "type": "checkbox",
+   "id": "show_callout",
+   "label": "Show callout card",
+   "default": true
+  },
+  {
+   "type": "select",
+   "id": "callout_icon",
+   "label": "Callout icon",
+   "default": "heart-fill",
+   "options": [
+    {
+     "value": "heart-fill",
+     "label": "Heart"
+    },
+    {
+     "value": "gift",
+     "label": "Gift"
+    },
+    {
+     "value": "tree",
+     "label": "Tree"
+    },
+    {
+     "value": "sparkle",
+     "label": "Sparkle"
+    },
+    {
+     "value": "snowflake",
+     "label": "Snowflake"
+    },
+    {
+     "value": "shield",
+     "label": "Shield"
+    }
+   ]
+  },
+  {
+   "type": "richtext",
+   "id": "callout_text",
+   "label": "Callout text",
+   "default": "<p>Every AuraGlow ships in a <strong>gift-ready box</strong> — ready to wrap the moment it lands on your doorstep.</p>"
+  },
+  {
+   "type": "header",
+   "content": "Title, rating & description"
+  },
+  {
+   "type": "range",
+   "id": "rating",
+   "label": "Star rating",
+   "min": 0,
+   "max": 5,
+   "step": 0.1,
+   "default": 4.8
+  },
+  {
+   "type": "text",
+   "id": "reviews_text",
+   "label": "Review count text",
+   "default": "1,547 Reviews"
+  },
+  {
+   "type": "text",
+   "id": "reviews_link",
+   "label": "Review link (anchor or URL)",
+   "default": "#agReviews"
+  },
+  {
+   "type": "text",
+   "id": "title_override",
+   "label": "Title (blank = product title)"
+  },
+  {
+   "type": "range",
+   "id": "title_size_m",
+   "label": "Title size (mobile)",
+   "min": 18,
+   "max": 44,
+   "step": 1,
+   "unit": "px",
+   "default": 26
+  },
+  {
+   "type": "range",
+   "id": "title_size_d",
+   "label": "Title size (desktop)",
+   "min": 20,
+   "max": 60,
+   "step": 1,
+   "unit": "px",
+   "default": 32
+  },
+  {
+   "type": "richtext",
+   "id": "desc",
+   "label": "Description (italic words get the highlight colour)",
+   "default": "<p>Most tree lights tangle, burn out or take an hour to hang. AuraGlow is <em>up in 60 seconds</em> and plays 200+ animated patterns from your phone.</p>"
+  },
+  {
+   "type": "header",
+   "content": "Avatar pill"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_pill",
+   "label": "Show avatar pill",
+   "default": true
+  },
+  {
+   "type": "image_picker",
+   "id": "pill_avatar",
+   "label": "Avatar image"
+  },
+  {
+   "type": "text",
+   "id": "pill_text",
+   "label": "Pill text",
+   "default": "One strand, the whole tree"
+  },
+  {
+   "type": "range",
+   "id": "pill_av_w",
+   "label": "Avatar width",
+   "min": 14,
+   "max": 80,
+   "step": 1,
+   "unit": "px",
+   "default": 24
+  },
+  {
+   "type": "range",
+   "id": "pill_av_h",
+   "label": "Avatar height",
+   "min": 14,
+   "max": 80,
+   "step": 1,
+   "unit": "px",
+   "default": 24
+  },
+  {
+   "type": "select",
+   "id": "pill_av_shape",
+   "label": "Avatar shape",
+   "default": "circle",
+   "options": [
+    {
+     "value": "circle",
+     "label": "Circle"
+    },
+    {
+     "value": "rounded",
+     "label": "Rounded square"
+    },
+    {
+     "value": "square",
+     "label": "Square"
+    }
+   ]
+  },
+  {
+   "type": "range",
+   "id": "pill_av_border",
+   "label": "Avatar border",
+   "min": 0,
+   "max": 4,
+   "step": 1,
+   "unit": "px",
+   "default": 0
+  },
+  {
+   "type": "color",
+   "id": "pill_av_border_color",
+   "label": "Avatar border colour",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "header",
+   "content": "Price"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_compare",
+   "label": "Show compare-at price and % badge",
+   "info": "Appears when the variant has a Compare-at price.",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "bubble_text",
+   "label": "Speech-bubble text under price",
+   "default": "One strand lights a full 6 ft tree"
+  },
+  {
+   "type": "header",
+   "content": "Countdown + discount code (under price)"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_deal",
+   "label": "Show countdown + code box",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "deal_text",
+   "label": "Countdown text",
+   "default": "Extra 25% off ends in"
+  },
+  {
+   "type": "range",
+   "id": "deal_hours",
+   "label": "Timer length (resets every day)",
+   "min": 1,
+   "max": 23,
+   "step": 1,
+   "unit": "h",
+   "default": 5
+  },
+  {
+   "type": "text",
+   "id": "deal_code",
+   "label": "Discount code",
+   "default": "XMAS25"
+  },
+  {
+   "type": "text",
+   "id": "deal_copied",
+   "label": "Copied message",
+   "default": "Copied!"
+  },
+  {
+   "type": "color",
+   "id": "deal_bg",
+   "label": "Box background",
+   "default": "#FBF1EF"
+  },
+  {
+   "type": "color",
+   "id": "deal_color",
+   "label": "Accent (border, timer)",
+   "default": "#9E1B32"
+  },
+  {
+   "type": "color",
+   "id": "deal_code_bg",
+   "label": "Code background",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "header",
+   "content": "Variants"
+  },
+  {
+   "type": "text",
+   "id": "variant_label",
+   "label": "Variant label (blank = option name)"
+  },
+  {
+   "type": "select",
+   "id": "pill_style",
+   "label": "Variant button style",
+   "default": "soft",
+   "options": [
+    {
+     "value": "soft",
+     "label": "Soft (ROSÉE)"
+    },
+    {
+     "value": "solid",
+     "label": "Solid pill (GRIPT)"
+    }
+   ]
+  },
+  {
+   "type": "checkbox",
+   "id": "show_stock",
+   "label": "Show stock line",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "stock_text",
+   "label": "Stock text",
+   "default": "Almost out of stock"
+  },
+  {
+   "type": "checkbox",
+   "id": "stock_glow",
+   "label": "Make stock text glow",
+   "default": true
+  },
+  {
+   "type": "checkbox",
+   "id": "show_spots",
+   "label": "Show discount spots line",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "spots_text",
+   "label": "Spots text ([n] = number)",
+   "default": "Only [n] discount spots left at this price"
+  },
+  {
+   "type": "range",
+   "id": "spots_count",
+   "label": "Spots left",
+   "min": 1,
+   "max": 100,
+   "step": 1,
+   "default": 30
+  },
+  {
+   "type": "range",
+   "id": "spots_total",
+   "label": "Total spots (for the bar)",
+   "min": 10,
+   "max": 500,
+   "step": 10,
+   "default": 200
+  },
+  {
+   "type": "checkbox",
+   "id": "spots_bar",
+   "label": "Show progress bar",
+   "default": true
+  },
+  {
+   "type": "color",
+   "id": "spots_color",
+   "label": "Spots colour",
+   "default": "#C8102E"
+  },
+  {
+   "type": "header",
+   "content": "Review slider"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_mr",
+   "label": "Show review slider",
+   "default": true
+  },
+  {
+   "type": "select",
+   "id": "mr_style",
+   "label": "Slider style",
+   "default": "lines",
+   "options": [
+    {
+     "value": "lines",
+     "label": "Lines above & below (GRIPT)"
+    },
+    {
+     "value": "card",
+     "label": "Rounded card"
+    }
+   ]
+  },
+  {
+   "type": "checkbox",
+   "id": "mr_autoplay",
+   "label": "Auto-slide",
+   "default": true
+  },
+  {
+   "type": "range",
+   "id": "mr_speed",
+   "label": "Seconds per review",
+   "min": 2,
+   "max": 12,
+   "step": 1,
+   "unit": "s",
+   "default": 5
+  },
+  {
+   "type": "paragraph",
+   "content": "Profile picture"
+  },
+  {
+   "type": "range",
+   "id": "mr_w",
+   "label": "Profile picture width",
+   "min": 20,
+   "max": 140,
+   "step": 2,
+   "unit": "px",
+   "default": 44
+  },
+  {
+   "type": "range",
+   "id": "mr_h",
+   "label": "Profile picture height",
+   "min": 20,
+   "max": 140,
+   "step": 2,
+   "unit": "px",
+   "default": 44
+  },
+  {
+   "type": "select",
+   "id": "mr_shape",
+   "label": "Profile picture shape",
+   "default": "circle",
+   "options": [
+    {
+     "value": "circle",
+     "label": "Circle"
+    },
+    {
+     "value": "rounded",
+     "label": "Rounded square"
+    },
+    {
+     "value": "square",
+     "label": "Square"
+    }
+   ]
+  },
+  {
+   "type": "range",
+   "id": "mr_border",
+   "label": "Profile picture border",
+   "min": 0,
+   "max": 6,
+   "step": 1,
+   "unit": "px",
+   "default": 2
+  },
+  {
+   "type": "color",
+   "id": "mr_border_color",
+   "label": "Profile picture border colour",
+   "default": "#F1D9D5"
+  },
+  {
+   "type": "color",
+   "id": "mr_av_bg",
+   "label": "Initials background (when no photo)",
+   "default": "#F6EBE8"
+  },
+  {
+   "type": "color",
+   "id": "mr_av_text",
+   "label": "Initials colour",
+   "default": "#5A1F2E"
+  },
+  {
+   "type": "paragraph",
+   "content": "Stars & text"
+  },
+  {
+   "type": "color",
+   "id": "mr_star_color",
+   "label": "Star colour",
+   "default": "#C8102E"
+  },
+  {
+   "type": "range",
+   "id": "mr_star_size",
+   "label": "Star size",
+   "min": 8,
+   "max": 28,
+   "step": 1,
+   "unit": "px",
+   "default": 13
+  },
+  {
+   "type": "color",
+   "id": "mr_name_color",
+   "label": "Name colour",
+   "default": "#1B1B1B"
+  },
+  {
+   "type": "range",
+   "id": "mr_name_size",
+   "label": "Name size",
+   "min": 10,
+   "max": 22,
+   "step": 1,
+   "unit": "px",
+   "default": 14
+  },
+  {
+   "type": "color",
+   "id": "mr_text_color",
+   "label": "Review text colour",
+   "default": "#555555"
+  },
+  {
+   "type": "range",
+   "id": "mr_text_size",
+   "label": "Review text size",
+   "min": 10,
+   "max": 20,
+   "step": 1,
+   "unit": "px",
+   "default": 13
+  },
+  {
+   "type": "checkbox",
+   "id": "mr_show_verified",
+   "label": "Show verified badge",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "mr_ver_text",
+   "label": "Verified badge text",
+   "default": "Verified buyer"
+  },
+  {
+   "type": "select",
+   "id": "mr_ver_icon",
+   "label": "Verified badge icon",
+   "default": "check-circle-fill",
+   "options": [
+    {
+     "value": "check-circle-fill",
+     "label": "Filled check"
+    },
+    {
+     "value": "check-circle",
+     "label": "Check circle"
+    },
+    {
+     "value": "check",
+     "label": "Check"
+    },
+    {
+     "value": "shield",
+     "label": "Shield"
+    },
+    {
+     "value": "star",
+     "label": "Star"
+    },
+    {
+     "value": "heart-fill",
+     "label": "Heart"
+    }
+   ]
+  },
+  {
+   "type": "color",
+   "id": "mr_ver_color",
+   "label": "Verified badge colour",
+   "default": "#1F6B3A"
+  },
+  {
+   "type": "paragraph",
+   "content": "Slider colours"
+  },
+  {
+   "type": "color",
+   "id": "mr_bg",
+   "label": "Background",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "color",
+   "id": "mr_line",
+   "label": "Lines / card border",
+   "default": "#EADFDC"
+  },
+  {
+   "type": "color",
+   "id": "mr_arrow_bg",
+   "label": "Arrow button background",
+   "default": "#FFFFFF"
+  },
+  {
+   "type": "color",
+   "id": "mr_arrow_color",
+   "label": "Arrow colour",
+   "default": "#333333"
+  },
+  {
+   "type": "header",
+   "content": "Bundles"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_bundles",
+   "label": "Show bundle picker",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "bundle_heading",
+   "label": "Bundle heading",
+   "default": "Build your glow"
+  },
+  {
+   "type": "paragraph",
+   "content": "Bundle discounts are applied at checkout by the automatic discounts 'AuraGlow 2 strands' and 'AuraGlow 3+ strands'. Keep the Save % here equal to those discounts."
+  },
+  {
+   "type": "header",
+   "content": "Button & trust"
+  },
+  {
+   "type": "text",
+   "id": "atc_text",
+   "label": "Button text",
+   "default": "Add to cart"
+  },
+  {
+   "type": "checkbox",
+   "id": "atc_show_price",
+   "label": "Show price in button",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "soldout_text",
+   "label": "Sold out text",
+   "default": "Sold out"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_dynamic_checkout",
+   "label": "Show Apple Pay / express checkout button",
+   "info": "Shows Apple Pay on iPhone & Safari, Google Pay or Shop Pay on other devices. Turn wallets on in Settings → Payments.",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "ship_text",
+   "label": "Text under button",
+   "default": "Free US shipping • 30-day money-back guarantee"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_payment",
+   "label": "Show mini payment icons",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "loved_text",
+   "label": "Social proof line",
+   "default": "Loved by <b>1,500+</b> families"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_ugc",
+   "label": "Show customer video / photo row",
+   "default": true
+  },
+  {
+   "type": "textarea",
+   "id": "quote_text",
+   "label": "Quote card text",
+   "default": "“Took me under a minute. The kids actually gasped when the Santa design came on — best tree we've ever had.”"
+  },
+  {
+   "type": "text",
+   "id": "quote_name",
+   "label": "Quote card name",
+   "default": "Jamie R. — verified buyer"
+  },
+  {
+   "type": "header",
+   "content": "Delivery estimate"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_eta",
+   "label": "Show delivery timeline",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "eta_before",
+   "label": "Text before timer",
+   "default": "If you order within"
+  },
+  {
+   "type": "text",
+   "id": "eta_after",
+   "label": "Text after timer",
+   "default": "you'll get it by"
+  },
+  {
+   "type": "range",
+   "id": "cutoff_hour",
+   "label": "Daily order cut-off hour (24h)",
+   "min": 0,
+   "max": 23,
+   "step": 1,
+   "default": 23
+  },
+  {
+   "type": "range",
+   "id": "ship_min",
+   "label": "Ships in (min days)",
+   "min": 0,
+   "max": 15,
+   "step": 1,
+   "default": 1
+  },
+  {
+   "type": "range",
+   "id": "ship_max",
+   "label": "Ships in (max days)",
+   "min": 0,
+   "max": 15,
+   "step": 1,
+   "default": 3
+  },
+  {
+   "type": "range",
+   "id": "del_min",
+   "label": "Delivered in (min days)",
+   "min": 1,
+   "max": 30,
+   "step": 1,
+   "default": 5
+  },
+  {
+   "type": "range",
+   "id": "del_max",
+   "label": "Delivered in (max days)",
+   "min": 1,
+   "max": 30,
+   "step": 1,
+   "default": 9
+  },
+  {
+   "type": "select",
+   "id": "date_style",
+   "label": "Date style",
+   "default": "short",
+   "options": [
+    {
+     "value": "short",
+     "label": "Dec 12"
+    },
+    {
+     "value": "long",
+     "label": "December 12"
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "id": "tl_1",
+   "label": "Step 1",
+   "default": "Ordered"
+  },
+  {
+   "type": "text",
+   "id": "tl_1_sub",
+   "label": "Step 1 date",
+   "default": "Today"
+  },
+  {
+   "type": "text",
+   "id": "tl_2",
+   "label": "Step 2",
+   "default": "Shipped"
+  },
+  {
+   "type": "text",
+   "id": "tl_3",
+   "label": "Step 3",
+   "default": "Delivered"
+  },
+  {
+   "type": "header",
+   "content": "Sticky bar (mobile)"
+  },
+  {
+   "type": "checkbox",
+   "id": "show_sticky",
+   "label": "Show sticky add-to-cart bar on mobile",
+   "default": true
+  },
+  {
+   "type": "text",
+   "id": "sticky_btn",
+   "label": "Sticky button text",
+   "default": "Add to cart"
+  }
+ ],
+ "blocks": [
+  {
+   "type": "side_card",
+   "name": "Card beside image",
+   "limit": 3,
+   "settings": [
+    {
+     "type": "select",
+     "id": "icon",
+     "label": "Icon",
+     "default": "clock",
+     "options": [
+      {
+       "value": "clock",
+       "label": "Clock"
+      },
+      {
+       "value": "leaf",
+       "label": "Leaf"
+      },
+      {
+       "value": "heart-fill",
+       "label": "Heart"
+      },
+      {
+       "value": "bulb",
+       "label": "Bulb"
+      },
+      {
+       "value": "sparkle",
+       "label": "Sparkle"
+      },
+      {
+       "value": "tree",
+       "label": "Tree"
+      },
+      {
+       "value": "phone",
+       "label": "Phone"
+      },
+      {
+       "value": "plug",
+       "label": "Plug"
+      },
+      {
+       "value": "snowflake",
+       "label": "Snowflake"
+      },
+      {
+       "value": "gift",
+       "label": "Gift"
+      }
+     ]
+    },
+    {
+     "type": "color",
+     "id": "icon_color",
+     "label": "Icon colour",
+     "default": "#5A1F2E"
+    },
+    {
+     "type": "text",
+     "id": "title",
+     "label": "Title",
+     "default": "60 Seconds"
+    },
+    {
+     "type": "text",
+     "id": "sub",
+     "label": "Subtitle",
+     "default": "Start to glow"
+    }
+   ]
+  },
+  {
+   "type": "benefit",
+   "name": "Benefit line",
+   "settings": [
+    {
+     "type": "select",
+     "id": "icon",
+     "label": "Icon",
+     "default": "bulb",
+     "options": [
+      {
+       "value": "bulb",
+       "label": "Bulb"
+      },
+      {
+       "value": "phone",
+       "label": "Phone"
+      },
+      {
+       "value": "clock",
+       "label": "Clock"
+      },
+      {
+       "value": "check-circle-fill",
+       "label": "Filled check"
+      },
+      {
+       "value": "check",
+       "label": "Check"
+      },
+      {
+       "value": "truck",
+       "label": "Truck"
+      },
+      {
+       "value": "plug",
+       "label": "Plug"
+      },
+      {
+       "value": "shield",
+       "label": "Shield"
+      },
+      {
+       "value": "sparkle",
+       "label": "Sparkle"
+      },
+      {
+       "value": "tree",
+       "label": "Tree"
+      }
+     ]
+    },
+    {
+     "type": "color",
+     "id": "icon_color",
+     "label": "Icon colour",
+     "default": "#3C3C3C"
+    },
+    {
+     "type": "text",
+     "id": "text",
+     "label": "Text",
+     "default": "400 warm LEDs on one USB strand"
+    }
+   ]
+  },
+  {
+   "type": "mini_review",
+   "name": "Review (slider)",
+   "settings": [
+    {
+     "type": "image_picker",
+     "id": "image",
+     "label": "Profile picture (blank = initials)"
+    },
+    {
+     "type": "text",
+     "id": "name",
+     "label": "Name",
+     "default": "Lena M."
+    },
+    {
+     "type": "range",
+     "id": "rating",
+     "label": "Stars",
+     "min": 1,
+     "max": 5,
+     "step": 1,
+     "default": 5
+    },
+    {
+     "type": "textarea",
+     "id": "text",
+     "label": "Review",
+     "default": "Took one minute to hang and looks like a designer tree."
+    }
+   ]
+  },
+  {
+   "type": "bundle",
+   "name": "Bundle option",
+   "limit": 4,
+   "settings": [
+    {
+     "type": "text",
+     "id": "title",
+     "label": "Title",
+     "default": "Single Strand"
+    },
+    {
+     "type": "text",
+     "id": "sub",
+     "label": "Subtitle",
+     "default": "Standard price"
+    },
+    {
+     "type": "range",
+     "id": "qty",
+     "label": "Quantity",
+     "min": 1,
+     "max": 10,
+     "step": 1,
+     "default": 1
+    },
+    {
+     "type": "range",
+     "id": "save_pct",
+     "label": "Save %",
+     "min": 0,
+     "max": 80,
+     "step": 1,
+     "unit": "%",
+     "default": 0
+    },
+    {
+     "type": "image_picker",
+     "id": "image",
+     "label": "Image (blank = product image)"
+    },
+    {
+     "type": "text",
+     "id": "badge",
+     "label": "Ribbon text (e.g. Best Value)"
+    },
+    {
+     "type": "color",
+     "id": "badge_color",
+     "label": "Ribbon colour",
+     "default": "#C8102E"
+    },
+    {
+     "type": "checkbox",
+     "id": "is_default",
+     "label": "Selected by default",
+     "default": false
+    }
+   ]
+  },
+  {
+   "type": "ugc",
+   "name": "Customer video / photo",
+   "settings": [
+    {
+     "type": "video",
+     "id": "video",
+     "label": "Video (plays muted on loop — tap for sound)"
+    },
+    {
+     "type": "image_picker",
+     "id": "image",
+     "label": "Photo (used when no video is set)"
+    },
+    {
+     "type": "text",
+     "id": "alt",
+     "label": "Alt text",
+     "default": "AuraGlow customer video"
+    }
+   ]
+  },
+  {
+   "type": "feature",
+   "name": "Feature tile (2×2)",
+   "settings": [
+    {
+     "type": "select",
+     "id": "icon",
+     "label": "Icon",
+     "default": "clock",
+     "options": [
+      {
+       "value": "clock",
+       "label": "Clock"
+      },
+      {
+       "value": "box",
+       "label": "Box"
+      },
+      {
+       "value": "heart",
+       "label": "Heart"
+      },
+      {
+       "value": "shield",
+       "label": "Shield"
+      },
+      {
+       "value": "bulb",
+       "label": "Bulb"
+      },
+      {
+       "value": "phone",
+       "label": "Phone"
+      },
+      {
+       "value": "sparkle",
+       "label": "Sparkle"
+      },
+      {
+       "value": "return",
+       "label": "Return"
+      },
+      {
+       "value": "plug",
+       "label": "Plug"
+      },
+      {
+       "value": "gift",
+       "label": "Gift"
+      }
+     ]
+    },
+    {
+     "type": "color",
+     "id": "icon_color",
+     "label": "Icon colour",
+     "default": "#1B1B1B"
+    },
+    {
+     "type": "text",
+     "id": "title",
+     "label": "Title",
+     "default": "60s Setup"
+    },
+    {
+     "type": "text",
+     "id": "sub",
+     "label": "Subtitle",
+     "default": "No ladder, no tangles"
+    }
+   ]
+  },
+  {
+   "type": "accordion",
+   "name": "Dropdown",
+   "settings": [
+    {
+     "type": "select",
+     "id": "icon",
+     "label": "Icon",
+     "default": "check",
+     "options": [
+      {
+       "value": "check",
+       "label": "Check"
+      },
+      {
+       "value": "dot",
+       "label": "Dot"
+      },
+      {
+       "value": "truck",
+       "label": "Truck"
+      },
+      {
+       "value": "box",
+       "label": "Box"
+      },
+      {
+       "value": "bulb",
+       "label": "Bulb"
+      },
+      {
+       "value": "shield",
+       "label": "Shield"
+      },
+      {
+       "value": "heart-fill",
+       "label": "Heart"
+      },
+      {
+       "value": "return",
+       "label": "Return"
+      }
+     ]
+    },
+    {
+     "type": "color",
+     "id": "icon_color",
+     "label": "Icon colour",
+     "default": "#5A1F2E"
+    },
+    {
+     "type": "text",
+     "id": "title",
+     "label": "Title",
+     "default": "What's in the box"
+    },
+    {
+     "type": "richtext",
+     "id": "content",
+     "label": "Content",
+     "default": "<p>Add details here.</p>"
+    },
+    {
+     "type": "checkbox",
+     "id": "open",
+     "label": "Open by default",
+     "default": false
+    }
+   ]
+  }
+ ],
+ "presets": [
+  {
+   "name": "AuraGlow product page"
+  }
+ ]
+}
+{% endschema %}
