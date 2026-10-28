@@ -85,3 +85,11 @@ Cart drawer: `cart-drawer/` (AuraGlow layout: social proof, reserved timer, bann
   on mobile with round ‹ › arrows. Cards are looping videos with a title + short grey subtext. Mature, clean Inter-style font.
 - **Before/after "What sets us apart"**: slider with pill labels, then a ✓/✗ alternating list (green check = us, grey x = them).
 - **Trust block**: dark section, "Trusted by … across the country", big stat counters + globe.
+
+## Status (Oct 2026)
+
+- AuraGlow is retired as a product (saturated, ads didn't convert). Keep the **structure** as the master template.
+- Every new product gets its **own new store**, built from this template.
+- Default extras for new stores, from the Intake refs: glass sticky ATC bar with "Delivery by <date>", feature video card
+  carousel (4 on desktop, 1 + arrows on mobile), "What sets us apart" slider + ✓/✗ list, real-numbers trust block.
+- Before building, check the product isn't saturated: look for many sellers running the same ads in the Meta Ad Library.
