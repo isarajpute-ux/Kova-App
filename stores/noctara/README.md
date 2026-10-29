@@ -1,6 +1,6 @@
 # Noctara (magnetic nasal strip)
 
-- Draft theme: "Noctara v1 (draft)" (ID 188052930669) on store yw0gjb-h0. The live theme is not touched.
+- Live theme: "Noctara v1" (188052930669, published by owner). Working draft: "Noctara v2 (draft)" (188118401133).
 - Product: noctara-magnetic-nasal-strip (ID 15414418767981), $29.99, compare-at $59.99, tab size S/M/L.
 - Discounts: automatic 2 kits −15%, 3+ kits −25%; code SLEEP15 (15%), all limited to this product.
 - Look: Intake + Huel. Inter font; white / black / glowing green #18E08A, red #FF3B30 for alerts only.
