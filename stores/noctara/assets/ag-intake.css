@@ -1,0 +1,84 @@
+/* ===== Noctara: Intake-style product page layout ===== */
+/* columns: images scroll naturally, info column sticks (smart offset set by ag-intake.js) */
+.agP .agP__media{position:static!important;top:auto!important}
+@media(min-width:990px){.agP .agP__grid{align-items:start!important}.agP .agP__info{position:sticky;top:var(--nx-stick,20px)}}
+/* gallery: one big image, feature cards become a glass bar over the bottom of it */
+.agP .agP__stage{display:block!important;position:relative}
+.agP .agP__main{border-radius:16px;overflow:hidden}
+.agP .agP__side{position:absolute!important;left:12px;right:12px;bottom:12px;z-index:3;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:0!important;padding:10px 4px;border-radius:14px;background:rgba(40,40,44,.55)!important;-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid rgba(255,255,255,.14);margin:0!important;width:auto!important;height:auto!important;flex-direction:row!important}
+.agP .agP__side .agP__sideCard{background:transparent!important;background-image:none!important;border:0!important;border-right:1px solid rgba(255,255,255,.16)!important;border-radius:0!important;box-shadow:none!important;padding:4px 6px!important;min-height:0!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#fff!important;aspect-ratio:auto!important}
+.agP .agP__side .agP__sideCard:last-child{border-right:0!important}
+.agP .agP__side .agP__sideCard *{color:#fff!important;background:transparent!important;padding:0!important}
+.agP .agP__side .agP__sideIc{width:22px!important;height:22px!important;box-shadow:none!important;color:#7DB2FF!important;margin:0!important}
+.agP .agP__side .agP__sideIc *{color:#7DB2FF!important}
+.agP .agP__side .agP__sideIc svg{width:20px;height:20px}
+.agP .agP__side .agP__sideCard strong,.agP .agP__side .agP__sideCard b,.agP .agP__side .agP__sideCard h3,.agP .agP__side .agP__sideCard p:first-of-type{font-size:12px!important;font-weight:500!important;letter-spacing:0!important;margin:0!important;line-height:1.2!important}
+.agP .agP__side .agP__sideCard .sub,.agP .agP__side .agP__sideCard small,.agP .agP__side .agP__sideCard p+p,.agP .agP__side .agP__sideCard span:not(.agP__sideIc):last-child{display:none!important}
+.agP .agP__callout{display:none!important}
+/* info column */
+.agP .agP__rating,.agP .agP__priceRow,.agP .agP__bubble,.agP .agP__ship,.agP .agP__pay,.agP .agP__loved{display:none!important}
+.agP .agP__pill{order:-1;background:none!important;border:0!important;padding:0!important;margin:0 0 8px!important;box-shadow:none!important;font-size:11px!important;font-weight:600!important;letter-spacing:.2em!important;text-transform:uppercase;color:#555!important}
+.agP .agP__pill .agP__pillAv{display:none!important}
+.agP .agP__title{font-size:34px!important;margin:0 0 8px!important}
+@media(min-width:990px){.agP .agP__title{font-size:44px!important}}
+.agP .agP__desc{color:#6E6E6E!important;font-size:15.5px!important;margin-bottom:6px}
+.agP .agP__desc em{color:#0A0A0A!important}
+.nxLbl{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#555;margin:18px 0 10px}
+.agP .agP__optLabel{font-size:11px!important;font-weight:600!important;letter-spacing:.2em;text-transform:uppercase;color:#555!important}
+.agP .agP__optLabel *{font-weight:600!important}
+.agP .agP__pillBtn{border-radius:12px!important;min-width:84px;font-weight:500}
+.agP .agP__pillBtn.is-active{border-color:#2B7BFF!important;background:#EEF4FF!important;box-shadow:0 0 0 1px #2B7BFF!important;color:#0A0A0A!important}
+/* plan selector: compact option cards + detail panel */
+.agP .agB__head{justify-content:flex-start!important;font-size:11px!important;font-weight:600!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:#555!important;margin:8px 0 0!important}
+.agP .agB{display:grid!important;grid-template-columns:repeat(3,1fr);gap:10px!important}
+.agP .agB__head{grid-column:1/-1}
+.agP .agB__card{padding:14px 8px!important;text-align:center;border-radius:12px!important;min-height:0}
+.agP .agB__card .agB__txt{padding:0!important}
+.agP .agB__card .agB__txt strong{font-size:15px!important}
+.agP .agB__card .agB__txt small{font-size:12px!important;margin-top:4px}
+.agP .agB__card .agB__price,.agP .agB__card .nxPerks,.agP .agB__card .nxSavePill{display:none!important}
+.agP .agB__card.is-active{background:#EEF4FF!important;border-color:#2B7BFF!important;box-shadow:0 0 0 1px #2B7BFF,0 0 22px -6px rgba(43,123,255,.55)!important}
+.agP .agB__badge{font-size:9.5px!important;padding:3px 8px!important;right:50%!important;transform:translateX(50%);white-space:nowrap;animation:none!important}
+.nxPlan{grid-column:1/-1;margin-top:6px;border:1.5px solid #2B7BFF;border-radius:16px;background:#F5F9FF;padding:20px 20px 18px;box-shadow:0 0 0 1px rgba(43,123,255,.15),0 16px 36px -22px rgba(43,123,255,.6)}
+.nxPlan__top{display:flex;justify-content:space-between;gap:12px}
+.nxPlan__pop{display:inline-block;background:#2B7BFF;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.nxPlan__t{font-size:18px;font-weight:600;letter-spacing:-.02em;margin:0}
+.nxPlan__s{font-size:13px;color:#6E6E6E;margin:4px 0 0}
+.nxPlan__sv{font-size:13px;color:#1A5FE0;font-weight:600;margin:6px 0 0}
+.nxPlan__pr{text-align:right;white-space:nowrap}
+.nxPlan__pr s{display:block;font-size:13px;color:#8A8A8A}
+.nxPlan__pr b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.nxPlan ul{list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px solid #D9E5FF;display:grid;gap:9px}
+.nxPlan li{display:flex;align-items:center;gap:10px;font-size:14px}
+.nxPlan li:before{content:"";flex:0 0 18px;height:18px;border-radius:50%;background:#2B7BFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4L18 8'/%3E%3C/svg%3E") center/12px no-repeat}
+/* 2x2 feature tiles above the button */
+.agP .agP__feats{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:14px 0!important}
+.agP .agP__feats .agP__feat{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:12px!important;background:#F5F5F5!important;background-image:none!important;border:0!important;border-radius:14px!important;padding:16px!important;color:#0A0A0A!important}
+.agP .agP__feats .agP__feat *{color:inherit!important;background:none!important}
+.agP .agP__feats .agP__featIc{color:#0A0A0A!important}
+.agP .agP__feats .agP__featIc svg{width:20px;height:20px}
+.agP .agP__feats .agP__feat strong{display:block;font-size:14px!important;font-weight:600!important;color:#0A0A0A!important;padding:0!important}
+.agP .agP__feats .agP__feat span:not(.agP__featIc){display:block;font-size:12.5px!important;color:#7A7A7A!important;margin-top:4px;line-height:1.4}
+/* button, delivery, trust row, info box */
+.agP .agP__atc{border-radius:999px!important;min-height:58px;font-size:16px!important;background:#0A0A0A!important}
+.agP .agP__atc .agP__sep,.agP .agP__atc [data-ag-atc-price]{display:none}
+.nxDelMain{color:#555!important;font-size:14px!important;margin:12px 0 0!important}
+.nxDelMain b{color:#0A0A0A!important}
+.nxTrust{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #E8E8E8;border-bottom:1px solid #E8E8E8;margin:16px 0}
+.nxTrust div{text-align:center;padding:14px 6px;border-right:1px solid #E8E8E8}
+.nxTrust div:last-child{border-right:0}
+.nxTrust b{display:block;font-size:15px;font-weight:600}
+.nxTrust span{display:block;font-size:12px;color:#7A7A7A;margin-top:3px}
+.nxInfo{background:#F5F5F5;border-radius:14px;padding:14px 16px;text-align:center;font-size:13.5px;color:#444;margin:0 0 8px}
+.nxInfo p{margin:0}.nxInfo strong{color:#0A0A0A}
+/* accordions: clean Intake rows */
+.nxKB{font-size:24px!important;font-weight:500!important;letter-spacing:-.02em!important;margin:22px 0 4px!important}
+.agP .agAcc{gap:0!important;border-top:1px solid #E8E8E8}
+.agP .agAcc__item{border:0!important;border-bottom:1px solid #E8E8E8!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+.agP .agAcc__sum{padding:20px 0!important;font-size:16.5px!important;font-weight:500!important}
+.agP .agAcc__sum>span:first-child{display:none!important}
+.agP .agAcc__body{padding:0 0 18px!important;color:#5E5E5E;font-size:14.5px;line-height:1.65}
+/* glass sticky bar: price, then blue "Save x%" + "FREE Delivery" lines, button right */
+.agSticky .nxBtnCol .nxDel{display:none!important}
+.agSticky .nxSave,.agSticky .nxDel2{display:block;color:#7DB2FF!important;font-size:13px!important;font-weight:600;margin-top:3px;white-space:nowrap}
+.agSticky .agSticky__txt{display:flex;flex-direction:column}
