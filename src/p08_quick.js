@@ -255,8 +255,8 @@ window.KovaQuick=(function(){
   }
 
   /* ---------------- where it lives: inside Fuel ----------------
-     "Scan food" (and the camera icon in Fuel's header) opens the camera
-     straight away; the one-tap chips sit under Fuel's quick actions. */
+     "Scan food" opens the camera straight away (Fuel's header icon scans
+     a barcode, src/p08_fuellog.js); the one-tap chips sit under Fuel's quick actions. */
   function paintHome(){
     var scr=document.getElementById('s-fuel'); if(!scr) return;
     var host=document.getElementById('kqFuel');
@@ -275,7 +275,7 @@ window.KovaQuick=(function(){
   }
   function wireFuel(){
     document.addEventListener('click',function(ev){
-      var b=ev.target.closest&&ev.target.closest('#scanBtn,#fuelScanIcon'); if(!b) return;
+      var b=ev.target.closest&&ev.target.closest('#scanBtn'); if(!b) return;
       ev.preventDefault(); ev.stopPropagation(); camera(false);
     },true);
   }

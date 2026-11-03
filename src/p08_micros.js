@@ -88,28 +88,40 @@ window.KovaMicros=(function(){
     if(!box){ box=document.createElement('div'); box.id='usdaResults'; res.parentNode.insertBefore(box,res.nextSibling); }
     if(!q||q.length<3){ box.innerHTML=''; return; }
     qT=setTimeout(function(){
-      if(!window.KovaLink||!KovaLink.authFetch){ box.innerHTML=''; return; }
       lastQ=q; box.innerHTML='<div class="kmi-note">Searching USDA FoodData Central…</div>';
-      KovaLink.authFetch('/foods/search',{json:{q:q}}).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'HTTP '+r.status); return j; }); })
-        .then(function(j){
-          if(lastQ!==q) return;
-          var F=j.foods||[];
-          if(!F.length){ box.innerHTML='<div class="kmi-note">USDA has nothing called that.</div>'; return; }
-          box.innerHTML='<div class="kmi-note">USDA FoodData Central · per 100 g</div>'+F.map(function(f,i){
-            return '<div class="kmi-f" data-i="'+i+'"><div><b>'+esc(f.n)+'</b><span>'+Math.round(f.kcal)+' kcal · '+Math.round(f.p)+'p '+Math.round(f.c)+'c '+Math.round(f.f)+'f per 100 g</span></div>'
-              +'<input type="number" min="1" value="100" aria-label="Grams" class="kmi-g"><span class="kmi-u">g</span><button class="kmi-add">Add</button></div>';
-          }).join('');
-          box.querySelectorAll('.kmi-add').forEach(function(btn){
-            btn.onclick=function(){
-              var row=btn.closest('.kmi-f'), f=F[+row.getAttribute('data-i')], g=Math.max(1,+row.querySelector('.kmi-g').value||100), s=g/100;
-              var m={}; Object.keys(f.m||{}).forEach(function(k){ m[k]=Math.round(f.m[k]*s*10)/10; });
-              if(window.KovaFuel) KovaFuel.add({src:'usda',kcal:Math.round(f.kcal*s),p:Math.round(f.p*s),c:Math.round(f.c*s),f:Math.round(f.f*s),m:m,items:[{n:f.n+' ('+g+' g)'}]});
-              try{ if(window.closeSheet) closeSheet(); }catch(x){}
-              try{ if(window.toast) toast(f.n+' logged with its vitamins and minerals.'); }catch(x){}
-              paint();
-            };
-          });
-        }).catch(function(){ if(lastQ===q) box.innerHTML='<div class="kmi-note">USDA search needs the Kova server. The foods above work offline.</div>'; });
+      /* USDA through the Kova server when signed in; Open Food Facts (no
+         key) when that is out of reach, and the note says why (p51) */
+      function draw(F,src){
+        if(lastQ!==q) return;
+        if(!F.length){ box.innerHTML='<div class="kmi-note">'+src+' has nothing called that. Try Quick add.</div>'; return; }
+        box.innerHTML='<div class="kmi-note">'+src+' · per 100 g</div>'+F.map(function(f,i){
+          return '<div class="kmi-f" data-i="'+i+'"><div><b>'+esc(f.n)+'</b><span>'+Math.round(f.kcal)+' kcal · '+Math.round(f.p)+'p '+Math.round(f.c)+'c '+Math.round(f.f)+'f per 100 g</span></div>'
+            +'<input type="number" min="1" value="100" aria-label="Grams" class="kmi-g"><span class="kmi-u">g</span><button class="kmi-add">Add</button></div>';
+        }).join('');
+        box.querySelectorAll('.kmi-add').forEach(function(btn){
+          btn.onclick=function(){
+            var row=btn.closest('.kmi-f'), f=F[+row.getAttribute('data-i')], g=Math.max(1,+row.querySelector('.kmi-g').value||100), s=g/100;
+            var m={}; Object.keys(f.m||{}).forEach(function(k){ m[k]=Math.round(f.m[k]*s*10)/10; });
+            if(window.KovaFuel) KovaFuel.add({src:/USDA/.test(src)?'usda':'off',kcal:Math.round(f.kcal*s),p:Math.round(f.p*s),c:Math.round(f.c*s),f:Math.round(f.f*s),m:m,items:[{n:f.n+' ('+g+' g)'}]});
+            try{ if(window.closeSheet) closeSheet(); }catch(x){}
+            try{ if(window.toast) toast(f.n+' logged.'); }catch(x){}
+            paint();
+          };
+        });
+      }
+      function fallback(why){
+        if(lastQ!==q) return;
+        var O=window.KovaFoodLog&&KovaFoodLog.off;
+        if(!O){ box.innerHTML='<div class="kmi-note">'+esc(why)+'</div>'; return; }
+        box.innerHTML='<div class="kmi-note">'+esc(why)+' Searching Open Food Facts…</div>';
+        O(q).then(function(F){ draw(F,'Open Food Facts'); if(lastQ===q) box.insertAdjacentHTML('afterbegin','<div class="kmi-note">'+esc(why)+'</div>'); })
+          .catch(function(){ if(lastQ===q) box.innerHTML='<div class="kmi-note">'+esc(why)+' No connection to Open Food Facts either. Quick add works offline.</div>'; });
+      }
+      var inAcct=false; try{ inAcct=!!(window.KovaCloudAuth&&KovaCloudAuth.status().signedIn); }catch(e){}
+      if(!window.KovaLink||!KovaLink.authFetch||!inAcct){ fallback('Sign in for USDA search.'); return; }
+      KovaLink.authFetch('/foods/search',{json:{q:q}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok) throw new Error(j.error||'USDA search is unavailable right now.'); return j; }); })
+        .then(function(j){ draw(j.foods||[],'USDA FoodData Central'); })
+        .catch(function(e){ fallback(/fetch|network|load/i.test(String(e&&e.message))?'USDA search is offline.':String(e&&e.message||'USDA search failed.')); });
     },420);
   }
   function start(){ paint(); setInterval(function(){ if(document.getElementById('s-fuel')&&document.getElementById('s-fuel').classList.contains('on')) paint(); },4000); }

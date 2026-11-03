@@ -1,0 +1,50 @@
+/* p51: Fuel with no watch (src/p08_fuellog.js): Log food's Quick add,
+   your foods and the chips, the barcode reader, Water and Streak.
+   App tokens only, so it follows dark, soft light and light glass. */
+.kfl-acts{display:flex;gap:8px;margin:0 0 10px}
+.kfl-acts .btn{flex:1;margin:0}
+.kfl-ghost{background:transparent!important;border:.5px solid var(--glass-brd)!important;color:var(--txt)!important}
+.kfl-h{margin:2px 2px 6px}
+#kflMine{margin-bottom:8px}
+.kfl-row{margin-bottom:6px;cursor:pointer;gap:8px}
+.kfl-txt{flex:1;min-width:0}
+.kfl-txt .li-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kfl-star,.kfl-add{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:.5px solid var(--glass-brd);background:transparent;color:var(--txt-2);font:400 16px/1 'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.kfl-star.on{color:var(--acc);border-color:var(--acc)}
+.kfl-add{color:var(--acc);font-size:20px}
+.kfl-none{font-size:12.5px;color:var(--txt-2);padding:10px 2px}
+.kfl-new{width:100%;margin:0 0 10px}
+/* Quick add */
+.kfl-f{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--txt-2);margin-bottom:10px}
+.kfl-f .field{display:block;width:100%;margin-top:5px;font-size:16px}
+.kfl-meal{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 12px}
+.kfl-meal .chip{cursor:pointer;font:inherit;font-size:12px}
+.kfl-nums{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.kfl-hint{margin:-2px 0 10px;font-size:11.5px}
+.kfl-chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt);margin:0 0 12px}
+.kfl-chk input{width:18px;height:18px;accent-color:var(--acc)}
+.kfl-q .btn{width:100%}
+.kfl-msg{min-height:18px;margin-top:8px;font-size:12.5px;color:var(--warn,var(--acc))}
+/* barcode */
+.kbc-view{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:4/3;max-height:52vh;margin:0 auto 10px;max-width:520px}
+.kbc-view video{width:100%;height:100%;object-fit:cover;display:block}
+.kbc-box{position:absolute;left:12%;right:12%;top:30%;bottom:30%;border:2px solid rgba(255,255,255,.85);border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.28)}
+.kbc-say{text-align:center;margin:0 0 12px;font-size:12.5px}
+.kbc-type{display:flex;gap:8px;max-width:520px;margin:0 auto}
+.kbc-type .field{flex:1;min-width:0;font-size:16px;letter-spacing:.06em;border:.5px solid var(--glass-brd);border-radius:12px;padding:11px 14px;background:transparent;color:var(--txt);outline:none}
+.kbc-type .field:focus{border-color:var(--acc)}
+.kbc-type .btn{width:auto;flex:0 0 auto;margin:0}
+/* Water and Streak */
+.kfl-cards{margin-bottom:10px}
+.kfl-cards .card{margin:0}
+.kfl-big{font-size:20px;font-weight:700;margin-top:3px;white-space:nowrap}
+.kfl-big .unit{margin-left:4px}
+.kfl-drops{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.kfl-drop{flex:1 0 12px;max-width:22px;height:20px;border-radius:5px;border:0;padding:0;cursor:pointer;background:var(--glass-brd)}
+.kfl-drop.on{background:var(--acc)}
+.kfl-wrow span{white-space:nowrap}
+.kfl-wrow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px;font-size:11.5px;color:var(--txt-2)}
+.kfl-wb{width:30px;height:30px;border-radius:50%;border:.5px solid var(--glass-brd);background:transparent;color:var(--txt);font:400 17px/1 'Outfit',sans-serif;cursor:pointer;padding:0}
+.kfl-note{margin-top:6px;font-size:11px}
+/* the search hint was white on white in light glass */
+body.light-mode #foodSearch::placeholder{color:var(--txt-3)}

@@ -121,7 +121,7 @@ window.KovaCycle=(function(){
     var st=starts(), pd=periodDays(), out=[];
     st.forEach(function(k,i){
       var a=parse(k), b=i+1<st.length?parse(st[i+1]):null, plen=0;
-      for(var t=a;;t+=DAY){ if(pd.indexOf(key(t))>=0) plen++; else if(plen) break; if(t-a>14*DAY) break; }
+      for(var t=a;;t=rd(t+DAY)){ if(pd.indexOf(key(t))>=0) plen++; else if(plen) break; if(t-a>14*DAY) break; }
       out.push({k:k,a:a,b:b,len:b?Math.round((b-a)/DAY):null,plen:plen,open:!b});
     });
     return out;
@@ -176,8 +176,8 @@ window.KovaCycle=(function(){
     var s=stats(); if(!s.starts.length) return null;
     var last=parse(s.starts[s.starts.length-1]); if(last>t) return null;
     var day=Math.round((sod(t)-last)/DAY)+1;
-    var next=last+s.avg*DAY; while(next<sod(t)-DAY*2&&day<=s.avg+7) next+=s.avg*DAY;
-    next=rd(next);
+    /* p51: compared as whole days; across a clock change the hour made a period 2 days late jump a month */
+    var next=rd(last+s.avg*DAY), lim=rd(sod(t)-DAY*2); while(next<lim&&day<=s.avg+7) next=rd(next+s.avg*DAY);
     var ov=rd(next-14*DAY), method='calendar', confirmed=false;
     var from=s.starts[s.starts.length-1];
     var lhPos=Object.keys(D.lh).filter(function(k){ return k>=from&&D.lh[k]==='pos'; }).sort()[0];
@@ -202,7 +202,8 @@ window.KovaCycle=(function(){
   /* ---------------- symptoms over cycles ---------------- */
   function sevOn(k,id){ return ((D.sev[k]||{})[id])|0; }
   function groupDays(g,a,b){
-    var n=0; for(var t=a;t<b;t+=DAY){ var k=key(t); if(g.items.some(function(x){ return sevOn(k,x[0])>0; })) n++; } return n;
+    /* p51: by calendar day; 24 h steps saw the 25-hour clock-change day twice */
+    var n=0; for(var t=a;t<b;t=rd(t+DAY)){ var k=key(t); if(g.items.some(function(x){ return sevOn(k,x[0])>0; })) n++; } return n;
   }
   /* per cycle (last 6 + this one): days with any symptom of the group */
   function groupSeries(g){

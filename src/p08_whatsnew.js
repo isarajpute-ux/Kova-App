@@ -23,6 +23,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-13',title:'Fuel, with no watch needed',
+      lines:['Quick add any food, with your own numbers','Recent, Favorites and My foods work','Barcodes scan on iPhone, or type the numbers','Real water and streak'],
+      steps:[
+        ['fuel','Log food','Quick add, recent foods and favorites.',function(){ return q('#logBtn'); }],
+        ['fuel','Scan a barcode','Works on iPhone. Or type the numbers.',function(){ return q('#fuelScanIcon'); }],
+        ['fuel','Water and streak','Tap a drop for each cup.',function(){ return q('#kflCards')||q('#waterDots'); }]
+      ]},
     {id:'new-2026-11-12',title:'Profile settings, done properly',
       lines:['Tap any row to change it','Change your email safely, by a link','Height, weight and units update Fuel','Download or delete your data here'],
       steps:[

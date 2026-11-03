@@ -63,7 +63,9 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: profile settings, its steps on Profile and Account', rel.id === 'new-2026-11-12' && rel.steps.length === 2 && rel.steps.every((t) => t[0] === 'profile') && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: Fuel with no watch, three steps on Fuel (Log food, the barcode icon, water)', rel.id === 'new-2026-11-13' && rel.steps.length === 3 && rel.steps.every((t) => t[0] === 'fuel' && !!t[3]()) && rel.lines.every((l) => l.split(' ').length <= 10));
+  const r12 = N.REL.filter((r) => r.id === 'new-2026-11-12')[0];
+  ck('the p50b release: profile settings, its steps on Profile and Account', r12.steps.length === 2 && r12.steps.every((t) => t[0] === 'profile') && r12.lines.every((l) => l.split(' ').length <= 10));
   const r32b = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
   ck('the p44 release: Back one page at a time, brown Workout, Customize, when to stretch; both steps in the workout', r32b.id === 'new-2026-11-02' && r32b.steps.length === 2 && r32b.steps.every((t) => t[0] === 'session') && r32b.lines.every((l) => l.split(' ').length <= 10));
   const r31 = N.REL.filter((r) => r.id === 'new-2026-11-01')[0]; void r32;
@@ -115,7 +117,9 @@ function boot(store) {
   const r1108 = N.REL.filter((r) => r.id === 'new-2026-11-08')[0];
   ck('the patterns release finds Patterns Kova found on the summary', !!r1108.steps[0][3]() && r1108.steps[0][3]().classList.contains('kpt'));
   w.go('profile'); await wait(30);
-  ck('the newest release finds Profile and Account on the profile', !!rel.steps[0][3]() && rel.steps[0][3]().id === 'pfProfile' && !!rel.steps[1][3]() && rel.steps[1][3]().id === 'pfAccount');
+  ck('the p50b release finds Profile and Account on the profile', !!r12.steps[0][3]() && r12.steps[0][3]().id === 'pfProfile' && !!r12.steps[1][3]() && r12.steps[1][3]().id === 'pfAccount');
+  w.go('fuel'); await wait(30);
+  ck('the newest release finds Log food, the barcode icon and the water card on Fuel', rel.steps[0][3]().id === 'logBtn' && rel.steps[1][3]().id === 'fuelScanIcon' && !!rel.steps[2][3]());
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

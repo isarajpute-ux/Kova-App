@@ -9519,6 +9519,59 @@ body.ks-touring #kta{display:none}
 .kpt-fine{font-size:11.5px;color:var(--txt-3,var(--txt-2))}
 
 </style>
+<style id="p08-fuellog">
+/* p51: Fuel with no watch (src/p08_fuellog.js): Log food's Quick add,
+   your foods and the chips, the barcode reader, Water and Streak.
+   App tokens only, so it follows dark, soft light and light glass. */
+.kfl-acts{display:flex;gap:8px;margin:0 0 10px}
+.kfl-acts .btn{flex:1;margin:0}
+.kfl-ghost{background:transparent!important;border:.5px solid var(--glass-brd)!important;color:var(--txt)!important}
+.kfl-h{margin:2px 2px 6px}
+#kflMine{margin-bottom:8px}
+.kfl-row{margin-bottom:6px;cursor:pointer;gap:8px}
+.kfl-txt{flex:1;min-width:0}
+.kfl-txt .li-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kfl-star,.kfl-add{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:.5px solid var(--glass-brd);background:transparent;color:var(--txt-2);font:400 16px/1 'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.kfl-star.on{color:var(--acc);border-color:var(--acc)}
+.kfl-add{color:var(--acc);font-size:20px}
+.kfl-none{font-size:12.5px;color:var(--txt-2);padding:10px 2px}
+.kfl-new{width:100%;margin:0 0 10px}
+/* Quick add */
+.kfl-f{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--txt-2);margin-bottom:10px}
+.kfl-f .field{display:block;width:100%;margin-top:5px;font-size:16px}
+.kfl-meal{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 12px}
+.kfl-meal .chip{cursor:pointer;font:inherit;font-size:12px}
+.kfl-nums{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.kfl-hint{margin:-2px 0 10px;font-size:11.5px}
+.kfl-chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt);margin:0 0 12px}
+.kfl-chk input{width:18px;height:18px;accent-color:var(--acc)}
+.kfl-q .btn{width:100%}
+.kfl-msg{min-height:18px;margin-top:8px;font-size:12.5px;color:var(--warn,var(--acc))}
+/* barcode */
+.kbc-view{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:4/3;max-height:52vh;margin:0 auto 10px;max-width:520px}
+.kbc-view video{width:100%;height:100%;object-fit:cover;display:block}
+.kbc-box{position:absolute;left:12%;right:12%;top:30%;bottom:30%;border:2px solid rgba(255,255,255,.85);border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.28)}
+.kbc-say{text-align:center;margin:0 0 12px;font-size:12.5px}
+.kbc-type{display:flex;gap:8px;max-width:520px;margin:0 auto}
+.kbc-type .field{flex:1;min-width:0;font-size:16px;letter-spacing:.06em;border:.5px solid var(--glass-brd);border-radius:12px;padding:11px 14px;background:transparent;color:var(--txt);outline:none}
+.kbc-type .field:focus{border-color:var(--acc)}
+.kbc-type .btn{width:auto;flex:0 0 auto;margin:0}
+/* Water and Streak */
+.kfl-cards{margin-bottom:10px}
+.kfl-cards .card{margin:0}
+.kfl-big{font-size:20px;font-weight:700;margin-top:3px;white-space:nowrap}
+.kfl-big .unit{margin-left:4px}
+.kfl-drops{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.kfl-drop{flex:1 0 12px;max-width:22px;height:20px;border-radius:5px;border:0;padding:0;cursor:pointer;background:var(--glass-brd)}
+.kfl-drop.on{background:var(--acc)}
+.kfl-wrow span{white-space:nowrap}
+.kfl-wrow{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px;font-size:11.5px;color:var(--txt-2)}
+.kfl-wb{width:30px;height:30px;border-radius:50%;border:.5px solid var(--glass-brd);background:transparent;color:var(--txt);font:400 17px/1 'Outfit',sans-serif;cursor:pointer;padding:0}
+.kfl-note{margin-top:6px;font-size:11px}
+/* the search hint was white on white in light glass */
+body.light-mode #foodSearch::placeholder{color:var(--txt-3)}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -21651,8 +21704,9 @@ function openLibrary(title,rec,onPick){
     var el=document.getElementById('fuelWhy'); if(!el) return;
     var bw=FUEL_BASE.src==='calc'?'Your calculated baseline':'Baseline';
     if(window.KovaMode&&KovaMode.live&&FUEL_BASE.src==='demo'){
-      el.innerHTML='No calorie target yet. Kova won\u2019t guess one \u2014 answer five questions and it works out your maintenance from your body, steps, sleep and training.'
-        +'<div class="tap" data-go="maint" style="margin-top:9px;font-size:11px;font-weight:600;color:var(--acc);cursor:pointer">Find my maintenance \u203a</div>';
+      var mp=window.KovaMaint&&KovaMaint.prof(), rd=mp&&(mp.asked||mp.train.pick);
+      el.innerHTML=(rd?'Your numbers are ready. Tap Use as my Fuel target to set your calories.':'No calorie target yet. Kova won\u2019t guess one \u2014 answer five questions and it works out your maintenance from your body, steps, sleep and training.')
+        +'<div class="tap" data-go="maint" style="margin-top:9px;font-size:11px;font-weight:600;color:var(--acc);cursor:pointer">'+(rd?'See my numbers':'Find my maintenance')+' \u203a</div>';
       return;
     }
     if(!TG.adj.length){
@@ -22360,185 +22414,6 @@ function openLibrary(title,rec,onPick){
   })();
   window.KovaOFF=KovaOFF;
 
-  /* ---------- barcode: real camera + real decode where the browser supports it ---------- */
-  function barcodeSheet(){
-    var h='<div class="grab"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
-      +'<div class="title-s" style="font-size:18px">Scan a barcode</div>'
-      +'<div class="iconbtn" onclick="closeSheet()" style="border-radius:50%;width:28px;height:28px"><svg class="ic"><use href="#i-x"/></svg></div></div>'
-      +'<div id="bcShotWrap"></div>'
-      +'<div class="mealdrop" id="bcOpen">'
-      +'<svg class="ic" style="font-size:28px;opacity:.55"><use href="#i-target"/></svg>'
-      +'<div style="font-size:13px;font-weight:600;margin-top:9px">Open the camera</div>'
-      +'<div class="sub" style="margin-top:3px">Line the barcode up inside the square.</div></div>'
-      +'<div id="bcOut"></div>';
-    openSheet(h);
-
-    document.getElementById('bcOpen').onclick=function(){
-      KovaCam.open({
-        title:'Scan barcode',
-        hint:'Line the barcode up inside the square.',
-        onShot:readBarcode
-      });
-    };
-
-    function readBarcode(dataUrl){
-      var wrap=document.getElementById('bcShotWrap');
-      var out=document.getElementById('bcOut');
-      if(!wrap||!out) return;
-      wrap.innerHTML='<div class="mealshot"><img src="'+dataUrl+'" alt=""/></div>';
-      var drop=document.getElementById('bcOpen');
-      if(drop) drop.innerHTML='<div style="font-size:12.5px;font-weight:600">Retake</div>';
-
-      if(!('BarcodeDetector' in window)){
-        out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">Photo saved, but nothing read it</div>'
-          +'<div class="sub" style="line-height:1.5">This browser cannot decode a barcode from a photo. Search the food below and log it by hand instead — the shipped app uses a native scanner here.</div></div>';
-        return;
-      }
-
-      out.innerHTML='<div class="card"><div class="sub">Reading the barcode\u2026</div></div>';
-      var img=new Image();
-      img.onload=function(){
-        var det=new window.BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128']});
-        det.detect(img).then(function(codes){
-          if(!codes.length){
-            out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">No barcode found</div>'
-              +'<div class="sub">Get closer and fill the square with just the barcode, then try again.</div></div>';
-            return;
-          }
-          var val=codes[0].rawValue;
-          lookupAndShow(val);
-        }).catch(function(){
-          out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">Could not read that</div>'
-            +'<div class="sub">Try again with better light and the barcode filling the square, or search below.</div></div>';
-        });
-      };
-      img.src=dataUrl;
-    }
-
-    function bcEsc(x){ var d=document.createElement('div'); d.textContent=x==null?'':String(x); return d.innerHTML; }
-
-    function lookupAndShow(code){
-      var out=document.getElementById('bcOut'); if(!out) return;
-      out.innerHTML='<div class="card"><div class="sub">Looking up '+bcEsc(code)+'\u2026</div></div>';
-
-      KovaOFF.lookup(code).then(function(prod){
-        if(!prod){
-          /* not-found is the single most common outcome for a US product,
-             so it gets a real explanation and a way forward rather than a
-             shrug */
-          out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">'
-            +'Read '+bcEsc(code)+', no match</div>'
-            +'<div class="sub" style="line-height:1.5">That barcode scanned cleanly but is not in Open Food '
-            +'Facts yet. Coverage is thinner on US products than European ones. Search the name below and '
-            +'log it by hand \u2014 and if you want it there next time, the product can be added at '
-            +'openfoodfacts.org.</div></div>';
-          return;
-        }
-        showProduct(prod);
-      }).catch(function(e){
-        var msg=String(e&&e.message||e);
-        var offline = /abort|network|failed to fetch/i.test(msg);
-        out.innerHTML='<div class="card"><div style="font-size:12px;font-weight:700;margin-bottom:5px">'
-          +'Read '+bcEsc(code)+', lookup did not go through</div>'
-          +'<div class="sub" style="line-height:1.5">'
-          +(offline
-            ? 'No answer from the product database \u2014 it may be offline, or you may be. The barcode itself read fine, so try again on a connection.'
-            : bcEsc(msg.slice(0,110))+'.')
-          +' Search the name below and log it by hand meanwhile.</div></div>';
-      });
-    }
-
-    function showProduct(prod){
-      var out=document.getElementById('bcOut'); if(!out) return;
-
-      /* per-serving is the number you actually eat, so it leads when the
-         product carries one. Plenty do not, and inventing a serving size
-         for them would be the one thing worse than showing per-100g. */
-      var hasServ=!!prod.perServ, mode=hasServ?'serving':'100g';
-
-      function macroOf(){ return mode==='serving'?prod.perServ:prod.per100; }
-      function n(v,d){ return v==null?'\u2014':(Math.round(v*(d||1))/(d||1)); }
-
-      function paint(){
-        var m=macroOf();
-        var title=prod.name||'Unnamed product';
-        var sub=[prod.brand,prod.qty].filter(Boolean).join(' \u00b7 ');
-
-        var toggle = hasServ
-          ? '<div style="display:flex;gap:6px;margin:11px 0 2px">'
-            +'<div class="chip bcMode'+(mode==='serving'?' on':'')+'" data-m="serving" style="font-size:10.5px'
-            +(mode==='serving'?';background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc)':'')+'">'
-            +'Per serving'+(prod.serving?' ('+bcEsc(prod.serving)+')':'')+'</div>'
-            +'<div class="chip bcMode'+(mode==='100g'?' on':'')+'" data-m="100g" style="font-size:10.5px'
-            +(mode==='100g'?';background:var(--acc-bg);border-color:var(--acc-brd);color:var(--acc)':'')+'">Per 100g</div></div>'
-          : '<div class="lbl" style="margin-top:11px">PER 100G \u00b7 NO SERVING SIZE ON RECORD</div>';
-
-        var grid = m
-          ? '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:11px">'
-            +[['KCAL',n(m.kcal)],['PROTEIN',m.p==null?'\u2014':n(m.p,10)+'g'],
-              ['CARBS',m.c==null?'\u2014':n(m.c,10)+'g'],['FAT',m.f==null?'\u2014':n(m.f,10)+'g']]
-              .map(function(x){
-                return '<div style="text-align:center"><div class="lbl">'+x[0]+'</div>'
-                  +'<div style="font-size:14px;font-weight:600;color:var(--acc);margin-top:3px;'
-                  +'font-variant-numeric:tabular-nums">'+x[1]+'</div></div>';
-              }).join('')+'</div>'
-          : '<div class="sub" style="margin-top:11px;line-height:1.5">This product is in the database but '
-            +'nobody has filled in its nutrition panel yet. The name is right \u2014 log it by hand below.</div>';
-
-        out.innerHTML='<div class="card" style="border-color:var(--acc-brd)">'
-          +'<div style="display:flex;gap:11px;align-items:flex-start">'
-          +(prod.img?'<img src="'+bcEsc(prod.img)+'" alt="" style="width:46px;height:46px;border-radius:10px;'
-                    +'object-fit:cover;flex-shrink:0;background:var(--ron-line-2)"/>':'')
-          +'<div style="flex:1;min-width:0">'
-          +'<div class="lbl" style="color:var(--acc)">FOUND</div>'
-          +'<div class="title-s" style="font-size:16px;margin-top:2px;line-height:1.25">'+bcEsc(title)+'</div>'
-          +(sub?'<div class="sub" style="margin-top:2px">'+bcEsc(sub)+'</div>':'')
-          +'</div></div>'
-          +toggle+grid
-          +(m?'<button class="btn" id="bcLog" style="margin-top:13px">Log it</button>':'')
-          +'<div class="sub" style="margin-top:9px;font-size:10px;line-height:1.45;opacity:.75">'
-          +'From Open Food Facts, which is filled in by the public. Check the panel on the pack if a '
-          +'number looks off.</div></div>';
-
-        out.querySelectorAll('.bcMode').forEach(function(b){
-          b.onclick=function(){ mode=b.dataset.m; paint(); };
-        });
-
-        var lg=document.getElementById('bcLog');
-        if(lg) lg.onclick=function(){
-          var mm=macroOf();
-          try{
-            /* through KovaFuel: the ring repaints, and history is not cut to 200 */
-            KovaFuel.add({src:'barcode',
-                      kcal:Math.round(mm.kcal||0),p:Math.round(mm.p||0),
-                      c:Math.round(mm.c||0),f:Math.round(mm.f||0),
-                      items:[{n:title,g:null,conf:null,upc:prod.code,src:'off'}]});
-          }catch(e){}
-          closeSheet();
-          toast('Logged '+Math.round(mm.kcal||0)+' kcal \u00b7 '+Math.round(mm.p||0)+'g protein');
-        };
-      }
-      paint();
-    }
-
-    var h2='<input class="srch" id="bcSearch" placeholder="Search any food..."/><div id="bcResults" style="margin-top:10px"></div>';
-    document.getElementById('bcOut').insertAdjacentHTML('afterend',h2);
-    var DB2=[['Greek yogurt, plain, 1 cup','150 kcal · 20p 8c 4f'],['Chicken breast, grilled, 6oz','280 kcal · 52p 0c 6f'],
-      ['White rice, cooked, 1 cup','205 kcal · 4p 45c 0f'],['Avocado, half','120 kcal · 1p 6c 11f'],
-      ['Egg, large','70 kcal · 6p 0c 5f'],['Salmon, 6oz','350 kcal · 40p 0c 20f']];
-    function drawBc(list){
-      document.getElementById('bcResults').innerHTML=list.map(function(x){
-        return '<div class="list-item foodpick" style="margin-bottom:6px"><div style="flex:1"><div class="li-name">'+x[0]+'</div><div class="li-sub">'+x[1]+'</div></div><svg class="ic" style="font-size:15px;color:var(--acc)"><use href="#i-plus"/></svg></div>';
-      }).join('');
-      document.querySelectorAll('#bcResults .foodpick').forEach(function(e){e.onclick=function(){closeSheet();toast('Logged. Kova updated your macros.')}});
-    }
-    drawBc(DB2.slice(0,5));
-    document.getElementById('bcSearch').addEventListener('input',function(){
-      var q=this.value.toLowerCase();
-      drawBc(q?DB2.filter(function(x){return x[0].toLowerCase().indexOf(q)>-1}):DB2.slice(0,5));
-    });
-  }
-  var bb=document.getElementById('barcodeBtn'); if(bb) bb.onclick=barcodeSheet;
 })();
 
 /* ---------- notebooks (active recall) ---------- */
@@ -44754,6 +44629,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
 
   /* ── barcode scan flow ── */
   function openBarcodeScan(){
+    if(window.KovaBarcode){ KovaBarcode.open(startBarcodeLookup); return; }
     if(!window.KovaCam){ toast('Camera not available'); return; }
     KovaCam.open({
       title: 'Scan barcode',
@@ -44937,7 +44813,7 @@ body.light-mode .kv-card{background:linear-gradient(143deg,rgba(255,255,255,.75)
   }
 
   /* ── public API ── */
-  window.KovaScanner = {mount:mount, scan:openBarcodeScan, photo:openIngredientPhoto, show:function(raw){ paint(shapeFull(raw)); }, shape:shapeFull};
+  window.KovaScanner = {mount:mount, scan:openBarcodeScan, lookup:startBarcodeLookup, photo:openIngredientPhoto, show:function(raw){ paint(shapeFull(raw)); }, shape:shapeFull};
 
   /* ── hook into go() ── */
   var _origGo = window.go;
@@ -45171,7 +45047,7 @@ window.KovaReason=(function(){
     maint:     {s:'Fuel',t:'Maintenance calculator',go:'maint',at:'#kmBody',note:'Your burn, target and projected weight, worked out step by step.'},
     macros:    {s:'Fuel',t:'Macro targets',go:'fuel',at:'#macroRows',note:'Protein, carbs and fat against today\u2019s target.'},
     log:       {s:'Fuel',t:'Log a meal',go:'fuel',at:'#logBtn',note:'Log it so Kova can check you\u2019re on plan.'},
-    water:     {s:'Fuel',t:'Water',go:'fuel',at:'#waterDots',note:'Tap a dot per glass.'},
+    water:     {s:'Fuel',t:'Water',go:'fuel',at:'#kflCards,#waterDots',note:'Tap a drop per cup.'},
     scanner:   {s:'Fuel',t:'Ingredient scanner',go:'scanner',at:'#scnBarcode',note:'Scan a barcode \u2014 it flags bloating, additives and sugar.'},
     sleepChart:{s:'Sleep',t:'Night-by-night chart',go:'sleep',at:'#slpChart',note:'Tap a night to see when you woke.'},
     sleepEff:  {s:'Sleep',t:'Efficiency',go:'sleep',at:'#slpEff',note:'Time asleep \u00f7 time in bed. 85%+ is good.'},
@@ -45972,7 +45848,7 @@ window.KovaMaint=(function(){
         d.rate=G(d.goal).dir?cl(d.rate,G(d.goal).lo,G(d.goal).hi):0;
         if(!d.train.pick||d.train.pick.length!==d.train.days) d.train.pick=pickDays(d.train.days);
         d.macros=null;
-        var had=prof(); d.applied=had?had.applied:false;
+        var had=prof(); d.applied=had?had.applied:false; d.asked=1;
         if(!wlog().length) logWeight(d.kg);
         S.mode='res'; S.i=0; S.sel=0; S.cur=null; save(d,true);
         var m=document.getElementById('main'); if(m) m.scrollTop=0;
@@ -45993,7 +45869,7 @@ window.KovaMaint=(function(){
   function paintFuel(){
     var el=document.getElementById('fuelBal'); if(!el||!window.KovaFuel) return;
     var p=prof();
-    if(!p){
+    if(!p||!(p.applied||p.asked||p.train.pick)){
       el.innerHTML=card('ENERGY BALANCE','<div class="km-empty">Kova doesn\u2019t know your burn yet, so it can\u2019t tell you whether today is a surplus or a deficit.</div>'
         +'<div class="chip on km-cta" data-go="maint">Find my maintenance \u00b7 5 questions</div>',null,null,'maint');
       return;
@@ -47479,7 +47355,7 @@ window.KovaScreenTour=(function(){
       ['For your goal','What your training goal asks you to eat.','#goalFuel .card',null,1],
       ['Your nutrition coach','Sage checks in on your week from your own logs.','#kciSlot .card',null,1],
       ['Today’s log','Everything you ate today.',up('mealLog')],
-      ['Water','Tap a drop for each glass.',up('waterDots')],
+      ['Water and streak','Tap a drop for each cup.',function(){ return document.getElementById('kflCards')||up('waterDots')(); }],
       ['Energy','How meal timing lines up with your energy.','#nrgCard'],
       ['Micronutrients','Vitamins and minerals you are short on.','#microGrid'],
       ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')],
@@ -51168,7 +51044,7 @@ window.KovaCycle=(function(){
     var st=starts(), pd=periodDays(), out=[];
     st.forEach(function(k,i){
       var a=parse(k), b=i+1<st.length?parse(st[i+1]):null, plen=0;
-      for(var t=a;;t+=DAY){ if(pd.indexOf(key(t))>=0) plen++; else if(plen) break; if(t-a>14*DAY) break; }
+      for(var t=a;;t=rd(t+DAY)){ if(pd.indexOf(key(t))>=0) plen++; else if(plen) break; if(t-a>14*DAY) break; }
       out.push({k:k,a:a,b:b,len:b?Math.round((b-a)/DAY):null,plen:plen,open:!b});
     });
     return out;
@@ -51223,8 +51099,8 @@ window.KovaCycle=(function(){
     var s=stats(); if(!s.starts.length) return null;
     var last=parse(s.starts[s.starts.length-1]); if(last>t) return null;
     var day=Math.round((sod(t)-last)/DAY)+1;
-    var next=last+s.avg*DAY; while(next<sod(t)-DAY*2&&day<=s.avg+7) next+=s.avg*DAY;
-    next=rd(next);
+    /* p51: compared as whole days; across a clock change the hour made a period 2 days late jump a month */
+    var next=rd(last+s.avg*DAY), lim=rd(sod(t)-DAY*2); while(next<lim&&day<=s.avg+7) next=rd(next+s.avg*DAY);
     var ov=rd(next-14*DAY), method='calendar', confirmed=false;
     var from=s.starts[s.starts.length-1];
     var lhPos=Object.keys(D.lh).filter(function(k){ return k>=from&&D.lh[k]==='pos'; }).sort()[0];
@@ -51249,7 +51125,8 @@ window.KovaCycle=(function(){
   /* ---------------- symptoms over cycles ---------------- */
   function sevOn(k,id){ return ((D.sev[k]||{})[id])|0; }
   function groupDays(g,a,b){
-    var n=0; for(var t=a;t<b;t+=DAY){ var k=key(t); if(g.items.some(function(x){ return sevOn(k,x[0])>0; })) n++; } return n;
+    /* p51: by calendar day; 24 h steps saw the 25-hour clock-change day twice */
+    var n=0; for(var t=a;t<b;t=rd(t+DAY)){ var k=key(t); if(g.items.some(function(x){ return sevOn(k,x[0])>0; })) n++; } return n;
   }
   /* per cycle (last 6 + this one): days with any symptom of the group */
   function groupSeries(g){
@@ -52032,28 +51909,40 @@ window.KovaMicros=(function(){
     if(!box){ box=document.createElement('div'); box.id='usdaResults'; res.parentNode.insertBefore(box,res.nextSibling); }
     if(!q||q.length<3){ box.innerHTML=''; return; }
     qT=setTimeout(function(){
-      if(!window.KovaLink||!KovaLink.authFetch){ box.innerHTML=''; return; }
       lastQ=q; box.innerHTML='<div class="kmi-note">Searching USDA FoodData Central…</div>';
-      KovaLink.authFetch('/foods/search',{json:{q:q}}).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'HTTP '+r.status); return j; }); })
-        .then(function(j){
-          if(lastQ!==q) return;
-          var F=j.foods||[];
-          if(!F.length){ box.innerHTML='<div class="kmi-note">USDA has nothing called that.</div>'; return; }
-          box.innerHTML='<div class="kmi-note">USDA FoodData Central · per 100 g</div>'+F.map(function(f,i){
-            return '<div class="kmi-f" data-i="'+i+'"><div><b>'+esc(f.n)+'</b><span>'+Math.round(f.kcal)+' kcal · '+Math.round(f.p)+'p '+Math.round(f.c)+'c '+Math.round(f.f)+'f per 100 g</span></div>'
-              +'<input type="number" min="1" value="100" aria-label="Grams" class="kmi-g"><span class="kmi-u">g</span><button class="kmi-add">Add</button></div>';
-          }).join('');
-          box.querySelectorAll('.kmi-add').forEach(function(btn){
-            btn.onclick=function(){
-              var row=btn.closest('.kmi-f'), f=F[+row.getAttribute('data-i')], g=Math.max(1,+row.querySelector('.kmi-g').value||100), s=g/100;
-              var m={}; Object.keys(f.m||{}).forEach(function(k){ m[k]=Math.round(f.m[k]*s*10)/10; });
-              if(window.KovaFuel) KovaFuel.add({src:'usda',kcal:Math.round(f.kcal*s),p:Math.round(f.p*s),c:Math.round(f.c*s),f:Math.round(f.f*s),m:m,items:[{n:f.n+' ('+g+' g)'}]});
-              try{ if(window.closeSheet) closeSheet(); }catch(x){}
-              try{ if(window.toast) toast(f.n+' logged with its vitamins and minerals.'); }catch(x){}
-              paint();
-            };
-          });
-        }).catch(function(){ if(lastQ===q) box.innerHTML='<div class="kmi-note">USDA search needs the Kova server. The foods above work offline.</div>'; });
+      /* USDA through the Kova server when signed in; Open Food Facts (no
+         key) when that is out of reach, and the note says why (p51) */
+      function draw(F,src){
+        if(lastQ!==q) return;
+        if(!F.length){ box.innerHTML='<div class="kmi-note">'+src+' has nothing called that. Try Quick add.</div>'; return; }
+        box.innerHTML='<div class="kmi-note">'+src+' · per 100 g</div>'+F.map(function(f,i){
+          return '<div class="kmi-f" data-i="'+i+'"><div><b>'+esc(f.n)+'</b><span>'+Math.round(f.kcal)+' kcal · '+Math.round(f.p)+'p '+Math.round(f.c)+'c '+Math.round(f.f)+'f per 100 g</span></div>'
+            +'<input type="number" min="1" value="100" aria-label="Grams" class="kmi-g"><span class="kmi-u">g</span><button class="kmi-add">Add</button></div>';
+        }).join('');
+        box.querySelectorAll('.kmi-add').forEach(function(btn){
+          btn.onclick=function(){
+            var row=btn.closest('.kmi-f'), f=F[+row.getAttribute('data-i')], g=Math.max(1,+row.querySelector('.kmi-g').value||100), s=g/100;
+            var m={}; Object.keys(f.m||{}).forEach(function(k){ m[k]=Math.round(f.m[k]*s*10)/10; });
+            if(window.KovaFuel) KovaFuel.add({src:/USDA/.test(src)?'usda':'off',kcal:Math.round(f.kcal*s),p:Math.round(f.p*s),c:Math.round(f.c*s),f:Math.round(f.f*s),m:m,items:[{n:f.n+' ('+g+' g)'}]});
+            try{ if(window.closeSheet) closeSheet(); }catch(x){}
+            try{ if(window.toast) toast(f.n+' logged.'); }catch(x){}
+            paint();
+          };
+        });
+      }
+      function fallback(why){
+        if(lastQ!==q) return;
+        var O=window.KovaFoodLog&&KovaFoodLog.off;
+        if(!O){ box.innerHTML='<div class="kmi-note">'+esc(why)+'</div>'; return; }
+        box.innerHTML='<div class="kmi-note">'+esc(why)+' Searching Open Food Facts…</div>';
+        O(q).then(function(F){ draw(F,'Open Food Facts'); if(lastQ===q) box.insertAdjacentHTML('afterbegin','<div class="kmi-note">'+esc(why)+'</div>'); })
+          .catch(function(){ if(lastQ===q) box.innerHTML='<div class="kmi-note">'+esc(why)+' No connection to Open Food Facts either. Quick add works offline.</div>'; });
+      }
+      var inAcct=false; try{ inAcct=!!(window.KovaCloudAuth&&KovaCloudAuth.status().signedIn); }catch(e){}
+      if(!window.KovaLink||!KovaLink.authFetch||!inAcct){ fallback('Sign in for USDA search.'); return; }
+      KovaLink.authFetch('/foods/search',{json:{q:q}}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if(!r.ok) throw new Error(j.error||'USDA search is unavailable right now.'); return j; }); })
+        .then(function(j){ draw(j.foods||[],'USDA FoodData Central'); })
+        .catch(function(e){ fallback(/fetch|network|load/i.test(String(e&&e.message))?'USDA search is offline.':String(e&&e.message||'USDA search failed.')); });
     },420);
   }
   function start(){ paint(); setInterval(function(){ if(document.getElementById('s-fuel')&&document.getElementById('s-fuel').classList.contains('on')) paint(); },4000); }
@@ -56559,8 +56448,8 @@ window.KovaQuick=(function(){
   }
 
   /* ---------------- where it lives: inside Fuel ----------------
-     "Scan food" (and the camera icon in Fuel's header) opens the camera
-     straight away; the one-tap chips sit under Fuel's quick actions. */
+     "Scan food" opens the camera straight away (Fuel's header icon scans
+     a barcode, src/p08_fuellog.js); the one-tap chips sit under Fuel's quick actions. */
   function paintHome(){
     var scr=document.getElementById('s-fuel'); if(!scr) return;
     var host=document.getElementById('kqFuel');
@@ -56579,7 +56468,7 @@ window.KovaQuick=(function(){
   }
   function wireFuel(){
     document.addEventListener('click',function(ev){
-      var b=ev.target.closest&&ev.target.closest('#scanBtn,#fuelScanIcon'); if(!b) return;
+      var b=ev.target.closest&&ev.target.closest('#scanBtn'); if(!b) return;
       ev.preventDefault(); ev.stopPropagation(); camera(false);
     },true);
   }
@@ -68985,6 +68874,13 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-13',title:'Fuel, with no watch needed',
+      lines:['Quick add any food, with your own numbers','Recent, Favorites and My foods work','Barcodes scan on iPhone, or type the numbers','Real water and streak'],
+      steps:[
+        ['fuel','Log food','Quick add, recent foods and favorites.',function(){ return q('#logBtn'); }],
+        ['fuel','Scan a barcode','Works on iPhone. Or type the numbers.',function(){ return q('#fuelScanIcon'); }],
+        ['fuel','Water and streak','Tap a drop for each cup.',function(){ return q('#kflCards')||q('#waterDots'); }]
+      ]},
     {id:'new-2026-11-12',title:'Profile settings, done properly',
       lines:['Tap any row to change it','Change your email safely, by a link','Height, weight and units update Fuel','Download or delete your data here'],
       steps:[
@@ -71950,6 +71846,328 @@ window.KovaPatterns=(function(){
     if(window.MutationObserver) new MutationObserver(function(){ if(s.classList.contains('on')) onShow(); }).observe(s,{attributes:true,attributeFilter:['class']});
   })();
   return {all:all,html:html,phaseAt:phaseAt,add:add,MIN:MIN};
+})();
+
+</script>
+<script id="p08-fuellog">
+/* =====================================================================
+   KovaFoodLog - Fuel with no watch, end to end (p51).
+
+   The owner: "I'm going to start using the fuel metric on my account...
+   make everything work, fuel doesn't have to be connected to the watch".
+   Measured first, as a new account in live mode with no watch:
+     - Log food's Recent / Favorites / Custom chips did nothing, and a food
+       outside the 8-food list could not be logged at all;
+     - on iPhone the barcode button said "try Chrome on Android" (Safari
+       has no BarcodeDetector), and Fuel's own barcode sheet was never
+       reachable (its search rows said "Logged" and wrote nothing);
+     - Water and the logging streak were sample numbers, so live mode hid
+       them;
+     - food search said "needs the Kova server" for every failure.
+   Now:
+     Log food  Quick add (name, meal, calories and macros; Save to My
+               foods), Barcode, and the chips: Recent (your own foods,
+               newest first), Favorites (the star), My foods. Typing finds
+               your own foods first.
+     Barcode   KovaBarcode.open(cb): a live camera that reads EAN and UPC
+               codes (the browser's own reader, else the zxing reader,
+               about 1 MB, loaded from jsdelivr the first time) and a box
+               to type the numbers. The Scanner screen and Fuel's header
+               icon use it; the product opens on the Scanner screen.
+     Search    off(q): Open Food Facts text search (no key) when USDA is
+               out of reach, per 100 g like USDA (src/p08_micros.js).
+     Water     glasses a day (KP water, ml by day). The target is the US
+               National Academies' drinks intake for your age and sex
+               (14-18: 2.6 L boys, 1.8 L girls; 19+: 3.0 L men, 2.2 L
+               women).
+     Streak    days in a row with food logged, and your best run.
+   ===================================================================== */
+window.KovaFoodLog=(function(){
+  'use strict';
+  var DAY=864e5, SLOTS=['Breakfast','Lunch','Snack','Dinner'];
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function kp(k,d){ try{ var v=window.KP?KP.get(k):null; return v==null?d:v; }catch(e){ return d; } }
+  function kset(k,v){ try{ if(window.KP) KP.set(k,v); }catch(e){} }
+  function F(){ return window.KovaFuel||null; }
+  function say(m){ try{ if(window.toast) toast(m); }catch(e){} }
+  function live(){ return !!(window.KovaMode&&KovaMode.live); }
+  function r1(x){ return Math.round((+x||0)*10)/10; }
+  function nameOf(e){ return ((e.items||[]).map(function(i){ return i.n; }).filter(Boolean).join(', ')||e.n||'').trim(); }
+  function line(x){ return Math.round(x.kcal||0)+' kcal · '+Math.round(x.p||0)+'p '+Math.round(x.c||0)+'c '+Math.round(x.f||0)+'f'; }
+  function key(n){ return String(n||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+
+  /* ---------------- your foods: recent, favorites, my foods ---------------- */
+  function snap(x){ return {n:x.n,kcal:Math.round(x.kcal||0),p:r1(x.p),c:r1(x.c),f:r1(x.f),m:x.m||null}; }
+  function recent(){
+    var seen={}, out=[];
+    (F()?F().all().slice().reverse():[]).forEach(function(e){
+      if(out.length>=20||!e||e.src==='seed') return;
+      var n=nameOf(e), k=key(n); if(!n||seen[k]) return; seen[k]=1;
+      out.push(snap({n:n,kcal:e.kcal,p:e.p,c:e.c,f:e.f,m:e.m}));
+    });
+    return out;
+  }
+  function favs(){ var o=kp('foodfav',{}); return Object.keys(o).map(function(k){ return o[k]; }); }
+  function isFav(n){ return !!kp('foodfav',{})[key(n)]; }
+  function star(x){
+    var o=Object.assign({},kp('foodfav',{})), k=key(x.n);
+    if(o[k]) delete o[k]; else o[k]=snap(x);
+    kset('foodfav',o); return !!o[k];
+  }
+  function mine(){ return kp('myfoods',[]); }
+  function saveMine(x){
+    var l=mine().filter(function(y){ return key(y.n)!==key(x.n); });
+    l.unshift(snap(x)); kset('myfoods',l.slice(0,200));
+  }
+  function log(x,src,meal){
+    if(!F()) return null;
+    var e={src:src||'mine',kcal:Math.round(x.kcal||0),p:r1(x.p),c:r1(x.c),f:r1(x.f),m:x.m||null,items:[{n:x.n}]};
+    if(meal) e.meal=meal;
+    F().add(e);
+    return e;
+  }
+
+  /* ---------------- the Log food sheet ---------------- */
+  var LIST=[], MODE='all';
+  function rows(list,head){
+    LIST=list;
+    if(!list.length) return '';
+    return (head?'<div class="lbl kfl-h">'+esc(head)+'</div>':'')+list.map(function(x,i){
+      var on=isFav(x.n);
+      return '<div class="list-item kfl-row" data-i="'+i+'"><div class="kfl-txt"><div class="li-name">'+esc(x.n)+'</div><div class="li-sub">'+line(x)+'</div></div>'
+        +'<button class="kfl-star'+(on?' on':'')+'" data-star="'+i+'" aria-label="Favorite '+esc(x.n)+'" aria-pressed="'+on+'">'+(on?'★':'☆')+'</button>'
+        +'<button class="kfl-add" data-add="'+i+'" aria-label="Log '+esc(x.n)+'">+</button></div>';
+    }).join('');
+  }
+  function empty(t){ return '<div class="kfl-none">'+t+'</div>'; }
+  function paintMine(){
+    var box=document.getElementById('kflMine'), res=document.getElementById('foodResults'); if(!box) return;
+    var inp=document.getElementById('foodSearch'), q=key(inp&&inp.value);
+    var core=MODE==='all';
+    if(q){
+      var seen={}, hits=[];
+      favs().concat(mine(),recent()).forEach(function(x){ var k=key(x.n); if(seen[k]||k.indexOf(q)<0) return; seen[k]=1; hits.push(x); });
+      box.innerHTML=rows(hits.slice(0,8),'Yours'); core=true;
+    } else if(MODE==='all'){ box.innerHTML=rows(recent().slice(0,3),'Recent'); }
+    else if(MODE==='recent'){ box.innerHTML=rows(recent())||empty('Foods you log show up here.'); }
+    else if(MODE==='fav'){ box.innerHTML=rows(favs())||empty('Tap the star on a food to keep it here.'); }
+    else { box.innerHTML='<button class="btn kfl-new" data-kfl="new">New food</button>'+(rows(mine())||empty('Foods you make with Quick add live here.')); }
+    if(res) res.hidden=!core;
+    var u=document.getElementById('usdaResults'); if(u) u.hidden=!core;
+  }
+  function enhance(){
+    var si=document.getElementById('sheetIn'), s=document.getElementById('foodSearch');
+    if(!si||!s||!document.getElementById('foodResults')||si.querySelector('.kfl-acts')) return;
+    MODE='all';
+    s.insertAdjacentHTML('beforebegin','<div class="kfl-acts"><button class="btn" data-kfl="quick">Quick add</button><button class="btn kfl-ghost" data-kfl="bar">Barcode</button></div>');
+    document.getElementById('foodResults').insertAdjacentHTML('beforebegin','<div id="kflMine"></div>');
+    paintMine();
+  }
+  function onSheetClick(ev){
+    var t=ev.target; if(!t.closest||!t.closest('#sheetIn')) return;
+    var ch=t.closest('.chip[data-t]');
+    if(ch&&document.getElementById('kflMine')){
+      ch.parentNode.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on',c===ch); });
+      MODE=ch.getAttribute('data-t'); var s=document.getElementById('foodSearch'); if(s&&MODE!=='all') s.value='';
+      paintMine(); return;
+    }
+    var a=t.closest('[data-kfl]');
+    if(a){ var k=a.getAttribute('data-kfl'); if(k==='quick'||k==='new') quickAdd({save:k==='new'}); else if(k==='bar') scanToFuel(); return; }
+    var st=t.closest('[data-star]');
+    if(st){ var x=LIST[+st.getAttribute('data-star')]; if(!x) return; var on=star(x); st.classList.toggle('on',on); st.textContent=on?'★':'☆'; st.setAttribute('aria-pressed',String(on)); if(MODE==='fav') paintMine(); return; }
+    var r=t.closest('.kfl-row');
+    if(r){ var y=LIST[+r.getAttribute('data-i')]; if(!y) return; log(y,'mine'); try{ closeSheet(); }catch(e){} say(y.n+' logged · '+Math.round(y.kcal)+' kcal'); }
+  }
+
+  /* ---------------- Quick add: any food, by hand ---------------- */
+  function slotNow(){ return F()?F().slotOf({at:Date.now()}):'Snack'; }
+  function quickAdd(o){
+    o=o||{};
+    var sl=slotNow();
+    openSheet('<div class="kfl-q"><div class="title-s" style="font-size:18px;margin-bottom:12px">Quick add</div>'
+      +'<label class="kfl-f">Food<input class="field" id="kflN" maxlength="60" placeholder="e.g. Turkey sandwich" autocomplete="off"></label>'
+      +'<div class="kfl-meal" role="group" aria-label="Meal">'+SLOTS.map(function(s){ return '<button class="chip'+(s===sl?' on':'')+'" data-meal="'+s+'">'+s+'</button>'; }).join('')+'</div>'
+      +'<div class="kfl-nums">'
+      +[['K','Calories','numeric'],['P','Protein g','decimal'],['C','Carbs g','decimal'],['F','Fat g','decimal']].map(function(f){
+        return '<label class="kfl-f">'+f[1]+'<input class="field" id="kfl'+f[0]+'" type="number" min="0" inputmode="'+f[2]+'" placeholder="0"></label>'; }).join('')
+      +'</div>'
+      +'<div class="sub kfl-hint">No calories? Kova adds them up from the macros.</div>'
+      +'<label class="kfl-chk"><input type="checkbox" id="kflSave"'+(o.save?' checked':'')+'> Save to My foods</label>'
+      +'<button class="btn" id="kflGo">Log it</button><div class="kfl-msg" id="kflMsg" role="status"></div></div>');
+    var si=document.getElementById('sheetIn');
+    si.querySelectorAll('[data-meal]').forEach(function(b){ b.onclick=function(){ si.querySelectorAll('[data-meal]').forEach(function(c){ c.classList.toggle('on',c===b); }); }; });
+    document.getElementById('kflGo').onclick=function(){
+      var v=function(id){ var s=document.getElementById(id).value; return s===''?null:+s; };
+      var n=(document.getElementById('kflN').value||'').trim(), k=v('kflK'), p=v('kflP'), c=v('kflC'), f=v('kflF'), msg=document.getElementById('kflMsg');
+      var bad=[k,p,c,f].some(function(x){ return x!=null&&(!isFinite(x)||x<0); });
+      if(bad){ msg.textContent='Numbers only, 0 or more.'; return; }
+      if(k==null) k=Math.round(4*(p||0)+4*(c||0)+9*(f||0));
+      if(!(k>0)){ msg.textContent='Add calories or macros.'; return; }
+      if(k>5000||(p||0)>500||(c||0)>800||(f||0)>400){ msg.textContent='That looks too big for one food. Check the numbers.'; return; }
+      var m=si.querySelector('[data-meal].on'), x={n:n||'Quick add',kcal:k,p:p||0,c:c||0,f:f||0};
+      if(document.getElementById('kflSave').checked) saveMine(x);
+      log(x,'manual',m?m.getAttribute('data-meal'):sl);
+      try{ closeSheet(); }catch(e){}
+      say(x.n+' logged · '+Math.round(k)+' kcal');
+    };
+    setTimeout(function(){ var n=document.getElementById('kflN'); if(n) try{ n.focus({preventScroll:true}); }catch(e){} },60);
+  }
+
+  /* ---------------- Open Food Facts text search (no key) ---------------- */
+  var OFF='https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=12&fields=code,product_name,brands,nutriments&search_terms=';
+  function off(q){
+    return fetch(OFF+encodeURIComponent(q)).then(function(r){ if(!r.ok) throw new Error('Open Food Facts '+r.status); return r.json(); }).then(function(j){
+      var out=[];
+      (j.products||[]).forEach(function(x){
+        var N=x.nutriments||{}, num=function(k){ var v=parseFloat(N[k]); return isFinite(v)?v:null; };
+        var kc=num('energy-kcal_100g'); if(kc==null&&num('energy-kj_100g')!=null) kc=num('energy-kj_100g')/4.184;
+        var n=String(x.product_name||'').trim(); if(!n||kc==null) return;
+        var b=String(x.brands||'').split(',')[0].trim(), m={};
+        [['fib','fiber_100g',1],['na','sodium_100g',1000],['k','potassium_100g',1000],['ca','calcium_100g',1000],['fe','iron_100g',1000],['c','vitamin-c_100g',1000]].forEach(function(a){ var v=num(a[1]); if(v!=null) m[a[0]]=r1(v*a[2]); });
+        out.push({n:(b&&n.toLowerCase().indexOf(b.toLowerCase())<0?b+' ':'')+n,kcal:r1(kc),p:r1(num('proteins_100g')),c:r1(num('carbohydrates_100g')),f:r1(num('fat_100g')),m:m});
+      });
+      return out.slice(0,8);
+    });
+  }
+
+  /* ---------------- barcodes on any phone ---------------- */
+  var SRC='https://cdn.jsdelivr.net/npm/barcode-detector@3.2.2/dist/iife/ponyfill.js', FMT=['ean_13','ean_8','upc_a','upc_e'], DET=null, LOADING=null;
+  function load(src){
+    if(LOADING) return LOADING;
+    LOADING=new Promise(function(ok,no){ var s=document.createElement('script'); s.src=src; s.async=true; s.onload=ok; s.onerror=function(){ LOADING=null; no(new Error('load')); }; document.head.appendChild(s); });
+    return LOADING;
+  }
+  function detector(){
+    if(DET) return Promise.resolve(DET);
+    function poly(){ return load(SRC).then(function(){ DET=new window.BarcodeDetectionAPI.BarcodeDetector({formats:FMT}); return DET; }); }
+    var N=window.BarcodeDetector;
+    if(N&&N.getSupportedFormats) return N.getSupportedFormats().then(function(f){ if(f&&f.indexOf('ean_13')>=0){ DET=new N({formats:FMT}); return DET; } return poly(); },poly);
+    return poly();
+  }
+  function stopAll(S){ S.on=false; clearTimeout(S.t); if(S.st) S.st.getTracks().forEach(function(t){ try{ t.stop(); }catch(e){} }); S.st=null; }
+  function open(cb){
+    openSheet('<div class="kbc"><div class="title-s" style="font-size:18px;margin-bottom:12px">Scan a barcode</div>'
+      +'<div class="kbc-view"><video id="kbcV" playsinline muted autoplay></video><div class="kbc-box"></div></div>'
+      +'<div class="sub kbc-say" id="kbcSay" role="status">Starting the camera…</div>'
+      +'<div class="kbc-type"><input class="field" id="kbcCode" inputmode="numeric" maxlength="14" placeholder="Or type the numbers" aria-label="Barcode numbers" autocomplete="off"><button class="btn" id="kbcGo">Look up</button></div></div>');
+    var S={on:true}, v=document.getElementById('kbcV'), sayEl=document.getElementById('kbcSay');
+    function done(code){ if(!S.on) return; stopAll(S); try{ closeSheet(); }catch(e){} cb(String(code)); }
+    function typed(){
+      var c=(document.getElementById('kbcCode').value||'').replace(/\D/g,'');
+      if(!/^\d{8}$|^\d{12,14}$/.test(c)){ sayEl.textContent='8, 12 or 13 numbers, from under the bars.'; return; }
+      done(c);
+    }
+    document.getElementById('kbcGo').onclick=typed;
+    document.getElementById('kbcCode').onkeydown=function(e){ if(e.key==='Enter') typed(); };
+    function gone(){ return !document.body.contains(v)||!document.getElementById('sheet').classList.contains('on'); }
+    function noCam(t){ sayEl.textContent=t; var view=v.parentNode; if(view) view.hidden=true; }
+    var md=navigator.mediaDevices;
+    if(!md||!md.getUserMedia){ noCam('No camera here. Type the numbers under the barcode.'); return S; }
+    md.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false}).then(function(st){
+      if(gone()){ st.getTracks().forEach(function(t){ t.stop(); }); return; }
+      S.st=st; v.srcObject=st; var pl=v.play(); if(pl&&pl.catch) pl.catch(function(){});
+      sayEl.textContent='Getting the reader ready…';
+      return detector().then(function(d){
+        sayEl.textContent='Hold the barcode inside the box.';
+        (function tick(){
+          if(!S.on) return; if(gone()){ stopAll(S); return; }
+          if(v.readyState<2){ S.t=setTimeout(tick,200); return; }
+          d.detect(v).then(function(c){ if(c&&c.length&&c[0].rawValue) done(c[0].rawValue); else S.t=setTimeout(tick,250); },function(){ S.t=setTimeout(tick,400); });
+        })();
+      },function(){ sayEl.textContent='The reader would not load. Check your connection, or type the numbers.'; });
+    },function(){ noCam('Camera blocked. Allow it in your browser, or type the numbers.'); });
+    return S;
+  }
+  /* a product opens on the Scanner screen: health check, then Log to Fuel */
+  function toScanner(code){ try{ go('scanner'); }catch(e){} if(window.KovaScanner&&KovaScanner.lookup) KovaScanner.lookup(code); }
+  function scanToFuel(){ open(toScanner); }
+
+  /* ---------------- water and the logging streak (live mode) ---------------- */
+  function metric(){
+    var u=''; try{ u=String(localStorage.getItem('kova.units')||'').replace(/"/g,''); }catch(e){}
+    if(u) return u==='metric';
+    return (kp('maint',{})||{}).unit==='kg';
+  }
+  function glass(){ return metric()?250:237; }   /* a glass, or an 8 oz cup */
+  function waterGoal(){
+    var m=kp('maint',{})||{}, sex=m.sex, age=+m.age||0;
+    if(!sex){ try{ var s=JSON.parse(localStorage.getItem('kova.sex')||'null'); if(s) sex=/^f/.test(s)?'f':'m'; }catch(e){} }
+    var teen=age>0&&age<19;
+    if(sex==='f') return {ml:teen?1800:2200,known:true};
+    if(sex==='m') return {ml:teen?2600:3000,known:true};
+    return {ml:2200,known:false};
+  }
+  function dk(t){ return F()?F().dayKey(t):new Date(t||Date.now()).toISOString().slice(0,10); }
+  function water(k){ return +(kp('water',{})[k||dk()])||0; }
+  function setWater(ml,k){ var o=Object.assign({},kp('water',{})); k=k||dk(); o[k]=Math.max(0,Math.min(8000,Math.round(ml))); kset('water',o); paintCards(); }
+  function addGlass(n){ setWater(water()+n*glass()); }
+  function streak(){
+    var days={}; (F()?F().all():[]).forEach(function(e){ if(e&&e.src!=='seed') days[dk(e.at)]=1; });
+    var keys=Object.keys(days).sort(), best=0, run=0, prev=null;
+    keys.forEach(function(k){ var t=new Date(k+'T12:00:00').getTime(); run=(prev!=null&&Math.round((t-prev)/DAY)===1)?run+1:1; prev=t; if(run>best) best=run; });
+    var cur=0, t=Date.now(), today=!!days[dk(t)];
+    if(!today) t-=DAY;
+    while(days[dk(t)]){ cur++; t-=DAY; }
+    return {cur:cur,best:best,today:today};
+  }
+  function fmtW(ml){ return metric()?(Math.round(ml/100)/10)+' L':Math.round(ml/29.57)+' oz'; }
+  function waterHTML(){
+    var G=waterGoal(), g=glass(), have=water(), n=Math.max(1,Math.round(G.ml/g)), got=Math.round(have/g), w=metric()?'glass':'cup';
+    var dots=''; for(var i=0;i<Math.max(n,got);i++) dots+='<button class="kfl-drop'+(i<got?' on':'')+'" data-drop="'+i+'" aria-label="'+(i+1)+' '+w+(i?'s':'')+'"></button>';
+    return '<div class="lbl">WATER</div><div class="kfl-big">'+fmtW(have)+' <span class="unit">of '+fmtW(G.ml)+'</span></div>'
+      +'<div class="kfl-drops">'+dots+'</div>'
+      +'<div class="kfl-wrow"><button class="kfl-wb" data-w="-1" aria-label="Remove a '+w+'">−</button><span>'+got+' of '+n+' '+w+(n>1?'s':'')+'</span><button class="kfl-wb" data-w="1" aria-label="Add a '+w+'">+</button></div>'
+      +(G.known?'':'<div class="sub kfl-note">Add your sex in Profile for your own target.</div>');
+  }
+  function streakHTML(){
+    var s=streak();
+    return '<div class="lbl">STREAK</div><div class="kfl-big">'+s.cur+' <span class="unit">day'+(s.cur===1?'':'s')+' logged</span></div>'
+      +'<div class="sub kfl-note">'+(!s.cur?'Log a meal to start one.':(!s.today?'Log today to keep it.':(s.best>s.cur?'Best: '+s.best+' days':'Your best run')))+'</div>';
+  }
+  function paintCards(){
+    if(!live()) return;
+    var scr=document.getElementById('s-fuel'); if(!scr) return;
+    var g=document.getElementById('kflCards');
+    if(!g){
+      var wd=document.getElementById('waterDots'), old=wd&&wd.closest('.grid2');
+      g=document.createElement('div'); g.id='kflCards'; g.className='grid2 kfl-cards';
+      g.innerHTML='<div class="card kfl-water"></div><div class="card kfl-streak"></div>';
+      if(old){ old.parentNode.insertBefore(g,old); old.remove(); }
+      else { var lg=document.getElementById('mealLog'), c=lg&&lg.closest('.card'); if(c) c.insertAdjacentElement('afterend',g); else scr.appendChild(g); }
+      g.addEventListener('click',function(ev){
+        var d=ev.target.closest('[data-drop]'), b=ev.target.closest('[data-w]');
+        if(d){ var i=+d.getAttribute('data-drop'), got=Math.round(water()/glass()); setWater((i+1===got?i:i+1)*glass()); }
+        else if(b) addGlass(+b.getAttribute('data-w'));
+      });
+    }
+    g.querySelector('.kfl-water').innerHTML=waterHTML();
+    g.querySelector('.kfl-streak').innerHTML=streakHTML();
+  }
+
+  /* ---------------- wiring ---------------- */
+  function start(){
+    var si=document.getElementById('sheetIn');
+    if(si&&window.MutationObserver) new MutationObserver(enhance).observe(si,{childList:true});
+    enhance();
+    document.addEventListener('click',onSheetClick);
+    document.addEventListener('input',function(e){ if(e.target&&e.target.id==='foodSearch'&&document.getElementById('kflMine')){
+      if(MODE!=='all'){ MODE='all'; var cs=document.querySelectorAll('#sheetIn .chip[data-t]'); cs.forEach(function(c){ c.classList.toggle('on',c.getAttribute('data-t')==='all'); }); }
+      paintMine(); } });
+    /* Fuel's header icon says "Scan a barcode": now it does */
+    document.addEventListener('click',function(ev){
+      var b=ev.target.closest&&ev.target.closest('#fuelScanIcon'); if(!b) return;
+      ev.preventDefault(); ev.stopPropagation(); scanToFuel();
+    },true);
+    var scr=document.getElementById('s-fuel');
+    if(scr&&window.MutationObserver) new MutationObserver(function(){ if(scr.classList.contains('on')) paintCards(); }).observe(scr,{attributes:true,attributeFilter:['class']});
+    if(F()) F().on(paintCards);
+    if(scr&&scr.classList.contains('on')) paintCards();
+  }
+  window.KovaBarcode={open:open,detector:detector};
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+
+  return {recent:recent,favs:favs,star:star,mine:mine,saveMine:saveMine,quickAdd:quickAdd,off:off,
+    water:water,setWater:setWater,addGlass:addGlass,waterGoal:waterGoal,streak:streak,paintCards:paintCards,glass:glass};
 })();
 
 </script>

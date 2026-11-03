@@ -392,7 +392,7 @@ window.KovaScreenTour=(function(){
       ['For your goal','What your training goal asks you to eat.','#goalFuel .card',null,1],
       ['Your nutrition coach','Sage checks in on your week from your own logs.','#kciSlot .card',null,1],
       ['Today’s log','Everything you ate today.',up('mealLog')],
-      ['Water','Tap a drop for each glass.',up('waterDots')],
+      ['Water and streak','Tap a drop for each cup.',function(){ return document.getElementById('kflCards')||up('waterDots')(); }],
       ['Energy','How meal timing lines up with your energy.','#nrgCard'],
       ['Micronutrients','Vitamins and minerals you are short on.','#microGrid'],
       ['Weight trend','The trend that sets your calories.',cardWith('fuel','Weight trend')],
