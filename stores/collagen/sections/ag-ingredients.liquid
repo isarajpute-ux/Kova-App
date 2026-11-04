@@ -1,0 +1,101 @@
+{%- comment -%} Auvela: ingredient carousel (oval images, dots + arrows, loops) {%- endcomment -%}
+<section id="nxIg-{{ section.id }}" class="nxIg" style="--ig-bg:{{ section.settings.c_bg }};--ig-ink:{{ section.settings.c_ink }};--ig-btn:{{ section.settings.c_btn }};padding:{{ section.settings.pad_top }}px 0 {{ section.settings.pad_bottom }}px">
+  <div class="nxIg__in">
+    <div class="nxIg__top">
+      <h2 class="nxIg__h">{{ section.settings.heading }}{% if section.settings.accent != blank %} <em>{{ section.settings.accent }}</em>{% endif %}</h2>
+      <div class="nxIg__r">
+        {%- if section.settings.text != blank -%}<p class="nxIg__t">{{ section.settings.text }}</p>{%- endif -%}
+        {%- if section.settings.btn_label != blank -%}<a class="nxIg__btn" href="{{ section.settings.btn_link | default: '#' }}">{{ section.settings.btn_label }}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="nxIg__track" data-ig-track>
+      {%- for block in section.blocks -%}
+        <div class="nxIg__card" {{ block.shopify_attributes }}>
+          <div class="nxIg__img" style="background:{{ block.settings.bg }}">
+            {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', alt: block.settings.title }}{%- endif -%}
+          </div>
+          <p class="nxIg__n">{{ block.settings.title }}</p>
+          <p class="nxIg__d">{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="nxIg__nav">
+      <div class="nxIg__dots" data-ig-dots></div>
+      <div class="nxIg__arr"><button type="button" aria-label="Previous" data-ig-prev><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button type="button" aria-label="Next" data-ig-next><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    </div>
+  </div>
+</section>
+<style>
+#nxIg-{{ section.id }}{background:var(--ig-bg);color:var(--ig-ink);overflow:hidden}
+#nxIg-{{ section.id }} .nxIg__in{max-width:1400px;margin:0 auto;padding:0 20px}
+#nxIg-{{ section.id }} .nxIg__top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:32px}
+#nxIg-{{ section.id }} .nxIg__h{margin:0;font-size:clamp(30px,4.4vw,56px);line-height:1.08;font-weight:500;letter-spacing:-.02em;max-width:560px;color:var(--ig-ink)}
+#nxIg-{{ section.id }} .nxIg__h em{display:block;font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:400}
+#nxIg-{{ section.id }} .nxIg__r{max-width:600px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:28px}
+#nxIg-{{ section.id }} .nxIg__t{margin:0;font-size:16px;line-height:1.6;opacity:.85}
+#nxIg-{{ section.id }} .nxIg__btn{display:inline-block;background:var(--ig-btn);color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:11px 26px;border-radius:999px}
+#nxIg-{{ section.id }} .nxIg__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 4*28px)/4.6);gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:smooth}
+#nxIg-{{ section.id }} .nxIg__track::-webkit-scrollbar{display:none}
+#nxIg-{{ section.id }} .nxIg__card{scroll-snap-align:start}
+#nxIg-{{ section.id }} .nxIg__img{aspect-ratio:2/3;border-radius:999px;overflow:hidden;display:grid;place-items:center}
+#nxIg-{{ section.id }} .nxIg__img img{width:100%;height:100%;object-fit:cover}
+#nxIg-{{ section.id }} .nxIg__n{margin:22px 8px 8px;font-size:15px;font-weight:500}
+#nxIg-{{ section.id }} .nxIg__d{margin:0 8px;font-size:13px;line-height:1.45;opacity:.75}
+#nxIg-{{ section.id }} .nxIg__nav{display:flex;justify-content:space-between;align-items:center;margin-top:34px}
+#nxIg-{{ section.id }} .nxIg__dots{display:flex;gap:8px;align-items:center}
+#nxIg-{{ section.id }} .nxIg__dots button{width:8px;height:8px;border-radius:999px;border:0;padding:0;background:#CFCFCF;cursor:pointer;transition:width .25s,background .25s}
+#nxIg-{{ section.id }} .nxIg__dots button.on{width:28px;background:var(--ig-ink)}
+#nxIg-{{ section.id }} .nxIg__arr{display:flex;gap:12px}
+#nxIg-{{ section.id }} .nxIg__arr button{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--ig-ink);background:transparent;color:var(--ig-ink);display:grid;place-items:center;cursor:pointer;padding:0}
+#nxIg-{{ section.id }} .nxIg__arr svg{width:20px;height:20px}
+@media (max-width:749px){
+ #nxIg-{{ section.id }} .nxIg__top{flex-direction:column;margin-bottom:24px}
+ #nxIg-{{ section.id }} .nxIg__r{text-align:left;align-items:flex-start;gap:18px}
+ #nxIg-{{ section.id }} .nxIg__t{font-size:14.5px}
+ #nxIg-{{ section.id }} .nxIg__track{grid-auto-columns:62%;gap:16px}
+ #nxIg-{{ section.id }} .nxIg__n{margin-top:16px}
+ #nxIg-{{ section.id }} .nxIg__arr button{width:40px;height:40px}
+}
+</style>
+<script>
+(function(){
+  var r=document.getElementById('nxIg-{{ section.id }}'); if(!r||r.__ig) return; r.__ig=1;
+  var t=r.querySelector('[data-ig-track]'), dw=r.querySelector('[data-ig-dots]'), cards=t.children;
+  function per(){ return cards.length? Math.max(1,Math.round(t.clientWidth/cards[0].getBoundingClientRect().width)):1; }
+  function pages(){ return Math.max(1,Math.ceil((t.scrollWidth-t.clientWidth)/Math.max(1,t.clientWidth*0.9))+1); }
+  function page(){ var max=t.scrollWidth-t.clientWidth; return max<=0?0:Math.round(t.scrollLeft/max*(pages()-1)); }
+  function go(i){ var n=pages(), max=t.scrollWidth-t.clientWidth; if(i>=n) i=0; if(i<0) i=n-1; t.scrollTo({left:n>1?max*i/(n-1):0,behavior:'smooth'}); }
+  function dots(){ var n=pages(); if(dw.children.length!==n){ dw.innerHTML=''; for(var i=0;i<n;i++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Slide '+(i+1)); (function(k){ b.onclick=function(){ go(k); }; })(i); dw.appendChild(b); } } var p=page(); Array.prototype.forEach.call(dw.children,function(b,i){ b.classList.toggle('on',i===p); }); }
+  r.querySelector('[data-ig-next]').onclick=function(){ go(page()+1); };
+  r.querySelector('[data-ig-prev]').onclick=function(){ go(page()-1); };
+  var to; t.addEventListener('scroll',function(){ clearTimeout(to); to=setTimeout(dots,80); },{passive:true});
+  window.addEventListener('resize',dots); dots();
+})();
+</script>
+{% schema %}
+{
+  "name": "Ingredients carousel",
+  "tag": "div",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Formulated with clinically studied"},
+    {"type":"text","id":"accent","label":"Italic accent words","default":"skin nutrients"},
+    {"type":"textarea","id":"text","label":"Text","default":"We choose every ingredient for one job: helping your skin feel firmer, bouncier and more hydrated after 40."},
+    {"type":"text","id":"btn_label","label":"Button label","default":"Nutrition & Ingredients"},
+    {"type":"url","id":"btn_link","label":"Button link"},
+    {"type":"color","id":"c_bg","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"c_ink","label":"Text & arrows","default":"#2A1427"},
+    {"type":"color","id":"c_btn","label":"Button","default":"#2A1427"},
+    {"type":"range","id":"pad_top","label":"Top padding","min":0,"max":120,"step":4,"unit":"px","default":64},
+    {"type":"range","id":"pad_bottom","label":"Bottom padding","min":0,"max":120,"step":4,"unit":"px","default":56}
+  ],
+  "blocks": [
+    {"type":"item","name":"Ingredient","settings":[
+      {"type":"image_picker","id":"image","label":"Image (transparent or plain background works best)"},
+      {"type":"color","id":"bg","label":"Oval background","default":"#F3ECE8"},
+      {"type":"text","id":"title","label":"Name","default":"Ingredient"},
+      {"type":"textarea","id":"text","label":"Description","default":"What it does for your skin."}
+    ]}
+  ],
+  "presets": [{"name":"Ingredients carousel"}]
+}
+{% endschema %}

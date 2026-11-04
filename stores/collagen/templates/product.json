@@ -803,12 +803,86 @@
         "pad_top": 56,
         "pad_bottom": 64
       }
+    },
+    "ingredients": {
+      "type": "ag-ingredients",
+      "blocks": {
+        "ig1": {
+          "type": "item",
+          "settings": {
+            "bg": "#EEF2E8",
+            "title": "Bovine Collagen Peptides",
+            "text": "Grass-fed Types I & III, the collagen your skin is mostly made of. Supports firmness and elasticity."
+          }
+        },
+        "ig2": {
+          "type": "item",
+          "settings": {
+            "bg": "#E8EEF2",
+            "title": "Marine Collagen",
+            "text": "Small, easy-to-absorb Type I peptides that support smoother, springier-looking skin."
+          }
+        },
+        "ig3": {
+          "type": "item",
+          "settings": {
+            "bg": "#F4ECE4",
+            "title": "Chicken Collagen",
+            "text": "Type II collagen, the kind found in cartilage. Supports comfortable, flexible joints."
+          }
+        },
+        "ig4": {
+          "type": "item",
+          "settings": {
+            "bg": "#F6F0E2",
+            "title": "Eggshell Membrane",
+            "text": "Types V & X collagen for full-spectrum support from the inside out."
+          }
+        },
+        "ig5": {
+          "type": "item",
+          "settings": {
+            "bg": "#EDE7F1",
+            "title": "Hyaluronic Acid",
+            "text": "Holds water in your skin, helping it look plumper and less dry."
+          }
+        },
+        "ig6": {
+          "type": "item",
+          "settings": {
+            "bg": "#FBEBDC",
+            "title": "Vitamin C",
+            "text": "Helps your body make and use collagen, so every scoop works harder."
+          }
+        }
+      },
+      "block_order": [
+        "ig1",
+        "ig2",
+        "ig3",
+        "ig4",
+        "ig5",
+        "ig6"
+      ],
+      "settings": {
+        "heading": "Formulated with clinically studied",
+        "accent": "skin nutrients",
+        "text": "We choose every ingredient for one job: helping your skin feel firmer, bouncier and more hydrated after 40.",
+        "btn_label": "Nutrition & Ingredients",
+        "btn_link": "#MainContent",
+        "c_bg": "#FFFFFF",
+        "c_ink": "#2A1427",
+        "c_btn": "#2A1427",
+        "pad_top": 64,
+        "pad_bottom": 56
+      }
     }
   },
   "order": [
     "main",
     "vrow",
     "features",
+    "ingredients",
     "apart",
     "compare",
     "trust",
