@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&display=swap");
+/* Collagen store: plum #4A2545 · blush #E8C9C1 · cream #F7F2EC · gold #C9A24B */
+:root{--nx-blue:#4A2545;--nx-green:#E8C9C1;--nx-tint:#F6ECE8;--nx-serif:'Fraunces',Georgia,serif}
+h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'Fraunces',Georgia,serif!important;font-weight:400!important}
+.agStars__fill{color:#C9A24B!important}
+.agP__sideCard:nth-child(3n){background:linear-gradient(150deg,#6B3A63 0%,#4A2545 60%,#2A1427 100%)!important}
+.agP__sideCard:nth-child(3n+1){background:#2A1427!important;border-color:#2A1427!important}
+.agP__sideCard:nth-child(3n+1) .agP__sideIc{background:#C9A24B!important;box-shadow:0 0 14px rgba(201,162,75,.6)!important}
+.agP__sideCard:nth-child(3n) .agP__sideIc,.agP__sideCard:nth-child(3n) .agP__sideIc *{color:#4A2545!important}
+.agTL__step:nth-of-type(3) .agTL__ic{background:#4A2545!important;box-shadow:0 0 18px rgba(74,37,69,.45)!important}
+.agRv__card:nth-child(even) .agRv__av,.agAb__val:nth-child(2) .ic{background:#4A2545!important}
+[id^="ag-"] .k__us .k__i--y{background:#4A2545!important}
+[id^="ag-"] .k__us .k__img:not(:has(img)):after{color:#E8C9C1!important}
+.agP .agB__card.is-active{border-color:#4A2545!important;background:#F6ECE8!important;box-shadow:0 0 0 1px #4A2545!important}
+.nxPlan{border-color:#4A2545!important;background:linear-gradient(180deg,#FBF5F2,#F7F2EC)!important;box-shadow:0 0 0 1px rgba(74,37,69,.1),0 14px 34px -18px rgba(74,37,69,.45)!important}
+.nxPlan__pop{background:#C9A24B!important;color:#fff!important}
+.nxSavePill{background:#4A2545!important}
+.nxPlan__sv{color:#4A2545!important;font-weight:600!important}
+.nxPlan ul{border-top-color:#E8D6CF!important}
+.nxPlan li:before,.nxPerks li:before{background-color:#4A2545!important}
+.agP .agP__atc{background:#4A2545!important}
+.agP .agP__feats .agP__feat{background:#F7F2EC!important}
+.nxInfo{background:#F6ECE8!important;color:#4A2545!important}.nxInfo strong{color:#4A2545!important}
+.nxOver li span:first-child,.nxOver li span:first-child *{color:#E8C9C1!important}
+.agSticky .nxSave,.agSticky .nxDel2,.nxDel{color:#E8C9C1!important}
+.nxHero__ey,.nxT__ey{color:#E8C9C1!important}
+[id^="nx-"].nxT,[id^="nx-"].nxRe,[id^="nx-"].nxHero{background:#2A1427!important}
+.nxHero__btn{background:#E8C9C1!important;color:#2A1427!important;animation-name:nxRingP!important}
+@keyframes nxRingP{0%{box-shadow:0 0 0 0 rgba(232,201,193,.6)}70%{box-shadow:0 0 0 14px rgba(232,201,193,0)}100%{box-shadow:0 0 0 0 rgba(232,201,193,0)}}
+.nxHero__bg:empty{background:radial-gradient(60% 50% at 70% 30%,rgba(232,201,193,.25),transparent 70%),linear-gradient(160deg,#4A2545,#2A1427)!important}
+.nxHero__bg:after{background:linear-gradient(180deg,rgba(42,20,39,.1) 0%,rgba(42,20,39,.55) 55%,#2A1427 100%)!important}
+.nxBn__tile,.nxW__ath,.nxVr__card{background:radial-gradient(70% 60% at 55% 35%,#6B3A63,#2A1427)!important}
+.nxBn__tag{color:#F7F2EC!important;background:rgba(232,201,193,.18)!important;border-color:rgba(232,201,193,.4)!important}
+.nxRe__ey,.nxFit__ey,.nxEy,.nxA__ey,.nxBn__ey,.nxVr__ey{color:#C9A24B!important}
+.nxRe__h span{color:#E8C9C1!important;text-shadow:none!important}
+.nxRe__nav button:last-child{background:#C9A24B!important;border-color:#C9A24B!important}
+.nxW__v svg{color:#4A2545!important}
+.nxW__c{background:#F7F2EC!important}
+.nxW__tabs button.on{background:#4A2545!important}
+.nxW__cta a{background:#4A2545!important;box-shadow:0 12px 30px -12px rgba(74,37,69,.7)!important}
+.nxA__tag--us,.nxA__ic.is-ok{background:#4A2545!important;color:#fff!important}
+.nxA__list{background:#F7F2EC!important}
+.nxT__globe g{fill:#C9A24B!important}
+.nxT__globe{color:rgba(232,201,193,.3)!important}
+.agDeal:before{background:#C9A24B!important}
+[id^="ag-"] .k__arr:last-child{background:#4A2545!important;border-color:#4A2545!important;color:#fff!important}
+[id^="ag-"] .k__hint{color:#4A2545!important}
