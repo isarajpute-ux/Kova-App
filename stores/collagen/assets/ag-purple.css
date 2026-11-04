@@ -21,7 +21,6 @@ h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'
 .agP .agP__atc{background:#4A2545!important}
 .agP .agP__feats .agP__feat{background:#F7F2EC!important}
 .nxInfo{background:#F6ECE8!important;color:#4A2545!important}.nxInfo strong{color:#4A2545!important}
-.nxOver li span:first-child,.nxOver li span:first-child *{color:#E8C9C1!important}
 .agSticky .nxSave,.agSticky .nxDel2,.nxDel{color:#E8C9C1!important}
 .nxHero__ey,.nxT__ey{color:#E8C9C1!important}
 [id^="nx-"].nxT,[id^="nx-"].nxRe,[id^="nx-"].nxHero{background:#2A1427!important}
@@ -45,3 +44,46 @@ h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'
 .agDeal:before{background:#C9A24B!important}
 [id^="ag-"] .k__arr:last-child{background:#4A2545!important;border-color:#4A2545!important;color:#fff!important}
 [id^="ag-"] .k__hint{color:#4A2545!important}
+/* ---- v2 fixes ---- */
+.agGN__b{width:36px!important;height:36px!important}
+.agGN__b svg{width:15px!important;height:15px!important}
+.agGN__b:nth-child(2){background:#4A2545!important;border-color:#4A2545!important}
+.agGN__fill{background:#4A2545!important}
+.agP .agP__slide img,.agP .agP__main img{object-fit:contain!important;background:#F7F2EC}
+.nxOver{left:10px!important;right:10px!important;bottom:10px!important;padding:6px 2px!important;border-radius:10px!important}
+.nxOver li{gap:3px!important;font-size:10.5px!important;padding:0 2px!important}
+.nxOver svg{width:15px!important;height:15px!important}
+.agP .agB{gap:10px!important}
+.agP .agB__card{padding:14px 8px!important;border-radius:12px!important}
+.agP .agB__card .agB__txt strong{font-size:15.5px!important;line-height:1.2}
+.agP .agB__card .agB__txt small{font-size:12.5px!important;margin-top:4px!important}
+.nxPlan{padding:18px 20px!important;border-radius:14px!important}
+.nxPlan__pop{font-size:10.5px!important;padding:4px 10px!important;margin-bottom:10px!important}
+.nxPlan__t{font-size:17px!important}
+.nxPlan__s,.nxPlan__sv{font-size:13.5px!important;margin-top:4px!important}
+.nxPlan:not(.nxPlan--sm) .nxPlan__pr{padding-top:32px!important}
+.nxPlan__pr b{font-size:20px!important}
+.nxPlan ul{margin-top:14px!important;padding-top:14px!important;gap:9px!important}
+.nxPlan li{font-size:14px!important}
+.nxPlan li:before{flex-basis:17px!important;height:17px!important;background-size:11px!important}
+.agP .agP__atc{min-height:54px!important;font-size:16px!important}
+.agP .agP__feats .agP__feat{padding:16px!important;gap:10px!important}
+.agTL__ic{background:#4A2545!important;color:#fff!important}
+.agTL__line{border-top:0!important;height:2px;background:repeating-linear-gradient(90deg,#C9A24B 0 8px,transparent 8px 14px);background-size:28px 2px;animation:nxDash 1s linear infinite}
+@keyframes nxDash{to{background-position:28px 0}}
+.agP .agP__stock{display:flex!important;align-items:center;gap:8px;color:#B3364F!important;font-weight:500;font-size:14px}
+.agP .agP__dot{width:9px!important;height:9px!important;border-radius:50%;background:#E0314B!important;animation:nxDot 1.4s infinite}
+@keyframes nxDot{0%{box-shadow:0 0 0 0 rgba(224,49,75,.55)}70%{box-shadow:0 0 0 8px rgba(224,49,75,0)}100%{box-shadow:0 0 0 0 rgba(224,49,75,0)}}
+.agSpots__t{color:#B3364F!important}.agSpots__bar span{background:#E0314B!important}
+.nxAv{display:inline-flex;align-items:center;margin-left:6px}
+.nxAv>span{width:28px;height:28px;border-radius:50%;overflow:hidden;border:2px solid #fff;margin-left:-8px;background:#4A2545;color:#fff;font-size:10px;font-weight:600;display:grid;place-items:center}
+.nxAv>span:first-child{margin-left:0}
+.nxAv img{width:100%;height:100%;object-fit:cover}
+.agP .agP__rating{display:flex!important;align-items:center;flex-wrap:wrap;gap:6px}
+.nxSteps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.nxSteps figure{margin:0;text-align:center}
+.nxSteps img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;background:#F7F2EC}
+.nxSteps figcaption{margin-top:6px;font-weight:500;color:#2A1427}
+.agAcc__body ul.nxChk{list-style:none;padding:0;margin:0 0 6px;display:grid;gap:8px}
+.agAcc__body ul.nxChk li{display:flex;gap:10px;align-items:flex-start}
+.agAcc__body ul.nxChk li:before{content:"";flex:0 0 18px;height:18px;margin-top:2px;border-radius:50%;background:#2A1427 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4L18 8'/%3E%3C/svg%3E") center/11px no-repeat}
