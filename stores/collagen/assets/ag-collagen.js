@@ -37,4 +37,5 @@
   }
   function go(){ setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(steps,300); setTimeout(avatars,450); setTimeout(ovl,600); setTimeout(sync,650); });
 })();
