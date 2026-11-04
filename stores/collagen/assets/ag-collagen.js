@@ -35,7 +35,11 @@
       bd.appendChild(g);
     });
   }
-  function go(){ setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
+  function arrows(){
+    if(!document.getElementById('nxArwCss')){ var st=document.createElement('style'); st.id='nxArwCss'; st.textContent='.nxArw{position:absolute;left:10px;right:10px;top:50%;transform:translateY(-50%);display:flex!important;justify-content:space-between!important;pointer-events:none;z-index:3}.nxArw .agGN__b{pointer-events:auto;background:rgba(255,255,255,.9)!important;color:#4A2545!important;border:0!important;box-shadow:0 4px 12px -4px rgba(42,20,39,.35)!important}.nxArw .agGN__b[disabled]{opacity:0!important}.agGN{margin-top:10px}'; document.head.appendChild(st); }
+    $$('.agGN__btns').forEach(function(bt){ if(bt.classList.contains('nxArw')) return; var w=bt.closest('.agGN'), stg=w&&w.previousElementSibling, mn=stg&&(stg.querySelector('.agP__main')||stg); if(!mn) return; bt.classList.add('nxArw'); mn.appendChild(bt); });
+  }
+  function go(){ arrows(); setTimeout(arrows,300); setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
-  document.addEventListener('shopify:section:load',function(){ setTimeout(steps,300); setTimeout(avatars,450); setTimeout(ovl,600); setTimeout(sync,650); });
+  document.addEventListener('shopify:section:load',function(){ setTimeout(steps,300); setTimeout(avatars,450); setTimeout(ovl,600); setTimeout(sync,650); setTimeout(arrows,200); });
 })();
