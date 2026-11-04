@@ -1,1 +1,819 @@
-{"sections": {"main": {"type": "ag-product", "blocks": {"side1": {"type": "side_card", "settings": {"icon": "heart-fill", "icon_color": "#4A2545", "title": "One scoop", "sub": "In your morning coffee"}}, "side2": {"type": "side_card", "settings": {"icon": "sparkle", "icon_color": "#4A2545", "title": "Firmer-feeling", "sub": "Bouncier-looking skin"}}, "side3": {"type": "side_card", "settings": {"icon": "leaf", "icon_color": "#4A2545", "title": "5 collagen types", "sub": "Full-spectrum peptides"}}, "bun1": {"type": "bundle", "settings": {"title": "Starter", "sub": "1 tub \u00b7 30 days|1 Tub \u00b7 30-Day Supply|Try the ritual for a month", "qty": 1, "save_pct": 0, "badge": "", "badge_color": "#2A1427", "is_default": false}}, "bun2": {"type": "bundle", "settings": {"title": "90-Day Protocol", "sub": "3 tubs \u00b7 90 days|The 90-Day Skin Firming Protocol|3 tubs \u2014 one full skin-renewal cycle|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free \u201cFirm From Within\u201d digital guide ($27 value)|Free US shipping ($9 value)", "qty": 1, "save_pct": 0, "badge": "Most popular", "badge_color": "#2A1427", "is_default": true}}, "bun3": {"type": "bundle", "settings": {"title": "Full Transformation", "sub": "6 tubs \u00b7 180 days|Full Transformation \u00b7 180 Days|6 tubs \u2014 best value per scoop|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free \u201cFirm From Within\u201d digital guide ($27 value)|Free US shipping ($9 value)", "qty": 1, "save_pct": 0, "badge": "Best value", "badge_color": "#C9A24B", "is_default": false}}, "ft3": {"type": "feature", "settings": {"icon": "box", "icon_color": "#2A1427", "title": "Deep hydration", "sub": "With hyaluronic acid"}}, "ft4": {"type": "feature", "settings": {"icon": "shield", "icon_color": "#2A1427", "title": "Hair & nails", "sub": "Stronger-looking hair and nails"}}, "acc1": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "How it works", "content": "<ol><li><strong>One scoop</strong> in coffee, tea or water \u2014 unflavored, dissolves clean.</li><li><strong>Full-spectrum peptides</strong> + hyaluronic acid + vitamin C support your skin from within.</li><li><strong>Skin renews on a ~90-day cycle</strong> \u2014 that\u2019s when the firmness shows.</li></ol>", "open": false}}, "acc2": {"type": "accordion", "settings": {"icon": "dot", "icon_color": "#4A2545", "title": "What\u2019s in the box", "content": "<ul><li>Multi-Collagen Peptide Powder (1, 3 or 6 tubs)</li><li>3 &amp; 6 tub packs: Hyaluronic Acid Firming Boost, 90-Day Firming Tracker, \u201cFirm From Within\u201d guide</li></ul>", "open": false}}, "mr1": {"type": "mini_review", "settings": {"name": "Customer name", "rating": 5, "text": "Paste a real review from a woman 45+ here (Judge.me or your own orders)."}}, "mr2": {"type": "mini_review", "settings": {"name": "Customer name", "rating": 5, "text": "Paste a real review from a woman 45+ here (Judge.me or your own orders)."}}, "mr3": {"type": "mini_review", "settings": {"name": "Customer name", "rating": 5, "text": "Paste a real review from a woman 45+ here (Judge.me or your own orders)."}}, "ft1": {"type": "feature", "settings": {"icon": "sparkle", "icon_color": "#2A1427", "title": "Firmer-feeling skin", "sub": "Supports the look of firmness and bounce"}}, "ft2": {"type": "feature", "settings": {"icon": "heart", "icon_color": "#2A1427", "title": "Smoother crepey areas", "sub": "Arms, chest and stomach look smoother"}}, "kb1": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "Firmer-feeling, bouncier skin", "content": "<p>As we get older our body makes less collagen \u2014 the protein that keeps skin springy. One daily scoop gives your body the collagen building blocks it needs, so your skin can look and feel firmer over time.</p>", "open": false}}, "kb2": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "Smoother-looking arms, chest and stomach", "content": "<p>Crepey, thin-looking skin shows up where collagen drops most. Taken daily, collagen supports skin elasticity, which helps those areas look smoother.</p>", "open": false}}, "kb3": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "Deep hydration from the inside", "content": "<p>Hyaluronic acid holds water in your skin and vitamin C helps your body use collagen. Together they help skin look plumper and less dry.</p>", "open": false}}, "kb4": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "90-Day Firmer-Skin Promise", "content": "<p>Take it daily for 90 days. If your skin doesn\u2019t look and feel firmer, bouncier and more hydrated, email us for a full refund. Keep the tubs and the bonuses.</p>", "open": false}}, "ben1": {"type": "benefit", "settings": {"icon": "check-circle-fill", "icon_color": "#E8C9C1", "text": "3rd-party tested"}}, "ben2": {"type": "benefit", "settings": {"icon": "shield", "icon_color": "#E8C9C1", "text": "Grass-fed"}}, "ben3": {"type": "benefit", "settings": {"icon": "sparkle", "icon_color": "#E8C9C1", "text": "90-Day Promise"}}, "howto": {"type": "accordion", "settings": {"icon": "check", "icon_color": "#2A1427", "title": "How to use", "open": true, "content": "<ul><li>Add 1 scoop (about 10 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10\u201315 seconds \u2014 it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days \u2014 that\u2019s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/2b895471-99da-4c77-95b7-6ac0de1c2e57.jpg\" title=\"Step 1 photo\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/9be163f4-aceb-42de-b035-2e434bc13cc9.jpg\" title=\"Step 2 photo\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/41f6985e-715f-42ef-8494-2209eda35b68.jpg\" title=\"Step 3 photo\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/b38f45ad-300a-44ab-a530-713a2a8c0640.jpg\" title=\"Step 4 photo\">Step 4 photo</a></p>"}}}, "block_order": ["side1", "side2", "side3", "ben1", "ben2", "ben3", "mr1", "mr2", "mr3", "bun1", "bun2", "bun3", "ft1", "ft2", "ft3", "ft4", "howto", "kb1", "kb2", "kb3", "kb4", "acc1", "acc2"], "settings": {"font_family": "Inter", "pad_top": 20, "pad_bottom": 36, "radius": 14, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "c_muted": "#6B6B6B", "c_title": "#2A1427", "c_btn": "#4A2545", "c_btn2": "#6B3A63", "c_soft": "#F7F2EC", "c_line": "#E8DDD6", "c_red": "#FF3B30", "c_star": "#C9A24B", "c_gold": "#C9A24B", "c_highlight": "#2A1427", "c_bundle": "#F7F2EC", "image_ratio": "square", "show_side_cards": true, "show_thumbs": true, "show_callout": true, "callout_icon": "gift", "callout_text": "<p><strong>Extra 15% off</strong> with code <strong>AUVELA15</strong> \u00b7 first 35 orders only \u00b7 ends Nov 30</p>", "rating": 5, "reviews_text": "See reviews", "reviews_link": "/pages/auvela-reviews", "title_override": "The 90-Day Skin Firming Ritual", "title_size_m": 26, "title_size_d": 32, "desc": "<p>With clothes on, you look incredible. This is for <em>the woman in the mirror.</em> One scoop in your morning coffee helps your skin feel firmer, bouncier and more hydrated \u2014 from your d\u00e9colletage to your stomach to your arms.</p>", "show_pill": true, "pill_text": "Multi-Collagen Peptides", "pill_av_w": 24, "pill_av_h": 24, "pill_av_shape": "circle", "pill_av_border": 0, "pill_av_border_color": "#FFFFFF", "show_compare": true, "bubble_text": "", "variant_label": "", "pill_style": "soft", "show_stock": true, "stock_text": "Founding Batch discount: limited to the first 35 orders", "show_mr": true, "mr_autoplay": true, "mr_speed": 5, "show_bundles": true, "bundle_heading": "Choose your protocol", "atc_text": "Start My 90-Day Protocol \u2192", "atc_show_price": false, "soldout_text": "Sold out", "ship_text": "90-Day|Firmer-Skin Promise;3rd-Party|Tested;Free|US shipping", "show_payment": false, "loved_text": "", "show_ugc": false, "quote_text": "", "quote_name": "", "show_eta": true, "eta_before": "If you order within", "eta_after": "you'll get it by", "cutoff_hour": 23, "ship_min": 1, "ship_max": 3, "del_min": 5, "del_max": 9, "date_style": "short", "tl_1": "Ordered", "tl_1_sub": "Today", "tl_2": "Shipped", "tl_3": "Delivered", "show_sticky": true, "sticky_btn": "Start My Protocol", "mr_style": "lines", "mr_w": 44, "mr_h": 44, "mr_shape": "circle", "mr_border": 2, "mr_border_color": "#E8E8E8", "mr_av_bg": "#4A2545", "mr_av_text": "#FFFFFF", "mr_star_color": "#C9A24B", "mr_star_size": 13, "mr_name_color": "#2A1427", "mr_name_size": 14, "mr_text_color": "#555555", "mr_text_size": 13, "mr_show_verified": true, "mr_ver_text": "Verified buyer", "mr_ver_icon": "check-circle-fill", "mr_ver_color": "#4A2545", "mr_bg": "#FFFFFF", "mr_line": "#E8E8E8", "mr_arrow_bg": "#FFFFFF", "mr_arrow_color": "#2A1427", "show_deal": false, "deal_text": "Extra 15% off ends in", "deal_hours": 5, "deal_code": "AUVELA15", "deal_copied": "Copied!", "deal_bg": "#F6ECE8", "deal_color": "#4A2545", "deal_code_bg": "#FFFFFF", "stock_glow": true, "show_spots": false, "spots_text": "Only [n] discount spots left at this price", "spots_count": 35, "spots_total": 100, "spots_bar": true, "spots_color": "#4A2545", "show_dynamic_checkout": true}}, "faq": {"type": "ag-faq", "blocks": {"q1": {"type": "qa", "settings": {"q": "How long until I see results?", "a": "<p>Most women start to feel a difference in hydration within a few weeks. Skin renews on roughly a 90-day cycle, which is why the 90-Day Protocol is where the firmness shows.</p>", "open": true}}, "q2": {"type": "qa", "settings": {"q": "Is it safe during or after menopause?", "a": "<p>Collagen peptides are a food-based protein. If you\u2019re on medication or have a medical condition, check with your doctor first.</p>", "open": false}}, "q3": {"type": "qa", "settings": {"q": "Can I take it with other supplements?", "a": "<p>Yes \u2014 it mixes with your usual routine. If you take prescription medication, ask your doctor.</p>", "open": false}}, "q4": {"type": "qa", "settings": {"q": "What does it taste like?", "a": "<p>Nothing. It\u2019s unflavored and dissolves clean in coffee, tea, smoothies or water.</p>", "open": false}}, "q5": {"type": "qa", "settings": {"q": "How do I cancel my subscription?", "a": "<p>Log in to your account and cancel or skip in one click \u2014 no emails to send, no phone calls.</p>", "open": false}}, "q6": {"type": "qa", "settings": {"q": "What\u2019s the guarantee?", "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn\u2019t look and feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs and the bonuses.</p>", "open": false}}}, "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"], "settings": {"heading": "Questions? <em>Answered.</em>", "sub": "Results, safety, taste and the guarantee.", "heading_font": "Inter", "font_family": "Inter", "heading_m": 34, "heading_d": 52, "icon": "check-circle", "max_width": 860, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "c_accent": "#2A1427", "c_line": "#EBEBEB", "pad_top": 56, "pad_bottom": 64}}, "video_wall": {"type": "ag-video-wall", "blocks": {}, "block_order": [], "settings": {"heading": "See it in action", "sub": "Tap any video for sound \ud83d\udd0a", "font_family": "Inter", "heading_m": 26, "heading_d": 36, "card_m": 62, "card_d": 230, "radius": 16, "show_captions": true, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "c_sub": "#6F6F6F", "c_star": "#4A2545", "pad_top": 36, "pad_bottom": 36}, "disabled": true}, "compare": {"type": "ag-compare", "blocks": {"r1": {"type": "row", "settings": {"label": "5 collagen types", "us": "yes", "c1": "Varies", "c2": "no", "c3": "no"}}, "r2": {"type": "row", "settings": {"label": "Hyaluronic acid + vitamin C", "us": "yes", "c1": "Varies", "c2": "Varies", "c3": "Varies"}}, "r3": {"type": "row", "settings": {"label": "Works from within", "us": "yes", "c1": "yes", "c2": "yes", "c3": "no"}}, "r4": {"type": "row", "settings": {"label": "Full dose per serving", "us": "yes", "c1": "Varies", "c2": "no", "c3": "no"}}, "r5": {"type": "row", "settings": {"label": "3rd-party tested", "us": "yes", "c1": "Varies", "c2": "Varies", "c3": "Varies"}}, "r6": {"type": "row", "settings": {"label": "90-day money-back promise", "us": "yes", "c1": "no", "c2": "no", "c3": "no"}}, "r7": {"type": "row", "settings": {"label": "Free bonuses", "us": "yes", "c1": "no", "c2": "no", "c3": "no"}}}, "block_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7"], "settings": {"heading": "Find your <em>perfect</em> collagen", "sub": "How our protocol compares to store-bought powders, gummies and creams.", "us_name": "Our Protocol", "c1_name": "Store powders", "c1_emoji": "\ud83e\udd44", "c2_name": "Gummies", "c2_emoji": "\ud83c\udf6c", "c3_name": "Firming creams", "c3_emoji": "\ud83e\uddf4", "row_h": 72, "head_h": 152, "heading_m": 34, "heading_d": 52, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "c_line": "#EBEBEB", "cta_text": "Start My 90-Day Protocol \u2192", "cta_link": "#MainContent", "pad_top": 52, "pad_bottom": 52, "italic_word": "perfect", "hint": "Compare next", "c_hl": "#F7F2EC", "c_acc": "#4A2545"}}, "reviews": {"type": "ag-reviews", "blocks": {}, "block_order": [], "settings": {"heading": "What customers are saying", "rating": 4.8, "count_text": "", "show_bars": true, "bars": "89,8,2,1,0", "initial": 4, "more_text": "Show more reviews", "font_family": "Inter", "heading_m": 28, "heading_d": 40, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "c_line": "#EBEBEB", "c_star": "#4A2545", "pad_top": 56, "pad_bottom": 56}, "disabled": true}, "features": {"type": "ag-features", "blocks": {"f1": {"type": "card", "settings": {"title": "One scoop", "text": "Unflavored. Stir into coffee, tea or water \u2014 it dissolves clean."}}, "f2": {"type": "card", "settings": {"title": "5 collagen types", "text": "Full-spectrum peptides: Types I, II, III, V and X."}}, "f3": {"type": "card", "settings": {"title": "Hydration layer", "text": "Hyaluronic acid and vitamin C for plumper-looking skin."}}, "f4": {"type": "card", "settings": {"title": "90-day cycle", "text": "Skin renews over about 90 days \u2014 that\u2019s when you see it."}}}, "block_order": ["f1", "f2", "f3", "f4"], "settings": {"eyebrow": "Why it works", "heading": "Your skin didn\u2019t change overnight.\n<em>Your collagen did.</em>", "heading_m": 30, "heading_d": 44, "c_bg": "#FFFFFF", "c_ink": "#2A1427", "pad_top": 56, "pad_bottom": 56}}, "apart": {"type": "ag-apart", "blocks": {"a1": {"type": "row", "settings": {"good": true, "title": "Full-spectrum", "text": "5 collagen types plus hyaluronic acid"}}, "a2": {"type": "row", "settings": {"good": false, "title": "Single-type powders", "text": "Usually Type I and III only"}}, "a3": {"type": "row", "settings": {"good": true, "title": "Made for women 40+", "text": "Formulated around post-menopause collagen loss"}}, "a4": {"type": "row", "settings": {"good": false, "title": "One-size-fits-all", "text": "Generic \u201cwellness\u201d for everyone"}}, "a5": {"type": "row", "settings": {"good": true, "title": "90-Day Promise", "text": "Firmer-feeling skin, or every penny back"}}, "a6": {"type": "row", "settings": {"good": false, "title": "Fine print", "text": "Opened tubs often can\u2019t be returned"}}}, "block_order": ["a1", "a2", "a3", "a4", "a5", "a6"], "settings": {"eyebrow": "The difference", "heading": "Made for the body <em>you see in the mirror.</em>", "us_label": "Our collagen", "them_label": "Generic collagen", "start": 85, "c_acc": "#4A2545", "pad_top": 56, "pad_bottom": 56}}, "trust": {"type": "ag-trust", "blocks": {"s1": {"type": "stat", "settings": {"num": "90", "label": "Day firmer-skin promise"}}, "s2": {"type": "stat", "settings": {"num": "5", "label": "Collagen types"}}, "s3": {"type": "stat", "settings": {"num": "$84", "label": "In free bonuses"}}, "s4": {"type": "stat", "settings": {"num": "Free", "label": "US shipping"}}}, "block_order": ["s1", "s2", "s3", "s4"], "settings": {"eyebrow": "Our promise", "heading": "The 90-Day <em>Firmer-Skin Promise.</em>", "text": "Take it daily for 90 days. If your skin doesn\u2019t look and feel firmer, bouncier and more hydrated \u2014 we refund every penny. Keep the tubs. Keep the bonuses. No questions.", "c_bg": "#2A1427", "c_dot": "#C9A24B", "pad_top": 64, "pad_bottom": 64}}, "vrow": {"type": "ag-vrow", "blocks": {"v1": {"type": "video", "settings": {}}, "v2": {"type": "video", "settings": {}}, "v3": {"type": "video", "settings": {}}, "v4": {"type": "video", "settings": {}}}, "block_order": ["v1", "v2", "v3", "v4"], "settings": {"eyebrow": "The morning ritual", "heading": "Real women. <em>Real mornings.</em>", "text": "One scoop, every morning. Add your customers\u2019 videos here.", "pad_top": 72, "pad_bottom": 72}}}, "order": ["main", "vrow", "features", "apart", "compare", "trust", "video_wall", "reviews", "faq"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "ag-product",
+      "blocks": {
+        "side1": {
+          "type": "side_card",
+          "settings": {
+            "icon": "heart-fill",
+            "icon_color": "#4a2545",
+            "title": "One scoop",
+            "sub": "In your morning coffee"
+          }
+        },
+        "side2": {
+          "type": "side_card",
+          "settings": {
+            "icon": "sparkle",
+            "icon_color": "#4a2545",
+            "title": "Firmer-feeling",
+            "sub": "Bouncier-looking skin"
+          }
+        },
+        "side3": {
+          "type": "side_card",
+          "settings": {
+            "icon": "leaf",
+            "icon_color": "#4a2545",
+            "title": "5 collagen types",
+            "sub": "Full-spectrum peptides"
+          }
+        },
+        "ben1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "check-circle-fill",
+            "icon_color": "#e8c9c1",
+            "text": "3rd-party tested"
+          }
+        },
+        "ben2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "icon_color": "#e8c9c1",
+            "text": "Grass-fed"
+          }
+        },
+        "ben3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "sparkle",
+            "icon_color": "#e8c9c1",
+            "text": "90-Day Promise"
+          }
+        },
+        "mr1": {
+          "type": "mini_review",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.08.19.png",
+            "name": "Amalia Castillo",
+            "rating": 5,
+            "text": "Not only do I feel younger, my hair, nails, skin, and body have been improving. I will keep buying this product. I’m on my 5th bag."
+          }
+        },
+        "mr2": {
+          "type": "mini_review",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png",
+            "name": "Susan Reynolds",
+            "rating": 5,
+            "text": "My wrinkled skin is finally all clear, I feel incredible in my prime years, and my sex life is better than ever."
+          }
+        },
+        "mr3": {
+          "type": "mini_review",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
+            "name": "Kathryn Maily",
+            "rating": 4,
+            "text": "It helps with my skin and joint pain, great value too, Love it and highly recommend , Second bag already, I take every morning and it’s part of my routine. Mix easily as well, Glow skin is visible!!!"
+          }
+        },
+        "bun1": {
+          "type": "bundle",
+          "settings": {
+            "title": "Starter",
+            "sub": "1 tub · 30 days|1 Tub · 30-Day Supply|Try the ritual for a month",
+            "qty": 1,
+            "save_pct": 0,
+            "badge": "",
+            "badge_color": "#2a1427",
+            "is_default": false
+          }
+        },
+        "bun2": {
+          "type": "bundle",
+          "settings": {
+            "title": "90-Day Protocol",
+            "sub": "3 tubs · 90 days|The 90-Day Skin Firming Protocol|3 tubs — one full skin-renewal cycle|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free “Firm From Within” digital guide ($27 value)|Free US shipping ($9 value)",
+            "qty": 1,
+            "save_pct": 0,
+            "badge": "Most popular",
+            "badge_color": "#2a1427",
+            "is_default": true
+          }
+        },
+        "bun3": {
+          "type": "bundle",
+          "settings": {
+            "title": "Full Transformation",
+            "sub": "6 tubs · 180 days|Full Transformation · 180 Days|6 tubs — best value per scoop|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free “Firm From Within” digital guide ($27 value)|Free US shipping ($9 value)",
+            "qty": 1,
+            "save_pct": 0,
+            "badge": "Best value",
+            "badge_color": "#c9a24b",
+            "is_default": false
+          }
+        },
+        "ft1": {
+          "type": "feature",
+          "settings": {
+            "icon": "sparkle",
+            "icon_color": "#2a1427",
+            "title": "Firmer-feeling skin",
+            "sub": "Supports the look of firmness and bounce"
+          }
+        },
+        "ft2": {
+          "type": "feature",
+          "settings": {
+            "icon": "heart",
+            "icon_color": "#2a1427",
+            "title": "Smoother crepey areas",
+            "sub": "Arms, chest and stomach look smoother"
+          }
+        },
+        "ft3": {
+          "type": "feature",
+          "settings": {
+            "icon": "box",
+            "icon_color": "#2a1427",
+            "title": "Deep hydration",
+            "sub": "With hyaluronic acid"
+          }
+        },
+        "ft4": {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "icon_color": "#2a1427",
+            "title": "Hair & nails",
+            "sub": "Stronger-looking hair and nails"
+          }
+        },
+        "howto": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "How to use",
+            "content": "<ul><li>Add 1 scoop (about 10 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10–15 seconds — it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days — that’s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/2b895471-99da-4c77-95b7-6ac0de1c2e57.jpg\" title=\"Step 1 photo\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/9be163f4-aceb-42de-b035-2e434bc13cc9.jpg\" title=\"Step 2 photo\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/41f6985e-715f-42ef-8494-2209eda35b68.jpg\" title=\"Step 3 photo\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/b38f45ad-300a-44ab-a530-713a2a8c0640.jpg\" title=\"Step 4 photo\">Step 4 photo</a></p>",
+            "open": true
+          }
+        },
+        "kb1": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "Firmer-feeling, bouncier skin",
+            "content": "<p>As we get older our body makes less collagen — the protein that keeps skin springy. One daily scoop gives your body the collagen building blocks it needs, so your skin can look and feel firmer over time.</p>",
+            "open": false
+          }
+        },
+        "kb2": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "Smoother-looking arms, chest and stomach",
+            "content": "<p>Crepey, thin-looking skin shows up where collagen drops most. Taken daily, collagen supports skin elasticity, which helps those areas look smoother.</p>",
+            "open": false
+          }
+        },
+        "kb3": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "Deep hydration from the inside",
+            "content": "<p>Hyaluronic acid holds water in your skin and vitamin C helps your body use collagen. Together they help skin look plumper and less dry.</p>",
+            "open": false
+          }
+        },
+        "kb4": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "90-Day Firmer-Skin Promise",
+            "content": "<p>Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated, email us for a full refund. Keep the tubs and the bonuses.</p>",
+            "open": false
+          }
+        },
+        "acc1": {
+          "type": "accordion",
+          "settings": {
+            "icon": "check",
+            "icon_color": "#2a1427",
+            "title": "How it works",
+            "content": "<ol><li><strong>One scoop</strong> in coffee, tea or water — unflavored, dissolves clean.</li><li><strong>Full-spectrum peptides</strong> + hyaluronic acid + vitamin C support your skin from within.</li><li><strong>Skin renews on a ~90-day cycle</strong> — that’s when the firmness shows.</li></ol>",
+            "open": false
+          }
+        },
+        "acc2": {
+          "type": "accordion",
+          "settings": {
+            "icon": "dot",
+            "icon_color": "#4a2545",
+            "title": "What’s in the box",
+            "content": "<ul><li>Multi-Collagen Peptide Powder (1, 3 or 6 tubs)</li><li>3 &amp; 6 tub packs: Hyaluronic Acid Firming Boost, 90-Day Firming Tracker, “Firm From Within” guide</li></ul>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "side1",
+        "side2",
+        "side3",
+        "ben1",
+        "ben2",
+        "ben3",
+        "mr1",
+        "mr2",
+        "mr3",
+        "bun1",
+        "bun2",
+        "bun3",
+        "ft1",
+        "ft2",
+        "ft3",
+        "ft4",
+        "howto",
+        "kb1",
+        "kb2",
+        "kb3",
+        "kb4",
+        "acc1",
+        "acc2"
+      ],
+      "settings": {
+        "font_family": "Inter",
+        "pad_top": 20,
+        "pad_bottom": 36,
+        "radius": 14,
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_muted": "#6b6b6b",
+        "c_title": "#2a1427",
+        "c_btn": "#4a2545",
+        "c_btn2": "#6b3a63",
+        "c_soft": "#f7f2ec",
+        "c_line": "#e8ddd6",
+        "c_red": "#ff3b30",
+        "c_star": "#c9a24b",
+        "c_gold": "#c9a24b",
+        "c_highlight": "#2a1427",
+        "c_bundle": "#f7f2ec",
+        "image_ratio": "square",
+        "show_side_cards": true,
+        "show_thumbs": true,
+        "show_callout": true,
+        "callout_icon": "gift",
+        "callout_text": "<p><strong>Extra 15% off</strong> with code <strong>AUVELA15</strong> · first 35 orders only</p>",
+        "rating": 5,
+        "reviews_text": "See reviews",
+        "reviews_link": "/pages/auvela-reviews",
+        "title_override": "The 90-Day Skin Firming Ritual",
+        "title_size_m": 26,
+        "title_size_d": 32,
+        "desc": "<p>With clothes on, you look incredible. This is for <em>the woman in the mirror.</em> One scoop in your morning coffee helps your skin feel firmer, bouncier and more hydrated — from your décolletage to your stomach to your arms.</p>",
+        "show_pill": true,
+        "pill_avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
+        "pill_text": "Multi-Collagen for Women 40+",
+        "pill_av_w": 24,
+        "pill_av_h": 24,
+        "pill_av_shape": "circle",
+        "pill_av_border": 0,
+        "pill_av_border_color": "#ffffff",
+        "show_compare": true,
+        "bubble_text": "",
+        "show_deal": false,
+        "deal_text": "Extra 15% off ends in",
+        "deal_hours": 5,
+        "deal_code": "AUVELA15",
+        "deal_copied": "Copied!",
+        "deal_bg": "#f6ece8",
+        "deal_color": "#4a2545",
+        "deal_code_bg": "#ffffff",
+        "variant_label": "",
+        "pill_style": "soft",
+        "show_stock": true,
+        "stock_text": "Limited Discount only applies to First 35 orders",
+        "stock_glow": true,
+        "show_spots": false,
+        "spots_text": "Only [n] discount spots left at this price",
+        "spots_count": 35,
+        "spots_total": 100,
+        "spots_bar": true,
+        "spots_color": "#4a2545",
+        "show_mr": true,
+        "mr_style": "lines",
+        "mr_autoplay": true,
+        "mr_speed": 5,
+        "mr_w": 44,
+        "mr_h": 44,
+        "mr_shape": "circle",
+        "mr_border": 2,
+        "mr_border_color": "#e8e8e8",
+        "mr_av_bg": "#4a2545",
+        "mr_av_text": "#ffffff",
+        "mr_star_color": "#c9a24b",
+        "mr_star_size": 13,
+        "mr_name_color": "#2a1427",
+        "mr_name_size": 14,
+        "mr_text_color": "#555555",
+        "mr_text_size": 13,
+        "mr_show_verified": true,
+        "mr_ver_text": "Verified buyer",
+        "mr_ver_icon": "check-circle-fill",
+        "mr_ver_color": "#4a2545",
+        "mr_bg": "#ffffff",
+        "mr_line": "#e8e8e8",
+        "mr_arrow_bg": "#ffffff",
+        "mr_arrow_color": "#2a1427",
+        "show_bundles": true,
+        "bundle_heading": "Choose your protocol",
+        "atc_text": "Start My 90-Day Protocol →",
+        "atc_show_price": false,
+        "soldout_text": "Sold out",
+        "show_dynamic_checkout": true,
+        "ship_text": "90-Day|Firmer-Skin Promise;3rd-Party|Tested;Free|US shipping",
+        "show_payment": false,
+        "loved_text": "",
+        "show_ugc": false,
+        "quote_text": "",
+        "quote_name": "",
+        "show_eta": true,
+        "eta_before": "If you order within",
+        "eta_after": "you'll get it by",
+        "cutoff_hour": 23,
+        "ship_min": 1,
+        "ship_max": 3,
+        "del_min": 5,
+        "del_max": 9,
+        "date_style": "short",
+        "tl_1": "Ordered",
+        "tl_1_sub": "Today",
+        "tl_2": "Shipped",
+        "tl_3": "Delivered",
+        "show_sticky": true,
+        "sticky_btn": "Start My Protocol"
+      }
+    },
+    "vrow": {
+      "type": "ag-vrow",
+      "blocks": {
+        "v1": {
+          "type": "video",
+          "settings": {}
+        },
+        "v2": {
+          "type": "video",
+          "settings": {}
+        },
+        "v3": {
+          "type": "video",
+          "settings": {}
+        },
+        "v4": {
+          "type": "video",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3",
+        "v4"
+      ],
+      "settings": {
+        "eyebrow": "The morning ritual",
+        "heading": "Real women. <em>Real mornings.</em>",
+        "text": "One scoop, every morning. Add your customers’ videos here.",
+        "pad_top": 72,
+        "pad_bottom": 72
+      }
+    },
+    "features": {
+      "type": "ag-features",
+      "blocks": {
+        "f1": {
+          "type": "card",
+          "settings": {
+            "title": "One scoop",
+            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
+          }
+        },
+        "f2": {
+          "type": "card",
+          "settings": {
+            "title": "5 collagen types",
+            "text": "Full-spectrum peptides: Types I, II, III, V and X."
+          }
+        },
+        "f3": {
+          "type": "card",
+          "settings": {
+            "title": "Hydration layer",
+            "text": "Hyaluronic acid and vitamin C for plumper-looking skin."
+          }
+        },
+        "f4": {
+          "type": "card",
+          "settings": {
+            "title": "90-day cycle",
+            "text": "Skin renews over about 90 days — that’s when you see it."
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
+      "settings": {
+        "eyebrow": "Why it works",
+        "heading": "Your skin didn’t change overnight.\n<em>Your collagen did.</em>",
+        "heading_m": 30,
+        "heading_d": 44,
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "pad_top": 56,
+        "pad_bottom": 56
+      }
+    },
+    "apart": {
+      "type": "ag-apart",
+      "blocks": {
+        "a1": {
+          "type": "row",
+          "settings": {
+            "good": true,
+            "title": "Full-spectrum",
+            "text": "5 collagen types plus hyaluronic acid"
+          }
+        },
+        "a2": {
+          "type": "row",
+          "settings": {
+            "good": false,
+            "title": "Single-type powders",
+            "text": "Usually Type I and III only"
+          }
+        },
+        "a3": {
+          "type": "row",
+          "settings": {
+            "good": true,
+            "title": "Made for women 40+",
+            "text": "Formulated around post-menopause collagen loss"
+          }
+        },
+        "a4": {
+          "type": "row",
+          "settings": {
+            "good": false,
+            "title": "One-size-fits-all",
+            "text": "Generic “wellness” for everyone"
+          }
+        },
+        "a5": {
+          "type": "row",
+          "settings": {
+            "good": true,
+            "title": "90-Day Promise",
+            "text": "Firmer-feeling skin, or every penny back"
+          }
+        },
+        "a6": {
+          "type": "row",
+          "settings": {
+            "good": false,
+            "title": "Fine print",
+            "text": "Opened tubs often can’t be returned"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6"
+      ],
+      "settings": {
+        "eyebrow": "The difference",
+        "heading": "Made for the body you see in the mirror.",
+        "us_label": "Our collagen",
+        "them_label": "Generic collagen",
+        "start": 85,
+        "c_acc": "#4a2545",
+        "pad_top": 56,
+        "pad_bottom": 56
+      }
+    },
+    "compare": {
+      "type": "ag-compare",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "label": "5 collagen types",
+            "us": "yes",
+            "c1": "Varies",
+            "c2": "no",
+            "c3": "no"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "label": "Hyaluronic acid + vitamin C",
+            "us": "yes",
+            "c1": "Varies",
+            "c2": "Varies",
+            "c3": "Varies"
+          }
+        },
+        "r3": {
+          "type": "row",
+          "settings": {
+            "label": "Works from within",
+            "us": "yes",
+            "c1": "yes",
+            "c2": "yes",
+            "c3": "no"
+          }
+        },
+        "r4": {
+          "type": "row",
+          "settings": {
+            "label": "Full dose per serving",
+            "us": "yes",
+            "c1": "Varies",
+            "c2": "no",
+            "c3": "no"
+          }
+        },
+        "r5": {
+          "type": "row",
+          "settings": {
+            "label": "3rd-party tested",
+            "us": "yes",
+            "c1": "Varies",
+            "c2": "Varies",
+            "c3": "Varies"
+          }
+        },
+        "r6": {
+          "type": "row",
+          "settings": {
+            "label": "90-day money-back promise",
+            "us": "yes",
+            "c1": "no",
+            "c2": "no",
+            "c3": "no"
+          }
+        },
+        "r7": {
+          "type": "row",
+          "settings": {
+            "label": "Free bonuses",
+            "us": "yes",
+            "c1": "no",
+            "c2": "no",
+            "c3": "no"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "settings": {
+        "heading": "Find your <em>perfect</em> collagen",
+        "italic_word": "perfect",
+        "hint": "Compare next",
+        "sub": "How our protocol compares to store-bought powders, gummies and creams.",
+        "us_name": "Our Protocol",
+        "c1_name": "Store powders",
+        "c1_emoji": "🥄",
+        "c2_name": "Gummies",
+        "c2_emoji": "🍬",
+        "c3_name": "Firming creams",
+        "c3_emoji": "🧴",
+        "row_h": 72,
+        "head_h": 152,
+        "heading_m": 34,
+        "heading_d": 52,
+        "c_hl": "#f7f2ec",
+        "c_acc": "#4a2545",
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_line": "#ebebeb",
+        "cta_text": "Start My 90-Day Protocol →",
+        "cta_link": "#MainContent",
+        "pad_top": 52,
+        "pad_bottom": 52
+      }
+    },
+    "trust": {
+      "type": "ag-trust",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "num": "90",
+            "label": "Day firmer-skin promise"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "num": "5",
+            "label": "Collagen types"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "num": "$84",
+            "label": "In free bonuses"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "num": "Free",
+            "label": "US shipping"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "eyebrow": "Our promise",
+        "heading": "The 90-Day <em>Firmer-Skin Promise.</em>",
+        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the tubs. Keep the bonuses. No questions.",
+        "c_bg": "#2a1427",
+        "c_dot": "#c9a24b",
+        "pad_top": 64,
+        "pad_bottom": 64
+      }
+    },
+    "video_wall": {
+      "type": "ag-video-wall",
+      "disabled": true,
+      "settings": {
+        "heading": "See it in action",
+        "sub": "Tap any video for sound 🔊",
+        "font_family": "Inter",
+        "heading_m": 26,
+        "heading_d": 36,
+        "card_m": 62,
+        "card_d": 230,
+        "radius": 16,
+        "show_captions": true,
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_sub": "#6f6f6f",
+        "c_star": "#4a2545",
+        "pad_top": 36,
+        "pad_bottom": 36
+      }
+    },
+    "reviews": {
+      "type": "ag-reviews",
+      "disabled": true,
+      "settings": {
+        "heading": "What customers are saying",
+        "rating": 4.8,
+        "count_text": "",
+        "show_bars": true,
+        "bars": "89,8,2,1,0",
+        "initial": 4,
+        "more_text": "Show more reviews",
+        "font_family": "Inter",
+        "heading_m": 28,
+        "heading_d": 40,
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_line": "#ebebeb",
+        "c_star": "#4a2545",
+        "pad_top": 56,
+        "pad_bottom": 56
+      }
+    },
+    "faq": {
+      "type": "ag-faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "q": "How long until I see results?",
+            "a": "<p>Most women start to feel a difference in hydration within a few weeks. Skin renews on roughly a 90-day cycle. That’s exactly why we built the 90-Day Protocol — it’s the full skin-renewal cycle, and it’s where the firmness shows.</p>",
+            "open": true
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "q": "Is it safe during or after menopause?",
+            "a": "<p>Collagen peptides are a food-based protein. If you’re on medication or have a medical condition, check with your doctor first.</p>",
+            "open": false
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "q": "Can I take it with other supplements?",
+            "a": "<p>Yes — it mixes with your usual routine. If you take prescription medication, ask your doctor.</p>",
+            "open": false
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "q": "What does it taste like?",
+            "a": "<p>Nothing. It’s unflavored and dissolves clean in coffee, tea, smoothies or water.</p>",
+            "open": false
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "q": "How do I cancel my subscription?",
+            "a": "<p>Log in to your account and cancel or skip in one click — no emails to send, no phone calls.</p>",
+            "open": false
+          }
+        },
+        "q6": {
+          "type": "qa",
+          "settings": {
+            "q": "What’s the guarantee?",
+            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs and the bonuses.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
+      "settings": {
+        "heading": "Questions? <em>Answered.</em>",
+        "sub": "Results, safety, taste and the guarantee.",
+        "heading_font": "Inter",
+        "font_family": "Inter",
+        "heading_m": 34,
+        "heading_d": 52,
+        "icon": "check-circle",
+        "max_width": 860,
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_accent": "#2a1427",
+        "c_line": "#ebebeb",
+        "pad_top": 56,
+        "pad_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main",
+    "vrow",
+    "features",
+    "apart",
+    "compare",
+    "trust",
+    "video_wall",
+    "reviews",
+    "faq"
+  ]
+}

@@ -85,9 +85,11 @@
       var ex=$('.nxPlan__subl',P); if(S.on){ if(!ex){ ex=document.createElement('p'); ex.className='nxPlan__sv nxPlan__subl'; var t=$('.nxPlan__top > div',P); if(t) t.appendChild(ex); } if(ex) ex.textContent='Subscribe & Save: extra '+PCT+'% off, every delivery'; } else if(ex) ex.remove(); }
     var q=$('[data-ag-qty]',p), qn=Math.max(1,+(q&&q.value)||1); $$('[data-ag-atc-price]').forEach(function(e){ e.textContent=money(price*qn,f); });
     $$('.agB__price,.nxPlan__pr,.agSticky__p,.agP__price').forEach(function(w){ var x=$('s',w), y=$('b,[data-ag-price],[data-ag-atc-price]',w); if(x) x.classList.toggle('nxSame', !!y && x.textContent.trim()===y.textContent.trim()); });
+    var tubs=c.cm>full?c.cm:full, pct=tubs>price?Math.round((1-price/tubs)*100):0;
+    $$('[data-ag-sticky] .nxSave').forEach(function(e){ e.textContent=pct?'Save '+pct+'% on this order':''; });
     var dyn=$('.agP__dyn',p); if(dyn) dyn.style.display=S.on?'none':'';
   }
-  function go(){ setTimeout(build,700); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card,.agP__pillBtn')) { setTimeout(apply,350); setTimeout(apply,700); } }); }
+  function go(){ setTimeout(build,700); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card,.agP__pillBtn')) { setTimeout(apply,350); setTimeout(apply,700); } else setTimeout(apply,300); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(build,900); });
 })();
