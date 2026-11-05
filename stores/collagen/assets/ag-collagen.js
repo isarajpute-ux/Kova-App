@@ -101,3 +101,25 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(build,900); });
 })();
+
+/* Auvela: pause / play button on every video */
+(function(){
+  var P='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>',
+      G='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+  function css(){ if(document.getElementById('nxVidCss')) return; var s=document.createElement('style'); s.id='nxVidCss';
+    s.textContent='.nxVbtn{position:absolute;right:10px;bottom:10px;z-index:5;width:38px;height:38px;border-radius:50%;border:0;padding:0;display:grid;place-items:center;background:rgba(42,20,39,.72);color:#fff;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 4px 12px -4px rgba(0,0,0,.4)}.nxVbtn svg{width:16px;height:16px}.nxVbtn:hover{background:#4A2545}';
+    document.head.appendChild(s); }
+  function run(){ css();
+    Array.prototype.forEach.call(document.querySelectorAll('video'),function(v){
+      if(v.__nxv) return; v.__nxv=1; var w=v.parentElement; if(!w) return;
+      if(getComputedStyle(w).position==='static') w.style.position='relative';
+      var b=document.createElement('button'); b.type='button'; b.className='nxVbtn';
+      function ui(){ var on=!v.paused; b.innerHTML=on?P:G; b.setAttribute('aria-label',on?'Pause video':'Play video'); }
+      b.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); if(v.paused){ var r=v.play(); if(r&&r.catch) r.catch(function(){}); } else v.pause(); });
+      v.addEventListener('play',ui); v.addEventListener('pause',ui); ui(); w.appendChild(b);
+    });
+  }
+  function go(){ run(); setTimeout(run,1000); setTimeout(run,3000); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); });
+})();
