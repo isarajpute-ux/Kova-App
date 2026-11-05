@@ -49,7 +49,7 @@
         "text": "A daily multi-collagen ritual that helps your skin feel firmer, bouncier and more hydrated — from your décolletage to your stomach to your arms. One scoop in your morning coffee. That’s the whole routine.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
-        "note": "Founding Batch: free HA Firming Boost on 3 & 6 tubs",
+        "note": "Founding Batch: extra 15% off · first 35 orders",
         "h_m": 90,
         "h_d": 90
       }
@@ -236,16 +236,6 @@
             "c2": "no",
             "c3": "no"
           }
-        },
-        "r7": {
-          "type": "row",
-          "settings": {
-            "label": "Free HA Firming Boost",
-            "us": "yes",
-            "c1": "no",
-            "c2": "no",
-            "c3": "no"
-          }
         }
       },
       "block_order": [
@@ -254,8 +244,7 @@
         "r3",
         "r4",
         "r5",
-        "r6",
-        "r7"
+        "r6"
       ],
       "settings": {
         "heading": "Find your <em>perfect</em> collagen",
@@ -304,8 +293,8 @@
         "s3": {
           "type": "stat",
           "settings": {
-            "num": "Free",
-            "label": "HA Firming Boost"
+            "num": "1",
+            "label": "Scoop a day"
           }
         },
         "s4": {
@@ -325,7 +314,7 @@
       "settings": {
         "eyebrow": "Our promise",
         "heading": "The 90-Day <em>Firmer-Skin Promise.</em>",
-        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the tubs. Keep the bonus. No questions.",
+        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the tubs. No questions.",
         "c_bg": "#2A1427",
         "c_dot": "#C9A24B",
         "pad_top": 64,
@@ -379,7 +368,7 @@
           "type": "qa",
           "settings": {
             "q": "What’s the guarantee?",
-            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs and the bonus.</p>",
+            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs.</p>",
             "open": false
           }
         }
@@ -414,7 +403,7 @@
       "settings": {
         "eyebrow": "The 90-Day Firmer-Skin Promise",
         "heading": "Firmer-feeling skin in 90 days —\n<em>or every penny back.</em>",
-        "text": "Keep the tubs. Keep the bonus. No return shipping, no restocking fee, no questions.",
+        "text": "Keep the tubs. No return shipping, no restocking fee, no questions.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
         "note": "",
