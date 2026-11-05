@@ -106,7 +106,7 @@
           "type": "bundle",
           "settings": {
             "title": "90-Day Protocol",
-            "sub": "3 tubs · 90 days|The 90-Day Skin Firming Protocol|3 tubs — one full skin-renewal cycle|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free “Firm From Within” digital guide ($27 value)|Free US shipping ($9 value)",
+            "sub": "3 tubs · 90 days|The 90-Day Skin Firming Protocol|3 tubs — one full skin-renewal cycle|Plus a free Hyaluronic Acid Firming Boost|Free Hyaluronic Acid Firming Boost|Free US shipping|90-Day Firmer-Skin Promise",
             "qty": 1,
             "save_pct": 0,
             "badge": "Most popular",
@@ -118,7 +118,7 @@
           "type": "bundle",
           "settings": {
             "title": "Full Transformation",
-            "sub": "6 tubs · 180 days|Full Transformation · 180 Days|6 tubs — best value per scoop|Get $84 in free bonuses|Free Hyaluronic Acid Firming Boost ($29 value)|Free 90-Day Firming Tracker journal ($19 value)|Free “Firm From Within” digital guide ($27 value)|Free US shipping ($9 value)",
+            "sub": "6 tubs · 180 days|Full Transformation · 180 Days|6 tubs — best value per scoop|Plus a free Hyaluronic Acid Firming Boost|Free Hyaluronic Acid Firming Boost|Free US shipping|90-Day Firmer-Skin Promise",
             "qty": 1,
             "save_pct": 0,
             "badge": "Best value",
@@ -208,7 +208,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "90-Day Firmer-Skin Promise",
-            "content": "<p>Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated, email us for a full refund. Keep the tubs and the bonuses.</p>",
+            "content": "<p>Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated, email us for a full refund. Keep the tubs and the bonus.</p>",
             "open": false
           }
         },
@@ -228,7 +228,7 @@
             "icon": "dot",
             "icon_color": "#4a2545",
             "title": "What’s in the box",
-            "content": "<ul><li>Multi-Collagen Peptide Powder (1, 3 or 6 tubs)</li><li>3 &amp; 6 tub packs: Hyaluronic Acid Firming Boost, 90-Day Firming Tracker, “Firm From Within” guide</li></ul>",
+            "content": "<ul><li>Multi-Collagen Peptide Powder (1, 3 or 6 tubs)</li><li>3 &amp; 6 tub packs: free Hyaluronic Acid Firming Boost</li></ul>",
             "open": false
           }
         }
@@ -592,7 +592,7 @@
         "r7": {
           "type": "row",
           "settings": {
-            "label": "Free bonuses",
+            "label": "Free HA Firming Boost",
             "us": "yes",
             "c1": "no",
             "c2": "no",
@@ -656,8 +656,8 @@
         "s3": {
           "type": "stat",
           "settings": {
-            "num": "$84",
-            "label": "In free bonuses"
+            "num": "Free",
+            "label": "HA Firming Boost"
           }
         },
         "s4": {
@@ -677,7 +677,7 @@
       "settings": {
         "eyebrow": "Our promise",
         "heading": "The 90-Day <em>Firmer-Skin Promise.</em>",
-        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the tubs. Keep the bonuses. No questions.",
+        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the tubs. Keep the bonus. No questions.",
         "c_bg": "#2a1427",
         "c_dot": "#c9a24b",
         "pad_top": 64,
@@ -774,7 +774,7 @@
           "type": "qa",
           "settings": {
             "q": "What’s the guarantee?",
-            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs and the bonuses.</p>",
+            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the tubs and the bonus.</p>",
             "open": false
           }
         }
