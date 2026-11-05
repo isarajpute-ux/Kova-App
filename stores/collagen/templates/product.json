@@ -168,7 +168,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "How to use",
-            "content": "<ul><li>Add 1 scoop (about 10 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10–15 seconds — it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days — that’s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/2b895471-99da-4c77-95b7-6ac0de1c2e57.jpg\" title=\"Step 1 photo\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/9be163f4-aceb-42de-b035-2e434bc13cc9.jpg\" title=\"Step 2 photo\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/41f6985e-715f-42ef-8494-2209eda35b68.jpg\" title=\"Step 3 photo\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/b38f45ad-300a-44ab-a530-713a2a8c0640.jpg\" title=\"Step 4 photo\">Step 4 photo</a></p>",
+            "content": "<ul><li>Add 1 scoop (about 10 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10–15 seconds — it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days — that’s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\">Step 4 photo</a></p>",
             "open": true
           }
         },
@@ -177,8 +177,8 @@
           "settings": {
             "icon": "check",
             "icon_color": "#2a1427",
-            "title": "Firmer-feeling, bouncier skin",
-            "content": "<p>As we get older our body makes less collagen — the protein that keeps skin springy. One daily scoop gives your body the collagen building blocks it needs, so your skin can look and feel firmer over time.</p>",
+            "title": "Firmer, More Bouncy-Looking Skin",
+            "content": "<ul><li>Supports skin firmness and elasticity.</li><li>Helps skin look and feel smoother.</li><li>Provides collagen peptides to support healthy skin.</li></ul>",
             "open": false
           }
         },
@@ -187,8 +187,8 @@
           "settings": {
             "icon": "check",
             "icon_color": "#2a1427",
-            "title": "Smoother-looking arms, chest and stomach",
-            "content": "<p>Crepey, thin-looking skin shows up where collagen drops most. Taken daily, collagen supports skin elasticity, which helps those areas look smoother.</p>",
+            "title": "Smoother-Looking Arms, Chest & Stomach",
+            "content": "<ul><li>Supports skin elasticity in areas prone to crepey skin.</li><li>Helps skin look smoother and more supple.</li><li>Supports your skin as it changes with age.</li></ul>",
             "open": false
           }
         },
@@ -198,7 +198,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "Deep hydration from the inside",
-            "content": "<p>Hyaluronic acid holds water in your skin and vitamin C helps your body use collagen. Together they help skin look plumper and less dry.</p>",
+            "content": "<ul><li>Hyaluronic acid helps skin hold moisture.</li><li>Vitamin C supports your body's natural collagen production.</li><li>Helps skin look more hydrated and feel less dry.</li></ul>",
             "open": false
           }
         },
@@ -208,7 +208,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "90-Day Firmer-Skin Promise",
-            "content": "<p>Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated, email us for a full refund. Keep the bags.</p>",
+            "content": "<ul><li>Take Auvela daily for 90 days.</li><li>Not happy with how your skin looks and feels?</li><li>Contact us for a full refund.</li><li>Keep your bags and free bonuses.</li></ul>",
             "open": false
           }
         },
@@ -218,7 +218,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "How it works",
-            "content": "<ol><li><strong>One scoop</strong> in coffee, tea or water — unflavored, dissolves clean.</li><li><strong>Full-spectrum peptides</strong> + hyaluronic acid + vitamin C support your skin from within.</li><li><strong>Skin renews on a ~90-day cycle</strong> — that’s when the firmness shows.</li></ol>",
+            "content": "<ol><li><strong>Mix one scoop:</strong> Add it to coffee, tea, or water.</li><li><strong>Get daily support:</strong> Collagen peptides, hyaluronic acid, and vitamin C support skin health.</li><li><strong>Stay consistent:</strong> Use it every day for 90 days to see how your skin responds.</li></ol>",
             "open": false
           }
         },
@@ -228,7 +228,7 @@
             "icon": "dot",
             "icon_color": "#4a2545",
             "title": "What’s in the box",
-            "content": "<ul><li>Multi-Collagen Peptide Powder (1, 3 or 6 bags)</li></ul>",
+            "content": "<ul><li><strong>1-Bag Bundle:</strong> Multi-Collagen Peptide Powder.</li><li><strong>3-Bag Bundle:</strong> 3 bags.</li><li><strong>6-Bag Bundle:</strong> 6 bags.</li></ul>",
             "open": false
           }
         }
@@ -285,10 +285,10 @@
         "rating": 5,
         "reviews_text": "See reviews",
         "reviews_link": "/pages/auvela-reviews",
-        "title_override": "The 90-Day Skin Firming Ritual",
+        "title_override": "Auvela Multi-Collagen",
         "title_size_m": 26,
         "title_size_d": 32,
-        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, one scoop a day.</em></p><ul><li>5 collagen types + hyaluronic acid &amp; vitamin C</li><li>Firms from within — stomach, arms, chest</li><li>Feel firmer in 90 days or your money back</li></ul>",
+        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, one scoop a day.</em></p><ul><li>5 collagen types + hyaluronic acid & vitamin C</li><li>Firms from within — stomach, arms, chest</li><li>Feel firmer in 90 days or your money back</li></ul>",
         "show_pill": true,
         "pill_avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
         "pill_text": "Multi-Collagen for Women 40+",
@@ -452,6 +452,85 @@
         "c_bg": "#ffffff",
         "c_ink": "#2a1427",
         "pad_top": 56,
+        "pad_bottom": 56
+      }
+    },
+    "ingredients": {
+      "type": "ag-ingredients",
+      "blocks": {
+        "ig1": {
+          "type": "item",
+          "settings": {
+            "bg": "#eef2e8",
+            "title": "Bovine Collagen Peptides",
+            "text": "Grass-fed Types I & III, the collagen your skin is mostly made of. Supports firmness and elasticity.",
+            "image": "shopify://shop_images/auvela-ing-bovine.png"
+          }
+        },
+        "ig2": {
+          "type": "item",
+          "settings": {
+            "bg": "#e8eef2",
+            "title": "Marine Collagen",
+            "text": "Small, easy-to-absorb Type I peptides that support smoother, springier-looking skin.",
+            "image": "shopify://shop_images/auvela-ing-marine.png"
+          }
+        },
+        "ig3": {
+          "type": "item",
+          "settings": {
+            "bg": "#f4ece4",
+            "title": "Chicken Collagen",
+            "text": "Type II collagen, the kind found in cartilage. Supports comfortable, flexible joints.",
+            "image": "shopify://shop_images/auvela-ing-chicken.png"
+          }
+        },
+        "ig4": {
+          "type": "item",
+          "settings": {
+            "bg": "#f6f0e2",
+            "title": "Eggshell Membrane",
+            "text": "Types V & X collagen for full-spectrum support from the inside out.",
+            "image": "shopify://shop_images/auvela-ing-eggshell.png"
+          }
+        },
+        "ig5": {
+          "type": "item",
+          "settings": {
+            "bg": "#ede7f1",
+            "title": "Hyaluronic Acid",
+            "text": "Holds water in your skin, helping it look plumper and less dry.",
+            "image": "shopify://shop_images/auvela-ing-hyaluronic.png"
+          }
+        },
+        "ig6": {
+          "type": "item",
+          "settings": {
+            "bg": "#fbebdc",
+            "title": "Vitamin C",
+            "text": "Helps your body make and use collagen, so every scoop works harder.",
+            "image": "shopify://shop_images/auvela-ing-vitamin-c.png"
+          }
+        }
+      },
+      "block_order": [
+        "ig1",
+        "ig2",
+        "ig3",
+        "ig4",
+        "ig5",
+        "ig6"
+      ],
+      "settings": {
+        "heading": "Formulated with clinically studied",
+        "accent": "skin nutrients",
+        "text": "We choose every ingredient for one job: helping your skin feel firmer, bouncier and more hydrated after 40.",
+        "btn_label": "Nutrition & Ingredients",
+        "btn_link": "#MainContent",
+        "c_bg": "#ffffff",
+        "c_ink": "#2a1427",
+        "c_btn": "#2a1427",
+        "pad_top": 64,
         "pad_bottom": 56
       }
     },
@@ -791,79 +870,6 @@
         "c_line": "#ebebeb",
         "pad_top": 56,
         "pad_bottom": 64
-      }
-    },
-    "ingredients": {
-      "type": "ag-ingredients",
-      "blocks": {
-        "ig1": {
-          "type": "item",
-          "settings": {
-            "bg": "#EEF2E8",
-            "title": "Bovine Collagen Peptides",
-            "text": "Grass-fed Types I & III, the collagen your skin is mostly made of. Supports firmness and elasticity."
-          }
-        },
-        "ig2": {
-          "type": "item",
-          "settings": {
-            "bg": "#E8EEF2",
-            "title": "Marine Collagen",
-            "text": "Small, easy-to-absorb Type I peptides that support smoother, springier-looking skin."
-          }
-        },
-        "ig3": {
-          "type": "item",
-          "settings": {
-            "bg": "#F4ECE4",
-            "title": "Chicken Collagen",
-            "text": "Type II collagen, the kind found in cartilage. Supports comfortable, flexible joints."
-          }
-        },
-        "ig4": {
-          "type": "item",
-          "settings": {
-            "bg": "#F6F0E2",
-            "title": "Eggshell Membrane",
-            "text": "Types V & X collagen for full-spectrum support from the inside out."
-          }
-        },
-        "ig5": {
-          "type": "item",
-          "settings": {
-            "bg": "#EDE7F1",
-            "title": "Hyaluronic Acid",
-            "text": "Holds water in your skin, helping it look plumper and less dry."
-          }
-        },
-        "ig6": {
-          "type": "item",
-          "settings": {
-            "bg": "#FBEBDC",
-            "title": "Vitamin C",
-            "text": "Helps your body make and use collagen, so every scoop works harder."
-          }
-        }
-      },
-      "block_order": [
-        "ig1",
-        "ig2",
-        "ig3",
-        "ig4",
-        "ig5",
-        "ig6"
-      ],
-      "settings": {
-        "heading": "Formulated with clinically studied",
-        "accent": "skin nutrients",
-        "text": "We choose every ingredient for one job: helping your skin feel firmer, bouncier and more hydrated after 40.",
-        "btn_label": "Nutrition & Ingredients",
-        "btn_link": "#MainContent",
-        "c_bg": "#FFFFFF",
-        "c_ink": "#2A1427",
-        "c_btn": "#2A1427",
-        "pad_top": 64,
-        "pad_bottom": 56
       }
     }
   },
