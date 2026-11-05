@@ -277,7 +277,7 @@
         "c_highlight": "#2a1427",
         "c_bundle": "#f7f2ec",
         "image_ratio": "square",
-        "show_side_cards": true,
+        "show_side_cards": false,
         "show_thumbs": true,
         "show_callout": true,
         "callout_icon": "gift",
