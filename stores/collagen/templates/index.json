@@ -61,28 +61,32 @@
           "type": "card",
           "settings": {
             "title": "One scoop",
-            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
+            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean.",
+            "image": "shopify://shop_images/auvela-feat-scoop.png"
           }
         },
         "f2": {
           "type": "card",
           "settings": {
             "title": "5 collagen types",
-            "text": "Full-spectrum peptides: Types I, II, III, V and X."
+            "text": "Full-spectrum peptides: Types I, II, III, V and X.",
+            "image": "shopify://shop_images/auvela-feat-5types.png"
           }
         },
         "f3": {
           "type": "card",
           "settings": {
             "title": "Hydration layer",
-            "text": "Hyaluronic acid and vitamin C for plumper-looking skin."
+            "text": "Hyaluronic acid and vitamin C for plumper-looking skin.",
+            "image": "shopify://shop_images/auvela-feat-hydration.png"
           }
         },
         "f4": {
           "type": "card",
           "settings": {
             "title": "90-day cycle",
-            "text": "Skin renews over about 90 days — that’s when you see it."
+            "text": "Skin renews over about 90 days — that’s when you see it.",
+            "image": "shopify://shop_images/auvela-feat-90day.png"
           }
         }
       },
