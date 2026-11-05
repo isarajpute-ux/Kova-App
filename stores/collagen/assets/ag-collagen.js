@@ -42,7 +42,9 @@
   function layout(){
     var p=$('[data-ag-product]'); if(!p) return;
     var form=$('.agP__form',p), feats=$('.agP__feats',p); if(form&&feats&&form.nextElementSibling!==feats) form.parentNode.insertBefore(feats,form.nextSibling);
-    var pill=$('.agP__pill',p), mr=$('.agMR',p); if(pill&&mr&&pill.nextElementSibling!==mr) pill.parentNode.insertBefore(mr,pill.nextSibling);
+    var pill=$('.agP__pill',p), rt=$('.agP__rating',p), row=$('.nxTopRow',p);
+    if(pill&&rt&&!row){ row=document.createElement('div'); row.className='nxTopRow'; row.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:10px'; pill.parentNode.insertBefore(row,pill); row.appendChild(pill); row.appendChild(rt); rt.style.margin='0'; pill.style.margin='0'; }
+    var top=row||pill, mr=$('.agMR',p); if(top&&mr&&top.nextElementSibling!==mr) top.parentNode.insertBefore(mr,top.nextSibling);
   }
   function go(){ setTimeout(layout,300); setTimeout(layout,900); arrows(); setTimeout(arrows,300); setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
