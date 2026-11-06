@@ -124,3 +124,35 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); });
 })();
+/* Auvela: compact mobile review slider + bundle cards */
+(function(){
+  if(document.getElementById('nxMobCss')) return;
+  var s=document.createElement('style'); s.id='nxMobCss';
+  s.textContent='@media(max-width:749px){'+
+   '.agP .agMR{margin:6px 0 10px!important;padding:8px 10px!important;min-height:0!important}'+
+   '.agP .agMR__slide{padding:0!important;gap:8px!important;min-height:0!important}'+
+   '.agP .agMR__head{gap:6px!important;margin:0 0 2px!important}'+
+   '.agP .agMR__img,.agP .agMR__ini{width:28px!important;height:28px!important;flex:0 0 28px!important;font-size:11px!important}'+
+   '.agP .agMR__name{font-size:12.5px!important}'+
+   '.agP .agMR svg{width:11px!important;height:11px!important}'+
+   '.agP .agMR__text{font-size:12px!important;line-height:1.35!important;margin:0!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}'+
+   '.agP .agMR__nav{width:24px!important;height:24px!important}'+
+   '.agP .agB{gap:6px!important;margin-top:6px!important}'+
+   '.agP .agB__head{margin-bottom:4px!important;font-size:12px!important}'+
+   '.agP .agB__card{padding:8px 5px!important;border-radius:10px!important;gap:4px!important;min-height:0!important}'+
+   '.agP .agB__img{width:40px!important;height:40px!important;margin:0 auto 2px!important}'+
+   '.agP .agB__img img{width:40px!important;height:40px!important}'+
+   '.agP .agB__card .agB__txt strong{font-size:12.5px!important;line-height:1.15!important}'+
+   '.agP .agB__card .agB__txt small{font-size:10.5px!important;margin-top:2px!important;line-height:1.2!important}'+
+   '.agP .agB__price{font-size:12.5px!important;gap:3px!important}'+
+   '.agP .agB__price s{font-size:10.5px!important}'+
+   '.agP .agB__badge{font-size:9px!important;padding:2px 6px!important}'+
+   '.agP .nxSavePill{font-size:9px!important;padding:2px 6px!important;margin-top:2px!important}'+
+   '.nxPlan{padding:12px 14px!important;margin-top:8px!important}'+
+   '.nxPlan__t{font-size:15px!important}.nxPlan__s,.nxPlan__sv{font-size:12px!important;margin-top:2px!important}'+
+   '.nxPlan:not(.nxPlan--sm) .nxPlan__pr{padding-top:22px!important}.nxPlan__pr b{font-size:17px!important}'+
+   '.nxPlan ul{margin-top:8px!important;padding-top:8px!important;gap:5px!important}.nxPlan li{font-size:12.5px!important}'+
+   '.nxSub{margin-bottom:8px!important}.nxSub__o{padding:7px 6px!important}.nxSub__t{font-size:12.5px!important}.nxSub__p{font-size:11px!important}.nxSub__d{margin-top:5px!important;font-size:11.5px!important}'+
+  '}';
+  document.head.appendChild(s);
+})();
