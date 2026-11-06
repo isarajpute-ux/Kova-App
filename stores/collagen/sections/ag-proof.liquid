@@ -1,0 +1,88 @@
+{%- comment -%} Auvela: product-page proof pieces. Rendered here, moved into the product info by ag-collagen.js. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="nxPf" id="nxPf-{{ section.id }}" data-nx-proof>
+  {%- if s.show_rating -%}
+  <div class="nxPf__rate" data-nx-proof-rate>
+    <span class="nxPf__stars" style="color:{{ s.c_star }}" aria-label="{{ s.rating }} out of 5">
+      {%- assign full = s.rating | floor -%}
+      {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" width="15" height="15" fill="{% if i <= full %}currentColor{% else %}#E2D8D3{% endif %}"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>{%- endfor -%}
+    </span>
+    <b>{{ s.rating }}</b>
+    {%- if s.count_text != blank -%}<span class="nxPf__muted">{{ s.count_text }}</span>{%- endif -%}
+    {%- if s.quote != blank -%}<span class="nxPf__dot">·</span><i class="nxPf__q">“{{ s.quote }}”{% if s.quote_name != blank %} — {{ s.quote_name }}{% endif %}</i>{%- endif -%}
+  </div>
+  {%- endif -%}
+  {%- if s.show_guarantee -%}
+  <div class="nxPf__box" data-nx-proof-box>
+    <div class="nxPf__pill" style="background:{{ s.c_soft }}">
+      <span class="nxPf__avs">
+        {%- for block in section.blocks -%}{%- if block.settings.image != blank -%}<span {{ block.shopify_attributes }}>{{ block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}{%- endfor -%}
+      </span>
+      <p>{{ s.guarantee }}</p>
+    </div>
+    {%- if s.show_payments -%}
+    <ul class="nxPf__pay">{%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}</ul>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+  {%- if s.show_value -%}
+  <div class="nxPf__val" data-nx-proof-val style="background:{{ s.c_soft }}">
+    <p>{{ s.value_text }}</p>
+    <p class="nxPf__vs"><b>{{ s.us_line }}</b><span>vs</span><s>{{ s.them_line }}</s></p>
+  </div>
+  {%- endif -%}
+</div>
+<style>
+.nxPf{display:none}
+.nxPf--on{display:block}
+.nxPf__rate{display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;font-size:13.5px;color:#2A1427;margin:2px 0 6px}
+.nxPf__stars{display:inline-flex;gap:1px}
+.nxPf__rate b{font-weight:700}
+.nxPf__muted{color:#8C7A76}
+.nxPf__dot{color:#C9B9B3}
+.nxPf__q{color:#4A3A44;font-style:italic}
+.nxPf__box{border:1px solid #E8DDD6;border-radius:16px;padding:12px;margin:12px 0 10px}
+.nxPf__pill{display:flex;align-items:center;gap:12px;border-radius:999px;padding:10px 16px}
+.nxPf__pill p{margin:0;font-size:14px;line-height:1.35;color:#2A1427}
+.nxPf__avs{display:inline-flex;flex:0 0 auto}
+.nxPf__avs span{width:30px;height:30px;border-radius:50%;overflow:hidden;border:2px solid #fff;margin-left:-9px;background:#E8C9C1}
+.nxPf__avs span:first-child{margin-left:0}
+.nxPf__avs img{width:100%;height:100%;object-fit:cover;display:block}
+.nxPf__pay{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0 2px;padding:0}
+.nxPf__pay svg{width:42px;height:28px;display:block}
+.nxPf__val{border:1px solid #E8DDD6;border-radius:16px;padding:14px 16px;text-align:center;margin:0 0 12px}
+.nxPf__val p{margin:0;font-size:14px;line-height:1.45;color:#2A1427}
+.nxPf__vs{margin-top:8px!important;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 12px}
+.nxPf__vs span{color:#B9A7A2;font-size:12px}
+.nxPf__vs s{color:#8C7A76}
+@media(max-width:749px){.nxPf__rate{font-size:12.5px}.nxPf__pill p,.nxPf__val p{font-size:13px}.nxPf__avs span{width:26px;height:26px}}
+</style>
+{% schema %}
+{
+  "name": "Product proof",
+  "tag": "div",
+  "settings": [
+    {"type":"header","content":"Rating line (under the top tag)"},
+    {"type":"checkbox","id":"show_rating","label":"Show rating line","default":true},
+    {"type":"range","id":"rating","label":"Star rating","min":1,"max":5,"step":0.1,"default":4.8},
+    {"type":"text","id":"count_text","label":"Customer count text","default":"(260+ customers)"},
+    {"type":"text","id":"quote","label":"Customer quote"},
+    {"type":"text","id":"quote_name","label":"Quote name"},
+    {"type":"color","id":"c_star","label":"Star color","default":"#C9A24B"},
+    {"type":"header","content":"Guarantee box (under Add to cart)"},
+    {"type":"checkbox","id":"show_guarantee","label":"Show guarantee box","default":true},
+    {"type":"richtext","id":"guarantee","label":"Guarantee text","default":"<p><strong>90-day money-back promise.</strong> Feel firmer or get every penny back.</p>"},
+    {"type":"checkbox","id":"show_payments","label":"Show payment icons","default":true},
+    {"type":"color","id":"c_soft","label":"Soft background","default":"#F6ECE8"},
+    {"type":"header","content":"Value box"},
+    {"type":"checkbox","id":"show_value","label":"Show value box","default":true},
+    {"type":"textarea","id":"value_text","label":"Value text","default":"Firming creams and clinic treatments cost $100s and only work on the surface. Auvela works from within, every day."},
+    {"type":"text","id":"us_line","label":"Our line","default":"Auvela — from $1.11/day"},
+    {"type":"text","id":"them_line","label":"Their line (crossed out)","default":"Clinic skin treatments — $300+"}
+  ],
+  "blocks": [
+    {"type":"avatar","name":"Customer photo","limit":5,"settings":[{"type":"image_picker","id":"image","label":"Photo"}]}
+  ],
+  "presets":[{"name":"Product proof"}]
+}
+{% endschema %}

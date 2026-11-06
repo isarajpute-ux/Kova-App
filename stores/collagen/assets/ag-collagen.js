@@ -45,7 +45,17 @@
     var form=$('.agP__form',p), feats=$('.agP__feats',p); if(form&&feats&&form.nextElementSibling!==feats) form.parentNode.insertBefore(feats,form.nextSibling);
     var pill=$('.agP__pill',p), rt=$('.agP__rating',p), row=$('.nxTopRow',p);
     if(pill&&rt&&!row){ row=document.createElement('div'); row.className='nxTopRow'; row.style.cssText='display:flex;flex-wrap:nowrap;align-items:center;gap:10px;margin-bottom:10px;max-width:100%'; if(!document.getElementById('nxTopCss')){ var cs=document.createElement('style'); cs.id='nxTopCss'; cs.textContent='.nxTopRow>*{flex:0 0 auto!important;width:auto!important;max-width:none!important;margin:0!important;align-self:center!important;position:static!important;top:auto!important;transform:none!important}.nxTopRow .agP__pill{display:inline-flex!important;align-items:center}.nxTopRow .agP__rating *{margin-top:0!important;margin-bottom:0!important}.nxTopRow .agP__rating>*{align-self:center;line-height:1!important}.nxTopRow .agP__rating{display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:6px;white-space:nowrap;font-size:13px}.nxTopRow .agP__rating svg{width:14px;height:14px}.nxTopRow .nxAv>span{width:22px;height:22px}@media(max-width:420px){.nxTopRow .nxAv{display:none!important}}'; document.head.appendChild(cs); } pill.parentNode.insertBefore(row,pill); row.appendChild(pill); row.appendChild(rt); rt.style.margin='0'; pill.style.margin='0'; }
-    var top=row||pill, mr=$('.agMR',p); if(top&&mr&&top.nextElementSibling!==mr) top.parentNode.insertBefore(mr,top.nextSibling);
+    var top=row||pill;
+    var pf=document.querySelector('[data-nx-proof]');
+    if(pf){
+      ['rate','box','val'].forEach(function(k){ if($('[data-nx-proof-'+k+']',pf)) $$('[data-nx-proof-'+k+']',p).forEach(function(o){ o.remove(); }); });
+      var rate=$('[data-nx-proof-rate]',pf)||$('.nxPf__rate',p), box=$('[data-nx-proof-box]',pf)||$('.nxPf__box',p), val=$('[data-nx-proof-val]',pf)||$('.nxPf__val',p);
+      if(rate&&top&&top.nextElementSibling!==rate) top.parentNode.insertBefore(rate,top.nextSibling);
+      var after=form; if(after){ if(box&&after.nextElementSibling!==box) after.parentNode.insertBefore(box,after.nextSibling); if(box) after=box; if(val&&after.nextElementSibling!==val) after.parentNode.insertBefore(val,after.nextSibling); }
+    }
+    if(!document.getElementById('nxTight')){ var tc=document.createElement('style'); tc.id='nxTight';
+      tc.textContent='.agP .agP__info>*{margin-top:0!important}.agP .nxTopRow{margin-bottom:4px!important}.agP .agP__pill{margin-bottom:4px!important}.agP .agP__title{margin:2px 0 4px!important}.agP .agP__price,.agP .agP__priceRow{margin:4px 0 6px!important}.agP .agP__desc{margin:4px 0 8px!important}.agP .agP__desc p{margin:0 0 4px!important}.agP .agP__desc ul{margin:0 0 4px!important;gap:3px!important}.agP .agP__stock{margin:6px 0!important}.agP .agB__head{margin:4px 0!important}.agP .agB{margin-top:4px!important;margin-bottom:6px!important}.agP .nxPlan{margin-top:6px!important;margin-bottom:8px!important}.agP .agP__form{margin-top:6px!important}.agP .agP__feats{margin-top:8px!important}';
+      document.head.appendChild(tc); }
   }
   function go(){ setTimeout(layout,300); setTimeout(layout,900); arrows(); setTimeout(arrows,300); setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();

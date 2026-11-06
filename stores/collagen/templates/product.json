@@ -292,7 +292,7 @@
         "show_pill": true,
         "pill_avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
         "pill_text": "Multi-Collagen for Women 40+",
-        "pill_av_w": 24,
+        "pill_av_w": 27,
         "pill_av_h": 24,
         "pill_av_shape": "circle",
         "pill_av_border": 0,
@@ -318,7 +318,7 @@
         "spots_total": 100,
         "spots_bar": true,
         "spots_color": "#4a2545",
-        "show_mr": true,
+        "show_mr": false,
         "mr_style": "lines",
         "mr_autoplay": true,
         "mr_speed": 5,
@@ -377,7 +377,9 @@
       "blocks": {
         "v1": {
           "type": "video",
-          "settings": {}
+          "settings": {
+            "video": "shopify://files/videos/meta_ad_video_1728722651529191.mp4"
+          }
         },
         "v2": {
           "type": "video",
@@ -412,33 +414,33 @@
         "f1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-scoop.png",
             "title": "One scoop",
-            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean.",
-            "image": "shopify://shop_images/auvela-feat-scoop.png"
+            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
           }
         },
         "f2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-5types.png",
             "title": "5 collagen types",
-            "text": "Full-spectrum peptides: Types I, II, III, V and X.",
-            "image": "shopify://shop_images/auvela-feat-5types.png"
+            "text": "Full-spectrum peptides: Types I, II, III, V and X."
           }
         },
         "f3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-hydration.png",
             "title": "Hydration layer",
-            "text": "Hyaluronic acid and vitamin C for plumper-looking skin.",
-            "image": "shopify://shop_images/auvela-feat-hydration.png"
+            "text": "Hyaluronic acid and vitamin C for plumper-looking skin."
           }
         },
         "f4": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/try_connecting_this_3_split_43e3187e_2K.jpg_a36381f0_2K.jpg",
             "title": "90-day cycle",
-            "text": "Skin renews over about 90 days — that’s when you see it.",
-            "image": "shopify://shop_images/auvela-feat-90day.png"
+            "text": "Skin renews over about 90 days — that’s when you see it."
           }
         }
       },
@@ -465,55 +467,55 @@
         "ig1": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-bovine.png",
             "bg": "#eef2e8",
             "title": "Bovine Collagen Peptides",
-            "text": "Grass-fed Types I & III, the collagen your skin is mostly made of. Supports firmness and elasticity.",
-            "image": "shopify://shop_images/auvela-ing-bovine.png"
+            "text": "Grass-fed Types I & III, the collagen your skin is mostly made of. Supports firmness and elasticity."
           }
         },
         "ig2": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-marine.png",
             "bg": "#e8eef2",
             "title": "Marine Collagen",
-            "text": "Small, easy-to-absorb Type I peptides that support smoother, springier-looking skin.",
-            "image": "shopify://shop_images/auvela-ing-marine.png"
+            "text": "Small, easy-to-absorb Type I peptides that support smoother, springier-looking skin."
           }
         },
         "ig3": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-chicken.png",
             "bg": "#f4ece4",
             "title": "Chicken Collagen",
-            "text": "Type II collagen, the kind found in cartilage. Supports comfortable, flexible joints.",
-            "image": "shopify://shop_images/auvela-ing-chicken.png"
+            "text": "Type II collagen, the kind found in cartilage. Supports comfortable, flexible joints."
           }
         },
         "ig4": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-eggshell.png",
             "bg": "#f6f0e2",
             "title": "Eggshell Membrane",
-            "text": "Hydrolyzed eggshell membrane, the thin inner layer of the shell, naturally provides Types V & X collagen.",
-            "image": "shopify://shop_images/auvela-ing-eggshell.png"
+            "text": "Hydrolyzed eggshell membrane, the thin inner layer of the shell, naturally provides Types V & X collagen."
           }
         },
         "ig5": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-hyaluronic.png",
             "bg": "#ede7f1",
             "title": "Hyaluronic Acid",
-            "text": "Holds water in your skin, helping it look plumper and less dry.",
-            "image": "shopify://shop_images/auvela-ing-hyaluronic.png"
+            "text": "Holds water in your skin, helping it look plumper and less dry."
           }
         },
         "ig6": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/auvela-ing-vitamin-c.png",
             "bg": "#fbebdc",
             "title": "Vitamin C",
-            "text": "Helps your body make and use collagen, so every scoop works harder.",
-            "image": "shopify://shop_images/auvela-ing-vitamin-c.png"
+            "text": "Helps your body make and use collagen, so every scoop works harder."
           }
         }
       },
@@ -615,10 +617,10 @@
         "r1": {
           "type": "row",
           "settings": {
-            "label": "5 collagen types",
+            "label": "5 collagen types (I, II, III, V, X)",
             "us": "yes",
-            "c1": "Varies",
-            "c2": "no",
+            "c1": "yes",
+            "c2": "Often I & III",
             "c3": "no"
           }
         },
@@ -627,9 +629,9 @@
           "settings": {
             "label": "Hyaluronic acid + vitamin C",
             "us": "yes",
-            "c1": "Varies",
-            "c2": "Varies",
-            "c3": "Varies"
+            "c1": "Vitamin C only",
+            "c2": "Some brands",
+            "c3": "On skin only"
           }
         },
         "r3": {
@@ -639,37 +641,47 @@
             "us": "yes",
             "c1": "yes",
             "c2": "yes",
-            "c3": "no"
+            "c3": "Surface only"
           }
         },
         "r4": {
           "type": "row",
           "settings": {
-            "label": "Full dose per serving",
-            "us": "yes",
-            "c1": "Varies",
-            "c2": "no",
-            "c3": "no"
+            "label": "Collagen per serving",
+            "us": "10 g",
+            "c1": "11 g",
+            "c2": "~1 g (3 caps)",
+            "c3": "Not absorbed"
           }
         },
         "r5": {
           "type": "row",
           "settings": {
-            "label": "3rd-party tested",
-            "us": "yes",
-            "c1": "Varies",
-            "c2": "Varies",
-            "c3": "Varies"
+            "label": "Easy daily routine",
+            "us": "1 scoop in coffee",
+            "c1": "1 scoop",
+            "c2": "3–6 capsules",
+            "c3": "15-min sheet"
           }
         },
         "r6": {
           "type": "row",
           "settings": {
-            "label": "90-day money-back promise",
+            "label": "Price per day",
+            "us": "From $1.11",
+            "c1": "~$0.25 (cheaper)",
+            "c2": "~$0.30 (cheaper)",
+            "c3": "$2–5 per mask"
+          }
+        },
+        "r7": {
+          "type": "row",
+          "settings": {
+            "label": "Made for women 40+",
             "us": "yes",
-            "c1": "no",
-            "c2": "no",
-            "c3": "no"
+            "c1": "General use",
+            "c2": "General use",
+            "c3": "General use"
           }
         }
       },
@@ -679,20 +691,21 @@
         "r3",
         "r4",
         "r5",
-        "r6"
+        "r6",
+        "r7"
       ],
       "settings": {
         "heading": "Find your <em>perfect</em> collagen",
         "italic_word": "perfect",
         "hint": "Compare next",
-        "sub": "How our protocol compares to store-bought powders, gummies and creams.",
-        "us_name": "Our Protocol",
-        "c1_name": "Store powders",
-        "c1_emoji": "🥄",
-        "c2_name": "Gummies",
-        "c2_emoji": "🍬",
-        "c3_name": "Firming creams",
-        "c3_emoji": "🧴",
+        "sub": "How Auvela compares to Micro Ingredients (Amazon’s popular pick), collagen pills and collagen masks.",
+        "us_name": "Auvela",
+        "c1_name": "Micro Ingredients",
+        "c1_emoji": "🛒",
+        "c2_name": "Collagen pills",
+        "c2_emoji": "💊",
+        "c3_name": "Collagen masks",
+        "c3_emoji": "🧖‍♀️",
         "row_h": 72,
         "head_h": 152,
         "heading_m": 34,
@@ -706,54 +719,6 @@
         "cta_link": "#MainContent",
         "pad_top": 52,
         "pad_bottom": 52
-      }
-    },
-    "trust": {
-      "type": "ag-trust",
-      "blocks": {
-        "s1": {
-          "type": "stat",
-          "settings": {
-            "num": "90",
-            "label": "Day firmer-skin promise"
-          }
-        },
-        "s2": {
-          "type": "stat",
-          "settings": {
-            "num": "5",
-            "label": "Collagen types"
-          }
-        },
-        "s3": {
-          "type": "stat",
-          "settings": {
-            "num": "1",
-            "label": "Scoop a day"
-          }
-        },
-        "s4": {
-          "type": "stat",
-          "settings": {
-            "num": "Free",
-            "label": "US shipping"
-          }
-        }
-      },
-      "block_order": [
-        "s1",
-        "s2",
-        "s3",
-        "s4"
-      ],
-      "settings": {
-        "eyebrow": "Our promise",
-        "heading": "The 90-Day <em>Firmer-Skin Promise.</em>",
-        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the bags. No questions.",
-        "c_bg": "#2a1427",
-        "c_dot": "#c9a24b",
-        "pad_top": 64,
-        "pad_bottom": 64
       }
     },
     "video_wall": {
@@ -779,7 +744,6 @@
     },
     "reviews": {
       "type": "ag-reviews",
-      "disabled": true,
       "settings": {
         "heading": "What customers are saying",
         "rating": 4.8,
@@ -875,18 +839,62 @@
         "pad_top": 56,
         "pad_bottom": 64
       }
+    },
+    "proof": {
+      "type": "ag-proof",
+      "blocks": {
+        "a1": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.08.19.png"
+          }
+        },
+        "a2": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png"
+          }
+        },
+        "a3": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {
+        "show_rating": true,
+        "rating": 4.8,
+        "count_text": "(add your customer count)",
+        "quote": "",
+        "quote_name": "",
+        "c_star": "#C9A24B",
+        "show_guarantee": true,
+        "guarantee": "<p><strong>90-day money-back promise.</strong> Feel firmer or get every penny back.</p>",
+        "show_payments": true,
+        "c_soft": "#F6ECE8",
+        "show_value": true,
+        "value_text": "Firming creams and clinic treatments cost $100s and only work on the surface. Auvela works from within, every day.",
+        "us_line": "Auvela — from $1.11/day",
+        "them_line": "Clinic skin treatments — $300+"
+      }
     }
   },
   "order": [
     "main",
+    "proof",
     "vrow",
     "features",
     "ingredients",
     "apart",
     "compare",
-    "trust",
     "video_wall",
-    "reviews",
-    "faq"
+    "faq",
+    "reviews"
   ]
 }
