@@ -1,5 +1,6 @@
 {%- comment -%} Auvela: product-page proof pieces. Rendered here, moved into the product info by ag-collagen.js. {%- endcomment -%}
 {%- assign s = section.settings -%}
+{%- if request.design_mode -%}<div class="nxPf__edit">✎ <b>Rating &amp; guarantee</b> — click here to edit the stars, 4.8, customer count, quote, guarantee and value box.</div>{%- endif -%}
 <div class="nxPf" id="nxPf-{{ section.id }}" data-nx-proof>
   {%- if s.show_rating -%}
   <div class="nxPf__rate" data-nx-proof-rate>
@@ -34,6 +35,7 @@
 </div>
 <style>
 .nxPf{display:none}
+.nxPf__edit{max-width:1200px;margin:8px auto;padding:10px 14px;border:1.5px dashed #4A2545;border-radius:10px;background:#F6ECE8;color:#2A1427;font-size:13px;cursor:pointer}
 .nxPf--on{display:block}
 .nxPf__rate{display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;font-size:13.5px;color:#2A1427;margin:2px 0 6px}
 .nxPf__stars{display:inline-flex;gap:1px}
@@ -59,7 +61,7 @@
 </style>
 {% schema %}
 {
-  "name": "Product proof",
+  "name": "Rating & guarantee",
   "tag": "div",
   "settings": [
     {"type":"header","content":"Rating line (under the top tag)"},

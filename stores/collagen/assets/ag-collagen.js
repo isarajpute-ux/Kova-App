@@ -48,10 +48,12 @@
     var top=row||pill;
     var pf=document.querySelector('[data-nx-proof]');
     if(pf){
-      ['rate','box','val'].forEach(function(k){ if($('[data-nx-proof-'+k+']',pf)) $$('[data-nx-proof-'+k+']',p).forEach(function(o){ o.remove(); }); });
-      var rate=$('[data-nx-proof-rate]',pf)||$('.nxPf__rate',p), box=$('[data-nx-proof-box]',pf)||$('.nxPf__box',p), val=$('[data-nx-proof-val]',pf)||$('.nxPf__val',p);
-      if(rate&&top&&top.nextElementSibling!==rate) top.parentNode.insertBefore(rate,top.nextSibling);
-      var after=form; if(after){ if(box&&after.nextElementSibling!==box) after.parentNode.insertBefore(box,after.nextSibling); if(box) after=box; if(val&&after.nextElementSibling!==val) after.parentNode.insertBefore(val,after.nextSibling); }
+      /* copy (never move) so the originals stay in the Product proof section and survive every editor re-render */
+      $$('.nxPfClone').forEach(function(o){ o.remove(); });
+      function cl(sel){ var o=$(sel,pf); if(!o) return null; var c=o.cloneNode(true); c.classList.add('nxPfClone'); c.removeAttribute('data-nx-proof-rate'); c.removeAttribute('data-nx-proof-box'); c.removeAttribute('data-nx-proof-val'); return c; }
+      var rate=cl('[data-nx-proof-rate]'), box=cl('[data-nx-proof-box]'), val=cl('[data-nx-proof-val]');
+      if(rate&&top) top.parentNode.insertBefore(rate,top.nextSibling);
+      var after=form; if(after){ if(box){ after.parentNode.insertBefore(box,after.nextSibling); after=box; } if(val) after.parentNode.insertBefore(val,after.nextSibling); }
     }
     if(!document.getElementById('nxTight')){ var tc=document.createElement('style'); tc.id='nxTight';
       tc.textContent='.agP .agP__info>*{margin-top:0!important}.agP .nxTopRow{margin-bottom:4px!important}.agP .agP__pill{margin-bottom:4px!important}.agP .agP__title{margin:2px 0 4px!important}.agP .agP__price,.agP .agP__priceRow{margin:4px 0 6px!important}.agP .agP__desc{margin:4px 0 8px!important}.agP .agP__desc p{margin:0 0 4px!important}.agP .agP__desc ul{margin:0 0 4px!important;gap:3px!important}.agP .agP__stock{margin:6px 0!important}.agP .agB__head{margin:4px 0!important}.agP .agB{margin-top:4px!important;margin-bottom:6px!important}.agP .nxPlan{margin-top:6px!important;margin-bottom:8px!important}.agP .agP__form{margin-top:6px!important}.agP .agP__feats{margin-top:8px!important}';
