@@ -168,3 +168,16 @@
   '}';
   document.head.appendChild(s);
 })();
+/* Auvela: plum delivery timeline with glow + animated dashed line */
+(function(){
+  if(document.getElementById('nxTlCss')) return;
+  var s=document.createElement('style'); s.id='nxTlCss';
+  s.textContent='body .agTL__ic,body .agP .agTL__ic,body .agTL__step .agTL__ic{background:#4A2545!important;background-color:#4A2545!important;color:#fff!important;border-color:#4A2545!important;animation:nxTlGlow 2.2s ease-in-out infinite!important}'+
+   'body .agTL__ic svg,body .agTL__ic svg *{color:#fff!important;stroke:currentColor}'+
+   'body .agTL__step:nth-of-type(2) .agTL__ic{animation-delay:.5s!important}body .agTL__step:nth-of-type(3) .agTL__ic{animation-delay:1s!important}'+
+   '@keyframes nxTlGlow{0%,100%{box-shadow:0 0 0 0 rgba(74,37,69,.45),0 0 10px rgba(74,37,69,.35)}50%{box-shadow:0 0 0 6px rgba(74,37,69,0),0 0 18px rgba(201,162,75,.55)}}'+
+   'body .agTL__line{border-top:0!important;height:2px!important;background:repeating-linear-gradient(90deg,#4A2545 0 8px,transparent 8px 14px)!important;background-size:28px 2px!important;animation:nxTlDash 1s linear infinite!important}'+
+   '@keyframes nxTlDash{to{background-position:28px 0}}'+
+   'body .agTL__t,body .agTL__step b{color:#2A1427!important}';
+  document.head.appendChild(s);
+})();
