@@ -181,3 +181,35 @@
    'body .agTL__t,body .agTL__step b{color:#2A1427!important}';
   document.head.appendChild(s);
 })();
+/* Auvela: tight vertical rhythm in the product info column */
+(function(){
+  function $(s,r){return (r||document).querySelector(s)}
+  function tight(){
+    var p=$('[data-ag-product]'); if(!p) return; var t=$('.agP__title',p); if(!t) return;
+    var col=t.parentNode; col.classList.add('nxCol');
+    var d=getComputedStyle(col).display; if(d!=='flex'&&d!=='grid'){ col.style.setProperty('display','flex','important'); col.style.setProperty('flex-direction','column','important'); col.style.setProperty('align-items','stretch','important'); }
+    if(!document.getElementById('nxColCss')){ var s=document.createElement('style'); s.id='nxColCss';
+      s.textContent='.agP .nxCol{gap:8px!important;row-gap:8px!important}'+
+      '.agP .nxCol>*{margin-top:0!important;margin-bottom:0!important}'+
+      '.agP .nxCol>.nxTopRow,.agP .nxCol>.agP__pill{align-self:flex-start!important}'+
+      '.agP .nxCol>*>p:last-child,.agP .nxCol>*>ul:last-child{margin-bottom:0!important}'+
+      '.agP .nxCol .nxPf__rate{margin:0!important;line-height:1.35}'+
+      '.agP .nxCol .nxPf__q{display:block;width:100%;margin-top:1px}'+
+      '.agP .nxCol .agP__title{line-height:1.05!important;padding:0!important}'+
+      '.agP .nxCol .agP__desc p,.agP .nxCol .agP__desc ul{margin:0 0 4px!important}'+
+      '.agP .nxCol .agP__stock,.agP .nxCol .agSpots{margin:0!important;padding:0!important}'+
+      '.agP .nxCol .agSpots__bar{margin-top:4px!important}'+
+      '.agP .nxSub{margin:0!important}.agP .nxSub__d{margin-top:6px!important}'+
+      '.agP .agB__head{margin:0 0 6px!important;padding:0!important}'+
+      '.agP .agB{margin:0!important;row-gap:8px!important}'+
+      '.agP .nxPlan{margin:8px 0 0!important}'+
+      '.agP .agP__form,.agP .nxPfClone{margin-top:0!important}'+
+      '.agP .nxPf__box{margin:0!important}.agP .nxPf__val{margin:0!important}';
+      document.head.appendChild(s); }
+    var kids=Array.prototype.slice.call(col.children);
+    kids.forEach(function(k){ var cs=getComputedStyle(k); if(cs.display!=='none' && parseFloat(cs.paddingTop)>12 && !k.matches('.agB,.nxPlan,.nxPf__box,.nxPf__val,.agP__form,.agMR')) { k.style.setProperty('padding-top','0','important'); } });
+  }
+  function go(){ setTimeout(tight,400); setTimeout(tight,1200); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(tight,700); setTimeout(tight,1300); });
+})();
