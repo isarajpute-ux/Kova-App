@@ -1,0 +1,94 @@
+{%- liquid
+  assign s = section.settings
+  assign url = s.link | default: '/products/multi-collagen-peptide-powder'
+-%}
+<section id="nx-{{ section.id }}" class="agNx nxHero">
+  <div class="nxHero__bg" style="--pos:{{ s.img_pos | default: 'center' }}">
+    {%- if s.video != blank -%}
+      {{ s.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata' }}
+    {%- elsif s.image != blank -%}
+      {{ s.image | image_url: width: 2000 | image_tag: loading: 'eager', sizes: '100vw' }}
+    {%- endif -%}
+  </div>
+  <div class="page-width nxHero__in">
+    <div class="nxHero__copy">
+      {%- if s.proof != blank -%}<p class="nxHero__proof">{% if s.show_stars %}<span class="nxHero__stars" aria-hidden="true">★★★★★</span> {% endif %}{{ s.proof }}</p>{%- endif -%}
+      {%- if s.eyebrow != blank -%}<p class="nxHero__ey">{{ s.eyebrow }}</p>{%- endif -%}
+      <h1 class="nxHero__h">{{ s.heading | newline_to_br }}</h1>
+      {%- if s.text != blank -%}<p class="nxHero__p">{{ s.text }}</p>{%- endif -%}
+      <div class="nxHero__ctas">
+        <a href="{{ url }}" class="nxHero__btn">{{ s.btn }}</a>
+        {%- if s.trust != blank -%}<span class="nxHero__trust">{{ s.trust }}</span>{%- endif -%}
+      </div>
+      {%- if s.note != blank -%}<p class="nxHero__note">{{ s.note }}</p>{%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="nxHero__pts">
+          {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+    {%- liquid
+      assign pimg = s.product_image
+      if pimg == blank and s.product != blank
+        assign pimg = s.product.featured_image
+      endif
+    -%}
+    {%- if pimg != blank -%}
+      <a href="{{ url }}" class="nxHero__prod">{{ pimg | image_url: width: 500 | image_tag: loading: 'eager', alt: s.product.title }}{%- if s.product_label != blank -%}<span>{{ s.product_label }}</span>{%- endif -%}</a>
+    {%- endif -%}
+  </div>
+</section>
+<style>
+#nx-{{ section.id }}{position:relative;background:#0A0A0A;color:#fff;overflow:hidden;min-height:{{ s.h_m }}vh;display:flex;align-items:flex-end}
+#nx-{{ section.id }} .nxHero__bg{position:absolute;inset:0}
+#nx-{{ section.id }} .nxHero__bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0) 0%,rgba(10,10,10,.1) 40%,rgba(10,10,10,.75) 72%,#0A0A0A 100%)}
+#nx-{{ section.id }} .nxHero__bg video,#nx-{{ section.id }} .nxHero__bg img{width:100%;height:100%;object-fit:cover;object-position:var(--pos)}
+#nx-{{ section.id }} .nxHero__in{position:relative;padding-top:120px;padding-bottom:36px;width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+#nx-{{ section.id }} .nxHero__copy{max-width:520px}
+#nx-{{ section.id }} .nxHero__proof{font-size:12.5px;margin:0 0 10px;color:rgba(255,255,255,.88)}
+#nx-{{ section.id }} .nxHero__stars{color:#C9A24B;letter-spacing:1px}
+#nx-{{ section.id }} .nxHero__ey{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:#7DB2FF;margin:0 0 10px}
+#nx-{{ section.id }} .nxHero__h{color:#fff;font-size:{{ s.head_m }}px!important;line-height:1.08!important;font-weight:500!important;letter-spacing:-.025em;margin:0 0 12px!important}
+#nx-{{ section.id }} .nxHero__p{color:rgba(255,255,255,.82);font-size:15px;line-height:1.5;margin:0 0 20px}
+#nx-{{ section.id }} .nxHero__ctas{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+#nx-{{ section.id }} .nxHero__btn{display:inline-block;background:#fff;color:#0A0A0A;font-weight:600;font-size:15px;padding:16px 32px;border-radius:999px;text-decoration:none;animation:nxRing 2.4s infinite}
+@keyframes nxRing{0%{box-shadow:0 0 0 0 rgba(43,123,255,.55)}70%{box-shadow:0 0 0 14px rgba(43,123,255,0)}100%{box-shadow:0 0 0 0 rgba(43,123,255,0)}}
+#nx-{{ section.id }} .nxHero__trust{font-size:12.5px;color:rgba(255,255,255,.85)}
+#nx-{{ section.id }} .nxHero__note{font-size:12.5px;color:rgba(255,255,255,.7);margin:12px 0 0}
+#nx-{{ section.id }} .nxHero__pts{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+#nx-{{ section.id }} .nxHero__pts li{font-size:12.5px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#nx-{{ section.id }} .nxHero__prod{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;width:110px;padding:8px;border-radius:16px;background:rgba(255,255,255,.92);color:#2A1427;text-decoration:none;box-shadow:0 14px 30px -12px rgba(0,0,0,.5)}
+#nx-{{ section.id }} .nxHero__prod img{width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:10px;background:#F7F2EC}
+#nx-{{ section.id }} .nxHero__prod span{font-size:11px;font-weight:600;text-align:center;line-height:1.2}
+@media(max-width:749px){#nx-{{ section.id }} .nxHero__prod{position:absolute;right:16px;top:90px;width:96px}}
+@media(min-width:990px){#nx-{{ section.id }}{min-height:{{ s.h_d }}vh}#nx-{{ section.id }} .nxHero__h{font-size:{{ s.head_d }}px!important}#nx-{{ section.id }} .nxHero__in{padding-bottom:64px}#nx-{{ section.id }} .nxHero__prod{width:190px;padding:12px}#nx-{{ section.id }} .nxHero__prod span{font-size:13px}}
+</style>
+{% schema %}
+{
+  "name": "Landing hero",
+  "tag": "div",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Background video" },
+    { "type": "image_picker", "id": "image", "label": "Background image (if no video)" },
+    { "type": "select", "id": "img_pos", "label": "Photo focus", "default": "center", "options": [ { "value": "center", "label": "Center" }, { "value": "center top", "label": "Top" }, { "value": "left center", "label": "Left" }, { "value": "right center", "label": "Right" }, { "value": "70% 20%", "label": "Upper right" }, { "value": "30% 20%", "label": "Upper left" } ] },
+    { "type": "text", "id": "proof", "label": "Proof line (above heading)" },
+    { "type": "checkbox", "id": "show_stars", "label": "Show 5 stars before proof line", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Small label", "default": "For women 40+" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Your heading here" },
+    { "type": "range", "id": "head_m", "label": "Heading size (mobile)", "min": 20, "max": 48, "step": 1, "unit": "px", "default": 30 },
+    { "type": "range", "id": "head_d", "label": "Heading size (desktop)", "min": 28, "max": 80, "step": 2, "unit": "px", "default": 50 },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    { "type": "text", "id": "btn", "label": "Button", "default": "Shop now" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "text", "id": "trust", "label": "Trust line next to button" },
+    { "type": "text", "id": "note", "label": "Note under button" },
+    { "type": "product", "id": "product", "label": "Product (shows its photo)" },
+    { "type": "image_picker", "id": "product_image", "label": "Product photo (overrides product)" },
+    { "type": "text", "id": "product_label", "label": "Product photo caption" },
+    { "type": "range", "id": "h_m", "label": "Height mobile (vh)", "min": 50, "max": 100, "step": 5, "default": 85 },
+    { "type": "range", "id": "h_d", "label": "Height desktop (vh)", "min": 50, "max": 100, "step": 5, "default": 90 }
+  ],
+  "blocks": [ { "type": "point", "name": "Pill", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping" } ] } ],
+  "presets": [ { "name": "Landing hero" } ]
+}
+{% endschema %}

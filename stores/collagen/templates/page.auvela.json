@@ -11,47 +11,25 @@
   "sections": {
     "hero": {
       "type": "ag-hero",
-      "blocks": {
-        "h1": {
-          "type": "point",
-          "settings": {
-            "text": "3rd-party tested"
-          }
-        },
-        "h2": {
-          "type": "point",
-          "settings": {
-            "text": "Grass-fed collagen"
-          }
-        },
-        "h3": {
-          "type": "point",
-          "settings": {
-            "text": "90-Day Firmer-Skin Promise"
-          }
-        },
-        "h4": {
-          "type": "point",
-          "settings": {
-            "text": "Free US shipping"
-          }
-        }
-      },
-      "block_order": [
-        "h1",
-        "h2",
-        "h3",
-        "h4"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "eyebrow": "For women 40+",
-        "heading": "With clothes on, you look incredible.\n<em>This is for the woman in the mirror.</em>",
-        "text": "A daily multi-collagen ritual that helps your skin feel firmer, bouncier and more hydrated — from your décolletage to your stomach to your arms. One scoop in your morning coffee. That’s the whole routine.",
+        "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
+        "text": "You didn’t gain weight — you lost collagen. Firmer-feeling skin in 90 days.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
-        "note": "Founding Batch: extra 15% off · first 35 orders",
+        "note": "Founding Batch: 15% off · first 35 orders",
         "h_m": 90,
-        "h_d": 90
+        "h_d": 90,
+        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
+        "show_stars": false,
+        "head_m": 30,
+        "head_d": 50,
+        "trust": "✓ 90-Day money-back promise · Free US shipping",
+        "product": "multi-collagen-peptide-powder",
+        "product_label": "Auvela Multi-Collagen",
+        "img_pos": "70% 20%"
       }
     },
     "features": {
