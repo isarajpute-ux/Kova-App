@@ -192,6 +192,8 @@
       s.textContent='.agP .nxCol{gap:8px!important;row-gap:8px!important}'+
       '.agP .nxCol>*{margin-top:0!important;margin-bottom:0!important}'+
       '.agP .nxCol>.nxTopRow,.agP .nxCol>.agP__pill{align-self:flex-start!important}'+
+      '.agP .nxInfo{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:100%!important;box-sizing:border-box;padding:10px 14px!important}'+
+      '.agP .nxInfo>*,.agP .nxInfo p{margin:0!important;text-align:center!important;width:100%}'+
       '.agP .nxCol>*>p:last-child,.agP .nxCol>*>ul:last-child{margin-bottom:0!important}'+
       '.agP .nxCol .nxPf__rate{margin:0!important;line-height:1.35}'+
       '.agP .nxCol .nxPf__q{display:block;width:100%;margin-top:1px}'+
