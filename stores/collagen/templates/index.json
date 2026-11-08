@@ -11,26 +11,24 @@
   "sections": {
     "hero": {
       "type": "ag-hero",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "image": "shopify://shop_images/Serene_Morning_Milk_by_the_Window.png",
+        "img_pos": "70% 20%",
+        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
+        "show_stars": false,
         "eyebrow": "For women 40+",
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
+        "head_m": 30,
+        "head_d": 50,
         "text": "You didn’t gain weight — you lost collagen. Firmer-feeling skin in 90 days.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
-        "note": "Founding Batch: 15% off · first 35 orders",
-        "h_m": 75,
-        "h_d": 80,
-        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
-        "show_stars": false,
-        "head_m": 30,
-        "head_d": 50,
         "trust": "✓ 90-Day money-back promise · Free US shipping",
+        "note": "Founding Batch: 15% off · first 35 orders",
         "product": "multi-collagen-peptide-powder",
         "product_label": "Auvela Multi-Collagen",
-        "img_pos": "70% 20%"
+        "h_m": 75,
+        "h_d": 80
       }
     },
     "bento": {
@@ -222,7 +220,7 @@
         "us_label": "Our collagen",
         "them_label": "Generic collagen",
         "start": 85,
-        "c_acc": "#4a2545",
+        "c_acc": "#C7ABFF",
         "pad_top": 56,
         "pad_bottom": 56
       }
@@ -316,7 +314,7 @@
         "heading_m": 34,
         "heading_d": 52,
         "c_hl": "#f7f2ec",
-        "c_acc": "#4a2545",
+        "c_acc": "#C7ABFF",
         "c_bg": "#ffffff",
         "c_ink": "#2a1427",
         "c_line": "#ebebeb",

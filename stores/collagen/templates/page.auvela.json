@@ -11,25 +11,23 @@
   "sections": {
     "hero": {
       "type": "ag-hero",
-      "blocks": {},
-      "block_order": [],
       "settings": {
+        "img_pos": "70% 20%",
+        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
+        "show_stars": false,
         "eyebrow": "For women 40+",
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
+        "head_m": 30,
+        "head_d": 50,
         "text": "You didn’t gain weight — you lost collagen. Firmer-feeling skin in 90 days.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
-        "note": "Founding Batch: 15% off · first 35 orders",
-        "h_m": 90,
-        "h_d": 90,
-        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
-        "show_stars": false,
-        "head_m": 30,
-        "head_d": 50,
         "trust": "✓ 90-Day money-back promise · Free US shipping",
+        "note": "Founding Batch: 15% off · first 35 orders",
         "product": "multi-collagen-peptide-powder",
         "product_label": "Auvela Multi-Collagen",
-        "img_pos": "70% 20%"
+        "h_m": 90,
+        "h_d": 90
       }
     },
     "features": {
@@ -38,33 +36,33 @@
         "f1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-scoop.png",
             "title": "One scoop",
-            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean.",
-            "image": "shopify://shop_images/auvela-feat-scoop.png"
+            "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
           }
         },
         "f2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-5types.png",
             "title": "5 collagen types",
-            "text": "Full-spectrum peptides: Types I, II, III, V and X.",
-            "image": "shopify://shop_images/auvela-feat-5types.png"
+            "text": "Full-spectrum peptides: Types I, II, III, V and X."
           }
         },
         "f3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-hydration.png",
             "title": "Hydration layer",
-            "text": "Hyaluronic acid and vitamin C for plumper-looking skin.",
-            "image": "shopify://shop_images/auvela-feat-hydration.png"
+            "text": "Hyaluronic acid and vitamin C for plumper-looking skin."
           }
         },
         "f4": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/auvela-feat-90day.png",
             "title": "90-day cycle",
-            "text": "Skin renews over about 90 days — that’s when you see it.",
-            "image": "shopify://shop_images/auvela-feat-90day.png"
+            "text": "Skin renews over about 90 days — that’s when you see it."
           }
         }
       },
@@ -151,7 +149,7 @@
         "us_label": "Our collagen",
         "them_label": "Generic collagen",
         "start": 85,
-        "c_acc": "#4A2545",
+        "c_acc": "#C7ABFF",
         "pad_top": 56,
         "pad_bottom": 56
       }
@@ -230,6 +228,8 @@
       ],
       "settings": {
         "heading": "Find your <em>perfect</em> collagen",
+        "italic_word": "perfect",
+        "hint": "Compare next",
         "sub": "How our protocol compares to store-bought powders, gummies and creams.",
         "us_name": "Our Protocol",
         "c1_name": "Store powders",
@@ -242,17 +242,15 @@
         "head_h": 152,
         "heading_m": 34,
         "heading_d": 52,
+        "c_hl": "#F7F2EC",
+        "c_acc": "#C7ABFF",
         "c_bg": "#FFFFFF",
         "c_ink": "#2A1427",
         "c_line": "#EBEBEB",
         "cta_text": "Start My 90-Day Protocol →",
         "cta_link": "/products/multi-collagen-peptide-powder",
         "pad_top": 52,
-        "pad_bottom": 52,
-        "italic_word": "perfect",
-        "hint": "Compare next",
-        "c_hl": "#F7F2EC",
-        "c_acc": "#4A2545"
+        "pad_bottom": 52
       }
     },
     "trust": {

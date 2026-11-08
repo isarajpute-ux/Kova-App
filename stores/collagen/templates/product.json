@@ -16,7 +16,7 @@
           "type": "side_card",
           "settings": {
             "icon": "heart-fill",
-            "icon_color": "#4a2545",
+            "icon_color": "#C7ABFF",
             "title": "One scoop",
             "sub": "In your morning coffee"
           }
@@ -25,7 +25,7 @@
           "type": "side_card",
           "settings": {
             "icon": "sparkle",
-            "icon_color": "#4a2545",
+            "icon_color": "#C7ABFF",
             "title": "Firmer-feeling",
             "sub": "Bouncier-looking skin"
           }
@@ -34,7 +34,7 @@
           "type": "side_card",
           "settings": {
             "icon": "leaf",
-            "icon_color": "#4a2545",
+            "icon_color": "#C7ABFF",
             "title": "5 collagen types",
             "sub": "Full-spectrum peptides"
           }
@@ -202,7 +202,7 @@
           "type": "accordion",
           "settings": {
             "icon": "dot",
-            "icon_color": "#4a2545",
+            "icon_color": "#C7ABFF",
             "title": "What’s in the box",
             "content": "<ul><li><strong>1-Bag Bundle:</strong> Multi-Collagen Peptide Powder.</li><li><strong>3-Bag Bundle:</strong> 3 bags.</li><li><strong>6-Bag Bundle:</strong> 6 bags.</li></ul>",
             "open": false
@@ -240,8 +240,8 @@
         "c_ink": "#2a1427",
         "c_muted": "#6b6b6b",
         "c_title": "#2a1427",
-        "c_btn": "#4a2545",
-        "c_btn2": "#6b3a63",
+        "c_btn": "#C7ABFF",
+        "c_btn2": "#B595F5",
         "c_soft": "#f7f2ec",
         "c_line": "#e8ddd6",
         "c_red": "#ff3b30",
@@ -277,8 +277,8 @@
         "deal_hours": 5,
         "deal_code": "AUVELA15",
         "deal_copied": "Copied!",
-        "deal_bg": "#f6ece8",
-        "deal_color": "#4a2545",
+        "deal_bg": "#F1EAFF",
+        "deal_color": "#C7ABFF",
         "deal_code_bg": "#ffffff",
         "variant_label": "",
         "pill_style": "soft",
@@ -290,7 +290,7 @@
         "spots_count": 14,
         "spots_total": 100,
         "spots_bar": true,
-        "spots_color": "#4a2545",
+        "spots_color": "#C7ABFF",
         "show_mr": false,
         "mr_style": "lines",
         "mr_autoplay": true,
@@ -300,7 +300,7 @@
         "mr_shape": "circle",
         "mr_border": 2,
         "mr_border_color": "#e8e8e8",
-        "mr_av_bg": "#4a2545",
+        "mr_av_bg": "#C7ABFF",
         "mr_av_text": "#ffffff",
         "mr_star_color": "#c9a24b",
         "mr_star_size": 13,
@@ -311,7 +311,7 @@
         "mr_show_verified": true,
         "mr_ver_text": "Verified buyer",
         "mr_ver_icon": "check-circle-fill",
-        "mr_ver_color": "#4a2545",
+        "mr_ver_color": "#C7ABFF",
         "mr_bg": "#ffffff",
         "mr_line": "#e8e8e8",
         "mr_arrow_bg": "#ffffff",
@@ -382,7 +382,7 @@
         "show_guarantee": true,
         "guarantee": "<p><strong>90-day money-back promise.</strong> Feel firmer or get every penny back.</p>",
         "show_payments": true,
-        "c_soft": "#f6ece8",
+        "c_soft": "#F1EAFF",
         "show_value": true,
         "value_text": "Firming creams and clinic treatments cost $100s and only work on the surface. Auvela works from within, every day.",
         "us_line": "Auvela — from $1.11/day",
@@ -623,7 +623,7 @@
         "us_label": "Our collagen",
         "them_label": "Generic collagen",
         "start": 85,
-        "c_acc": "#4a2545",
+        "c_acc": "#C7ABFF",
         "pad_top": 56,
         "pad_bottom": 56
       }
@@ -728,7 +728,7 @@
         "heading_m": 34,
         "heading_d": 52,
         "c_hl": "#f7f2ec",
-        "c_acc": "#4a2545",
+        "c_acc": "#C7ABFF",
         "c_bg": "#ffffff",
         "c_ink": "#2a1427",
         "c_line": "#ebebeb",
@@ -754,7 +754,7 @@
         "c_bg": "#ffffff",
         "c_ink": "#2a1427",
         "c_sub": "#6f6f6f",
-        "c_star": "#4a2545",
+        "c_star": "#C7ABFF",
         "pad_top": 36,
         "pad_bottom": 36
       }
@@ -852,7 +852,7 @@
         "c_bg": "#ffffff",
         "c_ink": "#2a1427",
         "c_line": "#ebebeb",
-        "c_star": "#4a2545",
+        "c_star": "#C7ABFF",
         "pad_top": 56,
         "pad_bottom": 56
       },
