@@ -373,7 +373,7 @@
           "type": "pill",
           "settings": {
             "icon": "coffee",
-            "text": "One scoop in your drink"
+            "text": "One scoop a day"
           }
         },
         "a1": {
@@ -499,6 +499,7 @@
         "f3",
         "f4"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "Why it works",
         "heading": "Your skin didn’t change overnight.\n<em>Your collagen did.</em>",

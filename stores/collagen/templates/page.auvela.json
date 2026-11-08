@@ -81,7 +81,8 @@
         "c_ink": "#2A1427",
         "pad_top": 56,
         "pad_bottom": 56
-      }
+      },
+      "disabled": true
     },
     "apart": {
       "type": "ag-apart",
@@ -465,121 +466,327 @@
     "wall": {
       "type": "ag-wall",
       "blocks": {
-        "w1": {
-          "type": "press",
-          "settings": {
-            "outlet": "Publication",
-            "headline": "Add a real article or blog post about us here — upload the outlet logo top left.",
-            "cat": ""
-          }
-        },
-        "w2": {
+        "athlete_MkpCqg": {
           "type": "athlete",
           "settings": {
-            "size": "square",
-            "tag": "Customer story",
-            "quote": "Add a real quote from a customer.",
-            "name": "Name",
-            "sub": "Who they are",
-            "cat": "Routine"
-          }
-        },
-        "w3": {
-          "type": "review",
-          "settings": {
-            "name": "Customer name",
-            "verified": true,
-            "rating": 5,
-            "title": "Review title",
-            "text": "Paste a real customer review here.",
-            "date": "Date",
+            "image": "shopify://shop_images/before-after_01.jpg",
+            "size": "wide",
+            "tag": "Loose skin gone",
+            "quote": "Body finally looks attractive and toned.",
+            "name": "Maya R.",
+            "sub": "Age 49 · Houston, TX",
             "cat": "Firmness"
           }
         },
-        "w4": {
-          "type": "social",
-          "settings": {
-            "name": "@handle",
-            "platform": "instagram",
-            "text": "Paste a real social post here.",
-            "date": "Date",
-            "cat": ""
-          }
-        },
-        "w5": {
+        "r1": {
           "type": "review",
           "settings": {
-            "name": "Customer name",
+            "name": "Diane W.",
             "verified": true,
             "rating": 5,
-            "title": "Review title",
-            "text": "Paste a real customer review here.",
-            "date": "Date",
+            "title": "Feeling like myself after menopause",
+            "text": "\"AUVELA Collagen Renew; My ASS look amazing in dresses again.\"",
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.23_PM.png",
+            "date": "October 25, 2026",
+            "cat": "Firmness"
+          }
+        },
+        "r3": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.17.44_PM.png",
+            "size": "square",
+            "tag": "Finally loving my natural nails",
+            "quote": "Finally loving my natural nails",
+            "name": "Patricia M.",
+            "sub": "Age 52 · Charleston, SC",
+            "cat": "Hair & Nails"
+          }
+        },
+        "r4": {
+          "type": "review",
+          "settings": {
+            "name": "Diane W.",
+            "verified": true,
+            "rating": 4,
+            "title": "Finally feel good with this new smooth body",
+            "text": "I've been using AUVELA Collagen Renew daily, I love how easily it fits into my morning routine. I wanted something simple to support my skin as I get older.",
+            "date": "November 2, 2026",
+            "cat": "Firmness"
+          }
+        },
+        "r5": {
+          "type": "review",
+          "settings": {
+            "name": "Evelyn C.",
+            "verified": true,
+            "rating": 4,
+            "title": "My skin looks refreshed again",
+            "text": "\"My butt looks fuller, and my breasts look firmer !\"",
+            "date": "September 18, 2026",
             "cat": "Hydration"
           }
         },
-        "w6": {
-          "type": "athlete",
+        "r6": {
+          "type": "social",
           "settings": {
-            "size": "tall",
-            "tag": "Customer story",
-            "quote": "",
-            "name": "Name",
-            "sub": "Add a video or photo",
+            "avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
+            "name": "@ Marissa Bennett",
+            "handle": "My confidence is back in the bedroom",
+            "platform": "x",
+            "text": "\"Feeling attractive and close again.\"",
+            "date": "August 10, 2026",
             "cat": "Firmness"
           }
         },
-        "w7": {
+        "r7": {
           "type": "review",
           "settings": {
-            "name": "Customer name",
+            "name": "Nancy F.",
             "verified": true,
-            "rating": 5,
-            "title": "Review title",
-            "text": "Paste a real customer review here.",
-            "date": "Date",
-            "cat": "Hair & nails"
+            "rating": 4,
+            "title": "Finally proud of my natural nails",
+            "text": "\"So amazed how my nails look so healthier and stronger just in 3 weeks.\"",
+            "date": "November 4, 2026",
+            "cat": "Hair & Nails"
           }
         },
-        "w8": {
+        "r8": {
+          "type": "review",
+          "settings": {
+            "name": "Karen M.",
+            "verified": true,
+            "rating": 5,
+            "title": "I finally feel sexy in my clothes again",
+            "text": "\"At 56, my stomach, butt, and breasts look smoother and firmer. AUVELA Collagen Renew is part of my beauty routine, and I love feeling confident in fitted dresses again.\"",
+            "date": "Age 56 · Dallas, TX",
+            "cat": "Routine"
+          }
+        },
+        "athlete_hHrcPj": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.17.55_PM.png",
+            "size": "square",
+            "tag": "My skin finally has that glow",
+            "quote": "My skin feels soft and hydrated.",
+            "name": "Linda P.",
+            "sub": "",
+            "cat": "Hydration"
+          }
+        },
+        "r9": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/try_connecting_this_3_split_43e3187e_2K.jpg_a36381f0_2K.jpg",
+            "size": "square",
+            "tag": "Face wrinkle",
+            "quote": "Finally seeing my stubborn wrinkles fade away.",
+            "name": "Lauren M.",
+            "sub": "Age 42 · Tampa, FL",
+            "cat": "Hydration"
+          }
+        },
+        "r10": {
+          "type": "review",
+          "settings": {
+            "name": "Janet B.",
+            "verified": true,
+            "rating": 4,
+            "title": "Finally loving how I look in dresses",
+            "text": "\"My stomach looks smoother, with less crepey looking skin.\"",
+            "date": "Age 56 · Austin, TX",
+            "cat": "Firmness"
+          }
+        },
+        "athlete_X77CR8": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.14_PM.png",
+            "size": "square",
+            "tag": "Hair Growth | 30 Days later",
+            "quote": "AUVELA Collagen Renew; my hair looks fuller and healthier.",
+            "name": "Angela R.",
+            "sub": "",
+            "cat": "Hair & Nails"
+          }
+        },
+        "r11": {
+          "type": "review",
+          "settings": {
+            "name": "Teresa J.",
+            "verified": true,
+            "rating": 4,
+            "title": "I'm not hiding my body anymore",
+            "text": "\"No more avoiding fitted outfits! I love feeling confident in my skin, embracing my curves, and taking care of myself with AUVELA Collagen Renew.\"",
+            "date": "Age 51 · Orlando, FL",
+            "cat": "Firmness"
+          }
+        },
+        "r13": {
           "type": "social",
           "settings": {
-            "name": "@handle",
+            "avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png",
+            "name": "Michelle Thompson",
+            "handle": "",
             "platform": "tiktok",
-            "text": "Paste a real social post here.",
-            "date": "Date",
+            "text": "Soft, youthful-looking skin",
+            "date": "Age 42 · Austin, TX",
+            "cat": "Hydration"
+          }
+        },
+        "athlete_a7W6BD": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.50.54_PM.png",
+            "size": "wide",
+            "tag": "Looking Years Younger Again",
+            "quote": "My Face Looks Smoother and More Refreshed",
+            "name": "Betty O.",
+            "sub": "",
             "cat": ""
+          }
+        },
+        "r14": {
+          "type": "review",
+          "settings": {
+            "name": "Deborah C.",
+            "verified": true,
+            "rating": 5,
+            "title": "Feeling beautiful and confident again",
+            "text": "\"I'm 58 inside, and finally loving my reflection.\"",
+            "date": "Age 63 · Tampa, FL",
+            "cat": "Routine"
+          }
+        },
+        "r15": {
+          "type": "review",
+          "settings": {
+            "name": "Carolyn P.",
+            "verified": true,
+            "rating": 5,
+            "title": "Finally confident showing my arms",
+            "text": "\"My arms look so much smoother now after 43 days.\"",
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.05_PM.png",
+            "date": "Age 58 · Naples, FL",
+            "cat": "Routine"
+          }
+        },
+        "r16": {
+          "type": "review",
+          "settings": {
+            "name": "Stephanie M.",
+            "verified": true,
+            "rating": 5,
+            "title": "I refuse to let aging define me",
+            "text": "\"My arms and stomach are the areas I notice most. I love taking care of myself with AUVELA\"",
+            "date": "Age 61 · Phoenix, AZ",
+            "cat": "Firmness"
           }
         }
       },
       "block_order": [
-        "w1",
-        "w2",
-        "w3",
-        "w4",
-        "w5",
-        "w6",
-        "w7",
-        "w8"
+        "athlete_MkpCqg",
+        "r1",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7",
+        "r8",
+        "athlete_hHrcPj",
+        "r9",
+        "r10",
+        "athlete_X77CR8",
+        "r11",
+        "r13",
+        "athlete_a7W6BD",
+        "r14",
+        "r15",
+        "r16"
       ],
       "settings": {
-        "heading": "What the woman in the mirror <em>is saying.</em>",
+        "heading": "What the woman in the mirror is saying.",
         "rating": "",
         "count": "",
         "all_label": "All",
         "cats": "Firmness, Hydration, Hair & nails, Routine",
-        "cta_heading": "Your 90 days <em>start now.</em>",
+        "cta_heading": "Your 90 days start now.",
         "cta_text": "Backed by the 90-Day Firmer-Skin Promise.",
         "cta_btn": "Start My 90-Day Protocol",
         "cta_link": "/products/multi-collagen-peptide-powder",
         "pad_top": 72,
         "pad_bottom": 72
       }
+    },
+    "why": {
+      "type": "ag-why",
+      "blocks": {
+        "a1": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.08.19.png"
+          }
+        },
+        "a2": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png"
+          }
+        },
+        "a3": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {
+        "heading": "Your skin didn’t change overnight. <em>Your collagen did.</em>",
+        "btn": "Shop Auvela",
+        "btn_link": "/products/multi-collagen-peptide-powder",
+        "product": "multi-collagen-peptide-powder",
+        "c1_title": "<em>Complete</em> collagen",
+        "c1_sub": "5 collagen types + hyaluronic acid & vitamin C",
+        "b1_big": "5",
+        "b1_small": "types",
+        "b2_big": "10g",
+        "b2_small": "collagen",
+        "b3_big": "1",
+        "b3_small": "scoop",
+        "c2_title": "<em>Balanced</em> formula",
+        "c2_sub": "Collagen, hyaluronic acid and vitamin C in one scoop",
+        "av_more": "+",
+        "c3_title": "<em>Research</em> backed",
+        "c3_sub": "Collagen peptides studied for skin elasticity and hydration",
+        "c4_image": "shopify://shop_images/auvela-ing-bovine.png",
+        "c4_title": "<em>Collagen</em> for firmness",
+        "c4_sub": "10 g per scoop for firmer-feeling skin",
+        "i1": "shopify://shop_images/auvela-ing-marine.png",
+        "i2": "shopify://shop_images/auvela-ing-eggshell.png",
+        "i3": "shopify://shop_images/auvela-ing-hyaluronic.png",
+        "i4": "shopify://shop_images/auvela-ing-vitamin-c.png",
+        "c5_title": "<em>Real</em> ingredients",
+        "c5_sub": "Bovine, marine, chicken & eggshell membrane collagen + HA & vitamin C",
+        "c_bg": "#FFFFFF",
+        "c_card": "#F6F1FF",
+        "c_line": "#E3D6FF",
+        "c_ink": "#2A1427",
+        "c_acc": "#C7ABFF",
+        "pad_top": 56,
+        "pad_bottom": 56
+      }
     }
   },
   "order": [
     "hero",
     "bento",
+    "why",
     "features",
     "reactions",
     "apart",

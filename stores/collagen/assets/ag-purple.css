@@ -94,6 +94,13 @@ h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'
 .nxArw .agGN__b svg,.agTL__ic svg{stroke:#2A1427!important}
 /* ---- lavender announcement bar, countdown bar and footer ---- */
 .announcement-bar-section,.announcement-bar-section .announcement-bar,.announcement-bar-section .utility-bar,.announcement-bar-section [class*="color-scheme"],
-.footer-group,.footer-group .footer,.footer-group [class*="color-scheme"],footer.footer{background:#C7ABFF!important;background-color:#C7ABFF!important}
+.footer-group .footer,footer.footer{background:#FFFFFF!important;background-color:#FFFFFF!important;border-top:1px solid #EEE6FF}
 .announcement-bar-section,.announcement-bar-section *,.footer-group .footer,.footer-group .footer *:not(svg):not(path){color:#2A1427!important}
 .footer-group .footer a:hover{opacity:.7}
+
+.footer-group .footer h2,.footer-group .footer .footer-block__heading{font-size:13px!important;letter-spacing:.14em!important;text-transform:uppercase;font-weight:700!important}
+.footer-group .footer .list-menu__item,.footer-group .footer .footer-block__details-content a{font-size:14px!important;opacity:.8}
+/* header: labelled cart like premium stores */
+.header__icons .nxCartLbl{font-size:13px;letter-spacing:.14em;font-weight:600;text-transform:uppercase;margin-left:6px;color:#2A1427}
+.header__icons #cart-icon-bubble{display:inline-flex!important;align-items:center;width:auto!important;padding:0 6px}
+@media(max-width:749px){.header__icons .nxCartLbl{display:none}}

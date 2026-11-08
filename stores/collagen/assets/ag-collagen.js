@@ -259,3 +259,10 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); setTimeout(run,1000); });
 })();
+/* Auvela: "CART" label next to header cart icon */
+(function(){
+  function run(){ var c=document.querySelector('#cart-icon-bubble'); if(!c||c.querySelector('.nxCartLbl')) return; var s=document.createElement('span'); s.className='nxCartLbl'; s.textContent='Cart'; var b=c.querySelector('.cart-count-bubble'); c.insertBefore(s,b||null); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); }); document.addEventListener('cart:updated',function(){ setTimeout(run,300); }); setTimeout(run,1500);
+})();
+setInterval(function(){ var c=document.querySelector('#cart-icon-bubble'); if(c&&!c.querySelector('.nxCartLbl')){ var s=document.createElement('span'); s.className='nxCartLbl'; s.textContent='Cart'; c.insertBefore(s,c.querySelector('.cart-count-bubble')||null); } },1500);

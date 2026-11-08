@@ -1,0 +1,137 @@
+{%- comment -%} Auvela: "Why it works" bento grid (5 cards) {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section id="nxWhy-{{ section.id }}" class="nxWhy" style="--bg:{{ s.c_bg }};--card:{{ s.c_card }};--line:{{ s.c_line }};--ink:{{ s.c_ink }};--acc:{{ s.c_acc }};padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="nxWhy__in">
+    <div class="nxWhy__top">
+      <h2 class="nxWhy__h">{{ s.heading }}</h2>
+      {%- if s.btn != blank -%}<a href="{{ s.btn_link | default: '#' }}" class="nxWhy__btn">{{ s.btn }}</a>{%- endif -%}
+    </div>
+    <div class="nxWhy__grid">
+      <div class="nxWhy__c nxWhy__c--tall">
+        <p class="nxWhy__t">{{ s.c1_title }}</p><p class="nxWhy__s">{{ s.c1_sub }}</p>
+        <div class="nxWhy__prod">
+          {%- if s.c1_image != blank -%}{{ s.c1_image | image_url: width: 700 | image_tag: loading: 'lazy', alt: '' }}
+          {%- elsif s.product != blank and s.product.featured_image -%}{{ s.product.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', alt: s.product.title }}{%- endif -%}
+        </div>
+      </div>
+      <div class="nxWhy__c">
+        <div class="nxWhy__boxes">
+          <div class="nxWhy__box"><b>{{ s.b1_big }}</b><span>{{ s.b1_small }}</span></div>
+          <div class="nxWhy__box nxWhy__box--on"><b>{{ s.b2_big }}</b><span>{{ s.b2_small }}</span></div>
+          <div class="nxWhy__box"><b>{{ s.b3_big }}</b><span>{{ s.b3_small }}</span></div>
+        </div>
+        <div class="nxWhy__foot"><p class="nxWhy__t">{{ s.c2_title }}</p><p class="nxWhy__s">{{ s.c2_sub }}</p></div>
+      </div>
+      <div class="nxWhy__c">
+        <div class="nxWhy__avs">
+          {%- for block in section.blocks -%}{%- if block.settings.image != blank -%}<span {{ block.shopify_attributes }}>{{ block.settings.image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}{%- endfor -%}
+          {%- if s.av_more != blank -%}<span class="nxWhy__more">{{ s.av_more }}</span>{%- endif -%}
+        </div>
+        <div class="nxWhy__foot"><p class="nxWhy__t">{{ s.c3_title }}</p><p class="nxWhy__s">{{ s.c3_sub }}</p></div>
+      </div>
+      <div class="nxWhy__c">
+        <div class="nxWhy__pic">{%- if s.c4_image != blank -%}{{ s.c4_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</div>
+        <div class="nxWhy__foot"><p class="nxWhy__t">{{ s.c4_title }}</p><p class="nxWhy__s">{{ s.c4_sub }}</p></div>
+      </div>
+      <div class="nxWhy__c">
+        <div class="nxWhy__ings">
+          {%- if s.i1 != blank -%}<span class="i1">{{ s.i1 | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
+          {%- if s.i2 != blank -%}<span class="i2">{{ s.i2 | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
+          {%- if s.i3 != blank -%}<span class="i3">{{ s.i3 | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
+          {%- if s.i4 != blank -%}<span class="i4">{{ s.i4 | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}</span>{%- endif -%}
+        </div>
+        <div class="nxWhy__foot"><p class="nxWhy__t">{{ s.c5_title }}</p><p class="nxWhy__s">{{ s.c5_sub }}</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+#nxWhy-{{ section.id }}{background:var(--bg);color:var(--ink)}
+#nxWhy-{{ section.id }} .nxWhy__in{max-width:1120px;margin:0 auto;padding:0 20px}
+#nxWhy-{{ section.id }} .nxWhy__top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+#nxWhy-{{ section.id }} .nxWhy__h{margin:0;font-size:clamp(26px,3.4vw,40px);font-weight:500;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+#nxWhy-{{ section.id }} .nxWhy__h em,#nxWhy-{{ section.id }} .nxWhy__t em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:400}
+#nxWhy-{{ section.id }} .nxWhy__btn{flex:0 0 auto;background:var(--ink);color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px}
+#nxWhy-{{ section.id }} .nxWhy__grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:10px}
+#nxWhy-{{ section.id }} .nxWhy__c{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:220px;overflow:hidden}
+#nxWhy-{{ section.id }} .nxWhy__c--tall{grid-row:span 2;justify-content:flex-start}
+#nxWhy-{{ section.id }} .nxWhy__t{margin:0;font-size:17px;font-weight:500;color:var(--ink);line-height:1.2}
+#nxWhy-{{ section.id }} .nxWhy__c--tall .nxWhy__t{font-size:24px}
+#nxWhy-{{ section.id }} .nxWhy__s{margin:4px 0 0;font-size:12.5px;color:#6E5F69;line-height:1.4}
+#nxWhy-{{ section.id }} .nxWhy__prod{flex:1;display:flex;align-items:flex-end;justify-content:center;margin-top:12px}
+#nxWhy-{{ section.id }} .nxWhy__prod img{max-width:80%;max-height:340px;object-fit:contain}
+#nxWhy-{{ section.id }} .nxWhy__boxes{display:flex;justify-content:center;gap:8px;margin:18px 0}
+#nxWhy-{{ section.id }} .nxWhy__box{border:1.5px solid var(--ink);border-radius:4px;padding:7px 10px;text-align:center;min-width:58px;background:#fff}
+#nxWhy-{{ section.id }} .nxWhy__box b{display:block;font-size:17px;font-weight:600;line-height:1.1}
+#nxWhy-{{ section.id }} .nxWhy__box span{display:block;font-size:11px;margin-top:2px}
+#nxWhy-{{ section.id }} .nxWhy__box--on{background:var(--ink);color:#fff}
+#nxWhy-{{ section.id }} .nxWhy__avs{display:flex;justify-content:center;margin:12px 0}
+#nxWhy-{{ section.id }} .nxWhy__avs span{width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--card);margin-left:-10px;background:var(--acc);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--ink)}
+#nxWhy-{{ section.id }} .nxWhy__avs span:first-child{margin-left:0}
+#nxWhy-{{ section.id }} .nxWhy__avs img{width:100%;height:100%;object-fit:cover}
+#nxWhy-{{ section.id }} .nxWhy__pic{flex:1;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+#nxWhy-{{ section.id }} .nxWhy__pic img{max-height:120px;width:auto;max-width:80%;object-fit:contain;border-radius:8px}
+#nxWhy-{{ section.id }} .nxWhy__ings{position:relative;height:130px;margin:6px auto 8px;width:200px}
+#nxWhy-{{ section.id }} .nxWhy__ings span{position:absolute;border-radius:50%;overflow:hidden;box-shadow:0 6px 16px -8px rgba(42,20,39,.35);border:3px solid var(--card)}
+#nxWhy-{{ section.id }} .nxWhy__ings img{width:100%;height:100%;object-fit:cover}
+#nxWhy-{{ section.id }} .nxWhy__ings .i1{width:62px;height:62px;left:0;top:6px}
+#nxWhy-{{ section.id }} .nxWhy__ings .i2{width:92px;height:92px;left:52px;top:26px;z-index:2}
+#nxWhy-{{ section.id }} .nxWhy__ings .i3{width:54px;height:54px;left:126px;top:0}
+#nxWhy-{{ section.id }} .nxWhy__ings .i4{width:58px;height:58px;left:136px;top:70px}
+@media(max-width:749px){
+ #nxWhy-{{ section.id }} .nxWhy__grid{grid-template-columns:1fr 1fr}
+ #nxWhy-{{ section.id }} .nxWhy__c--tall{grid-column:1 / -1;grid-row:auto;min-height:0}
+ #nxWhy-{{ section.id }} .nxWhy__prod img{max-height:240px}
+ #nxWhy-{{ section.id }} .nxWhy__c{min-height:190px;padding:12px}
+ #nxWhy-{{ section.id }} .nxWhy__t{font-size:15px}
+ #nxWhy-{{ section.id }} .nxWhy__box{min-width:0;padding:6px 6px}
+ #nxWhy-{{ section.id }} .nxWhy__box b{font-size:14px}
+ #nxWhy-{{ section.id }} .nxWhy__ings{transform:scale(.8);transform-origin:center top;height:110px}
+ #nxWhy-{{ section.id }} .nxWhy__avs span{width:36px;height:36px}
+}
+</style>
+{% schema %}
+{
+  "name": "Why it works (bento)",
+  "tag": "div",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Your skin didn’t change overnight. <em>Your collagen did.</em>"},
+    {"type":"text","id":"btn","label":"Button","default":"See the science"},
+    {"type":"url","id":"btn_link","label":"Button link"},
+    {"type":"product","id":"product","label":"Product (tall card image)"},
+    {"type":"header","content":"Tall card"},
+    {"type":"image_picker","id":"c1_image","label":"Image (overrides product)"},
+    {"type":"text","id":"c1_title","label":"Title","default":"<em>Complete</em> collagen"},
+    {"type":"text","id":"c1_sub","label":"Subtext","default":"5 collagen types + hyaluronic acid & vitamin C"},
+    {"type":"header","content":"Boxes card"},
+    {"type":"text","id":"b1_big","label":"Box 1 big","default":"5"},{"type":"text","id":"b1_small","label":"Box 1 small","default":"types"},
+    {"type":"text","id":"b2_big","label":"Box 2 big (highlighted)","default":"10g"},{"type":"text","id":"b2_small","label":"Box 2 small","default":"collagen"},
+    {"type":"text","id":"b3_big","label":"Box 3 big","default":"1"},{"type":"text","id":"b3_small","label":"Box 3 small","default":"scoop"},
+    {"type":"text","id":"c2_title","label":"Title","default":"<em>Balanced</em> formula"},
+    {"type":"text","id":"c2_sub","label":"Subtext","default":"Collagen, hyaluronic acid and vitamin C in one scoop"},
+    {"type":"header","content":"Profiles card"},
+    {"type":"text","id":"av_more","label":"Last bubble text","default":"+"},
+    {"type":"text","id":"c3_title","label":"Title","default":"<em>Clinically</em> studied"},
+    {"type":"text","id":"c3_sub","label":"Subtext","default":"Collagen peptides studied for skin elasticity"},
+    {"type":"header","content":"Photo card"},
+    {"type":"image_picker","id":"c4_image","label":"Image"},
+    {"type":"text","id":"c4_title","label":"Title","default":"<em>Collagen</em> for firmness"},
+    {"type":"text","id":"c4_sub","label":"Subtext","default":"10 g per scoop to support firmer-feeling skin"},
+    {"type":"header","content":"Ingredients card"},
+    {"type":"image_picker","id":"i1","label":"Circle 1"},{"type":"image_picker","id":"i2","label":"Circle 2 (big)"},
+    {"type":"image_picker","id":"i3","label":"Circle 3"},{"type":"image_picker","id":"i4","label":"Circle 4"},
+    {"type":"text","id":"c5_title","label":"Title","default":"<em>Real</em> ingredients"},
+    {"type":"text","id":"c5_sub","label":"Subtext","default":"Bovine, marine, chicken & eggshell membrane collagen"},
+    {"type":"header","content":"Colors & spacing"},
+    {"type":"color","id":"c_bg","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"c_card","label":"Card","default":"#F6F1FF"},
+    {"type":"color","id":"c_line","label":"Card border","default":"#E3D6FF"},
+    {"type":"color","id":"c_ink","label":"Text / dark","default":"#2A1427"},
+    {"type":"color","id":"c_acc","label":"Accent","default":"#C7ABFF"},
+    {"type":"range","id":"pad_top","label":"Top padding","min":0,"max":120,"step":4,"default":56},
+    {"type":"range","id":"pad_bottom","label":"Bottom padding","min":0,"max":120,"step":4,"default":56}
+  ],
+  "blocks":[{"type":"avatar","name":"Profile photo","limit":5,"settings":[{"type":"image_picker","id":"image","label":"Photo"}]}],
+  "presets":[{"name":"Why it works (bento)"}]
+}
+{% endschema %}
