@@ -122,3 +122,12 @@ img,video,iframe{max-width:100%}
   .announcement-bar__message,.announcement-bar__message *{font-size:11px!important;letter-spacing:.08em!important;line-height:1.35!important;text-align:center!important;white-space:normal!important}
   .announcement-bar__message{padding:7px 14px!important}
 }
+/* ---- "One scoop. Every morning." tiles: readable captions in the store fonts ---- */
+.nxBn__h,.nxBn__t{font-family:var(--font-body-family,'Inter',sans-serif)!important}
+.nxBn__h em,.nxBn__t em{font-family:'Fraunces',Georgia,serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:0!important}
+.nxBn__h{color:#2A1427!important}
+.nxBn__p{color:#5E4E5A!important}
+.nxBn__tile:after{background:linear-gradient(180deg,rgba(42,20,39,0) 40%,rgba(42,20,39,.35) 62%,rgba(42,20,39,.82) 100%)!important}
+.nxBn__t{color:#fff!important;font-weight:500!important;line-height:1.15!important;letter-spacing:-.01em!important;text-shadow:0 2px 12px rgba(42,20,39,.45)}
+.nxBn__tag{color:#2A1427!important;background:#C7ABFF!important;border-color:#C7ABFF!important;font-weight:700!important}
+@media(max-width:749px){.nxBn__t{font-size:20px!important;left:16px!important;right:16px!important;bottom:14px!important}.nxBn__h{font-size:30px!important}.nxBn__p{font-size:14px!important}}
