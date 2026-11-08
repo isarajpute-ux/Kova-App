@@ -39,7 +39,8 @@
           "settings": {
             "tag": "Step 1",
             "title": "One scoop in your",
-            "italic": "morning coffee"
+            "italic": "morning coffee",
+            "image": "shopify://shop_images/auvela-how-1-scoop.png"
           }
         },
         "b2": {
@@ -47,7 +48,8 @@
           "settings": {
             "tag": "Step 2",
             "title": "5 collagen types +",
-            "italic": "hyaluronic acid"
+            "italic": "hyaluronic acid",
+            "image": "shopify://shop_images/auvela-how-2-formula.png"
           }
         },
         "b3": {
@@ -55,7 +57,8 @@
           "settings": {
             "tag": "Step 3",
             "title": "Skin renews in",
-            "italic": "90 days"
+            "italic": "90 days",
+            "image": "shopify://shop_images/auvela-how-3-90days.png"
           }
         }
       },
@@ -66,10 +69,73 @@
       ],
       "settings": {
         "eyebrow": "How it works",
-        "heading": "One scoop. <em>Every morning.</em>",
+        "heading": "One scoop. Every morning.",
         "text": "After 40, your body makes about 1% less collagen every year. That’s the crepey-looking skin on your stomach, arms and chest — not weight, and not you doing anything wrong. This ritual helps replace what your body stopped making.",
         "pad_top": 72,
         "pad_bottom": 72
+      }
+    },
+    "why": {
+      "type": "ag-why",
+      "blocks": {
+        "a1": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.08.19.png"
+          }
+        },
+        "a2": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png"
+          }
+        },
+        "a3": {
+          "type": "avatar",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {
+        "heading": "Your skin didn’t change overnight. <em>Your collagen did.</em>",
+        "btn": "Shop Auvela",
+        "btn_link": "/products/multi-collagen-peptide-powder",
+        "product": "multi-collagen-peptide-powder",
+        "c1_title": "<em>Complete</em> collagen",
+        "c1_sub": "5 collagen types + hyaluronic acid & vitamin C",
+        "b1_big": "5",
+        "b1_small": "types",
+        "b2_big": "10g",
+        "b2_small": "collagen",
+        "b3_big": "1",
+        "b3_small": "scoop",
+        "c2_title": "<em>Balanced</em> formula",
+        "c2_sub": "Collagen, hyaluronic acid and vitamin C in one scoop",
+        "av_more": "+",
+        "c3_title": "<em>Research</em> backed",
+        "c3_sub": "Collagen peptides studied for skin elasticity and hydration",
+        "c4_image": "shopify://shop_images/auvela-ing-bovine.png",
+        "c4_title": "<em>Collagen</em> for firmness",
+        "c4_sub": "10 g per scoop for firmer-feeling skin",
+        "i1": "shopify://shop_images/auvela-ing-marine.png",
+        "i2": "shopify://shop_images/auvela-ing-eggshell.png",
+        "i3": "shopify://shop_images/auvela-ing-hyaluronic.png",
+        "i4": "shopify://shop_images/auvela-ing-vitamin-c.png",
+        "c5_title": "<em>Real</em> ingredients",
+        "c5_sub": "Bovine, marine, chicken & eggshell membrane collagen + HA & vitamin C",
+        "c_bg": "#ffffff",
+        "c_card": "#f6f1ff",
+        "c_line": "#e3d6ff",
+        "c_ink": "#2a1427",
+        "c_acc": "#c7abff",
+        "pad_top": 56,
+        "pad_bottom": 56
       }
     },
     "features": {
@@ -113,6 +179,7 @@
         "f3",
         "f4"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "Why it works",
         "heading": "Your skin didn’t change overnight.\n<em>Your collagen did.</em>",
@@ -122,37 +189,6 @@
         "c_ink": "#2a1427",
         "pad_top": 56,
         "pad_bottom": 56
-      },
-      "disabled": true
-    },
-    "reactions": {
-      "type": "ag-reactions",
-      "blocks": {
-        "v1": {
-          "type": "video",
-          "settings": {
-            "caption": ""
-          }
-        },
-        "v2": {
-          "type": "video",
-          "settings": {
-            "caption": ""
-          }
-        }
-      },
-      "block_order": [
-        "v1",
-        "v2"
-      ],
-      "settings": {
-        "eyebrow": "The morning ritual",
-        "heading_1": "Real women.",
-        "heading_hl": "Real mornings.",
-        "heading_2": "",
-        "text": "Add short videos of your customers’ morning ritual here.",
-        "pad_top": 80,
-        "pad_bottom": 80
       }
     },
     "apart": {
@@ -579,69 +615,6 @@
         "h_m": 65,
         "h_d": 70
       }
-    },
-    "why": {
-      "type": "ag-why",
-      "blocks": {
-        "a1": {
-          "type": "avatar",
-          "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.08.19.png"
-          }
-        },
-        "a2": {
-          "type": "avatar",
-          "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.16.02.png"
-          }
-        },
-        "a3": {
-          "type": "avatar",
-          "settings": {
-            "image": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png"
-          }
-        }
-      },
-      "block_order": [
-        "a1",
-        "a2",
-        "a3"
-      ],
-      "settings": {
-        "heading": "Your skin didn’t change overnight. <em>Your collagen did.</em>",
-        "btn": "Shop Auvela",
-        "btn_link": "/products/multi-collagen-peptide-powder",
-        "product": "multi-collagen-peptide-powder",
-        "c1_title": "<em>Complete</em> collagen",
-        "c1_sub": "5 collagen types + hyaluronic acid & vitamin C",
-        "b1_big": "5",
-        "b1_small": "types",
-        "b2_big": "10g",
-        "b2_small": "collagen",
-        "b3_big": "1",
-        "b3_small": "scoop",
-        "c2_title": "<em>Balanced</em> formula",
-        "c2_sub": "Collagen, hyaluronic acid and vitamin C in one scoop",
-        "av_more": "+",
-        "c3_title": "<em>Research</em> backed",
-        "c3_sub": "Collagen peptides studied for skin elasticity and hydration",
-        "c4_image": "shopify://shop_images/auvela-ing-bovine.png",
-        "c4_title": "<em>Collagen</em> for firmness",
-        "c4_sub": "10 g per scoop for firmer-feeling skin",
-        "i1": "shopify://shop_images/auvela-ing-marine.png",
-        "i2": "shopify://shop_images/auvela-ing-eggshell.png",
-        "i3": "shopify://shop_images/auvela-ing-hyaluronic.png",
-        "i4": "shopify://shop_images/auvela-ing-vitamin-c.png",
-        "c5_title": "<em>Real</em> ingredients",
-        "c5_sub": "Bovine, marine, chicken & eggshell membrane collagen + HA & vitamin C",
-        "c_bg": "#FFFFFF",
-        "c_card": "#F6F1FF",
-        "c_line": "#E3D6FF",
-        "c_ink": "#2A1427",
-        "c_acc": "#C7ABFF",
-        "pad_top": 56,
-        "pad_bottom": 56
-      }
     }
   },
   "order": [
@@ -649,7 +622,6 @@
     "bento",
     "why",
     "features",
-    "reactions",
     "apart",
     "wall",
     "faq",

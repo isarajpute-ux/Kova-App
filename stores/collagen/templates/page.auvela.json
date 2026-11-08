@@ -400,7 +400,8 @@
           "settings": {
             "tag": "Step 1",
             "title": "One scoop in your",
-            "italic": "morning coffee"
+            "italic": "morning coffee",
+            "image": "shopify://shop_images/auvela-how-1-scoop.png"
           }
         },
         "b2": {
@@ -408,7 +409,8 @@
           "settings": {
             "tag": "Step 2",
             "title": "5 collagen types +",
-            "italic": "hyaluronic acid"
+            "italic": "hyaluronic acid",
+            "image": "shopify://shop_images/auvela-how-2-formula.png"
           }
         },
         "b3": {
@@ -416,7 +418,8 @@
           "settings": {
             "tag": "Step 3",
             "title": "Skin renews in",
-            "italic": "90 days"
+            "italic": "90 days",
+            "image": "shopify://shop_images/auvela-how-3-90days.png"
           }
         }
       },
