@@ -61,6 +61,9 @@
       tc.textContent='.agP .agP__info>*{margin-top:0!important}.agP .nxTopRow{margin-bottom:4px!important}.agP .agP__pill{margin-bottom:4px!important}.agP .agP__title{margin:2px 0 4px!important}.agP .agP__price,.agP .agP__priceRow{margin:4px 0 6px!important}.agP .agP__desc{margin:4px 0 8px!important}.agP .agP__desc p{margin:0 0 4px!important}.agP .agP__desc ul{margin:0 0 4px!important;gap:3px!important}.agP .agP__stock{margin:6px 0!important}.agP .agB__head{margin:4px 0!important}.agP .agB{margin-top:4px!important;margin-bottom:6px!important}.agP .nxPlan{margin-top:6px!important;margin-bottom:8px!important}.agP .agP__form{margin-top:6px!important}.agP .agP__feats{margin-top:8px!important}';
       document.head.appendChild(tc); }
   }
+  /* self-heal: if an editor re-render dropped the copied pills / rating / boxes, put them back */
+  setInterval(function(){ var pf=document.querySelector('[data-nx-proof]'), p=document.querySelector('[data-ag-product]'); if(!pf||!p) return;
+    if((pf.querySelector('[data-nx-proof-pills]')&&!p.querySelector('.agP__desc .nxBen'))||(pf.querySelector('[data-nx-proof-rate]')&&!p.querySelector('.nxPf__rate'))||(pf.querySelector('[data-nx-proof-box]')&&!p.querySelector('.nxPf__box'))) layout(); },1000);
   function go(){ setTimeout(layout,300); setTimeout(layout,900); arrows(); setTimeout(arrows,300); setTimeout(avatars,300); setTimeout(steps,200); setTimeout(ovl,500); setTimeout(ovl,1500); setTimeout(sync,400); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card')) setTimeout(sync,60); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(steps,300); setTimeout(avatars,450); setTimeout(ovl,600); setTimeout(sync,650); setTimeout(arrows,200); setTimeout(layout,500); setTimeout(layout,1000); });

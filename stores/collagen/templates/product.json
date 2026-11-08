@@ -261,7 +261,7 @@
         "title_override": "Auvela Multi-Collagen",
         "title_size_m": 26,
         "title_size_d": 32,
-        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, one scoop a day.</em></p><ul><li>Tightens Arms, Stomach &amp; Chest</li><li>Erases Crinkly, Crepey Textures</li><li>Feel Firmer in 90 Days or Your Money Back</li></ul>",
+        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, one scoop a day.</em></p>",
         "show_pill": true,
         "pill_avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
         "pill_text": "Multi-Collagen for Women 40+",
@@ -352,21 +352,28 @@
           "type": "pill",
           "settings": {
             "icon": "arm",
-            "text": "Tightens Arms, Stomach & Chest"
+            "text": "Targets crepey skin on arms & stomach"
           }
         },
         "p2": {
           "type": "pill",
           "settings": {
             "icon": "lines",
-            "text": "Erases Crinkly, Crepey Textures"
+            "text": "Smooths crepey texture"
           }
         },
         "p3": {
           "type": "pill",
           "settings": {
-            "icon": "calendar",
-            "text": "Feel Firmer in 90 Days or Your Money Back"
+            "icon": "sparkle",
+            "text": "5 full-spectrum collagen types"
+          }
+        },
+        "p4": {
+          "type": "pill",
+          "settings": {
+            "icon": "coffee",
+            "text": "One scoop in your drink"
           }
         },
         "a1": {
@@ -392,6 +399,7 @@
         "p1",
         "p2",
         "p3",
+        "p4",
         "a1",
         "a2",
         "a3"
