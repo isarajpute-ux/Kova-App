@@ -12,14 +12,14 @@
     "hero": {
       "type": "ag-hero",
       "settings": {
-        "img_pos": "70% 20%",
-        "proof": "3rd-party tested · Grass-fed · 5 collagen types",
+        "img_pos": "70% 30%",
+        "proof": "For crepey-looking skin on arms, stomach, chest, glutes & legs",
         "show_stars": false,
         "eyebrow": "For women 40+",
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
         "head_m": 30,
-        "head_d": 50,
-        "text": "You didn’t gain weight — you lost collagen. Firmer-feeling skin in 90 days.",
+        "head_d": 52,
+        "text": "Crepey, thinning skin after 40 isn’t weight — it’s collagen loss. One scoop a day helps your arms, stomach, chest, glutes and legs feel firmer and smoother in 90 days.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
         "trust": "✓ 90-Day money-back promise · Free US shipping",
@@ -27,7 +27,8 @@
         "product": "multi-collagen-peptide-powder",
         "product_label": "Auvela Multi-Collagen",
         "h_m": 90,
-        "h_d": 90
+        "h_d": 90,
+        "image": "shopify://shop_images/auvela-hero-mirror.png"
       }
     },
     "features": {

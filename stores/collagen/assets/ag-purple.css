@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
 /* Collagen store: plum #C7ABFF · blush #E8C9C1 · cream #F7F2EC · gold #C9A24B */
-:root{--nx-blue:#C7ABFF;--nx-green:#E8C9C1;--nx-tint:#F1EAFF;--nx-serif:'Fraunces',Georgia,serif}
-h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'Fraunces',Georgia,serif!important;font-weight:400!important}
+:root{--nx-blue:#C7ABFF;--nx-green:#E8C9C1;--nx-tint:#F1EAFF;--nx-serif:'Instrument Serif',Georgia,serif}
+h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'Instrument Serif',Georgia,serif!important;font-weight:400!important}
 .agStars__fill{color:#C9A24B!important}
 .agP__sideCard:nth-child(3n){background:linear-gradient(150deg,#B595F5 0%,#C7ABFF 60%,#2A1427 100%)!important}
 .agP__sideCard:nth-child(3n+1){background:#2A1427!important;border-color:#2A1427!important}
@@ -124,10 +124,15 @@ img,video,iframe{max-width:100%}
 }
 /* ---- "One scoop. Every morning." tiles: readable captions in the store fonts ---- */
 .nxBn__h,.nxBn__t{font-family:var(--font-body-family,'Inter',sans-serif)!important}
-.nxBn__h em,.nxBn__t em{font-family:'Fraunces',Georgia,serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:0!important}
+.nxBn__h em,.nxBn__t em{font-family:'Instrument Serif',Georgia,serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:0!important}
 .nxBn__h{color:#2A1427!important}
 .nxBn__p{color:#5E4E5A!important}
 .nxBn__tile:after{background:linear-gradient(180deg,rgba(42,20,39,0) 40%,rgba(42,20,39,.35) 62%,rgba(42,20,39,.82) 100%)!important}
 .nxBn__t{color:#fff!important;font-weight:500!important;line-height:1.15!important;letter-spacing:-.01em!important;text-shadow:0 2px 12px rgba(42,20,39,.45)}
 .nxBn__tag{color:#2A1427!important;background:#C7ABFF!important;border-color:#C7ABFF!important;font-weight:700!important}
 @media(max-width:749px){.nxBn__t{font-size:20px!important;left:16px!important;right:16px!important;bottom:14px!important}.nxBn__h{font-size:30px!important}.nxBn__p{font-size:14px!important}}
+
+/* ---- thin, sharp serif italic everywhere (Huel-style) ---- */
+h1 em,h2 em,h3 em,h4 em,p em,.agP__desc em,.agP__title em,.nxHero__h em,.nxBn__h em,.nxBn__t em,.nxWhy__h em,.nxWhy__t em,.nxIg__h em,.nxRe__h span,
+[id^="ag-"] em,[id^="nx-"] em,.nxPf__q,.nxPlan em{font-family:'Instrument Serif',Georgia,serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:0!important;font-synthesis:none}
+h1 em,h2 em,.nxHero__h em,.nxBn__h em,.nxWhy__h em,.nxIg__h em{font-size:1.08em}
