@@ -1,7 +1,35 @@
 {%- comment -%} Auvela: product-page proof pieces. Rendered here, moved into the product info by ag-collagen.js. {%- endcomment -%}
 {%- assign s = section.settings -%}
-{%- if request.design_mode -%}<div class="nxPf__edit">✎ <b>Rating &amp; guarantee</b> — click here to edit the stars, 4.8, customer count, quote, guarantee and value box.</div>{%- endif -%}
+{%- if request.design_mode -%}<div class="nxPf__edit">✎ <b>Rating &amp; guarantee</b> — click here to edit the benefit pills &amp; icons, stars, customer count, quote, guarantee and value box.</div>{%- endif -%}
 <div class="nxPf" id="nxPf-{{ section.id }}" data-nx-proof>
+  {%- assign pcount = 0 -%}{%- for block in section.blocks -%}{%- if block.type == 'pill' -%}{%- assign pcount = pcount | plus: 1 -%}{%- endif -%}{%- endfor -%}
+  {%- if pcount > 0 -%}
+  <div class="nxBen" data-nx-proof-pills>
+    {%- for block in section.blocks -%}{%- if block.type == 'pill' -%}
+{%- capture nxic -%}
+{%- case block.settings.icon -%}
+{%- when 'arm' -%}<path d="M4 19c3 .5 7 .2 10-1.5 3-1.7 4.5-4.7 3-7.3-1-1.8-3.3-2.2-4.8-1L11 6.2C10.4 5 9 4.6 7.9 5.3 6.6 6.1 6.5 7.7 7.3 8.8L9 11c-2 1-3.8 2.8-5 5"/><path d="M12.5 9.5c1.2.6 1.6 2 1 3"/>
+{%- when 'waist' -%}<path d="M8 3c0 5 3 6 3 9s-3 4-3 9M16 3c0 5-3 6-3 9s3 4 3 9"/><path d="M10 12h4"/>
+{%- when 'lines' -%}<path d="M3 6.5c1.5-1.5 3 1.5 4.5 0s3 1.5 4.5 0 3 1.5 4.5 0 3 1.5 4.5 0"/><path d="M3 12c1.5-1 3 1 4.5 0s3 1 4.5 0 3 1 4.5 0 3 1 4.5 0"/><path d="M3 17.5h18"/>
+{%- when 'calendar' -%}<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><text x="12" y="17.6" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor" stroke="none" font-family="Arial">90</text>
+{%- when 'money' -%}<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M14 9.5c-.5-.8-1.3-1-2-1-1.2 0-2 .7-2 1.5 0 2 4 1 4 3 0 .9-.9 1.5-2 1.5-.8 0-1.6-.3-2-1M12 7.5v1M12 14.5v1"/>
+{%- when 'drop' -%}<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>
+{%- when 'hair' -%}<path d="M5 21c0-9 3-16 7-16s7 7 7 16"/><path d="M9 21c0-6 1.3-10 3-10s3 4 3 10"/>
+{%- when 'nails' -%}<path d="M9 21v-9a3 3 0 0 1 6 0v9"/><path d="M10.2 11.5c.4-1.3 3.2-1.3 3.6 0"/>
+{%- when 'face' -%}<circle cx="12" cy="12" r="8.5"/><path d="M9 10h.01M15 10h.01M9 14.5c1.6 1.6 4.4 1.6 6 0"/>
+{%- when 'sparkle' -%}<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>
+{%- when 'coffee' -%}<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16M8 3v3M12 3v3"/>
+{%- when 'leaf' -%}<path d="M5 19C5 10 10 5 20 4c0 9-5 15-13 15"/><path d="M5 19l8-8"/>
+{%- when 'heart' -%}<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>
+{%- when 'shield' -%}<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>
+{%- when 'truck' -%}<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
+{%- else -%}<path d="M5 12l4 4 10-10"/>
+{%- endcase -%}
+{%- endcapture -%}
+      <div class="nxBen__i" {{ block.shopify_attributes }}><i><svg viewBox="0 0 24 24">{{ nxic }}</svg></i><span>{{ block.settings.text }}</span></div>
+    {%- endif -%}{%- endfor -%}
+  </div>
+  {%- endif -%}
   {%- if s.show_rating -%}
   <div class="nxPf__rate" data-nx-proof-rate>
     <span class="nxPf__stars" style="color:{{ s.c_star }}" aria-label="{{ s.rating }} out of 5">
@@ -35,6 +63,14 @@
 </div>
 <style>
 .nxPf{display:none}
+.nxBen{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:8px;margin:2px 0}
+.nxBen__i{grid-column:span 2;display:flex;align-items:center;gap:9px;background:#F1EAFF;border-radius:999px;padding:8px 14px 8px 8px;font-size:13.5px;font-weight:600;color:#2A1427;line-height:1.25;min-height:46px;box-sizing:border-box}
+.nxBen__i:last-child:nth-child(odd){grid-column:2 / span 2}
+.nxBen__i i{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:#C7ABFF;display:grid;place-items:center}
+.nxBen__i svg{width:18px;height:18px;fill:none;stroke:#2A1427;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:749px){.nxBen{gap:6px}.nxBen__i{font-size:12px;padding:6px 10px 6px 6px;min-height:42px;gap:7px}.nxBen__i i{flex-basis:26px;width:26px;height:26px}.nxBen__i svg{width:15px;height:15px}}
+.agP__desc.nxHasBen ul{display:none!important}
+
 .nxPf__edit{max-width:1200px;margin:8px auto;padding:10px 14px;border:1.5px dashed #4A2545;border-radius:10px;background:#F6ECE8;color:#2A1427;font-size:13px;cursor:pointer}
 .nxPf--on{display:block}
 .nxPf__rate{display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;font-size:13.5px;color:#2A1427;margin:2px 0 6px}
@@ -83,6 +119,7 @@
     {"type":"text","id":"them_line","label":"Their line (crossed out)","default":"Clinic skin treatments — $300+"}
   ],
   "blocks": [
+    {"type":"pill","name":"Benefit pill","limit":6,"settings":[{"type":"select","id":"icon","label":"Icon","default":"sparkle","options":[{"value":"arm","label":"Toned arm"},{"value":"waist","label":"Waist / stomach"},{"value":"lines","label":"Smoothing lines (crepey skin)"},{"value":"calendar","label":"90-day calendar"},{"value":"money","label":"Money-back shield"},{"value":"shield","label":"Shield check"},{"value":"drop","label":"Hydration drop"},{"value":"face","label":"Face / glow"},{"value":"sparkle","label":"Sparkle"},{"value":"hair","label":"Hair"},{"value":"nails","label":"Nails"},{"value":"coffee","label":"Coffee / scoop"},{"value":"leaf","label":"Natural / leaf"},{"value":"heart","label":"Heart"},{"value":"truck","label":"Free shipping"},{"value":"check","label":"Check"}]},{"type":"text","id":"text","label":"Text","default":"Your benefit"}]},
     {"type":"avatar","name":"Customer photo","limit":5,"settings":[{"type":"image_picker","id":"image","label":"Photo"}]}
   ],
   "presets":[{"name":"Product proof"}]

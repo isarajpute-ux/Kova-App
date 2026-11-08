@@ -53,6 +53,8 @@
       function cl(sel){ var o=$(sel,pf); if(!o) return null; var c=o.cloneNode(true); c.classList.add('nxPfClone'); c.removeAttribute('data-nx-proof-rate'); c.removeAttribute('data-nx-proof-box'); c.removeAttribute('data-nx-proof-val'); return c; }
       var rate=cl('[data-nx-proof-rate]'), box=cl('[data-nx-proof-box]'), val=cl('[data-nx-proof-val]');
       if(rate&&top) top.parentNode.insertBefore(rate,top.nextSibling);
+      var pills=$('[data-nx-proof-pills]',pf), ds=$('.agP__desc',p);
+      if(pills&&ds){ var pc=pills.cloneNode(true); pc.classList.add('nxPfClone'); pc.removeAttribute('data-nx-proof-pills'); var ul=$('ul',ds); if(ul) ds.insertBefore(pc,ul); else ds.appendChild(pc); ds.classList.add('nxHasBen'); } else if(ds){ ds.classList.remove('nxHasBen'); }
       var after=form; if(after){ if(box){ after.parentNode.insertBefore(box,after.nextSibling); after=box; } if(val) after.parentNode.insertBefore(val,after.nextSibling); }
     }
     if(!document.getElementById('nxTight')){ var tc=document.createElement('style'); tc.id='nxTight';
@@ -107,7 +109,7 @@
     $$('.agB__price,.nxPlan__pr,.agSticky__p,.agP__price').forEach(function(w){ var x=$('s',w), y=$('b,[data-ag-price],[data-ag-atc-price]',w); if(x) x.classList.toggle('nxSame', !!y && x.textContent.trim()===y.textContent.trim()); });
     var tubs=c.cm>full?c.cm:full, pct=tubs>price?Math.round((1-price/tubs)*100):0;
     $$('[data-ag-sticky] .nxSave').forEach(function(e){ e.textContent=pct?'Save '+pct+'% on this order':''; });
-    var ds=$('.agP__desc',p); if(ds && !ds.__nxm && ds.scrollHeight>150){ ds.__nxm=1; ds.classList.add('nxClip'); var mb=document.createElement('button'); mb.type='button'; mb.className='nxMore'; mb.textContent='Read more'; mb.addEventListener('click',function(e){ e.stopPropagation(); var c=ds.classList.toggle('nxClip'); mb.textContent=c?'Read more':'Show less'; }); ds.parentNode.insertBefore(mb,ds.nextSibling); }
+    var ds=$('.agP__desc',p); if(ds && !ds.__nxm && false){ ds.__nxm=1; ds.classList.add('nxClip'); var mb=document.createElement('button'); mb.type='button'; mb.className='nxMore'; mb.textContent='Read more'; mb.addEventListener('click',function(e){ e.stopPropagation(); var c=ds.classList.toggle('nxClip'); mb.textContent=c?'Read more':'Show less'; }); ds.parentNode.insertBefore(mb,ds.nextSibling); }
     var dyn=$('.agP__dyn',p); if(dyn) dyn.style.display=S.on?'none':'';
   }
   function go(){ setTimeout(build,700); document.addEventListener('click',function(e){ if(e.target.closest('.agB__card,.agP__pillBtn')) { setTimeout(apply,350); setTimeout(apply,700); } else setTimeout(apply,300); }); }

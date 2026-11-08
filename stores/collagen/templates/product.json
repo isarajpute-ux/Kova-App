@@ -348,6 +348,27 @@
     "proof": {
       "type": "ag-proof",
       "blocks": {
+        "p1": {
+          "type": "pill",
+          "settings": {
+            "icon": "arm",
+            "text": "Tightens Arms, Stomach & Chest"
+          }
+        },
+        "p2": {
+          "type": "pill",
+          "settings": {
+            "icon": "lines",
+            "text": "Erases Crinkly, Crepey Textures"
+          }
+        },
+        "p3": {
+          "type": "pill",
+          "settings": {
+            "icon": "calendar",
+            "text": "Feel Firmer in 90 Days or Your Money Back"
+          }
+        },
         "a1": {
           "type": "avatar",
           "settings": {
@@ -368,6 +389,9 @@
         }
       },
       "block_order": [
+        "p1",
+        "p2",
+        "p3",
         "a1",
         "a2",
         "a3"

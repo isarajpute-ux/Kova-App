@@ -1,0 +1,97 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "ag_redirect": {
+      "type": "ag-redirect",
+      "settings": {
+        "enabled": false,
+        "logo_link": false,
+        "product": "multi-collagen-peptide-powder"
+      }
+    },
+    "ag_topbar": {
+      "type": "ag-topbar",
+      "settings": {
+        "label": "Founding Batch 15% off ends in",
+        "mode": "date",
+        "hours": 5,
+        "end_date": "2026-11-30T23:59",
+        "show_days": true,
+        "code": "AUVELA15",
+        "copied_text": "Copied!",
+        "dismissible": true,
+        "show_line": false,
+        "digit_m": 18,
+        "digit_d": 26,
+        "c_bg": "#c7abff",
+        "c_text": "#2a1427",
+        "c_label": "#2a1427",
+        "c_tile": "#f1eaff",
+        "c_code_bg": "#2a1427",
+        "c_code_text": "#ffffff",
+        "c_line": "#c7abff",
+        "show_snow": false,
+        "snow_count": 26,
+        "snow_opacity": 75,
+        "snow_color": "#d6e2ec"
+      }
+    },
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "SPECIAL LAUNCH OFFER · EXTRA 15% OFF WITH CODE AUVELA15",
+            "link": ""
+          }
+        },
+        "announcement-bar-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "90-DAY FIRMER-SKIN PROMISE · FREE US SHIPPING",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0",
+        "announcement-bar-1"
+      ],
+      "settings": {
+        "auto_rotate": true,
+        "change_slides_speed": 4,
+        "color_scheme": "scheme-7",
+        "show_line_separator": false,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-center",
+        "mobile_logo_position": "center",
+        "menu": "auvela-menu",
+        "menu_type_desktop": "drawer",
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "margin_bottom": 0,
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    }
+  },
+  "order": [
+    "ag_redirect",
+    "ag_topbar",
+    "announcement-bar",
+    "header"
+  ]
+}

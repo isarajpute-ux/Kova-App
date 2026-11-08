@@ -47,7 +47,7 @@ h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'
 .agGN__b svg{width:15px!important;height:15px!important}
 .agGN__b:nth-child(2){background:#C7ABFF!important;border-color:#C7ABFF!important}
 .agGN__fill{background:#C7ABFF!important}
-.agP .agP__slide img,.agP .agP__main img{object-fit:contain!important;background:#F7F2EC}
+.agP .agP__slide img,.agP .agP__main img{object-fit:cover!important;width:100%!important;height:100%!important;background:#F7F2EC}
 .nxOver{left:10px!important;right:10px!important;bottom:10px!important;padding:6px 2px!important;border-radius:10px!important}
 .nxOver li{gap:3px!important;font-size:10.5px!important;padding:0 2px!important}
 .nxOver svg{width:15px!important;height:15px!important}
@@ -92,3 +92,8 @@ h1 em,h2 em,h3 em,.agP__desc em,[id^="ag-"] .k__t em,.nxRe__h span{font-family:'
 [id^="ag-"] .k__arr:last-child,[id^="ag-"] .k__us .k__i--y,.agRv__card:nth-child(even) .agRv__av,.agAb__val:nth-child(2) .ic,
 .nxAv>span,.agP__sideCard:nth-child(3n) *{color:#2A1427!important}
 .nxArw .agGN__b svg,.agTL__ic svg{stroke:#2A1427!important}
+/* ---- lavender announcement bar, countdown bar and footer ---- */
+.announcement-bar-section,.announcement-bar-section .announcement-bar,.announcement-bar-section .utility-bar,.announcement-bar-section [class*="color-scheme"],
+.footer-group,.footer-group .footer,.footer-group [class*="color-scheme"],footer.footer{background:#C7ABFF!important;background-color:#C7ABFF!important}
+.announcement-bar-section,.announcement-bar-section *,.footer-group .footer,.footer-group .footer *:not(svg):not(path){color:#2A1427!important}
+.footer-group .footer a:hover{opacity:.7}
