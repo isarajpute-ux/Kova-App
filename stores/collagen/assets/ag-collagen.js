@@ -215,3 +215,39 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
   document.addEventListener('shopify:section:load',function(){ setTimeout(tight,700); setTimeout(tight,1300); });
 })();
+/* Auvela: description bullets -> lavender pills with matching icons */
+(function(){
+  var I={
+    body:'<path d="M12 4a2 2 0 1 0 0 .01M7 9h10M12 9v6M9 21l3-6 3 6"/>',
+    sparkle:'<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',
+    shield:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+    drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+    heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+    hair:'<path d="M6 20c0-8 2-14 6-14s6 6 6 14M9 20c0-6 1-10 3-10s3 4 3 10"/>'
+  };
+  function pick(t){ t=t.toLowerCase();
+    if(/arm|stomach|chest|tight|firm.*(arm|body)/.test(t)) return 'body';
+    if(/money|guarantee|promise|refund/.test(t)) return 'shield';
+    if(/crep|texture|wrinkl|smooth|glow/.test(t)) return 'sparkle';
+    if(/hydrat|moist|plump/.test(t)) return 'drop';
+    if(/hair|nail/.test(t)) return 'hair';
+    return 'heart'; }
+  function css(){ if(document.getElementById('nxPillCss')) return; var s=document.createElement('style'); s.id='nxPillCss';
+    s.textContent='body .agP .agP__desc ul.nxPills{list-style:none!important;padding:0!important;margin:8px 0 2px!important;display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important}'+
+    'body .agP .agP__desc ul.nxPills li{display:flex!important;align-items:center;gap:9px;background:#F1EAFF;border-radius:999px;padding:9px 14px 9px 9px!important;font-size:13.5px!important;font-weight:600;color:#2A1427;line-height:1.25;margin:0!important}'+
+    'body .agP body .agP .agP__desc ul.nxPills li:before{display:none!important;content:none!important}'+
+    'body .agP .agP__desc ul.nxPills li:last-child:nth-child(odd){grid-column:1/-1;justify-self:start}'+
+    '.nxPills i{flex:0 0 26px;width:26px;height:26px;border-radius:50%;background:#C7ABFF;display:grid;place-items:center}'+
+    '.nxPills i svg{width:15px;height:15px;fill:none;stroke:#2A1427;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'+
+    '@media(max-width:749px){body .agP .agP__desc ul.nxPills{gap:6px!important}body .agP .agP__desc ul.nxPills li{font-size:12.5px!important;padding:7px 10px 7px 7px!important}.nxPills i{flex-basis:22px;width:22px;height:22px}.nxPills i svg{width:13px;height:13px}}';
+    document.head.appendChild(s); }
+  function run(){ css();
+    Array.prototype.forEach.call(document.querySelectorAll('.agP__desc ul:not(.nxPills)'),function(ul){
+      ul.classList.add('nxPills');
+      Array.prototype.forEach.call(ul.children,function(li){ if(li.querySelector('i')) return; var i=document.createElement('i'); i.innerHTML='<svg viewBox="0 0 24 24">'+I[pick(li.textContent)]+'</svg>'; li.insertBefore(i,li.firstChild); });
+    });
+  }
+  function go(){ run(); setTimeout(run,500); setTimeout(run,1500); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); setTimeout(run,1000); });
+})();
