@@ -92,7 +92,7 @@
           "settings": {
             "good": true,
             "icon": "layers",
-            "title": "Full-spectrum",
+            "title": "Full-Spectrum Matrix",
             "text": "5 collagen types plus hyaluronic acid & vitamin C"
           }
         },
@@ -101,8 +101,8 @@
           "settings": {
             "good": false,
             "icon": "check",
-            "title": "Single-type powders",
-            "text": "Usually Type I and III only"
+            "title": "Single-Type Powders",
+            "text": "Usually cheap Type I and III only"
           }
         },
         "a3": {
@@ -110,8 +110,8 @@
           "settings": {
             "good": true,
             "icon": "woman",
-            "title": "Made for women 40+",
-            "text": "Built around the collagen change after 40"
+            "title": "Made for Ages 45-65",
+            "text": "Built directly for aging skin structural changes"
           }
         },
         "a4": {
@@ -119,8 +119,8 @@
           "settings": {
             "good": false,
             "icon": "check",
-            "title": "One-size-fits-all",
-            "text": "Generic “wellness” for everyone"
+            "title": "One-Size-Fits-All",
+            "text": "Generic “wellness” blends for anyone"
           }
         },
         "a5": {
@@ -128,8 +128,8 @@
           "settings": {
             "good": true,
             "icon": "arm",
-            "title": "The look",
-            "text": "Firmer-looking arms, chest & stomach"
+            "title": "Total Body Tightening",
+            "text": "Targets loose skin on arms, stomach, & chest"
           }
         },
         "a6": {
@@ -137,8 +137,8 @@
           "settings": {
             "good": false,
             "icon": "check",
-            "title": "Just a protein scoop",
-            "text": "Nothing aimed at body skin"
+            "title": "Just a Protein Scoop",
+            "text": "Nothing specifically built for body skin"
           }
         },
         "a7": {
@@ -146,8 +146,8 @@
           "settings": {
             "good": true,
             "icon": "heart",
-            "title": "The feeling",
-            "text": "Feel like you again"
+            "title": "The Feeling",
+            "text": "Bring back your natural body confidence"
           }
         },
         "a8": {
@@ -155,8 +155,8 @@
           "settings": {
             "good": false,
             "icon": "check",
-            "title": "Just another supplement",
-            "text": ""
+            "title": "Just Another Supplement",
+            "text": "No visible difference in how you look"
           }
         },
         "a9": {
@@ -164,8 +164,8 @@
           "settings": {
             "good": true,
             "icon": "shield",
-            "title": "90-Day Promise",
-            "text": "Firmer-feeling skin, or every penny back"
+            "title": "90-Day Pure Promise",
+            "text": "Visible structural tightening, or every penny back"
           }
         },
         "a10": {
@@ -173,8 +173,8 @@
           "settings": {
             "good": false,
             "icon": "check",
-            "title": "Fine print",
-            "text": "Opened bags often can’t be returned"
+            "title": "The Fine Print",
+            "text": "Opened bags usually cannot be returned"
           }
         }
       },
