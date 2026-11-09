@@ -91,14 +91,16 @@
           "type": "row",
           "settings": {
             "good": true,
+            "icon": "layers",
             "title": "Full-spectrum",
-            "text": "5 collagen types plus hyaluronic acid"
+            "text": "5 collagen types plus hyaluronic acid & vitamin C"
           }
         },
         "a2": {
           "type": "row",
           "settings": {
             "good": false,
+            "icon": "check",
             "title": "Single-type powders",
             "text": "Usually Type I and III only"
           }
@@ -107,14 +109,16 @@
           "type": "row",
           "settings": {
             "good": true,
+            "icon": "woman",
             "title": "Made for women 40+",
-            "text": "Formulated around post-menopause collagen loss"
+            "text": "Built around the collagen change after 40"
           }
         },
         "a4": {
           "type": "row",
           "settings": {
             "good": false,
+            "icon": "check",
             "title": "One-size-fits-all",
             "text": "Generic “wellness” for everyone"
           }
@@ -123,14 +127,52 @@
           "type": "row",
           "settings": {
             "good": true,
-            "title": "90-Day Promise",
-            "text": "Firmer-feeling skin, or every penny back"
+            "icon": "arm",
+            "title": "The look",
+            "text": "Firmer-looking arms, chest & stomach"
           }
         },
         "a6": {
           "type": "row",
           "settings": {
             "good": false,
+            "icon": "check",
+            "title": "Just a protein scoop",
+            "text": "Nothing aimed at body skin"
+          }
+        },
+        "a7": {
+          "type": "row",
+          "settings": {
+            "good": true,
+            "icon": "heart",
+            "title": "The feeling",
+            "text": "Feel like you again"
+          }
+        },
+        "a8": {
+          "type": "row",
+          "settings": {
+            "good": false,
+            "icon": "check",
+            "title": "Just another supplement",
+            "text": ""
+          }
+        },
+        "a9": {
+          "type": "row",
+          "settings": {
+            "good": true,
+            "icon": "shield",
+            "title": "90-Day Promise",
+            "text": "Firmer-feeling skin, or every penny back"
+          }
+        },
+        "a10": {
+          "type": "row",
+          "settings": {
+            "good": false,
+            "icon": "check",
             "title": "Fine print",
             "text": "Opened bags often can’t be returned"
           }
@@ -142,17 +184,23 @@
         "a3",
         "a4",
         "a5",
-        "a6"
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10"
       ],
       "settings": {
         "eyebrow": "The difference",
         "heading": "Made for the body <em>you see in the mirror.</em>",
         "us_label": "Our collagen",
-        "them_label": "Generic collagen",
-        "start": 85,
+        "them_label": "Ordinary collagen",
+        "start": 50,
         "c_acc": "#C7ABFF",
         "pad_top": 56,
-        "pad_bottom": 56
+        "pad_bottom": 56,
+        "after": "shopify://shop_images/auvela-vs-ours.png",
+        "before": "shopify://shop_images/auvela-vs-generic.png"
       }
     },
     "compare": {
