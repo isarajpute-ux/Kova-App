@@ -96,7 +96,7 @@ async function estimate({ cfg, body, fetch }) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model, max_tokens: 600, temperature: 0, system: SYSTEM, messages: [{ role: 'user', content }] })
+    body: JSON.stringify(require('./claude').fit(model, { max_tokens: 600, temperature: 0, system: SYSTEM, messages: [{ role: 'user', content }] }))
   });
   if (!r.ok) {
     console.error('body estimate', r.status, (await r.text().catch(() => '')).slice(0, 300));

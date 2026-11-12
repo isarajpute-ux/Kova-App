@@ -66,7 +66,7 @@ function call(method, url, { body: b, token, c } = {}) {
   const imgs = msg.messages[0].content.filter((x) => x.type === 'image'), texts = msg.messages[0].content.filter((x) => x.type === 'text').map((x) => x.text).join(' | ');
   ck('the model gets the earlier photo first, then the new one', imgs.length === 2 && /EARLIER photo, 21 days ago, weight then 81.4 kg/.test(texts) && /NEW photo \(front view\)/.test(texts));
   ck('with the profile as a sanity check', /sex male, age 31, height 180 cm, weight today 79.4 kg/.test(texts));
-  ck('it uses Kova’s model at temperature 0, with the careful instructions', msg.model === 'claude-sonnet-5-5' && msg.temperature === 0 && msg.system === body.SYSTEM);
+  ck('it uses Kova’s model with the careful instructions, and no temperature (Sonnet 5.5 returns a 400 for one, p51b)', msg.model === 'claude-sonnet-5-5' && !('temperature' in msg) && msg.system === body.SYSTEM);
   sent = [];
   const solo = await call('POST', '/body/estimate', { token: 'good-u1', body: { image: IMG } });
   ck('one photo alone works, with "change" left empty by the model', solo.status === 200 && sent[0].body.messages[0].content.filter((x) => x.type === 'image').length === 1);

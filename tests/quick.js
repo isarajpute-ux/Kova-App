@@ -59,18 +59,22 @@ function boot(opts) {
   let sent = null;
   const out = await readMeal({ cfg: { anthropicKey: 'k', model: 'm' }, body: { image: 'A'.repeat(400), note: 'olive oil' },
     fetch: async (u, o) => { sent = JSON.parse(o.body); return { ok: true, json: async () => ({ content: [{ type: 'text', text: JSON.stringify(PLATE) }] }) }; } });
-  ck('the photo goes to the model as an image, with the note as context', sent.messages[0].content[0].type === 'image' && /olive oil/.test(sent.messages[0].content[1].text) && sent.temperature === 0);
+  ck('the photo goes to the model as an image, with the note as context', sent.messages[0].content[0].type === 'image' && /olive oil/.test(sent.messages[0].content[1].text));
   ck('and three items come back', out.items.length === 3);
   let refused = null;
   try { await readMeal({ cfg: { anthropicKey: 'k' }, body: { image: 'not base64 !!' } }); } catch (e) { refused = e; }
   ck('a malformed image is refused (400)', refused && refused.status === 400);
   // p51b: the reader goes through the shared helper (fallback models, named reasons)
-  const tried = [];
+  const tried = [], bodies = [];
   const out2 = await readMeal({ cfg: { anthropicKey: 'k', mealModel: 'claude-haiku-4-5-20251001' }, body: { image: 'A'.repeat(400) },
-    fetch: async (u, o) => { const m = JSON.parse(o.body).model; tried.push(m);
+    fetch: async (u, o) => { const m = JSON.parse(o.body).model; tried.push(m); bodies.push(JSON.parse(o.body));
       if (m === 'claude-haiku-4-5-20251001') return { ok: false, status: 404, text: async () => '{"type":"error","error":{"type":"not_found_error","message":"model: claude-haiku-4-5-20251001"}}' };
       return { ok: true, json: async () => ({ content: [{ type: 'text', text: JSON.stringify(PLATE) }] }) }; } });
   ck('a model that is gone moves on to the current fast one (Haiku 5.5), and the plate is still read', tried[0] === 'claude-haiku-4-5-20251001' && tried[1] === 'claude-haiku-5-5' && out2.items.length === 3 && out2.model === 'claude-haiku-5-5');
+  const { fit } = require(__dirname + '/../functions/claude.js');
+  const f55 = fit('claude-haiku-5-5', { max_tokens: 1400, temperature: 0, output_config: { effort: 'low' } }), f45 = fit('claude-haiku-4-5', { max_tokens: 1400, temperature: 0, output_config: { effort: 'low' } });
+  ck('Haiku 5.5 gets no temperature (it returns a 400 for one), low effort and room for its thinking; Haiku 4.5 keeps temperature 0 and no effort (it refuses effort)', !('temperature' in f55) && f55.output_config.effort === 'low' && f55.max_tokens === 4000 && f45.temperature === 0 && !f45.output_config && f45.max_tokens === 1400);
+  ck('the meal read asks Haiku 5.5 for low effort and sends it no temperature', !('temperature' in bodies[1]) && bodies[1].output_config.effort === 'low' && bodies[1].max_tokens === 4000);
   ck('the default reader is Haiku 5.5', /MEAL_MODEL_DEFAULT = 'claude-haiku-5-5'/.test(fs.readFileSync(__dirname + '/../functions/env.js', 'utf8')));
   let broke = null;
   try { await readMeal({ cfg: { anthropicKey: 'k' }, body: { image: 'A'.repeat(400) }, fetch: async () => ({ ok: false, status: 400, text: async () => '{"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API."}}' }) }); } catch (e) { broke = e; }

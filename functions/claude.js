@@ -29,6 +29,25 @@ function why(status, text) {
   return { status: 502, code: 'other', message: 'Kova’s AI could not answer just now. Try again in a moment.' };
 }
 
+/* p51b: the newest models refuse what older ones took. Claude Haiku 5.5 and
+   Sonnet 5.5 return a 400 for a temperature (or top_p / top_k) other than the
+   default, and Opus 4.7 and later, Sonnet 5 and Fable remove them altogether;
+   Kova sent temperature 0 for steady numbers. Kept only for the older
+   models that accept it. Effort (output_config) is the reverse: the 5.x
+   models take it, Haiku 4.5 and Sonnet 4.5 refuse it. Thinking counts
+   against max_tokens on the 5.x models (it is on by default), so a short
+   cap gets room to finish its answer. */
+const SAMPLING_OK = /^claude-(opus-4-6|sonnet-4-6|haiku-4-5|sonnet-4-5|opus-4-5|opus-4-1|opus-4-0|sonnet-4-0|opus-4-2|sonnet-4-2|3)/;
+const EFFORT_NO = /^claude-(haiku-4-5|sonnet-4-5|sonnet-4-0|opus-4-1|opus-4-0|3)/;
+function fit(model, body) {
+  const o = Object.assign({}, body, { model });
+  const m = String(model || '');
+  if (!SAMPLING_OK.test(m)) { delete o.temperature; delete o.top_p; delete o.top_k; }
+  if (EFFORT_NO.test(m)) delete o.output_config;
+  else if (/^claude-(haiku|sonnet|opus|fable|mythos)-5/.test(m) && o.max_tokens && o.max_tokens < 4000) o.max_tokens = 4000;
+  return o;
+}
+
 /* body is Anthropic's message body; its model (or cfg.model) is tried first */
 async function ask(cfg, body, opts = {}) {
   const f = opts.fetch || ((...a) => global.fetch(...a));
@@ -42,7 +61,7 @@ async function ask(cfg, body, opts = {}) {
         r = await f(URL, {
           method: 'POST',
           headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-          body: JSON.stringify(Object.assign({}, body, { model: list[i] }))
+          body: JSON.stringify(fit(list[i], body))
         });
       } catch (e) {
         last = { status: 503, code: 'busy', message: 'Kova’s server could not reach its AI just now. Try again in a minute.' };
@@ -65,4 +84,4 @@ async function ask(cfg, body, opts = {}) {
   throw e;
 }
 
-module.exports = { ask, why, FALLBACK, URL };
+module.exports = { ask, why, fit, FALLBACK, URL };

@@ -355,8 +355,8 @@ async function caption(deps, body) {
   const ask = { title: s(b.title, 200), notes: s(b.notes, 1500), seconds: Math.round(+b.dur || 0), shape: s(b.shape, 20), platforms: (Array.isArray(b.platforms) ? b.platforms : []).slice(0, 6).map((x) => s(x, 20)), voice: s(b.voice, 400) };
   const r = await f('https://api.anthropic.com/v1/messages', { method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: cfg.mealModel || cfg.model, max_tokens: 600, temperature: 0.7, system: CAPTION_SYSTEM,
-      messages: [{ role: 'user', content: (function () { const im = imageBlocks(b.images); return im.length ? im.concat([{ type: 'text', text: JSON.stringify(ask) }]) : JSON.stringify(ask); })() }] }) });
+    body: JSON.stringify(require('./claude').fit(cfg.mealModel || cfg.model, { max_tokens: 600, temperature: 0.7, system: CAPTION_SYSTEM, output_config: { effort: 'low' },
+      messages: [{ role: 'user', content: (function () { const im = imageBlocks(b.images); return im.length ? im.concat([{ type: 'text', text: JSON.stringify(ask) }]) : JSON.stringify(ask); })() }] })) });
   if (!r.ok) throw new AskError(502, 'Could not write the caption right now.');
   const j = await r.json();
   const text = (j.content || []).filter((x) => x.type === 'text').map((x) => x.text).join('');

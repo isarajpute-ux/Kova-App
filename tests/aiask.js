@@ -60,7 +60,7 @@ const user = (content) => ({ messages: [{ role: 'user', content }] });
   ck('the server’s own key and model are used, never one from the page', sent[sent.length - 1].opts.headers['x-api-key'] === cfg.anthropicKey && up.model === 'claude-test');
   ck('a "system" message from the page is dropped; the system prompt is its own field', up.messages.length === 1 && up.messages[0].role === 'user' && up.system === 'You read photos.');
   ck('the photo goes through; an empty text piece is dropped', up.messages[0].content.length === 2 && up.messages[0].content[0].type === 'image' && up.messages[0].content[1].text === 'What is this?');
-  ck('max_tokens is capped at 2000 and temperature 0 is kept', up.max_tokens === 2000 && up.temperature === 0);
+  ck('max_tokens is capped at 2000, and a temperature is not sent to a model that refuses it (p51b)', up.max_tokens === 2000 && !('temperature' in up));
   await call('POST', '/ai/ask', { token: 'good-u1', body: Object.assign(user('x'), { max_tokens: 1, temperature: 5 }) });
   const up2 = JSON.parse(sent[sent.length - 1].opts.body);
   ck('a tiny max_tokens is raised to 64; a temperature out of range is dropped', up2.max_tokens === 64 && !('temperature' in up2));

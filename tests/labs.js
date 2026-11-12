@@ -26,7 +26,7 @@ Page 1 of 2   Phone 555-0100`;
   ck('the server keeps only rows with a number, and cleans them', rows.length === 1 && rows[0].value === 22 && rows[0].low === 30);
   let sent = null;
   const ex = await extract({ cfg: { anthropicKey: 'k', model: 'm' }, body: { text: REPORT }, fetch: async (u, o) => { sent = JSON.parse(o.body); return { ok: true, json: async () => ({ content: [{ type: 'text', text: '[{"name":"Ferritin","value":22,"unit":"ng/mL","low":30,"high":400,"date":"2026-09-12"}]' }] }) }; } });
-  ck('the model is told to extract, not interpret', /do not interpret/i.test(sent.system) && /no diagnosis/i.test(sent.system) && ex.rows.length === 1 && sent.temperature === 0);
+  ck('the model is told to extract, not interpret', /do not interpret/i.test(sent.system) && /no diagnosis/i.test(sent.system) && ex.rows.length === 1 && !('temperature' in sent));
 
   // the app
   const vc = new VirtualConsole();

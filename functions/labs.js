@@ -57,7 +57,7 @@ async function extract({ cfg, body, fetch }) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: cfg.model, max_tokens: 4000, temperature: 0, system: SYSTEM, messages: [{ role: 'user', content }] })
+    body: JSON.stringify(require('./claude').fit(cfg.model, { max_tokens: 4000, temperature: 0, system: SYSTEM, messages: [{ role: 'user', content }] }))
   });
   if (!r.ok) { console.error('labs', r.status); throw new LabError(503, 'Could not read the report right now.'); }
   const j = await r.json();

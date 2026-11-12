@@ -88,7 +88,7 @@ async function readMeal({ cfg, body, fetch }) {
   let out;
   try {
     out = await claude.ask(cfg, {
-      model: cfg.mealModel || cfg.model, max_tokens: 1400, temperature: 0, system: SYSTEM,
+      model: cfg.mealModel || cfg.model, max_tokens: 1400, temperature: 0, system: SYSTEM, output_config: { effort: 'low' },
       messages: [{ role: 'user', content: [
         { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
         { type: 'text', text: note ? 'User context, trust this for hidden ingredients: ' + note : 'What food is on this plate?' }
