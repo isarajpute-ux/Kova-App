@@ -35,3 +35,7 @@
   background:linear-gradient(180deg,transparent,rgba(255,255,255,.28) 70%,rgba(255,255,255,.75) 98%,transparent);mix-blend-mode:screen;animation:kqBeam 1.4s cubic-bezier(.45,0,.55,1) infinite}
 @keyframes kqBeam{to{top:100%}}
 @media (prefers-reduced-motion:reduce){.kq-beam{animation:none;display:none}}
+
+/* p51b: other ways to log it when a photo cannot be read */
+.kq-alt{display:flex;gap:8px;margin:0 0 8px}
+.kq-alt .btn{flex:1;margin:0}

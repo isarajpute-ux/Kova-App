@@ -34,7 +34,7 @@ function boot(opts) {
     if (/\/api\/meal\/read$/.test(u)) {
       reads.push(JSON.parse(o.body));
       if (opts.failOnce && reads.length === 1) return Promise.resolve({ ok: false, status: 503, json: () => Promise.resolve({ error: 'busy' }) });
-      if (opts.status) return Promise.resolve({ ok: false, status: opts.status, json: () => Promise.resolve({ error: 'x' }) });
+      if (opts.status) return Promise.resolve({ ok: false, status: opts.status, json: () => Promise.resolve({ error: opts.err || 'x' }) });
       return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ items: PLATE }) });
     }
     return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ ok: true, url: 'https://kova.local/api/media/file?p=x', path: 'x' }), text: () => Promise.resolve('') });
@@ -64,6 +64,17 @@ function boot(opts) {
   let refused = null;
   try { await readMeal({ cfg: { anthropicKey: 'k' }, body: { image: 'not base64 !!' } }); } catch (e) { refused = e; }
   ck('a malformed image is refused (400)', refused && refused.status === 400);
+  // p51b: the reader goes through the shared helper (fallback models, named reasons)
+  const tried = [];
+  const out2 = await readMeal({ cfg: { anthropicKey: 'k', mealModel: 'claude-haiku-4-5-20251001' }, body: { image: 'A'.repeat(400) },
+    fetch: async (u, o) => { const m = JSON.parse(o.body).model; tried.push(m);
+      if (m === 'claude-haiku-4-5-20251001') return { ok: false, status: 404, text: async () => '{"type":"error","error":{"type":"not_found_error","message":"model: claude-haiku-4-5-20251001"}}' };
+      return { ok: true, json: async () => ({ content: [{ type: 'text', text: JSON.stringify(PLATE) }] }) }; } });
+  ck('a model that is gone moves on to the current fast one (Haiku 5.5), and the plate is still read', tried[0] === 'claude-haiku-4-5-20251001' && tried[1] === 'claude-haiku-5-5' && out2.items.length === 3 && out2.model === 'claude-haiku-5-5');
+  ck('the default reader is Haiku 5.5', /MEAL_MODEL_DEFAULT = 'claude-haiku-5-5'/.test(fs.readFileSync(__dirname + '/../functions/env.js', 'utf8')));
+  let broke = null;
+  try { await readMeal({ cfg: { anthropicKey: 'k' }, body: { image: 'A'.repeat(400) }, fetch: async () => ({ ok: false, status: 400, text: async () => '{"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API."}}' }) }); } catch (e) { broke = e; }
+  ck('out of credit is named in words the owner can act on, not "could not read"', broke && broke.status === 503 && /run out of credit/.test(broke.message) && broke.code === 'credit');
 
   // ---------- two taps ----------
   const A = boot({});
@@ -153,6 +164,17 @@ function boot(opts) {
   E.doc.getElementById('scanBtn').click(); E.cam.onShot('data:image/jpeg;base64,' + 'E'.repeat(600));
   for (let i = 0; i < 120 && !/kcal/.test((E.doc.querySelector('#sheetIn .kq') || {}).textContent || ''); i++) await wait(100);
   ck('a busy server is retried once by itself, and the plate is read', E.reads.length === 2 && /kcal/.test(E.doc.querySelector('#sheetIn .kq').textContent) && !/Could not read/.test(E.doc.querySelector('#sheetIn .kq').textContent));
+
+  // ---------- p51b: a failed read says why, and offers every other way to log it ----------
+  const G = boot({ status: 503, err: 'Kova’s AI has run out of credit. The owner adds credit at console.anthropic.com, under Billing.' });
+  await wait(600);
+  G.doc.getElementById('scanBtn').click(); G.cam.onShot('data:image/jpeg;base64,' + 'G'.repeat(600));
+  for (let i = 0; i < 80 && !/credit/.test((G.doc.querySelector('#sheetIn .kq') || {}).textContent || ''); i++) await wait(100);
+  const gs = G.doc.querySelector('#sheetIn .kq');
+  ck('a failed read shows the server\'s own reason (out of credit), not "Could not read the photo right now"', /run out of credit/.test(gs.textContent) && !/Could not read the photo/.test(gs.textContent));
+  ck('…with Scan the barcode, Quick add and Search the food right there', !!gs.querySelector('[data-kq="bar"]') && !!gs.querySelector('[data-kq="quick"]') && !!gs.querySelector('[data-kq="search"]'));
+  gs.querySelector('[data-kq="quick"]').click(); await wait(80);
+  ck('Quick add opens from there', /Quick add/.test(G.doc.getElementById('sheetIn').textContent) && !!G.doc.getElementById('kflGo'));
 
   // ---------- the old photo sheet no longer wipes the meal list ----------
   ck('the scan sheet updates its own button, not the Fuel meal list', !/getElementById\('mealLog'\)\.textContent/.test(html) && /KovaFuel\.add\(\{src:'photo'/.test(html));

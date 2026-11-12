@@ -729,7 +729,7 @@ window.KovaCrew=(function(){
      role (quick triage on Haiku, writing and analysis on Sonnet) and steps
      up to Sonnet when a job runs long. You can pin one per employee. */
   var MODELS={haiku:'Haiku',sonnet:'Sonnet',opus:'Opus'};
-  var MODEL_ID={haiku:'claude-haiku-4-5-20251001',sonnet:'claude-sonnet-5-5',opus:'claude-opus-5-5'};
+  var MODEL_ID={haiku:'claude-haiku-5-5',sonnet:'claude-sonnet-5-5',opus:'claude-opus-5-5'};
   var AUTO={chief:'sonnet',pm:'haiku',analyst:'sonnet',inbox:'haiku',content:'sonnet',research:'sonnet',finance:'haiku',sched:'haiku',coach:'haiku',social:'sonnet'};
   function pickModel(e,job){
     if(e.model&&MODELS[e.model]) return e.model;

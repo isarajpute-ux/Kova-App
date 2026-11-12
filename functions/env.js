@@ -11,7 +11,7 @@
    that, so only set the keys you actually use. */
 
 const MODEL_DEFAULT = 'claude-sonnet-5-5';
-const MEAL_MODEL_DEFAULT = 'claude-haiku-4-5-20251001';
+const MEAL_MODEL_DEFAULT = 'claude-haiku-5-5';
 
 function str(env, k, d) {
   const v = env[k];

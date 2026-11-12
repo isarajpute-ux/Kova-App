@@ -23,6 +23,11 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-14',title:'Meal photos, fixed',
+      lines:['The photo reader uses the newest AI model','A failed read says why','Scan the barcode or Quick add from there','Reads the label on packaged food'],
+      steps:[
+        ['fuel','Scan food','Snap your plate. Packaged food too.',function(){ return q('#scanBtn'); }]
+      ]},
     {id:'new-2026-11-13',title:'Fuel, with no watch needed',
       lines:['Quick add any food, with your own numbers','Recent, Favorites and My foods work','Barcodes scan on iPhone, or type the numbers','Real water and streak'],
       steps:[

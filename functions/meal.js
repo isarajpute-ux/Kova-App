@@ -23,6 +23,7 @@ RULES:
 - One definitive number per field. Never a range.
 - Itemise invisible cooking fat: if anything looks grilled, sauteed or pan-fried, add its own row of 5 to 15 g of cooking oil or butter unless the user text says otherwise. Never fold it into another row.
 - "c" (confidence 0-100) reflects visual clarity: an intact apple is about 95, a blended soup about 30. Let confidence carry the doubt rather than shading the weight.
+- Packaged food: if a Nutrition Facts label is readable, use its per-serving numbers for the amount you see.
 - If the photo contains no food, return [].
 
 Respond with ONLY a JSON array, no prose, no markdown, one object per item with these short keys:
@@ -44,6 +45,10 @@ function longKeys(i) {
   return o;
 }
 
+const claude = require('./claude');
+/* the fast reader first, then the bigger ones */
+const MEAL_FALLBACK = ['claude-haiku-5-5', 'claude-sonnet-5-5', 'claude-sonnet-4-5'];
+
 class MealError extends Error { constructor(status, msg) { super(msg); this.status = status; } }
 
 function parseItems(text) {
@@ -64,7 +69,7 @@ function parseItems(text) {
 
 /* Speed: the photo arrives already shrunk to about 1024 px (enough for the
    model, a fraction of the upload), the answer uses short keys, and the
-   default reader is the fast model (KOVA_MEAL_MODEL, Claude Haiku 4.5), so
+   default reader is the fast model (KOVA_MEAL_MODEL, Claude Haiku 5.5), so
    a plate comes back in about two to three seconds. Set KOVA_MEAL_MODEL to
    a bigger model to trade speed for a little accuracy. */
 async function readMeal({ cfg, body, fetch }) {
@@ -76,25 +81,26 @@ async function readMeal({ cfg, body, fetch }) {
   if (b64.length > 4.2 * 1024 * 1024) throw new MealError(413, 'That photo is too large. Kova shrinks it first; try again.');
   const mime = /^image\/(jpeg|png|webp)$/.test(body.mime) ? body.mime : 'image/jpeg';
   const note = String(body.note || '').slice(0, 300).trim();
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': cfg.anthropicKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({
+  /* p51b: through claude.ask like the rest of Kova's AI, so a failure names
+     its reason (out of credit, key refused, busy) and a model that is gone
+     moves on to the next one (the reader asked for Haiku 4.5 by name, with
+     no fallback, and every failure read "Could not read the photo") */
+  let out;
+  try {
+    out = await claude.ask(cfg, {
       model: cfg.mealModel || cfg.model, max_tokens: 1400, temperature: 0, system: SYSTEM,
       messages: [{ role: 'user', content: [
         { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
         { type: 'text', text: note ? 'User context, trust this for hidden ingredients: ' + note : 'What food is on this plate?' }
       ] }]
-    })
-  });
-  if (!r.ok) {
-    console.error('meal read', r.status, (await r.text().catch(() => '')).slice(0, 300));
-    throw new MealError(503, 'Could not read the photo right now.');
+    }, { fetch, tag: 'meal', models: MEAL_FALLBACK });
+  } catch (e) {
+    const m = new MealError(e.status || 503, e.message || 'Could not read the photo right now.'); m.code = e.code; throw m;
   }
-  const j = await r.json();
+  const j = out.json;
   const text = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n');
-  try { return { items: parseItems(text), model: cfg.mealModel || cfg.model }; }
+  try { return { items: parseItems(text), model: out.model }; }
   catch (e) { throw new MealError(502, 'The photo read came back garbled. Try again.'); }
 }
 
-module.exports = { readMeal, parseItems, MealError, SYSTEM };
+module.exports = { readMeal, parseItems, MealError, SYSTEM, MEAL_FALLBACK };

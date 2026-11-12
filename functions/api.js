@@ -823,7 +823,7 @@ function cleanCrew(b) {
 /* the AI team's model router: each employee asks for haiku, sonnet or
    opus (src/p08_crew.js picks per job); anything else uses the server's
    default. Opus has its own, smaller daily allowance. */
-const CREW_MODELS = { haiku: 'claude-haiku-4-5-20251001', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
+const CREW_MODELS = { haiku: 'claude-haiku-5-5', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
 /* ---------- Kova's own AI, for everything that used to need your key ----
    p28: the Machine scan, Form Check's technique review, ingredients from a
    photo, the voice and chat answers outside your data, and Work OS planning

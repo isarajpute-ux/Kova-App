@@ -185,7 +185,10 @@ window.KovaQuick=(function(){
     }
     else if(state==='empty') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-msg">No food found on that photo. Try again with the plate filling the square.</div><button class="btn" data-kq="again">Retake</button>';
     else if(state==='error') body=(R&&R.shot?'<div class="kq-shot"><img alt="" src="'+R.shot+'"></div>':'')+'<div class="kq-msg">'+esc(R.err)+'</div>'
-      +'<button class="btn ghost" data-kq="search">Search the food instead</button>';
+      /* p51b: every other way to log it, right here */
+      +'<div class="kq-alt">'+(window.KovaBarcode?'<button class="btn" data-kq="bar">Scan the barcode</button>':'')
+      +(window.KovaFoodLog?'<button class="btn ghost" data-kq="quick">Quick add</button>':'')+'</div>'
+      +'<button class="btn ghost" data-kq="search">Search the food</button>';
     else body='<div class="kq-msg">Point the camera at the plate.</div><button class="btn" data-kq="again">Open the camera</button>';
     var ch=chipsHTML();
     el.innerHTML=el.querySelector('.kq-h').outerHTML+body+(ch?'<div class="lbl" style="margin:16px 0 8px">OR LOG AGAIN, ONE TAP</div><div class="kq-chips">'+ch+'</div>':'');
@@ -204,7 +207,9 @@ window.KovaQuick=(function(){
     if(k==='x'){ if(window.closeSheet) closeSheet(); return; }
     if(k==='s'){ scale=+b.getAttribute('data-v'); paint('result'); return; }
     if(k==='again'){ camera(true); return; }
-    if(k==='search'){ if(window.closeSheet) closeSheet(); try{ go('fuel'); }catch(e){} return; }
+    if(k==='search'){ if(window.closeSheet) closeSheet(); try{ go('fuel'); var lb=document.getElementById('logBtn'); if(lb) lb.click(); }catch(e){} return; }
+    if(k==='bar'){ if(window.closeSheet) closeSheet(); KovaBarcode.open(function(c){ try{ go('scanner'); }catch(e){} if(window.KovaScanner&&KovaScanner.lookup) KovaScanner.lookup(c); }); return; }
+    if(k==='quick'){ if(window.closeSheet) closeSheet(); KovaFoodLog.quickAdd(); return; }
     if(k==='y'||k==='r'){ T.taps--; onChip(b,'sheet'); if(window.closeSheet) closeSheet(); return; }
     if(k==='log') logIt();
   }
@@ -248,7 +253,8 @@ window.KovaQuick=(function(){
       busy=false;
       R.err=e&&e.status===402?'Reading a photo is part of Kova Pro. Log it by search for free, or start the trial.'
         :e&&e.message==='offline'?(navigator.onLine===false?'You are offline, so nothing could read the photo. It is saved; search the food to log it now.':'The Kova server could not be reached, so nothing read the photo. It is saved; search the food to log it now.')
-        :'Could not read the photo right now. Search the food to log it.';
+        /* p51b: the server's own reason (out of credit, busy...), not one vague line */
+        :(e&&e.status&&e.message&&!/^HTTP \d/.test(e.message)?e.message:'Could not read the photo right now.');
       paint('error');
       if(e&&e.status===402&&window.KovaBilling) setTimeout(function(){ KovaBilling.paywall('meal'); },1600);
     });
