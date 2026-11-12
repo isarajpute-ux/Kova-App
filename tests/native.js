@@ -7,6 +7,12 @@ const fs = require('fs');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const html = fs.readFileSync(__dirname + '/../index.html', 'utf8');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
+/* p51c: the app copy knows the live server's address; the website keeps its own */
+{
+  const cw = fs.readFileSync(__dirname + '/../native/scripts/copy-web.mjs', 'utf8');
+  ck('the iPhone app copy points at the live server', /kovactive\.vercel\.app/.test(cw) && cw.includes("window.KOVA_SITE = window.KOVA_SITE || '';") && /process\.exit\(1\)/.test(cw));
+  ck('the website itself leaves KOVA_SITE empty', html.includes("window.KOVA_SITE = window.KOVA_SITE || '';"));
+}
 const vc = new VirtualConsole(); const errors = []; vc.on('jsdomError', (e) => errors.push(e.message));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 

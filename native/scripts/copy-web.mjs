@@ -24,7 +24,13 @@ for (const f of FILES) {
 /* no service worker in the app shell */
 const page = join(www, 'index.html');
 const html = readFileSync(page, 'utf8');
-const out = html.replace(/navigator\.serviceWorker\.register\(/g, '(window.Capacitor?function(){ return Promise.resolve(); }:navigator.serviceWorker.register.bind(navigator.serviceWorker))(');
+/* p51c: inside the app the page lives at capacitor://localhost, so it
+   needs the live site's address to reach Kova's server (AI, food search,
+   the AI team, uploads). The website itself keeps using its own address. */
+const SITE = (process.env.KOVA_SITE || 'https://kovactive.vercel.app').replace(/\/+$/, '');
+const out = html.replace(/navigator\.serviceWorker\.register\(/g, '(window.Capacitor?function(){ return Promise.resolve(); }:navigator.serviceWorker.register.bind(navigator.serviceWorker))(')
+  .replace("window.KOVA_SITE = window.KOVA_SITE || '';", 'window.KOVA_SITE = window.KOVA_SITE || ' + JSON.stringify(SITE) + ';');
+if (!out.includes('window.KOVA_SITE = window.KOVA_SITE || ' + JSON.stringify(SITE))) { console.error('could not set KOVA_SITE in the app copy'); process.exit(1); }
 writeFileSync(page, out);
 console.log('copied ' + FILES.length + ' files to www/' + (out !== html ? ' (service worker off in the app)' : ''));
 
