@@ -98,7 +98,8 @@ await context.close(); await b.close();
   await pg.waitForTimeout(800);
   /* p29: Workout adds "Built around your goal". Fuel's vitamins card counts your real log, so it is a stop too.
      p40: Workout covers its whole screen (form check, machine scan, exercises, Dream physique, recovery, stretch, Zone 2) */
-  const want = { home: 5, vitals: 4, sleep: 4, fuel: 8, move: 10 };   /* this phone has no goal yet (no goal cards) and no plan (no See my plan) */
+  /* fuel is 9 since p51: Water and streak are real with your own data, so the tour stops there too */
+  const want = { home: 5, vitals: 4, sleep: 4, fuel: 9, move: 10 };   /* this phone has no goal yet (no goal cards) and no plan (no See my plan) */
   for (const id of Object.keys(want)) {
     await pg.evaluate((id) => go(id), id);
     await pg.waitForTimeout(700);
