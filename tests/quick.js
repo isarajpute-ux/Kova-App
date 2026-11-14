@@ -21,8 +21,8 @@ function boot(opts) {
   const vc = new VirtualConsole();
   const dom = new JSDOM(html, { runScripts: 'outside-only', pretendToBeVisual: true, url: 'https://kova.local/', virtualConsole: vc });
   const w = dom.window;
-  const user = { uid: 'u1', email: 'a@b.c', getIdToken: () => Promise.resolve('tok') };
-  const auth = { get currentUser() { return user; }, onAuthStateChanged(cb) { cb(user); }, signOut: () => Promise.resolve() };
+  const user = opts.out ? null : { uid: 'u1', email: 'a@b.c', getIdToken: () => Promise.resolve('tok') };
+  const auth = { signInAnonymously: () => Promise.reject(new Error('auth/operation-not-allowed')), get currentUser() { return user; }, onAuthStateChanged(cb) { cb(user); }, signOut: () => Promise.resolve() };
   const events = [];
   w.firebase = { initializeApp() {}, apps: [{}], auth: () => auth,
     database: () => ({ ref: () => ({ child() { return this; }, set: () => Promise.resolve(), update: () => Promise.resolve(),
@@ -179,6 +179,22 @@ function boot(opts) {
   ck('…with Scan the barcode, Quick add and Search the food right there', !!gs.querySelector('[data-kq="bar"]') && !!gs.querySelector('[data-kq="quick"]') && !!gs.querySelector('[data-kq="search"]'));
   gs.querySelector('[data-kq="quick"]').click(); await wait(80);
   ck('Quick add opens from there', /Quick add/.test(G.doc.getElementById('sheetIn').textContent) && !!G.doc.getElementById('kflGo'));
+
+  // ---------- p52: signed out, it says to sign in before the camera (it used to blame the server) ----------
+  const H = boot({ out: true });
+  await wait(600);
+  H.doc.getElementById('scanBtn').click(); await wait(120);
+  const hs = H.doc.querySelector('#sheetIn .kq');
+  ck('signed out, Scan food says "Sign in and Kova reads your plate" instead of opening the camera', H.cam.opened === 0 && !!hs && /Sign in and Kova reads your plate/.test(hs.textContent) && !/could not be reached/.test(hs.textContent));
+  ck('…with a Sign in button, and the barcode, Quick add and Search still there', !!hs.querySelector('[data-kq="signin"]') && !!hs.querySelector('[data-kq="bar"]') && !!hs.querySelector('[data-kq="quick"]') && !!hs.querySelector('[data-kq="search"]'));
+  let opened = null; H.w.KovaCloudAuth.open = (o) => { opened = o; };
+  hs.querySelector('[data-kq="signin"]').click(); await wait(60);
+  ck('Sign in opens the sign-in card', !!opened && opened.mode === 'in' && H.reads.length === 0);
+  const I = boot({ status: 401, err: 'Your session expired. Sign in again.' });
+  await wait(600);
+  I.doc.getElementById('scanBtn').click(); I.cam.onShot('data:image/jpeg;base64,' + 'I'.repeat(600));
+  for (let i = 0; i < 60 && !/Sign in/.test((I.doc.querySelector('#sheetIn .kq') || {}).textContent || ''); i++) await wait(100);
+  ck('a session that ran out says so, with Sign in', /session ran out\. Sign in again/.test(I.doc.querySelector('#sheetIn .kq').textContent) && !!I.doc.querySelector('#sheetIn .kq [data-kq="signin"]'));
 
   // ---------- the old photo sheet no longer wipes the meal list ----------
   ck('the scan sheet updates its own button, not the Fuel meal list', !/getElementById\('mealLog'\)\.textContent/.test(html) && /KovaFuel\.add\(\{src:'photo'/.test(html));

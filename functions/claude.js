@@ -84,4 +84,33 @@ async function ask(cfg, body, opts = {}) {
   throw e;
 }
 
-module.exports = { ask, why, fit, FALLBACK, URL };
+/* p52: does the AI really answer? The owner's scans kept failing and the
+   reason (no credit, a key, a model) could only be seen by a signed-in
+   phone. This asks each reader one tiny question ("reply ok"), remembers
+   the answer for ten minutes, and says only ok or the reason in words. No
+   one's data is involved and nothing a person typed is sent. */
+let HEALTH = null;
+async function probe(cfg, model, models, opts) {
+  try {
+    const out = await ask(cfg, { model, max_tokens: 16, output_config: { effort: 'low' }, messages: [{ role: 'user', content: 'Reply with the single word: ok' }] },
+      { fetch: opts.fetch, sleep: opts.sleep, tag: 'health', models });
+    return { ok: true, model: out.model };
+  } catch (e) { return { ok: false, code: e.code || 'error', message: e.message }; }
+}
+async function health(cfg, opts = {}) {
+  const now = opts.now || Date.now();
+  if (!opts.force && HEALTH && now - HEALTH.at < 10 * 60e3) return Object.assign({}, HEALTH.v, { checked: HEALTH.at });
+  let v;
+  if (!cfg || !cfg.anthropicKey) v = { ok: false, code: 'config', message: 'Kova’s AI is not set up on the server yet (ANTHROPIC_API_KEY in Vercel).' };
+  else {
+    const photo = await probe(cfg, cfg.mealModel || cfg.model, opts.photoModels, opts);
+    /* out of credit or a refused key is the same for every model: one call says it */
+    const main = !photo.ok && (photo.code === 'credit' || photo.code === 'key') ? photo : await probe(cfg, cfg.model, undefined, opts);
+    v = { ok: photo.ok && main.ok, photo, main };
+    if (!v.ok) { const bad = photo.ok ? main : photo; v.code = bad.code; v.message = bad.message; }
+  }
+  HEALTH = { at: now, v };
+  return Object.assign({}, v, { checked: now });
+}
+
+module.exports = { ask, why, fit, health, FALLBACK, URL };

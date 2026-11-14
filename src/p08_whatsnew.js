@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-15',title:'Work OS, simpler on your phone',
+      lines:['One short screen on a phone','Tasks, meetings, your AI team and apps','Studio and Automations open on a computer','Sign-in is one screen, no dead ends'],
+      steps:[
+        ['work','Your tasks','On a phone, tick them off right here.',function(){ return document.body.classList.contains('wk-phone')?q('#wkpToday'):q('#s-work .wgl[data-go="worktoday"]'); }],
+        ['work','AI team','On a phone, ask your team from here.',function(){ return document.body.classList.contains('wk-phone')?q('#wkpTeam'):(q('#s-work .wk-tabs [data-go="workteam"]')||q('#s-work .wk-tabs')); }]
+      ]},
     {id:'new-2026-11-14',title:'Meal photos, fixed',
       lines:['The photo reader uses the newest AI model','A failed read says why','Scan the barcode or Quick add from there','Reads the label on packaged food'],
       steps:[

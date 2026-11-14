@@ -28,10 +28,11 @@ for (const theme of ['dark', 'soft', 'light']) {
   await p.locator('#kwn [data-kwn="show"]').click();
   await p.waitForSelector('#ksCoach.on', { timeout: 8000 }).catch(() => {});
   const c1 = await p.evaluate(() => ({ t: (document.querySelector('#ksCoach .ks-ct') || {}).textContent, scr: (document.querySelector('.screen.on') || {}).id }));
-  ck(theme + ': Show me goes to your tasks and lights up New task', c1.t === 'New task' && c1.scr === 's-worktasks' || (console.error(theme, c1), false));
+  /* the newest release (p52: Work OS, simpler on your phone): its first stop is your tasks on Work OS */
+  ck(theme + ': Show me goes to Work OS and lights up your tasks', c1.t === 'Your tasks' && c1.scr === 's-work' || (console.error(theme, c1), false));
   const spot = async (sel) => p.evaluate((sel) => { const s = document.getElementById('ksSpot').getBoundingClientRect(), k = document.querySelector(sel).getBoundingClientRect(); return s.left <= k.left + 2 && s.right >= k.right - 2 && s.top <= k.top + 2; }, sel);
   await p.waitForTimeout(900);                                  /* the light slides into place */
-  ck(theme + ': …with the light around it', await spot('#wtNewTask'));
+  ck(theme + ': …with the light around it', await spot(await p.evaluate(() => document.body.classList.contains('wk-phone') ? '#wkpToday' : '#s-work .wgl[data-go="worktoday"]')));
   await p.screenshot({ path: join(shots, `whatsnew-step1-${theme}.png`) });
   await p.locator('#ksCoach [data-t="skip"]').click(); await p.waitForTimeout(400);
   ck(theme + ': Skip ends it, and the card does not come back', await p.locator('#ksTour').count() === 0 && await p.locator('#kwn').count() === 0);

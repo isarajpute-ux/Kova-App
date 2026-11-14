@@ -301,7 +301,7 @@ window.KovaWorkTour=(function(){
     },900);
   }
   document.addEventListener('click',function(e){ var h=e.target.closest&&e.target.closest('[data-wktour]'); if(h){ e.preventDefault(); run(); } });
-  return {run:run,onScreen:onScreenHook,reset:reset,zoomTo:zoomTo};
+  return {run:run,onScreen:onScreenHook,reset:reset,zoomTo:zoomTo,steps:STEPS};
 })();
 
 /* ---------------------------------------------------------------------

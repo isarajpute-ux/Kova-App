@@ -265,7 +265,7 @@ window.KovaBody=(function(){
       track('body_estimate',{withPrev:!!prev});
       S.busy=null; repaint(); return find(id).est;
     }).catch(function(e){
-      S.busy=null; S.err=(e&&e.message)||'Could not read the photo right now.'; repaint(); return null;
+      S.busy=null; S.err=e&&e.code==='signin'?'Sign in and Kova estimates from your photo. It is saved on this phone.':((e&&e.message)||'Could not read the photo right now.'); repaint(); return null;
     });
   }
 
@@ -419,7 +419,7 @@ window.KovaBody=(function(){
       +'<div class="kb-meta"><b>'+esc(new Date(p.t).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'}))+'</b>'
       +'<span>'+esc(POSES.filter(function(x){ return x[0]===p.pose; })[0][1])+(p.kg?' · '+esc(fmt(p.kg)):'')
       +(p.up==='ok'?' · backed up':p.up==='…'?' · backing up…':p.up==='no'?' · on this phone only':'')+'</span></div>'
-      +(S.err?'<div class="kb-err" role="alert">'+esc(S.err)+'</div>':'')+est
+      +(S.err?'<div class="kb-err" role="alert">'+esc(S.err)+(/^Sign in/.test(S.err)?' <button type="button" class="chip" data-b="signin">Sign in</button>':'')+'</div>':'')+est
       +'<div class="kb-two"><button class="btn ghost" data-b="then" data-v="'+p.id+'">Compare from this one</button>'
       +'<button class="btn ghost kb-del" data-b="del" data-v="'+p.id+'">Delete photo</button></div>';
   }
@@ -442,6 +442,7 @@ window.KovaBody=(function(){
     else if(k==='open'){ S.open=v; S.err=''; repaint(); }
     else if(k==='back'){ S.open=null; S.err=''; repaint(); }
     else if(k==='cam') camera();
+    else if(k==='signin'){ if(window.closeSheet) closeSheet(); if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); }
     else if(k==='est') estimate(v);
     else if(k==='then'){ var p=find(v); if(p){ S.pose=p.pose; S.a=v; var L=byPose(p.pose); S.b=L[L.length-1].id===v&&L.length>1?L[L.length-2].id:L[L.length-1].id; S.open=null; repaint(); } }
     else if(k==='del'){ if(b.getAttribute('data-sure')){ remove(v); } else { b.setAttribute('data-sure','1'); b.textContent='Tap again to delete'; } }

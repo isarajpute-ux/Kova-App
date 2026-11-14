@@ -38,6 +38,7 @@
      POST /crew/inbox/ack {ids}                    picked up by the app [auth]
      POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools; photos allowed) [auth]
      POST /crew/watch/check {id,url,emp,note}  read a watched page now and report what changed (Work) [auth]
+     GET  /ai/health                                             does Kova's AI answer right now: {ok} or {ok:false,code,message} (kept 10 minutes)
      POST /ai/ask      {system,messages,max_tokens,temperature}  Kova's own AI for a question or a photo (machine scan, form review, ingredients, voice): text and up to 8 images [auth]
      POST /hashtags     {post words}    hashtag ideas, grouped, with a rough size band [auth]
      POST /assist       {text}          the agent drafts a job: an email, a task, or an answer [auth]
@@ -1356,6 +1357,11 @@ async function handle(req, res, cfg) {
 
   try {
     if (M === 'GET' && path === '/ping') return res.json({ ok: true, service: 'kova-api', has: cfg.has || null });
+    /* p52: whether Kova's AI really answers right now (ok, or the reason in words); one small check, kept ten minutes */
+    if (M === 'GET' && path === '/ai/health') {
+      await rateLimit(`aih_${sha(req.ip || '').slice(0, 16)}`, 20, 3600e3);
+      return res.json(await claudeMod.health(cfg, { photoModels: meal.MEAL_FALLBACK }));
+    }
     if (M === 'POST' && path === '/auth/code') return await authCode(req, res, cfg);
     if (M === 'POST' && path === '/auth/verify') return await authVerify(req, res, cfg);
     if (M === 'POST' && path === '/health/token') return await healthToken(req, res, cfg);

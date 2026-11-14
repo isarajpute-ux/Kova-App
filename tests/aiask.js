@@ -180,6 +180,26 @@ const user = (content) => ({ messages: [{ role: 'user', content }] });
   await until(() => C2.w.KovaModel && C2.w.KovaModel.viaServer());
   ck('OpenAI picked once, key since removed: photos still go to Kova’s AI, not to OpenAI', C2.w.KovaModel.cfg().p === 'anthropic' && /\/ai\/ask$/.test(C2.w.KovaModel.providers[C2.w.KovaModel.cfg().p].url));
 
+  /* p52: /ai/health, does the AI really answer (ok, or the reason in words) */
+  {
+    const claude = require('../functions/claude');
+    const mk = (answers) => { const calls = []; const f = (u, o) => { const b = JSON.parse(o.body); calls.push(b); const a = answers(b);
+      return Promise.resolve({ ok: a.status === 200, status: a.status, json: () => Promise.resolve(a.json || {}), text: () => Promise.resolve(JSON.stringify(a.json || {})) }); }; f.calls = calls; return f; };
+    const cfg = { anthropicKey: 'k', model: 'claude-sonnet-5-5', mealModel: 'claude-haiku-5-5' };
+    const okF = mk(() => ({ status: 200, json: { content: [{ type: 'text', text: 'ok' }] } }));
+    const h1 = await claude.health(cfg, { fetch: okF, force: true, now: 1e6 });
+    ck('AI health: both readers answer, so it says ok and names the models', h1.ok === true && h1.photo.model === 'claude-haiku-5-5' && h1.main.model === 'claude-sonnet-5-5' && okF.calls.length === 2);
+    ck('…with one tiny question each, nothing of anyone’s (no temperature on the new models)', okF.calls.every((c) => /single word: ok/.test(c.messages[0].content) && c.temperature === undefined && c.messages.length === 1));
+    const h2 = await claude.health(cfg, { fetch: okF, now: 1e6 + 60e3 });
+    ck('…asked again within ten minutes, it answers from memory (no new call)', h2.ok === true && okF.calls.length === 2 && h2.checked === 1e6);
+    const noF = mk(() => ({ status: 400, json: { type: 'error', error: { type: 'invalid_request_error', message: 'Your credit balance is too low to access the Anthropic API.' } } }));
+    const h3 = await claude.health(cfg, { fetch: noF, now: 1e6 + 11 * 60e3, sleep: () => Promise.resolve() });
+    ck('AI health: out of credit is named in words, with one call (it is the same for every model)', h3.ok === false && h3.code === 'credit' && /run out of credit/.test(h3.message) && noF.calls.length === 1);
+    const h4 = await claude.health({ model: 'claude-sonnet-5-5' }, { force: true });
+    ck('AI health: no key on the server says so', h4.ok === false && h4.code === 'config');
+    ck('the server has the route, open to anyone but limited per address', /path === '\/ai\/health'/.test(require('fs').readFileSync(__dirname + '/../functions/api.js', 'utf8')) && /aih_/.test(require('fs').readFileSync(__dirname + '/../functions/api.js', 'utf8')));
+  }
+
   const bad = R.filter((r) => !r[1]);
   R.forEach((r) => console.log((r[1] ? 'ok   ' : 'FAIL ') + r[0]));
   console.log(bad.length ? bad.length + ' failed' : 'all ' + R.length + ' passed');

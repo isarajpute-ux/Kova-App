@@ -83,7 +83,7 @@ window.KovaLabs=(function(){
     return KovaLink.authFetch('/labs/extract',{json:body}).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){
       if(!r.ok){ var e=new Error(r.status===402?'Reading photos of reports is part of Kova Pro. A PDF with text is read on your phone for free.':(j.error||'The report could not be read.')); e.status=r.status; throw e; }
       return (j.rows||[]).map(function(x){ var k=keyOf(x.name); return {name:KEYS.some(function(y){ return y[0]===k; })?label(k,x.name):x.name,key:k,value:x.value,qualifier:x.qualifier,unit:x.unit,low:x.low,high:x.high,date:x.date||today()}; });
-    }); },function(){ throw new Error('The Kova server could not be reached.'); });
+    }); },function(e){ throw new Error(e&&e.code==='signin'?'Sign in and Kova reads this report. A PDF with text is read on your phone without it.':'The Kova server could not be reached.'); });
   }
   function toJpeg(file){
     return new Promise(function(ok,no){ var fr=new FileReader(); fr.onload=function(){ ok(String(fr.result)); }; fr.onerror=no; fr.readAsDataURL(file); });

@@ -43,6 +43,8 @@ function dob(w, doc, d, m, y) {
   const A = boot();
   await wait(400);
   ck('the first screen is the birthday question, and the sign-in card is not stacked on it yet', !!A.doc.getElementById('afDay') && card(A.doc).style.display !== 'flex');
+  /* p52: the owner tapped Back here and landed on the old email-code screen ("Code not sent") */
+  ck('with sign-in up, the birthday question has no Back to the old email-code screen', !A.doc.getElementById('afAgeBack') && !A.doc.getElementById('afSend') && !/Send code/.test(text(A.doc)));
   ck('the age step asks day, month and year', !!A.doc.getElementById('afDay') && !!A.doc.getElementById('afMonth') && !!A.doc.getElementById('afYear'));
   ck('Continue waits for all three', A.doc.getElementById('afAgeGo').disabled);
   dob(A.w, A.doc, 31, 1, 1990);

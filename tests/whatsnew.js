@@ -63,7 +63,9 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: meal photos fixed, one step on Scan food', rel.id === 'new-2026-11-14' && rel.steps.length === 1 && rel.steps[0][0] === 'fuel' && rel.lines.every((l) => l.split(' ').length <= 10));
+  ck('the newest release: Work OS on a phone, two steps on Work', rel.id === 'new-2026-11-15' && rel.steps.length === 2 && rel.steps.every((t) => t[0] === 'work') && rel.lines.every((l) => l.split(' ').length <= 10));
+  const r14 = N.REL.filter((r) => r.id === 'new-2026-11-14')[0];
+  ck('the p51b release: meal photos fixed, one step on Scan food', r14.steps.length === 1 && r14.steps[0][0] === 'fuel' && r14.lines.every((l) => l.split(' ').length <= 10));
   const r13 = N.REL.filter((r) => r.id === 'new-2026-11-13')[0];
   ck('the p51 release: Fuel with no watch, three steps on Fuel (Log food, the barcode icon, water)', r13.id === 'new-2026-11-13' && r13.steps.length === 3 && r13.steps.every((t) => t[0] === 'fuel' && !!t[3]()) && r13.lines.every((l) => l.split(' ').length <= 10));
   const r12 = N.REL.filter((r) => r.id === 'new-2026-11-12')[0];
@@ -121,7 +123,7 @@ function boot(store) {
   w.go('profile'); await wait(30);
   ck('the p50b release finds Profile and Account on the profile', !!r12.steps[0][3]() && r12.steps[0][3]().id === 'pfProfile' && !!r12.steps[1][3]() && r12.steps[1][3]().id === 'pfAccount');
   w.go('fuel'); await wait(30);
-  ck('the p51 release finds Log food, the barcode icon and the water card on Fuel', r13.steps[0][3]().id === 'logBtn' && r13.steps[1][3]().id === 'fuelScanIcon' && !!r13.steps[2][3]() && rel.steps[0][3]().id === 'scanBtn');
+  ck('the p51 release finds Log food, the barcode icon and the water card on Fuel', r13.steps[0][3]().id === 'logBtn' && r13.steps[1][3]().id === 'fuelScanIcon' && !!r13.steps[2][3]() && r14.steps[0][3]().id === 'scanBtn');
   ck('the p37 attachment step finds the attachment button, or + Exercise in an empty workout', !!r23.steps[0][3]() && /katt-chip|addExBtn/.test(r23.steps[0][3]().className + ' ' + r23.steps[0][3]().id));
   w.go('workteam'); await wait(300);
   if (w.KovaCrew) { w.KovaCrew._S.view = 'team'; w.KovaCrew._S.nav = 'team'; w.KovaCrew.paint(); }

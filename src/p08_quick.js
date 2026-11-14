@@ -89,7 +89,7 @@ window.KovaQuick=(function(){
         if(r.ok) return j.items||[];
         var e=new Error(j.error||('HTTP '+r.status)); e.status=r.status; e.soft=r.status!==402; throw e;
       });
-    },function(){ throw Object.assign(new Error('offline'),{soft:true}); });
+    },function(x){ if(x&&x.code==='signin') throw Object.assign(new Error('Sign in first.'),{status:401,soft:true}); throw Object.assign(new Error('offline'),{soft:true}); });
   }
   /* your own key (Settings > AI model), when the server cannot */
   function viaOwnKey(dataUrl){
@@ -185,6 +185,7 @@ window.KovaQuick=(function(){
     }
     else if(state==='empty') body='<div class="kq-shot"><img alt="" src="'+R.shot+'"></div><div class="kq-msg">No food found on that photo. Try again with the plate filling the square.</div><button class="btn" data-kq="again">Retake</button>';
     else if(state==='error') body=(R&&R.shot?'<div class="kq-shot"><img alt="" src="'+R.shot+'"></div>':'')+'<div class="kq-msg">'+esc(R.err)+'</div>'
+      +(R&&R.signin?'<button class="btn kq-in" data-kq="signin">Sign in</button>':'')
       /* p51b: every other way to log it, right here */
       +'<div class="kq-alt">'+(window.KovaBarcode?'<button class="btn" data-kq="bar">Scan the barcode</button>':'')
       +(window.KovaFoodLog?'<button class="btn ghost" data-kq="quick">Quick add</button>':'')+'</div>'
@@ -207,6 +208,7 @@ window.KovaQuick=(function(){
     if(k==='x'){ if(window.closeSheet) closeSheet(); return; }
     if(k==='s'){ scale=+b.getAttribute('data-v'); paint('result'); return; }
     if(k==='again'){ camera(true); return; }
+    if(k==='signin'){ if(window.closeSheet) closeSheet(); if(window.KovaCloudAuth&&KovaCloudAuth.open) KovaCloudAuth.open({mode:'in'}); return; }
     if(k==='search'){ if(window.closeSheet) closeSheet(); try{ go('fuel'); var lb=document.getElementById('logBtn'); if(lb) lb.click(); }catch(e){} return; }
     if(k==='bar'){ if(window.closeSheet) closeSheet(); KovaBarcode.open(function(c){ try{ go('scanner'); }catch(e){} if(window.KovaScanner&&KovaScanner.lookup) KovaScanner.lookup(c); }); return; }
     if(k==='quick'){ if(window.closeSheet) closeSheet(); KovaFoodLog.quickAdd(); return; }
@@ -235,9 +237,16 @@ window.KovaQuick=(function(){
     try{ if(window.__fuelRefresh) __fuelRefresh(); }catch(x){}
   }
 
+  /* p52: signed out (and no key of your own) nothing can read a photo. It
+     used to take the photo and then say "the Kova server could not be
+     reached", which was not true. Now it says to sign in, before the camera. */
+  function signedIn(){ try{ var u=window.KOVA_FB&&KOVA_FB.auth&&KOVA_FB.auth.currentUser; return !!(u&&!u.isAnonymous); }catch(e){ return false; } }
+  function canRead(){ if(signedIn()) return true; try{ return !!(window.KovaModel&&KovaModel.connected&&KovaModel.connected()); }catch(e){ return false; } }
+  var SIGNIN='Sign in and Kova reads your plate for you.';
   /* tap 1: straight into the camera */
   function camera(again){
     if(!again){ T={taps:1,src:'camera'}; scale=1; R=null; }
+    if(!canRead()){ R={err:SIGNIN,signin:true}; openSheet2('error'); return; }
     if(!window.KovaCam){ R={err:'The camera is not available here. Search the food instead.'}; openSheet2('error'); return; }
     KovaCam.open({title:'Log a meal',hint:'Fill the square with the plate. Closer is more accurate.',onShot:shot});
   }
@@ -251,6 +260,8 @@ window.KovaQuick=(function(){
       paint(R.items.length?'result':'empty');
     },function(e){
       busy=false;
+      /* signed out, or the session ran out: say so, with Sign in right there */
+      if(e&&(e.status===401||(e.message==='offline'&&navigator.onLine!==false&&!canRead()))){ R.err=e.status===401&&signedIn()?'Your session ran out. Sign in again and Kova reads your plate.':SIGNIN; R.signin=true; paint('error'); return; }
       R.err=e&&e.status===402?'Reading a photo is part of Kova Pro. Log it by search for free, or start the trial.'
         :e&&e.message==='offline'?(navigator.onLine===false?'You are offline, so nothing could read the photo. It is saved; search the food to log it now.':'The Kova server could not be reached, so nothing read the photo. It is saved; search the food to log it now.')
         /* p51b: the server's own reason (out of credit, busy...), not one vague line */

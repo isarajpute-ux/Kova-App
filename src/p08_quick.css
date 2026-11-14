@@ -39,3 +39,6 @@
 /* p51b: other ways to log it when a photo cannot be read */
 .kq-alt{display:flex;gap:8px;margin:0 0 8px}
 .kq-alt .btn{flex:1;margin:0}
+
+/* p52: Sign in, when nothing can read the photo yet */
+.kq-in{margin:0 0 8px}
