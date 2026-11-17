@@ -2,7 +2,7 @@
   assign s = section.settings
   assign url = s.link | default: '/products/multi-collagen-peptide-powder'
 -%}
-<section id="nx-{{ section.id }}" class="agNx nxHero">
+<section id="nx-{{ section.id }}" class="agNx nxHero{% if s.style == 'light' %} nxHero--light{% endif %}" style="--ink:{{ s.c_ink | default: '#4B1C63' }};--hbg:{{ s.c_bg | default: '#FBF5F3' }}">
   <div class="nxHero__bg" style="--pos:{{ s.img_pos | default: 'center' }}">
     {%- if s.video != blank -%}
       {{ s.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata' }}
@@ -16,16 +16,38 @@
       {%- if s.eyebrow != blank -%}<p class="nxHero__ey">{{ s.eyebrow }}</p>{%- endif -%}
       <h1 class="nxHero__h">{{ s.heading | newline_to_br }}</h1>
       {%- if s.text != blank -%}<p class="nxHero__p">{{ s.text }}</p>{%- endif -%}
+      {%- liquid
+        assign n_feat = 0
+        assign n_pt = 0
+        for block in section.blocks
+          if block.type == 'feat'
+            assign n_feat = n_feat | plus: 1
+          else
+            assign n_pt = n_pt | plus: 1
+          endif
+        endfor
+      -%}
+      {%- if n_feat > 0 -%}
+        <ul class="nxHero__fts" style="--n:{{ n_feat }}">
+          {%- for block in section.blocks -%}{%- if block.type == 'feat' -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="nxHero__ic" aria-hidden="true">{%- render 'ag-hero-icon', icon: block.settings.icon -%}</span>
+              <span class="nxHero__ft">{{ block.settings.title | newline_to_br }}</span>
+              {%- if block.settings.sub != blank -%}<span class="nxHero__fs">{{ block.settings.sub }}</span>{%- endif -%}
+            </li>
+          {%- endif -%}{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if n_pt > 0 -%}
+        <ul class="nxHero__pts">
+          {%- for block in section.blocks -%}{%- if block.type == 'point' -%}<li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>{%- endif -%}{%- endfor -%}
+        </ul>
+      {%- endif -%}
       <div class="nxHero__ctas">
-        <a href="{{ url }}" class="nxHero__btn">{{ s.btn }}</a>
+        <a href="{{ url }}" class="nxHero__btn">{{ s.btn }}{% if s.show_arrow %}<svg class="nxHero__arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>{% endif %}</a>
         {%- if s.trust != blank -%}<span class="nxHero__trust">{{ s.trust }}</span>{%- endif -%}
       </div>
       {%- if s.note != blank -%}<p class="nxHero__note">{{ s.note }}</p>{%- endif -%}
-      {%- if section.blocks.size > 0 -%}
-        <ul class="nxHero__pts">
-          {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>{%- endfor -%}
-        </ul>
-      {%- endif -%}
     </div>
     {%- liquid
       assign pimg = s.product_image
@@ -62,15 +84,56 @@
 #nx-{{ section.id }} .nxHero__prod span{font-size:11px;font-weight:600;text-align:center;line-height:1.2}
 @media(max-width:749px){#nx-{{ section.id }} .nxHero__prod{position:absolute;right:14px;top:78px;width:92px;padding:6px}#nx-{{ section.id }} .nxHero__prod span{font-size:10px}#nx-{{ section.id }} .nxHero__p,#nx-{{ section.id }} .nxHero__trust,#nx-{{ section.id }} .nxHero__pts{display:none!important}#nx-{{ section.id }} .nxHero__in{padding-bottom:28px}#nx-{{ section.id }} .nxHero__h{margin-bottom:16px!important}#nx-{{ section.id }} .nxHero__btn{padding:14px 28px}#nx-{{ section.id }} .nxHero__note{font-size:12px}}
 @media(min-width:990px){#nx-{{ section.id }}{min-height:{{ s.h_d }}vh}#nx-{{ section.id }} .nxHero__h{font-size:{{ s.head_d }}px!important}#nx-{{ section.id }} .nxHero__in{padding-bottom:64px}#nx-{{ section.id }} .nxHero__prod{width:190px;padding:12px}#nx-{{ section.id }} .nxHero__prod span{font-size:13px}}
+#nx-{{ section.id }} .nxHero__arr{width:18px;height:18px;margin-left:10px;vertical-align:-3px}
+#nx-{{ section.id }} .nxHero__fts{list-style:none;padding:0;margin:4px 0 26px;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:10px;max-width:520px}
+#nx-{{ section.id }} .nxHero__fts li{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
+#nx-{{ section.id }} .nxHero__ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(199,171,255,.28);color:var(--ink);margin-bottom:8px}
+#nx-{{ section.id }} .nxHero__ic svg{width:24px;height:24px}
+#nx-{{ section.id }} .nxHero__ft{font-size:13px;line-height:1.3;font-weight:500}
+#nx-{{ section.id }} .nxHero__fs{font-size:10.5px;line-height:1.3;opacity:.65}
+#nx-{{ section.id }}.nxHero--light{background:linear-gradient(90deg,var(--hbg) 0%,var(--hbg) 38%,#F4ECEF 100%)!important;color:#3B2A40;align-items:center;min-height:0}
+#nx-{{ section.id }}.nxHero--light .nxHero__bg{left:auto;right:0;width:60%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 30%);mask-image:linear-gradient(90deg,transparent 0,#000 30%)}
+#nx-{{ section.id }}.nxHero--light .nxHero__bg:after{display:none!important}
+#nx-{{ section.id }}.nxHero--light .nxHero__in{padding-top:56px;padding-bottom:56px;align-items:center}
+#nx-{{ section.id }}.nxHero--light .nxHero__copy{max-width:min(540px,44vw);position:relative}
+#nx-{{ section.id }}.nxHero--light .nxHero__proof{color:#8A7A90}
+#nx-{{ section.id }}.nxHero--light .nxHero__stars{color:#E9A93B}
+#nx-{{ section.id }}.nxHero--light .nxHero__ey{color:var(--ink)!important;opacity:.8;font-weight:500;letter-spacing:.14em}
+#nx-{{ section.id }}.nxHero--light .nxHero__h{color:var(--ink);font-weight:600!important;letter-spacing:-.01em}
+#nx-{{ section.id }}.nxHero--light .nxHero__h em{display:block;font-size:1.22em!important;line-height:1.05;-webkit-text-stroke:.5px currentColor;margin-top:4px}
+#nx-{{ section.id }}.nxHero--light .nxHero__p{color:#3B2A40;font-size:16px;margin-bottom:24px}
+#nx-{{ section.id }}.nxHero--light .nxHero__fts{color:var(--ink)}
+#nx-{{ section.id }}.nxHero--light .nxHero__ctas{flex-direction:column;align-items:flex-start;gap:16px}
+#nx-{{ section.id }}.nxHero--light .nxHero__btn{box-sizing:border-box;background:var(--ink)!important;color:#fff!important;padding:17px 40px;font-size:16px;animation:none!important;box-shadow:0 12px 26px -12px rgba(75,28,99,.55)}
+#nx-{{ section.id }}.nxHero--light .nxHero__trust{color:#3B2A40;font-size:13px}
+#nx-{{ section.id }}.nxHero--light .nxHero__note{color:#3B2A40;font-size:13px;opacity:.9}
+@media(max-width:749px){
+#nx-{{ section.id }}.nxHero--light{flex-direction:column;align-items:stretch;background:var(--hbg)!important}
+#nx-{{ section.id }}.nxHero--light .nxHero__bg{position:relative;inset:auto;width:100%;height:84vw;-webkit-mask-image:linear-gradient(180deg,#000 78%,transparent);mask-image:linear-gradient(180deg,#000 78%,transparent)}
+#nx-{{ section.id }}.nxHero--light .nxHero__in{padding-top:6px;padding-bottom:30px}
+#nx-{{ section.id }}.nxHero--light .nxHero__copy{max-width:none}
+#nx-{{ section.id }}.nxHero--light .nxHero__trust{display:block!important;font-size:12px}
+#nx-{{ section.id }}.nxHero--light .nxHero__ctas{gap:12px}
+#nx-{{ section.id }}.nxHero--light .nxHero__btn{width:100%;text-align:center;padding:16px 20px}
+#nx-{{ section.id }} .nxHero__fts{gap:6px;margin:6px 0 20px}
+#nx-{{ section.id }} .nxHero__ic{width:44px;height:44px;margin-bottom:6px}
+#nx-{{ section.id }} .nxHero__ic svg{width:20px;height:20px}
+#nx-{{ section.id }} .nxHero__ft{font-size:11.5px}
+#nx-{{ section.id }} .nxHero__fs{font-size:9.5px}
+}
+@media(min-width:990px){#nx-{{ section.id }}.nxHero--light{min-height:{{ s.h_d }}vh}#nx-{{ section.id }}.nxHero--light .nxHero__in{padding-top:72px;padding-bottom:72px}}
 </style>
 {% schema %}
 {
   "name": "Landing hero",
   "tag": "div",
   "settings": [
+    { "type": "select", "id": "style", "label": "Style", "default": "dark", "options": [ { "value": "dark", "label": "Dark (photo behind text)" }, { "value": "light", "label": "Light split (text left, photo right)" } ] },
+    { "type": "color", "id": "c_ink", "label": "Light style: heading, icons & button", "default": "#4B1C63" },
+    { "type": "color", "id": "c_bg", "label": "Light style: background", "default": "#FBF5F3" },
     { "type": "video", "id": "video", "label": "Background video" },
     { "type": "image_picker", "id": "image", "label": "Background image (if no video)" },
-    { "type": "select", "id": "img_pos", "label": "Photo focus", "default": "center", "options": [ { "value": "center", "label": "Center" }, { "value": "center top", "label": "Top" }, { "value": "left center", "label": "Left" }, { "value": "right center", "label": "Right" }, { "value": "70% 20%", "label": "Upper right" }, { "value": "30% 20%", "label": "Upper left" } ] },
+    { "type": "select", "id": "img_pos", "label": "Photo focus", "default": "center", "options": [ { "value": "center", "label": "Center" }, { "value": "center top", "label": "Top" }, { "value": "left center", "label": "Left" }, { "value": "right center", "label": "Right" }, { "value": "70% 20%", "label": "Upper right" }, { "value": "30% 20%", "label": "Upper left" }, { "value": "45% center", "label": "Center-left" } ] },
     { "type": "text", "id": "proof", "label": "Proof line (above heading)" },
     { "type": "checkbox", "id": "show_stars", "label": "Show 5 stars before proof line", "default": false },
     { "type": "text", "id": "eyebrow", "label": "Small label", "default": "For women 40+" },
@@ -79,6 +142,7 @@
     { "type": "range", "id": "head_d", "label": "Heading size (desktop)", "min": 28, "max": 80, "step": 2, "unit": "px", "default": 50 },
     { "type": "textarea", "id": "text", "label": "Text" },
     { "type": "text", "id": "btn", "label": "Button", "default": "Shop now" },
+    { "type": "checkbox", "id": "show_arrow", "label": "Show arrow on button", "default": false },
     { "type": "url", "id": "link", "label": "Button link" },
     { "type": "text", "id": "trust", "label": "Trust line next to button" },
     { "type": "text", "id": "note", "label": "Note under button" },
@@ -88,7 +152,13 @@
     { "type": "range", "id": "h_m", "label": "Height mobile (vh)", "min": 50, "max": 100, "step": 5, "default": 85 },
     { "type": "range", "id": "h_d", "label": "Height desktop (vh)", "min": 50, "max": 100, "step": 5, "default": 90 }
   ],
-  "blocks": [ { "type": "point", "name": "Pill", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping" } ] } ],
+  "blocks": [
+    { "type": "feat", "name": "Icon benefit", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "waves", "options": [ { "value": "waves", "label": "Waves (texture)" }, { "value": "sparkle", "label": "Sparkle" }, { "value": "molecule", "label": "Molecule" }, { "value": "leaf", "label": "Leaf" }, { "value": "drop", "label": "Drop" }, { "value": "scoop", "label": "Scoop" }, { "value": "coffee", "label": "Coffee cup" }, { "value": "shield", "label": "Shield" }, { "value": "heart", "label": "Heart" }, { "value": "calendar", "label": "Calendar" }, { "value": "check", "label": "Check" }, { "value": "truck", "label": "Truck" } ] },
+      { "type": "textarea", "id": "title", "label": "Title", "default": "Benefit" },
+      { "type": "text", "id": "sub", "label": "Small line under (optional)" }
+    ] },
+    { "type": "point", "name": "Pill", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping" } ] } ],
   "presets": [ { "name": "Landing hero" } ]
 }
 {% endschema %}

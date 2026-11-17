@@ -12,14 +12,14 @@
     "hero": {
       "type": "ag-hero",
       "settings": {
-        "image": "shopify://shop_images/auvela-hero-mirror.png",
-        "img_pos": "right center",
+        "image": "shopify://shop_images/auvela-hero-group.jpg",
+        "img_pos": "45% center",
         "proof": "4.8 · Loved by 1.4K+ women 40+",
         "show_stars": true,
         "eyebrow": "For women 40+",
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
         "head_m": 30,
-        "head_d": 52,
+        "head_d": 46,
         "text": "Crepey, thinning skin after 40 isn’t weight — it’s collagen loss. One scoop a day helps your arms, stomach, chest, glutes and legs feel firmer and smoother in 90 days.",
         "btn": "Shop Now — from $49.99",
         "link": "/products/multi-collagen-peptide-powder",
@@ -28,9 +28,52 @@
         "product": "",
         "product_label": "Auvela Multi-Collagen · from $49.99",
         "h_m": 75,
-        "h_d": 80,
-        "product_image": "shopify://shop_images/auvela-bag.webp"
-      }
+        "h_d": 75,
+        "style": "light",
+        "c_ink": "#4B1C63",
+        "c_bg": "#FBF5F3",
+        "show_arrow": true
+      },
+      "blocks": {
+        "f1": {
+          "type": "feat",
+          "settings": {
+            "icon": "waves",
+            "title": "Targets\ncrepey skin",
+            "sub": "on arms & stomach"
+          }
+        },
+        "f2": {
+          "type": "feat",
+          "settings": {
+            "icon": "sparkle",
+            "title": "Smooths\ncrepey texture",
+            "sub": ""
+          }
+        },
+        "f3": {
+          "type": "feat",
+          "settings": {
+            "icon": "molecule",
+            "title": "5 full-spectrum\ncollagen types",
+            "sub": ""
+          }
+        },
+        "f4": {
+          "type": "feat",
+          "settings": {
+            "icon": "leaf",
+            "title": "One scoop\na day",
+            "sub": ""
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ]
     },
     "bento": {
       "type": "ag-bento",

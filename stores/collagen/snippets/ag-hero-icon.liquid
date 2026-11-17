@@ -1,0 +1,17 @@
+{%- comment -%} Auvela: line icons for the landing hero "Icon benefit" blocks. Usage: render 'ag-hero-icon', icon: 'waves' {%- endcomment -%}
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+{%- case icon -%}
+  {%- when 'sparkle' -%}<path d="M11 4l1.7 4.8L17.5 10.5l-4.8 1.7L11 17l-1.7-4.8L4.5 10.5l4.8-1.7z"/><path d="M18.5 3v4M16.5 5h4M18 16v4M16 18h4"/>
+  {%- when 'molecule' -%}<circle cx="6" cy="6" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="6" cy="18" r="2.3"/><circle cx="18" cy="18" r="2.3"/><path d="M8.3 6h7.4M8.3 18h7.4M7.6 7.6l8.8 8.8M16.4 7.6l-8.8 8.8"/>
+  {%- when 'leaf' -%}<path d="M6 19c-1-8 4-14 13-15 1 9-5 14-13 15z"/><path d="M6 19c3-4 6-7 9-9"/>
+  {%- when 'drop' -%}<path d="M12 3.5c3.5 4.2 6 7.5 6 10.5a6 6 0 0 1-12 0c0-3 2.5-6.3 6-10.5z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>
+  {%- when 'scoop' -%}<ellipse cx="15" cy="8.5" rx="5" ry="4" transform="rotate(-35 15 8.5)"/><path d="M11.6 11.6L4 19.5"/><path d="M12.5 7.5c1 .3 2 1 2.6 2"/>
+  {%- when 'coffee' -%}<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5v2.5M11.5 3.5v2.5"/>
+  {%- when 'shield' -%}<path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/>
+  {%- when 'heart' -%}<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/>
+  {%- when 'calendar' -%}<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/>
+  {%- when 'check' -%}<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 5-5.2"/>
+  {%- when 'truck' -%}<path d="M3 6.5h11v9.5H3zM14 10h3.8l3.2 3.2V16H14"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/>
+  {%- else -%}<path d="M3.5 8.5c2-1.8 3.7-1.8 5.6 0s3.7 1.8 5.7 0 3.7-1.8 5.7 0"/><path d="M3.5 12.5c2-1.8 3.7-1.8 5.6 0s3.7 1.8 5.7 0 3.7-1.8 5.7 0"/><path d="M3.5 16.5c2-1.8 3.7-1.8 5.6 0s3.7 1.8 5.7 0 3.7-1.8 5.7 0"/>
+{%- endcase -%}
+</svg>
