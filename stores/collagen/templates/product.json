@@ -107,8 +107,8 @@
           "settings": {
             "icon": "sparkle",
             "icon_color": "#2a1427",
-            "title": "Firmer-feeling skin",
-            "sub": "Supports the look of firmness and bounce"
+            "title": "5 collagen types + hyaluronic acid",
+            "sub": "Full-spectrum I, II, III, V & X"
           }
         },
         "ft2": {
@@ -116,8 +116,8 @@
           "settings": {
             "icon": "heart",
             "icon_color": "#2a1427",
-            "title": "Smoother crepey areas",
-            "sub": "Arms, chest and stomach look smoother"
+            "title": "One scoop in your coffee",
+            "sub": "Unflavored, dissolves clean"
           }
         },
         "ft3": {
@@ -125,17 +125,8 @@
           "settings": {
             "icon": "box",
             "icon_color": "#2a1427",
-            "title": "Deep hydration",
-            "sub": "With hyaluronic acid"
-          }
-        },
-        "ft4": {
-          "type": "feature",
-          "settings": {
-            "icon": "shield",
-            "icon_color": "#2a1427",
-            "title": "Hair & nails",
-            "sub": "Stronger-looking hair and nails"
+            "title": "90-day money-back promise",
+            "sub": "Feel firmer or every penny back"
           }
         },
         "howto": {
@@ -222,7 +213,6 @@
         "ft1",
         "ft2",
         "ft3",
-        "ft4",
         "howto",
         "kb1",
         "kb2",
@@ -318,8 +308,8 @@
         "mr_arrow_color": "#2a1427",
         "show_bundles": true,
         "bundle_heading": "Choose your protocol",
-        "atc_text": "Start My 90-Day Protocol →",
-        "atc_show_price": false,
+        "atc_text": "Add to Cart",
+        "atc_show_price": true,
         "soldout_text": "Sold out",
         "show_dynamic_checkout": true,
         "ship_text": "90-Day|Firmer-Skin Promise;3rd-Party|Tested;Free|US shipping",
@@ -342,7 +332,7 @@
         "tl_2": "Shipped",
         "tl_3": "Delivered",
         "show_sticky": true,
-        "sticky_btn": "Start My Protocol"
+        "sticky_btn": "Add to Cart"
       }
     },
     "proof": {

@@ -266,3 +266,10 @@
   document.addEventListener('shopify:section:load',function(){ setTimeout(run,300); }); document.addEventListener('cart:updated',function(){ setTimeout(run,300); }); setTimeout(run,1500);
 })();
 setInterval(function(){ var c=document.querySelector('#cart-icon-bubble'); if(c&&!c.querySelector('.nxCartLbl')){ var s=document.createElement('span'); s.className='nxCartLbl'; s.textContent='Cart'; c.insertBefore(s,c.querySelector('.cart-count-bubble')||null); } },1500);
+/* Auvela: show the brand name Auvela anywhere the store name (Auraglow) is printed on the page */
+(function(){
+  function fix(root){ var w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,null), n;
+    while((n=w.nextNode())){ if(/Auraglow|AuraGlow|AURAGLOW|LOCKSTEP/.test(n.nodeValue)) n.nodeValue=n.nodeValue.replace(/Auraglow|AuraGlow|AURAGLOW|LOCKSTEP/g,'Auvela'); } }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ fix(); }); else fix();
+  setTimeout(fix,1500); document.addEventListener('shopify:section:load',function(){ setTimeout(fix,400); });
+})();

@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "t:sections.header.name",
   "type": "header",
@@ -14,7 +23,7 @@
       "type": "ag-topbar",
       "settings": {
         "label": "Founding Batch 15% off ends in",
-        "mode": "date",
+        "mode": "evergreen",
         "hours": 5,
         "end_date": "2026-11-30T23:59",
         "show_days": true,
