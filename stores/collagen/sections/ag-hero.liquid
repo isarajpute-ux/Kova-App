@@ -2,6 +2,7 @@
   assign s = section.settings
   assign url = s.link | default: '/products/multi-collagen-peptide-powder'
 -%}
+{%- if s.italic_font == 'bold' -%}<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600;1,700&display=swap">{%- endif -%}
 <section id="nx-{{ section.id }}" class="agNx nxHero{% if s.style == 'light' %} nxHero--light{% endif %}" style="--ink:{{ s.c_ink | default: '#4B1C63' }};--hbg:{{ s.c_bg | default: '#FBF5F3' }}">
   <div class="nxHero__bg" style="--pos:{{ s.img_pos | default: 'center' }}">
     {%- if s.video != blank -%}
@@ -100,7 +101,11 @@
 #nx-{{ section.id }}.nxHero--light .nxHero__stars{color:#E9A93B}
 #nx-{{ section.id }}.nxHero--light .nxHero__ey{color:var(--ink)!important;opacity:.8;font-weight:500;letter-spacing:.14em}
 #nx-{{ section.id }}.nxHero--light .nxHero__h{color:var(--ink);font-weight:600!important;letter-spacing:-.01em}
-#nx-{{ section.id }}.nxHero--light .nxHero__h em{display:block;font-size:1.22em!important;line-height:1.05;-webkit-text-stroke:.5px currentColor;margin-top:4px}
+#nx-{{ section.id }}.nxHero--light .nxHero__h em{display:block;font-size:1.22em!important;line-height:1.05;margin-top:4px}
+{%- if s.italic_font == 'bold' -%}
+#nx-{{ section.id }} .nxHero__h em{font-family:'Playfair Display',Georgia,serif!important;font-weight:{{ s.italic_weight | default: 600 }}!important;letter-spacing:-.01em!important}
+#nx-{{ section.id }}.nxHero--light .nxHero__h em{font-size:1.12em!important;margin-top:2px}
+{%- endif -%}
 #nx-{{ section.id }}.nxHero--light .nxHero__p{color:#3B2A40;font-size:16px;margin-bottom:24px}
 #nx-{{ section.id }}.nxHero--light .nxHero__fts{color:var(--ink)}
 #nx-{{ section.id }}.nxHero--light .nxHero__ctas{flex-direction:column;align-items:flex-start;gap:16px}
@@ -131,6 +136,8 @@
     { "type": "select", "id": "style", "label": "Style", "default": "dark", "options": [ { "value": "dark", "label": "Dark (photo behind text)" }, { "value": "light", "label": "Light split (text left, photo right)" } ] },
     { "type": "color", "id": "c_ink", "label": "Light style: heading, icons & button", "default": "#4B1C63" },
     { "type": "color", "id": "c_bg", "label": "Light style: background", "default": "#FBF5F3" },
+    { "type": "select", "id": "italic_font", "label": "Italic words font", "default": "thin", "options": [ { "value": "thin", "label": "Thin (site italic)" }, { "value": "bold", "label": "Bold serif italic" } ] },
+    { "type": "range", "id": "italic_weight", "label": "Bold italic thickness", "min": 500, "max": 700, "step": 100, "default": 600 },
     { "type": "video", "id": "video", "label": "Background video" },
     { "type": "image_picker", "id": "image", "label": "Background image (if no video)" },
     { "type": "select", "id": "img_pos", "label": "Photo focus", "default": "center", "options": [ { "value": "center", "label": "Center" }, { "value": "center top", "label": "Top" }, { "value": "left center", "label": "Left" }, { "value": "right center", "label": "Right" }, { "value": "70% 20%", "label": "Upper right" }, { "value": "30% 20%", "label": "Upper left" }, { "value": "45% center", "label": "Center-left" } ] },
