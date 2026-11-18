@@ -3,7 +3,7 @@
   assign url = s.link | default: '/products/multi-collagen-peptide-powder'
 -%}
 {%- if s.italic_font == 'bold' -%}<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600;1,700&display=swap">{%- endif -%}
-<section id="nx-{{ section.id }}" class="agNx nxHero{% if s.style == 'light' %} nxHero--light{% endif %}" style="--ink:{{ s.c_ink | default: '#4B1C63' }};--hbg:{{ s.c_bg | default: '#FBF5F3' }}">
+<section id="nx-{{ section.id }}" class="agNx nxHero{% if s.style == 'light' %} nxHero--light{% if s.m_layout == 'photo_bottom' %} nxHero--mb{% endif %}{% endif %}{% if s.bar_desktop %} nxHero--bard{% endif %}" style="--ink:{{ s.c_ink | default: '#4B1C63' }};--hbg:{{ s.c_bg | default: '#FBF5F3' }}">
   <div class="nxHero__bg" style="--pos:{{ s.img_pos | default: 'center' }}">
     {%- if s.video != blank -%}
       {{ s.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata' }}
@@ -23,7 +23,7 @@
         for block in section.blocks
           if block.type == 'feat'
             assign n_feat = n_feat | plus: 1
-          else
+          elsif block.type == 'point'
             assign n_pt = n_pt | plus: 1
           endif
         endfor
@@ -60,6 +60,21 @@
       <a href="{{ url }}" class="nxHero__prod">{{ pimg | image_url: width: 500 | image_tag: loading: 'eager', alt: s.product.title }}{%- if s.product_label != blank -%}<span>{{ s.product_label }}</span>{%- endif -%}</a>
     {%- endif -%}
   </div>
+  {%- liquid
+    assign n_bar = 0
+    for block in section.blocks
+      if block.type == 'badge'
+        assign n_bar = n_bar | plus: 1
+      endif
+    endfor
+  -%}
+  {%- if n_bar > 0 -%}
+    <ul class="nxHero__bar" style="--n:{{ n_bar }}">
+      {%- for block in section.blocks -%}{%- if block.type == 'badge' -%}
+        <li {{ block.shopify_attributes }}><span class="nxHero__bi" aria-hidden="true">{%- render 'ag-hero-icon', icon: block.settings.icon -%}</span><span>{{ block.settings.text | newline_to_br }}</span></li>
+      {%- endif -%}{%- endfor -%}
+    </ul>
+  {%- endif -%}
 </section>
 <style>
 #nx-{{ section.id }}{position:relative;background:#0A0A0A;color:#fff;overflow:hidden;min-height:{{ s.h_m }}vh;display:flex;align-items:flex-end}
@@ -126,6 +141,30 @@
 #nx-{{ section.id }} .nxHero__ft{font-size:11.5px}
 #nx-{{ section.id }} .nxHero__fs{font-size:9.5px}
 }
+#nx-{{ section.id }} .nxHero__bar{display:none;list-style:none;margin:0;padding:0}
+#nx-{{ section.id }}.nxHero--bard .nxHero__bar{display:grid;position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:min(760px,calc(100% - 40px));z-index:2}
+#nx-{{ section.id }} .nxHero__bar{grid-template-columns:repeat(var(--n),minmax(0,1fr));background:rgba(243,236,255,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.8);border-radius:22px;padding:16px 6px;box-shadow:0 14px 30px -18px rgba(75,28,99,.45);color:var(--ink)}
+#nx-{{ section.id }} .nxHero__bar li{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:13px;line-height:1.25;padding:0 8px;color:#2A1A33}
+#nx-{{ section.id }} .nxHero__bar li+li{border-left:1px solid rgba(75,28,99,.18)}
+#nx-{{ section.id }} .nxHero__bi{color:var(--ink);display:grid;place-items:center}
+#nx-{{ section.id }} .nxHero__bi svg{width:30px;height:30px}
+@media(max-width:749px){
+#nx-{{ section.id }}.nxHero--mb .nxHero__in{order:1;padding-top:26px;padding-bottom:6px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__bg{order:2;height:auto;aspect-ratio:1/1;margin-top:-6px;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 16%);mask-image:linear-gradient(180deg,transparent 0,#000 16%)}
+#nx-{{ section.id }}.nxHero--mb .nxHero__copy{text-align:center}
+#nx-{{ section.id }}.nxHero--mb .nxHero__h em{font-size:1.3em!important;margin-top:2px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__ey{letter-spacing:.22em;font-size:12px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__p{display:block!important;font-size:14.5px;line-height:1.45;margin:0 auto 18px;max-width:34em}
+#nx-{{ section.id }}.nxHero--mb .nxHero__fts{margin:4px auto 20px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__ft{font-size:12px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__ctas{align-items:center}
+#nx-{{ section.id }}.nxHero--mb .nxHero__btn{max-width:340px}
+#nx-{{ section.id }}.nxHero--mb .nxHero__trust{font-size:12.5px;white-space:pre-wrap}
+#nx-{{ section.id }}.nxHero--mb .nxHero__note{font-size:12.5px;margin-top:8px}
+#nx-{{ section.id }} .nxHero__bar,#nx-{{ section.id }}.nxHero--bard .nxHero__bar{display:grid;order:3;position:relative;left:auto;bottom:auto;transform:none;width:auto;margin:-58px 12px 18px;z-index:2;padding:14px 2px}
+#nx-{{ section.id }} .nxHero__bar li{font-size:11.5px;padding:0 6px}
+#nx-{{ section.id }} .nxHero__bi svg{width:26px;height:26px}
+}
 @media(min-width:990px){#nx-{{ section.id }}.nxHero--light{min-height:{{ s.h_d }}vh}#nx-{{ section.id }}.nxHero--light .nxHero__in{padding-top:72px;padding-bottom:72px}}
 </style>
 {% schema %}
@@ -136,6 +175,8 @@
     { "type": "select", "id": "style", "label": "Style", "default": "dark", "options": [ { "value": "dark", "label": "Dark (photo behind text)" }, { "value": "light", "label": "Light split (text left, photo right)" } ] },
     { "type": "color", "id": "c_ink", "label": "Light style: heading, icons & button", "default": "#4B1C63" },
     { "type": "color", "id": "c_bg", "label": "Light style: background", "default": "#FBF5F3" },
+    { "type": "select", "id": "m_layout", "label": "Light style: phone layout", "default": "photo_top", "options": [ { "value": "photo_top", "label": "Photo on top, text below" }, { "value": "photo_bottom", "label": "Text on top (centered), photo below" } ] },
+    { "type": "checkbox", "id": "bar_desktop", "label": "Show trust bar on desktop too", "info": "Trust bar = the 'Trust badge' blocks. Always shows on phones.", "default": false },
     { "type": "select", "id": "italic_font", "label": "Italic words font", "default": "thin", "options": [ { "value": "thin", "label": "Thin (site italic)" }, { "value": "bold", "label": "Bold serif italic" } ] },
     { "type": "range", "id": "italic_weight", "label": "Bold italic thickness", "min": 500, "max": 700, "step": 100, "default": 600 },
     { "type": "video", "id": "video", "label": "Background video" },
@@ -164,6 +205,10 @@
       { "type": "select", "id": "icon", "label": "Icon", "default": "waves", "options": [ { "value": "waves", "label": "Waves (texture)" }, { "value": "sparkle", "label": "Sparkle" }, { "value": "molecule", "label": "Molecule" }, { "value": "leaf", "label": "Leaf" }, { "value": "drop", "label": "Drop" }, { "value": "scoop", "label": "Scoop" }, { "value": "coffee", "label": "Coffee cup" }, { "value": "shield", "label": "Shield" }, { "value": "heart", "label": "Heart" }, { "value": "calendar", "label": "Calendar" }, { "value": "check", "label": "Check" }, { "value": "truck", "label": "Truck" } ] },
       { "type": "textarea", "id": "title", "label": "Title", "default": "Benefit" },
       { "type": "text", "id": "sub", "label": "Small line under (optional)" }
+    ] },
+    { "type": "badge", "name": "Trust badge", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "shield", "options": [ { "value": "shield", "label": "Shield" }, { "value": "truck", "label": "Truck" }, { "value": "badge", "label": "Badge check" }, { "value": "heart", "label": "Heart" }, { "value": "check", "label": "Check" }, { "value": "calendar", "label": "Calendar" }, { "value": "leaf", "label": "Leaf" }, { "value": "drop", "label": "Drop" } ] },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Free US shipping" }
     ] },
     { "type": "point", "name": "Pill", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping" } ] } ],
   "presets": [ { "name": "Landing hero" } ]

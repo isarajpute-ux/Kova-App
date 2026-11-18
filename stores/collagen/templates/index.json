@@ -18,12 +18,12 @@
         "show_stars": true,
         "eyebrow": "For women 40+",
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
-        "head_m": 30,
+        "head_m": 32,
         "head_d": 46,
-        "text": "Crepey, thinning skin after 40 isn’t weight — it’s collagen loss. One scoop a day helps your arms, stomach, chest, glutes and legs feel firmer and smoother in 90 days.",
+        "text": "Crepey, thinning skin after 40 isn’t weight loss. It’s collagen loss. One scoop a day helps smooth crepey texture and supports a more youthful-looking you — in 90 days.",
         "btn": "Shop Now — from $49.99",
         "link": "/products/multi-collagen-peptide-powder",
-        "trust": "✓ 90-Day money-back promise · Free US shipping",
+        "trust": "✓ 90-Day Money-Back Guarantee   ✓ Free US Shipping",
         "note": "Founding Batch: 15% off · first 35 orders",
         "product": "",
         "product_label": "Auvela Multi-Collagen · from $49.99",
@@ -34,22 +34,24 @@
         "c_bg": "#FBF5F3",
         "show_arrow": true,
         "italic_font": "bold",
-        "italic_weight": 600
+        "italic_weight": 600,
+        "m_layout": "photo_bottom",
+        "bar_desktop": false
       },
       "blocks": {
         "f1": {
           "type": "feat",
           "settings": {
             "icon": "waves",
-            "title": "Targets\ncrepey skin",
-            "sub": "on arms & stomach"
+            "title": "Target\ncrepey skin",
+            "sub": ""
           }
         },
         "f2": {
           "type": "feat",
           "settings": {
             "icon": "sparkle",
-            "title": "Smooths\ncrepey texture",
+            "title": "Smooths\nfine lines",
             "sub": ""
           }
         },
@@ -57,16 +59,37 @@
           "type": "feat",
           "settings": {
             "icon": "molecule",
-            "title": "5 full-spectrum\ncollagen types",
+            "title": "Supports\ncollagen levels",
             "sub": ""
           }
         },
         "f4": {
           "type": "feat",
           "settings": {
-            "icon": "leaf",
-            "title": "One scoop\na day",
+            "icon": "drop",
+            "title": "Hydrates\nskin",
             "sub": ""
+          }
+        },
+        "b1": {
+          "type": "badge",
+          "settings": {
+            "icon": "shield",
+            "text": "Made for\nwomen 40+"
+          }
+        },
+        "b2": {
+          "type": "badge",
+          "settings": {
+            "icon": "truck",
+            "text": "Fast & Free\nUS Shipping"
+          }
+        },
+        "b3": {
+          "type": "badge",
+          "settings": {
+            "icon": "badge",
+            "text": "90-Day\nMoney-Back Guarantee"
           }
         }
       },
@@ -74,7 +97,10 @@
         "f1",
         "f2",
         "f3",
-        "f4"
+        "f4",
+        "b1",
+        "b2",
+        "b3"
       ]
     },
     "bento": {
