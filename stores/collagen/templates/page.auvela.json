@@ -19,7 +19,7 @@
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
         "head_m": 32,
         "head_d": 46,
-        "text": "Crepey, thinning skin after 40 isn’t weight loss. It’s collagen loss. One scoop a day helps smooth crepey texture and supports a more youthful-looking you — in 90 days.",
+        "text": "Crepey skin after 40 isn’t fat. It’s lost collagen. One scoop a day helps your skin feel smoother and firmer in 90 days.",
         "btn": "Shop Now — from $49.99",
         "link": "/products/multi-collagen-peptide-powder",
         "trust": "✓ 90-Day Money-Back Guarantee   ✓ Free US Shipping",
@@ -69,37 +69,13 @@
             "title": "Hydrates\nskin",
             "sub": ""
           }
-        },
-        "b1": {
-          "type": "badge",
-          "settings": {
-            "icon": "shield",
-            "text": "Made for\nwomen 40+"
-          }
-        },
-        "b2": {
-          "type": "badge",
-          "settings": {
-            "icon": "truck",
-            "text": "Fast & Free\nUS Shipping"
-          }
-        },
-        "b3": {
-          "type": "badge",
-          "settings": {
-            "icon": "badge",
-            "text": "90-Day\nMoney-Back Guarantee"
-          }
         }
       },
       "block_order": [
         "f1",
         "f2",
         "f3",
-        "f4",
-        "b1",
-        "b2",
-        "b3"
+        "f4"
       ]
     },
     "features": {
