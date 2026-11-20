@@ -8,86 +8,92 @@ All routes live under `/api` (Netlify: `netlify/functions/api.mjs`). "Auth" mean
 
 None: every call the app makes has a route.
 
-## Routes (79)
+## Routes (85)
 
 | Method | Path | Implemented in | Auth | What it does / returns | Called by |
 |---|---|---|---|---|---|
-| GET | `/ping` | `api.js` | no | health check; `has` says which keys are set (yes/no only) | app, index.html line 13140, 56847 |
-| POST | `/auth/code` | `api.js` (authCode) | no | {email} email a 6-digit sign-in code | app, index.html line 39422, 39507 |
-| POST | `/auth/verify` | `api.js` (authVerify) | no | {email,code} -> {ok, token, name} (Firebase custom token) | app, index.html line 39517 |
-| POST | `/health/token` | `api.js` (healthToken) | yes | -> {url} personal Apple Health sync URL | app, index.html line 13269 |
+| GET | `/ping` | `api.js` | no | health check; `has` says which keys are set (yes/no only) | app, index.html line 14798, 59022 |
+| GET | `/ai/health` | `api.js` | no | does Kova's AI answer right now: {ok} or {ok:false,code,message} (kept 10 minutes) | — |
+| POST | `/auth/code` | `api.js` (authCode) | no | {email} email a 6-digit sign-in code | app, index.html line 40721, 40807 |
+| POST | `/auth/verify` | `api.js` (authVerify) | no | {email,code} -> {ok, token, name} (Firebase custom token) | app, index.html line 40817 |
+| POST | `/health/token` | `api.js` (healthToken) | yes | -> {url} personal Apple Health sync URL | app, index.html line 14927 |
 | POST | `/health/:token` | `api.js`, `health.js`, `wellness.js` (healthPost) | no | Shortcut / Health Auto Export posts here | the Apple Health shortcut / Health Auto Export (POST); the app reads it (GET) |
 | GET | `/health/:token` | `api.js` (healthGet) | no | the app pulls the merged latest values | the Apple Health shortcut / Health Auto Export (POST); the app reads it (GET) |
-| GET | `/status` | `api.js`, `providers.js` (status) | yes | which providers are linked | app, index.html line 13133 |
-| POST | `/connect/:provider` | `api.js`, `providers.js` (connect) | yes | {return,instance} -> {url} provider consent screen | app, index.html line 13191 |
-| POST | `/link/:provider` | `api.js`, `providers.js` (linkRoute) | yes | {fields} Bluesky / Discord / Telegram | app, index.html line 13205 |
-| GET | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | Pages, ad accounts, boards, locations, blogs | app, index.html line 13215, 13218 |
-| POST | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | {id} choose which one to post to | app, index.html line 13215, 13218 |
-| GET | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | Meta Ads: ad account, Page, pixel, currency | app, index.html line 45689 |
-| POST | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | {account,page,pixel} choose them | app, index.html line 45689 |
+| GET | `/status` | `api.js`, `providers.js` (status) | yes | which providers are linked | app, index.html line 14791 |
+| POST | `/connect/:provider` | `api.js`, `providers.js` (connect) | yes | {return,instance} -> {url} provider consent screen | app, index.html line 14849 |
+| POST | `/link/:provider` | `api.js`, `providers.js` (linkRoute) | yes | {fields} Bluesky / Discord / Telegram | app, index.html line 14863 |
+| GET | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | Pages, ad accounts, boards, locations, blogs | app, index.html line 14873, 14876 |
+| POST | `/targets/:provider` | `api.js`, `providers.js` (targetsRoute) | yes | {id} choose which one to post to | app, index.html line 14873, 14876 |
+| GET | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | Meta Ads: ad account, Page, pixel, currency | app, index.html line 47044 |
+| POST | `/ads/setup` | `api.js`, `providers.js`, `ads.js` (adsSetup) | yes | {account,page,pixel} choose them | app, index.html line 47044 |
 | GET | `/oauth/callback` | `api.js`, `providers.js` (callback) | no | provider redirects here | the provider, after you approve |
-| POST | `/disconnect/:provider` | `api.js`, `providers.js` (disconnect) | yes |  | app, index.html line 13245 |
-| POST | `/call/:provider` | `api.js`, `providers.js` (proxy) | yes | {path,method,body} proxied provider API call | app, index.html line 13256 |
-| GET | `/inbound` | `api.js`, `providers.js` (inbound) | yes | recent YouTube comments on your videos | app, index.html line 35373 |
-| POST | `/script` | `api.js`, `crew.js` (script) | yes | Work OS "Creator Script" engine | app, index.html line 36284 |
-| POST | `/publish` | `api.js`, `providers.js`, `publish.js (worker)` (publishRoute) | yes | {post} publish now, schedule, or send as a draft | app, index.html line 45673 |
-| GET | `/posts` | `api.js` (postsRoute) | yes | recent posts and each platform's result | app, index.html line 45700 |
-| GET | `/posts/:id` | `api.js` (postsRoute) | yes | one post | app, index.html line 45697 |
-| POST | `/posts/:id/cancel` | `api.js` (cancelRoute) | yes | unschedule a post that has not run yet | app, index.html line 45698 |
-| POST | `/write` | `api.js`, `crew.js` (writeRoute) | yes | {field,...} write one field of a post with the model | app, index.html line 45706 |
-| POST | `/foods/search` | `api.js` (foodsSearch) | yes | {q} USDA FoodData Central: calories, macros and 10 micronutrients per 100 g | app, index.html line 50346 |
-| POST | `/crew/step` | `api.js`, `crew.js` (crewStep) | yes | {system,messages,tools,web,model} one step of an AI employee's job (Claude with tools) | app, index.html line 51337 |
-| POST | `/crew/cloud` | `api.js`, `crew.js` (crewCloud) | yes | {tz,emps:[{id,freq,time,dow}]} which routines also run while Kova is closed (Kova Pro) | app, index.html line 51136 |
-| GET | `/crew/inbox` | `api.js` (crewInbox) | yes | what they did: reports and proposed changes | app, index.html line 51154 |
-| POST | `/crew/inbox/ack` | `api.js` (crewInboxAck) | yes | {ids} picked up by the app | app, index.html line 51157 |
-| POST | `/hashtags` | `api.js`, `crew.js` (hashtagsRoute) | yes | {post words} hashtag ideas, grouped, with a rough size band | app, index.html line 45694 |
-| POST | `/assist` | `api.js`, `crew.js` (assistRoute) | yes | {text} the agent drafts a job: an email, a task, or an answer | app, index.html line 48592 |
-| POST | `/assist/email` | `api.js`, `providers.js` (assistEmail) | yes | {to,subject,body,send} send the APPROVED email, or save it as a Gmail draft | app, index.html line 48598, 51060 |
-| POST | `/traction/refresh` | `api.js`, `traction.js`, `providers.js` (tractionRefresh) | yes | {postId?} read posts' numbers and comments back now | app, index.html line 49004, 59658 |
-| POST | `/traction/:id/advice` | `api.js`, `traction.js`, `providers.js` (tractionAdvice) | yes | {mode} "What should I fix?" - business or creator | app, index.html line 49059, 59659 |
-| POST | `/card/push` | `api.js`, `card.js`, `providers.js` (cardPush) | yes | {card} business inquiries onto Facebook Page, YouTube | app, index.html line 49101 |
-| GET | `/agent` | `api.js` (agentGet) | yes | wellness agent: settings, last audit, alerts | app, index.html line 48709 |
-| POST | `/agent/settings` | `api.js`, `wellness.js` (agentSettings) | yes | {on,tz,times} switch the three daily audits on or off | app, index.html line 48708, 48843 |
-| POST | `/agent/run` | `api.js`, `wellness.js` (agentRun) | yes | {window?} queue an audit now ("Check now") | app, index.html line 48832 |
-| POST | `/agent/alerts/:id` | `api.js` (agentAlert) | yes | {state} seen / done | app, index.html line 48777 |
-| POST | `/chat` | `api.js`, `chat.js` (chatRoute) | yes | {messages,pillar,snapshot} -> {text} the chat (was the kovaChat callable) | app, index.html line 31232 |
-| GET | `/account/export` | `api.js`, `account.js` (accountExport) | yes | everything the server holds about you, no secrets | app, index.html line 53514 |
-| POST | `/account/delete` | `api.js`, `account.js` (accountDelete) | yes | {confirm:"DELETE"} delete the account and every record of it | app, index.html line 53590 |
-| POST | `/media/upload` | `api.js`, `media.js` (mediaUpload) | yes | one 3 MB part of a file (Netlify Blobs or Supabase Storage) | app, index.html line 3544 |
-| POST | `/media/remove` | `api.js`, `media.js` (mediaRemove) | yes | {path} delete one of your files | app, index.html line 3627 |
-| POST | `/media/link` | `api.js`, `media.js` (mediaLink) | yes | {path} -> {url} a fresh 15-minute link to one of your files (progress photos) | app, index.html line 58866 |
-| POST | `/crew/ask` | `api.js` (crewAsk) | yes | {emp,text,url?,deliverAt?,kind?,ref?} -> {id,runAt} a request to your AI team, done while Kova is closed (Work) | app, index.html line 59556, 59750 |
-| GET | `/crew/asks` | `api.js` (crewAsks) | yes | -> {items} your requests and where they are | app, index.html line 59578 |
-| POST | `/crew/ask/cancel` | `api.js` (crewAskCancel) | yes | {id} take back a request that has not started | app, index.html line 59583 |
-| GET | `/crew/plan` | `api.js` (crewPlanRoute) | yes | -> {prep,checkin} meeting prep and check-in times | app, index.html line 59578, 59588 |
-| POST | `/crew/plan` | `api.js` (crewPlanRoute) | yes | {tz,prep:{on,time,emp},checkin:{on,time,emp}} set them (Work) | app, index.html line 59578, 59588 |
-| POST | `/crew/fetch` | `api.js`, `webpage.js` (crewFetch) | yes | {url} -> {title,text,links} read one public web page for a teammate (Work) | app, index.html line 59646 |
-| POST | `/crew/caption` | `api.js`, `asks.js` (crewCaption) | yes | {title,notes,dur,shape,platforms} -> {heading,caption,tags} a post in your voice (Work) | app, index.html line 59689 |
-| POST | `/body/estimate` | `api.js`, `body.js` (bodyEstimate) | yes | {image,mime,prev?,days?,sex,age,cm,kg} -> {lo,hi,conf,notes,change} body-fat range from a progress photo (Pro) | app, index.html line 58943 |
-| POST | `/meal/read` | `api.js`, `meal.js` (mealRead) | yes | {image,mime,note} -> {items} read a plate from a photo (Pro) | app, index.html line 54335 |
-| POST | `/labs/extract` | `api.js`, `labs.js` (labsExtract) | yes | {text \| image,mime} -> {rows} lab results, extraction only (Pro) | app, index.html line 56240 |
-| POST | `/calendar/sync` | `api.js`, `calendar.js`, `providers.js` (calendarSync) | yes | {blocks,from,to} Work OS blocks <-> Google Calendar, both ways | app, index.html line 56480 |
-| POST | `/devices` | `api.js`, `push.js` (devicesRoute) | yes | {token,platform} this device's push token | app, index.html line 53767 |
-| POST | `/devices/remove` | `api.js`, `push.js` (devicesRoute) | yes | {token} stop pushing to this device | app, index.html line 53777 |
-| POST | `/reminders` | `api.js`, `push.js` (remindersRoute) | yes | {tz,quiet,items} the reminder list the push schedule uses | app, index.html line 53737 |
-| GET | `/book/setup` | `api.js`, `booking.js` (bookOwner) | yes | your booking link settings | app, index.html line 61717, 61798, 61850 |
-| POST | `/book/setup` | `api.js`, `booking.js` (bookOwner) | yes | {slug,name,title,mins,days,from,to,tz,ahead,buffer,notice,on} claim a link name and save (Work) | app, index.html line 61717, 61798, 61850 |
-| POST | `/book/busy` | `api.js`, `booking.js` (bookOwner) | yes | {busy:[{start,end}]} your Work OS meeting times, so they show as busy | app, index.html line 61748 |
-| GET | `/book/list` | `api.js`, `booking.js` (bookOwner) | yes | your upcoming bookings | app, index.html line 61717 |
-| POST | `/book/cancel` | `api.js`, `booking.js` (bookOwner) | yes | {id} cancel one; the time opens again | app, index.html line 61751 |
+| POST | `/disconnect/:provider` | `api.js`, `providers.js` (disconnect) | yes |  | app, index.html line 14903 |
+| POST | `/call/:provider` | `api.js`, `providers.js` (proxy) | yes | {path,method,body} proxied provider API call | app, index.html line 14914 |
+| GET | `/inbound` | `api.js`, `providers.js` (inbound) | yes | recent YouTube comments on your videos | app, index.html line 36536 |
+| POST | `/script` | `api.js`, `crew.js` (script) | yes | Work OS "Creator Script" engine | app, index.html line 37453 |
+| POST | `/publish` | `api.js`, `providers.js`, `publish.js (worker)` (publishRoute) | yes | {post} publish now, schedule, or send as a draft | app, index.html line 47028 |
+| GET | `/posts` | `api.js` (postsRoute) | yes | recent posts and each platform's result | app, index.html line 47055 |
+| GET | `/posts/:id` | `api.js` (postsRoute) | yes | one post | app, index.html line 47052 |
+| POST | `/posts/:id/cancel` | `api.js` (cancelRoute) | yes | unschedule a post that has not run yet | app, index.html line 47053 |
+| POST | `/write` | `api.js`, `asks.js`, `crew.js` (writeRoute) | yes | {field,...} write one field of a post with the model | app, index.html line 47066 |
+| POST | `/foods/search` | `api.js` (foodsSearch) | yes | {q} USDA FoodData Central: calories, macros and 10 micronutrients per 100 g | app, index.html line 52061 |
+| POST | `/crew/step` | `api.js`, `claude.js`, `photoai.js`, `crew.js` (crewStep) | yes | {system,messages,tools,web,model} one step of an AI employee's job (Claude with tools; photos allowed) | app, index.html line 53159 |
+| POST | `/crew/apps` | `api.js`, `apps.js`, `providers.js` (crewApps) | yes | {action:connections\|calendar_list\|calendar_add, ...} the AI team in your linked accounts: what is linked, your Google Calendar, add an approved event | app, index.html line 52698 |
+| POST | `/ai/ask` | `api.js`, `claude.js`, `photoai.js`, `crew.js` (aiAsk) | yes | {system,messages,max_tokens,temperature} Kova's own AI for a question or a photo (machine scan, form review, ingredients, voice): text and up to 8 images | app, index.html line 30329 |
+| POST | `/crew/cloud` | `api.js`, `crew.js` (crewCloud) | yes | {tz,emps:[{id,freq,time,dow}]} which routines also run while Kova is closed (Kova Pro) | app, index.html line 52945 |
+| POST | `/crew/watch/check` | `api.js`, `crew.js` (crewWatchCheck) | yes | {id,url,emp,note} read a watched page now and report what changed (Work) | app, index.html line 67178 |
+| GET | `/crew/inbox` | `api.js` (crewInbox) | yes | what they did: reports and proposed changes | app, index.html line 52966 |
+| POST | `/crew/inbox/ack` | `api.js` (crewInboxAck) | yes | {ids} picked up by the app | app, index.html line 52969 |
+| POST | `/hashtags` | `api.js`, `crew.js` (hashtagsRoute) | yes | {post words} hashtag ideas, grouped, with a rough size band | app, index.html line 47049 |
+| POST | `/assist` | `api.js`, `crew.js` (assistRoute) | yes | {text} the agent drafts a job: an email, a task, or an answer | app, index.html line 50171 |
+| POST | `/assist/email` | `api.js`, `providers.js` (assistEmail) | yes | {to,subject,body,send} send the APPROVED email, or save it as a Gmail draft | app, index.html line 50177, 52865 |
+| POST | `/traction/refresh` | `api.js`, `traction.js`, `providers.js` (tractionRefresh) | yes | {postId?} read posts' numbers and comments back now | app, index.html line 50583, 61894 |
+| POST | `/traction/:id/advice` | `api.js`, `traction.js`, `providers.js` (tractionAdvice) | yes | {mode} "What should I fix?" - business or creator | app, index.html line 50638, 61895 |
+| POST | `/card/push` | `api.js`, `card.js`, `providers.js` (cardPush) | yes | {card} business inquiries onto Facebook Page, YouTube | app, index.html line 50680 |
+| GET | `/agent` | `api.js` (agentGet) | yes | wellness agent: settings, last audit, alerts | app, index.html line 50288 |
+| POST | `/agent/settings` | `api.js`, `wellness.js` (agentSettings) | yes | {on,tz,times} switch the three daily audits on or off | app, index.html line 50287, 50422 |
+| POST | `/agent/run` | `api.js`, `wellness.js` (agentRun) | yes | {window?} queue an audit now ("Check now") | app, index.html line 50411 |
+| POST | `/agent/alerts/:id` | `api.js` (agentAlert) | yes | {state} seen / done | app, index.html line 50356 |
+| POST | `/chat` | `api.js`, `chat.js` (chatRoute) | yes | {messages,pillar,snapshot} -> {text} the chat (was the kovaChat callable) | app, index.html line 32325 |
+| GET | `/account/export` | `api.js`, `account.js` (accountExport) | yes | everything the server holds about you, no secrets | app, index.html line 55628 |
+| POST | `/account/delete` | `api.js`, `account.js` (accountDelete) | yes | {confirm:"DELETE"} delete the account and every record of it | app, index.html line 55704 |
+| POST | `/media/upload` | `api.js`, `media.js` (mediaUpload) | yes | one 3 MB part of a file (Netlify Blobs or Supabase Storage) | app, index.html line 66166 |
+| POST | `/media/remove` | `api.js`, `media.js` (mediaRemove) | yes | {path} delete one of your files | app, index.html line 66258 |
+| POST | `/media/link` | `api.js`, `media.js` (mediaLink) | yes | {path} -> {url} a fresh 15-minute link to one of your files (progress photos) | app, index.html line 61073 |
+| POST | `/crew/ask` | `api.js` (crewAsk) | yes | {emp,text,url?,deliverAt?,kind?,ref?} -> {id,runAt} a request to your AI team, done while Kova is closed (Work) | app, index.html line 61792, 61990 |
+| GET | `/crew/asks` | `api.js` (crewAsks) | yes | -> {items} your requests and where they are | app, index.html line 61814 |
+| POST | `/crew/ask/cancel` | `api.js` (crewAskCancel) | yes | {id} take back a request that has not started | app, index.html line 61819 |
+| GET | `/crew/plan` | `api.js` (crewPlanRoute) | yes | -> {prep,checkin} meeting prep and check-in times | app, index.html line 61814, 61824 |
+| POST | `/crew/plan` | `api.js` (crewPlanRoute) | yes | {tz,prep:{on,time,emp},checkin:{on,time,emp}} set them (Work) | app, index.html line 61814, 61824 |
+| POST | `/crew/fetch` | `api.js`, `webpage.js` (crewFetch) | yes | {url} -> {title,text,links} read one public web page for a teammate (Work) | app, index.html line 61882 |
+| POST | `/scan/link` | `api.js`, `webpage.js` (scanLink) | yes | {url} -> {site,title,text,image} a link's picture and title, for Scan a machine (YouTube, TikTok, any page) | app, index.html line 70459, 71515 |
+| POST | `/tts` | `api.js`, `voice.js` (voiceRoute) | yes | {text} -> {audio,type} Coach me's natural voice (ElevenLabs) | app, index.html line 69402, 71708 |
+| POST | `/crew/caption` | `api.js`, `asks.js` (crewCaption) | yes | {title,notes,dur,shape,platforms} -> {heading,caption,tags} a post in your voice (Work) | app, index.html line 61928 |
+| POST | `/body/estimate` | `api.js`, `body.js` (bodyEstimate) | yes | {image,mime,prev?,days?,sex,age,cm,kg} -> {lo,hi,conf,notes,change} body-fat range from a progress photo (Pro) | app, index.html line 61150 |
+| POST | `/meal/read` | `api.js`, `meal.js`, `photoai.js` (mealRead) | yes | {image,mime,note} -> {items} read a plate from a photo (Pro) | app, index.html line 56455 |
+| POST | `/labs/extract` | `api.js`, `labs.js`, `photoai.js` (labsExtract) | yes | {text \| image,mime} -> {rows} lab results, extraction only (Pro) | app, index.html line 58409 |
+| POST | `/calendar/sync` | `api.js`, `calendar.js`, `providers.js` (calendarSync) | yes | {blocks,from,to} Work OS blocks <-> Google Calendar, both ways | app, index.html line 58655 |
+| POST | `/devices` | `api.js`, `push.js` (devicesRoute) | yes | {token,platform} this device's push token | app, index.html line 55883 |
+| POST | `/devices/remove` | `api.js`, `push.js` (devicesRoute) | yes | {token} stop pushing to this device | app, index.html line 55893 |
+| POST | `/reminders` | `api.js`, `push.js` (remindersRoute) | yes | {tz,quiet,items} the reminder list the push schedule uses | app, index.html line 55853 |
+| GET | `/book/setup` | `api.js`, `booking.js` (bookOwner) | yes | your booking link settings | app, index.html line 64043, 64127, 64179 |
+| POST | `/book/setup` | `api.js`, `booking.js` (bookOwner) | yes | {slug,name,title,mins,days,from,to,tz,ahead,buffer,notice,on} claim a link name and save (Work) | app, index.html line 64043, 64127, 64179 |
+| POST | `/book/busy` | `api.js`, `booking.js` (bookOwner) | yes | {busy:[{start,end}]} your Work OS meeting times, so they show as busy | app, index.html line 64074 |
+| GET | `/book/list` | `api.js`, `booking.js` (bookOwner) | yes | your upcoming bookings | app, index.html line 64043 |
+| POST | `/book/cancel` | `api.js`, `booking.js` (bookOwner) | yes | {id} cancel one; the time opens again | app, index.html line 64077 |
 | GET | `/book/:id` | `api.js`, `booking.js` (bookPublic) | no | the free times on someone's booking page (public: anyone with the link) | the booking page (book.html) |
 | POST | `/book/:id` | `api.js`, `booking.js` (bookPublic) | no | {start,name,email,note} book one (public: anyone with the link) | the booking page (book.html) |
-| GET | `/billing/status` | `api.js`, `billing.js` (billingStatus) | yes | {configured, pro, until} Kova Pro, from RevenueCat | app, index.html line 54071 |
+| GET | `/billing/status` | `api.js`, `billing.js` (billingStatus) | yes | {configured, pro, until} Kova Pro, from RevenueCat | app, index.html line 56191 |
 | GET | `/social/me` | `api.js`, `social.js` (socialRoute) | yes | your friends-feed profile, followers, following | not called yet (reserved for a profile screen) |
-| GET | `/social/feed` | `api.js`, `social.js` (socialRoute) | yes | the opt-in friends feed: workouts and PRs of people you follow | app, index.html line 56083 |
-| POST | `/social/profile` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} switch the feed on or off, pick a handle | app, index.html line 56121 |
-| POST | `/social/follow` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} follow or unfollow someone | app, index.html line 56102 |
+| GET | `/social/feed` | `api.js`, `social.js` (socialRoute) | yes | the opt-in friends feed: workouts and PRs of people you follow | app, index.html line 58252 |
+| POST | `/social/profile` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} switch the feed on or off, pick a handle | app, index.html line 58290 |
+| POST | `/social/follow` | `api.js`, `social.js` (socialRoute) | yes | {handle,on} follow or unfollow someone | app, index.html line 58271 |
 | POST | `/social/followers/remove` | `api.js`, `social.js` (socialRoute) | yes | {handle} remove a follower | not called yet (reserved for "remove follower") |
-| POST | `/social/post` | `api.js`, `social.js` (socialRoute) | yes | {stats} share a finished workout or PR (no health data) | app, index.html line 55956 |
-| POST | `/social/unpost` | `api.js`, `social.js` (socialRoute) | yes | {id} take a share back | app, index.html line 55966, 56097 |
-| POST | `/social/like` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,on} like or unlike a friend's post | app, index.html line 56096 |
-| POST | `/social/comment` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,text} comment on a friend's post | app, index.html line 56103 |
-| POST | `/social/favs` | `api.js`, `social.js` (socialRoute) | yes | {favs} share your favourites (sound, meals, workout, lift, nap) | app, index.html line 56016 |
-| POST | `/social/person` | `api.js`, `social.js` (socialRoute) | yes | {handle} a friend's favourites and counts (followers only) | app, index.html line 56038 |
+| POST | `/social/post` | `api.js`, `social.js` (socialRoute) | yes | {stats} share a finished workout or PR (no health data) | app, index.html line 58125 |
+| POST | `/social/unpost` | `api.js`, `social.js` (socialRoute) | yes | {id} take a share back | app, index.html line 58135, 58266 |
+| POST | `/social/like` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,on} like or unlike a friend's post | app, index.html line 58265 |
+| POST | `/social/comment` | `api.js`, `social.js` (socialRoute) | yes | {handle,id,text} comment on a friend's post | app, index.html line 58272 |
+| POST | `/social/favs` | `api.js`, `social.js` (socialRoute) | yes | {favs} share your favourites (sound, meals, workout, lift, nap) | app, index.html line 58185 |
+| POST | `/social/person` | `api.js`, `social.js` (socialRoute) | yes | {handle} a friend's favourites and counts (followers only) | app, index.html line 58207 |
 | POST | `/billing/webhook` | `api.js`, `billing.js` (billingWebhook) | no | RevenueCat events (its own Authorization value) | RevenueCat |
 | GET | `/media/file` | `netlify.js`, `vercel.js`, `media.js` | no | a signed link to a file (streamed) | signed links in the app (img/video src) |

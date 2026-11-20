@@ -109,7 +109,10 @@ function boot() {
   B._S.open = second; B.open(second); await wait(10);
   ck('a photo opens on its own with "Estimate body fat"', !!sheet().querySelector('[data-b="est"]') && /next to your/.test(sheet().textContent));
   sheet().querySelector('[data-b="est"]').click();
-  await wait(80);
+  /* the photo is read back and shrunk first, which takes longer on a busy machine,
+     so wait for the request itself (up to 3 s) rather than a fixed 80 ms */
+  for (let i = 0; i < 150 && !calls.find((c) => c.path === '/body/estimate'); i++) await wait(20);
+  await wait(20);
   const c0 = calls.find((c) => c.path === '/body/estimate');
   ck('it sends the photo and the earlier one of the same pose to /body/estimate', !!c0 && c0.body.image.length > 20 && !!c0.body.prev && c0.body.days === 21 && c0.body.pose === 'front');
   ck('with the profile: sex, age, height and that day’s weight', c0.body.sex === 'm' && c0.body.age === 31 && c0.body.cm === 180 && c0.body.kg === 79.4 && c0.body.prevKg === 81.4);
