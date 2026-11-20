@@ -8,6 +8,9 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 const html = fs.readFileSync(__dirname + '/../index.html', 'utf8');
 const R = []; const ck = (n, c) => R.push([n, !!c]);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+/* wait until it is true, up to a limit: a slow machine gets more time, the
+   result checked is the same (it was a fixed wait and flaky in CI, p53) */
+const until = async (fn, ms) => { for (let t = 0; t < ms && !fn(); t += 50) await wait(50); };
 
 /* one cloud: a path -> value store, child_changed delivered to every device */
 const store = {}, listeners = {};
@@ -70,12 +73,12 @@ const tasks = (d) => d.w.WorkOS.list('items').map((i) => i.name).sort().join('|'
   /* two real devices on one account */
   lap.w.KovaCloud.start('u1'); phone.w.KovaCloud.start('u1'); await wait(300);
   lap.w.WorkOS.create('items', { name: 'Chem homework ch 5', status: 'Not Started' });
-  await wait(1300);                                          /* pushed after 0.9 s, delivered to the phone */
+  await until(() => /Chem homework ch 5/.test(tasks(phone)), 8000);   /* pushed after 0.9 s, delivered to the phone */
   ck('a task added on the laptop reaches the phone', /Chem homework ch 5/.test(tasks(phone)));
   /* the phone saves something of its own: the laptop's task must survive */
   phone.w.WorkOS.create('items', { name: 'Gym at 5 pm', status: 'Not Started' });
   phone.w.KP.set('water', 6);
-  await wait(1500);
+  await until(() => tasks(lap) === tasks(phone) && /Gym at 5 pm/.test(tasks(lap)), 8000);
   ck('the phone saving its own task does not wipe the laptop’s (both on both)', tasks(lap) === tasks(phone) && /Chem homework ch 5/.test(tasks(lap)) && /Gym at 5 pm/.test(tasks(lap)) || (console.log(tasks(lap), '/', tasks(phone)), false));
   /* the phone was asleep (offline) while the laptop added one; it then saves on its own */
   const listenersBak = listeners['users/u1/store']; listeners['users/u1/store'] = listenersBak.filter((l, i) => i === 0);   /* only the laptop hears */
@@ -85,9 +88,11 @@ const tasks = (d) => d.w.WorkOS.list('items').map((i) => i.name).sort().join('|'
   /* the phone comes back: its copy (without the laptop's newest task) reached the cloud; the laptop merges and sends back the whole */
   await wait(1500);
   const all = ['Chem homework ch 5', 'Gym at 5 pm', 'E-commerce: product photos', 'App: fix the dial'];
+  await until(() => all.every((n) => tasks(lap).includes(n)) && all.every((n) => tasks(phone).includes(n)), 8000);
   ck('a phone that was asleep and saved a stale copy no longer erases a task (everything ends up on both)', all.every((n) => tasks(lap).includes(n)) && all.every((n) => tasks(phone).includes(n)) || (console.log(tasks(lap), '/', tasks(phone)), false));
   const gone = phone.w.WorkOS.list('items').filter((i) => i.name === 'Gym at 5 pm')[0];
-  phone.w.WorkOS.remove('items', gone.id); await wait(1500);
+  phone.w.WorkOS.remove('items', gone.id);
+  await until(() => !/Gym at 5 pm/.test(tasks(lap)) && !/Gym at 5 pm/.test(tasks(phone)), 8000);
   ck('deleting on one device deletes on the other', !/Gym at 5 pm/.test(tasks(lap)) && !/Gym at 5 pm/.test(tasks(phone)));
   ck('no script errors', ![...lap.errors, ...phone.errors].filter((x) => !/Not implemented/i.test(x)).length || (console.log([...lap.errors, ...phone.errors].slice(0, 3)), false));
   let p = 0; R.forEach(([n, c]) => { console.log((c ? 'ok   ' : 'FAIL ') + n); if (c) p++; });
