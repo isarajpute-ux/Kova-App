@@ -790,5 +790,8 @@
   }
 
   paint();
+  /* p53: the pictures come from KovaDemo; if it is not here yet (a build that
+     loads it later), draw the list again once it is */
+  if(!window.KovaDemo) addEventListener('kova:lazy',function(){ if(window.KovaDemo) paint(); },{once:true});
   window.__mcPaint=paint;
 })();
