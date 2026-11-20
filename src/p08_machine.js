@@ -794,4 +794,8 @@
      loads it later), draw the list again once it is */
   if(!window.KovaDemo) addEventListener('kova:lazy',function(){ if(window.KovaDemo) paint(); },{once:true});
   window.__mcPaint=paint;
+  /* p53: KovaGoal adds the cardio machines (bike, rower, stairs, elliptical)
+     when the page is ready. The built site loads it after the page is ready
+     and before this list exists, so it found nothing to add to: add them now */
+  try{ if(window.KovaGoal&&KovaGoal._addMachines) KovaGoal._addMachines(); }catch(e){}
 })();

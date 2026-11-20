@@ -29,8 +29,12 @@ ck('the source page opens all ' + A.ids.length + ' screens without an error', A.
 ck('the built site opens all ' + B.ids.length + ' screens without an error', B.errs.length === 0 || (console.error(B.errs.slice(0, 5)), false));
 const diff = [];
 for (const id of A.ids) {
-  /* ids with a random suffix (gradient ids like rgBloom_x8k2pq) differ on every load */
-  const norm = (x) => x && Object.assign({}, x, { ids: x.ids.map((i) => i.replace(/_[a-z0-9]{6}$/, '_*')), bound: x.bound.map((i) => i.replace(/_[a-z0-9]{6}$/, '_*')) });
+  /* ids with a random suffix (gradient ids like rgBloom_x8k2pq) differ on every load;
+     the exercise figures number their gradients by how many figures were drawn
+     before (k1_g, ki_g), which depends on the order modules load in, so the
+     built site, which loads some later, numbers them differently (p53) */
+  const one = (i) => i.replace(/_[a-z0-9]{6}$/, '_*').replace(/^k[0-9a-z]{1,4}_([ghs])$/, 'k*_$1');
+  const norm = (x) => x && Object.assign({}, x, { ids: x.ids.map(one), bound: x.bound.map(one) });
   const a = norm(A.snap[id]), b = norm(B.snap[id]);
   if (!a || !b) { diff.push(id + ': missing'); continue; }
   const lostB = a.bound.filter((x, i) => b.bound.indexOf(x) < 0), gainB = b.bound.filter((x) => a.bound.indexOf(x) < 0);
@@ -50,7 +54,7 @@ ck('every screen has the same elements and the same ones answer taps (' + A.ids.
   await page.waitForFunction(() => window.__kovaWork === 1, null, { timeout: 20000 });
   await page.waitForTimeout(2500);
   const late = (await snapshot(page, ['worktasks'])).worktasks;
-  const ref = A.snap.worktasks, norm = (l) => l.map((i) => i.replace(/_[a-z0-9]{6}$/, '_*'));
+  const ref = A.snap.worktasks, norm = (l) => l.map((i) => i.replace(/_[a-z0-9]{6}$/, '_*').replace(/^k[0-9a-z]{1,4}_([ghs])$/, 'k*_$1'));
   ck('opening Work before its code arrives: it loads at once and the screen is drawn the same', early && late.on && JSON.stringify(norm(late.bound)) === JSON.stringify(norm(ref.bound)) && JSON.stringify(norm(late.ids)) === JSON.stringify(norm(ref.ids)) && pageErrors.length === 0);
   await context.close();
 }
