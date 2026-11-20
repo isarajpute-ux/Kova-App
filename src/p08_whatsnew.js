@@ -23,6 +23,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-20',title:'Your AI team, in your calendar',
+      lines:['Your team reads your calendar, adds events after your OK','Say a name in a car or a crowd','Chat works offline, then answers in full','Photos never spend AI credit by surprise'],
+      steps:[
+        ['workteam','Call them by name','Say "Maya, plan my week". Works in noisy places too.',function(){ return q('#wtmBody [data-c="listen"]')||q('#s-workteam'); }],
+        ['settings','Photo reading','Turn off reading photos with Kova\u2019s AI here.',function(){ return q('#kpaRow'); }]
+      ]},
     {id:'new-2026-11-15',title:'Work OS, simpler on your phone',
       lines:['One short screen on a phone','Tasks, meetings, your AI team and apps','Studio and Automations open on a computer','Sign-in is one screen, no dead ends'],
       steps:[

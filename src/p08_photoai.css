@@ -1,0 +1,14 @@
+/* p52: Settings > "Read photos with Kova's AI" */
+.kpa{--pa-ink:var(--txt,#fff);--pa-mute:var(--txt-2,rgba(255,255,255,.62));--pa-off:rgba(255,255,255,.18);--pa-on:var(--acc,#E06A6A);padding:12px 14px;margin:0 0 16px}
+.kpa-row{display:flex;align-items:center;gap:12px}
+.kpa-t{flex:1;min-width:0}
+.kpa-t b{display:block;font-size:14px;font-weight:600;color:var(--pa-ink)}
+.kpa-t small{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--pa-mute)}
+.kpa-tog{flex-shrink:0;width:44px;height:26px;border-radius:13px;border:0;padding:0;background:var(--pa-off);position:relative;cursor:pointer;transition:background .2s}
+.kpa-tog span{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.kpa-tog.on{background:var(--pa-on)}
+.kpa-tog.on span{transform:translateX(18px)}
+.kpa-tog:focus-visible{outline:2px solid var(--pa-on);outline-offset:2px}
+body.soft-light .kpa{--pa-off:rgba(255,255,255,.22);--pa-mute:rgba(255,248,248,.7)}
+body.light-mode .kpa{--pa-ink:#1E1416;--pa-mute:rgba(30,20,22,.58);--pa-off:rgba(30,20,22,.16)}
+@media (prefers-reduced-motion:reduce){.kpa-tog,.kpa-tog span{transition:none}}

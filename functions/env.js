@@ -67,6 +67,11 @@ function fromEnv(env) {
     model,
     agentModel: str(env, 'KOVA_AGENT_MODEL', model),
     mealModel: str(env, 'KOVA_MEAL_MODEL', MEAL_MODEL_DEFAULT),
+    /* p52: photos read by Kova's AI (functions/photoai.js): the cheaper model,
+       a daily cap per person, and one switch to turn photo reading off */
+    photoModel: str(env, 'KOVA_PHOTO_MODEL', MEAL_MODEL_DEFAULT),
+    photoAi: str(env, 'KOVA_PHOTO_AI', 'on'),
+    photoDaily: +(str(env, 'KOVA_PHOTO_DAILY', '40')),
     agentBudgetUsd: +(str(env, 'KOVA_AGENT_BUDGET_USD', '0.4')),
     /* Netlify functions cannot start the Agent SDK's own process, so the
        audit runs as a plain tool-use loop there (agent.js viaApi) */

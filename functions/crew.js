@@ -153,10 +153,13 @@ const TOOLS = {
   create_task: { d: 'Propose a new task (the user approves it when they open Kova).', s: obj({ name: S, priority: PRI, due: { type: 'string', description: 'today, tomorrow, +3d or YYYY-MM-DD' }, notes: S }, ['name']), propose: true },
   update_task: { d: 'Propose a change to an existing task, by name: status, priority, due or notes.', s: obj({ name: S, status: STA, priority: PRI, due: S, notes: S }, ['name']), propose: true },
   draft_email: { d: 'Write an email for the user to approve and send. to = email address.', s: obj({ to: S, subject: S, body: S }, ['to', 'subject', 'body']), propose: true },
+  /* p52: the real Google Calendar (functions/apps.js); adding is only proposed */
+  read_calendar: { d: 'The user\'s real Google Calendar events for the next 1-14 days (title, start, end, all-day). Use it before planning anything with a time.', s: obj({ days: N }) },
+  add_calendar_event: { d: 'Propose an event for the user\'s Google Calendar (they approve it when they open Kova). start and end are ISO date-times with the user\'s offset.', s: obj({ title: S, start: S, end: S, notes: S }, ['title', 'start']), propose: true },
   write_report: { d: 'Finish with a report: title, summary, up to 5 metrics {label,value,note}, and sections {heading,text}.',
     s: obj({ title: S, summary: S, metrics: { type: 'array', items: obj({ label: S, value: S, note: S }, ['label', 'value']) }, sections: { type: 'array', items: obj({ heading: S, text: S }, ['heading', 'text']) } }, ['title', 'summary']) }
 };
-const GROUP = { create_task: 'tasks', update_task: 'tasks', draft_email: 'email' };
+const GROUP = { create_task: 'tasks', update_task: 'tasks', draft_email: 'email', add_calendar_event: 'tasks' };
 function toolsFor(e) {
   const g = ['read', 'always'].concat(e.tools || []);
   return Object.keys(TOOLS).filter((k) => !GROUP[k] || g.includes(GROUP[k]));
@@ -165,8 +168,8 @@ function systemFor(e, w, now, tz) {
   const L = W.local(now, tz);
   return `You are ${e.n}, ${e.title} on the user's team inside Kova Work OS, running your routine while the app is closed.\n\n`
     + `YOUR JOB\n${String(e.job || '').slice(0, 4000)}\n\n${e.playbook ? 'HOW YOU WORK\n' + String(e.playbook).slice(0, 4000) + '\n\n' : ''}`
-    + 'RULES\n- Read the work first, then do the job with real numbers from it. Never invent a figure.\n'
-    + '- You cannot change anything directly now: create_task, update_task and draft_email are PROPOSALS the user approves when they open Kova. Propose only what is clearly worth doing (at most 6).\n'
+    + 'RULES\n- Read the work first (and read_calendar when timing matters, if you have it), then do the job with real numbers from it. Never invent a figure.\n'
+    + '- You cannot change anything directly now: create_task, update_task, draft_email and add_calendar_event are PROPOSALS the user approves when they open Kova. Propose only what is clearly worth doing (at most 6).\n'
     + '- Finish by calling write_report exactly once, then reply with one short closing sentence.\n- Write plainly, like a capable colleague. No emojis.\n\n'
     + `ABOUT THE BUSINESS\n${JSON.stringify(w.profile).slice(0, 1500)}\n\nNow: ${L.text} (${tz}).`;
 }
@@ -217,11 +220,19 @@ function makeCrew(deps) {
       content.forEach((b) => { if (b.type === 'text' && b.text && b.text.trim()) say = b.text.trim(); });
       const uses = content.filter((b) => b.type === 'tool_use');
       if (!uses.length) break;
+      const cal = {};
+      for (const u of uses) {
+        if (u.name !== 'read_calendar' || !toolsFor(e).includes(u.name)) continue;
+        if (!deps.tokens) { cal[u.id] = { error: 'The calendar is not available to routines on this server.' }; continue; }
+        try { cal[u.id] = await require('./apps').makeApps({ tokens: deps.tokens, fetch: deps.fetch, now }).calendarList(uid, u.input || {}); }
+        catch (x) { cal[u.id] = { error: (x && x.message) || 'The calendar could not be read.' }; }
+      }
       const results = uses.map((u) => {
         let out;
         if (!toolsFor(e).includes(u.name)) out = { error: `You do not have the ${u.name} tool.` };
         else if (u.name === 'read_work') { out = readWork(w, t, tz); steps.push({ t: `Read the work: ${out.open} open, ${out.overdue} overdue, ${out.due_today} due today`, k: 'read' }); }
         else if (u.name === 'list_tasks') { out = listTasks(w, u.input, t, tz); steps.push({ t: `Listed ${out.length} task${out.length === 1 ? '' : 's'} (${(u.input && u.input.filter) || 'open'})`, k: 'read' }); }
+        else if (u.name === 'read_calendar') { out = cal[u.id] || { error: 'not read' }; steps.push({ t: out.error ? `Could not read the calendar: ${out.error}` : `Read your calendar: ${out.count} event${out.count === 1 ? '' : 's'} in ${out.days} days`, k: 'read' }); }
         else if (u.name === 'write_report') { report = u.input || null; out = { ok: true }; steps.push({ t: 'Wrote the report', k: 'report' }); }
         else if (TOOLS[u.name] && TOOLS[u.name].propose) {
           if (proposals.length >= 6) out = { error: 'That is enough proposals for one run.' };

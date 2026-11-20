@@ -38,7 +38,10 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   ck('a greeting alone is not a job', L.request('Good morning Maya', 'maya') === '' && L.request('Maya hello', 'maya') === '');
   /* p49: in a crowd the name comes out a little wrong */
   ck('in noise, a near name counts right after "hey" (Mia, Maia, my a for Maya)', ['hey mia plan my week', 'hey maia plan my week', 'hey my a plan my week', 'ok mya, plan my week'].every((t) => (L.find(t) || {}).e && L.find(t).e.n === 'Maya'));
-  ck('…but not on its own, so other people\'s chatter does not open boxes', !L.find('mia said plan the week') && !L.find('i talked to mia') && L.find('i talked to maya').e.n === 'Maya');
+  ck('…but not mid-sentence on its own, so other people\'s chatter does not open boxes', !L.find('so mia said plan the week') && !L.find('i talked to mia') && L.find('i talked to maya').e.n === 'Maya');
+  /* p52: "every time I call a name in a crowded location, they still can't hear me" */
+  ck('p52: a near name counts when it opens the phrase, no "hey" needed (Mia, plan my week)', ['mia plan my week', 'maia, plan my week', 'my a plan my week'].every((t) => (L.find(t) || {}).e && L.find(t).e.n === 'Maya'));
+  ck('p52: "Kova" works as a wake word too', (L.find('kova mia plan my week') || {}).e && L.find('kova mia plan my week').e.n === 'Maya');
   ck('names under 4 letters stay exact (Leo is not "Lee")', !L.find('hey lee help me') && L.find('hey leo help me').e.n === 'Leo');
   ck('the job still follows the name as it was heard', L.request('hey my a, plan my week', L.find('hey my a, plan my week').w) === 'Plan my week' && L.request("Maya's turn: write the report", 'maya') === 'Turn: write the report');
 
@@ -127,6 +130,19 @@ w.eval([...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].m
   const ry = recs[recs.length - 1], n0 = recs.length; ry.onend(); await wait(2300);
   ck('after the microphone stops it starts again within 2 seconds', recs.length > n0 && L.running());
   L.set(false); await wait(20);
+  /* p52: on desktop Chrome and Edge, a cleaner microphone (noise suppression, echo cancellation, gain) feeds the recogniser */
+  const gum = [], tr = { readyState: 'live', stop() { tr.readyState = 'ended'; } };
+  Object.defineProperty(w.navigator, 'userAgent', { value: 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 Chrome/140.0 Safari/537.36', configurable: true });
+  Object.defineProperty(w.navigator, 'mediaDevices', { value: { getUserMedia: (c) => { gum.push(c); return Promise.resolve({ getAudioTracks: () => [tr], getTracks: () => [tr] }); } }, configurable: true });
+  FakeSR.prototype.start = function (t) { this.started = true; this.track = t || null; };
+  L.set(true); await wait(40);
+  const rz = recs[recs.length - 1], a0 = gum[0] && gum[0].audio;
+  ck('p52: on desktop Chrome it listens through a mic with noise suppression and echo cancellation', L.cleanMic() && a0 && a0.noiseSuppression === true && a0.echoCancellation === true && a0.autoGainControl === true && rz.track === tr);
+  L.set(false); await wait(20);
+  ck('p52: turning it off closes that microphone', tr.readyState === 'ended');
+  rz.onerror && rz.onerror({ error: 'audio-capture' });
+  Object.defineProperty(w.navigator, 'userAgent', { value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1', configurable: true });
+  ck('p52: on an iPhone Safari keeps its own (already cleaned) microphone', !L.cleanMic());
   let reached = [];
   w.KovaScreenTour.run('move'); await wait(80);
   for (let i = 0; i < 12 && doc.getElementById('ksTour'); i++) { reached.push(doc.querySelector('.screen.on').id + ':' + doc.querySelector('#ksCoach .ks-ct').textContent); doc.querySelector('#ksCoach [data-t="next"]').click(); await wait(250); }

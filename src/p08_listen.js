@@ -38,7 +38,13 @@ window.KovaListen=(function(){
      counts right after a wake word (hey, hi, ok, yo, hello), so other
      people's chatter does not open boxes. Names under 4 letters are
      exact only. */
-  var WAKE=/^(hey|hay|hi|ok|okay|yo|hello)$/;
+  /* p52, the owner again: "every time I call a name in a crowded location,
+     they still can't hear me". People call a name first, without "hey"
+     ("Maya, plan my week"), so a near name now also counts when it opens
+     what was heard (the recogniser starts a new piece after each pause),
+     and "Kova" works as a wake word too. Mid-sentence it still needs the
+     exact name or a wake word, so chatter about "Mia" opens nothing. */
+  var WAKE=/^(hey|hay|hi|ok|okay|yo|hello|kova|cova)$/;
   function lev(a,b){
     var m=a.length, n=b.length, d=[], i, j;
     for(i=0;i<=m;i++){ d[i]=[i]; } for(j=1;j<=n;j++) d[0][j]=j;
@@ -61,7 +67,7 @@ window.KovaListen=(function(){
         var opts=i+1<words.length?[[words[i]+words[i+1],2],[words[i],1]]:[[words[i],1]];   /* two words run together first ("my a") */
         for(var c=0;c<opts.length;c++){
           var q=near(opts[c][0],n); if(!q) continue;
-          if(q===1&&!(i>0&&WAKE.test(words[i-1]))) continue;
+          if(q===1&&!(i===0||WAKE.test(words[i-1]))) continue;
           if(!best||i<best.i) best={e:e,i:i,n:n,w:words.slice(i,i+opts[c][1]).join(' '),exact:q===2};
           return;
         }
@@ -208,7 +214,7 @@ window.KovaListen=(function(){
     } else if(p) p.remove();
   }
   function begin(){
-    if(!SR||!S.on||S.running||document.hidden) return;
+    if(!SR||!S.on||S.running||S.starting||document.hidden) return;
     var r=new SR();
     r.continuous=true; r.interimResults=true; r.lang=navigator.language||'en-US';
     r.maxAlternatives=5;   /* p49: in a crowd the name is often in the 2nd or 3rd guess */
@@ -217,6 +223,8 @@ window.KovaListen=(function(){
       for(var i=ev.resultIndex;i<ev.results.length;i++){ var res=ev.results[i]; hear(pick(res),res.isFinal); }
     };
     r.onerror=function(ev){
+      /* a browser that cannot listen through Kova's own microphone: use its own from now on */
+      if(S.track&&(ev.error==='audio-capture'||ev.error==='not-allowed'||ev.error==='bad-grammar'||ev.error==='language-not-supported')&&!S.noTrack){ S.noTrack=true; dropMic(); return; }
       if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){ S.err='Microphone permission was refused. Allow it in your browser settings to call your team by name.'; set(false); }
       else if(ev.error==='audio-capture'){ S.err='No microphone found.'; set(false); }
     };
@@ -225,8 +233,30 @@ window.KovaListen=(function(){
       /* browsers stop after a pause or a minute; carry on while it is on, gently */
       if(S.on&&!document.hidden){ var gap=Date.now()-S.last<4000?Math.min(2000,300*Math.pow(2,S.restarts++)):150; S.last=Date.now(); setTimeout(begin,gap); }   /* p49: never deaf for more than 2 s (it was up to 8) */
     };
-    try{ r.start(); S.rec=r; S.running=true; S.err=''; S.last=Date.now(); pill(); }catch(e){ S.running=false; }
+    S.starting=true;
+    mic().then(function(track){
+      S.starting=false;
+      if(!S.on||S.running||document.hidden) return;
+      try{ if(track) r.start(track); else r.start(); }
+      catch(e){ try{ r.start(); }catch(e2){ S.running=false; return; } }   /* a browser that takes no track */
+      S.rec=r; S.running=true; S.err=''; S.last=Date.now(); pill();
+    });
   }
+  /* p52: a cleaner microphone. Chrome and Edge let speech recognition listen
+     through a microphone Kova opens itself, so Kova asks for one with noise
+     suppression, echo cancellation and automatic gain: the voice is lifted
+     and the room, the car and the music behind it are turned down before
+     the words are read. Safari, Firefox and older Chrome keep their own
+     microphone (Safari already cleans it). Opened once and reused. */
+  function cleanMicOK(){ var ua=navigator.userAgent||''; return /Chrome\/|Edg\//.test(ua)&&!/iPhone|iPad|iPod|Android/.test(ua)&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!S.noTrack; }
+  function mic(){
+    if(!cleanMicOK()) return Promise.resolve(null);
+    var t=S.track; if(t&&t.readyState==='live') return Promise.resolve(t);
+    return navigator.mediaDevices.getUserMedia({audio:{noiseSuppression:true,echoCancellation:true,autoGainControl:true,channelCount:1}})
+      .then(function(st){ S.stream=st; S.track=st.getAudioTracks()[0]||null; return S.track; })
+      .catch(function(){ S.noTrack=true; return null; });
+  }
+  function dropMic(){ try{ if(S.stream) S.stream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){} S.stream=null; S.track=null; }
   /* the phone's guesses for one piece of speech: the first one with a name in it,
      else its best guess (once a box is open, its best guess) */
   function pick(res){
@@ -234,7 +264,7 @@ window.KovaListen=(function(){
     for(var a=0;a<res.length;a++){ var x=res[a]&&res[a].transcript; if(x&&find(x)) return x; }
     return t;
   }
-  function halt(){ S.running=false; try{ if(S.rec) S.rec.abort(); }catch(e){} S.rec=null; pill(); }
+  function halt(){ S.running=false; try{ if(S.rec) S.rec.abort(); }catch(e){} S.rec=null; dropMic(); pill(); }
   function set(on){
     S.on=!!on; lsPut(KEY,{on:S.on});
     if(S.on){ S.restarts=0; begin(); } else halt();
@@ -259,5 +289,5 @@ window.KovaListen=(function(){
     return true;
   }
   return {supported:supported,set:set,on:function(){ return S.on; },running:function(){ return S.running; },error:function(){ return S.err; },
-    hear:hear,find:find,request:request,pick:pick,close:close,send:send,ask:ask,_S:S};
+    hear:hear,find:find,request:request,pick:pick,close:close,send:send,ask:ask,cleanMic:cleanMicOK,_S:S};
 })();

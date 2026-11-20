@@ -37,6 +37,7 @@
      GET  /crew/inbox                              what they did: reports and proposed changes [auth]
      POST /crew/inbox/ack {ids}                    picked up by the app [auth]
      POST /crew/step   {system,messages,tools,web,model}  one step of an AI employee's job (Claude with tools; photos allowed) [auth]
+     POST /crew/apps   {action:connections|calendar_list|calendar_add, ...}  the AI team in your linked accounts: what is linked, your Google Calendar, add an approved event [auth]
      POST /crew/watch/check {id,url,emp,note}  read a watched page now and report what changed (Work) [auth]
      GET  /ai/health                                             does Kova's AI answer right now: {ok} or {ok:false,code,message} (kept 10 minutes)
      POST /ai/ask      {system,messages,max_tokens,temperature}  Kova's own AI for a question or a photo (machine scan, form review, ingredients, voice): text and up to 8 images [auth]
@@ -126,6 +127,9 @@ const asksMod = require('./asks');
 const { fetchPage, linkPreview } = require('./webpage');
 const labs = require('./labs');
 const { makeCalendar, CalError } = require('./calendar');
+const { makeApps, AppsError } = require('./apps');
+const { makePhotoAI, countImages } = require('./photoai');
+const photoAI = (cfg) => makePhotoAI({ db: db(), cfg, rateLimit, HttpError });
 const { makeBooking, BookError } = require('./booking');
 const { makeSocial, SocialError } = require('./social');
 
@@ -862,11 +866,19 @@ async function aiAsk(req, res, cfg) {
   if (u.firebase && u.firebase.sign_in_provider === 'anonymous') throw new HttpError(403, 'Sign in with your email or Google to use Kova\'s AI.');
   await requirePro(u, cfg, 'any');
   if (!configured(cfg.anthropicKey)) throw new HttpError(503, 'Kova\'s AI is not set up on this server yet.');
-  await rateLimit(`ai_${u.uid}`, 300, 24 * 3600e3);
   const c = cleanAsk(req.body || {});
+  /* p52: photos use the cheaper model, are never paid for twice, and can be switched off */
+  const imgs = countImages(c), P = photoAI(cfg);
+  P.check(imgs);
+  const ck = imgs ? P.key({ s: c.system, m: c.messages, t: c.max_tokens }) : '';
+  if (imgs) { const hit = await P.cached(u.uid, ck); if (hit) return res.json(Object.assign({}, hit, { cached: true })); }
+  await rateLimit(`ai_${u.uid}`, 300, 24 * 3600e3);
+  await P.spend(u.uid, imgs);
   /* p43c: a failure says why (credit, key, model, photo size, busy), busy is tried again, a missing model moves on */
-  const { json: j, model } = await claudeMod.ask(cfg, Object.assign({ model: cfg.model }, c), { tag: 'ai' });
-  return res.json({ content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model });
+  const { json: j, model } = await claudeMod.ask(cfg, Object.assign({ model: imgs ? P.model() : cfg.model }, c), { tag: imgs ? 'ai_photo' : 'ai' });
+  const out = { content: Array.isArray(j.content) ? j.content : [], stop_reason: j.stop_reason || '', usage: j.usage || null, model };
+  if (imgs && out.content.length) await P.keep(u.uid, ck, out);
+  return res.json(out);
 }
 
 async function crewStep(req, res, cfg) {
@@ -876,6 +888,9 @@ async function crewStep(req, res, cfg) {
   await rateLimit(`crew_${u.uid}`, 400, 24 * 3600e3);
   const c = cleanCrew(req.body || {});
   if (c.model === 'opus') await rateLimit(`crew_opus_${u.uid}`, 60, 24 * 3600e3);
+  /* p52: a photo attached to a teammate's job counts toward today's photo reads, and the switch applies */
+  const imgs = countImages(c), P = photoAI(cfg);
+  P.check(imgs); await P.spend(u.uid, imgs);
   const tools = c.tools.slice();
   if (c.web) tools.push({ type: 'web_search_20250305', name: 'web_search', max_uses: 3 });
   const { json: j } = await claudeMod.ask(cfg, { model: CREW_MODELS[c.model] || cfg.model, max_tokens: 2000, system: c.system, tools, messages: c.messages }, { tag: 'crew' });
@@ -911,6 +926,20 @@ async function crewWatchCheck(req, res, cfg) {
   if (!w) throw new HttpError(400, 'That address is not a web page Kova can read.');
   await db().ref(`srv/crewCloud/${u.uid}/watches/${id}`).set(w.v);
   res.json(await askTry(() => crew.makeCrew({ db: db(), cfg }).watch(u.uid, id)));
+}
+/* p52: the AI team in your linked accounts (functions/apps.js) */
+async function crewApps(req, res, cfg) {
+  const u = await requireUser(req);
+  await requirePro(u, cfg, 'work');
+  await rateLimit(`apps_${u.uid}`, 120, 3600e3);
+  const b = req.body || {};
+  const apps = makeApps({ tokens: oauth(cfg) });
+  try {
+    if (b.action === 'connections') return res.json(await apps.connections(u.uid));
+    if (b.action === 'calendar_list') return res.json(await apps.calendarList(u.uid, b));
+    if (b.action === 'calendar_add') { await rateLimit(`apps_add_${u.uid}`, 30, 24 * 3600e3); return res.json(await apps.calendarAdd(u.uid, b)); }
+  } catch (e) { if (e instanceof AppsError) throw new HttpError(e.status, e.message); throw e; }
+  throw new HttpError(400, 'Which action? connections, calendar_list or calendar_add.');
 }
 async function crewInbox(req, res) {
   const u = await requireUser(req);
@@ -1246,8 +1275,13 @@ async function bodyEstimate(req, res, cfg) {
 async function mealRead(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg, 'health');
+  /* p52: the switch applies, and the same plate photo is never paid for twice (meals already use the fast model) */
+  const P = photoAI(cfg), b = req.body || {};
+  P.check(countImages(b));
+  const ck = P.key({ meal: String(b.image || ''), note: String(b.note || '') });
+  const hit = await P.cached(u.uid, ck); if (hit) return res.json(Object.assign({}, hit, { cached: true }));
   await rateLimit(`meal_${u.uid}`, 60, 24 * 3600e3);
-  try { res.json(await meal.readMeal({ cfg, body: req.body })); }
+  try { const r = await meal.readMeal({ cfg, body: req.body }); if (r && r.items && r.items.length) await P.keep(u.uid, ck, r); res.json(r); }
   catch (e) { if (e instanceof meal.MealError) throw new HttpError(e.status, e.message); throw e; }
 }
 
@@ -1255,7 +1289,13 @@ async function labsExtract(req, res, cfg) {
   const u = await requireUser(req);
   await requirePro(u, cfg, 'health');
   await rateLimit(`labs_${u.uid}`, 30, 24 * 3600e3);
-  try { res.json(await labs.extract({ cfg, body: req.body })); }
+  /* p52: a report photo: the switch, the same photo free the second time, the daily cap (the main model stays, numbers must be right) */
+  const imgs = countImages(req.body), P = photoAI(cfg);
+  P.check(imgs);
+  const ck = imgs ? P.key({ labs: String((req.body || {}).image || '') }) : '';
+  if (imgs) { const hit = await P.cached(u.uid, ck); if (hit) return res.json(Object.assign({}, hit, { cached: true })); }
+  await P.spend(u.uid, imgs);
+  try { const r = await labs.extract({ cfg, body: req.body }); if (imgs && r && r.rows && r.rows.length) await P.keep(u.uid, ck, r); res.json(r); }
   catch (e) { if (e instanceof labs.LabError) throw new HttpError(e.status, e.message); throw e; }
 }
 
@@ -1386,6 +1426,7 @@ async function handle(req, res, cfg) {
     if (M === 'POST' && path === '/write') return await writeRoute(req, res, cfg);
     if (M === 'POST' && path === '/foods/search') return await foodsSearch(req, res, cfg);
     if (M === 'POST' && path === '/crew/step') return await crewStep(req, res, cfg);
+    if (M === 'POST' && path === '/crew/apps') return await crewApps(req, res, cfg);
     if (M === 'POST' && path === '/ai/ask') return await aiAsk(req, res, cfg);
     if (M === 'POST' && path === '/crew/cloud') return await crewCloud(req, res, cfg);
     if (M === 'POST' && path === '/crew/watch/check') return await crewWatchCheck(req, res, cfg);

@@ -32,7 +32,7 @@ try {
   firebase.messaging();
 } catch (e) { /* no push on this install; reminders still show while Kova is open */ }
 
-var VERSION = 'kova-v5-116';
+var VERSION = 'kova-v5-117';
 var SHELL   = 'kova-shell-' + VERSION;
 var ASSETS  = 'kova-assets-' + VERSION;
 /* food and recipe photos (Unsplash): kept across versions, at most 80 */
@@ -113,15 +113,24 @@ self.addEventListener('fetch', function(e){
   if (/\/version\.json$/.test(new URL(url).pathname)) return;
 
   /* Navigations and the shell: network-first, cache as fallback. */
+  /* p52: on a weak connection (a car, a gym's Wi-Fi with no internet) the
+     network could hang for half a minute before the saved copy was used, so
+     Kova looked broken offline. Now, after 4 seconds, the saved copy opens
+     and the network answer, when it comes, is kept for next time. */
   if (req.mode === 'navigate' || /\/index\.html$/.test(url) || url.endsWith('/')) {
+    var net = fetch(req).then(function(res){
+      if (res && res.ok) { var copy = res.clone(); caches.open(SHELL).then(function(c){ c.put(HOME, copy); }); }
+      return res;
+    });
+    var saved = function(){ return caches.match(HOME); };
+    var slow = new Promise(function(done){
+      setTimeout(function(){ saved().then(function(hit){ if (hit) done(hit); }); }, 4000);
+    });
+    if (e.waitUntil) e.waitUntil(net.catch(function(){}));
     e.respondWith(
-      fetch(req).then(function(res){
-        var copy = res.clone();
-        caches.open(SHELL).then(function(c){ c.put(HOME, copy); });
-        return res;
-      }).catch(function(){
-        return caches.match(HOME).then(function(hit){
-          return hit || new Response('<h1>Offline</h1><p>Open Kova once with a connection to install it.</p>',
+      Promise.race([net, slow]).catch(function(){
+        return saved().then(function(hit){
+          return hit || new Response('<h1>Kova</h1><p>Open Kova once with a connection to install it.</p>',
             { headers: { 'Content-Type': 'text/html' } });
         });
       })

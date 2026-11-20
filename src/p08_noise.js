@@ -8,9 +8,11 @@
      - shows the level now, in A-weighted decibels (dBA, how the ear hears);
      - adds up today's dose the NIOSH way: 85 dBA is safe for 8 hours, and
        every 3 dB louder halves that (88 for 4 h, 91 for 2 h, 100 for 15 min);
-     - warns when it has been 85 dBA or more for a minute: how loud, how
-       long it is safe at this level, and what to do (earplugs, step out,
-       move away from the speakers);
+     - warns only when it can hurt (p52): 94 dBA or more for two minutes,
+       or once today's safe dose passes half and again when it is used up:
+       how loud, how long it is safe at this level, and what to do
+       (earplugs, step out, move away from the speakers). Talking in a car
+       or a busy room never sets it off;
      - logs each workout's noise with the session (average, peak, minutes
        over 85), and keeps 14 days of loud spells in Vitals.
    Honest limits, said on screen: a phone microphone is not a sound level
@@ -100,11 +102,19 @@ window.KovaNoise=(function(){
     var cur=T.mins[mk]||[0,0,0]; cur[0]+=db; cur[1]++; cur[2]=Math.max(cur[2],db); T.mins[mk]=cur;
     /* counted in seconds of sound, not clock time, so a spell is a spell
        however the timer is throttled */
-    if(db>=85){ if(!S.loudFrom) S.loudFrom=now; S.loudRun=(S.loudRun||0)+secs; S.quietRun=0; }
+    if(db>=85){ if(!S.loudFrom) S.loudFrom=now; S.loudRun=(S.loudRun||0)+secs; S.hardRun=db>=94?(S.hardRun||0)+secs:Math.max(0,(S.hardRun||0)-2*secs); S.quietRun=0; }
     else if(S.loudFrom){ S.quietRun=(S.quietRun||0)+secs; if(S.quietRun>20) closeSpell(); }
-    if(S.loudFrom&&S.loudRun>=60&&now>S.mute){
+    /* p52, the owner: "even when I'm in the car just talking to someone, the
+       app says it's too loud. That's kind of dumb." A phone held near people
+       talking reads 85 dB or more, and a minute of that is no harm at all.
+       Kova now speaks up only when it can actually hurt: very loud (94 dB or
+       more, under an hour safe) for two minutes, or once today's safe dose
+       passes half, and again when it is used up. */
+    if(now>S.mute&&!(window.KovaListen&&KovaListen._S&&KovaListen._S.pop)){
+      var harm=S.loudFrom&&S.hardRun>=120, half=T.dose>=50&&!T.warn50, full=T.dose>=100&&!T.warn100;
+      if(half) T.warn50=1; if(full) T.warn100=1;
       var again=!S.lastAlert||now-S.lastAlert>15*60e3||(S.lastLevel&&db>=S.lastLevel+5);
-      if(again){ S.lastAlert=now; S.lastLevel=db; alert(db); }
+      if(half||full||(harm&&again)){ S.lastAlert=now; S.lastLevel=db; alert(db); }
     }
     if(Object.keys(D.days).length>14){ Object.keys(D.days).sort().slice(0,-14).forEach(function(k){ delete D.days[k]; }); }
     if(S.secs.length%30===0) save();
@@ -117,7 +127,7 @@ window.KovaNoise=(function(){
       D.spells.push({at:S.loudFrom,secs:Math.round(dur),avg:Math.round(avg),max:Math.round(mx),why:S.why||''});
       D.spells=D.spells.filter(function(x){ return x.at>Date.now()-14*DAY; }).slice(-60);
     }
-    S.loudFrom=0; S.loudRun=0; S.quietRun=0; save();
+    S.loudFrom=0; S.loudRun=0; S.hardRun=0; S.quietRun=0; save();
   }
   /* a workout's noise, for the session log */
   function summary(since){
@@ -250,6 +260,9 @@ window.KovaNoise=(function(){
   function onGo(){
     var s=document.getElementById('s-session');
     if(s&&s.classList.contains('on')){ paintSession(); if(D.auto&&!S.on&&D.granted) start('workout'); }
+    /* p52: listening that a workout started ends with the workout, so it never
+       carries on into the car afterwards */
+    else if(S.on&&S.why==='workout') stop();
   }
   function start0(){
     var tries=0;

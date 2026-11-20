@@ -22,7 +22,7 @@ const R = []; const ck = (n, c) => R.push([n, !!c]);
 const ENG = process.env.ENGINE === 'webkit' ? webkit : chromium;
 const OUT = process.env.HOME + '/Kova/previews/p52/';
 const b = await ENG.launch(); const site = await serve(join(root, 'dist'));
-const seen = { home: 1, move: 1, fuel: 1, work: 1, worktoday: 1, workteam: 1, worktasks: 1, workmeetings: 1, workmeeting: 1, workauto: 1, 'new-2026-11-15': 1 };
+const seen = { home: 1, move: 1, fuel: 1, work: 1, worktoday: 1, workteam: 1, worktasks: 1, workmeetings: 1, workmeeting: 1, workauto: 1, 'new-2026-11-15': 1, 'new-2026-11-20': 1 };
 const errs = [];
 
 async function open(th, w, h) {

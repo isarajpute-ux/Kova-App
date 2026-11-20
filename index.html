@@ -9638,6 +9638,23 @@ body.light-mode .wkp-send{background:#16181D;color:#FFFFFF}
 .wkp-ghost{background:transparent!important;border:.5px solid var(--glass-brd)!important;color:var(--txt)!important}
 
 </style>
+<style id="p08-photoai">
+/* p52: Settings > "Read photos with Kova's AI" */
+.kpa{--pa-ink:var(--txt,#fff);--pa-mute:var(--txt-2,rgba(255,255,255,.62));--pa-off:rgba(255,255,255,.18);--pa-on:var(--acc,#E06A6A);padding:12px 14px;margin:0 0 16px}
+.kpa-row{display:flex;align-items:center;gap:12px}
+.kpa-t{flex:1;min-width:0}
+.kpa-t b{display:block;font-size:14px;font-weight:600;color:var(--pa-ink)}
+.kpa-t small{display:block;margin-top:3px;font-size:12px;line-height:1.45;color:var(--pa-mute)}
+.kpa-tog{flex-shrink:0;width:44px;height:26px;border-radius:13px;border:0;padding:0;background:var(--pa-off);position:relative;cursor:pointer;transition:background .2s}
+.kpa-tog span{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.kpa-tog.on{background:var(--pa-on)}
+.kpa-tog.on span{transform:translateX(18px)}
+.kpa-tog:focus-visible{outline:2px solid var(--pa-on);outline-offset:2px}
+body.soft-light .kpa{--pa-off:rgba(255,255,255,.22);--pa-mute:rgba(255,248,248,.7)}
+body.light-mode .kpa{--pa-ink:#1E1416;--pa-mute:rgba(30,20,22,.58);--pa-off:rgba(30,20,22,.16)}
+@media (prefers-reduced-motion:reduce){.kpa-tog,.kpa-tog span{transition:none}}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><symbol id="i-layout-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 12c2-2.96 0-7-1-8 0 3.04-1.77 4.74-3 6-1.23 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.53-1.06-3.94-2-5-1.79 3-2.79 3-4 2z"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol><symbol id="i-barbell" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14M6 8v8M18 8v8M9 12h6M3 10v4M21 10v4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 1 1 12 6.01a5 5 0 1 1 7.5 6.56z"/></symbol><symbol id="i-book-2" viewBox="0 0 24 24"><path d="M19 4v16H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 4v16"/></symbol><symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="6" rx="2"/><circle cx="18" cy="6" r="3"/><rect x="14" y="15" width="7" height="6" rx="2"/><path d="M10 6h5M6.5 9v5a4 4 0 0 0 4 4H14"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6M20 12h-4a2 2 0 0 0 0 4h4"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9 2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5 2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol><symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6M9 17v1a3 3 0 0 0 6 0v-1"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-player-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol><symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 11l7-7 7 7"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2M9 12h6M9 16h4"/></symbol><symbol id="i-chart-bar" viewBox="0 0 24 24"><path d="M3 20h18M7 16V9M12 16V5M17 16v-4"/></symbol><symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></symbol><symbol id="i-battery-3" viewBox="0 0 24 24"><path d="M17 6H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM22 11v2M5 10v4M8 10v4M11 10v4"/></symbol><symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4 3 2 1-5 4 2M6 12l3-3 3 1 3-3"/></symbol><symbol id="i-adjustments" viewBox="0 0 24 24"><path d="M4 10V4M4 20v-6M12 6V4M12 20v-8M20 14V4M20 20v-2M2 10h4M10 6h4M18 14h4"/></symbol><symbol id="i-calendar-stats" viewBox="0 0 24 24"><path d="M11 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M16 3v4M8 3v4M4 11h16M18 21v-3M21 21v-5M15 21v-1"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M3 20l1.3-3.9A8 8 0 1 1 8 19.7z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-heartbeat" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol><symbol id="i-tools-kitchen-2" viewBox="0 0 24 24"><path d="M4 3v6a3 3 0 0 0 3 3h1V3M7 3v9M7 12v9M17 3c-2 2-3 5-3 9h5c0-4-1-7-2-9zM19 12v9"/></symbol><symbol id="i-temperature" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 1 0 4 0V5a2 2 0 0 0-4 0z"/></symbol><symbol id="i-device-mobile" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></symbol><symbol id="i-walk" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.5"/><path d="M7 21l3-4M16 21l-2-6-4-3 1-6M6 12l2-3 4-1 3 3 3 1"/></symbol><symbol id="i-yoga" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.5"/><path d="M4 18h4l4-6 4 6h4M12 12V8"/></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M3 14c0 2 1 5 4 5h6c3 0 4-3 4-5V8H3zM17 9h2a2 2 0 0 1 0 6h-1"/></symbol><symbol id="i-wave-sine" viewBox="0 0 24 24"><path d="M3 12c3 0 3-7 6-7s3 14 6 14 3-7 6-7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19.5l1-6L3.4 9.3l6-.9z"/></symbol><symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8 3 3 0 0 0 4 3.2 3 3 0 0 0 4-3.2 3 3 0 0 0-1-5.8 3 3 0 0 0-3-3zM12 5v13"/></symbol><symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14a2 2 0 0 1 2-2h1v6H6a2 2 0 0 1-2-2zM20 14a2 2 0 0 0-2-2h-1v6h1a2 2 0 0 0 2-2z"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 18z"/></symbol><symbol id="i-arrows-shuffle" viewBox="0 0 24 24"><path d="M18 4l3 3-3 3M18 14l3 3-3 3M3 7h4l10 10h4M3 17h4l3-3M17 7h4"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l2 12H4zM9 8V6a3 3 0 0 1 6 0v2"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M11 18h5a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h5"/></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8M21 17h-4v-4"/></symbol><symbol id="i-body-scan" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.5"/><path d="M9 21v-6l-2-4V8l5-1 5 1v3l-2 4v6"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol><symbol id="i-hand-grab" viewBox="0 0 24 24"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-1a1.5 1.5 0 0 1 3 0"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 0 0 6 6L4 8M4 13a8 8 0 0 0 14 5l2-2M4 4v4h4M20 20v-4h-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h14l-3 4 3 4H5"/></symbol><symbol id="i-seedling" viewBox="0 0 24 24"><path d="M12 20v-8M12 12a5 5 0 0 0-5-5H4a5 5 0 0 0 5 5zM12 12a5 5 0 0 1 5-5h3a5 5 0 0 1-5 5z"/></symbol><symbol id="i-stairs-up" viewBox="0 0 24 24"><path d="M4 20h4v-4h4v-4h4V8h4M18 4h3v3"/></symbol><symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 6l-4 7-2-3z"/></symbol><symbol id="i-focus-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></symbol><symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol><symbol id="i-arrows-up-down" viewBox="0 0 24 24"><path d="M7 4v16M7 4L4 7M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></symbol><symbol id="i-grid-dots" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></symbol><symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol><symbol id="i-info-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M7 10h3V7L6 3 3 6l4 4zM10 10l7 7M17 17l3 3M14 4l6 6-3 3-6-6z"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l10.5-10.5a2.8 2.8 0 0 0-4-4L4 16z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol><symbol id="i-list-details" viewBox="0 0 24 24"><path d="M13 5h8M13 9h5M13 15h8M13 19h5M3 4h6v6H3zM3 14h6v6H3z"/></symbol><symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.2"/><circle cx="18.5" cy="17" r="3.2"/><path d="M5.5 17l4-9h4M9.5 8L13 17h5.5M13 8l2 2.5"/><circle cx="16" cy="5" r="1.4"/></symbol><symbol id="i-swimming" viewBox="0 0 24 24"><path d="M3 17.5c1.5 0 1.5 1.2 3 1.2s1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2 1.5 1.2 3 1.2 1.5-1.2 3-1.2M6 13.5l4-3.5 3.5 2.5M16.5 9.5l-3.5 3"/><circle cx="17.5" cy="6" r="1.6"/></symbol></svg>
@@ -32116,7 +32133,7 @@ window.KovaChat=(function(){
           +'</div>';
       }
       return '<div class="kc-a'+(m.err?' err':'')+'">'+md(m.content)+extra
-        +(m.local?'<div class="kc-src">'+(m.signin?'Quick answer from the on-device guide':'Offline answer')+'</div>':'')+'</div>';
+        +(m.local?'<div class="kc-src">'+(m.signin?'Quick answer from the on-device guide':m.pend?'Answered on this device \u00b7 Kova\u2019s full answer comes by itself once you are online':'Answered on this device')+'</div>':'')+'</div>';
     }).join('');
     if(busy) logEl.insertAdjacentHTML('beforeend','<div class="kc-typing"><i></i><i></i><i></i></div>');
     scrollEnd();
@@ -32238,7 +32255,7 @@ window.KovaChat=(function(){
     try{ a=window.KovaBrain&&KovaBrain.local?KovaBrain.local(q):null; }catch(e){}
     if(a) return a;
     try{ a=window.KovaBrain&&KovaBrain.answer?KovaBrain.answer(q):null; }catch(e){}
-    return a || 'I cannot give a proper answer to that without a connection. Sign in and connect, and ask again - the full assistant knows far more than this offline mode.';
+    return a || 'I can\u2019t answer that one on this device. Kova\u2019s full AI will answer it as soon as it can be reached.';
   }
 
   function send(text){
@@ -32249,9 +32266,15 @@ window.KovaChat=(function(){
     busy=true; sendB.classList.add('off'); render();
     try{ if(window.KovaAnalytics) KovaAnalytics.track('chat_message',{pillar:pillarNow(),len:text.length}); }catch(e){}
 
-    function doneR(r){
-      if(r&&typeof r==='object') done(r.text,{links:r.links,viz:r.viz,q:r.q,depth:r.depth,local:true});
-      else done(r,{local:true});
+    /* p52, the owner: "even if I'm offline... it still works if I have an AI
+       chat history. Why does it have to say that?" No more "Offline mode"
+       line. An answer from the on-device guide is marked quietly under it,
+       and when it was only given because Kova's AI could not be reached
+       (pend), Kova asks again by itself once you are back online. */
+    function doneR(r,pend){
+      var o=pend?{local:true,pend:1}:{local:true};
+      if(r&&typeof r==='object') done(r.text,Object.assign({links:r.links,viz:r.viz,q:r.q,depth:r.depth},o));
+      else done(r,o);
     }
     function done(reply,opts){
       busy=false; sendB.classList.remove('off');
@@ -32288,8 +32311,8 @@ window.KovaChat=(function(){
     }
 
     function offline(){
-      foot.textContent='Offline mode \u00b7 answers from the on-device guide';
-      setTimeout(function(){ doneR(localAnswer(text)); },450);
+      foot.textContent='';
+      setTimeout(function(){ doneR(localAnswer(text),true); },450);
     }
 
     function ask(){
@@ -32317,8 +32340,10 @@ window.KovaChat=(function(){
            say why in the server's own words (p40: "not configured on the
            server yet" is something the owner can act on) */
         if(/not-found|unavailable|internal|deadline/.test(code)){
-          foot.textContent=(why||'Kova\u2019s AI could not answer')+' \u00b7 answered from the on-device guide';
-          doneR(localAnswer(text));
+          /* p52: no server message on screen; it is kept for the console */
+          foot.textContent='';
+          try{ if(why) console.warn('Kova chat: '+why); }catch(x){}
+          doneR(localAnswer(text),true);
         } else if(/payment-required/.test(code)){
           /* Kova Pro: the on-device guide answers, and the plan screen says why */
           foot.textContent='The full assistant is part of Kova Pro';
@@ -32335,6 +32360,18 @@ window.KovaChat=(function(){
     }
   }
 
+  /* p52: a question answered on the device while Kova's AI was out of reach
+     is asked again, once, when the connection is back (or the chat opens) */
+  var reasked={};
+  function reask(){
+    if(busy||navigator.onLine===false||!backend()) return false;
+    var h=hist(), a=h[h.length-1], u=h[h.length-2];
+    if(!a||a.role!=='assistant'||!a.pend||!u||u.role!=='user'||reasked[u.content]) return false;
+    reasked[u.content]=1;
+    h.splice(h.length-2,2); save(h); send(u.content);
+    return true;
+  }
+  window.addEventListener('online',function(){ setTimeout(reask,1500); });
   function autosize(){ inp.style.height='auto'; inp.style.height=Math.min(120,inp.scrollHeight)+'px'; inp.style.overflowY=inp.scrollHeight>120?'auto':'hidden'; }
 
   function open(q){
@@ -32342,7 +32379,8 @@ window.KovaChat=(function(){
     panel.setAttribute('data-pillar',p);
     document.getElementById('kcCtx').textContent=(PN[p]||'Home');
     greet(); render(); autosize();
-    foot.textContent = (backend()||(window.KOVA_FB&&KOVA_FB.ok)) ? '' : 'Offline mode \u00b7 answers from the on-device guide';
+    foot.textContent = '';
+    setTimeout(reask,600);
     panel.classList.add('on'); panel.setAttribute('aria-hidden','false');
     /* go('chat') returns early into this panel, before the router's
        screen_view - so the open is logged here or it never is */
@@ -32367,7 +32405,7 @@ window.KovaChat=(function(){
   });
 
   window.__kovaOpen=function(){ open(); }; window.__kovaClose=close;
-  return { open:open, close:close, send:send, snapshot:snapshot, history:hist, backend:backend };
+  return { open:open, close:close, send:send, snapshot:snapshot, history:hist, backend:backend, reask:reask };
 })();
 
 /* One chat, one entry point. The old in-page chat screen and every
@@ -35506,7 +35544,7 @@ window.KovaProfile=(function(){
     if(!st||!st.ok){ host.innerHTML='<div class="sub" style="padding:10px 0">Backup is not available right now. Everything is saved on this device.</div>'; return; }
     var col,line,sub;
     if(!st.signedIn){ col='var(--txt-3,rgba(127,127,127,.6))'; line='Not backed up'; sub='Sign in to back this device up.'; }
-    else if(!st.online){ col='#E0B94F'; line='Offline'; sub=st.pending+' change'+(st.pending===1?'':'s')+' waiting to upload.'; }
+    else if(!st.online){ col='#E0B94F'; line='Saved on this device'; sub=st.pending?(st.pending+' change'+(st.pending===1?'':'s')+' will back up by itself once you are online.'):'Everything is saved here and backs up by itself once you are online.'; }   /* p52: no "Offline" label */
     else if(st.pending){ col='#E0B94F'; line='Backing up'; sub=st.pending+' change'+(st.pending===1?'':'s')+' uploading.'; }
     else { col='#4FBF7F'; line='Backed up'; sub='Everything on this device is saved to your account.'; }
     host.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:10px 0">'
@@ -41722,11 +41760,10 @@ window.KovaRelay=(function(){
       + 'saved here could be read by anyone who opened the browser tools. The app only '
       + 'knows whether an account is linked.'
       + '</div>'
-      + '<div class="card" style="padding:12px 13px;margin-bottom:14px">'
-      + '<div style="font-size:12px;font-weight:700;color:var(--txt,#FFFFFF)">Kova server</div>'
-      + '<div class="sub" style="margin-top:3px">'
-      + (last===null?'Checking…':(last?'Online':'Not reachable — offline, or not deployed yet'))
-      + '</div></div>';
+      /* p52, the owner: "if the server's off or if it's online, why does it
+         have to say that?" No server line; only a plain note when linking
+         cannot work right now */
+      + (last===false?'<div class="sub" style="margin:-4px 0 14px">Linking an account needs a connection. Accounts you already linked keep working.</div>':'');
 
     h+=ROWS.map(function(b){
       var on=b[2]&&last;
@@ -52653,6 +52690,19 @@ window.KovaCrew=(function(){
   var DUE='today, tomorrow, +3d or YYYY-MM-DD';
   var PRI={type:'string',enum:['Critical','High','Medium','Low']}, STA={type:'string',enum:['Not Started','In Progress','Waiting','Completed']};
   var COLL={create_task:'items',create_project:'projects',create_process:'processes',create_goal:'goals',create_board:'boards',create_content_draft:'content',schedule_meeting:'meetings'};
+  /* p52: one call to the server for the linked accounts; a failure is an
+     answer the teammate can read ({error}), never a thrown job */
+  function appsCall(body){
+    if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve({error:'Kova is not connected to its server here.'});
+    if(navigator.onLine===false) return Promise.resolve({error:'You are offline right now; linked accounts are read once you are back online.'});
+    return KovaLink.authFetch('/crew/apps',{json:body}).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){ return r.ok?j:{error:j.error||('The server said '+r.status+'.')}; });
+    },function(e){ return {error:e&&e.code==='signin'?'Sign in to use your linked accounts.':'The Kova server could not be reached.'}; });
+  }
+  function calWhen(iso){
+    var t=Date.parse(iso); if(!isFinite(t)) return String(iso||'');
+    try{ return new Date(t).toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }catch(e){ return new Date(t).toISOString(); }
+  }
 
   var TOOLS={
     read_work:{g:'read',kind:'read',d:'Overview of all the work right now: counts by status, overdue, due today and this week, projects, goals, content pipeline and meetings, with findings.',
@@ -52795,6 +52845,18 @@ window.KovaCrew=(function(){
       run:function(a){ return window.KovaAsk?KovaAsk.publishFromTool(a):{error:'Posting is not available here.'}; },
       describe:function(a){ return {t:'Post',n:a.post,s:'to '+(a.platforms||[]).join(', ')}; },
       label:function(r){ return r.error?'Not posted: '+r.error:'Posted \u201c'+r.post+'\u201d to '+r.platforms.join(', '); }},
+    /* p52: the team in your linked accounts (functions/apps.js) */
+    connected_apps:{g:'read',kind:'read',d:'Which of the user’s accounts are linked to Kova (Google, Instagram, TikTok, LinkedIn, X...) and what each lets the team do. Check it before promising to act in another app.',
+      s:obj({}), run:function(){ return appsCall({action:'connections'}); },
+      label:function(r){ return r.error?'Could not check the linked accounts: '+r.error:'Checked the linked accounts: '+((r.linked||[]).map(function(x){ return x.app; }).join(', ')||'none yet'); }},
+    read_calendar:{g:'read',kind:'read',d:'The user’s real Google Calendar events for the next 1-14 days (title, start, end, all-day, where). Read it before planning or proposing anything with a time.',
+      s:obj({days:S_NUM}), run:function(a){ return appsCall({action:'calendar_list',days:a.days||7}); },
+      label:function(r){ return r.error?'Could not read the calendar: '+r.error:'Read your calendar: '+r.count+' event'+(r.count===1?'':'s')+' in '+r.days+' days'; }},
+    add_calendar_event:{g:'tasks',kind:'external',d:'Add one event to the user’s Google Calendar. It waits for their OK. start and end are ISO date-times with the user’s time-zone offset; read_calendar first so it does not land on a meeting.',
+      s:obj({title:S_STR,start:S_STR,end:S_STR,notes:S_STR},['title','start']),
+      run:function(a){ return appsCall({action:'calendar_add',title:a.title,start:a.start,end:a.end,notes:a.notes}); },
+      describe:function(a){ return {t:'Calendar',n:a.title,s:calWhen(a.start)}; },
+      label:function(r,a){ return r.error?'Not added to the calendar: '+r.error:'Added “'+(r.title||a.title)+'” to your calendar, '+calWhen(r.start||a.start); }},
     draft_email:{g:'email',kind:'external',d:'Write an email for the user to approve. It is only sent (or saved to Gmail drafts) after they approve. to = email address.',
       s:obj({to:S_STR,subject:S_STR,body:S_STR},['to','subject','body']),
       run:function(a){
@@ -53023,14 +53085,16 @@ window.KovaCrew=(function(){
       +'- Hand a job to a teammate (hand_off) only when it needs that teammate\u2019s tools.\n'
       +'- Keep going until the job is done; do not stop to ask what you can find out yourself. If you truly need a decision, finish and say exactly what you need.\n'
       +'- Email is prepared for the user to approve; you never send anything yourself. Posts are Studio drafts; the user publishes.\n'
+      +'- Other apps: connected_apps says which accounts are linked; read_calendar shows their real Google Calendar, so read it before planning anything with a time. A calendar event (add_calendar_event) waits for the user\u2019s OK like an email.\n'
       +'- A question gets a direct answer: a few short lines, their numbers first, then what to do. Call write_report only for real work (a plan, an analysis, a weekly report), once, with at least one chart built from real numbers, then one short closing sentence.\n'
       +'- Write plainly, like a capable colleague. No filler, no emojis.\n\n'
       +(team?'TEAM\n'+team+'\n\n':'')
       +'YOUR HEALTH (from Kova)\n'+healthText()+'\n\n'
       +'ABOUT THE BUSINESS\n'+((A&&A.context)?A.context():'')+'\n\n'
       +(mem?'WHAT YOU REMEMBER\n'+mem+'\n\n':'')
-      +'Now: '+d.toDateString()+' '+clock(d.getTime())+' ('+tz+').';
+      +'Now: '+d.toDateString()+' '+clock(d.getTime())+' ('+tz+', UTC'+offStr(d)+').';
   }
+  function offStr(d){ var m=-d.getTimezoneOffset(), a=Math.abs(m); return (m<0?'-':'+')+('0'+Math.floor(a/60)).slice(-2)+':'+('0'+a%60).slice(-2); }
 
   /* ---------------- brains ---------------- */
   function keyBrain(){ try{ if(window.KovaModel&&KovaModel.connected()){ var c=KovaModel.cfg(); if(c&&c.p==='anthropic'&&c.key) return c; } }catch(e){} return null; }
@@ -54505,7 +54569,7 @@ window.KovaCrew=(function(){
     var L=window.KovaListen; if(!L) return '';
     var ok=L.supported(), on=ok&&L.on(), err=L.error(), names=emps().filter(function(e){ return e.enabled; }).map(function(e){ return e.n; }).slice(0,2);
     return '<div class="crw-listen"><span class="crw-lt"><b>Call them by name</b><small>'
-      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. In a noisy room, say “hey” first. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
+      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. Say the name first, or “hey” before it, and it works in a busy room or a car too. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
           :'This browser cannot listen for names. Chrome, Edge and Safari can.')
       +(err?'<em>'+esc(err)+'</em>':'')+'</small></span>'
       +'<button class="crw-tog'+(on?' on':'')+'" data-c="listen" role="switch" aria-checked="'+on+'" aria-label="Call your team by name"'+(ok?'':' disabled')+'><span></span></button></div>';
@@ -55188,7 +55252,13 @@ window.KovaListen=(function(){
      counts right after a wake word (hey, hi, ok, yo, hello), so other
      people's chatter does not open boxes. Names under 4 letters are
      exact only. */
-  var WAKE=/^(hey|hay|hi|ok|okay|yo|hello)$/;
+  /* p52, the owner again: "every time I call a name in a crowded location,
+     they still can't hear me". People call a name first, without "hey"
+     ("Maya, plan my week"), so a near name now also counts when it opens
+     what was heard (the recogniser starts a new piece after each pause),
+     and "Kova" works as a wake word too. Mid-sentence it still needs the
+     exact name or a wake word, so chatter about "Mia" opens nothing. */
+  var WAKE=/^(hey|hay|hi|ok|okay|yo|hello|kova|cova)$/;
   function lev(a,b){
     var m=a.length, n=b.length, d=[], i, j;
     for(i=0;i<=m;i++){ d[i]=[i]; } for(j=1;j<=n;j++) d[0][j]=j;
@@ -55211,7 +55281,7 @@ window.KovaListen=(function(){
         var opts=i+1<words.length?[[words[i]+words[i+1],2],[words[i],1]]:[[words[i],1]];   /* two words run together first ("my a") */
         for(var c=0;c<opts.length;c++){
           var q=near(opts[c][0],n); if(!q) continue;
-          if(q===1&&!(i>0&&WAKE.test(words[i-1]))) continue;
+          if(q===1&&!(i===0||WAKE.test(words[i-1]))) continue;
           if(!best||i<best.i) best={e:e,i:i,n:n,w:words.slice(i,i+opts[c][1]).join(' '),exact:q===2};
           return;
         }
@@ -55358,7 +55428,7 @@ window.KovaListen=(function(){
     } else if(p) p.remove();
   }
   function begin(){
-    if(!SR||!S.on||S.running||document.hidden) return;
+    if(!SR||!S.on||S.running||S.starting||document.hidden) return;
     var r=new SR();
     r.continuous=true; r.interimResults=true; r.lang=navigator.language||'en-US';
     r.maxAlternatives=5;   /* p49: in a crowd the name is often in the 2nd or 3rd guess */
@@ -55367,6 +55437,8 @@ window.KovaListen=(function(){
       for(var i=ev.resultIndex;i<ev.results.length;i++){ var res=ev.results[i]; hear(pick(res),res.isFinal); }
     };
     r.onerror=function(ev){
+      /* a browser that cannot listen through Kova's own microphone: use its own from now on */
+      if(S.track&&(ev.error==='audio-capture'||ev.error==='not-allowed'||ev.error==='bad-grammar'||ev.error==='language-not-supported')&&!S.noTrack){ S.noTrack=true; dropMic(); return; }
       if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){ S.err='Microphone permission was refused. Allow it in your browser settings to call your team by name.'; set(false); }
       else if(ev.error==='audio-capture'){ S.err='No microphone found.'; set(false); }
     };
@@ -55375,8 +55447,30 @@ window.KovaListen=(function(){
       /* browsers stop after a pause or a minute; carry on while it is on, gently */
       if(S.on&&!document.hidden){ var gap=Date.now()-S.last<4000?Math.min(2000,300*Math.pow(2,S.restarts++)):150; S.last=Date.now(); setTimeout(begin,gap); }   /* p49: never deaf for more than 2 s (it was up to 8) */
     };
-    try{ r.start(); S.rec=r; S.running=true; S.err=''; S.last=Date.now(); pill(); }catch(e){ S.running=false; }
+    S.starting=true;
+    mic().then(function(track){
+      S.starting=false;
+      if(!S.on||S.running||document.hidden) return;
+      try{ if(track) r.start(track); else r.start(); }
+      catch(e){ try{ r.start(); }catch(e2){ S.running=false; return; } }   /* a browser that takes no track */
+      S.rec=r; S.running=true; S.err=''; S.last=Date.now(); pill();
+    });
   }
+  /* p52: a cleaner microphone. Chrome and Edge let speech recognition listen
+     through a microphone Kova opens itself, so Kova asks for one with noise
+     suppression, echo cancellation and automatic gain: the voice is lifted
+     and the room, the car and the music behind it are turned down before
+     the words are read. Safari, Firefox and older Chrome keep their own
+     microphone (Safari already cleans it). Opened once and reused. */
+  function cleanMicOK(){ var ua=navigator.userAgent||''; return /Chrome\/|Edg\//.test(ua)&&!/iPhone|iPad|iPod|Android/.test(ua)&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)&&!S.noTrack; }
+  function mic(){
+    if(!cleanMicOK()) return Promise.resolve(null);
+    var t=S.track; if(t&&t.readyState==='live') return Promise.resolve(t);
+    return navigator.mediaDevices.getUserMedia({audio:{noiseSuppression:true,echoCancellation:true,autoGainControl:true,channelCount:1}})
+      .then(function(st){ S.stream=st; S.track=st.getAudioTracks()[0]||null; return S.track; })
+      .catch(function(){ S.noTrack=true; return null; });
+  }
+  function dropMic(){ try{ if(S.stream) S.stream.getTracks().forEach(function(t){ t.stop(); }); }catch(e){} S.stream=null; S.track=null; }
   /* the phone's guesses for one piece of speech: the first one with a name in it,
      else its best guess (once a box is open, its best guess) */
   function pick(res){
@@ -55384,7 +55478,7 @@ window.KovaListen=(function(){
     for(var a=0;a<res.length;a++){ var x=res[a]&&res[a].transcript; if(x&&find(x)) return x; }
     return t;
   }
-  function halt(){ S.running=false; try{ if(S.rec) S.rec.abort(); }catch(e){} S.rec=null; pill(); }
+  function halt(){ S.running=false; try{ if(S.rec) S.rec.abort(); }catch(e){} S.rec=null; dropMic(); pill(); }
   function set(on){
     S.on=!!on; lsPut(KEY,{on:S.on});
     if(S.on){ S.restarts=0; begin(); } else halt();
@@ -55409,7 +55503,7 @@ window.KovaListen=(function(){
     return true;
   }
   return {supported:supported,set:set,on:function(){ return S.on; },running:function(){ return S.running; },error:function(){ return S.err; },
-    hear:hear,find:find,request:request,pick:pick,close:close,send:send,ask:ask,_S:S};
+    hear:hear,find:find,request:request,pick:pick,close:close,send:send,ask:ask,cleanMic:cleanMicOK,_S:S};
 })();
 
 </script>
@@ -59235,9 +59329,11 @@ window.KovaBrand=(function(){
      - shows the level now, in A-weighted decibels (dBA, how the ear hears);
      - adds up today's dose the NIOSH way: 85 dBA is safe for 8 hours, and
        every 3 dB louder halves that (88 for 4 h, 91 for 2 h, 100 for 15 min);
-     - warns when it has been 85 dBA or more for a minute: how loud, how
-       long it is safe at this level, and what to do (earplugs, step out,
-       move away from the speakers);
+     - warns only when it can hurt (p52): 94 dBA or more for two minutes,
+       or once today's safe dose passes half and again when it is used up:
+       how loud, how long it is safe at this level, and what to do
+       (earplugs, step out, move away from the speakers). Talking in a car
+       or a busy room never sets it off;
      - logs each workout's noise with the session (average, peak, minutes
        over 85), and keeps 14 days of loud spells in Vitals.
    Honest limits, said on screen: a phone microphone is not a sound level
@@ -59327,11 +59423,19 @@ window.KovaNoise=(function(){
     var cur=T.mins[mk]||[0,0,0]; cur[0]+=db; cur[1]++; cur[2]=Math.max(cur[2],db); T.mins[mk]=cur;
     /* counted in seconds of sound, not clock time, so a spell is a spell
        however the timer is throttled */
-    if(db>=85){ if(!S.loudFrom) S.loudFrom=now; S.loudRun=(S.loudRun||0)+secs; S.quietRun=0; }
+    if(db>=85){ if(!S.loudFrom) S.loudFrom=now; S.loudRun=(S.loudRun||0)+secs; S.hardRun=db>=94?(S.hardRun||0)+secs:Math.max(0,(S.hardRun||0)-2*secs); S.quietRun=0; }
     else if(S.loudFrom){ S.quietRun=(S.quietRun||0)+secs; if(S.quietRun>20) closeSpell(); }
-    if(S.loudFrom&&S.loudRun>=60&&now>S.mute){
+    /* p52, the owner: "even when I'm in the car just talking to someone, the
+       app says it's too loud. That's kind of dumb." A phone held near people
+       talking reads 85 dB or more, and a minute of that is no harm at all.
+       Kova now speaks up only when it can actually hurt: very loud (94 dB or
+       more, under an hour safe) for two minutes, or once today's safe dose
+       passes half, and again when it is used up. */
+    if(now>S.mute&&!(window.KovaListen&&KovaListen._S&&KovaListen._S.pop)){
+      var harm=S.loudFrom&&S.hardRun>=120, half=T.dose>=50&&!T.warn50, full=T.dose>=100&&!T.warn100;
+      if(half) T.warn50=1; if(full) T.warn100=1;
       var again=!S.lastAlert||now-S.lastAlert>15*60e3||(S.lastLevel&&db>=S.lastLevel+5);
-      if(again){ S.lastAlert=now; S.lastLevel=db; alert(db); }
+      if(half||full||(harm&&again)){ S.lastAlert=now; S.lastLevel=db; alert(db); }
     }
     if(Object.keys(D.days).length>14){ Object.keys(D.days).sort().slice(0,-14).forEach(function(k){ delete D.days[k]; }); }
     if(S.secs.length%30===0) save();
@@ -59344,7 +59448,7 @@ window.KovaNoise=(function(){
       D.spells.push({at:S.loudFrom,secs:Math.round(dur),avg:Math.round(avg),max:Math.round(mx),why:S.why||''});
       D.spells=D.spells.filter(function(x){ return x.at>Date.now()-14*DAY; }).slice(-60);
     }
-    S.loudFrom=0; S.loudRun=0; S.quietRun=0; save();
+    S.loudFrom=0; S.loudRun=0; S.hardRun=0; S.quietRun=0; save();
   }
   /* a workout's noise, for the session log */
   function summary(since){
@@ -59477,6 +59581,9 @@ window.KovaNoise=(function(){
   function onGo(){
     var s=document.getElementById('s-session');
     if(s&&s.classList.contains('on')){ paintSession(); if(D.auto&&!S.on&&D.granted) start('workout'); }
+    /* p52: listening that a workout started ends with the workout, so it never
+       carries on into the car afterwards */
+    else if(S.on&&S.why==='workout') stop();
   }
   function start0(){
     var tries=0;
@@ -68973,6 +69080,12 @@ window.KovaWhatsNew=(function(){
 
   /* newest first */
   var REL=[
+    {id:'new-2026-11-20',title:'Your AI team, in your calendar',
+      lines:['Your team reads your calendar, adds events after your OK','Say a name in a car or a crowd','Chat works offline, then answers in full','Photos never spend AI credit by surprise'],
+      steps:[
+        ['workteam','Call them by name','Say "Maya, plan my week". Works in noisy places too.',function(){ return q('#wtmBody [data-c="listen"]')||q('#s-workteam'); }],
+        ['settings','Photo reading','Turn off reading photos with Kova\u2019s AI here.',function(){ return q('#kpaRow'); }]
+      ]},
     {id:'new-2026-11-15',title:'Work OS, simpler on your phone',
       lines:['One short screen on a phone','Tasks, meetings, your AI team and apps','Studio and Automations open on a computer','Sign-in is one screen, no dead ends'],
       steps:[
@@ -71380,7 +71493,7 @@ window.KovaDream=(function(){
     file.click();
   }
   function take(f,which){
-    var set=function(d){ if(!d){ S.err='Kova could not open that file. Try a photo.'; paint(); return; } if(which==='me') S.me=d; else { S.want=d; S.hint=''; } S.err=''; paint(); arOf(d,which); if(S.out&&!S.busy) compare(); };
+    var set=function(d){ if(!d){ S.err='Kova could not open that file. Try a photo.'; paint(); return; } if(which==='me') S.me=d; else { S.want=d; S.hint=''; } S.err=''; paint(); arOf(d,which); };   /* p52: a new picture waits for a tap on "Compare again"; it used to read (and pay) again by itself */
     if(/^video\//.test(f.type)){
       var g=window.KovaLook&&KovaLook.videoStills?KovaLook.videoStills(f):Promise.resolve([]);
       g.then(function(st){ set(st&&st.length?st[Math.min(1,st.length-1)]:''); });
@@ -72566,6 +72679,67 @@ window.KovaWorkPhone=(function(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
   return {is:phone,paint:paint,tasks:tasks,meetings:meetings,team:team,apps:apps,addTask:addTask,ask:ask,gate:gate,DESK:DESK,STEPS:STEPS,_S:S};
+})();
+
+</script>
+<script id="p08-photoai">
+/* =====================================================================
+   KovaPhotoAI - one switch for photos read by Kova's AI (p52).
+
+   The owner: "make sure the app doesn't use my credits when I use a
+   picture on the Kova app". A photo is only ever read after a tap
+   (Scan, Compare, Read the report...), and the server already reads it
+   with the cheaper model and never pays twice for the same photo
+   (functions/photoai.js). This adds the switch in Settings, under
+   Connections: "Read photos with Kova's AI". Off, no photo leaves this
+   device for Kova's AI: meals, machines, form checks, reports and
+   pictures given to the team all stop before anything is sent, and say
+   so. A key of your own (Settings > AI) is yours to spend and is not
+   blocked.
+   ===================================================================== */
+window.KovaPhotoAI=(function(){
+  'use strict';
+  var KEY='kova.photoai.v1';
+  var MSG='You switched off reading photos with Kova’s AI in Settings, so this photo was not sent and no credit was used.';
+  function on(){ try{ var v=JSON.parse(localStorage.getItem(KEY)||'null'); return !(v&&v.off); }catch(e){ return true; } }
+  function set(v){ try{ localStorage.setItem(KEY,JSON.stringify({off:!v,at:Date.now()})); }catch(e){} paint(); }
+  /* a request to Kova's own server that carries a photo */
+  var PHOTO_PATH=/\/(ai\/ask|meal\/read|labs\/extract|crew\/step)(\?|$)/;
+  function isPhoto(url,opts){
+    var u=String(url&&url.url||url||''), b=opts&&opts.body;
+    if(!PHOTO_PATH.test(u)) return false;
+    if(/^https?:\/\/(api\.anthropic\.com|api\.openai\.com|generativelanguage\.googleapis\.com)\//.test(u)) return false;   /* a key of your own */
+    return typeof b==='string'&&(b.indexOf('"type":"image"')>=0||/"image":"[^"]/.test(b));
+  }
+  function refused(){
+    var body=JSON.stringify({error:MSG,photo_off:true});
+    try{ return new Response(body,{status:403,headers:{'content-type':'application/json'}}); }
+    catch(e){ return {ok:false,status:403,json:function(){ return Promise.resolve(JSON.parse(body)); },text:function(){ return Promise.resolve(body); }}; }
+  }
+  var orig=window.fetch;
+  if(orig&&!orig.__kpa){
+    var wrapped=function(url,opts){ if(!on()&&isPhoto(url,opts)){ try{ if(window.toast) toast('Photo reading is off in Settings'); }catch(e){} return Promise.resolve(refused()); } return orig.apply(window,arguments); };
+    wrapped.__kpa=true; window.fetch=wrapped;
+  }
+
+  /* the row in Settings, under Connections */
+  function row(){
+    var o=on();
+    return '<div class="kpa-row"><div class="kpa-t"><b>Read photos with Kova’s AI</b><small>'
+      +(o?'On: a photo is read only when you tap Scan, Compare or Read, with the cheaper model, and the same photo is never paid for twice.'
+         :'Off: photos are never sent to Kova’s AI, so they use no credit. Typing and talking still work.')
+      +'</small></div><button type="button" class="kpa-tog'+(o?' on':'')+'" role="switch" aria-checked="'+o+'" aria-label="Read photos with Kova’s AI"><span></span></button></div>';
+  }
+  function paint(){
+    var anchor=document.getElementById('setIntWrap'); if(!anchor) return false;
+    var el=document.getElementById('kpaRow');
+    if(!el){ el=document.createElement('div'); el.id='kpaRow'; el.className='card kpa'; anchor.parentNode.insertBefore(el,anchor.nextSibling);
+      el.addEventListener('click',function(e){ if(e.target.closest('.kpa-tog')) set(!on()); }); }
+    el.innerHTML=row(); return true;
+  }
+  function start(){ var n=0; (function t(){ if(!paint()&&++n<40) setTimeout(t,150); })(); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+  return {on:on,set:set,isPhoto:isPhoto,paint:paint,MSG:MSG};
 })();
 
 </script>

@@ -333,6 +333,19 @@ window.KovaCrew=(function(){
   var DUE='today, tomorrow, +3d or YYYY-MM-DD';
   var PRI={type:'string',enum:['Critical','High','Medium','Low']}, STA={type:'string',enum:['Not Started','In Progress','Waiting','Completed']};
   var COLL={create_task:'items',create_project:'projects',create_process:'processes',create_goal:'goals',create_board:'boards',create_content_draft:'content',schedule_meeting:'meetings'};
+  /* p52: one call to the server for the linked accounts; a failure is an
+     answer the teammate can read ({error}), never a thrown job */
+  function appsCall(body){
+    if(!(window.KovaLink&&KovaLink.authFetch)) return Promise.resolve({error:'Kova is not connected to its server here.'});
+    if(navigator.onLine===false) return Promise.resolve({error:'You are offline right now; linked accounts are read once you are back online.'});
+    return KovaLink.authFetch('/crew/apps',{json:body}).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){ return r.ok?j:{error:j.error||('The server said '+r.status+'.')}; });
+    },function(e){ return {error:e&&e.code==='signin'?'Sign in to use your linked accounts.':'The Kova server could not be reached.'}; });
+  }
+  function calWhen(iso){
+    var t=Date.parse(iso); if(!isFinite(t)) return String(iso||'');
+    try{ return new Date(t).toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }catch(e){ return new Date(t).toISOString(); }
+  }
 
   var TOOLS={
     read_work:{g:'read',kind:'read',d:'Overview of all the work right now: counts by status, overdue, due today and this week, projects, goals, content pipeline and meetings, with findings.',
@@ -475,6 +488,18 @@ window.KovaCrew=(function(){
       run:function(a){ return window.KovaAsk?KovaAsk.publishFromTool(a):{error:'Posting is not available here.'}; },
       describe:function(a){ return {t:'Post',n:a.post,s:'to '+(a.platforms||[]).join(', ')}; },
       label:function(r){ return r.error?'Not posted: '+r.error:'Posted \u201c'+r.post+'\u201d to '+r.platforms.join(', '); }},
+    /* p52: the team in your linked accounts (functions/apps.js) */
+    connected_apps:{g:'read',kind:'read',d:'Which of the user’s accounts are linked to Kova (Google, Instagram, TikTok, LinkedIn, X...) and what each lets the team do. Check it before promising to act in another app.',
+      s:obj({}), run:function(){ return appsCall({action:'connections'}); },
+      label:function(r){ return r.error?'Could not check the linked accounts: '+r.error:'Checked the linked accounts: '+((r.linked||[]).map(function(x){ return x.app; }).join(', ')||'none yet'); }},
+    read_calendar:{g:'read',kind:'read',d:'The user’s real Google Calendar events for the next 1-14 days (title, start, end, all-day, where). Read it before planning or proposing anything with a time.',
+      s:obj({days:S_NUM}), run:function(a){ return appsCall({action:'calendar_list',days:a.days||7}); },
+      label:function(r){ return r.error?'Could not read the calendar: '+r.error:'Read your calendar: '+r.count+' event'+(r.count===1?'':'s')+' in '+r.days+' days'; }},
+    add_calendar_event:{g:'tasks',kind:'external',d:'Add one event to the user’s Google Calendar. It waits for their OK. start and end are ISO date-times with the user’s time-zone offset; read_calendar first so it does not land on a meeting.',
+      s:obj({title:S_STR,start:S_STR,end:S_STR,notes:S_STR},['title','start']),
+      run:function(a){ return appsCall({action:'calendar_add',title:a.title,start:a.start,end:a.end,notes:a.notes}); },
+      describe:function(a){ return {t:'Calendar',n:a.title,s:calWhen(a.start)}; },
+      label:function(r,a){ return r.error?'Not added to the calendar: '+r.error:'Added “'+(r.title||a.title)+'” to your calendar, '+calWhen(r.start||a.start); }},
     draft_email:{g:'email',kind:'external',d:'Write an email for the user to approve. It is only sent (or saved to Gmail drafts) after they approve. to = email address.',
       s:obj({to:S_STR,subject:S_STR,body:S_STR},['to','subject','body']),
       run:function(a){
@@ -703,14 +728,16 @@ window.KovaCrew=(function(){
       +'- Hand a job to a teammate (hand_off) only when it needs that teammate\u2019s tools.\n'
       +'- Keep going until the job is done; do not stop to ask what you can find out yourself. If you truly need a decision, finish and say exactly what you need.\n'
       +'- Email is prepared for the user to approve; you never send anything yourself. Posts are Studio drafts; the user publishes.\n'
+      +'- Other apps: connected_apps says which accounts are linked; read_calendar shows their real Google Calendar, so read it before planning anything with a time. A calendar event (add_calendar_event) waits for the user\u2019s OK like an email.\n'
       +'- A question gets a direct answer: a few short lines, their numbers first, then what to do. Call write_report only for real work (a plan, an analysis, a weekly report), once, with at least one chart built from real numbers, then one short closing sentence.\n'
       +'- Write plainly, like a capable colleague. No filler, no emojis.\n\n'
       +(team?'TEAM\n'+team+'\n\n':'')
       +'YOUR HEALTH (from Kova)\n'+healthText()+'\n\n'
       +'ABOUT THE BUSINESS\n'+((A&&A.context)?A.context():'')+'\n\n'
       +(mem?'WHAT YOU REMEMBER\n'+mem+'\n\n':'')
-      +'Now: '+d.toDateString()+' '+clock(d.getTime())+' ('+tz+').';
+      +'Now: '+d.toDateString()+' '+clock(d.getTime())+' ('+tz+', UTC'+offStr(d)+').';
   }
+  function offStr(d){ var m=-d.getTimezoneOffset(), a=Math.abs(m); return (m<0?'-':'+')+('0'+Math.floor(a/60)).slice(-2)+':'+('0'+a%60).slice(-2); }
 
   /* ---------------- brains ---------------- */
   function keyBrain(){ try{ if(window.KovaModel&&KovaModel.connected()){ var c=KovaModel.cfg(); if(c&&c.p==='anthropic'&&c.key) return c; } }catch(e){} return null; }
@@ -2185,7 +2212,7 @@ window.KovaCrew=(function(){
     var L=window.KovaListen; if(!L) return '';
     var ok=L.supported(), on=ok&&L.on(), err=L.error(), names=emps().filter(function(e){ return e.enabled; }).map(function(e){ return e.n; }).slice(0,2);
     return '<div class="crw-listen"><span class="crw-lt"><b>Call them by name</b><small>'
-      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. In a noisy room, say “hey” first. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
+      +(ok?'Say “'+esc(names[0]||'Maya')+'” or “hey '+esc(names[1]||'Leo')+'” on any screen and their box pops up. Say the name first, or “hey” before it, and it works in a busy room or a car too. Your browser turns speech into text'+(/Chrome/.test(navigator.userAgent||'')&&!/Edg\//.test(navigator.userAgent||'')?' (in Chrome, through Google)':'')+'; Kova keeps only the job you give.'
           :'This browser cannot listen for names. Chrome, Edge and Safari can.')
       +(err?'<em>'+esc(err)+'</em>':'')+'</small></span>'
       +'<button class="crw-tog'+(on?' on':'')+'" data-c="listen" role="switch" aria-checked="'+on+'" aria-label="Call your team by name"'+(ok?'':' disabled')+'><span></span></button></div>';

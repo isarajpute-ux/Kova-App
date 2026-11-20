@@ -501,7 +501,7 @@ window.KovaDream=(function(){
     file.click();
   }
   function take(f,which){
-    var set=function(d){ if(!d){ S.err='Kova could not open that file. Try a photo.'; paint(); return; } if(which==='me') S.me=d; else { S.want=d; S.hint=''; } S.err=''; paint(); arOf(d,which); if(S.out&&!S.busy) compare(); };
+    var set=function(d){ if(!d){ S.err='Kova could not open that file. Try a photo.'; paint(); return; } if(which==='me') S.me=d; else { S.want=d; S.hint=''; } S.err=''; paint(); arOf(d,which); };   /* p52: a new picture waits for a tap on "Compare again"; it used to read (and pay) again by itself */
     if(/^video\//.test(f.type)){
       var g=window.KovaLook&&KovaLook.videoStills?KovaLook.videoStills(f):Promise.resolve([]);
       g.then(function(st){ set(st&&st.length?st[Math.min(1,st.length-1)]:''); });

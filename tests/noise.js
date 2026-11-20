@@ -30,19 +30,28 @@ const errors = [];
   ck('85 dB is safe for 8 hours, every 3 dB louder halves it (88: 4 h, 100: 15 min)', N.safeMins(85) === 480 && N.safeMins(88) === 240 && Math.round(N.safeMins(100)) === 15 && N.safeMins(70) === Infinity);
   ck('A-weighting: 0 at 1 kHz, about -19 dB at 100 Hz, about -2.5 dB at 10 kHz', Math.abs(N.aWeight(1000)) < 0.1 && Math.abs(N.aWeight(100) + 19.1) < 0.3 && Math.abs(N.aWeight(10000) + 2.5) < 0.3);
 
-  // a minute and a half at 91 dB
+  // p52: a minute and a half at 91 dB (people talking near the phone, a car): no alert any more
   N._S.on = true; N._S.firstDone = true;   /* the first read (6 s) is checked below; this is the loud warning */
-  for (let i = 0; i < 59; i++) N._tick(91, 1);
-  ck('no loud warning in the first minute', !d.querySelector('#knAlert.on'));
-  for (let i = 0; i < 31; i++) N._tick(91, 1);
-  const al = d.getElementById('knAlert');
-  ck('after a minute at 85 dB or more, an alert: how loud, safe for how long, what to do', !!al && al.classList.contains('on') && /~91 dB/.test(al.textContent) && /Safe for:2 h/.test(al.textContent.replace(/\s+/g, ' ')) && /Earplugs/.test(al.textContent));
+  for (let i = 0; i < 90; i++) N._tick(91, 1);
+  ck('p52: talking in a car or a busy room (91 dB for 90 s) never says it is too loud', !d.querySelector('#knAlert.on'));
   const dose = N._D().days[Object.keys(N._D().days)[0]].dose;
   ck('the day’s dose adds up the NIOSH way (90 s at 91 dB is about 1.25%)', Math.abs(dose - 1.25) < 0.05);
+  // genuinely harmful: two minutes at 100 dB
+  for (let i = 0; i < 119; i++) N._tick(100, 1);
+  ck('…under two minutes at 100 dB, still quiet', !d.querySelector('#knAlert.on'));
+  N._tick(100, 1);
+  const al = d.getElementById('knAlert');
+  ck('two minutes at 94 dB or more: an alert with how loud, safe for how long, what to do', !!al && al.classList.contains('on') && /~100 dB/.test(al.textContent) && /Safe for:15 m/.test(al.textContent.replace(/\s+/g, ' ')) && /earplugs/i.test(al.textContent));
   al.querySelector('[data-n="mute"]').click(); await wait(10);
   ck('"Quiet for 1 h" closes it', !al.classList.contains('on'));
+  // half of today's safe dose, even at an ordinary loud level
+  N._S.mute = 0; N._S.lastAlert = 0; const T0 = N._D().days[Object.keys(N._D().days)[0]]; T0.dose = 50; T0.warn50 = 0;
+  N._tick(88, 1);
+  ck('once half of today’s safe dose is used, one alert', d.getElementById('knAlert').classList.contains('on') && T0.warn50 === 1);
+  d.getElementById('knAlert').classList.remove('on'); N._tick(88, 1);
+  ck('…and only once', !d.getElementById('knAlert').classList.contains('on'));
   const sm = N.summary(Date.now() - 5 * 60e3);
-  ck('a workout gets average, peak and minutes over 85', sm && sm.avg === 91 && sm.max === 91 && sm.loudMin === 2 && sm.est === true);
+  ck('a workout gets average, peak and minutes over 85', sm && sm.avg >= 91 && sm.avg <= 100 && sm.max === 100 && sm.loudMin >= 3 && sm.est === true);
   ck('the session log saves it with the workout', /noise:\(window\.KovaNoise&&KovaNoise\.summary\)\?KovaNoise\.summary\(/.test(html));
 
   // Vitals

@@ -136,14 +136,26 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   await wait(500);
   B.w.KovaChat.open(); B.w.KovaChat.send('what is sleep efficiency'); await wait(250);
   const ba=B.doc.querySelector('.kc-a');
-  ck('undeployed function falls back to on-device',ba&&/Offline answer/.test(ba.textContent));
-  ck('footer says it was answered from the on-device guide',/answered from the on-device guide/i.test(B.doc.getElementById('kcFoot').textContent));
+  ck('undeployed function falls back to on-device, marked quietly under the answer',ba&&/Answered on this device/.test(ba.textContent));
+  ck('p52: no "offline" or server line under the chat',B.doc.getElementById('kcFoot').textContent==='');
 
   // ---------- p40: the server's own reason, in plain words ----------
   const E=boot(true,()=>Promise.reject({code:'unavailable',message:'The assistant is not configured on the server yet.'}));
   await wait(500);
   E.w.KovaChat.open(); E.w.KovaChat.send('what is sleep efficiency'); await wait(250);
-  ck('when Kova\u2019s AI fails, the footer says why in the server\u2019s words',/not configured on the server yet/.test(E.doc.getElementById('kcFoot').textContent));
+  ck('p52: when Kova\u2019s AI fails, it still answers and says nothing about the server',E.doc.getElementById('kcFoot').textContent===''&&!!E.doc.querySelector('.kc-a')&&!/server/.test(E.doc.querySelector('.kc-a').textContent));
+
+  // ---------- p52: asked while Kova's AI was out of reach: asked again by itself once back online ----------
+  let up=false;
+  const P=boot(true,()=>up?Promise.resolve({data:{text:'The full answer'}}):Promise.reject({code:'unavailable'}));
+  await wait(500);
+  P.w.KovaChat.open(); P.w.KovaChat.send('how was my sleep this week'); await wait(250);
+  const pa=P.doc.querySelector('.kc-a');
+  ck('p52: offline, the question is answered on the device and says the full answer will follow',pa&&/full answer comes by itself once you are online/.test(pa.textContent));
+  up=true; P.w.dispatchEvent(new P.w.Event('online')); await wait(1900);
+  const ph=P.w.KovaChat.history();
+  ck('p52: back online, Kova asks again by itself and the full answer replaces it',P.calls.length===2&&ph.length>=2&&ph[ph.length-1].content==='The full answer'&&ph.filter(m=>m.role==='user'&&m.content==='how was my sleep this week').length===1);
+  ck('p52: the chat history is kept on the device (works with no connection)',/KP\.set\('chat',h\.slice\(-40\)\)/.test(html));
 
   // ---------- p40: guest sessions switched off: honest, with a way in ----------
   const G=boot(false,()=>Promise.resolve({data:{text:'x'}}),{anonOff:true});
@@ -173,7 +185,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   await wait(500);
   D.w.KovaChat.open(); D.w.KovaChat.send('hello'); await wait(700);
   ck('without auth it never calls the function',D.calls.length===0);
-  ck('without auth it says it is offline mode',/Offline mode/.test(D.doc.getElementById('kcFoot').textContent));
+  ck('p52: without auth it still answers, with no "Offline mode" line',!/Offline/.test(D.doc.getElementById('kcFoot').textContent)&&/Answered on this device/.test((D.doc.querySelector('.kc-a')||{}).textContent||''));
 
   let p=0,f=0;R.forEach(([n,o])=>{console.log((o?'PASS':'FAIL')+' - '+n);o?p++:f++;});
   console.log('\n'+p+'/'+(p+f)+' passing');

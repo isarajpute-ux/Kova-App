@@ -204,7 +204,7 @@ function makeJobs(deps) {
   async function crewAll(cfg) {
     const q = (await db.ref('srv/crewQueue').once('value')).val() || {};
     const push = mods.push({ db, messaging: admin.messaging ? admin.messaging() : null, cfg });
-    const crew = mods.crew({ db, cfg, push });
+    const crew = mods.crew({ db, cfg, push, tokens: mods.oauth({ db, cfg }) });
     let asks = null;
     /* requests you sent the team (asks.js), with the calendar and the post numbers they may need */
     const askMod = () => asks || (asks = mods.asks({ db, cfg, push,

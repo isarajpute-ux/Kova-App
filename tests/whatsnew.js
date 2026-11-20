@@ -63,7 +63,10 @@ function boot(store) {
   const r29 = N.REL.filter((r) => r.id === 'new-2026-10-29')[0];
   const r30 = N.REL.filter((r) => r.id === 'new-2026-10-30')[0];
   const r32 = N.REL.filter((r) => r.id === 'new-2026-11-02')[0];
-  ck('the newest release: Work OS on a phone, two steps on Work', rel.id === 'new-2026-11-15' && rel.steps.length === 2 && rel.steps.every((t) => t[0] === 'work') && rel.lines.every((l) => l.split(' ').length <= 10));
+  const r20 = N.REL.filter((r) => r.id === 'new-2026-11-20')[0];
+  ck('the newest release (p52): the team in your calendar, names in noise, offline chat, photo credit; steps on the team and Settings', rel.id === 'new-2026-11-20' && r20.steps.length === 2 && r20.steps[0][0] === 'workteam' && r20.steps[1][0] === 'settings' && r20.lines.every((l) => l.split(' ').length <= 10));
+  const r15 = N.REL.filter((r) => r.id === 'new-2026-11-15')[0];
+  ck('the p51c release: Work OS on a phone, two steps on Work', r15.id === 'new-2026-11-15' && r15.steps.length === 2 && r15.steps.every((t) => t[0] === 'work') && r15.lines.every((l) => l.split(' ').length <= 10));
   const r14 = N.REL.filter((r) => r.id === 'new-2026-11-14')[0];
   ck('the p51b release: meal photos fixed, one step on Scan food', r14.steps.length === 1 && r14.steps[0][0] === 'fuel' && r14.lines.every((l) => l.split(' ').length <= 10));
   const r13 = N.REL.filter((r) => r.id === 'new-2026-11-13')[0];
