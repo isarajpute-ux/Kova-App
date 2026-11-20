@@ -47143,6 +47143,10 @@ window.KovaTour=(function(){
     if(st.o.screens&&tick%15===0){ var on=$('.screen.on'), id=on?on.id.replace(/^s-/,''):''; if(id&&st.o.screens.indexOf(id)<0){ end('left'); return; } }
     /* keep the light on a target that scrolls or moves, a few times a
        second rather than every frame */
+    /* p53: a page that redraws itself (the AI team page does, a moment after
+       it opens) replaces the element the light is on; find it again, so the
+       light does not sit on a node that is gone (it slid to the corner) */
+    if(st.el&&!st.el.isConnected&&tick%4===0){ var cs=st.steps[st.i], again=cs&&resolve(cs); if(again&&again.isConnected) st.el=again; }
     if(st.el&&st.ride&&!document.hidden&&tick%4===0) spot(rect(st.el));
     requestAnimationFrame(follow);
   }
