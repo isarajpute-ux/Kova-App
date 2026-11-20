@@ -25,6 +25,11 @@ if (!(await page.evaluate(() => typeof MediaRecorder !== 'undefined'))) {
 }
 await page.evaluate(() => { KP.set('tourSeen', true); go('workstudio'); });   /* the once-ever walkthrough would open over it */
 await page.waitForTimeout(800);
+/* on a phone, Studio first says it is on a computer (p52); a phone user
+   taps "Open here anyway", so the test does too, and the editor is tested
+   at phone size (p53) */
+if (await page.$('#wkpAny')) { await page.click('#wkpAny'); await page.waitForTimeout(800); }
+await page.waitForFunction(() => !!KovaCanvas._post(), null, { timeout: 10000 });
 /* two short clips with sound, recorded right here, and a song */
 await page.evaluate(async () => {
   async function clip(color, secs, hz) {
