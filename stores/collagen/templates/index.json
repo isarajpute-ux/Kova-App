@@ -356,7 +356,8 @@
         "pad_bottom": 56,
         "after": "shopify://shop_images/auvela-vs-ours.png",
         "before": "shopify://shop_images/auvela-vs-generic.png"
-      }
+      },
+      "disabled": true
     },
     "wall": {
       "type": "ag-wall",
@@ -711,6 +712,110 @@
         "h_m": 65,
         "h_d": 70
       }
+    },
+    "versus": {
+      "type": "ag-versus",
+      "blocks": {
+        "cv1": {
+          "type": "row",
+          "settings": {
+            "label": "5 collagen types in every serving",
+            "v_us": "yes",
+            "v_a": "some",
+            "v_b": "no",
+            "v_c": "na"
+          }
+        },
+        "cv2": {
+          "type": "row",
+          "settings": {
+            "label": "10,880 mg of collagen in one serving",
+            "v_us": "yes",
+            "v_a": "no",
+            "v_b": "no",
+            "v_c": "na"
+          }
+        },
+        "cv3": {
+          "type": "row",
+          "settings": {
+            "label": "Hyaluronic acid, vitamin C and biotin built in",
+            "v_us": "yes",
+            "v_a": "some",
+            "v_b": "some",
+            "v_c": "na"
+          }
+        },
+        "cv4": {
+          "type": "row",
+          "settings": {
+            "label": "No added sugar, flavors or fillers",
+            "v_us": "yes",
+            "v_a": "some",
+            "v_b": "no",
+            "v_c": "na"
+          }
+        },
+        "cv5": {
+          "type": "row",
+          "settings": {
+            "label": "Stirs into the coffee you already make",
+            "v_us": "yes",
+            "v_a": "no",
+            "v_b": "no",
+            "v_c": "no"
+          }
+        },
+        "cv6": {
+          "type": "row",
+          "settings": {
+            "label": "Your time each month",
+            "v_us": "text",
+            "v_a": "text",
+            "v_b": "text",
+            "v_c": "text",
+            "t_us": "under 30 minutes",
+            "t_a": "under 30 minutes",
+            "t_b": "under 30 minutes",
+            "t_c": "about 3 hours"
+          }
+        }
+      },
+      "block_order": [
+        "cv1",
+        "cv2",
+        "cv3",
+        "cv4",
+        "cv5",
+        "cv6"
+      ],
+      "settings": {
+        "eyebrow": "HOW WE COMPARE",
+        "heading": "Collagen that fits your <em>busy morning.</em>",
+        "text": "Two scoops, your usual coffee, under a minute. Auvela is made to support firmer-looking skin,* and here is how it compares with other ways to take collagen.",
+        "col_label": "What matters most",
+        "col_us": "Auvela",
+        "col_a": "Collagen pills",
+        "col_b": "Collagen gummies",
+        "col_c": "Collagen masks",
+        "bottom": "<p><strong>Bottom line:</strong> Pills and gummies are quick too, but a full serving can mean a handful of them. Masks take hours a month. Auvela is one serving, stirred into the coffee you were already making.</p>",
+        "btn": "Get Auvela",
+        "btn_link": "",
+        "fine": "<p>Based on typical products in each category. Time is an estimate: about 1 minute a day for Auvela, and a mask used 3 times a week for about 15 minutes. *These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.</p>",
+        "head_d": 44,
+        "head_m": 28,
+        "c_bg": "#FAF7FF",
+        "c_ink": "#2A1427",
+        "c_acc": "#8E6AE6",
+        "c_col": "#2A1427",
+        "c_ok": "#C7ABFF",
+        "c_btn": "#C7ABFF",
+        "pad_top": 72,
+        "pad_bottom": 72,
+        "col_a_m": "Pills",
+        "col_b_m": "Gummies",
+        "col_c_m": "Masks"
+      }
     }
   },
   "order": [
@@ -719,6 +824,7 @@
     "why",
     "features",
     "apart",
+    "versus",
     "wall",
     "faq",
     "hero2"

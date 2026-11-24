@@ -169,3 +169,10 @@ body .agP .agB{row-gap:16px!important}
 
 /* ---- feature boxes under Add to Cart: 2x2 on desktop, stacked on phones ---- */
 @media(max-width:749px){body .agP .agP__feats{grid-template-columns:1fr!important;gap:10px!important}}
+
+/* ---- announcement bar: soft lavender band so it stands apart from the white header ---- */
+body .announcement-bar-section,body .announcement-bar-section .announcement-bar,body .announcement-bar-section .utility-bar,body .announcement-bar-section [class*="color-scheme"]{background:#E7DAFF!important;background-color:#E7DAFF!important;border-top:0!important}
+body .announcement-bar-section .utility-bar{border-bottom:1px solid #D6C2FF!important}
+body .announcement-bar-section .announcement-bar__message,body .announcement-bar-section .announcement-bar__message *{color:#2A1427!important;font-weight:600!important;letter-spacing:.16em!important;font-size:12.5px!important}
+body .announcement-bar-section .slider-button,body .announcement-bar-section .slider-button *{color:#6B4FC4!important}
+@media(max-width:749px){body .announcement-bar-section .announcement-bar__message,body .announcement-bar-section .announcement-bar__message *{font-size:11px!important;letter-spacing:.08em!important}}

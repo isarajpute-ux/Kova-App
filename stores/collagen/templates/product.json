@@ -1607,7 +1607,8 @@
         "col_a_m": "Pills",
         "col_b_m": "Gummies",
         "col_c_m": "Masks"
-      }
+      },
+      "disabled": true
     }
   },
   "order": [
