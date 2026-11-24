@@ -710,7 +710,8 @@
         "c_acc": "#c7abff",
         "pad_top": 52,
         "pad_bottom": 56
-      }
+      },
+      "disabled": true
     },
     "compare": {
       "type": "ag-compare",
@@ -1197,6 +1198,257 @@
         "pad_top": 56,
         "pad_bottom": 56
       }
+    },
+    "results": {
+      "type": "ag-results",
+      "blocks": {
+        "ph1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/before-after_01.jpg",
+            "label": "",
+            "alt": "Loose skin gone"
+          }
+        },
+        "ph2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.23_PM.png",
+            "label": "",
+            "alt": "Feeling like myself after menopause"
+          }
+        },
+        "ph3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.17.44_PM.png",
+            "label": "",
+            "alt": "Finally loving my natural nails"
+          }
+        },
+        "ph4": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.17.55_PM.png",
+            "label": "",
+            "alt": "My skin finally has that glow"
+          }
+        },
+        "ph5": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/try_connecting_this_3_split_43e3187e_2K.jpg_a36381f0_2K.jpg",
+            "label": "",
+            "alt": "Face wrinkle"
+          }
+        },
+        "ph6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.14_PM.png",
+            "label": "",
+            "alt": "Hair Growth | 30 Days later"
+          }
+        },
+        "ph7": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.50.54_PM.png",
+            "label": "",
+            "alt": "Looking Years Younger Again"
+          }
+        },
+        "ph8": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Screenshot_2026-11-05_at_7.18.05_PM.png",
+            "label": "",
+            "alt": "Finally confident showing my arms"
+          }
+        },
+        "rv1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Feeling like myself after menopause",
+            "text": "AUVELA Collagen Renew; My ASS look amazing in dresses again.",
+            "name": "Diane W.",
+            "verified": true,
+            "tags": "Firmness"
+          }
+        },
+        "rv2": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Finally feel good with this new smooth body",
+            "text": "I've been using AUVELA Collagen Renew daily, I love how easily it fits into my morning routine. I wanted something simple to support my skin as I get older.",
+            "name": "Diane W.",
+            "verified": true,
+            "tags": "Firmness"
+          }
+        },
+        "rv3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "My skin looks refreshed again",
+            "text": "My butt looks fuller, and my breasts look firmer !",
+            "name": "Evelyn C.",
+            "verified": true,
+            "tags": "Hydration"
+          }
+        },
+        "rv4": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Finally proud of my natural nails",
+            "text": "So amazed how my nails look so healthier and stronger just in 3 weeks.",
+            "name": "Nancy F.",
+            "verified": true,
+            "tags": "Hair & Nails"
+          }
+        },
+        "rv5": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "I finally feel sexy in my clothes again",
+            "text": "At 56, my stomach, butt, and breasts look smoother and firmer. AUVELA Collagen Renew is part of my beauty routine, and I love feeling confident in fitted dresses again.",
+            "name": "Karen M.",
+            "verified": true,
+            "tags": "Routine"
+          }
+        },
+        "rv6": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "Finally loving how I look in dresses",
+            "text": "My stomach looks smoother, with less crepey looking skin.",
+            "name": "Janet B.",
+            "verified": true,
+            "tags": "Firmness"
+          }
+        },
+        "rv7": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "title": "I'm not hiding my body anymore",
+            "text": "No more avoiding fitted outfits! I love feeling confident in my skin, embracing my curves, and taking care of myself with AUVELA Collagen Renew.",
+            "name": "Teresa J.",
+            "verified": true,
+            "tags": "Firmness"
+          }
+        },
+        "rv8": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Feeling beautiful and confident again",
+            "text": "I'm 58 inside, and finally loving my reflection.",
+            "name": "Deborah C.",
+            "verified": true,
+            "tags": "Routine"
+          }
+        },
+        "rv9": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Finally confident showing my arms",
+            "text": "My arms look so much smoother now after 43 days.",
+            "name": "Carolyn P.",
+            "verified": true,
+            "tags": "Routine"
+          }
+        },
+        "rv10": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "I refuse to let aging define me",
+            "text": "My arms and stomach are the areas I notice most. I love taking care of myself with AUVELA",
+            "name": "Stephanie M.",
+            "verified": true,
+            "tags": "Firmness"
+          }
+        }
+      },
+      "block_order": [
+        "ph1",
+        "ph2",
+        "ph3",
+        "ph4",
+        "ph5",
+        "ph6",
+        "ph7",
+        "ph8",
+        "rv1",
+        "rv2",
+        "rv3",
+        "rv4",
+        "rv5",
+        "rv6",
+        "rv7",
+        "rv8",
+        "rv9",
+        "rv10"
+      ],
+      "settings": {
+        "show_stars": true,
+        "heading": "Real women. <em>Real results.</em>",
+        "sub": "Made for women 40+. Real photos and words from our customers.",
+        "head_d": 48,
+        "head_m": 30,
+        "speed": 45,
+        "direction": "left",
+        "photo_ratio": "1 / 1",
+        "photo_h_d": 220,
+        "photo_h_m": 150,
+        "show_photos_m": true,
+        "per_d": "3",
+        "per_m": "1",
+        "verified_label": "Verified Customer",
+        "c_bg": "#F6F1FF",
+        "c_card": "#FFFFFF",
+        "c_ink": "#2A1427",
+        "c_acc": "#8E6AE6",
+        "c_star": "#C9A24B",
+        "c_line": "#E3D6FF",
+        "pad_top": 64,
+        "pad_bottom": 64
+      }
+    },
+    "problem": {
+      "type": "ag-problem",
+      "settings": {
+        "p_eyebrow": "The problem",
+        "p_heading": "Your skin is losing collagen every year.",
+        "p_text": "<p>After 40, your body makes about 1% less collagen every year. That’s the crepey, thinning skin on your arms, stomach and chest. It isn’t weight, and it isn’t something you did wrong.</p>",
+        "p_stat": "1%",
+        "p_stat_sub": "less collagen your body makes every year after 40",
+        "s_eyebrow": "The solution",
+        "s_heading": "Put back what your body stopped making.",
+        "s_text": "<p>Auvela gives you 5 collagen types plus hyaluronic acid and vitamin C in one daily stir, so your skin can feel firmer, smoother and more hydrated from within.</p>",
+        "s_stat": "5 types",
+        "s_stat_sub": "of collagen in every serving · plus hyaluronic acid & vitamin C · no 10-step routine",
+        "btn": "Your journey starts now",
+        "head_d": 36,
+        "head_m": 26,
+        "stat_d": 80,
+        "stat_m": 56,
+        "c_bg": "#FFFFFF",
+        "c_card": "#F7F2EC",
+        "c_card2": "#F1EAFF",
+        "c_ink": "#2A1427",
+        "c_acc": "#8E6AE6",
+        "c_btn": "#2A1427",
+        "pad_top": 56,
+        "pad_bottom": 56
+      }
     }
   },
   "order": [
@@ -1206,6 +1458,8 @@
     "features",
     "ingredients",
     "apart",
+    "results",
+    "problem",
     "compare",
     "video_wall",
     "faq",

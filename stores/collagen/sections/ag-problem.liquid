@@ -1,0 +1,92 @@
+{%- comment -%} Auvela: Problem / Solution cards with a big stat and a call-to-action button {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section id="nxPs-{{ section.id }}" class="nxPs" style="--ps-bg:{{ s.c_bg }};--ps-card:{{ s.c_card }};--ps-card2:{{ s.c_card2 }};--ps-ink:{{ s.c_ink }};--ps-acc:{{ s.c_acc }};--ps-btn:{{ s.c_btn }};padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="nxPs__in">
+    <div class="nxPs__card">
+      {%- if s.p_eyebrow != blank -%}<p class="nxPs__ey">{{ s.p_eyebrow }}</p>{%- endif -%}
+      <h2 class="nxPs__h">{{ s.p_heading }}</h2>
+      <div class="nxPs__p">{{ s.p_text }}</div>
+      {%- if s.p_stat != blank -%}<p class="nxPs__big">{{ s.p_stat }}</p>{%- endif -%}
+      {%- if s.p_stat_sub != blank -%}<p class="nxPs__small">{{ s.p_stat_sub }}</p>{%- endif -%}
+    </div>
+    <div class="nxPs__card nxPs__card--b">
+      {%- if s.s_eyebrow != blank -%}<p class="nxPs__ey">{{ s.s_eyebrow }}</p>{%- endif -%}
+      <h2 class="nxPs__h">{{ s.s_heading }}</h2>
+      <div class="nxPs__p">{{ s.s_text }}</div>
+      {%- if s.s_stat != blank -%}<p class="nxPs__big">{{ s.s_stat }}</p>{%- endif -%}
+      {%- if s.s_stat_sub != blank -%}<p class="nxPs__small">{{ s.s_stat_sub }}</p>{%- endif -%}
+      {%- if s.btn != blank -%}<a class="nxPs__btn" href="{{ s.btn_link | default: '#nx-buy' }}" data-ps-btn>{{ s.btn }}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>{%- endif -%}
+    </div>
+  </div>
+</section>
+<style>
+#nxPs-{{ section.id }}{background:var(--ps-bg);color:var(--ps-ink)}
+#nxPs-{{ section.id }} .nxPs__in{max-width:1240px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#nxPs-{{ section.id }} .nxPs__card{background:var(--ps-card);border-radius:26px;padding:48px 52px 46px;display:flex;flex-direction:column;align-items:flex-start}
+#nxPs-{{ section.id }} .nxPs__card--b{background:var(--ps-card2)}
+#nxPs-{{ section.id }} .nxPs__ey{margin:0 0 18px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--ps-acc)}
+#nxPs-{{ section.id }} .nxPs__h{margin:0 0 20px!important;font-size:{{ s.head_d }}px!important;line-height:1.12!important;font-weight:500!important;letter-spacing:-.015em;color:var(--ps-ink)}
+#nxPs-{{ section.id }} .nxPs__p{font-size:16.5px;line-height:1.6}
+#nxPs-{{ section.id }} .nxPs__p p{margin:0 0 10px}
+#nxPs-{{ section.id }} .nxPs__big{margin:auto 0 0!important;padding-top:34px;font-size:{{ s.stat_d }}px;line-height:1;font-weight:500;letter-spacing:-.03em;color:var(--ps-ink)}
+#nxPs-{{ section.id }} .nxPs__small{margin:12px 0 0;font-size:14.5px;line-height:1.45;opacity:.65}
+#nxPs-{{ section.id }} .nxPs__btn{display:inline-flex;align-items:center;gap:10px;margin-top:28px;background:var(--ps-btn);color:#fff;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;padding:17px 30px;border-radius:12px;box-shadow:0 12px 26px -14px rgba(42,20,39,.6);transition:transform .2s}
+#nxPs-{{ section.id }} .nxPs__btn:hover{transform:translateY(-2px)}
+#nxPs-{{ section.id }} .nxPs__btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:749px){
+  #nxPs-{{ section.id }} .nxPs__in{grid-template-columns:1fr;gap:14px}
+  #nxPs-{{ section.id }} .nxPs__card{padding:30px 22px 28px;border-radius:20px}
+  #nxPs-{{ section.id }} .nxPs__ey{font-size:12px;margin-bottom:12px}
+  #nxPs-{{ section.id }} .nxPs__h{font-size:{{ s.head_m }}px!important;margin-bottom:14px!important}
+  #nxPs-{{ section.id }} .nxPs__p{font-size:15px}
+  #nxPs-{{ section.id }} .nxPs__big{font-size:{{ s.stat_m }}px;padding-top:22px}
+  #nxPs-{{ section.id }} .nxPs__btn{width:100%;justify-content:center;box-sizing:border-box;padding:16px 14px;font-size:13px;letter-spacing:.08em;white-space:nowrap}
+}
+</style>
+<script>
+(function(){
+  var r=document.getElementById('nxPs-{{ section.id }}'); if(!r) return; var b=r.querySelector('[data-ps-btn]'); if(!b) return;
+  b.addEventListener('click',function(e){
+    if(b.getAttribute('href')!=='#nx-buy') return;
+    var t=document.querySelector('[data-ag-product] .agB')||document.querySelector('[data-ag-product]')||document.querySelector('.agP');
+    if(t){ e.preventDefault(); var y=t.getBoundingClientRect().top+window.pageYOffset-90; window.scrollTo({top:y<0?0:y,behavior:'smooth'}); }
+    else { b.setAttribute('href','/products/multi-collagen-peptide-powder'); }
+  });
+})();
+</script>
+{% schema %}
+{
+  "name": "Problem / solution",
+  "tag": "div",
+  "settings": [
+    {"type":"header","content":"Left card (the problem)"},
+    {"type":"text","id":"p_eyebrow","label":"Small label","default":"The problem"},
+    {"type":"text","id":"p_heading","label":"Heading","default":"Your skin is losing collagen every year."},
+    {"type":"richtext","id":"p_text","label":"Text","default":"<p>After 40, your body makes about 1% less collagen every year. That’s the crepey, thinning skin on your arms, stomach and chest. It isn’t weight, and it isn’t something you did wrong.</p>"},
+    {"type":"text","id":"p_stat","label":"Big number","default":"1%"},
+    {"type":"text","id":"p_stat_sub","label":"Line under the big number","default":"less collagen your body makes every year after 40"},
+    {"type":"header","content":"Right card (the solution)"},
+    {"type":"text","id":"s_eyebrow","label":"Small label","default":"The solution"},
+    {"type":"text","id":"s_heading","label":"Heading","default":"Put back what your body stopped making."},
+    {"type":"richtext","id":"s_text","label":"Text","default":"<p>Auvela gives you 5 collagen types plus hyaluronic acid and vitamin C in one daily stir, so your skin can feel firmer, smoother and more hydrated from within.</p>"},
+    {"type":"text","id":"s_stat","label":"Big number","default":"5 types"},
+    {"type":"text","id":"s_stat_sub","label":"Line under the big number","default":"of collagen in every serving · plus hyaluronic acid & vitamin C · no 10-step routine"},
+    {"type":"text","id":"btn","label":"Button text","default":"Your journey starts now"},
+    {"type":"url","id":"btn_link","label":"Button link","info":"Leave empty to scroll up to the bundle choice / Add to Cart"},
+    {"type":"header","content":"Sizes, colours & spacing"},
+    {"type":"range","id":"head_d","label":"Heading size (desktop)","min":22,"max":56,"step":2,"unit":"px","default":36},
+    {"type":"range","id":"head_m","label":"Heading size (mobile)","min":20,"max":40,"step":1,"unit":"px","default":26},
+    {"type":"range","id":"stat_d","label":"Big number size (desktop)","min":40,"max":120,"step":4,"unit":"px","default":80},
+    {"type":"range","id":"stat_m","label":"Big number size (mobile)","min":32,"max":90,"step":2,"unit":"px","default":56},
+    {"type":"color","id":"c_bg","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"c_card","label":"Left card","default":"#F7F2EC"},
+    {"type":"color","id":"c_card2","label":"Right card","default":"#F1EAFF"},
+    {"type":"color","id":"c_ink","label":"Text","default":"#2A1427"},
+    {"type":"color","id":"c_acc","label":"Small labels","default":"#8E6AE6"},
+    {"type":"color","id":"c_btn","label":"Button","default":"#2A1427"},
+    {"type":"range","id":"pad_top","label":"Top padding","min":0,"max":120,"step":4,"unit":"px","default":56},
+    {"type":"range","id":"pad_bottom","label":"Bottom padding","min":0,"max":120,"step":4,"unit":"px","default":56}
+  ],
+  "presets":[{"name":"Problem / solution"}]
+}
+{% endschema %}

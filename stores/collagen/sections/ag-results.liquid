@@ -1,0 +1,193 @@
+{%- comment -%} Auvela: "Real women. Real results." photo marquee (auto-scrolls) + review cards (N per view, arrows) {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign n_ph = 0
+  assign n_rv = 0
+  for block in section.blocks
+    if block.type == 'photo' and block.settings.image != blank
+      assign n_ph = n_ph | plus: 1
+    elsif block.type == 'review'
+      assign n_rv = n_rv | plus: 1
+    endif
+  endfor
+-%}
+<section id="nxRs-{{ section.id }}" class="nxRs" style="--rs-bg:{{ s.c_bg }};--rs-card:{{ s.c_card }};--rs-ink:{{ s.c_ink }};--rs-acc:{{ s.c_acc }};--rs-star:{{ s.c_star }};--rs-line:{{ s.c_line }};--per-d:{{ s.per_d }};--per-m:{{ s.per_m }};--ph-d:{{ s.photo_h_d }}px;--ph-m:{{ s.photo_h_m }}px;--spd:{{ s.speed }}s;padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="nxRs__hd">
+    {%- if s.show_stars -%}<div class="nxRs__stars" aria-hidden="true">{%- for i in (1..5) -%}<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>{%- endfor -%}</div>{%- endif -%}
+    <h2 class="nxRs__h">{{ s.heading }}</h2>
+    {%- if s.sub != blank -%}<p class="nxRs__sub">{{ s.sub }}</p>{%- endif -%}
+  </div>
+
+  {%- if n_ph > 0 -%}
+  <div class="nxRs__mq{% unless s.show_photos_m %} nxRs__mq--dhide{% endunless %}" aria-label="Customer photos">
+    <div class="nxRs__mqT{% if s.direction == 'right' %} is-right{% endif %}">
+      {%- for k in (1..2) -%}
+        {%- for block in section.blocks -%}{%- if block.type == 'photo' and block.settings.image != blank -%}
+          <figure class="nxRs__ph"{% if k == 1 %} {{ block.shopify_attributes }}{% else %} aria-hidden="true"{% endif %}>
+            {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.alt }}
+            {%- if block.settings.label != blank -%}<figcaption>{{ block.settings.label }}</figcaption>{%- endif -%}
+          </figure>
+        {%- endif -%}{%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if n_rv > 0 -%}
+  <div class="nxRs__rv">
+    <div class="nxRs__track" data-rs-track>
+      {%- for block in section.blocks -%}{%- if block.type == 'review' -%}
+      {%- assign b = block.settings -%}
+      <article class="nxRs__card" {{ block.shopify_attributes }}>
+        <span class="nxRs__badge"><b>{{ b.rating | times: 1.0 | round: 1 }}</b>{%- for i in (1..5) -%}<svg viewBox="0 0 24 24" class="{% if i > b.rating %}off{% endif %}"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>{%- endfor -%}</span>
+        {%- if b.title != blank -%}<h3 class="nxRs__t">“{{ b.title }}”</h3>{%- endif -%}
+        <p class="nxRs__x">{{ b.text }}</p>
+        <div class="nxRs__ft">
+          <span class="nxRs__who">
+            <span class="nxRs__av">{%- if b.avatar != blank -%}{{ b.avatar | image_url: width: 80 | image_tag: loading: 'lazy', alt: '' }}{%- else -%}{{ b.name | slice: 0 }}{%- endif -%}</span>
+            <b>{{ b.name }}</b>
+          </span>
+          {%- if b.verified -%}<span class="nxRs__ok"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>{{ s.verified_label }}</span>{%- endif -%}
+        </div>
+        {%- if b.tags != blank -%}<div class="nxRs__tags">{%- assign tg = b.tags | split: ',' -%}{%- for x in tg -%}{%- assign xs = x | strip -%}{%- if xs != blank -%}<span>{{ xs }}</span>{%- endif -%}{%- endfor -%}</div>{%- endif -%}
+      </article>
+      {%- endif -%}{%- endfor -%}
+    </div>
+    <div class="nxRs__nav">
+      <button type="button" aria-label="Previous reviews" data-rs-prev><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <div class="nxRs__dots" data-rs-dots></div>
+      <button type="button" aria-label="Next reviews" data-rs-next><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+  {%- endif -%}
+</section>
+<style>
+#nxRs-{{ section.id }}{background:var(--rs-bg);color:var(--rs-ink);overflow:hidden}
+#nxRs-{{ section.id }} .nxRs__hd{max-width:760px;margin:0 auto 34px;padding:0 20px;text-align:center}
+#nxRs-{{ section.id }} .nxRs__stars{display:inline-flex;gap:4px;margin-bottom:14px}
+#nxRs-{{ section.id }} .nxRs__stars svg{width:20px;height:20px;fill:var(--rs-star)}
+#nxRs-{{ section.id }} .nxRs__h{margin:0 0 10px!important;font-size:{{ s.head_d }}px!important;line-height:1.08!important;font-weight:500!important;letter-spacing:-.02em;color:var(--rs-ink)}
+#nxRs-{{ section.id }} .nxRs__h em{color:var(--rs-acc)}
+#nxRs-{{ section.id }} .nxRs__sub{margin:0;font-size:16px;line-height:1.5;opacity:.75}
+/* photo marquee */
+#nxRs-{{ section.id }} .nxRs__mq{overflow:hidden;margin-bottom:48px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+#nxRs-{{ section.id }} .nxRs__mqT{display:flex;gap:14px;width:max-content;animation:nxRsMq-{{ section.id }} var(--spd) linear infinite}
+#nxRs-{{ section.id }} .nxRs__mqT.is-right{animation-direction:reverse}
+#nxRs-{{ section.id }} .nxRs__mq:hover .nxRs__mqT{animation-play-state:paused}
+@keyframes nxRsMq-{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 7px))}}
+#nxRs-{{ section.id }} .nxRs__ph{position:relative;flex:0 0 auto;height:var(--ph-d);aspect-ratio:{{ s.photo_ratio }};margin:0;border-radius:16px;overflow:hidden;background:var(--rs-card)}
+#nxRs-{{ section.id }} .nxRs__ph img{width:100%;height:100%;object-fit:cover;display:block}
+#nxRs-{{ section.id }} .nxRs__ph figcaption{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);color:var(--rs-ink);font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px}
+@media (prefers-reduced-motion:reduce){#nxRs-{{ section.id }} .nxRs__mqT{animation:none}#nxRs-{{ section.id }} .nxRs__mq{overflow-x:auto}}
+/* review cards */
+#nxRs-{{ section.id }} .nxRs__rv{max-width:1240px;margin:0 auto;padding:0 20px}
+#nxRs-{{ section.id }} .nxRs__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - (var(--per-d) - 1) * 20px) / var(--per-d));gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 6px}
+#nxRs-{{ section.id }} .nxRs__track::-webkit-scrollbar{display:none}
+#nxRs-{{ section.id }} .nxRs__card{scroll-snap-align:start;display:flex;flex-direction:column;background:var(--rs-card);border:1px solid var(--rs-line);border-radius:18px;padding:22px 22px 20px;box-shadow:0 10px 28px -22px rgba(42,20,39,.35);min-width:0}
+#nxRs-{{ section.id }} .nxRs__badge{align-self:flex-start;display:inline-flex;align-items:center;gap:3px;border:1.5px solid var(--rs-acc);border-radius:999px;padding:4px 12px;margin-bottom:14px}
+#nxRs-{{ section.id }} .nxRs__badge b{font-size:14px;margin-right:5px;color:var(--rs-ink)}
+#nxRs-{{ section.id }} .nxRs__badge svg{width:13px;height:13px;fill:var(--rs-star)}
+#nxRs-{{ section.id }} .nxRs__badge svg.off{fill:#E2D8D3}
+#nxRs-{{ section.id }} .nxRs__t{margin:0 0 10px!important;font-size:18px!important;line-height:1.3!important;font-weight:600!important;color:var(--rs-ink)}
+#nxRs-{{ section.id }} .nxRs__x{margin:0 0 18px;font-size:14.5px;line-height:1.6;opacity:.82;flex:1}
+#nxRs-{{ section.id }} .nxRs__ft{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+#nxRs-{{ section.id }} .nxRs__who{display:flex;align-items:center;gap:10px;min-width:0}
+#nxRs-{{ section.id }} .nxRs__who b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#nxRs-{{ section.id }} .nxRs__av{flex:0 0 34px;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#F1EAFF;color:var(--rs-ink);display:grid;place-items:center;font-weight:700;font-size:14px}
+#nxRs-{{ section.id }} .nxRs__av img{width:100%;height:100%;object-fit:cover}
+#nxRs-{{ section.id }} .nxRs__ok{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;opacity:.75;white-space:nowrap}
+#nxRs-{{ section.id }} .nxRs__ok svg{width:14px;height:14px;fill:none;stroke:#3F9A64;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#nxRs-{{ section.id }} .nxRs__tags{display:flex;flex-wrap:wrap;gap:6px}
+#nxRs-{{ section.id }} .nxRs__tags span{font-size:12px;border:1px solid var(--rs-line);border-radius:999px;padding:4px 11px;background:#fff}
+#nxRs-{{ section.id }} .nxRs__nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:26px}
+#nxRs-{{ section.id }} .nxRs__nav>button{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--rs-ink);background:transparent;color:var(--rs-ink);display:grid;place-items:center;cursor:pointer;padding:0}
+#nxRs-{{ section.id }} .nxRs__nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#nxRs-{{ section.id }} .nxRs__dots{display:flex;gap:7px;align-items:center}
+#nxRs-{{ section.id }} .nxRs__dots button{width:8px;height:8px;border:0;border-radius:999px;background:#D8CCE8;padding:0;cursor:pointer;transition:width .25s,background .25s}
+#nxRs-{{ section.id }} .nxRs__dots button.on{width:26px;background:var(--rs-ink)}
+#nxRs-{{ section.id }}.is-fit .nxRs__nav{display:none}
+@media(max-width:749px){
+  #nxRs-{{ section.id }} .nxRs__hd{margin-bottom:24px}
+  #nxRs-{{ section.id }} .nxRs__h{font-size:{{ s.head_m }}px!important}
+  #nxRs-{{ section.id }} .nxRs__sub{font-size:14.5px}
+  #nxRs-{{ section.id }} .nxRs__mq{margin-bottom:30px}
+  #nxRs-{{ section.id }} .nxRs__mq.nxRs__mq--dhide{display:none}
+  #nxRs-{{ section.id }} .nxRs__ph{height:var(--ph-m);border-radius:12px}
+  #nxRs-{{ section.id }} .nxRs__track{grid-auto-columns:calc((100% - (var(--per-m) - 1) * 12px) / var(--per-m));gap:12px}
+  #nxRs-{{ section.id }} .nxRs__card{padding:18px 16px 16px}
+  #nxRs-{{ section.id }} .nxRs__t{font-size:16.5px!important}
+  #nxRs-{{ section.id }} .nxRs__x{font-size:14px}
+  #nxRs-{{ section.id }} .nxRs__nav>button{width:40px;height:40px;flex:0 0 40px}
+  #nxRs-{{ section.id }} .nxRs__nav{gap:12px}
+  #nxRs-{{ section.id }} .nxRs__dots{gap:5px;flex-wrap:wrap;justify-content:center;max-width:70%}
+  #nxRs-{{ section.id }} .nxRs__dots button{width:7px;height:7px}
+  #nxRs-{{ section.id }} .nxRs__dots button.on{width:20px}
+}
+</style>
+<script>
+(function(){
+  var r=document.getElementById('nxRs-{{ section.id }}'); if(!r) return;
+  var t=r.querySelector('[data-rs-track]'); if(!t) return;
+  var dw=r.querySelector('[data-rs-dots]');
+  function gap(){ return parseFloat(getComputedStyle(t).columnGap)||0; }
+  function step(){ return t.clientWidth+gap(); }
+  function pages(){ return Math.max(1,Math.round((t.scrollWidth+gap())/step())); }
+  function page(){ return Math.round(t.scrollLeft/step()); }
+  function go(i){ var n=pages(); if(i>=n) i=0; if(i<0) i=n-1; t.scrollTo({left:i*step(),behavior:'smooth'}); }
+  function dots(){ var n=pages(); r.classList.toggle('is-fit',n<=1); if(dw.children.length!==n){ dw.innerHTML=''; for(var i=0;i<n;i++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Reviews page '+(i+1)); (function(k){ b.onclick=function(){ go(k); }; })(i); dw.appendChild(b); } } var p=page(); Array.prototype.forEach.call(dw.children,function(b,i){ b.classList.toggle('on',i===p); }); }
+  r.querySelector('[data-rs-next]').onclick=function(){ go(page()+1); };
+  r.querySelector('[data-rs-prev]').onclick=function(){ go(page()-1); };
+  var to; t.addEventListener('scroll',function(){ clearTimeout(to); to=setTimeout(dots,90); },{passive:true});
+  window.addEventListener('resize',dots); dots(); setTimeout(dots,600);
+})();
+</script>
+{% schema %}
+{
+  "name": "Real results",
+  "tag": "div",
+  "settings": [
+    {"type":"checkbox","id":"show_stars","label":"Show 5 stars above heading","default":true},
+    {"type":"text","id":"heading","label":"Heading","default":"Real women. <em>Real results.</em>"},
+    {"type":"text","id":"sub","label":"Text under heading","default":"Made for women 40+. Real photos and words from our customers."},
+    {"type":"range","id":"head_d","label":"Heading size (desktop)","min":28,"max":72,"step":2,"unit":"px","default":48},
+    {"type":"range","id":"head_m","label":"Heading size (mobile)","min":22,"max":44,"step":1,"unit":"px","default":30},
+    {"type":"header","content":"Moving photo row"},
+    {"type":"range","id":"speed","label":"Scroll speed (seconds per loop, lower = faster)","min":15,"max":120,"step":5,"unit":"s","default":45},
+    {"type":"select","id":"direction","label":"Direction","default":"left","options":[{"value":"left","label":"Moves to the left"},{"value":"right","label":"Moves to the right"}]},
+    {"type":"select","id":"photo_ratio","label":"Photo shape","default":"1 / 1","options":[{"value":"1 / 1","label":"Square"},{"value":"4 / 5","label":"Portrait"},{"value":"4 / 3","label":"Landscape"}]},
+    {"type":"range","id":"photo_h_d","label":"Photo height (desktop)","min":140,"max":340,"step":10,"unit":"px","default":220},
+    {"type":"range","id":"photo_h_m","label":"Photo height (mobile)","min":100,"max":260,"step":10,"unit":"px","default":150},
+    {"type":"checkbox","id":"show_photos_m","label":"Show photo row on mobile","default":true},
+    {"type":"header","content":"Review cards"},
+    {"type":"select","id":"per_d","label":"Cards shown at once (desktop)","default":"3","options":[{"value":"2","label":"2"},{"value":"3","label":"3"},{"value":"4","label":"4"}]},
+    {"type":"select","id":"per_m","label":"Cards shown at once (mobile)","default":"1","options":[{"value":"1","label":"1"},{"value":"2","label":"2"}]},
+    {"type":"text","id":"verified_label","label":"Verified label","default":"Verified Customer"},
+    {"type":"header","content":"Colours & spacing"},
+    {"type":"color","id":"c_bg","label":"Background","default":"#F6F1FF"},
+    {"type":"color","id":"c_card","label":"Card background","default":"#FFFFFF"},
+    {"type":"color","id":"c_ink","label":"Text","default":"#2A1427"},
+    {"type":"color","id":"c_acc","label":"Accent (italic words, rating outline)","default":"#8E6AE6"},
+    {"type":"color","id":"c_star","label":"Stars","default":"#C9A24B"},
+    {"type":"color","id":"c_line","label":"Card border","default":"#E3D6FF"},
+    {"type":"range","id":"pad_top","label":"Top padding","min":0,"max":120,"step":4,"unit":"px","default":64},
+    {"type":"range","id":"pad_bottom","label":"Bottom padding","min":0,"max":120,"step":4,"unit":"px","default":64}
+  ],
+  "blocks": [
+    {"type":"photo","name":"Photo (moving row)","settings":[
+      {"type":"image_picker","id":"image","label":"Photo (before/after works great)"},
+      {"type":"text","id":"label","label":"Small label on photo (optional)"},
+      {"type":"text","id":"alt","label":"Photo description (for accessibility)"}
+    ]},
+    {"type":"review","name":"Review card","settings":[
+      {"type":"range","id":"rating","label":"Stars","min":1,"max":5,"step":1,"default":5},
+      {"type":"text","id":"title","label":"Title"},
+      {"type":"textarea","id":"text","label":"Review text"},
+      {"type":"text","id":"name","label":"Name"},
+      {"type":"image_picker","id":"avatar","label":"Customer photo (optional)"},
+      {"type":"checkbox","id":"verified","label":"Verified customer","default":true},
+      {"type":"text","id":"tags","label":"Tags (comma separated)","info":"e.g. Firmness, Hydration"}
+    ]}
+  ],
+  "presets":[{"name":"Real results"}]
+}
+{% endschema %}
