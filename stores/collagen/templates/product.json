@@ -75,7 +75,8 @@
             "save_pct": 0,
             "badge": "",
             "badge_color": "#2a1427",
-            "is_default": false
+            "is_default": false,
+            "image": "shopify://shop_images/auvela-bundle-1.png"
           }
         },
         "bun2": {
@@ -87,7 +88,8 @@
             "save_pct": 0,
             "badge": "Most popular",
             "badge_color": "#2a1427",
-            "is_default": true
+            "is_default": true,
+            "image": "shopify://shop_images/auvela-bundle-3.png"
           }
         },
         "bun3": {
@@ -99,7 +101,8 @@
             "save_pct": 0,
             "badge": "Best value",
             "badge_color": "#c9a24b",
-            "is_default": false
+            "is_default": false,
+            "image": "shopify://shop_images/auvela-bundle-6.png"
           }
         },
         "ft1": {
@@ -262,7 +265,7 @@
         "pill_av_border_color": "#ffffff",
         "show_compare": true,
         "bubble_text": "",
-        "show_deal": false,
+        "show_deal": true,
         "deal_text": "Extra 15% off ends in",
         "deal_hours": 5,
         "deal_code": "AUVELA15",
@@ -274,7 +277,7 @@
         "pill_style": "soft",
         "show_stock": false,
         "stock_text": "Only 14 spots remaining for the founding batch",
-        "stock_glow": true,
+        "stock_glow": false,
         "show_spots": true,
         "spots_text": "Only [n] discount spots left at this price",
         "spots_count": 14,
@@ -326,7 +329,7 @@
         "ship_max": 3,
         "del_min": 5,
         "del_max": 9,
-        "date_style": "short",
+        "date_style": "long",
         "tl_1": "Ordered",
         "tl_1_sub": "Today",
         "tl_2": "Shipped",
@@ -690,7 +693,7 @@
         "eyebrow": "The difference",
         "heading": "Made for the body you see in the mirror.",
         "after": "shopify://shop_images/Lavender_Collagen_Supplement_Display.png",
-        "before": "shopify://shop_images/Change_image_brand_colors_ed564f2d_2K.jpg",
+        "before": "shopify://shop_images/Collagen_Options_Comparison_Infographic.png",
         "us_label": "Our collagen",
         "them_label": "Ordinary collagen",
         "start": 50,

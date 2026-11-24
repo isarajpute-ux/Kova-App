@@ -136,3 +136,13 @@ img,video,iframe{max-width:100%}
 h1 em,h2 em,h3 em,h4 em,p em,.agP__desc em,.agP__title em,.nxHero__h em,.nxBn__h em,.nxBn__t em,.nxWhy__h em,.nxWhy__t em,.nxIg__h em,.nxRe__h span,
 [id^="ag-"] em,[id^="nx-"] em,.nxPf__q,.nxPlan em{font-family:'Instrument Serif',Georgia,serif!important;font-style:italic!important;font-weight:400!important;letter-spacing:0!important;font-synthesis:none}
 h1 em,h2 em,.nxHero__h em,.nxBn__h em,.nxWhy__h em,.nxIg__h em{font-size:1.08em}
+
+/* ---- bundle cards: show a picture of 1 / 3 / 6 bags (kept compact, cards stay side by side) ---- */
+.agP .agB .agB__card{padding:10px 8px 12px!important;justify-content:flex-start!important}
+.agP .agB .agB__card .agB__img{display:block!important;position:relative;width:100%!important;max-width:150px!important;height:auto!important;aspect-ratio:4/3;margin:0 auto 6px!important;background:transparent!important;border:0!important;border-radius:0!important;overflow:visible!important;box-shadow:none!important}
+.agP .agB .agB__card .agB__img img{display:block;width:100%!important;height:100%!important;max-width:none!important;object-fit:contain!important;mix-blend-mode:multiply;border-radius:0!important;background:transparent!important}
+.agP .agB .agB__card .agB__x{display:none!important}
+@media(max-width:749px){
+.agP .agB .agB__card{padding:8px 4px 10px!important}
+.agP .agB .agB__card .agB__img{max-width:100px!important;margin-bottom:4px!important}
+}
