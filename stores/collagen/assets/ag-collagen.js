@@ -273,3 +273,16 @@ setInterval(function(){ var c=document.querySelector('#cart-icon-bubble'); if(c&
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ fix(); }); else fix();
   setTimeout(fix,1500); document.addEventListener('shopify:section:load',function(){ setTimeout(fix,400); });
 })();
+
+/* Auvela: put the "Only [n] discount spots left" line in its own roomy box right above Add to Cart */
+(function(){
+  function mv(){
+    var p=document.querySelector('[data-ag-product]'); if(!p) return;
+    var sp=p.querySelector('.agSpots'), f=p.querySelector('.agP__form'); if(!sp||!f||!f.parentNode) return;
+    if(sp.nextElementSibling!==f) f.parentNode.insertBefore(sp,f);
+    sp.classList.add('nxSpotsMv');
+  }
+  function go(){ setTimeout(mv,500); setTimeout(mv,1300); setInterval(mv,2000); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+  document.addEventListener('shopify:section:load',function(){ setTimeout(mv,700); setTimeout(mv,1500); });
+})();

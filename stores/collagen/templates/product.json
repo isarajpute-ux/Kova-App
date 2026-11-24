@@ -75,7 +75,7 @@
             "save_pct": 0,
             "badge": "",
             "badge_color": "#2a1427",
-            "is_default": false,
+            "is_default": true,
             "image": "shopify://shop_images/auvela-bundle-1.png"
           }
         },
@@ -88,7 +88,7 @@
             "save_pct": 0,
             "badge": "Most popular",
             "badge_color": "#2a1427",
-            "is_default": true,
+            "is_default": false,
             "image": "shopify://shop_images/auvela-bundle-3.png"
           }
         },
