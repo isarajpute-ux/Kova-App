@@ -73,10 +73,10 @@
             "sub": "1 bag · 30 days|1 Bag · 30-Day Supply|Try the ritual for a month",
             "qty": 1,
             "save_pct": 0,
+            "image": "shopify://shop_images/auvela-bundle-1.png",
             "badge": "",
             "badge_color": "#2a1427",
-            "is_default": true,
-            "image": "shopify://shop_images/auvela-bundle-1.png"
+            "is_default": true
           }
         },
         "bun2": {
@@ -86,10 +86,10 @@
             "sub": "3 bags · 90 days|The 90-Day Skin Firming Protocol|3 bags — one full skin-renewal cycle|Save $49.98 vs. 3 single bags|Free US shipping|90-Day Firmer-Skin Promise",
             "qty": 1,
             "save_pct": 0,
+            "image": "shopify://shop_images/auvela-bundle-3.png",
             "badge": "Most popular",
             "badge_color": "#2a1427",
-            "is_default": false,
-            "image": "shopify://shop_images/auvela-bundle-3.png"
+            "is_default": false
           }
         },
         "bun3": {
@@ -99,10 +99,10 @@
             "sub": "6 bags · 180 days|Full Transformation · 180 Days|6 bags — best value per scoop|Save $119.95 vs. 6 single bags|Free US shipping|90-Day Firmer-Skin Promise",
             "qty": 1,
             "save_pct": 0,
+            "image": "shopify://shop_images/auvela-bundle-6.png",
             "badge": "Best value",
             "badge_color": "#c9a24b",
-            "is_default": false,
-            "image": "shopify://shop_images/auvela-bundle-6.png"
+            "is_default": false
           }
         },
         "ft1": {
@@ -265,7 +265,7 @@
         "pill_av_border_color": "#ffffff",
         "show_compare": true,
         "bubble_text": "",
-        "show_deal": true,
+        "show_deal": false,
         "deal_text": "Extra 15% off ends in",
         "deal_hours": 5,
         "deal_code": "AUVELA15",
