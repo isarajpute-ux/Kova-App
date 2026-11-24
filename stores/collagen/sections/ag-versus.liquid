@@ -29,14 +29,14 @@
       <table class="nxCv__t">
         <thead>
           <tr>
-            <th class="nxCv__lbl" scope="col">{{ s.col_label }}</th>
+            <th class="nxCv__lbl" scope="col"><span class="nxCv__d">{{ s.col_label }}</span></th>
             <th class="nxCv__us nxCv__us--top" scope="col">
               {%- if s.logo != blank -%}{{ s.logo | image_url: width: 160 | image_tag: class: 'nxCv__logo', alt: s.col_us, loading: 'lazy' }}{%- endif -%}
               <span>{{ s.col_us }}</span>
             </th>
-            <th scope="col">{{ s.col_a }}</th>
-            <th scope="col">{{ s.col_b }}</th>
-            <th scope="col">{{ s.col_c }}</th>
+            <th scope="col"><span class="nxCv__d">{{ s.col_a }}</span><span class="nxCv__m">{{ s.col_a_m | default: s.col_a }}</span></th>
+            <th scope="col"><span class="nxCv__d">{{ s.col_b }}</span><span class="nxCv__m">{{ s.col_b_m | default: s.col_b }}</span></th>
+            <th scope="col"><span class="nxCv__d">{{ s.col_c }}</span><span class="nxCv__m">{{ s.col_c_m | default: s.col_c }}</span></th>
           </tr>
         </thead>
         <tbody>
@@ -98,6 +98,7 @@
 #nxCv-{{ section.id }} .nxCv__i--d{color:#C9BFC8;background:none}
 #nxCv-{{ section.id }} .nxCv__w{display:block;font-size:16px;line-height:1.3;font-weight:500;opacity:.8}
 #nxCv-{{ section.id }} .nxCv__us .nxCv__w{font-size:17px;font-weight:700;opacity:1}
+#nxCv-{{ section.id }} .nxCv__m{display:none}
 #nxCv-{{ section.id }} .nxCv__bl{max-width:900px;margin:34px auto 0;font-size:16px;line-height:1.6}
 #nxCv-{{ section.id }} .nxCv__bl p{margin:0}
 #nxCv-{{ section.id }} .nxCv__bl strong{color:var(--cv-ink)}
@@ -111,21 +112,23 @@
   #nxCv-{{ section.id }} .nxCv__ey{font-size:11.5px;margin-bottom:10px}
   #nxCv-{{ section.id }} .nxCv__h{font-size:{{ s.head_m }}px!important;margin-bottom:12px!important}
   #nxCv-{{ section.id }} .nxCv__sub{font-size:15px;line-height:1.55}
-  #nxCv-{{ section.id }} .nxCv__wrap{margin-top:30px}
-  #nxCv-{{ section.id }} .nxCv__t th,#nxCv-{{ section.id }} .nxCv__t td{padding:14px 3px}
-  #nxCv-{{ section.id }} .nxCv__t thead th{font-size:8.5px;letter-spacing:.02em;padding-top:18px;padding-bottom:14px;line-height:1.3;overflow-wrap:anywhere}
-  #nxCv-{{ section.id }} .nxCv__t thead th:first-child{width:34%}
-  #nxCv-{{ section.id }} .nxCv__t .nxCv__lbl{padding-left:4px;padding-right:8px;font-size:13px;line-height:1.3}
-  #nxCv-{{ section.id }} .nxCv__t thead .nxCv__lbl{font-size:10px;letter-spacing:.08em}
-  #nxCv-{{ section.id }} .nxCv__t thead .nxCv__us{border-radius:16px 16px 0 0;padding-top:20px;font-size:10.5px;letter-spacing:.1em}
-  #nxCv-{{ section.id }} .nxCv__t .nxCv__us--end{border-radius:0 0 16px 16px}
-  #nxCv-{{ section.id }} .nxCv__logo{max-width:40px;max-height:26px;margin-bottom:8px}
-  #nxCv-{{ section.id }} .nxCv__i{width:28px;height:28px;font-size:18px}
-  #nxCv-{{ section.id }} .nxCv__i svg{width:15px;height:15px}
-  #nxCv-{{ section.id }} .nxCv__i--n svg{width:12px;height:12px}
-  #nxCv-{{ section.id }} .nxCv__w{display:block;font-size:11.5px;line-height:1.2}
-  #nxCv-{{ section.id }} .nxCv__us .nxCv__w{font-size:12px}
-  #nxCv-{{ section.id }} .nxCv__bl{font-size:14.5px;margin-top:24px;text-align:left}
+  #nxCv-{{ section.id }} .nxCv__wrap{margin-top:28px}
+  #nxCv-{{ section.id }} .nxCv__d{display:none}
+  #nxCv-{{ section.id }} .nxCv__m{display:inline}
+  #nxCv-{{ section.id }} .nxCv__t th,#nxCv-{{ section.id }} .nxCv__t td{padding:17px 2px;border-bottom-color:rgba(42,20,39,.08)}
+  #nxCv-{{ section.id }} .nxCv__t thead th{font-size:9.5px;letter-spacing:.03em;padding-top:18px;padding-bottom:12px;line-height:1.2}
+  #nxCv-{{ section.id }} .nxCv__t thead th:first-child{width:41%}
+  #nxCv-{{ section.id }} .nxCv__t .nxCv__lbl{padding-left:2px;padding-right:10px;font-size:14px;line-height:1.35}
+  #nxCv-{{ section.id }} .nxCv__t thead .nxCv__us{border-radius:14px 14px 0 0;padding-top:18px;font-size:9.5px;letter-spacing:.06em}
+  #nxCv-{{ section.id }} .nxCv__t .nxCv__us--end{border-radius:0 0 14px 14px}
+  #nxCv-{{ section.id }} .nxCv__logo{max-width:36px;max-height:24px;margin-bottom:6px}
+  #nxCv-{{ section.id }} .nxCv__i{width:26px;height:26px;font-size:17px}
+  #nxCv-{{ section.id }} .nxCv__i svg{width:14px;height:14px}
+  #nxCv-{{ section.id }} .nxCv__i--n{background:none;width:20px;height:20px}
+  #nxCv-{{ section.id }} .nxCv__i--n svg{width:13px;height:13px;stroke-width:2.2}
+  #nxCv-{{ section.id }} .nxCv__w{font-size:10.5px;line-height:1.25}
+  #nxCv-{{ section.id }} .nxCv__us .nxCv__w{font-size:11px}
+  #nxCv-{{ section.id }} .nxCv__bl{font-size:14.5px;margin-top:26px;text-align:left}
   #nxCv-{{ section.id }} .nxCv__btn{width:100%;min-width:0;box-sizing:border-box}
   #nxCv-{{ section.id }} .nxCv__fine{font-size:11px;text-align:left}
 }
@@ -160,6 +163,9 @@
     {"type":"text","id":"col_a","label":"Column 2","default":"Collagen pills"},
     {"type":"text","id":"col_b","label":"Column 3","default":"Collagen gummies"},
     {"type":"text","id":"col_c","label":"Column 4","default":"Collagen masks"},
+    {"type":"text","id":"col_a_m","label":"Column 2 (phone)","default":"Pills"},
+    {"type":"text","id":"col_b_m","label":"Column 3 (phone)","default":"Gummies"},
+    {"type":"text","id":"col_c_m","label":"Column 4 (phone)","default":"Masks"},
     {"type":"header","content":"Under the table"},
     {"type":"richtext","id":"bottom","label":"Bottom line","default":"<p><strong>Bottom line:</strong> Pills and gummies are quick too, but a full serving can mean a handful of them. Masks take hours a month. Auvela is one serving, stirred into the coffee you were already making.</p>"},
     {"type":"text","id":"btn","label":"Button text","default":"Get Auvela"},

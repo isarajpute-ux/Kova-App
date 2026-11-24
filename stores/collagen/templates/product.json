@@ -1603,7 +1603,10 @@
         "c_ok": "#C7ABFF",
         "c_btn": "#C7ABFF",
         "pad_top": 72,
-        "pad_bottom": 72
+        "pad_bottom": 72,
+        "col_a_m": "Pills",
+        "col_b_m": "Gummies",
+        "col_c_m": "Masks"
       }
     }
   },
