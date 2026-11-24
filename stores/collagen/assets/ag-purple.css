@@ -166,3 +166,6 @@ body .agP .agB{row-gap:16px!important}
 /* ---- customer quote next to the rating: bigger and easier to read ---- */
 .nxPf__rate .nxPf__q,.agP .nxCol .nxPf__q{font-size:18px!important;line-height:1.35!important;color:#2A1427!important;margin-top:4px!important}
 @media(max-width:749px){.nxPf__rate .nxPf__q,.agP .nxCol .nxPf__q{font-size:16px!important}}
+
+/* ---- feature boxes under Add to Cart: 2x2 on desktop, stacked on phones ---- */
+@media(max-width:749px){body .agP .agP__feats{grid-template-columns:1fr!important;gap:10px!important}}

@@ -108,28 +108,28 @@
         "ft1": {
           "type": "feature",
           "settings": {
-            "icon": "sparkle",
+            "icon": "clock",
             "icon_color": "#2a1427",
-            "title": "5 collagen types + hyaluronic acid",
-            "sub": "Full-spectrum I, II, III, V & X"
+            "title": "Under a minute",
+            "sub": "Stir 2 scoops into the coffee you already make. No extra step to remember."
           }
         },
         "ft2": {
           "type": "feature",
           "settings": {
-            "icon": "heart",
+            "icon": "coffee",
             "icon_color": "#2a1427",
-            "title": "One scoop in your coffee",
-            "sub": "Unflavored, dissolves clean"
+            "title": "All in one stir",
+            "sub": "5 collagen types (I, II, III, V, X), hyaluronic acid and vitamin C in every serving."
           }
         },
         "ft3": {
           "type": "feature",
           "settings": {
-            "icon": "box",
+            "icon": "calendar",
             "icon_color": "#2a1427",
-            "title": "90-day money-back promise",
-            "sub": "Feel firmer or every penny back"
+            "title": "Nothing to book",
+            "sub": "No appointments, no waiting rooms, no 10-step routine."
           }
         },
         "howto": {
@@ -201,6 +201,15 @@
             "content": "<ul><li><strong>1-Bag Bundle:</strong> Multi-Collagen Peptide Powder.</li><li><strong>3-Bag Bundle:</strong> 3 bags.</li><li><strong>6-Bag Bundle:</strong> 6 bags.</li></ul>",
             "open": false
           }
+        },
+        "ft4": {
+          "type": "feature",
+          "settings": {
+            "icon": "box",
+            "icon_color": "#2a1427",
+            "title": "About six weeks per bag",
+            "sub": "41 servings in every bag. One a day."
+          }
         }
       },
       "block_order": [
@@ -216,6 +225,7 @@
         "ft1",
         "ft2",
         "ft3",
+        "ft4",
         "howto",
         "kb1",
         "kb2",
