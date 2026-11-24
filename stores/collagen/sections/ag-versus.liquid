@@ -1,0 +1,195 @@
+{%- comment -%} Auvela: "How we compare" table with a tall highlighted brand column {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign p = all_products['multi-collagen-peptide-powder']
+  assign v1 = p.variants.first
+  for v in p.variants
+    if v.title contains '1 Bag'
+      assign v1 = v
+      break
+    endif
+  endfor
+  if s.btn_link != blank
+    assign link = s.btn_link
+  elsif p != blank
+    assign link = p.url | append: '?variant=' | append: v1.id
+  else
+    assign link = '/products/multi-collagen-peptide-powder'
+  endif
+  assign cols = 'us,a,b,c' | split: ','
+-%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap">
+<section id="nxCv-{{ section.id }}" class="nxCv" style="--cv-bg:{{ s.c_bg }};--cv-ink:{{ s.c_ink }};--cv-acc:{{ s.c_acc }};--cv-col:{{ s.c_col }};--cv-ok:{{ s.c_ok }};--cv-btn:{{ s.c_btn }};padding:{{ s.pad_top }}px 0 {{ s.pad_bottom }}px">
+  <div class="nxCv__in">
+    {%- if s.eyebrow != blank -%}<p class="nxCv__ey">{{ s.eyebrow }}</p>{%- endif -%}
+    <h2 class="nxCv__h">{{ s.heading }}</h2>
+    {%- if s.text != blank -%}<p class="nxCv__sub">{{ s.text }}</p>{%- endif -%}
+
+    <div class="nxCv__wrap">
+      <table class="nxCv__t">
+        <thead>
+          <tr>
+            <th class="nxCv__lbl" scope="col">{{ s.col_label }}</th>
+            <th class="nxCv__us nxCv__us--top" scope="col">
+              {%- if s.logo != blank -%}{{ s.logo | image_url: width: 160 | image_tag: class: 'nxCv__logo', alt: s.col_us, loading: 'lazy' }}{%- endif -%}
+              <span>{{ s.col_us }}</span>
+            </th>
+            <th scope="col">{{ s.col_a }}</th>
+            <th scope="col">{{ s.col_b }}</th>
+            <th scope="col">{{ s.col_c }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+          <tr {{ block.shopify_attributes }}>
+            <th class="nxCv__lbl" scope="row">{{ block.settings.label }}</th>
+            {%- for c in cols -%}
+              {%- assign k = 'v_' | append: c -%}
+              {%- assign t = 't_' | append: c -%}
+              {%- assign val = block.settings[k] -%}
+              <td class="{% if c == 'us' %}nxCv__us{% if forloop.parentloop.last %} nxCv__us--end{% endif %}{% endif %}">
+                {%- case val -%}
+                  {%- when 'yes' -%}<span class="nxCv__i nxCv__i--y" role="img" aria-label="Yes"><svg viewBox="0 0 24 24"><path d="m6.5 12.5 3.6 3.6 7.4-8"/></svg></span>
+                  {%- when 'no' -%}<span class="nxCv__i nxCv__i--n" role="img" aria-label="No"><svg viewBox="0 0 24 24"><path d="m8 8 8 8M16 8l-8 8"/></svg></span>
+                  {%- when 'some' -%}<span class="nxCv__i nxCv__i--s" role="img" aria-label="Partly">~</span>
+                  {%- when 'na' -%}<span class="nxCv__i nxCv__i--d" role="img" aria-label="Does not apply">–</span>
+                  {%- else -%}<span class="nxCv__w">{{ block.settings[t] }}</span>
+                {%- endcase -%}
+              </td>
+            {%- endfor -%}
+          </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    {%- if s.bottom != blank -%}<div class="nxCv__bl">{{ s.bottom }}</div>{%- endif -%}
+    {%- if s.btn != blank -%}<div class="nxCv__cta"><a class="nxCv__btn" href="{{ link }}" data-cv-btn data-v="{{ v1.id }}">{{ s.btn }}</a></div>{%- endif -%}
+    {%- if s.fine != blank -%}<div class="nxCv__fine">{{ s.fine }}</div>{%- endif -%}
+  </div>
+</section>
+<style>
+#nxCv-{{ section.id }}{background:var(--cv-bg);color:var(--cv-ink)}
+#nxCv-{{ section.id }} .nxCv__in{max-width:1120px;margin:0 auto;padding:0 20px;text-align:center}
+#nxCv-{{ section.id }} .nxCv__ey{margin:0 0 14px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:var(--cv-acc)}
+#nxCv-{{ section.id }} .nxCv__h{margin:0 0 16px!important;font-size:{{ s.head_d }}px!important;line-height:1.12!important;font-weight:600!important;letter-spacing:-.02em;color:var(--cv-ink)}
+#nxCv-{{ section.id }} .nxCv__h em{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:600;color:var(--cv-acc);letter-spacing:-.01em}
+#nxCv-{{ section.id }} .nxCv__sub{max-width:720px;margin:0 auto;font-size:17px;line-height:1.6;opacity:.72}
+#nxCv-{{ section.id }} .nxCv__wrap{max-width:1000px;margin:48px auto 0}
+#nxCv-{{ section.id }} .nxCv__t{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
+#nxCv-{{ section.id }} .nxCv__t col{width:auto}
+#nxCv-{{ section.id }} .nxCv__t th,#nxCv-{{ section.id }} .nxCv__t td{padding:20px 12px;text-align:center;vertical-align:middle;border-bottom:1px dashed rgba(42,20,39,.14);font-weight:400}
+#nxCv-{{ section.id }} .nxCv__t thead th{font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;opacity:.7;padding-top:26px;padding-bottom:20px;vertical-align:bottom}
+#nxCv-{{ section.id }} .nxCv__t thead th:first-child{width:34%}
+#nxCv-{{ section.id }} .nxCv__t .nxCv__lbl{text-align:left;padding-left:22px;font-size:16px;font-weight:500;line-height:1.35;opacity:1}
+#nxCv-{{ section.id }} .nxCv__t thead .nxCv__lbl{font-size:14px;font-weight:600;letter-spacing:.14em;opacity:1}
+#nxCv-{{ section.id }} .nxCv__t .nxCv__us{background:var(--cv-col);color:#fff;border-bottom-color:rgba(255,255,255,.13);opacity:1}
+#nxCv-{{ section.id }} .nxCv__t thead .nxCv__us{border-radius:22px 22px 0 0;padding-top:30px;letter-spacing:.2em;font-size:15px}
+#nxCv-{{ section.id }} .nxCv__us--top span{display:block}
+#nxCv-{{ section.id }} .nxCv__logo{display:block;max-width:64px;max-height:40px;width:auto;height:auto;margin:0 auto 12px}
+#nxCv-{{ section.id }} .nxCv__t .nxCv__us--end{border-radius:0 0 22px 22px;border-bottom:0}
+#nxCv-{{ section.id }} .nxCv__t tbody tr:last-child th,#nxCv-{{ section.id }} .nxCv__t tbody tr:last-child td{border-bottom:0;padding-top:24px;padding-bottom:26px}
+#nxCv-{{ section.id }} .nxCv__i{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;font-size:22px;line-height:1;font-weight:500}
+#nxCv-{{ section.id }} .nxCv__i svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#nxCv-{{ section.id }} .nxCv__i--y{background:var(--cv-ok);color:var(--cv-col)}
+#nxCv-{{ section.id }} .nxCv__i--n{background:#FBE7EA;color:#D9475C}
+#nxCv-{{ section.id }} .nxCv__i--n svg{width:16px;height:16px}
+#nxCv-{{ section.id }} .nxCv__i--s{color:#A89AA6;background:none}
+#nxCv-{{ section.id }} .nxCv__i--d{color:#C9BFC8;background:none}
+#nxCv-{{ section.id }} .nxCv__w{display:block;font-size:16px;line-height:1.3;font-weight:500;opacity:.8}
+#nxCv-{{ section.id }} .nxCv__us .nxCv__w{font-size:17px;font-weight:700;opacity:1}
+#nxCv-{{ section.id }} .nxCv__bl{max-width:900px;margin:34px auto 0;font-size:16px;line-height:1.6}
+#nxCv-{{ section.id }} .nxCv__bl p{margin:0}
+#nxCv-{{ section.id }} .nxCv__bl strong{color:var(--cv-ink)}
+#nxCv-{{ section.id }} .nxCv__cta{margin-top:28px}
+#nxCv-{{ section.id }} .nxCv__btn{display:inline-flex;align-items:center;justify-content:center;min-width:280px;min-height:56px;padding:0 40px;border-radius:999px;background:var(--cv-btn);color:var(--cv-ink);font-size:16px;font-weight:600;text-decoration:none;box-shadow:0 14px 30px -18px rgba(42,20,39,.55);transition:transform .2s}
+#nxCv-{{ section.id }} .nxCv__btn:hover{transform:translateY(-2px)}
+#nxCv-{{ section.id }} .nxCv__fine{max-width:820px;margin:30px auto 0;font-size:12px;line-height:1.55;opacity:.55}
+#nxCv-{{ section.id }} .nxCv__fine p{margin:0}
+@media(max-width:749px){
+  #nxCv-{{ section.id }} .nxCv__in{padding:0 16px}
+  #nxCv-{{ section.id }} .nxCv__ey{font-size:11.5px;margin-bottom:10px}
+  #nxCv-{{ section.id }} .nxCv__h{font-size:{{ s.head_m }}px!important;margin-bottom:12px!important}
+  #nxCv-{{ section.id }} .nxCv__sub{font-size:15px;line-height:1.55}
+  #nxCv-{{ section.id }} .nxCv__wrap{margin-top:30px}
+  #nxCv-{{ section.id }} .nxCv__t th,#nxCv-{{ section.id }} .nxCv__t td{padding:14px 3px}
+  #nxCv-{{ section.id }} .nxCv__t thead th{font-size:8.5px;letter-spacing:.02em;padding-top:18px;padding-bottom:14px;line-height:1.3;overflow-wrap:anywhere}
+  #nxCv-{{ section.id }} .nxCv__t thead th:first-child{width:34%}
+  #nxCv-{{ section.id }} .nxCv__t .nxCv__lbl{padding-left:4px;padding-right:8px;font-size:13px;line-height:1.3}
+  #nxCv-{{ section.id }} .nxCv__t thead .nxCv__lbl{font-size:10px;letter-spacing:.08em}
+  #nxCv-{{ section.id }} .nxCv__t thead .nxCv__us{border-radius:16px 16px 0 0;padding-top:20px;font-size:10.5px;letter-spacing:.1em}
+  #nxCv-{{ section.id }} .nxCv__t .nxCv__us--end{border-radius:0 0 16px 16px}
+  #nxCv-{{ section.id }} .nxCv__logo{max-width:40px;max-height:26px;margin-bottom:8px}
+  #nxCv-{{ section.id }} .nxCv__i{width:28px;height:28px;font-size:18px}
+  #nxCv-{{ section.id }} .nxCv__i svg{width:15px;height:15px}
+  #nxCv-{{ section.id }} .nxCv__i--n svg{width:12px;height:12px}
+  #nxCv-{{ section.id }} .nxCv__w{display:block;font-size:11.5px;line-height:1.2}
+  #nxCv-{{ section.id }} .nxCv__us .nxCv__w{font-size:12px}
+  #nxCv-{{ section.id }} .nxCv__bl{font-size:14.5px;margin-top:24px;text-align:left}
+  #nxCv-{{ section.id }} .nxCv__btn{width:100%;min-width:0;box-sizing:border-box}
+  #nxCv-{{ section.id }} .nxCv__fine{font-size:11px;text-align:left}
+}
+</style>
+<script>
+(function(){
+  var r=document.getElementById('nxCv-{{ section.id }}'); if(!r) return;
+  var b=r.querySelector('[data-cv-btn]'); if(!b) return;
+  b.addEventListener('click',function(e){
+    var prod=document.querySelector('[data-ag-product]'); if(!prod) return;
+    var href=b.getAttribute('href')||''; if(href.indexOf(location.pathname)!==0) return;
+    e.preventDefault();
+    var one=prod.querySelector('[data-ag-bundle][data-qty="1"]'); if(one) one.click();
+    var ot=prod.querySelector('.nxSub__o[data-s="0"]'); if(ot) ot.click();
+    var t=prod.querySelector('.agB')||prod; var y=t.getBoundingClientRect().top+window.pageYOffset-90;
+    window.scrollTo({top:y<0?0:y,behavior:'smooth'});
+  });
+})();
+</script>
+{% schema %}
+{
+  "name": "Comparison table",
+  "tag": "div",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Small label","default":"HOW WE COMPARE"},
+    {"type":"text","id":"heading","label":"Heading","info":"Put words in <em></em> to show them in the accent colour","default":"Collagen that fits your <em>busy morning.</em>"},
+    {"type":"textarea","id":"text","label":"Text under heading","default":"Two scoops, your usual coffee, under a minute. Auvela is made to support firmer-looking skin,* and here is how it compares with other ways to take collagen."},
+    {"type":"header","content":"Columns"},
+    {"type":"text","id":"col_label","label":"First column title","default":"What matters most"},
+    {"type":"text","id":"col_us","label":"Your brand (tall column)","default":"Auvela"},
+    {"type":"image_picker","id":"logo","label":"Logo above brand name (optional)"},
+    {"type":"text","id":"col_a","label":"Column 2","default":"Collagen pills"},
+    {"type":"text","id":"col_b","label":"Column 3","default":"Collagen gummies"},
+    {"type":"text","id":"col_c","label":"Column 4","default":"Collagen masks"},
+    {"type":"header","content":"Under the table"},
+    {"type":"richtext","id":"bottom","label":"Bottom line","default":"<p><strong>Bottom line:</strong> Pills and gummies are quick too, but a full serving can mean a handful of them. Masks take hours a month. Auvela is one serving, stirred into the coffee you were already making.</p>"},
+    {"type":"text","id":"btn","label":"Button text","default":"Get Auvela"},
+    {"type":"url","id":"btn_link","label":"Button link","info":"Leave empty to go to the product with 1 bag selected"},
+    {"type":"richtext","id":"fine","label":"Small print","default":"<p>Based on typical products in each category. Time is an estimate: about 1 minute a day for Auvela, and a mask used 3 times a week for about 15 minutes. *These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.</p>"},
+    {"type":"header","content":"Sizes, colours & spacing"},
+    {"type":"range","id":"head_d","label":"Heading size (desktop)","min":24,"max":60,"step":2,"unit":"px","default":44},
+    {"type":"range","id":"head_m","label":"Heading size (mobile)","min":20,"max":40,"step":1,"unit":"px","default":28},
+    {"type":"color","id":"c_bg","label":"Background","default":"#FAF7FF"},
+    {"type":"color","id":"c_ink","label":"Text","default":"#2A1427"},
+    {"type":"color","id":"c_acc","label":"Accent (label & italic words)","default":"#8E6AE6"},
+    {"type":"color","id":"c_col","label":"Brand column","default":"#2A1427"},
+    {"type":"color","id":"c_ok","label":"Check circle","default":"#C7ABFF"},
+    {"type":"color","id":"c_btn","label":"Button","default":"#C7ABFF"},
+    {"type":"range","id":"pad_top","label":"Top padding","min":0,"max":120,"step":4,"unit":"px","default":72},
+    {"type":"range","id":"pad_bottom","label":"Bottom padding","min":0,"max":120,"step":4,"unit":"px","default":72}
+  ],
+  "blocks": [
+    {"type":"row","name":"Row","settings":[
+      {"type":"text","id":"label","label":"What matters","default":"New row"},
+      {"type":"select","id":"v_us","label":"Brand column","default":"yes","options":[{"value":"yes","label":"✓ Check"},{"value":"no","label":"✗ Cross"},{"value":"some","label":"~ Partly"},{"value":"na","label":"– Doesn't apply"},{"value":"text","label":"Words (below)"}]},
+      {"type":"text","id":"t_us","label":"Brand column words"},
+      {"type":"select","id":"v_a","label":"Column 2","default":"no","options":[{"value":"yes","label":"✓ Check"},{"value":"no","label":"✗ Cross"},{"value":"some","label":"~ Partly"},{"value":"na","label":"– Doesn't apply"},{"value":"text","label":"Words (below)"}]},
+      {"type":"text","id":"t_a","label":"Column 2 words"},
+      {"type":"select","id":"v_b","label":"Column 3","default":"no","options":[{"value":"yes","label":"✓ Check"},{"value":"no","label":"✗ Cross"},{"value":"some","label":"~ Partly"},{"value":"na","label":"– Doesn't apply"},{"value":"text","label":"Words (below)"}]},
+      {"type":"text","id":"t_b","label":"Column 3 words"},
+      {"type":"select","id":"v_c","label":"Column 4","default":"no","options":[{"value":"yes","label":"✓ Check"},{"value":"no","label":"✗ Cross"},{"value":"some","label":"~ Partly"},{"value":"na","label":"– Doesn't apply"},{"value":"text","label":"Words (below)"}]},
+      {"type":"text","id":"t_c","label":"Column 4 words"}
+    ]}
+  ],
+  "presets":[{"name":"Comparison table"}]
+}
+{% endschema %}
