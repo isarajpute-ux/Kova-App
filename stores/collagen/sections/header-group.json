@@ -23,9 +23,9 @@
       "type": "ag-topbar",
       "settings": {
         "label": "Founding Batch 15% off ends in",
-        "mode": "evergreen",
+        "mode": "date",
         "hours": 5,
-        "end_date": "2026-11-30T23:59",
+        "end_date": "2026-11-30T23:59:00-05:00",
         "show_days": true,
         "code": "AUVELA15",
         "copied_text": "Copied!",
@@ -59,8 +59,8 @@
         "announcement-bar-1": {
           "type": "announcement",
           "settings": {
-            "text": "90-DAY FIRMER-SKIN PROMISE · FREE US SHIPPING",
-            "link": ""
+            "text": "90-DAY MONEY-BACK GUARANTEE · FREE US SHIPPING",
+            "link": "/policies/refund-policy"
           }
         }
       },

@@ -1,0 +1,32 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "ag-contact",
+      "settings": {
+        "heading": "We're here to help",
+        "sub": "Questions about fit, sizing or your order? Send us a message and a real person will reply.",
+        "font_family": "Inter",
+        "v_email": "YOUR-SUPPORT-EMAIL",
+        "v_warranty": "90-day money-back guarantee",
+        "c_ink": "#0A0A0A",
+        "c_title": "#0A0A0A",
+        "c_btn": "#0A0A0A",
+        "c_btn2": "#1F1F1F",
+        "c_soft": "#F5F5F5",
+        "p_email": "YOUR-SUPPORT-EMAIL"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,178 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": "Dawn",
+  "presets": {
+    "Dawn": {
+      "logo": "",
+      "logo_width": 130,
+      "customer_account_menu": "customer-account-main-menu",
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#FFFFFF",
+            "background_gradient": "",
+            "text": "#2A1427",
+            "button": "#4A2545",
+            "button_label": "#FFFFFF",
+            "secondary_button_label": "#4A2545",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#F7F2EC",
+            "background_gradient": "",
+            "text": "#2A1427",
+            "button": "#4A2545",
+            "button_label": "#FFFFFF",
+            "secondary_button_label": "#4A2545",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#E8C9C1",
+            "background_gradient": "",
+            "text": "#2A1427",
+            "button": "#4A2545",
+            "button_label": "#FFFFFF",
+            "secondary_button_label": "#2A1427",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#2A1427",
+            "background_gradient": "",
+            "text": "#F7F2EC",
+            "button": "#E8C9C1",
+            "button_label": "#2A1427",
+            "secondary_button_label": "#F7F2EC",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#C9A24B",
+            "background_gradient": "",
+            "text": "#FFFFFF",
+            "button": "#FFFFFF",
+            "button_label": "#4A2545",
+            "secondary_button_label": "#FFFFFF",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-6": {
+          "settings": {
+            "background": "#B3364F",
+            "background_gradient": "",
+            "text": "#FFFFFF",
+            "button": "#FFFFFF",
+            "button_label": "#B3364F",
+            "secondary_button_label": "#FFFFFF",
+            "shadow": "#2A1427"
+          }
+        },
+        "scheme-7": {
+          "settings": {
+            "background": "#4A2545",
+            "background_gradient": "",
+            "text": "#F7F2EC",
+            "button": "#E8C9C1",
+            "button_label": "#4A2545",
+            "secondary_button_label": "#F7F2EC",
+            "shadow": "#2A1427"
+          }
+        }
+      },
+      "type_header_font": "inter_n5",
+      "heading_scale": 100,
+      "type_body_font": "inter_n4",
+      "body_scale": 100,
+      "page_width": 1200,
+      "spacing_sections": 0,
+      "spacing_grid_horizontal": 8,
+      "spacing_grid_vertical": 8,
+      "animations_reveal_on_scroll": true,
+      "animations_hover_elements": "none",
+      "buttons_border_thickness": 1,
+      "buttons_border_opacity": 100,
+      "buttons_radius": 40,
+      "buttons_shadow_opacity": 0,
+      "buttons_shadow_horizontal_offset": 0,
+      "buttons_shadow_vertical_offset": 4,
+      "buttons_shadow_blur": 5,
+      "variant_pills_border_thickness": 1,
+      "variant_pills_border_opacity": 55,
+      "variant_pills_radius": 40,
+      "variant_pills_shadow_opacity": 0,
+      "variant_pills_shadow_horizontal_offset": 0,
+      "variant_pills_shadow_vertical_offset": 4,
+      "variant_pills_shadow_blur": 5,
+      "inputs_border_thickness": 1,
+      "inputs_border_opacity": 55,
+      "inputs_radius": 8,
+      "inputs_shadow_opacity": 0,
+      "inputs_shadow_horizontal_offset": 0,
+      "inputs_shadow_vertical_offset": 4,
+      "inputs_shadow_blur": 5,
+      "card_style": "standard",
+      "card_image_padding": 0,
+      "card_text_alignment": "left",
+      "card_color_scheme": "scheme-2",
+      "card_border_thickness": 0,
+      "card_border_opacity": 10,
+      "card_corner_radius": 0,
+      "card_shadow_opacity": 0,
+      "card_shadow_horizontal_offset": 0,
+      "card_shadow_vertical_offset": 4,
+      "card_shadow_blur": 5,
+      "badge_position": "bottom left",
+      "badge_corner_radius": 40,
+      "sale_badge_color_scheme": "scheme-5",
+      "sold_out_badge_color_scheme": "scheme-3",
+      "predictive_search_enabled": true,
+      "predictive_search_show_vendor": false,
+      "predictive_search_show_price": false,
+      "currency_code_enabled": true,
+      "cart_type": "drawer",
+      "show_vendor": false,
+      "show_cart_note": false,
+      "cart_drawer_collection": "",
+      "cart_color_scheme": "scheme-1",
+      "ag_cd_accent": "#4A2545",
+      "ag_cd_pink_bg": "#F6ECE8",
+      "ag_cd_social_bg": "#F7F2EC",
+      "ag_cd_banner_bg": "#2A1427",
+      "ag_cd_badge_bg": "#C9A24B",
+      "ag_cd_banner_star_color": "#C9A24B",
+      "ag_cd_fs_bar_color": "#4A2545",
+      "ag_cd_show_social": false,
+      "ag_cd_social_text": "90-day money-back guarantee",
+      "ag_cd_show_banner": false,
+      "ag_cd_banner_subtext": "",
+      "sections": {
+        "main-password-header": {
+          "type": "main-password-header",
+          "settings": {
+            "color_scheme": "scheme-1"
+          }
+        },
+        "main-password-footer": {
+          "type": "main-password-footer",
+          "settings": {
+            "color_scheme": "scheme-1"
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@
         "heading": "The woman in the mirror deserves\n<em>her collagen back.</em>",
         "head_m": 32,
         "head_d": 46,
-        "text": "Crepey skin after 40 isn’t fat. It’s lost collagen. One scoop a day helps your skin feel smoother and firmer in 90 days.",
+        "text": "Two scoops in your morning coffee. Made to support firmer-looking skin.*",
         "btn": "Shop Now — from $49.99",
         "link": "/products/multi-collagen-peptide-powder",
         "trust": "✓ 90-Day Money-Back Guarantee   ✓ Free US Shipping",
@@ -85,7 +85,7 @@
           "type": "card",
           "settings": {
             "image": "shopify://shop_images/auvela-feat-scoop.png",
-            "title": "One scoop",
+            "title": "Two scoops",
             "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
           }
         },
@@ -212,8 +212,8 @@
           "settings": {
             "good": true,
             "icon": "shield",
-            "title": "90-Day Pure Promise",
-            "text": "Visible structural tightening, or every penny back"
+            "title": "90-Day Money-Back Guarantee",
+            "text": "Full refund within 90 days of delivery"
           }
         },
         "a10": {
@@ -308,7 +308,7 @@
         "r6": {
           "type": "row",
           "settings": {
-            "label": "90-day money-back promise",
+            "label": "90-day money-back guarantee",
             "us": "yes",
             "c1": "no",
             "c2": "no",
@@ -358,7 +358,7 @@
           "type": "stat",
           "settings": {
             "num": "90",
-            "label": "Day firmer-skin promise"
+            "label": "Day money-back guarantee"
           }
         },
         "s2": {
@@ -371,8 +371,8 @@
         "s3": {
           "type": "stat",
           "settings": {
-            "num": "1",
-            "label": "Scoop a day"
+            "num": "2",
+            "label": "Scoops a day"
           }
         },
         "s4": {
@@ -391,8 +391,8 @@
       ],
       "settings": {
         "eyebrow": "Our promise",
-        "heading": "The 90-Day <em>Firmer-Skin Promise.</em>",
-        "text": "Take it daily for 90 days. If your skin doesn’t feel firmer, bouncier and more hydrated — we refund every penny. Keep the bags. No questions.",
+        "heading": "The 90-day <em>money-back guarantee.</em>",
+        "text": "Not happy with how your skin looks and feels? Contact us within 90 days of delivery for a full refund. You can keep your bags.",
         "c_bg": "#2A1427",
         "c_dot": "#C9A24B",
         "pad_top": 64,
@@ -446,7 +446,7 @@
           "type": "qa",
           "settings": {
             "q": "What’s the guarantee?",
-            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the bags.</p>",
+            "a": "<p><strong>90-day money-back guarantee.</strong> Not happy with how your skin looks and feels? Contact us within 90 days of delivery for a full refund. You can keep your bags. <a href=\"/policies/refund-policy\">Refund policy</a></p>",
             "open": false
           }
         }
@@ -479,9 +479,9 @@
     "hero2": {
       "type": "ag-hero",
       "settings": {
-        "eyebrow": "The 90-Day Firmer-Skin Promise",
-        "heading": "Firmer-feeling skin in 90 days —\n<em>or every penny back.</em>",
-        "text": "Keep the bags. No return shipping, no restocking fee, no questions.",
+        "eyebrow": "90-day money-back guarantee",
+        "heading": "Not happy with your skin?\n<em>Full refund within 90 days.</em>",
+        "text": "Contact us within 90 days of delivery for a full refund. You can keep your bags.",
         "btn": "Start My 90-Day Protocol →",
         "link": "/products/multi-collagen-peptide-powder",
         "note": "",
@@ -496,7 +496,7 @@
           "type": "tile",
           "settings": {
             "tag": "Step 1",
-            "title": "One scoop in your",
+            "title": "Two scoops in your",
             "italic": "morning coffee",
             "image": "shopify://shop_images/auvela-how-1-scoop.png"
           }
@@ -527,7 +527,7 @@
       ],
       "settings": {
         "eyebrow": "How it works",
-        "heading": "One scoop. <em>Every morning.</em>",
+        "heading": "Two scoops. <em>Every morning.</em>",
         "text": "After 40, your body makes about 1% less collagen every year. That’s the crepey-looking skin on your stomach, arms and chest — not weight, and not you doing anything wrong. This ritual helps replace what your body stopped making.",
         "pad_top": 72,
         "pad_bottom": 72
@@ -812,7 +812,7 @@
         "all_label": "All",
         "cats": "Firmness, Hydration, Hair & nails, Routine",
         "cta_heading": "Your 90 days start now.",
-        "cta_text": "Backed by the 90-Day Firmer-Skin Promise.",
+        "cta_text": "Backed by our 90-day money-back guarantee.",
         "cta_btn": "Start My 90-Day Protocol",
         "cta_link": "/products/multi-collagen-peptide-powder",
         "pad_top": 72,
@@ -855,18 +855,18 @@
         "c1_sub": "5 collagen types + hyaluronic acid & vitamin C",
         "b1_big": "5",
         "b1_small": "types",
-        "b2_big": "10g",
-        "b2_small": "collagen",
-        "b3_big": "1",
-        "b3_small": "scoop",
+        "b2_big": "10,880",
+        "b2_small": "mg collagen",
+        "b3_big": "2",
+        "b3_small": "scoops",
         "c2_title": "<em>Balanced</em> formula",
-        "c2_sub": "Collagen, hyaluronic acid and vitamin C in one scoop",
+        "c2_sub": "Collagen, hyaluronic acid and vitamin C in two scoops",
         "av_more": "+",
         "c3_title": "<em>Research</em> backed",
         "c3_sub": "Collagen peptides studied for skin elasticity and hydration",
         "c4_image": "shopify://shop_images/auvela-ing-bovine.png",
         "c4_title": "<em>Collagen</em> for firmness",
-        "c4_sub": "10 g per scoop for firmer-feeling skin",
+        "c4_sub": "11 g per serving for firmer-feeling skin",
         "i1": "shopify://shop_images/auvela-ing-marine.png",
         "i2": "shopify://shop_images/auvela-ing-eggshell.png",
         "i3": "shopify://shop_images/auvela-ing-hyaluronic.png",

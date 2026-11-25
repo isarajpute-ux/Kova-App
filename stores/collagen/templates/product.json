@@ -17,7 +17,7 @@
           "settings": {
             "icon": "heart-fill",
             "icon_color": "#4a2545",
-            "title": "One scoop",
+            "title": "Two scoops",
             "sub": "In your morning coffee"
           }
         },
@@ -70,7 +70,7 @@
           "type": "bundle",
           "settings": {
             "title": "Starter",
-            "sub": "1 bag · 30 days|1 Bag · 30-Day Supply|Try the ritual for a month",
+            "sub": "1 bag · 41 servings|1 Bag · 41 Servings|Try the ritual",
             "qty": 1,
             "save_pct": 0,
             "image": "shopify://shop_images/auvela-bundle-1.png",
@@ -83,7 +83,7 @@
           "type": "bundle",
           "settings": {
             "title": "90-Day Protocol",
-            "sub": "3 bags · 90 days|The 90-Day Skin Firming Protocol|3 bags — one full skin-renewal cycle|Save $49.98 vs. 3 single bags|Free US shipping|90-Day Firmer-Skin Promise",
+            "sub": "3 bags · 123 servings|The 90-Day Skin Firming Protocol|3 bags — one full skin-renewal cycle|Save $49.98 vs. 3 single bags|Free US shipping|90-day money-back guarantee",
             "qty": 1,
             "save_pct": 0,
             "image": "shopify://shop_images/auvela-bundle-3.png",
@@ -96,7 +96,7 @@
           "type": "bundle",
           "settings": {
             "title": "Full Transformation",
-            "sub": "6 bags · 180 days|Full Transformation · 180 Days|6 bags — best value per scoop|Save $119.95 vs. 6 single bags|Free US shipping|90-Day Firmer-Skin Promise",
+            "sub": "6 bags · 246 servings|Full Transformation · 180 Days|6 bags — best value per serving|Save $119.95 vs. 6 single bags|Free US shipping|90-day money-back guarantee",
             "qty": 1,
             "save_pct": 0,
             "image": "shopify://shop_images/auvela-bundle-6.png",
@@ -147,7 +147,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "How to use",
-            "content": "<ul><li>Add 1 scoop (about 10 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10–15 seconds — it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days — that’s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\">Step 4 photo</a></p>",
+            "content": "<ul><li>Add 2 scoops (about 11 g) to your morning coffee, tea or a glass of water</li><li>Stir for 10–15 seconds — it dissolves clean, no taste</li><li>Drink it every day, at any time that suits you</li><li>Keep going for 90 days — that’s when the firmness shows</li></ul><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/For_this_image_right_now__4133e8c5_2K.jpg?v=1793839661\">Step 1 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Copy_hand_and_ring_a70ccc00_2K.jpg?v=1793840535\">Step 2 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/Replace_powders_and_jars_9ba472c7_2K.jpg?v=1793841016\">Step 3 photo</a></p><p><a href=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\" title=\"https://cdn.shopify.com/s/files/1/0735/6573/2973/files/image_5458ebce.jpg?v=1793841761\">Step 4 photo</a></p>",
             "open": true
           }
         },
@@ -186,8 +186,8 @@
           "settings": {
             "icon": "check",
             "icon_color": "#2a1427",
-            "title": "90-Day Firmer-Skin Promise",
-            "content": "<ul><li>Take Auvela daily for 90 days.</li><li>Not happy with how your skin looks and feels?</li><li>Contact us for a full refund.</li><li>Keep your bags and free bonuses.</li></ul>",
+            "title": "90-Day Money-Back Guarantee",
+            "content": "<ul><li>Not happy with how your skin looks and feels?</li><li>Contact us within 90 days of delivery for a full refund.</li><li>You can keep your bags.</li></ul><p><a href=\"/policies/refund-policy\">Read the refund policy</a></p>",
             "open": false
           }
         },
@@ -197,7 +197,7 @@
             "icon": "check",
             "icon_color": "#2a1427",
             "title": "How it works",
-            "content": "<ol><li><strong>Mix one scoop:</strong> Add it to coffee, tea, or water.</li><li><strong>Get daily support:</strong> Collagen peptides, hyaluronic acid, and vitamin C support skin health.</li><li><strong>Stay consistent:</strong> Use it every day for 90 days to see how your skin responds.</li></ol>",
+            "content": "<ol><li><strong>Mix two scoops:</strong> Add it to coffee, tea, or water.</li><li><strong>Get daily support:</strong> Collagen peptides, hyaluronic acid, and vitamin C support skin health.</li><li><strong>Stay consistent:</strong> Use it every day for 90 days to see how your skin responds.</li></ol>",
             "open": false
           }
         },
@@ -264,7 +264,7 @@
         "title_override": "Auvela Multi-Collagen",
         "title_size_m": 26,
         "title_size_d": 32,
-        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, one scoop a day.</em></p>",
+        "desc": "<p>Crepey skin after 40 isn’t you — it’s collagen loss. <em>Auvela gives it back, two scoops a day.</em></p>",
         "show_pill": true,
         "pill_avatar": "shopify://shop_images/Screenshot_2026-10-19_at_11.12.36.png",
         "pill_text": "Multi-Collagen for Women 40+",
@@ -286,13 +286,13 @@
         "variant_label": "",
         "pill_style": "soft",
         "show_stock": false,
-        "stock_text": "Only 14 spots remaining for the founding batch",
+        "stock_text": "First 35 orders only",
         "stock_glow": false,
         "show_spots": true,
-        "spots_text": "Only [n] discount spots left at this price",
+        "spots_text": "First 35 orders only",
         "spots_count": 14,
         "spots_total": 100,
-        "spots_bar": true,
+        "spots_bar": false,
         "spots_color": "#4a2545",
         "show_mr": false,
         "mr_style": "lines",
@@ -325,7 +325,7 @@
         "atc_show_price": true,
         "soldout_text": "Sold out",
         "show_dynamic_checkout": true,
-        "ship_text": "90-Day|Firmer-Skin Promise;3rd-Party|Tested;Free|US shipping",
+        "ship_text": "90-Day|Money-Back Guarantee;3rd-Party|Tested;Free|US shipping",
         "show_payment": false,
         "loved_text": "",
         "show_ugc": false,
@@ -376,7 +376,7 @@
           "type": "pill",
           "settings": {
             "icon": "coffee",
-            "text": "One scoop a day"
+            "text": "Two scoops a day"
           }
         },
         "a1": {
@@ -415,12 +415,12 @@
         "quote_name": "Susan Reynolds",
         "c_star": "#c9a24b",
         "show_guarantee": true,
-        "guarantee": "<p><strong>90-day money-back promise.</strong> Feel firmer or get every penny back.</p>",
+        "guarantee": "<p><strong>90-day money-back guarantee.</strong> Not happy with how your skin looks and feels? Contact us within 90 days of delivery for a full refund. You can keep your bags. <a href=\"/policies/refund-policy\">Refund policy</a></p>",
         "show_payments": true,
         "c_soft": "#f6ece8",
         "show_value": true,
         "value_text": "Firming creams and clinic treatments cost $100s and only work on the surface. Auvela works from within, every day.",
-        "us_line": "Auvela — from $1.11/day",
+        "us_line": "Auvela — from $0.73/day",
         "them_line": "Clinic skin treatments — $300+"
       }
     },
@@ -431,7 +431,7 @@
           "type": "card",
           "settings": {
             "image": "shopify://shop_images/auvela-feat-scoop.png",
-            "title": "One scoop",
+            "title": "Two scoops",
             "text": "Unflavored. Stir into coffee, tea or water — it dissolves clean."
           }
         },
@@ -845,7 +845,7 @@
             "image": "shopify://shop_images/auvela-ing-vitamin-c.png",
             "bg": "#fbebdc",
             "title": "Vitamin C",
-            "text": "Helps your body make and use collagen, so every scoop works harder."
+            "text": "Helps your body make and use collagen, so every serving works harder."
           }
         }
       },
@@ -950,8 +950,8 @@
           "settings": {
             "good": true,
             "icon": "shield",
-            "title": "90-Day Pure Promise",
-            "text": "Visible structural tightening, or every penny back"
+            "title": "90-Day Money-Back Guarantee",
+            "text": "Full refund within 90 days of delivery"
           }
         },
         "a10": {
@@ -1056,7 +1056,7 @@
           "type": "row",
           "settings": {
             "label": "Collagen per serving",
-            "us": "10 g",
+            "us": "10,880 mg",
             "c1": "11 g",
             "c2": "~1 g (3 caps)",
             "c3": "Not absorbed"
@@ -1066,7 +1066,7 @@
           "type": "row",
           "settings": {
             "label": "Easy daily routine",
-            "us": "1 scoop in coffee",
+            "us": "2 scoops in coffee",
             "c1": "1 scoop",
             "c2": "3–6 capsules",
             "c3": "15-min sheet"
@@ -1197,7 +1197,7 @@
           "type": "qa",
           "settings": {
             "q": "What’s the guarantee?",
-            "a": "<p>The 90-Day Firmer-Skin Promise: if your skin doesn’t feel firmer, bouncier and more hydrated after 90 days, email us for a full refund. Keep the bags.</p>",
+            "a": "<p><strong>90-day money-back guarantee.</strong> Not happy with how your skin looks and feels? Contact us within 90 days of delivery for a full refund. You can keep your bags. <a href=\"/policies/refund-policy\">Refund policy</a></p>",
             "open": false
           }
         }
@@ -1476,7 +1476,7 @@
         "all_label": "All",
         "cats": "Firmness, Hydration, Hair & nails, Routine",
         "cta_heading": "Your 90 days start now.",
-        "cta_text": "Backed by the 90-Day Firmer-Skin Promise.",
+        "cta_text": "Backed by our 90-day money-back guarantee.",
         "cta_btn": "Start My 90-Day Protocol",
         "cta_link": "/products/multi-collagen-peptide-powder",
         "pad_top": 72,
